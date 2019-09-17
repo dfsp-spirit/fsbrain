@@ -3,3 +3,5 @@
 export(fs.atlas.region.agg)
 export(fs.atlas.region.agg.group)
 export(fs.spread.value.over.region)
+export(nit.read.demographics)
+export(nit.read.subjectsfile)
