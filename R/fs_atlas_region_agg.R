@@ -13,7 +13,7 @@
 #' @return dataframe with aggregated values for all regions, with 2 columns and n rows, where n is the number of effective regions. The columns are: "region": string, contains the region name. "aggregated": numeric, contains the result of applying agg_fun to the morphometry data in that region.
 #'
 #'
-#' @keywords internal
+#' @export
 fs.atlas.region.agg <- function(vertex_morph_data, vertex_label_names, agg_fun = mean, requested_label_names = c()) {
 
   if (length(vertex_morph_data) != length(vertex_label_names)) {
@@ -69,7 +69,7 @@ fs.atlas.region.agg <- function(vertex_morph_data, vertex_label_names, agg_fun =
 #' @return dataframe with aggregated values for all regions and subjects, with n columns and m rows, where n is the number of subjects and m is the number of regions.
 #'
 #'
-#' @keywords internal
+#' @export
 fs.atlas.region.agg.group <- function(subjects_dir, subjects_list, measure, hemi, atlas, agg_fun = mean) {
     if (! dir.exists(subjects_dir)) {
         stop(sprintf("Subjects directory '%s' does not exist or cannot be accessed.\n", subjects_dir));
@@ -136,7 +136,7 @@ fs.value.list.from.agg.res <- function(agg_res, subject_id) {
 #'
 #' @return a vector of length n, where n is the number of vertices in the annotation. One could write this to an MGH or curv file for visualization.
 #'
-#' @keywords internal
+#' @export
 fs.spread.value.over.region <- function(annot, region_value_list, value_for_unlisted_regions = NaN) {
     num_verts = length(annot$vertices);
     new_data = rep(value_for_unlisted_regions, num_verts);
@@ -158,7 +158,7 @@ fs.write.region.aggregated <- function(subjects_dir, subjects_list, measure, hem
         outfile_part = sprintf("agg_%s", measure);  # something like 'agg_thickness'
     }
 
-    outfile_part = sprintf("%s%s", outfile_part, fs.get.morph.file.ext.for.format(format)); # something like 'agg_thickness.mgh'
+    outfile_part = sprintf("%s%s", outfile_part, freesurferformats::fs.get.morph.file.ext.for.format(format)); # something like 'agg_thickness.mgh'
 
     agg_res = fs.atlas.region.agg.group(subjects_dir, subjects_list, measure, hemi, atlas, agg_fun = agg_fun);
 
