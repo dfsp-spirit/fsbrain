@@ -1,0 +1,11 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^Meta$
+^doc$
+^\.DS_Store$
+.*/\.DS_Store$
+.DS_Store$
+README_DEVELOPMENT.md
+LICENSE_FULL
+CHANGES
+\.travis\.yml
