@@ -116,7 +116,7 @@ test_that("Spreading a single value over an atlas region works from manually cre
     expect_equal(new_data[annot$label_names=="frontalpole"][1:check_first_n], rep(NaN, check_first_n)); # first 100 in region must be NaN
 })
 
-test_that("Spreading a single value over an atlas region works from manually created list", {
+test_that("Writing MGH data spread over regions works", {
     subjects_dir = path.expand("~/data/tim_only")
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip when test data missing, e.g., on travis
     subject_id = "tim"
@@ -124,11 +124,14 @@ test_that("Spreading a single value over an atlas region works from manually cre
     hemi = "lh"
     atlas = "aparc"
     region_value_list = list("bankssts"= 0.1, "blah"= 0.3)
+    num_verts_bankssts = 1722
+    num_verts_subject1_lh = 149244
+
     data = fs.write.region.values(subjects_dir, subject_id, hemi, atlas, region_value_list, "ignored", do_write_file = FALSE);
     expect_equal(typeof(data), "double")
     expect_equal(class(data), "numeric")
     expect_equal(length(data), 149244)
-    expect_equal(sum(na.omit(data)==0.1), 1722)
-    expect_equal(sum(is.nan(data)), 149244 - 1722)
-    #print(data)
+    expect_equal(sum(na.omit(data)==0.1), num_verts_bankssts)
+    expect_equal(sum(na.omit(data)==0.3), 0)    # blah is not a valid aparc atlas region
+    expect_equal(sum(is.nan(data)), num_verts_subject1_lh - num_verts_bankssts)
 })
