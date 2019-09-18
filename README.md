@@ -8,5 +8,7 @@ GNU R utlity function for structural neuroimaging
 Usually requires the latest development version of freesurferformats: 
 
 ```r
+install.packages("devtools")
 devtools::install_github("dfsp-spirit/freesurferformats", build_vignettes=TRUE)
+devtools::install_github("dfsp-spirit/nitools", build_vignettes=TRUE)
 ```
