@@ -130,7 +130,7 @@ test_that("Writing MGH data spread over regions works", {
     data = fs.write.region.values(subjects_dir, subject_id, hemi, atlas, region_value_list, "ignored", do_write_file = FALSE);
     expect_equal(typeof(data), "double")
     expect_equal(class(data), "numeric")
-    expect_equal(length(data), 149244)
+    expect_equal(length(data), num_verts_subject1_lh)
     expect_equal(sum(na.omit(data)==0.1), num_verts_bankssts)
     expect_equal(sum(na.omit(data)==0.3), 0)    # blah is not a valid aparc atlas region
     expect_equal(sum(is.nan(data)), num_verts_subject1_lh - num_verts_bankssts)

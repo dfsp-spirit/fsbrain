@@ -214,8 +214,7 @@ fs.write.region.values <- function(subjects_dir, subject_id, hemi, atlas, region
   outfile_morph_name = sprintf("%s%s", outfile_morph_name, freesurferformats::fs.get.morph.file.ext.for.format(format)); # append file extension
   morph_outfile = file.path(subjects_dir, subject_id, "surf", sprintf("%s.%s", hemi, outfile_morph_name));
 
-  annot_file = file.path(subjects_dir, subject_id, "label", sprintf("%s.%s.annot", hemi, atlas));
-  annot = freesurferformats::read.fs.annot(annot_file);
+  annot = annot.subject(subjects_dir, subject_id, hemi, atlas);
 
   morph_data = fs.spread.value.over.region(annot, region_value_list);
 
@@ -224,4 +223,13 @@ fs.write.region.values <- function(subjects_dir, subject_id, hemi, atlas, region
   }
 
   return(morph_data);
+}
+
+#'  @title Load an annotation (cortical parcellation based on an atlas) for a subject.
+annot.subject <- function(subjects_dir, subject_id, hemi, atlas) {
+  annot_file = file.path(subjects_dir, subject_id, "label", sprintf("%s.%s.annot", hemi, atlas));
+  if(!file.exists(annot_file)) {
+    stop(sprintf("Annotation file '%s' for subject '%s' atlas '%s' hemi '%s' cannot be accessed.\n", annot_file, subject_id, atlas, hemi));
+  }
+  return(freesurferformats::read.fs.annot(annot_file));
 }

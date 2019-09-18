@@ -1,0 +1,25 @@
+test_that("Aggregation of whole brain morph data on subject level works", {
+  subjects_dir = path.expand("~/data/tim_only")
+  skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
+
+  data = subject.morph.native(subjects_dir, "tim", "thickness", "lh");
+
+  num_verts_subject1_lh = 149244
+  expect_equal(class(data), "numeric")
+  expect_equal(length(data), num_verts_subject1_lh)
+})
+
+
+test_that("Aggregation of whole brain morph data on group level works", {
+  subjects_dir = path.expand("~/data/tim_only")
+  skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
+
+  subjects_list = c("tim", "timcopy")
+  data = group.morph.agg.native(subjects_dir, subjects_list, "thickness", "lh")
+
+  expect_equal(class(data), "data.frame")
+  expect_equal(nrow(data), 2)
+  expect_equal(ncol(data), 2)
+  expect_equal(data$subject_id[0], subjects_list[0])
+  expect_equal(data$subject_id[1], subjects_list[1])
+})
