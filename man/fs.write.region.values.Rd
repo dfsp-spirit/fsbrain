@@ -11,6 +11,8 @@ fs.write.region.values(subjects_dir, subject_id, hemi, atlas,
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
 
+\item{subject_id, }{string. The subejct identifier}
+
 \item{hemi, }{string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.}
 
 \item{atlas, }{string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.}
@@ -22,8 +24,6 @@ fs.write.region.values(subjects_dir, subject_id, hemi, atlas,
 \item{format, }{string. A morphometry file format. One of 'mgh', 'mgz' or 'curv.' The output file name extension will be set accordingly. Defaults to 'mgz'.}
 
 \item{do_write_file, }{logical. Whether to write the data to a file on the disk. If FALSE, the data are only returned (and the outfile_morph_name parameter gets ignored). Default to TRUE.}
-
-\item{subjects_list, }{string vector. A vector of subject identifiers that match the directory names within subjects_dir.}
 }
 \value{
 a vector with the resulting data

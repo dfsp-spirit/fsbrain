@@ -193,7 +193,7 @@ fs.write.region.aggregated <- function(subjects_dir, subjects_list, measure, hem
 #'
 #' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
 #'
-#' @param subjects_list, string vector. A vector of subject identifiers that match the directory names within subjects_dir.
+#' @param subject_id, string. The subejct identifier
 #'
 #' @param hemi, string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.
 #'
@@ -225,7 +225,19 @@ fs.write.region.values <- function(subjects_dir, subject_id, hemi, atlas, region
   return(morph_data);
 }
 
-#'  @title Load an annotation (cortical parcellation based on an atlas) for a subject.
+#'@title Load an annotation for a subject.
+#'
+#' @description Load a brain surface annotation, i.e., a cortical parcellation based on an atlas, for a subject.
+#'
+#' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
+#'
+#' @param subject_id, string. The subject identifier
+#'
+#' @param hemi, string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.
+#'
+#' @param atlas, string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.
+#'
+#' @return the annotation, as returned by freesurferformats::read.fs.annot.
 annot.subject <- function(subjects_dir, subject_id, hemi, atlas) {
   annot_file = file.path(subjects_dir, subject_id, "label", sprintf("%s.%s.annot", hemi, atlas));
   if(!file.exists(annot_file)) {

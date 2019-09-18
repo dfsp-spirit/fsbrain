@@ -7,6 +7,24 @@
 subject.morph.standard(subjects_dir, subject_id, measure, hemi,
   fwhm = "10", template_subject = "fsaverage", format = "mgh")
 }
+\arguments{
+\item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
+
+\item{subject_id, }{string. The subject identifier}
+
+\item{measure, }{string. Name of the vertex-wise measure of morphometry data file. E.g., "area" or "thickness". Used to construct the name of the morphometry file to be loaded.}
+
+\item{hemi, }{string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.}
+
+\item{fwhm, }{string. Smoothing as string, e.g. '10' or '25'.}
+
+\item{template_subject, }{string. Template subject name, defaults to 'fsaverage'.}
+
+\item{format, }{string. One of 'mgh', 'mgz', 'curv'. Defaults to 'mgh'.}
+}
+\value{
+vector with standard space morph data
+}
 \description{
 Retrieve standard space morphometry data for a single subject.
 }

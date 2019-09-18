@@ -17,6 +17,8 @@ group.morph.agg.native(subjects_dir, subjects_list, measure, hemi,
 \item{hemi, }{string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.}
 
 \item{agg_fun, }{function. An R function that aggregates data, typically max, mean, min or something similar. Note: this is NOT a string, put the function name without quotes. Defaults to mean.}
+
+\item{format, }{string. One of 'mgh', 'mgz', 'curv'. Defaults to 'curv'.}
 }
 \value{
 dataframe with aggregated values for all subjects, with 2 columns and n rows, where n is the number of subjects. The 2 columns are 'subject_id' and 'value', the latter contains the aggregated data.

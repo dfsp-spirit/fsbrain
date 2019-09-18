@@ -19,6 +19,10 @@ group.morph.agg.standard(subjects_dir, subjects_list, measure, hemi, fwhm,
 \item{fwhm, }{string. Smoothing as string, e.g. '10' or '25'.}
 
 \item{agg_fun, }{function. An R function that aggregates data, typically max, mean, min or something similar. Note: this is NOT a string, put the function name without quotes. Defaults to mean.}
+
+\item{template_subject, }{string. Template subject name, defaults to 'fsaverage'.}
+
+\item{format, }{string. One of 'mgh', 'mgz', 'curv'. Defaults to 'mgh'.}
 }
 \value{
 dataframe with aggregated values for all subjects, with 2 columns and n rows, where n is the number of subjects. The 2 columns are 'subject_id' and 'value', the latter contains the aggregated data.

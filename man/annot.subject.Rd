@@ -2,10 +2,22 @@
 % Please edit documentation in R/fs_atlas_region_agg.R
 \name{annot.subject}
 \alias{annot.subject}
-\title{@title Load an annotation (cortical parcellation based on an atlas) for a subject.}
+\title{Load an annotation for a subject.}
 \usage{
 annot.subject(subjects_dir, subject_id, hemi, atlas)
 }
+\arguments{
+\item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
+
+\item{subject_id, }{string. The subject identifier}
+
+\item{hemi, }{string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.}
+
+\item{atlas, }{string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.}
+}
+\value{
+the annotation, as returned by freesurferformats::read.fs.annot.
+}
 \description{
-@title Load an annotation (cortical parcellation based on an atlas) for a subject.
+Load a brain surface annotation, i.e., a cortical parcellation based on an atlas, for a subject.
 }
