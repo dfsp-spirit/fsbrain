@@ -99,20 +99,36 @@ test_that("Spreading a single value over an atlas region works from agg.res resu
 })
 
 test_that("Spreading a single value over an atlas region works from manually created list", {
-  # Test with handcrafted list
-  annot_file = system.file("extdata", "lh.aparc.annot.gz", package = "freesurferformats", mustWork = TRUE);
-  annot = freesurferformats::read.fs.annot(annot_file);
+    # Test with handcrafted list
+    annot_file = system.file("extdata", "lh.aparc.annot.gz", package = "freesurferformats", mustWork = TRUE);
+    annot = freesurferformats::read.fs.annot(annot_file);
 
-  region_value_list = list("bankssts"= 0.1, "blah"= 0.3)
-  new_data = fs.spread.value.over.region(annot, region_value_list);
-  expect_equal(class(new_data), "numeric");
-  expect_equal(length(new_data), length(annot$vertices));
-  num_verts_bankssts = 1722
-  expect_equal(new_data[annot$label_names=="bankssts"], unlist(rep(0.1, num_verts_bankssts))); # all vertices in bankssts region must be 0.1
-  expect_equal(new_data[annot$label_names=="superiorparietal"][1], NaN);  # value of first vertex in superiorparietal region must be NaN
-  check_first_n=100
-  expect_equal(new_data[annot$label_names=="paracentral"][1:check_first_n], rep(NaN, check_first_n)); # first 100 in region must be NaN
-  expect_equal(new_data[annot$label_names=="middletemporal"][1:check_first_n], rep(NaN, check_first_n)); # first 100 in region must be NaN
-  expect_equal(new_data[annot$label_names=="frontalpole"][1:check_first_n], rep(NaN, check_first_n)); # first 100 in region must be NaN
+    region_value_list = list("bankssts"= 0.1, "blah"= 0.3)
+    new_data = fs.spread.value.over.region(annot, region_value_list);
+    expect_equal(class(new_data), "numeric");
+    expect_equal(length(new_data), length(annot$vertices));
+    num_verts_bankssts = 1722
+    expect_equal(new_data[annot$label_names=="bankssts"], unlist(rep(0.1, num_verts_bankssts))); # all vertices in bankssts region must be 0.1
+    expect_equal(new_data[annot$label_names=="superiorparietal"][1], NaN);  # value of first vertex in superiorparietal region must be NaN
+    check_first_n=100
+    expect_equal(new_data[annot$label_names=="paracentral"][1:check_first_n], rep(NaN, check_first_n)); # first 100 in region must be NaN
+    expect_equal(new_data[annot$label_names=="middletemporal"][1:check_first_n], rep(NaN, check_first_n)); # first 100 in region must be NaN
+    expect_equal(new_data[annot$label_names=="frontalpole"][1:check_first_n], rep(NaN, check_first_n)); # first 100 in region must be NaN
 })
 
+test_that("Spreading a single value over an atlas region works from manually created list", {
+    subjects_dir = path.expand("~/data/tim_only")
+    skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip when test data missing, e.g., on travis
+    subject_id = "tim"
+    measure = "thickness"
+    hemi = "lh"
+    atlas = "aparc"
+    region_value_list = list("bankssts"= 0.1, "blah"= 0.3)
+    data = fs.write.region.values(subjects_dir, subject_id, hemi, atlas, region_value_list, "ignored", do_write_file = FALSE);
+    expect_equal(typeof(data), "double")
+    expect_equal(class(data), "numeric")
+    expect_equal(length(data), 149244)
+    expect_equal(sum(na.omit(data)==0.1), 1722)
+    expect_equal(sum(is.nan(data)), 149244 - 1722)
+    #print(data)
+})

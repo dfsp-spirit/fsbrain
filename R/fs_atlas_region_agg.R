@@ -152,24 +152,76 @@ fs.spread.value.over.region <- function(annot, region_value_list, value_for_unli
 
 
 
-
-fs.write.region.aggregated <- function(subjects_dir, subjects_list, measure, hemi, atlas, agg_fun = mean, outfile_part="", format="mgh") {
-    if(nchar(outfile_part)==0) {
-        outfile_part = sprintf("agg_%s", measure);  # something like 'agg_thickness'
+#' @title Write data aggregated over regions to morphometry file for group.
+#'
+#' @description Given an atlas, a subjects list and a measure, aggregate the measure over each region (e.g., mean) and write an output morphometry file in which the value for all region vertices is set to the aggregated value.
+#'
+#' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
+#'
+#' @param subjects_list, string vector. A vector of subject identifiers that match the directory names within subjects_dir.
+#'
+#' @param measure, string. Name of the vertex-wise measure of morphometry data file. E.g., "area" or "thickness". Used to construct the name of the morphometry file to be loaded.
+#'
+#' @param hemi, string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.
+#'
+#' @param atlas, string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.
+#'
+#' @param agg_fun, function. An R function that aggregates data, typically max, mean, min or something similar. Note: this is NOT a string, put the function name without quotes. Defaults to mean.
+#'
+#' @param outfile_morph_name, string. The measure part of the output file name. E.g., 'agg_thickness' will write the file '<subject>/surf/<hemi>.agg_thickness.mgh'. Defaults to 'agg_<measure>'.
+#'
+#' @param format, string. A morphometry file format. One of 'mgh', 'mgz' or 'curv.' The output file name extension will be set accordingly. Defaults to 'mgz'.
+#'
+#' @export
+fs.write.region.aggregated <- function(subjects_dir, subjects_list, measure, hemi, atlas, agg_fun = mean, outfile_morph_name="", format="mgz") {
+    if(nchar(outfile_morph_name)==0) {
+      outfile_morph_name = sprintf("agg_%s", measure);  # something like 'agg_thickness'
     }
-
-    outfile_part = sprintf("%s%s", outfile_part, freesurferformats::fs.get.morph.file.ext.for.format(format)); # something like 'agg_thickness.mgh'
 
     agg_res = fs.atlas.region.agg.group(subjects_dir, subjects_list, measure, hemi, atlas, agg_fun = agg_fun);
 
     for (subject_id in subjects_list) {
-        agg_morph_outfile = file.path(subjects_dir, subject_id, "surf", sprintf("%s.%s", hemi, outfile_part));
-
-        annot_file = file.path(subjects_dir, subject_id, "label", sprintf("%s.%s.annot", hemi, atlas));
-        annot = freesurferformats::read.fs.annot(annot_file);
-
         region_value_list = fs.value.list.from.agg.res(agg_res, subject_id);
-        agg_morph_data = fs.spread.value.over.region(annot, region_value_list);
-        freesurferformats::write.fs.morph(agg_morph_outfile, agg_morph_data);
+        fs.write.region.values(subjects_dir, subject_id, hemi, atlas, region_value_list, outfile_morph_name, format=format);
     }
+}
+
+
+#' @title Write one value per atlas region for a subject.
+#'
+#' @description Given an atlas and a list that contains one value for each atlas region, write a morphometry file in which all region vertices are assigned the value. Can be used to plot stuff like p-values or effect sizes onto brain regions.
+#'
+#' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
+#'
+#' @param subjects_list, string vector. A vector of subject identifiers that match the directory names within subjects_dir.
+#'
+#' @param hemi, string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.
+#'
+#' @param atlas, string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.
+#'
+#' @param region_value_list, named list. A list in which the names are atlas regions, and the values are the value to write to all vertices of that region.
+#'
+#' @param outfile_morph_name, string. The measure part of the output file name. E.g., 'agg_thickness' will write the file '<subject>/surf/<hemi>.agg_thickness.mgh'.
+#'
+#' @param format, string. A morphometry file format. One of 'mgh', 'mgz' or 'curv.' The output file name extension will be set accordingly. Defaults to 'mgz'.
+#'
+#' @param do_write_file, logical. Whether to write the data to a file on the disk. If FALSE, the data are only returned (and the outfile_morph_name parameter gets ignored). Default to TRUE.
+#'
+#' @return a vector with the resulting data
+#'
+#' @export
+fs.write.region.values <- function(subjects_dir, subject_id, hemi, atlas, region_value_list, outfile_morph_name, format="mgz", do_write_file = TRUE) {
+  outfile_morph_name = sprintf("%s%s", outfile_morph_name, freesurferformats::fs.get.morph.file.ext.for.format(format)); # append file extension
+  morph_outfile = file.path(subjects_dir, subject_id, "surf", sprintf("%s.%s", hemi, outfile_morph_name));
+
+  annot_file = file.path(subjects_dir, subject_id, "label", sprintf("%s.%s.annot", hemi, atlas));
+  annot = freesurferformats::read.fs.annot(annot_file);
+
+  morph_data = fs.spread.value.over.region(annot, region_value_list);
+
+  if (do_write_file) {
+      freesurferformats::write.fs.morph(morph_outfile, morph_data);
+  }
+
+  return(morph_data);
 }
