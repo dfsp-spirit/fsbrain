@@ -77,7 +77,7 @@ subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm
   if(nchar(fwhm) > 0) {
     fwhm_tag = sprintf(".fwhm%s", fwhm)
   } else {
-    fwhm_tag = ""
+    fwhm_tag = "" # Support opening files without any FWHM part
   }
 
   curvfile = file.path(subjects_dir, subject_id, "surf", sprintf("%s.%s%s.%s%s", hemi, measure, fwhm_tag, template_subject, freesurferformats::fs.get.morph.file.ext.for.format(format)));

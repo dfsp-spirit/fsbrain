@@ -22,6 +22,7 @@ nit.read.subjectsfile = function(subjects_file) {
 #' @return a data.frame. The data in the file.
 #'
 #' @export
+#' @importFrom dplyr "%>%"
 nit.read.demographics = function(demographics_file) {
   demographics_df = utils::read.table(demographics_file, header=TRUE, sep='\t');
   demographics_df = demographics_df %>% dplyr::mutate_if(is.character, as.factor) %>% dplyr::mutate_if(is.numeric, scale, scale=F);
