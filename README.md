@@ -1,5 +1,5 @@
 # nitools 
-GNU R utlity function for structural neuroimaging
+My personal GNU R utlity functions for structural neuroimaging research. I doubt many others will want them, but feel free to use them.
 
 [![Build Status](https://travis-ci.org/dfsp-spirit/nitools.svg?branch=master)](https://travis-ci.org/dfsp-spirit/nitools)
 
@@ -8,5 +8,7 @@ GNU R utlity function for structural neuroimaging
 Usually requires the latest development version of freesurferformats: 
 
 ```r
+install.packages("devtools")
 devtools::install_github("dfsp-spirit/freesurferformats", build_vignettes=TRUE)
+devtools::install_github("dfsp-spirit/nitools", build_vignettes=TRUE)
 ```
