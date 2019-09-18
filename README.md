@@ -1,5 +1,5 @@
 # nitools 
-GNU R utlity function for structural neuroimaging
+My personal GNU R utlity functions for structural neuroimaging. I doubt many others will want them, but feel free to use them.
 
 [![Build Status](https://travis-ci.org/dfsp-spirit/nitools.svg?branch=master)](https://travis-ci.org/dfsp-spirit/nitools)
 
