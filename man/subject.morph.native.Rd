@@ -22,5 +22,5 @@ subject.morph.native(subjects_dir, subject_id, measure, hemi,
 vector with native space morph data
 }
 \description{
-Retrieve native space morphometry data for a single subject.
+Load native space morphometry data (like 'surf/lh.area') for a subject from disk. Uses knowledge about the FreeSurfer directory structure to load the correct file.
 }

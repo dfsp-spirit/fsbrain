@@ -25,8 +25,8 @@ group.morph.agg.standard(subjects_dir, subjects_list, measure, hemi, fwhm,
 \item{format, }{string. One of 'mgh', 'mgz', 'curv'. Defaults to 'mgh'.}
 }
 \value{
-dataframe with aggregated values for all subjects, with 2 columns and n rows, where n is the number of subjects. The 2 columns are 'subject_id' and 'value', the latter contains the aggregated data.
+dataframe with aggregated values for all subjects, with 2 columns and n rows, where n is the number of subjects. The 2 columns are 'subject_id' and '<hemi>.<measure>' (e.g., "lh.thickness"), the latter contains the aggregated data.
 }
 \description{
-Aggregate standard space (fsaverage) morphometry data over one hemisphere for a group of subjects.
+Compute the mean (or other aggregates) over all vertices of a subject from standard space morphometry data (like 'surf/lh.area.fwhm10.fsaverage.mgh'). Uses knowledge about the FreeSurfer directory structure to load the correct file.
 }

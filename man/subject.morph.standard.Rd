@@ -26,5 +26,5 @@ subject.morph.standard(subjects_dir, subject_id, measure, hemi,
 vector with standard space morph data
 }
 \description{
-Retrieve standard space morphometry data for a single subject.
+Load standard space morphometry data (like 'surf/lh.area.fwhm10.fsaverage.mgh') for a subject from disk. Uses knowledge about the FreeSurfer directory structure to load the correct file.
 }

@@ -21,8 +21,8 @@ group.morph.agg.native(subjects_dir, subjects_list, measure, hemi,
 \item{format, }{string. One of 'mgh', 'mgz', 'curv'. Defaults to 'curv'.}
 }
 \value{
-dataframe with aggregated values for all subjects, with 2 columns and n rows, where n is the number of subjects. The 2 columns are 'subject_id' and 'value', the latter contains the aggregated data.
+dataframe with aggregated values for all subjects, with 2 columns and n rows, where n is the number of subjects. The 2 columns are 'subject_id' and '<hemi>.<measure>' (e.g., "lh.thickness"), the latter contains the aggregated data.
 }
 \description{
-Aggregate native space morphometry data over one hemisphere for a group of subjects.
+Compute the mean (or other aggregates) over all vertices of a subject from native space morphometry data (like 'surf/lh.area'). Uses knowledge about the FreeSurfer directory structure to load the correct file.
 }
