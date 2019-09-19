@@ -1,5 +1,7 @@
 #' @title Aggregate native space morphometry data over one hemisphere for a group of subjects.
 #'
+#' @description Compute the mean (or other aggregates) over all vertices of a subject from native space morphometry data (like 'surf/lh.area'). Uses knowledge about the FreeSurfer directory structure to load the correct file.
+#'
 #' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
 #'
 #' @param subjects_list, string vector. A vector of subject identifiers that match the directory names within subjects_dir.
@@ -37,6 +39,8 @@ group.morph.agg.native <- function(subjects_dir, subjects_list, measure, hemi, a
 
 #' @title Retrieve native space morphometry data for a single subject.
 #'
+#' @description Load native space morphometry data (like 'surf/lh.area') for a subject from disk. Uses knowledge about the FreeSurfer directory structure to load the correct file.
+#'
 #' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
 #'
 #' @param subject_id, string. The subject identifier
@@ -60,6 +64,8 @@ subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, format
 
 
 #' @title Aggregate standard space (fsaverage) morphometry data over one hemisphere for a group of subjects.
+#'
+#' @description Compute the mean (or other aggregates) over all vertices of a subject from standard space morphometry data (like 'surf/lh.area.fwhm10.fsaverage.mgh'). Uses knowledge about the FreeSurfer directory structure to load the correct file.
 #'
 #' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
 #'
@@ -102,11 +108,13 @@ group.morph.agg.standard <- function(subjects_dir, subjects_list, measure, hemi,
 
 #' @title Aggregate standard space (fsaverage) morphometry data for multiple measures over hemispheres for a group of subjects.
 #'
+#' @description Compute the mean (or other aggregates) over all vertices of a subject from standard space morphometry data (like 'surf/lh.area.fwhm10.fsaverage.mgh'). You can specify several measures and hemispheres. Uses knowledge about the FreeSurfer directory structure to load the correct files.
+#'
 #' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
 #'
 #' @param subjects_list, string vector. A vector of subject identifiers that match the directory names within subjects_dir.
 #'
-#' @param measures, vector of strinsg. Names of the vertex-wise measure of morphometry data file. E.g., c("area", "thickness"). Used to construct the names of the morphometry file to be loaded.
+#' @param measures, vector of strings. Names of the vertex-wise morphometry measures. E.g., c("area", "thickness"). Used to construct the names of the morphometry file to be loaded.
 #'
 #' @param hemis, string, one of 'lh', 'rh' or 'both'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.
 #'
@@ -143,6 +151,8 @@ group.multimorph.agg.standard <- function(subjects_dir, subjects_list, measures,
 
 
 #' @title Retrieve standard space morphometry data for a single subject.
+#'
+#' @description Load standard space morphometry data (like 'surf/lh.area.fwhm10.fsaverage.mgh') for a subject from disk. Uses knowledge about the FreeSurfer directory structure to load the correct file.
 #'
 #' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
 #'
@@ -182,11 +192,13 @@ subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm
 
 #' @title Aggregate native space morphometry data for multiple measures over hemispheres for a group of subjects.
 #'
+#' @description Compute the mean (or other aggregates) over all vertices of a subject from native space morphometry data (like 'surf/lh.area'). You can specify several measures and hemispheres. Uses knowledge about the FreeSurfer directory structure to load the correct files.
+#'
 #' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
 #'
 #' @param subjects_list, string vector. A vector of subject identifiers that match the directory names within subjects_dir.
 #'
-#' @param measures, vector of strinsg. Names of the vertex-wise measure of morphometry data file. E.g., c("area", "thickness"). Used to construct the names of the morphometry file to be loaded.
+#' @param measures, vector of strings. Names of the vertex-wise morhometry measures. E.g., c("area", "thickness"). Used to construct the names of the morphometry file to be loaded.
 #'
 #' @param hemis, string, one of 'lh', 'rh' or 'both'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.
 #'
