@@ -120,6 +120,7 @@ fs.atlas.region.agg.group <- function(subjects_dir, subjects_list, measure, hemi
 fs.value.list.from.agg.res <- function(agg_res, subject_id) {
   value_list_by_region = subset(agg_res, agg_res$subject==subject_id, drop=TRUE);
   names(value_list_by_region) = colnames(agg_res);
+  value_list_by_region$subject = NULL; # delete the subject entry
   return(value_list_by_region);
 }
 
@@ -134,19 +135,45 @@ fs.value.list.from.agg.res <- function(agg_res, subject_id) {
 #'
 #' @param value_for_unlisted_regions, numeric scalar. The value to assign to vertices which are part of atlas regions that are not listed in region_value_list. Defaults to NaN.
 #'
+#' @param warn_on_unmatched_list_regions, logical. Whether to print a warning when a region occurs in the region_value_list that is not part of the given atlas (and the value assigned to this region is thus ignored in the output file and data). Defaults to TRUE.
+#'
+#' @param warn_on_unmatched_atlas_regions, logical. Whether to print a warning when a region occurs in the atlas that is not part of the given region_value_list (and thus the vertices of the region will be assigned the value 'value_for_unlisted_regions' in the output file and data). Defaults to FALSE.
+#'
 #' @return a vector of length n, where n is the number of vertices in the annotation. One could write this to an MGH or curv file for visualization.
 #'
 #' @export
-fs.spread.value.over.region <- function(annot, region_value_list, value_for_unlisted_regions = NaN) {
+fs.spread.value.over.region <- function(annot, region_value_list, value_for_unlisted_regions=NaN, warn_on_unmatched_list_regions=TRUE, warn_on_unmatched_atlas_regions=FALSE) {
     num_verts = length(annot$vertices);
     new_data = rep(value_for_unlisted_regions, num_verts);
+
+    regions_not_in_annot = c();
 
     list_region_names = names(region_value_list);
     for (idx in 1:length(region_value_list)) {
       region_name = list_region_names[idx];
       region_value = region_value_list[idx];
       new_data[annot$label_names==region_name] = region_value;
+      if(!(region_name %in% annot$colortable$struct_names)) {
+        regions_not_in_annot = c(regions_not_in_annot, region_name);
+      }
     }
+
+    if(warn_on_unmatched_list_regions && length(regions_not_in_annot) > 0) {
+      warning(sprintf("fs.spread.value.over.region: Ignored %d regions from 'region_value_list' parameter which do not occur in 'atlas': %s\n", length(regions_not_in_annot), paste(regions_not_in_annot, collapse=", ")));
+    }
+
+    if(warn_on_unmatched_atlas_regions) {
+      atlas_regions_not_in_list = c();
+      for (atlas_region in annot$colortable$struct_names) {
+        if(!(atlas_region %in% names(region_value_list))) {
+          atlas_regions_not_in_list = c(atlas_regions_not_in_list, atlas_region);
+        }
+      }
+      if(length(atlas_regions_not_in_list) > 0) {
+          warning(sprintf("fs.spread.value.over.region: Found %d regions from 'atlas' parameter which are not assigned any value in 'region_value_list' (their vertices will get default value): %s\n", length(atlas_regions_not_in_list), paste(atlas_regions_not_in_list, collapse=", ")));
+      }
+    }
+
     return(unlist(new_data));
 }
 
@@ -331,7 +358,6 @@ find.subjectsdir.of <- function(subject_id='fsaverage') {
 #'
 #' @export
 annot.subject <- function(subjects_dir, subject_id, hemi, atlas) {
-  cat(sprintf("checking dir '%s'\n", subjects_dir));
   annot_file = file.path(subjects_dir, subject_id, "label", sprintf("%s.%s.annot", hemi, atlas));
   if(!file.exists(annot_file)) {
     stop(sprintf("Annotation file '%s' for subject '%s' atlas '%s' hemi '%s' cannot be accessed.\n", annot_file, subject_id, atlas, hemi));

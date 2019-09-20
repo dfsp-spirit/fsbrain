@@ -71,9 +71,10 @@ test_that("Aggregation on group level works", {
 
     # Test that extracting a region_value_list from the agg.res result works
     region_value_list = fs.value.list.from.agg.res(agg.res, "tim");
-    expect_equal(length(region_value_list), 36);
+    expect_equal(length(region_value_list), 35);
     expect_equal(class(region_value_list), "list");
     expect_true("bankssts" %in% names(region_value_list));
+    cat(sprintf("*****: %s", paste(names(region_value_list), collapse=", ")))
     expect_equal(region_value_list$bankssts, 3.9, tolerance=1e-2);
 })
 
@@ -140,7 +141,12 @@ test_that("Writing MGH data spread over regions works", {
 test_that("Writing faverage region values works", {
     hemi = "lh"
     atlas = "aparc"
-    region_value_list = list("bankssts"= 0.1, "blah"= 0.3)
+
+    region_names_aparc = c('unknown', 'bankssts', 'caudalanteriorcingulate', 'caudalmiddlefrontal', 'corpuscallosum', 'cuneus', 'entorhinal', 'fusiform', 'inferiorparietal', 'inferiortemporal', 'isthmuscingulate', 'lateraloccipital', 'lateralorbitofrontal', 'lingual', 'medialorbitofrontal', 'middletemporal', 'parahippocampal', 'paracentral', 'parsopercularis', 'parsorbitalis', 'parstriangularis', 'pericalcarine', 'postcentral', 'posteriorcingulate', 'precentral', 'precuneus', 'rostralanteriorcingulate','rostralmiddlefrontal', 'superiorfrontal', 'superiorparietal', 'superiortemporal', 'supramarginal', 'frontalpole', 'temporalpole', 'transversetemporal', 'insula')
+    num_regions = length(region_names_aparc)
+    region_value_list = as.list(rnorm(num_regions, mean=3, sd=1));
+    names(region_value_list) = region_names_aparc;
+    region_value_list$bankssts= 0.1;
 
     subjects_dir = path.expand("~/data/tim_only")
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip when test data missing, e.g., on travis
@@ -155,5 +161,5 @@ test_that("Writing faverage region values works", {
     expect_equal(length(data), num_verts_fsaverage)
     expect_equal(sum(na.omit(data)==0.1), num_verts_fsaverage_bankssts)
     expect_equal(sum(na.omit(data)==0.3), 0)    # blah is not a valid aparc atlas region
-    expect_equal(sum(is.nan(data)), num_verts_fsaverage - num_verts_fsaverage_bankssts)
+    expect_equal(sum(is.nan(data)), 13887)  # some vertices are outside of the regions we assigned value to
 })
