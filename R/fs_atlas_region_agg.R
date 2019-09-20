@@ -243,10 +243,12 @@ fs.write.region.aggregated <- function(subjects_dir, subjects_list, measure, hem
 #'
 #' @param output_path string, path to the output directory. If omitted, defaults to the 'surf' directory of the subject (i.e., '<subjects_dir>/<subject_id>/surf/').
 #'
+#' @param value_for_unlisted_regions, numeric scalar. The value to assign to vertices which are part of atlas regions that are not listed in region_value_list. Defaults to NaN.
+#'
 #' @return a named list with the following entries: "data": a vector containing the data. "file_written": string, path to the file that was written, only exists if do_write = TRUE.
 #'
 #' @export
-fs.write.region.values <- function(subjects_dir, subject_id, hemi, atlas, region_value_list, outfile_morph_name, format="mgz", do_write_file = TRUE, output_path = NULL) {
+fs.write.region.values <- function(subjects_dir, subject_id, hemi, atlas, region_value_list, outfile_morph_name, format="mgz", do_write_file = TRUE, output_path = NULL, value_for_unlisted_regions=NaN) {
   outfile_morph_name = sprintf("%s%s", outfile_morph_name, freesurferformats::fs.get.morph.file.ext.for.format(format)); # append file extension
   output_file_name_no_path = sprintf("%s.%s", hemi, outfile_morph_name);
 
@@ -258,7 +260,7 @@ fs.write.region.values <- function(subjects_dir, subject_id, hemi, atlas, region
 
   annot = annot.subject(subjects_dir, subject_id, hemi, atlas);
 
-  spread = fs.spread.value.over.region(annot, region_value_list);
+  spread = fs.spread.value.over.region(annot, region_value_list, value_for_unlisted_regions=value_for_unlisted_regions);
   morph_data = spread$spread_data;
 
   return_list = list();
@@ -290,10 +292,12 @@ fs.write.region.values <- function(subjects_dir, subject_id, hemi, atlas, region
 #'
 #' @param show_freeview_tip logical, whether to print the freeview command on howto use the overlay to the console. (Only happens if the output_file is not NULL.)
 #'
+#' @param value_for_unlisted_regions, numeric scalar. The value to assign to vertices which are part of atlas regions that are not listed in region_value_list. Defaults to NaN.
+#'
 #' @return a named list with the following entries: "data": a vector containing the data. "file_written": string, path to the file that was written, only exists if do_write = TRUE.
 #'
 #' @export
-fs.write.region.values.fsaverage <- function(hemi, atlas, region_value_list, output_file, template_subject='fsaverage', template_subjects_dir=NULL, show_freeview_tip=FALSE) {
+fs.write.region.values.fsaverage <- function(hemi, atlas, region_value_list, output_file, template_subject='fsaverage', template_subjects_dir=NULL, show_freeview_tip=FALSE, value_for_unlisted_regions=NaN) {
   if(is.null(template_subjects_dir)) {
     ret = find.subjectsdir.of(subject_id=template_subject)
     if(ret$found) {
@@ -306,7 +310,7 @@ fs.write.region.values.fsaverage <- function(hemi, atlas, region_value_list, out
   }
   subject_id = template_subject;
   annot = annot.subject(subjects_dir, subject_id, hemi, atlas);
-  spread = fs.spread.value.over.region(annot, region_value_list);
+  spread = fs.spread.value.over.region(annot, region_value_list, value_for_unlisted_regions=value_for_unlisted_regions);
   morph_data = spread$spread_data;
 
   do_write_file = !is.null(output_file);
