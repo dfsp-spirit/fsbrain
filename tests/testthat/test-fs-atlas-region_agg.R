@@ -124,14 +124,36 @@ test_that("Writing MGH data spread over regions works", {
     hemi = "lh"
     atlas = "aparc"
     region_value_list = list("bankssts"= 0.1, "blah"= 0.3)
-    num_verts_bankssts = 1722
+    num_verts_bankssts = 1722 # valid for this subject only, ofc
     num_verts_subject1_lh = 149244
 
-    data = fs.write.region.values(subjects_dir, subject_id, hemi, atlas, region_value_list, "ignored", do_write_file = FALSE);
+    ret = fs.write.region.values(subjects_dir, subject_id, hemi, atlas, region_value_list, "ignored", do_write_file = FALSE);
+    data = ret$data;
     expect_equal(typeof(data), "double")
     expect_equal(class(data), "numeric")
     expect_equal(length(data), num_verts_subject1_lh)
     expect_equal(sum(na.omit(data)==0.1), num_verts_bankssts)
     expect_equal(sum(na.omit(data)==0.3), 0)    # blah is not a valid aparc atlas region
     expect_equal(sum(is.nan(data)), num_verts_subject1_lh - num_verts_bankssts)
+})
+
+test_that("Writing faverage region values works", {
+    hemi = "lh"
+    atlas = "aparc"
+    region_value_list = list("bankssts"= 0.1, "blah"= 0.3)
+
+    subjects_dir = path.expand("~/data/tim_only")
+    skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip when test data missing, e.g., on travis
+    skip_if_not(dir.exists(file.path(subjects_dir, 'fsaverage')), message="Test data for fsaverage missing.")
+
+    ret = fs.write.region.values.fsaverage(hemi, atlas, region_value_list, output_file=NULL, template_subjects_dir=subjects_dir);
+    data = ret$data;
+    num_verts_fsaverage = 163842
+    num_verts_fsaverage_bankssts = 2137
+    expect_equal(typeof(data), "double")
+    expect_equal(class(data), "numeric")
+    expect_equal(length(data), num_verts_fsaverage)
+    expect_equal(sum(na.omit(data)==0.1), num_verts_fsaverage_bankssts)
+    expect_equal(sum(na.omit(data)==0.3), 0)    # blah is not a valid aparc atlas region
+    expect_equal(sum(is.nan(data)), num_verts_fsaverage - num_verts_fsaverage_bankssts)
 })

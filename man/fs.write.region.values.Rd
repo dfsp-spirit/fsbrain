@@ -6,7 +6,7 @@
 \usage{
 fs.write.region.values(subjects_dir, subject_id, hemi, atlas,
   region_value_list, outfile_morph_name, format = "mgz",
-  do_write_file = TRUE)
+  do_write_file = TRUE, output_path = NULL)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -24,9 +24,11 @@ fs.write.region.values(subjects_dir, subject_id, hemi, atlas,
 \item{format, }{string. A morphometry file format. One of 'mgh', 'mgz' or 'curv.' The output file name extension will be set accordingly. Defaults to 'mgz'.}
 
 \item{do_write_file, }{logical. Whether to write the data to a file on the disk. If FALSE, the data are only returned (and the outfile_morph_name parameter gets ignored). Default to TRUE.}
+
+\item{output_path}{string, path to the output directory. If omitted, defaults to the 'surf' directory of the subject (i.e., '<subjects_dir>/<subject_id>/surf/').}
 }
 \value{
-a vector with the resulting data
+a named list with the following entries: "data": a vector containing the data. "file_written": string, path to the file that was written, only exists if do_write = TRUE.
 }
 \description{
 Given an atlas and a list that contains one value for each atlas region, write a morphometry file in which all region vertices are assigned the value. Can be used to plot stuff like p-values or effect sizes onto brain regions.

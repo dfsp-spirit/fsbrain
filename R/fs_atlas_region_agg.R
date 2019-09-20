@@ -207,23 +207,113 @@ fs.write.region.aggregated <- function(subjects_dir, subjects_list, measure, hem
 #'
 #' @param do_write_file, logical. Whether to write the data to a file on the disk. If FALSE, the data are only returned (and the outfile_morph_name parameter gets ignored). Default to TRUE.
 #'
-#' @return a vector with the resulting data
+#' @param output_path string, path to the output directory. If omitted, defaults to the 'surf' directory of the subject (i.e., '<subjects_dir>/<subject_id>/surf/').
+#'
+#' @return a named list with the following entries: "data": a vector containing the data. "file_written": string, path to the file that was written, only exists if do_write = TRUE.
 #'
 #' @export
-fs.write.region.values <- function(subjects_dir, subject_id, hemi, atlas, region_value_list, outfile_morph_name, format="mgz", do_write_file = TRUE) {
+fs.write.region.values <- function(subjects_dir, subject_id, hemi, atlas, region_value_list, outfile_morph_name, format="mgz", do_write_file = TRUE, output_path = NULL) {
   outfile_morph_name = sprintf("%s%s", outfile_morph_name, freesurferformats::fs.get.morph.file.ext.for.format(format)); # append file extension
-  morph_outfile = file.path(subjects_dir, subject_id, "surf", sprintf("%s.%s", hemi, outfile_morph_name));
+  output_file_name_no_path = sprintf("%s.%s", hemi, outfile_morph_name);
+
+  if(is.null(output_path)) {
+    morph_outfile = file.path(subjects_dir, subject_id, "surf", output_file_name_no_path);
+  } else {
+    morph_outfile = file.path(output_path, output_file_name_no_path);
+  }
 
   annot = annot.subject(subjects_dir, subject_id, hemi, atlas);
 
   morph_data = fs.spread.value.over.region(annot, region_value_list);
 
+  return_list = list();
   if (do_write_file) {
-      freesurferformats::write.fs.morph(morph_outfile, morph_data);
+    freesurferformats::write.fs.morph(morph_outfile, morph_data);
+    return_list$file_written = morph_outfile;
   }
 
-  return(morph_data);
+  return_list$data = morph_data;
+  return(return_list);
 }
+
+
+#' @title Write one value per atlas region for a template subject.
+#'
+#' @description Given an atlas and a list that contains one value for each atlas region, write a morphometry file in which all region vertices are assigned the value. Can be used to plot stuff like p-values or effect sizes onto brain regions.
+#'
+#' @param hemi, string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.
+#'
+#' @param atlas, string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.
+#'
+#' @param region_value_list, named list. A list in which the names are atlas regions, and the values are the value to write to all vertices of that region.
+#'
+#' @param output_file, string or NULL. Path of the output file, including file name and extension. The format is determined from the (absence of a) file extension. If NULL, no file will be written.
+#'
+#' @param template_subject string, template subject name. Defaults to 'fsaverage'.
+#'
+#' @param template_subjects_dir string, the path to the subjects directory containing the template subject directory. If this is NULL, the function will try to find it using the environment, see the function 'find.subjectsdir.of' for details. Defaults to NULL.
+#'
+#' @return a named list with the following entries: "data": a vector containing the data. "file_written": string, path to the file that was written, only exists if do_write = TRUE.
+#'
+#' @export
+fs.write.region.values.fsaverage <- function(hemi, atlas, region_value_list, output_file, template_subject='fsaverage', template_subjects_dir=NULL) {
+  if(is.null(template_subjects_dir)) {
+    ret = find.subjectsdir.of(subject_id=template_subject)
+    if(ret$found) {
+      subjects_dir = ret$found_at;
+    } else {
+      stop(sprintf("Parameter 'template_subjects_dir' is NULL and subject directory for template subject '%s' could not be found based on environment variables. Set FREESURFER_HOME and/or SUBJECTS_DIR or provide parameter 'template_subjects_dir'.", template_subject));
+    }
+  } else {
+    subjects_dir = template_subjects_dir;
+  }
+  subject_id = template_subject;
+  annot = annot.subject(subjects_dir, subject_id, hemi, atlas);
+  morph_data = fs.spread.value.over.region(annot, region_value_list);
+
+  do_write_file = !is.null(output_file);
+  return_list = list();
+  if (do_write_file) {
+    freesurferformats::write.fs.morph(output_file, morph_data);
+    return_list$file_written = output_file;
+  }
+  return_list$data = morph_data;
+  return(return_list);
+}
+
+#' @title Find the subject directory containing the fsaverage subject on disk.
+#'
+#' @description Try to find directory containing the fsaverage subject (or any other subject) by checking the environment variables FREESURFER_HOME and SUBJECTS_DIR.
+#'
+#' @param subject_id string, the subject id of the subject. Defaults to 'fsaverage'.
+#'
+#' @return named list with the following entries: "found": logical, whether it was found. "found_at": Only set if found=TRUE, the path to the fsaverage directory (NOT including the fsaverage dir itself).
+#'
+#' @export
+find.subjectsdir.of <- function(subject_id='fsaverage') {
+  ret = list();
+  ret$found = FALSE;
+
+  fs_home=Sys.getenv("FREESURFER_HOME");
+  if(nchar(fs_home) > 0) {
+    guessed_path = file.path(fs_home, "subjects", subject_id);
+    if(dir.exists(guessed_path)) {
+        ret$found = TRUE;
+        ret$found_at = file.path(fs_home, "subjects");
+    }
+  }
+
+  subj_dir=Sys.getenv("SUBJECTS_DIR");
+  if(nchar(subj_dir) > 0) {
+    guessed_path = file.path(subj_dir, subject_id);
+    if(dir.exists(guessed_path)) {
+      ret$found = TRUE;
+      ret$found_at = subj_dir;
+    }
+  }
+  return(ret);
+}
+
 
 #'@title Load an annotation for a subject.
 #'
@@ -238,7 +328,10 @@ fs.write.region.values <- function(subjects_dir, subject_id, hemi, atlas, region
 #' @param atlas, string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.
 #'
 #' @return the annotation, as returned by freesurferformats::read.fs.annot.
+#'
+#' @export
 annot.subject <- function(subjects_dir, subject_id, hemi, atlas) {
+  cat(sprintf("checking dir '%s'\n", subjects_dir));
   annot_file = file.path(subjects_dir, subject_id, "label", sprintf("%s.%s.annot", hemi, atlas));
   if(!file.exists(annot_file)) {
     stop(sprintf("Annotation file '%s' for subject '%s' atlas '%s' hemi '%s' cannot be accessed.\n", annot_file, subject_id, atlas, hemi));
