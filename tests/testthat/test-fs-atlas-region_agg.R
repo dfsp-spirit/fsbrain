@@ -183,7 +183,7 @@ test_that("Writing faverage region values works", {
 
     region_names_aparc = c('unknown', 'bankssts', 'caudalanteriorcingulate', 'caudalmiddlefrontal', 'corpuscallosum', 'cuneus', 'entorhinal', 'fusiform', 'inferiorparietal', 'inferiortemporal', 'isthmuscingulate', 'lateraloccipital', 'lateralorbitofrontal', 'lingual', 'medialorbitofrontal', 'middletemporal', 'parahippocampal', 'paracentral', 'parsopercularis', 'parsorbitalis', 'parstriangularis', 'pericalcarine', 'postcentral', 'posteriorcingulate', 'precentral', 'precuneus', 'rostralanteriorcingulate','rostralmiddlefrontal', 'superiorfrontal', 'superiorparietal', 'superiortemporal', 'supramarginal', 'frontalpole', 'temporalpole', 'transversetemporal', 'insula')
     num_regions = length(region_names_aparc)
-    region_value_list = as.list(rnorm(num_regions, mean=3, sd=1));
+    region_value_list = as.list(rnorm(num_regions, mean=5, sd=1.5));
     names(region_value_list) = region_names_aparc;
     region_value_list$bankssts= 0.1;
 
@@ -191,7 +191,7 @@ test_that("Writing faverage region values works", {
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip when test data missing, e.g., on travis
     skip_if_not(dir.exists(file.path(subjects_dir, 'fsaverage')), message="Test data for fsaverage missing.")
 
-    ret = fs.write.region.values.fsaverage(hemi, atlas, region_value_list, output_file=NULL, template_subjects_dir=subjects_dir);
+    ret = fs.write.region.values.fsaverage(hemi, atlas, region_value_list, output_file="/tmp/spread.mgz", template_subjects_dir=subjects_dir);
     data = ret$data;
     num_verts_fsaverage = 163842
     num_verts_fsaverage_bankssts = 2137

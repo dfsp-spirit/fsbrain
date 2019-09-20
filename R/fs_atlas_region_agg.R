@@ -288,10 +288,12 @@ fs.write.region.values <- function(subjects_dir, subject_id, hemi, atlas, region
 #'
 #' @param template_subjects_dir string, the path to the subjects directory containing the template subject directory. If this is NULL, the function will try to find it using the environment, see the function 'find.subjectsdir.of' for details. Defaults to NULL.
 #'
+#' @param show_freeview_tip logical, whether to print the freeview command on howto use the overlay to the console. (Only happens if the output_file is not NULL.)
+#'
 #' @return a named list with the following entries: "data": a vector containing the data. "file_written": string, path to the file that was written, only exists if do_write = TRUE.
 #'
 #' @export
-fs.write.region.values.fsaverage <- function(hemi, atlas, region_value_list, output_file, template_subject='fsaverage', template_subjects_dir=NULL) {
+fs.write.region.values.fsaverage <- function(hemi, atlas, region_value_list, output_file, template_subject='fsaverage', template_subjects_dir=NULL, show_freeview_tip=FALSE) {
   if(is.null(template_subjects_dir)) {
     ret = find.subjectsdir.of(subject_id=template_subject)
     if(ret$found) {
@@ -312,6 +314,9 @@ fs.write.region.values.fsaverage <- function(hemi, atlas, region_value_list, out
   if (do_write_file) {
     freesurferformats::write.fs.morph(output_file, morph_data);
     return_list$file_written = output_file;
+    if(show_freeview_tip) {
+      cat(sprintf("To visualize these region values, try:\nfreeview -f ${FREESURFER_HOME}/subjects/fsaverage/surf/%s.white:overlay=%s:overlay_method=linearopaque:overlay_threshold=0,100,percentile'", hemi, output_file));
+    }
   }
   return_list$data = morph_data;
   return(return_list);
