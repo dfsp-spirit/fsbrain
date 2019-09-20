@@ -319,7 +319,7 @@ fs.write.region.values.fsaverage <- function(hemi, atlas, region_value_list, out
     freesurferformats::write.fs.morph(output_file, morph_data);
     return_list$file_written = output_file;
     if(show_freeview_tip) {
-      cat(sprintf("To visualize these region values, try:\nfreeview -f ${FREESURFER_HOME}/subjects/fsaverage/surf/%s.white:overlay=%s:overlay_method=linearopaque:overlay_threshold=0,100,percentile'", hemi, output_file));
+      cat(sprintf("To visualize these region values, try:\nfreeview -f ${FREESURFER_HOME}/subjects/fsaverage/surf/%s.white:overlay=%s:overlay_method=linearopaque:overlay_threshold=0,100,percentile\n", hemi, output_file));
     }
   }
   return_list$data = morph_data;
