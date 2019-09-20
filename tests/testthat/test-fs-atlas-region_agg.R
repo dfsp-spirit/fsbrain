@@ -6,13 +6,34 @@ test_that("Aggregation on subject level works", {
   annot = freesurferformats::read.fs.annot(annot_file);
   expect_equal(length(ct), length(annot$label_names));  # ensure the data fits together.
 
-  # Test with the default names and aggregation function (mean)
+  # Test without explicitely requesting all possible atlas regions: regions which have no verts assigned in subject will not occur
   agg = fs.atlas.region.agg(ct, annot$label_names);
-  expect_equal(class(agg), "data.frame");
   expect_equal(nrow(agg), 35);
+  expect_false("unknown" %in% agg$region);
+  expect_false("corpuscallosum" %in% agg$region);
+  expect_true("bankssts" %in% agg$region);
+
+  # Test with the default names and aggregation function (mean), but this time with all possible atlas names
+  agg = fs.atlas.region.agg(ct, annot$label_names, requested_label_names = annot$colortable$struct_names);
+  expect_equal(class(agg), "data.frame");
+  expect_equal(nrow(agg), 36);
   expect_equal(ncol(agg), 2);
   expect_equal(colnames(agg), c("region", "aggregated"));
+
+  # first 6
+  expect_true("unknown" %in% agg$region);
   expect_true("bankssts" %in% agg$region);
+  expect_true("caudalanteriorcingulate" %in% agg$region);
+  expect_true("caudalmiddlefrontal" %in% agg$region);
+  expect_true("corpuscallosum" %in% agg$region);
+  expect_true("cuneus" %in% agg$region);
+
+  # last 4
+  expect_true("frontalpole" %in% agg$region);
+  expect_true("temporalpole" %in% agg$region);
+  expect_true("transversetemporal" %in% agg$region);
+  expect_true("insula" %in% agg$region);
+
   mean_bankssts = subset(agg, region=="bankssts", select=aggregated, drop=TRUE);
   expect_equal(mean_bankssts, 2.49, tolerance=1e-2);
 
@@ -48,15 +69,16 @@ test_that("Aggregation on group level works", {
 
     expect_equal(nrow(agg.res), 2);   # 2 subjects
     expect_equal(rownames(agg.res), c("tim", "timcopy"));
-    expect_equal(ncol(agg.res), 36);  # 36 regions
+    expect_equal(ncol(agg.res), 37);  # 36 atlas region columns + the 1 'subject' column
     expect_true("bankssts" %in% colnames(agg.res));
     expect_equal(class(agg.res), "data.frame");
 
     region_names_aparc = c('unknown', 'bankssts', 'caudalanteriorcingulate', 'caudalmiddlefrontal', 'corpuscallosum', 'cuneus', 'entorhinal', 'fusiform', 'inferiorparietal', 'inferiortemporal', 'isthmuscingulate', 'lateraloccipital', 'lateralorbitofrontal', 'lingual', 'medialorbitofrontal', 'middletemporal', 'parahippocampal', 'paracentral', 'parsopercularis', 'parsorbitalis', 'parstriangularis', 'pericalcarine', 'postcentral', 'posteriorcingulate', 'precentral', 'precuneus', 'rostralanteriorcingulate','rostralmiddlefrontal', 'superiorfrontal', 'superiorparietal', 'superiortemporal', 'supramarginal', 'frontalpole', 'temporalpole', 'transversetemporal', 'insula')
+    expect_equal(length(region_names_aparc), 36);
     for (region in region_names_aparc) {
       #cat(sprintf("handling region %s\n", region))
       if(!region %in% colnames(agg.res)) {
-        expect_equal(region, "nosuchregion");
+        expect_equal(region, "missing this aparc region in agg.res result");
       }
     }
 
@@ -70,8 +92,16 @@ test_that("Aggregation on group level works", {
 
     expect_equal(nrow(agg.res), 2);   # 2 subjects
     expect_equal(rownames(agg.res), c("tim", "timcopy"));
-    expect_equal(ncol(agg.res), 36);  # 36 regions
+
+    expect_equal(ncol(agg.res), 37);  # 36 atlas region columns + the 1 'subject' column
+    expect_true("unknown" %in% colnames(agg.res));
     expect_true("bankssts" %in% colnames(agg.res));
+    expect_true("corpuscallosum" %in% colnames(agg.res));
+    expect_true("subject" %in% colnames(agg.res));
+    expect_true("caudalmiddlefrontal" %in% colnames(agg.res));
+    expect_true("caudalanteriorcingulate" %in% colnames(agg.res));
+    expect_true("cuneus" %in% colnames(agg.res));
+
     expect_equal(class(agg.res), "data.frame");
 
     max_bankssts_tim = agg.res$bankssts[1]
@@ -79,10 +109,9 @@ test_that("Aggregation on group level works", {
 
     # Test that extracting a region_value_list from the agg.res result works
     region_value_list = fs.value.list.from.agg.res(agg.res, "tim");
-    expect_equal(length(region_value_list), 35);
+    expect_equal(length(region_value_list), 36); # only the 36 regions: the 'subject' column has been removed.
     expect_equal(class(region_value_list), "list");
     expect_true("bankssts" %in% names(region_value_list));
-    cat(sprintf("*****: %s", paste(names(region_value_list), collapse=", ")))
     expect_equal(region_value_list$bankssts, 3.9, tolerance=1e-2);
 })
 

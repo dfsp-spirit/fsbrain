@@ -91,7 +91,7 @@ fs.atlas.region.agg.group <- function(subjects_dir, subjects_list, measure, hemi
         }
         annot = freesurferformats::read.fs.annot(annot_file);
 
-        subject_agg = fs.atlas.region.agg(morph_data, annot$label_names, agg_fun=agg_fun)
+        subject_agg = fs.atlas.region.agg(morph_data, annot$label_names, agg_fun=agg_fun, requested_label_names = annot$colortable$struct_names)
         subject_agg$subject = subject_id;
 
         if(nrow(agg_all_subjects) > 0) {
