@@ -52,6 +52,14 @@ test_that("Aggregation on group level works", {
     expect_true("bankssts" %in% colnames(agg.res));
     expect_equal(class(agg.res), "data.frame");
 
+    region_names_aparc = c('unknown', 'bankssts', 'caudalanteriorcingulate', 'caudalmiddlefrontal', 'corpuscallosum', 'cuneus', 'entorhinal', 'fusiform', 'inferiorparietal', 'inferiortemporal', 'isthmuscingulate', 'lateraloccipital', 'lateralorbitofrontal', 'lingual', 'medialorbitofrontal', 'middletemporal', 'parahippocampal', 'paracentral', 'parsopercularis', 'parsorbitalis', 'parstriangularis', 'pericalcarine', 'postcentral', 'posteriorcingulate', 'precentral', 'precuneus', 'rostralanteriorcingulate','rostralmiddlefrontal', 'superiorfrontal', 'superiorparietal', 'superiortemporal', 'supramarginal', 'frontalpole', 'temporalpole', 'transversetemporal', 'insula')
+    for (region in region_names_aparc) {
+      #cat(sprintf("handling region %s\n", region))
+      if(!region %in% colnames(agg.res)) {
+        expect_equal(region, "nosuchregion");
+      }
+    }
+
     mean_bankssts_tim = agg.res$bankssts[1]
     expect_equal(mean_bankssts_tim, 2.49, tolerance=1e-2);
 
