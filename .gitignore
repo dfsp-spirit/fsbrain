@@ -39,3 +39,4 @@ vignettes/*.pdf
 rsconnect/
 doc
 Meta
+.Rproj.user
