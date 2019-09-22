@@ -18,11 +18,31 @@ test_that("Aggregation of native space whole brain morph data on group level wor
   data = group.morph.agg.native(subjects_dir, subjects_list, "thickness", "lh")
 
   expect_equal(class(data), "data.frame")
-  expect_equal(nrow(data), 2)
-  expect_equal(ncol(data), 2)
+  expect_equal(nrow(data), 2)  # the 2 subjects
+  expect_equal(ncol(data), 3)  # 3 rows: "subject_id", "hemi", "thickness"
+  expect_true("subject_id" %in% colnames(data))
+  expect_true("hemi" %in% colnames(data))
+  expect_true("thickness" %in% colnames(data))
   expect_equal(data$subject_id[0], subjects_list[0])
   expect_equal(data$subject_id[1], subjects_list[1])
 })
+
+test_that("Aggregation of native space whole brain morph data on group level works with cast set to FALSE", {
+  subjects_dir = path.expand("~/data/tim_only")
+  skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
+
+  subjects_list = c("tim", "timcopy")
+  data = group.morph.agg.native(subjects_dir, subjects_list, "thickness", "lh", cast=FALSE)
+
+  expect_equal(class(data), "data.frame")
+  expect_equal(nrow(data), 2)  # the 2 subjects
+  expect_equal(ncol(data), 2)  # 2 rows: "subject_id", "lh.thickness"
+  expect_true("subject_id" %in% colnames(data))
+  expect_true("lh.thickness" %in% colnames(data))
+  expect_equal(data$subject_id[0], subjects_list[0])
+  expect_equal(data$subject_id[1], subjects_list[1])
+})
+
 
 test_that("Aggregation of standard space whole brain morph data on subject level works", {
   subjects_dir = path.expand("~/data/tim_only")
@@ -78,7 +98,7 @@ test_that("Aggregation of native space whole brain morph data on group level wor
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
 
   subjects_list = c("tim", "timcopy")
-  data = group.multimorph.agg.native(subjects_dir, subjects_list, c("thickness", "area"), c("lh", "rh"))
+  data = group.multimorph.agg.native(subjects_dir, subjects_list, c("thickness", "area"), c("lh", "rh"), cast=FALSE)
 
   expect_equal(class(data), "data.frame")
   expect_equal(nrow(data), 2)

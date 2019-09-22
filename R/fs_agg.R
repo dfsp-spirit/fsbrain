@@ -14,11 +14,13 @@
 #'
 #' @param format, string. One of 'mgh', 'mgz', 'curv'. Defaults to 'curv'.
 #'
-#' @return dataframe with aggregated values for all subjects, with 2 columns and n rows, where n is the number of subjects. The 2 columns are 'subject_id' and '<hemi>.<measure>' (e.g., "lh.thickness"), the latter contains the aggregated data.
+#' @param cast, logical. Whether the format of the returned data frame should be cast, i.e., whether a separate 'hemi' column should be introduced. If this is set to FALSE, the following will be returned: a dataframe with 2 columns and n rows, where n is the number of subjects. The 2 columns are 'subject_id' and '<hemi>.<measure>' (e.g., "lh.thickness"), the latter contains the aggregated data. See the description of the return value for the default case (cast=TRUE). Defaults to TRUE.
+#'
+#' @return dataframe with aggregated values for all subjects, with 3 columns and n rows, where n is the number of subjects. The 3 columns are 'subject_id', 'hemi', and '<measure>' (e.g., "thickness"), the latter contains the aggregated data.
 #'
 #'
 #' @export
-group.morph.agg.native <- function(subjects_dir, subjects_list, measure, hemi, agg_fun = mean, format='curv') {
+group.morph.agg.native <- function(subjects_dir, subjects_list, measure, hemi, agg_fun = mean, cast=TRUE, format='curv') {
   if(!(hemi %in% c("lh", "rh"))) {
     stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s.'", hemi));
   }
@@ -26,13 +28,29 @@ group.morph.agg.native <- function(subjects_dir, subjects_list, measure, hemi, a
   for (subject_id in subjects_list) {
       morph_data = subject.morph.native(subjects_dir, subject_id, measure, hemi, format=format);
       if(nrow(agg_all_subjects) == 0) {
-        agg_all_subjects = data.frame(c(as.character(subject_id)), agg_fun(morph_data), stringsAsFactors = FALSE);
+        if(cast) {
+          agg_all_subjects = data.frame(c(as.character(subject_id)), hemi, agg_fun(morph_data), stringsAsFactors = FALSE);
+        } else {
+          agg_all_subjects = data.frame(c(as.character(subject_id)), agg_fun(morph_data), stringsAsFactors = FALSE);
+        }
       } else {
-        agg_all_subjects = rbind(agg_all_subjects, c(as.character(subject_id), agg_fun(morph_data)));
+        if(cast) {
+          agg_all_subjects = rbind(agg_all_subjects, c(as.character(subject_id), hemi, agg_fun(morph_data)));
+        } else {
+          agg_all_subjects = rbind(agg_all_subjects, c(as.character(subject_id), agg_fun(morph_data)));
+        }
       }
   }
-  value_column_name = sprintf("%s.%s", hemi, measure);
-  colnames(agg_all_subjects) = c("subject_id", value_column_name);
+
+  if(cast) {
+    value_column_name = measure;
+    colnames(agg_all_subjects) = c("subject_id", "hemi", value_column_name);
+  } else {
+    value_column_name = sprintf("%s.%s", hemi, measure);
+    colnames(agg_all_subjects) = c("subject_id", value_column_name);
+  }
+
+
   return(agg_all_subjects);
 }
 
@@ -130,7 +148,7 @@ group.morph.agg.standard <- function(subjects_dir, subjects_list, measure, hemi,
 #'
 #'
 #' @export
-group.multimorph.agg.standard <- function(subjects_dir, subjects_list, measures, hemis, fwhm, agg_fun = mean, template_subject='fsaverage', format='mgh') {
+group.multimorph.agg.standard <- function(subjects_dir, subjects_list, measures, hemis, fwhm, agg_fun = mean, template_subject='fsaverage', format='mgh', cast=TRUE) {
   agg_all_measures_and_hemis = data.frame();
   for (hemi in hemis) {
     if(!(hemi %in% c("lh", "rh"))) {
@@ -210,14 +228,14 @@ subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm
 #'
 #'
 #' @export
-group.multimorph.agg.native <- function(subjects_dir, subjects_list, measures, hemis, agg_fun = mean, format='curv') {
+group.multimorph.agg.native <- function(subjects_dir, subjects_list, measures, hemis, agg_fun = mean, format='curv', cast=TRUE) {
   agg_all_measures_and_hemis = data.frame();
   for (hemi in hemis) {
     if(!(hemi %in% c("lh", "rh"))) {
       stop(sprintf("Each entry in the parameter 'hemis' must be one of 'lh' or 'rh', but the current one is '%s.'", hemi));
     }
     for (measure in measures) {
-      measure_hemi_data = group.morph.agg.native(subjects_dir, subjects_list, measure, hemi, agg_fun = agg_fun, format=format);
+      measure_hemi_data = group.morph.agg.native(subjects_dir, subjects_list, measure, hemi, agg_fun = agg_fun, format=format, cast=cast);
 
       if(nrow(agg_all_measures_and_hemis) == 0) {
         agg_all_measures_and_hemis = measure_hemi_data;
@@ -228,4 +246,3 @@ group.multimorph.agg.native <- function(subjects_dir, subjects_list, measures, h
   }
   return(agg_all_measures_and_hemis);
 }
-
