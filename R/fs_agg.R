@@ -29,27 +29,26 @@ group.morph.agg.native <- function(subjects_dir, subjects_list, measure, hemi, a
       morph_data = subject.morph.native(subjects_dir, subject_id, measure, hemi, format=format);
       if(nrow(agg_all_subjects) == 0) {
         if(cast) {
-          agg_all_subjects = data.frame(c(as.character(subject_id)), hemi, agg_fun(morph_data), stringsAsFactors = FALSE);
+          agg_all_subjects = data.frame(c(as.character(subject_id)), hemi, measure, agg_fun(morph_data), stringsAsFactors = FALSE);
         } else {
           agg_all_subjects = data.frame(c(as.character(subject_id)), agg_fun(morph_data), stringsAsFactors = FALSE);
         }
       } else {
         if(cast) {
-          agg_all_subjects = rbind(agg_all_subjects, c(as.character(subject_id), hemi, agg_fun(morph_data)));
+          agg_all_subjects = rbind(agg_all_subjects, c(as.character(subject_id), hemi, measure, agg_fun(morph_data)));
         } else {
           agg_all_subjects = rbind(agg_all_subjects, c(as.character(subject_id), agg_fun(morph_data)));
         }
       }
   }
 
-  if(cast) {
+  if(cast){
     value_column_name = measure;
-    colnames(agg_all_subjects) = c("subject_id", "hemi", value_column_name);
+    colnames(agg_all_subjects) = c("subject_id", "hemi", "measure_name", "measure_value");
   } else {
     value_column_name = sprintf("%s.%s", hemi, measure);
     colnames(agg_all_subjects) = c("subject_id", value_column_name);
   }
-
 
   return(agg_all_subjects);
 }
@@ -144,6 +143,8 @@ group.morph.agg.standard <- function(subjects_dir, subjects_list, measure, hemi,
 #'
 #' @param format, string. One of 'mgh', 'mgz', 'curv'. Defaults to 'mgh'.
 #'
+#' @param cast Whether a separate 'hemi' column should exist.
+#'
 #' @return dataframe with aggregated values over all measures and hemis for all subjects, with m columns and n rows, where n is the number of subjects. The m columns are 'subject_id' and '<hemi>.<measure>' (e.g., "lh.thickness") for all combinations of hemi and measure, the latter contains the aggregated data.
 #'
 #'
@@ -224,6 +225,8 @@ subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm
 #'
 #' @param format, string. One of 'mgh', 'mgz', 'curv'. Defaults to 'mgh'.
 #'
+#' @param cast, logical. Whether a separate hemi column should exist.
+#'
 #' @return dataframe with aggregated values over all measures and hemis for all subjects, with m columns and n rows, where n is the number of subjects. The m columns are 'subject_id' and '<hemi>.<measure>' (e.g., "lh.thickness") for all combinations of hemi and measure, the latter contains the aggregated data.
 #'
 #'
@@ -240,7 +243,12 @@ group.multimorph.agg.native <- function(subjects_dir, subjects_list, measures, h
       if(nrow(agg_all_measures_and_hemis) == 0) {
         agg_all_measures_and_hemis = measure_hemi_data;
       } else {
-        agg_all_measures_and_hemis = merge(agg_all_measures_and_hemis, measure_hemi_data, by.x='subject_id', by.y='subject_id');
+
+        if(cast) {
+          agg_all_measures_and_hemis = rbind(agg_all_measures_and_hemis, measure_hemi_data);
+        } else {
+          agg_all_measures_and_hemis = merge(agg_all_measures_and_hemis, measure_hemi_data, by.x='subject_id', by.y='subject_id');
+        }
       }
     }
   }
