@@ -1,0 +1,62 @@
+---
+title: "nitools: Utility Functions for the Analysis of Structural Neuroimaging Data in GNU R"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Analysis of structural neuroimaging data with nitools}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+In this document, we demonstrate some high-level functions for loading and analysing structural neuroimaging data preprocessed with [FreeSurfer](https://surfer.nmr.mgh.harvard.edu). FreeSurfer stores its output in a directory structure with fixed subfolder names. This package implements several high-level functions that allow the user to access surface-based brain structure data for large groups of subjects with very little code. It also supports the computation of statistics for individual brain structures or brain atlas regions for brain morphometry measures. Statistical analysis can then be performed using standard methods implemented in other packages.
+
+Note: While this packages provides an abstract access layer to neuroimaging data, it does *not* implement file readers. It uses the 'freesurferformats' package in the background to parse the file formats.
+
+## Abstraction of 'Freesurfer' directory structure
+
+
+The 'FreeSurfer' output structure looks like this:
+
+```
+study_dir
+           subject1
+	             label
+		            lh.aparc.annot
+			    rh.aparc.annot
+	             mri
+		            brain.mgz
+		     stats
+		            lh.aparc.stats
+			    rh.sparc.stats
+		     surf
+		            lh.area
+			    rh.area
+			    lh.white
+			    rh.white
+	   subject2
+	   ...
+```
+
+To open a single file directly, all you need is 'freesurferformats':
+
+```{r, eval = FALSE}
+    cortical_thickness = read.fs.morph("study_dir/subject1/surf/lh.thickness");
+```
+
+When working with native space data for groups, vertex-wise comparison is not possible and one if often interested in aggregating data or summary statistics. Obtaining these for a group becomes easy with 'nitools':
+
+
+```{r, eval = FALSE}
+  subjects_dir = file.path("study_dir")
+  subjects_list = c("subject1", "subject2", "subject3")  # You may want to read them from a subjects file instead if you have many
+  data = group.multimorph.agg.native(subjects_dir, subjects_list, c("thickness", "area", "volume"), c("lh", "rh"), agg_fun = mean);
+```
+
+This gives you a dataframe that contains the following columns:
+
+* `subject_id`
+* `hemi`
+* `thickness`
+* `area`
+* `volume`
+
+The values are the mean thickness/area/volume over all vertices of the subject, computed from the respective native space morphometry files (e.g., 'subject1/surf/lh.thickness', 'subject2/surf/lh.thickness', and so on).
