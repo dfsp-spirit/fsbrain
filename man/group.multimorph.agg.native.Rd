@@ -5,7 +5,7 @@
 \title{Aggregate native space morphometry data for multiple measures over hemispheres for a group of subjects.}
 \usage{
 group.multimorph.agg.native(subjects_dir, subjects_list, measures, hemis,
-  agg_fun = mean, format = "curv")
+  agg_fun = mean, format = "curv", cast = TRUE)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -19,6 +19,8 @@ group.multimorph.agg.native(subjects_dir, subjects_list, measures, hemis,
 \item{agg_fun, }{function. An R function that aggregates data, typically max, mean, min or something similar. Note: this is NOT a string, put the function name without quotes. Defaults to mean.}
 
 \item{format, }{string. One of 'mgh', 'mgz', 'curv'. Defaults to 'mgh'.}
+
+\item{cast, }{logical. Whether a separate hemi column should exist.}
 }
 \value{
 dataframe with aggregated values over all measures and hemis for all subjects, with m columns and n rows, where n is the number of subjects. The m columns are 'subject_id' and '<hemi>.<measure>' (e.g., "lh.thickness") for all combinations of hemi and measure, the latter contains the aggregated data.

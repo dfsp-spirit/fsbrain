@@ -5,7 +5,8 @@
 \title{Aggregate standard space (fsaverage) morphometry data over one hemisphere for a group of subjects.}
 \usage{
 group.morph.agg.standard(subjects_dir, subjects_list, measure, hemi, fwhm,
-  agg_fun = mean, template_subject = "fsaverage", format = "mgh")
+  agg_fun = mean, template_subject = "fsaverage", format = "mgh",
+  cast = TRUE)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -23,6 +24,8 @@ group.morph.agg.standard(subjects_dir, subjects_list, measure, hemi, fwhm,
 \item{template_subject, }{string. Template subject name, defaults to 'fsaverage'.}
 
 \item{format, }{string. One of 'mgh', 'mgz', 'curv'. Defaults to 'mgh'.}
+
+\item{cast, }{logical. Whether the columns should be database style, i.e., separate columns for everything.}
 }
 \value{
 dataframe with aggregated values for all subjects, with 2 columns and n rows, where n is the number of subjects. The 2 columns are 'subject_id' and '<hemi>.<measure>' (e.g., "lh.thickness"), the latter contains the aggregated data.

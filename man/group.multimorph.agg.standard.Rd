@@ -6,7 +6,7 @@
 \usage{
 group.multimorph.agg.standard(subjects_dir, subjects_list, measures, hemis,
   fwhm, agg_fun = mean, template_subject = "fsaverage",
-  format = "mgh")
+  format = "mgh", cast = TRUE)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -24,6 +24,8 @@ group.multimorph.agg.standard(subjects_dir, subjects_list, measures, hemis,
 \item{template_subject, }{string. Template subject name, defaults to 'fsaverage'.}
 
 \item{format, }{string. One of 'mgh', 'mgz', 'curv'. Defaults to 'mgh'.}
+
+\item{cast}{Whether a separate 'hemi' column should exist.}
 }
 \value{
 dataframe with aggregated values over all measures and hemis for all subjects, with m columns and n rows, where n is the number of subjects. The m columns are 'subject_id' and '<hemi>.<measure>' (e.g., "lh.thickness") for all combinations of hemi and measure, the latter contains the aggregated data.

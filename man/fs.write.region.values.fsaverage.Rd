@@ -6,7 +6,8 @@
 \usage{
 fs.write.region.values.fsaverage(hemi, atlas, region_value_list,
   output_file, template_subject = "fsaverage",
-  template_subjects_dir = NULL, show_freeview_tip = FALSE)
+  template_subjects_dir = NULL, show_freeview_tip = FALSE,
+  value_for_unlisted_regions = NaN)
 }
 \arguments{
 \item{hemi, }{string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.}
@@ -22,6 +23,8 @@ fs.write.region.values.fsaverage(hemi, atlas, region_value_list,
 \item{template_subjects_dir}{string, the path to the subjects directory containing the template subject directory. If this is NULL, the function will try to find it using the environment, see the function 'find.subjectsdir.of' for details. Defaults to NULL.}
 
 \item{show_freeview_tip}{logical, whether to print the freeview command on howto use the overlay to the console. (Only happens if the output_file is not NULL.)}
+
+\item{value_for_unlisted_regions, }{numeric scalar. The value to assign to vertices which are part of atlas regions that are not listed in region_value_list. Defaults to NaN.}
 }
 \value{
 a named list with the following entries: "data": a vector containing the data. "file_written": string, path to the file that was written, only exists if do_write = TRUE.

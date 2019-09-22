@@ -6,7 +6,8 @@
 \usage{
 fs.write.region.values(subjects_dir, subject_id, hemi, atlas,
   region_value_list, outfile_morph_name, format = "mgz",
-  do_write_file = TRUE, output_path = NULL)
+  do_write_file = TRUE, output_path = NULL,
+  value_for_unlisted_regions = NaN)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -26,6 +27,8 @@ fs.write.region.values(subjects_dir, subject_id, hemi, atlas,
 \item{do_write_file, }{logical. Whether to write the data to a file on the disk. If FALSE, the data are only returned (and the outfile_morph_name parameter gets ignored). Default to TRUE.}
 
 \item{output_path}{string, path to the output directory. If omitted, defaults to the 'surf' directory of the subject (i.e., '<subjects_dir>/<subject_id>/surf/').}
+
+\item{value_for_unlisted_regions, }{numeric scalar. The value to assign to vertices which are part of atlas regions that are not listed in region_value_list. Defaults to NaN.}
 }
 \value{
 a named list with the following entries: "data": a vector containing the data. "file_written": string, path to the file that was written, only exists if do_write = TRUE.

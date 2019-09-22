@@ -5,7 +5,7 @@
 \title{Aggregate native space morphometry data over one hemisphere for a group of subjects.}
 \usage{
 group.morph.agg.native(subjects_dir, subjects_list, measure, hemi,
-  agg_fun = mean, format = "curv")
+  agg_fun = mean, cast = TRUE, format = "curv")
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -18,10 +18,12 @@ group.morph.agg.native(subjects_dir, subjects_list, measure, hemi,
 
 \item{agg_fun, }{function. An R function that aggregates data, typically max, mean, min or something similar. Note: this is NOT a string, put the function name without quotes. Defaults to mean.}
 
+\item{cast, }{logical. Whether the format of the returned data frame should be cast, i.e., whether a separate 'hemi' column should be introduced. If this is set to FALSE, the following will be returned: a dataframe with 2 columns and n rows, where n is the number of subjects. The 2 columns are 'subject_id' and '<hemi>.<measure>' (e.g., "lh.thickness"), the latter contains the aggregated data. See the description of the return value for the default case (cast=TRUE). Defaults to TRUE.}
+
 \item{format, }{string. One of 'mgh', 'mgz', 'curv'. Defaults to 'curv'.}
 }
 \value{
-dataframe with aggregated values for all subjects, with 2 columns and n rows, where n is the number of subjects. The 2 columns are 'subject_id' and '<hemi>.<measure>' (e.g., "lh.thickness"), the latter contains the aggregated data.
+dataframe with aggregated values for all subjects, with 3 columns and n rows, where n is the number of subjects. The 3 columns are 'subject_id', 'hemi', and '<measure>' (e.g., "thickness"), the latter contains the aggregated data.
 }
 \description{
 Compute the mean (or other aggregates) over all vertices of a subject from native space morphometry data (like 'surf/lh.area'). Uses knowledge about the FreeSurfer directory structure to load the correct file.
