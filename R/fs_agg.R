@@ -143,6 +143,8 @@ group.morph.agg.native <- function(subjects_dir, subjects_list, measure, hemi, a
 #'
 #' @param format, string. One of 'mgh', 'mgz', 'curv'. Defaults to 'mgh'.
 #'
+#' @param cast, logical. Whether the columns should be database style, i.e., separate columns for everything.
+#'
 #' @return dataframe with aggregated values for all subjects, with 2 columns and n rows, where n is the number of subjects. The 2 columns are 'subject_id' and '<hemi>.<measure>' (e.g., "lh.thickness"), the latter contains the aggregated data.
 #'
 #'
