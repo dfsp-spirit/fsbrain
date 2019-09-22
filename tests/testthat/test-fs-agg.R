@@ -57,29 +57,31 @@ test_that("Aggregation of standard space whole brain morph data on subject level
 })
 
 
-test_that("Aggregation of standard space whole brain morph data on group level works", {
+test_that("Aggregation of standard space whole brain morph data on group level works with cast=TRUE", {
   subjects_dir = path.expand("~/data/tim_only")
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
 
   subjects_list = c("tim", "timcopy")
-  data = group.morph.agg.standard(subjects_dir, subjects_list, "thickness", "lh", fwhm="10")
+  data = group.morph.agg.standard(subjects_dir, subjects_list, "thickness", "lh", fwhm="10", cast=TRUE)
 
   expect_equal(class(data), "data.frame")
   expect_equal(nrow(data), 2)
-  expect_equal(ncol(data), 2)
+  expect_equal(ncol(data), 4)
   expect_equal(data$subject_id[0], subjects_list[0])
   expect_equal(data$subject_id[1], subjects_list[1])
   cols = colnames(data)
   expect_true("subject_id" %in% cols)
-  expect_true("lh.thickness" %in% cols)
+  expect_true("hemi" %in% cols)
+  expect_true("measure_name" %in% cols)
+  expect_true("measure_value" %in% cols)
 })
 
-test_that("Aggregation of standard space whole brain morph data on group level works for several measures and hemis", {
+test_that("Aggregation of standard space whole brain morph data on group level works for several measures and hemis with cast=FALSE", {
   subjects_dir = path.expand("~/data/tim_only")
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
 
   subjects_list = c("tim", "timcopy")
-  data = group.multimorph.agg.standard(subjects_dir, subjects_list, c("thickness", "area"), c("lh", "rh"), fwhm="10")
+  data = group.multimorph.agg.standard(subjects_dir, subjects_list, c("thickness", "area"), c("lh", "rh"), fwhm="10", cast=FALSE)
 
   expect_equal(class(data), "data.frame")
   expect_equal(nrow(data), 2)
@@ -135,3 +137,21 @@ test_that("Aggregation of native space whole brain morph data on group level wor
 })
 
 
+test_that("Aggregation of standard space whole brain morph data on group level works for several measures and hemis with cast=TRUE", {
+  subjects_dir = path.expand("~/data/tim_only")
+  skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
+
+  subjects_list = c("tim", "timcopy")
+  data = group.multimorph.agg.standard(subjects_dir, subjects_list, c("thickness", "area"), c("lh", "rh"), fwhm="10", cast=TRUE)
+
+  expect_equal(class(data), "data.frame")
+  expect_equal(nrow(data), 8)
+  expect_equal(ncol(data), 4)
+  expect_equal(data$subject_id[0], subjects_list[0])
+  expect_equal(data$subject_id[1], subjects_list[1])
+  cols = colnames(data)
+  expect_true("subject_id" %in% cols)
+  expect_true("hemi" %in% cols)
+  expect_true("measure_name" %in% cols)
+  expect_true("measure_value" %in% cols)
+})
