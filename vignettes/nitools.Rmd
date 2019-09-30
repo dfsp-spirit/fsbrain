@@ -55,8 +55,17 @@ This gives you a dataframe that contains the following columns:
 
 * `subject_id`
 * `hemi`
-* `thickness`
-* `area`
-* `volume`
+* `measure_name`
+* `measure_value`
 
-The values are the mean thickness/area/volume over all vertices of the subject, computed from the respective native space morphometry files (e.g., 'subject1/surf/lh.thickness', 'subject2/surf/lh.thickness', and so on).
+The measure values are the mean thickness/area/volume over all vertices of the subject, computed from the respective native space morphometry files (e.g., 'subject1/surf/lh.thickness', 'subject2/surf/lh.thickness', and so on).
+
+Note that you can get short format by setting 'cast = FALSE', which will result in a dataframe with the following columns instead:
+
+* `subject_id`
+* `lh.thickness`
+* `rh.thickness`
+* `lh.area`
+* `eh.area`
+* `lh.volume`
+* `rh.volume`
