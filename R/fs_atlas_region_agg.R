@@ -332,10 +332,12 @@ fs.write.region.values.fsaverage <- function(hemi, atlas, region_value_list, out
 #'
 #' @param subject_id string, the subject id of the subject. Defaults to 'fsaverage'.
 #'
+#' @param mustWork logical. Whether the function should with an error stop if the directory cannot be found. If this is TRUE, the return value will be only the 'found_at' entry of the list (i.e., only the path of the subjects dir).
+#'
 #' @return named list with the following entries: "found": logical, whether it was found. "found_at": Only set if found=TRUE, the path to the fsaverage directory (NOT including the fsaverage dir itself).
 #'
 #' @export
-find.subjectsdir.of <- function(subject_id='fsaverage') {
+find.subjectsdir.of <- function(subject_id='fsaverage', mustWork=FALSE) {
   ret = list();
   ret$found = FALSE;
 
@@ -356,6 +358,15 @@ find.subjectsdir.of <- function(subject_id='fsaverage') {
       ret$found_at = subj_dir;
     }
   }
+
+  if(mustWork) {
+    if(ret$found) {
+      return(ret$found_at);
+    } else {
+      stop(sprintf("Could not find subjects dir containing subject '%s'. Checked for directories given by environment variables FREESURFER_HOME and SUBJECTS_DIR.\n", subject_id));
+    }
+  }
+
   return(ret);
 }
 
@@ -381,4 +392,28 @@ annot.subject <- function(subjects_dir, subject_id, hemi, atlas) {
     stop(sprintf("Annotation file '%s' for subject '%s' atlas '%s' hemi '%s' cannot be accessed.\n", annot_file, subject_id, atlas, hemi));
   }
   return(freesurferformats::read.fs.annot(annot_file));
+}
+
+
+#'@title Determine atlas region names from a subject.
+#'
+#' @description Determine atlas region names from a subject. WARNING: Not all subjects have all regions of an atlas. You should use an average subject like fsaverage to get all regions.
+#'
+#' @param template_subjects_dir, string. The directory containing the dir of the template_subject. E.g., the path to FREESURFER_HOME/subjects. If NULL, env vars will be searched for candidates, and the function will fail if they are not set correctly. Defaults to NULL.
+#'
+#' @param template_subject, string. The subject identifier. Defaults to 'fsaverage'.
+#'
+#' @param hemi, string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded. Defaults to 'lh'. Should not matter much, unless you do not have the file for one of the hemis for some reason.
+#'
+#' @param atlas, string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.
+#'
+#' @return vector of strings, the region names.
+#'
+#' @export
+get.atlas.region.names <- function(atlas, template_subjects_dir=NULL, template_subject='fsaverage', hemi='lh') {
+  if(is.null(template_subjects_dir)) {
+    template_subjects_dir = find.subjectsdir.of(subject_id=template_subject, mustWork = TRUE);
+  }
+  annot = annot.subject(template_subjects_dir, template_subject, hemi, atlas);
+  return(annot$colortable$struct_names);
 }

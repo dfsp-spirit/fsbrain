@@ -4,10 +4,12 @@
 \alias{find.subjectsdir.of}
 \title{Find the subject directory containing the fsaverage subject on disk.}
 \usage{
-find.subjectsdir.of(subject_id = "fsaverage")
+find.subjectsdir.of(subject_id = "fsaverage", mustWork = FALSE)
 }
 \arguments{
 \item{subject_id}{string, the subject id of the subject. Defaults to 'fsaverage'.}
+
+\item{mustWork}{logical. Whether the function should with an error stop if the directory cannot be found. If this is TRUE, the return value will be only the 'found_at' entry of the list (i.e., only the path of the subjects dir).}
 }
 \value{
 named list with the following entries: "found": logical, whether it was found. "found_at": Only set if found=TRUE, the path to the fsaverage directory (NOT including the fsaverage dir itself).

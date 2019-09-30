@@ -11,36 +11,42 @@ In this document, we demonstrate some high-level functions for loading and analy
 
 Note: While this packages provides an abstract access layer to neuroimaging data, it does *not* implement file readers. It uses the 'freesurferformats' package in the background to parse the file formats.
 
-## Abstraction of 'Freesurfer' directory structure
+## Accessing morphometry data for groups of subjects
 
 
-The 'FreeSurfer' output structure looks like this:
-
-```
-study_dir
-           subject1
-	             label
-		            lh.aparc.annot
-			    rh.aparc.annot
-	             mri
-		            brain.mgz
-		     stats
-		            lh.aparc.stats
-			    rh.sparc.stats
-		     surf
-		            lh.area
-			    rh.area
-			    lh.white
-			    rh.white
-	   subject2
-	   ...
-```
-
-To open a single file directly, all you need is 'freesurferformats':
+To open a single file directly, all you would need is 'freesurferformats':
 
 ```{r, eval = FALSE}
+    library("freesurferformats");
     cortical_thickness = read.fs.morph("study_dir/subject1/surf/lh.thickness");
 ```
+
+
+### Native space
+
+The nitools package provides a high-level interface to access data for groups of subjects. Here, we compute the mean thickness for each subject in native space:
+
+```{r, eval = FALSE}
+    library("nitools");
+    subjects_dir = path.expand("~/data/study1")
+    subjects_list = c("subject1", "subject2", "subject3", "subject4", "subject5")
+    mean_thickness_lh = group.morph.agg.native(subjects_dir, subjects_list, "thickness", "lh", agg_fun=mean)
+```
+
+
+### Standard space
+
+Here, we compute the mean thickness for each subject in standard space:
+
+```{r, eval = FALSE}
+    library("nitools");
+    subjects_dir = path.expand("~/data/study1")
+    subjects_list = c("subject1", "subject2", "subject3", "subject4", "subject5")
+    mean_thickness_lh = group.morph.agg.standard(subjects_dir, subjects_list, "thickness", "lh", fwhm="10", agg_fun=mean)
+```
+
+
+## Aggregating over atlas regions
 
 When working with native space data for groups, vertex-wise comparison is not possible and one if often interested in aggregating data or summary statistics. Obtaining these for a group becomes easy with 'nitools':
 
@@ -69,3 +75,30 @@ Note that you can get short format by setting 'cast = FALSE', which will result 
 * `eh.area`
 * `lh.volume`
 * `rh.volume`
+
+You could do the same in standard space with `group.multimorph.agg.native()`, even though it's not very common.
+
+
+## Mapping one result value to each brain atlas region
+
+Mapping a single value to an atlas region of a subject (usually a template subject like fsaverage) is useful to display results, like p values or effect sizes, on the brain surface. Here is an example script that uses nitools to do that:
+
+```{r, eval = FALSE}
+library("nitools")
+
+hemi = "lh"               # 'lh' or 'rh'
+atlas = "aparc"           # an atlas, e.g., 'aparc', 'aparc.a2009s', 'aparc.DKTatlas'
+
+template_subjects_dir = "/Applications/freesurfer/subjects";    # Some directory where we can find fsaverage. This can be omitted if FREESURFER_HOME is set, the function will find fsaverage in there by default.
+
+# One can also retrieve all region names of an atlas. This would get all 36 aparc regions:
+region_names_aparc = nitools::get.atlas.region.names('aparc', template_subjects_dir=template_subjects_dir);
+region_value_list = as.list(rnorm(length(region_names_aparc), mean=5, sd=1.5)); # assign some random normal values for this example. One would put effect size values or whatever here. The order of values has to match the order of the region names.
+names(region_value_list) = region_names_aparc;    # Assign the names to the values.
+
+ret = nitools::fs.write.region.values.fsaverage(hemi, atlas, region_value_list, output_file="/tmp/spread.mgz", template_subjects_dir=template_subjects_dir, show_freeview_tip=TRUE);
+```
+
+This code will write an MGZ file that can be visualized in FreeView or Matlab/Surfstat.
+
+
