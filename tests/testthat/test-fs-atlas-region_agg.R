@@ -202,3 +202,23 @@ test_that("Writing faverage region values works", {
     expect_equal(sum(na.omit(data)==0.3), 0)    # blah is not a valid aparc atlas region
     expect_equal(sum(is.nan(data)), 13887)  # some vertices are outside of the regions we assigned value to
 })
+
+test_that("Atlas region names can be retrieved", {
+  subjects_dir = path.expand("~/data/tim_only")
+  fsaverage_dir = path.expand("~/data/tim_only/fsaverage")
+  skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip when test data missing, e.g., on travis
+  skip_if_not(dir.exists(fsaverage_dir), message="Test data missing.") # skip when test data missing, e.g., on travis
+
+  regions = get.atlas.region.names('aparc', template_subjects_dir=subjects_dir);
+  expect_equal(length(regions), 36);
+  expect_equal(typeof(regions), "character");
+
+  expect_true("unknown" %in% regions);
+  expect_true("bankssts" %in% regions);
+  expect_true("corpuscallosum" %in% regions);
+  expect_true("caudalmiddlefrontal" %in% regions);
+  expect_true("caudalanteriorcingulate" %in% regions);
+  expect_true("cuneus" %in% regions);
+
+  expect_false("subject" %in% regions);
+})

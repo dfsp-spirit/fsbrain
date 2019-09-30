@@ -25,7 +25,7 @@ group.multimorph.agg.standard(subjects_dir, subjects_list, measures, hemis,
 
 \item{format, }{string. One of 'mgh', 'mgz', 'curv'. Defaults to 'mgh'.}
 
-\item{cast}{Whether a separate 'hemi' column should exist.}
+\item{cast, }{Whether a separate 'hemi' column should exist.}
 }
 \value{
 dataframe with aggregated values over all measures and hemis for all subjects, with m columns and n rows, where n is the number of subjects. The m columns are 'subject_id' and '<hemi>.<measure>' (e.g., "lh.thickness") for all combinations of hemi and measure, the latter contains the aggregated data.
