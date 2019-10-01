@@ -109,14 +109,13 @@ You can visualize data directly in GNU R in different ways. If you want an inter
 Let's first load a mesh and an annotation:
 
 ```{r, eval = FALSE}
-    library("nitools");
-    library("freesurferformats");   # a dependency of nitools, so you have it already
-    library("rgl");
+library("freesurferformats");   # a dependency of nitools, so you have it already
+library("rgl");
 
-    sample_subject_dir = file.path(Sys.getenv("FREESURFER_HOME"), "subjects", "bert");       # or whatever you prefer
+sample_subject_dir = file.path(Sys.getenv("FREESURFER_HOME"), "subjects", "bert");       # or whatever you prefer
 
-    surf = fs.read.surface(file.path(sample_subject_dir, "surf", "lh.white"));
-    annot = read.fs.annot(file.path(sample_subject_dir, "label", "lh.aparc.annot"));
+surf = read.fs.surface(file.path(sample_subject_dir, "surf", "lh.white"));
+annot = read.fs.annot(file.path(sample_subject_dir, "label", "lh.aparc.annot"));
 ```
 
 Now we can render:
@@ -127,5 +126,23 @@ rgl.open();
 col = annot$hex_colors_rgb;
 wire3d(mesh, col=col, meshcolor="vertices");
 ```
+
+This will give you an interactive window in which you can freely rotate a view similar to the one shown in the following screenshot:
+
+![**Figure 1**: Brain mesh rendered loaded with `freesurferformats`, rendered using the `rgl` package.](rgl_brain_aparc.jpg)
+
+
+You could also visualize cortical thickness (continuing the example from above):
+
+```{r, eval = FALSE}
+ct = read.fs.morph(file.path(sample_subject_dir, "surf", "lh.thickness"))   # Load some data to visualize, cortical thickness here
+library(squash); # for colormap functions
+col_ct = cmap(ct, map = makecmap(ct, colFn = jet));  # apply 'jet' colormap to data
+wire3d(mesh, col=col_ct, meshcolor="vertices");
+```
+
+
+![**Figure 1**: Cortical thickness data visualized on a brain mesh. Data loaded with `freesurferformats`, mesh rendered using the `rgl` package.](rgl_brain_ct.jpg)
+
 
 If you prefer a 2D view that shows brain regions from different viewports in cartoon style, you may want to try the `ggseg` package instead.
