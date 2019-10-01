@@ -129,7 +129,7 @@ wire3d(mesh, col=col, meshcolor="vertices");
 
 This will give you an interactive window in which you can freely rotate a view similar to the one shown in the following screenshot:
 
-![**Figure 1**: Brain mesh rendered loaded with `freesurferformats`, rendered using the `rgl` package.](rgl_brain_aparc.jpg)
+![**Figure 1**: Atlas regions visualized on a brain surface mesh. Annotation and mesh loaded with `freesurferformats`, and rendered using the `rgl` package.](rgl_brain_aparc.jpg)
 
 
 You could also visualize cortical thickness (continuing the example from above):
@@ -142,7 +142,7 @@ wire3d(mesh, col=col_ct, meshcolor="vertices");
 ```
 
 
-![**Figure 1**: Cortical thickness data visualized on a brain mesh. Data loaded with `freesurferformats`, mesh rendered using the `rgl` package.](rgl_brain_ct.jpg)
+![**Figure 2**: Cortical thickness data visualized on a brain mesh. Morphometry data and mesh loaded with `freesurferformats`, mesh rendered using the `rgl` package.](rgl_brain_ct.jpg)
 
 
 If you prefer a 2D view that shows brain regions from different viewports in cartoon style, you may want to try the `ggseg` package instead.
