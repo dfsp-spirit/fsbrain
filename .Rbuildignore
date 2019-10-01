@@ -1,7 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^Meta$
-^doc$
 ^\.DS_Store$
 .*/\.DS_Store$
 .DS_Store$
