@@ -52,8 +52,8 @@ When working with native space data for groups, vertex-wise comparison is not po
 
 
 ```{r, eval = FALSE}
-  subjects_dir = file.path("study_dir")
-  subjects_list = c("subject1", "subject2", "subject3")  # You may want to read them from a subjects file instead if you have many
+  subjects_dir = path.expand("~/data/study1")
+  subjects_list = c("subject1", "subject2", "subject3", "subject4", "subject5")  # You may want to read them from a subjects file instead if you have many
   data = group.multimorph.agg.native(subjects_dir, subjects_list, c("thickness", "area", "volume"), c("lh", "rh"), agg_fun = mean);
 ```
 
