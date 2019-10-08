@@ -27,24 +27,57 @@ read.subjects = function(subjects_file, header=FALSE) {
 #'
 #' @param header, logical. Whether the file starts with a header line.
 #'
-#' @param scale_and_center, logical. Whether to center and scale the data.
+#' @param scale_and_center, logical. Whether to center and scale the data. Defaults to FALSE.
 #'
 #' @param sep, string. Separator passed to utils::read.table(), defaults to tabulator.
+#'
+#' @param report, logical. Whether to write an overview, i.e., some descriptive statistics for each column, to STDOUT. Defaults to TRUE.
 #'
 #' @return a dataframe. The data in the file.
 #'
 #' @export
 #' @importFrom dplyr "%>%"
-read.demographics = function(demographics_file, column_names, header=TRUE, scale_and_center=TRUE, sep='\t') {
+#' @importFrom stats sd
+read.demographics = function(demographics_file, column_names, header=TRUE, scale_and_center=FALSE, sep='\t', report=TRUE) {
     demographics_df = utils::read.table(demographics_file, header=header, sep=sep);
+
     if(ncol(demographics_df) != length(column_names)) {
       stop(sprintf("Column count mismatch in demographics file '%s': expected %d from 'column_names' parameter, but got %d.\n", demographics_file, length(column_names), ncol(demographics_df)));
     }
+
     demographics_df = demographics_df %>% dplyr::mutate_if(is.character, as.factor);
+    colnames(demographics_df) = column_names;
+
+    numeric_colname = c();
+    numeric_colmin = c();
+    numeric_colmean = c();
+    numeric_colmax = c();
+    character_colname = c();
+    if(report) {
+        for (colname in names(demographics_df)) {
+            if(is.numeric(demographics_df[[colname]])) {
+              numeric_colname = c(numeric_colname, colname);
+              numeric_colmin = c(numeric_colmin, min(demographics_df[[colname]]));
+              numeric_colmean = c(numeric_colmean, mean(demographics_df[[colname]]));
+              numeric_colmax = c(numeric_colmax, max(demographics_df[[colname]]));
+            } else {
+              character_colname = c(character_colname, colname);
+            }
+        }
+        cat(sprintf("Demographics report for the %d numeric columns (min/mean/max from %d rows):\n", length(numeric_colname), nrow(demographics_df)));
+        numeric_desc_stats = data.frame("column"=numeric_colname, min=numeric_colmin, mean=numeric_colmean, max=numeric_colmax);
+        print(numeric_desc_stats);
+        cat(sprintf("Demographics report for the %d character columns (listing character column names):\n", length(character_colname)));
+        cat(sprintf("  %s\n", paste(character_colname, collapse=", ")));
+    }
+
     if(scale_and_center) {
-        scale2 <- function(x, na.rm = TRUE) (x - mean(x, na.rm = na.rm)) / sd(x, na.rm);
+        if(report) {
+            cat(sprintf("Demographics report notice: the numeric data will be scaled and centered, and the report represents the data BEFORE that operation.\n"));
+        }
+        scale2 <- function(x, na.rm = TRUE) (x - mean(x, na.rm = na.rm)) / stats::sd(x, na.rm);
         demographics_df = demographics_df %>% dplyr::mutate_if(is.numeric, scale2);
     }
-    colnames(demographics_df) = column_names;
+
     return(demographics_df);
 }

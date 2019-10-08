@@ -4,20 +4,24 @@
 \alias{read.demographics}
 \title{Read demographics file}
 \usage{
-read.demographics(demographics_file, header = TRUE,
-  scale_and_center = TRUE, sep = "\\t")
+read.demographics(demographics_file, column_names, header = TRUE,
+  scale_and_center = FALSE, sep = "\\t", report = TRUE)
 }
 \arguments{
 \item{demographics_file, }{string. The path to the file.}
 
+\item{column_names, }{vector of strings. The column names to set in the returned dataframe. The length must match the number of columns in the file.}
+
 \item{header, }{logical. Whether the file starts with a header line.}
 
-\item{scale_and_center, }{logical. Whether to center and scale the data.}
+\item{scale_and_center, }{logical. Whether to center and scale the data. Defaults to FALSE.}
 
 \item{sep, }{string. Separator passed to utils::read.table(), defaults to tabulator.}
+
+\item{report, }{logical. Whether to write an overview, i.e., some descriptive statistics for each column, to STDOUT. Defaults to TRUE.}
 }
 \value{
-a data.frame. The data in the file.
+a dataframe. The data in the file.
 }
 \description{
 Load a list of subjects and metadata from a demographics file, i.e., a tab-separated file containing an arbitrary number of columns, one of which must be the subject id.
