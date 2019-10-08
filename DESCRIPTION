@@ -13,9 +13,10 @@ BugReports: https://github.com/dfsp-spirit/nitools/issues
 Imports:
     reshape,
     reshape2,
-    freesurferformats (>= 0.1.1),
+    freesurferformats (>= 0.1.2),
     ggplot2,
-    dplyr
+    dplyr,
+    rgl
 Suggests:
     knitr,
     rmarkdown,
