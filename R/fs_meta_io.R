@@ -23,22 +23,28 @@ read.subjects = function(subjects_file, header=FALSE) {
 #'
 #' @param demographics_file, string. The path to the file.
 #'
+#' @param column_names, vector of strings. The column names to set in the returned dataframe. The length must match the number of columns in the file.
+#'
 #' @param header, logical. Whether the file starts with a header line.
 #'
 #' @param scale_and_center, logical. Whether to center and scale the data.
 #'
 #' @param sep, string. Separator passed to utils::read.table(), defaults to tabulator.
 #'
-#' @return a data.frame. The data in the file.
+#' @return a dataframe. The data in the file.
 #'
 #' @export
 #' @importFrom dplyr "%>%"
-read.demographics = function(demographics_file, header=TRUE, scale_and_center=TRUE, sep='\t') {
+read.demographics = function(demographics_file, column_names, header=TRUE, scale_and_center=TRUE, sep='\t') {
     demographics_df = utils::read.table(demographics_file, header=header, sep=sep);
+    if(ncol(demographics_df) != length(column_names)) {
+      stop(sprintf("Column count mismatch in demographics file '%s': expected %d from 'column_names' parameter, but got %d.\n", demographics_file, length(column_names), ncol(demographics_df)));
+    }
     demographics_df = demographics_df %>% dplyr::mutate_if(is.character, as.factor);
     if(scale_and_center) {
         scale2 <- function(x, na.rm = TRUE) (x - mean(x, na.rm = na.rm)) / sd(x, na.rm);
         demographics_df = demographics_df %>% dplyr::mutate_if(is.numeric, scale2);
     }
+    colnames(demographics_df) = column_names;
     return(demographics_df);
 }

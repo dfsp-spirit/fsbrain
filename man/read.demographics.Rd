@@ -4,17 +4,15 @@
 \alias{read.demographics}
 \title{Read demographics file}
 \usage{
-read.demographics(demographics_file, header = TRUE, center = TRUE,
-  scale = FALSE, sep = "\\t")
+read.demographics(demographics_file, header = TRUE,
+  scale_and_center = TRUE, sep = "\\t")
 }
 \arguments{
 \item{demographics_file, }{string. The path to the file.}
 
 \item{header, }{logical. Whether the file starts with a header line.}
 
-\item{center, }{logical. Whether to center the data. See the docs for base::scale().}
-
-\item{scale, }{logical. Whether to scale the data. See the docs for base::scale().}
+\item{scale_and_center, }{logical. Whether to center and scale the data.}
 
 \item{sep, }{string. Separator passed to utils::read.table(), defaults to tabulator.}
 }
