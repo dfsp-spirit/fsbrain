@@ -46,9 +46,11 @@ fs.atlas.region.agg <- function(vertex_morph_data, vertex_label_names, agg_fun =
   return(agg);
 }
 
-#' @title Aggregate morphometry data over brain atlas regions and subjects for a group of subjects.
+
+
+#' @title Aggregate native space morphometry data over brain atlas regions and subjects for a group of subjects.
 #'
-#' @description Aggregate morphometry data over brain atlas regions, e.g., compute the mean thickness value over all regions in an atlas for all subjects. Try visualizing the results, e.g.,:
+#' @description Aggregate native space morphometry data over brain atlas regions, e.g., compute the mean thickness value over all regions in an atlas for all subjects. Try visualizing the results, e.g.,:
 #'
 #'    molten=melt(agg, id=c('subject'));
 #'    ggplot(data=molten, aes(x=variable, y=value, group=subject)) + geom_point() + geom_line() + theme(axis.text.x = element_text(angle = 90, hjust = 1));
@@ -80,22 +82,22 @@ fs.atlas.region.agg.group <- function(subjects_dir, subjects_list, measure, hemi
         curvfile = file.path(subjects_dir, subject_id, "surf", sprintf("%s.%s", hemi, measure));
 
         if(!file.exists(curvfile)) {
-            warning(sprintf("Curv file '%s' for subject '%s' measure '%s' cannot be accessed.\n", curvfile, subject_id, measure));
+            stop(sprintf("Curv file '%s' for subject '%s' measure '%s' cannot be accessed.\n", curvfile, subject_id, measure));
         }
 
         morph_data = freesurferformats::read.fs.curv(curvfile);
 
         annot_file = file.path(subjects_dir, subject_id, "label", sprintf("%s.%s.annot", hemi, atlas));
         if(!file.exists(annot_file)) {
-            warning(sprintf("Annotation file '%s' for subject '%s' atlas '%s' cannot be accessed.\n", annot_file, subject_id, atlas));
+            stop(sprintf("Annotation file '%s' for subject '%s' atlas '%s' cannot be accessed.\n", annot_file, subject_id, atlas));
         }
         annot = freesurferformats::read.fs.annot(annot_file);
 
-        subject_agg = fs.atlas.region.agg(morph_data, annot$label_names, agg_fun=agg_fun, requested_label_names = annot$colortable$struct_names)
+        subject_agg = fs.atlas.region.agg(morph_data, annot$label_names, agg_fun=agg_fun, requested_label_names = annot$colortable$struct_names);
         subject_agg$subject = subject_id;
 
         if(nrow(agg_all_subjects) > 0) {
-          agg_all_subjects = rbind(agg_all_subjects, subject_agg)
+          agg_all_subjects = rbind(agg_all_subjects, subject_agg);
         } else {
           agg_all_subjects = subject_agg;
         }
@@ -104,6 +106,61 @@ fs.atlas.region.agg.group <- function(subjects_dir, subjects_list, measure, hemi
     rownames(agg_res) = subjects_list;
     return(as.data.frame(agg_res));
 }
+
+
+
+#' @title Aggregate standard space morphometry data over brain atlas regions and subjects for a group of subjects.
+#'
+#' @description Aggregate standard space morphometry data over brain atlas regions, e.g., compute the mean thickness value over all regions in an atlas for all subjects. Try visualizing the results, e.g.,:
+#'
+#'    molten=melt(agg, id=c('subject'));
+#'    ggplot(data=molten, aes(x=variable, y=value, group=subject)) + geom_point() + geom_line() + theme(axis.text.x = element_text(angle = 90, hjust = 1));
+#'
+#'
+#' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
+#'
+#' @param subjects_list, string vector. A vector of subject identifiers that match the directory names within subjects_dir.
+#'
+#' @param measure, string. Name of the vertex-wise measure of morphometry data file. E.g., "area" or "thickness". Used to construct the name of the morphometry file to be loaded.
+#'
+#' @param hemi, string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.
+#'
+#' @param atlas, string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.
+#'
+#' @param fwhm, string. The smoothing setting which was applied when mapping data to the template subject. Usually one of '0', '5', '10', '15', '20', or '25'.
+#'
+#' @param agg_fun, function. An R function that aggregates data, typically max, mean, min or something similar. Note: this is NOT a string, put the function name without quotes. Defaults to mean.
+#'
+#' @param template_subject, string. The template subject name. Defaults to 'fsaverage'. Must have its data in subjects_dir.
+#'
+#' @return dataframe with aggregated values for all regions and subjects, with n columns and m rows, where n is the number of subjects and m is the number of regions.
+#'
+#'
+#' @export
+fs.atlas.region.agg.group.standard <- function(subjects_dir, subjects_list, measure, hemi, atlas, fwhm, agg_fun = mean, template_subject='fsaverage') {
+  if (! dir.exists(subjects_dir)) {
+    stop(sprintf("Subjects directory '%s' does not exist or cannot be accessed.\n", subjects_dir));
+  }
+
+  annot = annot.subject(subjects_dir, template_subject, hemi, atlas);
+  agg_all_subjects = data.frame()
+  for (subject_id in subjects_list) {
+    morph_data = subject.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm=fwhm);
+
+    subject_agg = fs.atlas.region.agg(morph_data, annot$label_names, agg_fun=agg_fun, requested_label_names = annot$colortable$struct_names);
+    subject_agg$subject = subject_id;
+
+    if(nrow(agg_all_subjects) > 0) {
+      agg_all_subjects = rbind(agg_all_subjects, subject_agg);
+    } else {
+      agg_all_subjects = subject_agg;
+    }
+  }
+  agg_res = reshape::cast(agg_all_subjects, subject~region, value='aggregated');
+  rownames(agg_res) = subjects_list;
+  return(as.data.frame(agg_res));
+}
+
 
 
 #' @title Create a named value list from a dataframe.
