@@ -66,20 +66,26 @@ read.demographics = function(demographics_file, column_names, header=TRUE, scale
               factor_numlevels = c(factor_numlevels, nlevels(demographics_df[[colname]]));
             }
         }
-        cat(sprintf("Demographics report for the %d numeric columns (min/mean/max from %d rows):\n", length(numeric_colname), nrow(demographics_df)));
+        cat(sprintf("===Demographics report follows===\n"));
+        cat(sprintf(" *Demographics report notice: pass 'report=FALSE' to read.demographics() to silence this report.\n"));
+        cat(sprintf(" *Demographics report for the %d numeric columns (min/mean/max from %d rows):\n", length(numeric_colname), nrow(demographics_df)));
         numeric_desc = data.frame("column"=numeric_colname, min=numeric_colmin, mean=numeric_colmean, max=numeric_colmax);
-        print(numeric_desc);
-        cat(sprintf("Demographics report for the %d factor columns (from %d rows):\n", length(factor_colname), nrow(demographics_df)));
+        print(numeric_desc, row.names = TRUE);
+        cat(sprintf(" *Demographics report for the %d factor columns (levels from %d rows):\n", length(factor_colname), nrow(demographics_df)));
         factor_desc = data.frame("column"=factor_colname, "num_levels"=factor_numlevels);
-        print(factor_desc);
+        print(factor_desc, row.names = TRUE);
     }
 
     if(scale_and_center) {
         if(report) {
-            cat(sprintf("Demographics report notice: the numeric data will be scaled and centered, and the report represents the data BEFORE that operation.\n"));
+            cat(sprintf(" *Demographics report notice: the numeric data will be scaled and centered, and the report above represents the data BEFORE that operation.\n"));
         }
         scale2 <- function(x, na.rm = TRUE) (x - mean(x, na.rm = na.rm)) / stats::sd(x, na.rm);
         demographics_df = demographics_df %>% dplyr::mutate_if(is.numeric, scale2);
+    }
+
+    if(report) {
+      cat(sprintf("===End of Demographics Report===\n"));
     }
 
     return(demographics_df);
