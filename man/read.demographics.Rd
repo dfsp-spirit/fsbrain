@@ -21,7 +21,7 @@ read.demographics(demographics_file, column_names, header = TRUE,
 \item{report, }{logical. Whether to write an overview, i.e., some descriptive statistics for each column, to STDOUT. Defaults to TRUE.}
 }
 \value{
-a dataframe. The data in the file.
+a dataframe. The data in the file. String columns will be returned as factors, which you may want to adapt afterwards for the subject identifier column.
 }
 \description{
 Load a list of subjects and metadata from a demographics file, i.e., a tab-separated file containing an arbitrary number of columns, one of which must be the subject id.

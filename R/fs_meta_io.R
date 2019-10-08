@@ -33,7 +33,7 @@ read.subjects = function(subjects_file, header=FALSE) {
 #'
 #' @param report, logical. Whether to write an overview, i.e., some descriptive statistics for each column, to STDOUT. Defaults to TRUE.
 #'
-#' @return a dataframe. The data in the file.
+#' @return a dataframe. The data in the file. String columns will be returned as factors, which you may want to adapt afterwards for the subject identifier column.
 #'
 #' @export
 #' @importFrom dplyr "%>%"
@@ -52,7 +52,8 @@ read.demographics = function(demographics_file, column_names, header=TRUE, scale
     numeric_colmin = c();
     numeric_colmean = c();
     numeric_colmax = c();
-    character_colname = c();
+    factor_colname = c();
+    factor_numlevels = c();
     if(report) {
         for (colname in names(demographics_df)) {
             if(is.numeric(demographics_df[[colname]])) {
@@ -61,14 +62,16 @@ read.demographics = function(demographics_file, column_names, header=TRUE, scale
               numeric_colmean = c(numeric_colmean, mean(demographics_df[[colname]]));
               numeric_colmax = c(numeric_colmax, max(demographics_df[[colname]]));
             } else {
-              character_colname = c(character_colname, colname);
+              factor_colname = c(factor_colname, colname);
+              factor_numlevels = c(factor_numlevels, nlevels(demographics_df[[colname]]));
             }
         }
         cat(sprintf("Demographics report for the %d numeric columns (min/mean/max from %d rows):\n", length(numeric_colname), nrow(demographics_df)));
-        numeric_desc_stats = data.frame("column"=numeric_colname, min=numeric_colmin, mean=numeric_colmean, max=numeric_colmax);
-        print(numeric_desc_stats);
-        cat(sprintf("Demographics report for the %d character columns (listing character column names):\n", length(character_colname)));
-        cat(sprintf("  %s\n", paste(character_colname, collapse=", ")));
+        numeric_desc = data.frame("column"=numeric_colname, min=numeric_colmin, mean=numeric_colmean, max=numeric_colmax);
+        print(numeric_desc);
+        cat(sprintf("Demographics report for the %d factor columns (from %d rows):\n", length(factor_colname), nrow(demographics_df)));
+        factor_desc = data.frame("column"=factor_colname, "num_levels"=factor_numlevels);
+        print(factor_desc);
     }
 
     if(scale_and_center) {
