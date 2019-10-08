@@ -25,18 +25,20 @@ read.subjects = function(subjects_file, header=FALSE) {
 #'
 #' @param header, logical. Whether the file starts with a header line.
 #'
-#' @param center, logical. Whether to center the data. See the docs for base::scale().
+#' @param scale_and_center, logical. Whether to center and scale the data.
 #'
-#' @param scale, logical. Whether to scale the data. See the docs for base::scale().
-#'
-#' @param sep, string. Separator passed to utils::read.table(), defaults to '\t' for tabulator.
+#' @param sep, string. Separator passed to utils::read.table(), defaults to tabulator.
 #'
 #' @return a data.frame. The data in the file.
 #'
 #' @export
 #' @importFrom dplyr "%>%"
-read.demographics = function(demographics_file, header=TRUE, center=TRUE, scale=FALSE, sep='\t') {
-  demographics_df = utils::read.table(demographics_file, header=header, sep=sep);
-  demographics_df = demographics_df %>% dplyr::mutate_if(is.character, as.factor) %>% dplyr::mutate_if(is.numeric, scale, center=center, scale=scale);
-  return(demographics_df);
+read.demographics = function(demographics_file, header=TRUE, scale_and_center=TRUE, sep='\t') {
+    demographics_df = utils::read.table(demographics_file, header=header, sep=sep);
+    demographics_df = demographics_df %>% dplyr::mutate_if(is.character, as.factor);
+    if(scale_and_center) {
+        scale2 <- function(x, na.rm = TRUE) (x - mean(x, na.rm = na.rm)) / sd(x, na.rm);
+        demographics_df = demographics_df %>% dplyr::mutate_if(is.numeric, scale2);
+    }
+    return(demographics_df);
 }
