@@ -229,6 +229,8 @@ group.multimorph.agg.standard <- function(subjects_dir, subjects_list, measures,
         }
     }
   }
+  print("infunc standard")
+  print(sapply(agg_all_measures_and_hemis, class))
   return(agg_all_measures_and_hemis);
 }
 
@@ -278,5 +280,7 @@ group.multimorph.agg.native <- function(subjects_dir, subjects_list, measures, h
       }
     }
   }
+  print("infunc native")
+  print(sapply(agg_all_measures_and_hemis, class))
   return(agg_all_measures_and_hemis);
 }

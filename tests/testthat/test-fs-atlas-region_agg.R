@@ -56,7 +56,7 @@ test_that("Aggregation on subject level works", {
 })
 
 
-test_that("Aggregation on group level works", {
+test_that("Region-based aggregation on group level works in native space", {
     subjects_dir = path.expand("~/data/tim_only")
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
     subjects_list = c("tim", "timcopy")
@@ -222,3 +222,70 @@ test_that("Atlas region names can be retrieved", {
 
   expect_false("subject" %in% regions);
 })
+
+
+
+test_that("Region-based aggregation on group level works in native space", {
+  subjects_dir = path.expand("~/data/tim_only")
+  skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
+  subjects_list = c("tim", "timcopy")
+  measure = "thickness"
+  hemi = "lh"
+  atlas = "aparc"
+
+  # Test for mean aggregation
+  agg.res = fs.atlas.region.agg.group.standard(subjects_dir, subjects_list, measure, hemi, atlas, fwhm = '10');
+
+  expect_equal(nrow(agg.res), 2);   # 2 subjects
+  expect_equal(rownames(agg.res), c("tim", "timcopy"));
+  expect_equal(ncol(agg.res), 37);  # 36 atlas region columns + the 1 'subject' column
+  expect_true("bankssts" %in% colnames(agg.res));
+  expect_equal(class(agg.res), "data.frame");
+
+  region_names_aparc = c('unknown', 'bankssts', 'caudalanteriorcingulate', 'caudalmiddlefrontal', 'corpuscallosum', 'cuneus', 'entorhinal', 'fusiform', 'inferiorparietal', 'inferiortemporal', 'isthmuscingulate', 'lateraloccipital', 'lateralorbitofrontal', 'lingual', 'medialorbitofrontal', 'middletemporal', 'parahippocampal', 'paracentral', 'parsopercularis', 'parsorbitalis', 'parstriangularis', 'pericalcarine', 'postcentral', 'posteriorcingulate', 'precentral', 'precuneus', 'rostralanteriorcingulate','rostralmiddlefrontal', 'superiorfrontal', 'superiorparietal', 'superiortemporal', 'supramarginal', 'frontalpole', 'temporalpole', 'transversetemporal', 'insula')
+  expect_equal(length(region_names_aparc), 36);
+  for (region in region_names_aparc) {
+    #cat(sprintf("handling region %s\n", region))
+    if(!region %in% colnames(agg.res)) {
+      expect_equal(region, "missing this aparc region in agg.res result");
+    }
+  }
+
+  mean_bankssts_tim = agg.res$bankssts[1]
+  expect_equal(mean_bankssts_tim, 2.58, tolerance=1e-2);
+
+
+
+  # Test for max aggregation
+  agg.res = fs.atlas.region.agg.group.standard(subjects_dir, subjects_list, measure, hemi, atlas, fwhm = '10', agg_fun = max);
+
+  expect_equal(nrow(agg.res), 2);   # 2 subjects
+  expect_equal(rownames(agg.res), c("tim", "timcopy"));
+
+  expect_equal(ncol(agg.res), 37);  # 36 atlas region columns + the 1 'subject' column
+  expect_true("unknown" %in% colnames(agg.res));
+  expect_true("bankssts" %in% colnames(agg.res));
+  expect_true("corpuscallosum" %in% colnames(agg.res));
+  expect_true("subject" %in% colnames(agg.res));
+  expect_true("caudalmiddlefrontal" %in% colnames(agg.res));
+  expect_true("caudalanteriorcingulate" %in% colnames(agg.res));
+  expect_true("cuneus" %in% colnames(agg.res));
+
+  expect_equal(class(agg.res), "data.frame");
+
+  max_bankssts_tim = agg.res$bankssts[1]
+  expect_equal(max_bankssts_tim, 3.16, tolerance=1e-2);
+
+  # Test that extracting a region_value_list from the agg.res result works
+  region_value_list = fs.value.list.from.agg.res(agg.res, "tim");
+  expect_equal(length(region_value_list), 36); # only the 36 regions: the 'subject' column has been removed.
+  expect_equal(class(region_value_list), "list");
+  expect_true("bankssts" %in% names(region_value_list));
+  expect_equal(region_value_list$bankssts, 3.16, tolerance=1e-2);
+
+  dtypes = sapply(agg.res, class);
+  # TODO: check data types
+
+})
+
+
