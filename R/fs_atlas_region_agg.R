@@ -165,9 +165,9 @@ atlas_agg_group_standard <- function(subjects_dir, subjects_list, measure, hemi,
 
 #' @title Create a named value list from a dataframe.
 #'
-#' @description Given the result of the fs.atlas.region.agg.group function, extract a named region value list (typically for use with the fs.spread.value.over.region function) for a single subject.
+#' @description Given the result of the atlas_agg_group_native() function, extract a named region value list (typically for use with the fs.spread.value.over.region function) for a single subject.
 #'
-#' @param agg_res, a dataframe. The result of calling fs.atlas.region.agg.group.
+#' @param agg_res, a dataframe. The result of calling atlas_agg_group_native().
 #'
 #' @param subject_id, string. A subject identifier, must occur in the subject column of the dataframe agg_res.
 #'
@@ -269,7 +269,7 @@ fs.write.region.aggregated <- function(subjects_dir, subjects_list, measure, hem
       outfile_morph_name = sprintf("agg_%s", measure);  # something like 'agg_thickness'
     }
 
-    agg_res = fs.atlas.region.agg.group(subjects_dir, subjects_list, measure, hemi, atlas, agg_fun = agg_fun);
+    agg_res = atlas_agg_group_native(subjects_dir, subjects_list, measure, hemi, atlas, agg_fun = agg_fun);
 
     for (subject_id in subjects_list) {
         region_value_list = fs.value.list.from.agg.res(agg_res, subject_id);
