@@ -10,6 +10,9 @@
 #'
 #' @export
 read.subjects = function(subjects_file, header=FALSE) {
+    if(! file.exists(subjects_file)) {
+        stop(sprintf("Cannot access subjects file '%s'.\n", subjects_file));
+    }
     subjects_df = utils::read.table(subjects_file, header=header, col.names = c("subject_id"));
     subjects_list = as.vector(subjects_df$subject_id);
     return(subjects_list);
@@ -39,6 +42,9 @@ read.subjects = function(subjects_file, header=FALSE) {
 #' @importFrom dplyr "%>%"
 #' @importFrom stats sd
 read.demographics = function(demographics_file, column_names, header=TRUE, scale_and_center=FALSE, sep='\t', report=TRUE) {
+    if(! file.exists(demographics_file)) {
+        stop(sprintf("Cannot access demographics file '%s'.\n", demographics_file));
+    }
     demographics_df = utils::read.table(demographics_file, header=header, sep=sep);
 
     if(ncol(demographics_df) != length(column_names)) {

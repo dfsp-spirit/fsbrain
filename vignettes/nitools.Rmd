@@ -46,9 +46,11 @@ Here, we compute the mean thickness for each subject in standard space:
 ```
 
 
-## Aggregating over atlas regions
+## Aggregating over entire hemispheres
 
-When working with native space data for groups, vertex-wise comparison is not possible and one if often interested in aggregating data or summary statistics. Obtaining these for a group becomes easy with 'nitools':
+### Native space
+
+When working with native space data for groups, vertex-wise comparison is not possible and one is often interested in aggregating data or summary statistics. Obtaining these for a group becomes easy with 'nitools':
 
 
 ```{r, eval = FALSE}
@@ -76,7 +78,52 @@ Note that you can get short format by setting 'cast = FALSE', which will result 
 * `lh.volume`
 * `rh.volume`
 
-You could do the same in standard space with `group.multimorph.agg.native()`, even though it's not very common.
+### Standard space
+
+You could do the same in standard space with `group.multimorph.agg.standard()`, even though it's less common as typically vertex-wise analysis is used in standard space. This requires that you pass the `fwhm` parameter to identify which smoothing value you want:
+
+```{r, eval = FALSE}
+  data_std = group.multimorph.agg.standard(subjects_dir, subjects_list, c("thickness", "area", "volume"), c("lh", "rh"), fwhm='10', agg_fun = mean);
+```
+
+Other parameters exist to define the template subject, which defaults to 'fsaverage' in the example above.
+
+
+## Aggregating over atlas regions
+
+### Native space
+
+Instead of looking at the full hemispheres, you may want to look at brain regions from some atlas (also called *cortical parcellation*). Examples are the Desikan atlas and the Destrieux atlas, both of which come with FreeSurfer.
+
+
+```{r, eval = FALSE}
+  atlas = 'aparc';         # or 'aparc.a2009s', or 'aparc.DKTatlas'.
+  measure = 'thickness';
+  region_means = nitools::atlas_agg_group_native(subjects_dir, subjects_list, measure, "lh", atlas, agg_fun = mean);
+```
+
+This gives you a dataframe that contains the following columns:
+
+* `subject`
+* `bankssts`
+* `caudalanteriorcingulate`
+* `caudalmiddlefrontal`
+
+Where the first column is the subject, and all others are the region names from the respective atlas (the `aparc` atlas in this example).
+
+The measure values are the mean thickness over all vertices of the respective region of the subject, computed from the respective native space morphometry files (e.g., 'subject1/surf/lh.thickness', 'subject2/surf/lh.thickness', and so on).
+
+
+### Standard space
+
+You could do the same in standard space with `atlas_agg_group_standard()`, even though it's less common as typically vertex-wise analysis is used in standard space. This requires that you pass the `fwhm` parameter to identify which smoothing value you want:
+
+```{r, eval = FALSE}
+  region_means_std = nitools::atlas_agg_group_standard(subjects_dir, subjects_list, measure, "lh", atlas, fwhm = '10', agg_fun = mean);
+```
+
+Other parameters exist to define the template subject, which defaults to 'fsaverage' in the example above.
+
 
 
 ## Mapping one result value to each brain atlas region

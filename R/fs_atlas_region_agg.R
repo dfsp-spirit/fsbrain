@@ -72,7 +72,7 @@ fs.atlas.region.agg <- function(vertex_morph_data, vertex_label_names, agg_fun =
 #'
 #'
 #' @export
-fs.atlas.region.agg.group <- function(subjects_dir, subjects_list, measure, hemi, atlas, agg_fun = mean) {
+atlas_agg_group_native <- function(subjects_dir, subjects_list, measure, hemi, atlas, agg_fun = mean) {
     if (! dir.exists(subjects_dir)) {
         stop(sprintf("Subjects directory '%s' does not exist or cannot be accessed.\n", subjects_dir));
     }
@@ -137,7 +137,7 @@ fs.atlas.region.agg.group <- function(subjects_dir, subjects_list, measure, hemi
 #'
 #'
 #' @export
-fs.atlas.region.agg.group.standard <- function(subjects_dir, subjects_list, measure, hemi, atlas, fwhm, agg_fun = mean, template_subject='fsaverage') {
+atlas_agg_group_standard <- function(subjects_dir, subjects_list, measure, hemi, atlas, fwhm, agg_fun = mean, template_subject='fsaverage') {
   if (! dir.exists(subjects_dir)) {
     stop(sprintf("Subjects directory '%s' does not exist or cannot be accessed.\n", subjects_dir));
   }
