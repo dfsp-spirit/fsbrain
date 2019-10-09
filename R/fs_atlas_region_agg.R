@@ -474,3 +474,24 @@ get.atlas.region.names <- function(atlas, template_subjects_dir=NULL, template_s
   annot = annot.subject(template_subjects_dir, template_subject, hemi, atlas);
   return(annot$colortable$struct_names);
 }
+
+
+
+#'@title Give suggestions for regions to ignore for an atlas.
+#'
+#' @description Give suggestions for regions to ignore for an atlas. These are regions for which many subjects do not have any vertices in them, or the Medial Wall and Unknown regions.
+#'
+#' @param atlas, string. The name of an atlas. Supported strings are 'aparc' and 'aparc.a2009s'.
+#'
+#' @return vector of strings, the region names.
+#'
+#' @export
+regions_to_ignore <- function(atlas) {
+  if(atlas == "aparc") {
+    return(c("unknown", "corpuscallosum"));
+  } else if(atlas == "aparc.a2009s") {
+    return(c("Medial_wall"));
+  } else {
+    return(c());
+  }
+}

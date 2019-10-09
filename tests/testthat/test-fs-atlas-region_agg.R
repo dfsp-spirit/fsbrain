@@ -289,3 +289,13 @@ test_that("Region-based aggregation on group level works in native space", {
 })
 
 
+test_that("Suggested regions to be ignored can be retrieved for an atlas", {
+  reg_aparc= regions_to_ignore('aparc');
+  expect_equal(length(reg_aparc), 2);
+
+  reg_aparc.a2009s= regions_to_ignore('aparc.a2009s');
+  expect_equal(length(reg_aparc.a2009s), 1);
+
+  reg_nosuchatlas= regions_to_ignore('nosuchatlas');
+  expect_equal(length(reg_nosuchatlas), 0);
+})
