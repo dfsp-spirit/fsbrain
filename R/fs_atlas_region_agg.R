@@ -68,11 +68,28 @@ fs.atlas.region.agg <- function(vertex_morph_data, vertex_label_names, agg_fun =
 #'
 #' @param agg_fun, function. An R function that aggregates data, typically max, mean, min or something similar. Note: this is NOT a string, put the function name without quotes. Defaults to mean.
 #'
+#' @param cache_file, string or NULL. If given, it is interpreted as path of a file, and the data will be cached in the file cache_file in RData format. If the file does not exist yet, the function will run and cache the data in the file. If the file exists, the function will load the data from the file instead of running. The filename should end in '.RData', but that is not enforced or checked in any way. Defaults to NULL.
+#'
 #' @return dataframe with aggregated values for all regions and subjects, with n columns and m rows, where n is the number of subjects and m is the number of regions.
 #'
 #'
 #' @export
-atlas_agg_group_native <- function(subjects_dir, subjects_list, measure, hemi, atlas, agg_fun = mean) {
+atlas_agg_group_native <- function(subjects_dir, subjects_list, measure, hemi, atlas, agg_fun = mean, cache_file=NULL) {
+
+    if(! is.null(cache_file)) {
+      if(file.exists(cache_file)) {
+        e <- new.env();
+        object_names = load(cache_file, envir = e);
+        var_to_restore = "agg_res_df_nt";
+        if(var_to_restore %in% object_names) {
+          message(sprintf("atlas_agg_group_native(): Returning cached value from file '%s'.\n", cache_file));
+          return(e[[var_to_restore]]);
+        } else {
+          warning(sprintf("Expected object '%s' not in rdata file '%s'.\n", var_to_restore, cache_file));
+        }
+      }
+    }
+
     if (! dir.exists(subjects_dir)) {
         stop(sprintf("Subjects directory '%s' does not exist or cannot be accessed.\n", subjects_dir));
     }
@@ -94,7 +111,14 @@ atlas_agg_group_native <- function(subjects_dir, subjects_list, measure, hemi, a
     }
     agg_res = reshape::cast(agg_all_subjects, subject~region, value='aggregated');
     rownames(agg_res) = subjects_list;
-    return(as.data.frame(agg_res));
+    agg_res_df_nt = as.data.frame(agg_res);
+
+    if(! is.null(cache_file)) {
+      message(sprintf("atlas_agg_group_standard(): Caching return value in file '%s'.\n", cache_file));
+      save(agg_res_df_nt, file = cache_file);
+    }
+
+    return(agg_res_df_nt);
 }
 
 
@@ -123,11 +147,28 @@ atlas_agg_group_native <- function(subjects_dir, subjects_list, measure, hemi, a
 #'
 #' @param template_subject, string. The template subject name. Defaults to 'fsaverage'. Must have its data in subjects_dir.
 #'
+#' @param cache_file, string or NULL. If given, it is interpreted as path of a file, and the data will be cached in the file cache_file in RData format. If the file does not exist yet, the function will run and cache the data in the file. If the file exists, the function will load the data from the file instead of running. The filename should end in '.RData', but that is not enforced or checked in any way. Defaults to NULL.
+#'
 #' @return dataframe with aggregated values for all regions and subjects, with n columns and m rows, where n is the number of subjects and m is the number of regions.
 #'
 #'
 #' @export
-atlas_agg_group_standard <- function(subjects_dir, subjects_list, measure, hemi, atlas, fwhm, agg_fun = mean, template_subject='fsaverage') {
+atlas_agg_group_standard <- function(subjects_dir, subjects_list, measure, hemi, atlas, fwhm, agg_fun = mean, template_subject='fsaverage', cache_file=NULL) {
+
+  if(! is.null(cache_file)) {
+    if(file.exists(cache_file)) {
+      e <- new.env();
+      object_names = load(cache_file, envir = e);
+      var_to_restore = "agg_res_df_std";
+      if(var_to_restore %in% object_names) {
+        message(sprintf("atlas_agg_group_standard(): Returning cached value from file '%s'.\n", cache_file));
+        return(e[[var_to_restore]]);
+      } else {
+        warning(sprintf("Expected object '%s' not in rdata file '%s'.\n", var_to_restore, cache_file));
+      }
+    }
+  }
+
   if (! dir.exists(subjects_dir)) {
     stop(sprintf("Subjects directory '%s' does not exist or cannot be accessed.\n", subjects_dir));
   }
@@ -152,7 +193,14 @@ atlas_agg_group_standard <- function(subjects_dir, subjects_list, measure, hemi,
   }
   agg_res = reshape::cast(agg_all_subjects, subject~region, value='aggregated');
   rownames(agg_res) = subjects_list;
-  return(as.data.frame(agg_res));
+  agg_res_df_std = as.data.frame(agg_res);
+
+  if(! is.null(cache_file)) {
+    message(sprintf("atlas_agg_group_standard(): Caching return value in file '%s'.\n", cache_file));
+    save(agg_res_df_std, file = cache_file);
+  }
+
+  return(agg_res_df_std);
 }
 
 

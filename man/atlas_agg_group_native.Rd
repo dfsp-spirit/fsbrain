@@ -5,7 +5,7 @@
 \title{Aggregate native space morphometry data over brain atlas regions and subjects for a group of subjects.}
 \usage{
 atlas_agg_group_native(subjects_dir, subjects_list, measure, hemi, atlas,
-  agg_fun = mean)
+  agg_fun = mean, cache_file = NULL)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -19,6 +19,8 @@ atlas_agg_group_native(subjects_dir, subjects_list, measure, hemi, atlas,
 \item{atlas, }{string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.}
 
 \item{agg_fun, }{function. An R function that aggregates data, typically max, mean, min or something similar. Note: this is NOT a string, put the function name without quotes. Defaults to mean.}
+
+\item{cache_file, }{string or NULL. If given, it is interpreted as path of a file, and the data will be cached in the file cache_file in RData format. If the file does not exist yet, the function will run and cache the data in the file. If the file exists, the function will load the data from the file instead of running. The filename should end in '.RData', but that is not enforced or checked in any way. Defaults to NULL.}
 }
 \value{
 dataframe with aggregated values for all regions and subjects, with n columns and m rows, where n is the number of subjects and m is the number of regions.
