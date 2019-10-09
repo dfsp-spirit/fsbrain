@@ -79,19 +79,9 @@ atlas_agg_group_native <- function(subjects_dir, subjects_list, measure, hemi, a
 
     agg_all_subjects = data.frame()
     for (subject_id in subjects_list) {
-        curvfile = file.path(subjects_dir, subject_id, "surf", sprintf("%s.%s", hemi, measure));
 
-        if(!file.exists(curvfile)) {
-            stop(sprintf("Curv file '%s' for subject '%s' measure '%s' cannot be accessed.\n", curvfile, subject_id, measure));
-        }
-
-        morph_data = freesurferformats::read.fs.curv(curvfile);
-
-        annot_file = file.path(subjects_dir, subject_id, "label", sprintf("%s.%s.annot", hemi, atlas));
-        if(!file.exists(annot_file)) {
-            stop(sprintf("Annotation file '%s' for subject '%s' atlas '%s' cannot be accessed.\n", annot_file, subject_id, atlas));
-        }
-        annot = freesurferformats::read.fs.annot(annot_file);
+        morph_data = subject.morph.native(subjects_dir, subject_id, measure, hemi);
+        annot = annot.subject(subjects_dir, subject_id, hemi, atlas);
 
         subject_agg = fs.atlas.region.agg(morph_data, annot$label_names, agg_fun=agg_fun, requested_label_names = annot$colortable$struct_names);
         subject_agg$subject = subject_id;
@@ -140,6 +130,10 @@ atlas_agg_group_native <- function(subjects_dir, subjects_list, measure, hemi, a
 atlas_agg_group_standard <- function(subjects_dir, subjects_list, measure, hemi, atlas, fwhm, agg_fun = mean, template_subject='fsaverage') {
   if (! dir.exists(subjects_dir)) {
     stop(sprintf("Subjects directory '%s' does not exist or cannot be accessed.\n", subjects_dir));
+  }
+
+  if (typeof(fwhm) != "character") {
+    stop(sprintf("Parameter 'fwhm' must be of type 'character', but is '%s'.\n", typeof(fwhm)));
   }
 
   annot = annot.subject(subjects_dir, template_subject, hemi, atlas);
