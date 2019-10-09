@@ -62,7 +62,7 @@ fs.atlas.region.agg <- function(vertex_morph_data, vertex_label_names, agg_fun =
 #'
 #' @param measure, string. Name of the vertex-wise measure of morphometry data file. E.g., "area" or "thickness". Used to construct the name of the morphometry file to be loaded.
 #'
-#' @param hemi, string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.
+#' @param hemi, string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded. If set to 'both', combined data for 'lh' and 'rh' will be used.
 #'
 #' @param atlas, string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.
 #'
@@ -88,6 +88,10 @@ atlas_agg_group_native <- function(subjects_dir, subjects_list, measure, hemi, a
           warning(sprintf("Expected object '%s' not in rdata file '%s'.\n", var_to_restore, cache_file));
         }
       }
+    }
+
+    if(!(hemi %in% c("lh", "rh", "both"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
     }
 
     if (! dir.exists(subjects_dir)) {
@@ -137,7 +141,7 @@ atlas_agg_group_native <- function(subjects_dir, subjects_list, measure, hemi, a
 #'
 #' @param measure, string. Name of the vertex-wise measure of morphometry data file. E.g., "area" or "thickness". Used to construct the name of the morphometry file to be loaded.
 #'
-#' @param hemi, string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.
+#' @param hemi, string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded. If set to 'both', combined data for 'lh' and 'rh' will be used.
 #'
 #' @param atlas, string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.
 #'
@@ -167,6 +171,10 @@ atlas_agg_group_standard <- function(subjects_dir, subjects_list, measure, hemi,
         warning(sprintf("Expected object '%s' not in rdata file '%s'.\n", var_to_restore, cache_file));
       }
     }
+  }
+
+  if(!(hemi %in% c("lh", "rh", "both"))) {
+    stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
   }
 
   if (! dir.exists(subjects_dir)) {
