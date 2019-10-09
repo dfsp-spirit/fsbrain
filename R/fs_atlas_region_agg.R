@@ -68,7 +68,7 @@ fs.atlas.region.agg <- function(vertex_morph_data, vertex_label_names, agg_fun =
 #'
 #' @param agg_fun, function. An R function that aggregates data, typically max, mean, min or something similar. Note: this is NOT a string, put the function name without quotes. Defaults to mean.
 #'
-#' @param cache_file, string or NULL. If given, it is interpreted as path of a file, and the data will be cached in the file cache_file in RData format. If the file does not exist yet, the function will run and cache the data in the file. If the file exists, the function will load the data from the file instead of running. The filename should end in '.RData', but that is not enforced or checked in any way. Defaults to NULL.
+#' @param cache_file, string or NULL. If given, it is interpreted as path of a file, and the data will be cached in the file cache_file in RData format. If the file does not exist yet, the function will run and cache the data in the file. If the file exists, the function will load the data from the file instead of running. The filename should end in '.RData', but that is not enforced or checked in any way. WARNING: If cached data is returned, all parameters passed to this function (with the exception of 'cache_file') are ignored! Whether the cached data is for another subjects_list or hemi is NOT checked! You have to ensure this yourself, by using different filenames. Defaults to NULL.
 #'
 #' @return dataframe with aggregated values for all regions and subjects, with n columns and m rows, where n is the number of subjects and m is the number of regions.
 #'
@@ -82,7 +82,7 @@ atlas_agg_group_native <- function(subjects_dir, subjects_list, measure, hemi, a
         object_names = load(cache_file, envir = e);
         var_to_restore = "agg_res_df_nt";
         if(var_to_restore %in% object_names) {
-          message(sprintf("atlas_agg_group_native(): Returning cached value from file '%s'.\n", cache_file));
+          message(sprintf("atlas_agg_group_native(): Returning cached value from file '%s'. Parameters passed to this function were ignored.\n", cache_file));
           return(e[[var_to_restore]]);
         } else {
           warning(sprintf("Expected object '%s' not in rdata file '%s'.\n", var_to_restore, cache_file));
@@ -147,7 +147,7 @@ atlas_agg_group_native <- function(subjects_dir, subjects_list, measure, hemi, a
 #'
 #' @param template_subject, string. The template subject name. Defaults to 'fsaverage'. Must have its data in subjects_dir.
 #'
-#' @param cache_file, string or NULL. If given, it is interpreted as path of a file, and the data will be cached in the file cache_file in RData format. If the file does not exist yet, the function will run and cache the data in the file. If the file exists, the function will load the data from the file instead of running. The filename should end in '.RData', but that is not enforced or checked in any way. Defaults to NULL.
+#' @param cache_file, string or NULL. If given, it is interpreted as path of a file, and the data will be cached in the file cache_file in RData format. If the file does not exist yet, the function will run and cache the data in the file. If the file exists, the function will load the data from the file instead of running. The filename should end in '.RData', but that is not enforced or checked in any way. WARNING: If cached data is returned, all parameters passed to this function (with the exception of 'cache_file') are ignored! Whether the cached data is for another subjects_list or hemi is NOT checked! You have to ensure this yourself, by using different filenames. Defaults to NULL.
 #'
 #' @return dataframe with aggregated values for all regions and subjects, with n columns and m rows, where n is the number of subjects and m is the number of regions.
 #'
@@ -161,7 +161,7 @@ atlas_agg_group_standard <- function(subjects_dir, subjects_list, measure, hemi,
       object_names = load(cache_file, envir = e);
       var_to_restore = "agg_res_df_std";
       if(var_to_restore %in% object_names) {
-        message(sprintf("atlas_agg_group_standard(): Returning cached value from file '%s'.\n", cache_file));
+        message(sprintf("atlas_agg_group_standard(): Returning cached value from file '%s'. Parameters passed to this function were ignored.\n", cache_file));
         return(e[[var_to_restore]]);
       } else {
         warning(sprintf("Expected object '%s' not in rdata file '%s'.\n", var_to_restore, cache_file));
