@@ -8,7 +8,7 @@
 #'
 #' @param measure, string. Name of the vertex-wise measure of morphometry data file. E.g., "area" or "thickness". Used to construct the name of the morphometry file to be loaded.
 #'
-#' @param hemi, string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.
+#' @param hemi, string, one of 'lh', 'rh' or 'both'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.
 #'
 #' @param format, string. One of 'mgh', 'mgz', 'curv'. Defaults to 'mgh'.
 #'
@@ -16,11 +16,34 @@
 #'
 #' @export
 subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, format='curv') {
-  curvfile = file.path(subjects_dir, subject_id, "surf", sprintf("%s.%s%s", hemi, measure, freesurferformats::fs.get.morph.file.ext.for.format(format)));
-  if(!file.exists(curvfile)) {
-    stop(sprintf("Native space morphometry file '%s' for subject '%s' measure '%s' hemi '%s' cannot be accessed.\n", curvfile, subject_id, measure, hemi));
+
+  if(!(hemi %in% c("lh", "rh", "both"))) {
+    stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s.'", hemi));
   }
-  return(freesurferformats::read.fs.morph(curvfile));
+
+  if(hemi == "both") {
+    lh_curvfile = file.path(subjects_dir, subject_id, "surf", sprintf("%s.%s%s", "lh", measure, freesurferformats::fs.get.morph.file.ext.for.format(format)));
+    if(!file.exists(lh_curvfile)) {
+      stop(sprintf("Native space lh morphometry file '%s' for subject '%s' measure '%s' hemi '%s' cannot be accessed.\n", curvfile, subject_id, measure, "lh"));
+    }
+    lh_morph_data = freesurferformats::read.fs.morph(lh_curvfile);
+
+    rh_curvfile = file.path(subjects_dir, subject_id, "surf", sprintf("%s.%s%s", "rh", measure, freesurferformats::fs.get.morph.file.ext.for.format(format)));
+    if(!file.exists(rh_curvfile)) {
+      stop(sprintf("Native space rh morphometry file '%s' for subject '%s' measure '%s' hemi '%s' cannot be accessed.\n", curvfile, subject_id, measure, "rh"));
+    }
+    rh_morph_data = freesurferformats::read.fs.morph(rh_curvfile);
+
+    merged_morph_data = c(lh_morph_data, rh_morph_data);
+    return(merged_morph_data);
+
+  } else {
+    curvfile = file.path(subjects_dir, subject_id, "surf", sprintf("%s.%s%s", hemi, measure, freesurferformats::fs.get.morph.file.ext.for.format(format)));
+    if(!file.exists(curvfile)) {
+      stop(sprintf("Native space morphometry file '%s' for subject '%s' measure '%s' hemi '%s' cannot be accessed.\n", curvfile, subject_id, measure, hemi));
+    }
+    return(freesurferformats::read.fs.morph(curvfile));
+  }
 }
 
 
@@ -34,7 +57,7 @@ subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, format
 #'
 #' @param measure, string. Name of the vertex-wise measure of morphometry data file. E.g., "area" or "thickness". Used to construct the name of the morphometry file to be loaded.
 #'
-#' @param hemi, string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.
+#' @param hemi, string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.
 #'
 #' @param fwhm, string. Smoothing as string, e.g. '10' or '25'.
 #'
@@ -46,8 +69,8 @@ subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, format
 #'
 #' @export
 subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm='10', template_subject='fsaverage', format='mgh') {
-  if(!(hemi %in% c("lh", "rh"))) {
-    stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s.'", hemi));
+  if(!(hemi %in% c("lh", "rh", "both"))) {
+    stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s.'", hemi));
   }
 
   if(nchar(fwhm) > 0) {
@@ -56,11 +79,29 @@ subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm
     fwhm_tag = "" # Support opening files without any FWHM part
   }
 
-  curvfile = file.path(subjects_dir, subject_id, "surf", sprintf("%s.%s%s.%s%s", hemi, measure, fwhm_tag, template_subject, freesurferformats::fs.get.morph.file.ext.for.format(format)));
-  if(!file.exists(curvfile)) {
-    stop(sprintf("Standard space morphometry file '%s' for subject '%s' measure '%s' hemi '%s' fwhm '%s' cannot be accessed.\n", curvfile, subject_id, measure, hemi, fwhm));
+  if(hemi == "both") {
+    lh_curvfile = file.path(subjects_dir, subject_id, "surf", sprintf("%s.%s%s.%s%s", "lh", measure, fwhm_tag, template_subject, freesurferformats::fs.get.morph.file.ext.for.format(format)));
+    if(!file.exists(lh_curvfile)) {
+      stop(sprintf("Standard space lh morphometry file '%s' for subject '%s' measure '%s' hemi '%s' fwhm '%s' cannot be accessed.\n", lh_curvfile, subject_id, measure, "lh", fwhm));
+    }
+    lh_morph_data = freesurferformats::read.fs.morph(lh_curvfile);
+
+    rh_curvfile = file.path(subjects_dir, subject_id, "surf", sprintf("%s.%s%s.%s%s", "rh", measure, fwhm_tag, template_subject, freesurferformats::fs.get.morph.file.ext.for.format(format)));
+    if(!file.exists(rh_curvfile)) {
+      stop(sprintf("Standard space rh morphometry file '%s' for subject '%s' measure '%s' hemi '%s' fwhm '%s' cannot be accessed.\n", rh_curvfile, subject_id, measure, "rh", fwhm));
+    }
+    rh_morph_data = freesurferformats::read.fs.morph(rh_curvfile);
+
+    merged_morph_data = c(lh_morph_data, rh_morph_data);
+    return(merged_morph_data);
+
+  } else {
+    curvfile = file.path(subjects_dir, subject_id, "surf", sprintf("%s.%s%s.%s%s", hemi, measure, fwhm_tag, template_subject, freesurferformats::fs.get.morph.file.ext.for.format(format)));
+    if(!file.exists(curvfile)) {
+      stop(sprintf("Standard space morphometry file '%s' for subject '%s' measure '%s' hemi '%s' fwhm '%s' cannot be accessed.\n", curvfile, subject_id, measure, hemi, fwhm));
+    }
+    return(freesurferformats::read.fs.morph(curvfile));
   }
-  return(freesurferformats::read.fs.morph(curvfile));
 }
 
 
