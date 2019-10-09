@@ -16,7 +16,7 @@ annot.subject(subjects_dir, subject_id, hemi, atlas)
 \item{atlas, }{string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.}
 }
 \value{
-the annotation, as returned by freesurferformats::read.fs.annot.
+the annotation, as returned by freesurferformats::read.fs.annot().
 }
 \description{
 Load a brain surface annotation, i.e., a cortical parcellation based on an atlas, for a subject.

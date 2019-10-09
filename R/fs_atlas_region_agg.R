@@ -434,15 +434,55 @@ find.subjectsdir.of <- function(subject_id='fsaverage', mustWork=FALSE) {
 #'
 #' @param atlas, string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.
 #'
-#' @return the annotation, as returned by freesurferformats::read.fs.annot.
+#' @return the annotation, as returned by freesurferformats::read.fs.annot().
 #'
 #' @export
 annot.subject <- function(subjects_dir, subject_id, hemi, atlas) {
-  annot_file = file.path(subjects_dir, subject_id, "label", sprintf("%s.%s.annot", hemi, atlas));
-  if(!file.exists(annot_file)) {
-    stop(sprintf("Annotation file '%s' for subject '%s' atlas '%s' hemi '%s' cannot be accessed.\n", annot_file, subject_id, atlas, hemi));
+  if(hemi == "both") {
+    lh_annot_file = file.path(subjects_dir, subject_id, "label", sprintf("%s.%s.annot", "lh", atlas));
+    if(!file.exists(lh_annot_file)) {
+      stop(sprintf("Annotation lh file '%s' for subject '%s' atlas '%s' hemi '%s' cannot be accessed.\n", annot_file, subject_id, atlas, "lh"));
+    }
+    lh_annot = freesurferformats::read.fs.annot(lh_annot_file);
+
+    rh_annot_file = file.path(subjects_dir, subject_id, "label", sprintf("%s.%s.annot", "rh", atlas));
+    if(!file.exists(rh_annot_file)) {
+      stop(sprintf("Annotation rh file '%s' for subject '%s' atlas '%s' hemi '%s' cannot be accessed.\n", annot_file, subject_id, atlas, "rh"));
+    }
+    rh_annot = freesurferformats::read.fs.annot(rh_annot_file);
+
+    merged_annot = merge_hemi_annots(lh_annot, rh_annot);
+    return(merged_annot);
   }
-  return(freesurferformats::read.fs.annot(annot_file));
+  else {
+    annot_file = file.path(subjects_dir, subject_id, "label", sprintf("%s.%s.annot", hemi, atlas));
+    if(!file.exists(annot_file)) {
+      stop(sprintf("Annotation file '%s' for subject '%s' atlas '%s' hemi '%s' cannot be accessed.\n", annot_file, subject_id, atlas, hemi));
+    }
+    return(freesurferformats::read.fs.annot(annot_file));
+  }
+}
+
+
+#'@title Merge the annotations from two hemispheres into one annot.
+#
+#' @param lh_annot, annot. An annotation, as returned by freesurferformats::read.fs.annot().
+#'
+#' @param rh_annot, annot. An annotation, as returned by freesurferformats::read.fs.annot().
+#'
+#' @return annot, the merged annotation.
+#'
+#' @keywords internal
+merge_hemi_annots <- function(lh_annot, rh_annot) {
+  merged_annot = list();
+  merged_annot$colortable = lh_annot$colortable;        # randomly use the lh one, they must be identical for lh nad rh anyways
+  merged_annot$colortable_df = lh_annot$colortable_df;  # same
+
+  merged_annot$vertices = c(lh_annot$vertices, rh_annot$vertices);
+  merged_annot$label_codes = c(lh_annot$label_codes, rh_annot$label_codes);
+  merged_annot$label_names = c(lh_annot$label_names, rh_annot$label_names);
+  merged_annot$hex_colors_rgb = c(lh_annot$hex_colors_rgb, rh_annot$hex_colors_rgb);
+  return(merged_annot);
 }
 
 

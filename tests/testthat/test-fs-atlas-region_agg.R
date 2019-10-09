@@ -299,3 +299,58 @@ test_that("Suggested regions to be ignored can be retrieved for an atlas", {
   reg_nosuchatlas= regions_to_ignore('nosuchatlas');
   expect_equal(length(reg_nosuchatlas), 0);
 })
+
+
+test_that("Subject annotation works", {
+  subjects_dir = path.expand("~/data/tim_only")
+  skip_if_not(dir.exists(subjects_dir), message="Test data missing.")
+
+  subject_id = "tim";
+  annot = annot.subject(subjects_dir, subject_id, "lh", "aparc");
+
+  num_verts_subject1_lh = 149244
+  expect_equal(length(annot$vertices), num_verts_subject1_lh);
+  expect_equal(length(annot$label_codes), num_verts_subject1_lh);
+  expect_equal(length(annot$label_names), num_verts_subject1_lh);
+  expect_equal(length(annot$hex_colors_rgb), num_verts_subject1_lh);
+
+  expect_equal(annot$colortable$num_entries, 36);
+  expect_equal(nrow(annot$colortable$table), 36);
+  expect_equal(nrow(annot$colortable_df), 36);
+})
+
+
+test_that("Merging annotations works", {
+  subjects_dir = path.expand("~/data/tim_only")
+  skip_if_not(dir.exists(subjects_dir), message="Test data missing.")
+
+  subject_id = "tim";
+  lh_annot = annot.subject(subjects_dir, subject_id, "lh", "aparc");
+  rh_annot = annot.subject(subjects_dir, subject_id, "rh", "aparc");
+
+  num_verts_subject1_lh = 149244
+  num_verts_subject1_rh = 153333
+  num_verts_subject1_both = num_verts_subject1_lh + num_verts_subject1_rh
+
+  annot = merge_hemi_annots(lh_annot, rh_annot);
+  # Ensure vertex-wise data was merged.
+  expect_equal(length(annot$vertices), num_verts_subject1_both);
+  expect_equal(length(annot$label_codes), num_verts_subject1_both);
+  expect_equal(length(annot$label_names), num_verts_subject1_both);
+  expect_equal(length(annot$hex_colors_rgb), num_verts_subject1_both);
+
+  # Ensure that the colortable entries were not duplicated
+  expect_equal(lh_annot$colortable$num_entries, 36);
+  expect_equal(nrow(lh_annot$colortable$table), 36);
+  expect_equal(nrow(lh_annot$colortable_df), 36);
+
+  expect_equal(rh_annot$colortable$num_entries, 36);
+  expect_equal(nrow(rh_annot$colortable$table), 36);
+  expect_equal(nrow(rh_annot$colortable_df), 36);
+
+  expect_equal(annot$colortable$num_entries, 36);
+  expect_equal(nrow(annot$colortable$table), 36);
+  expect_equal(nrow(annot$colortable_df), 36);
+})
+
+
