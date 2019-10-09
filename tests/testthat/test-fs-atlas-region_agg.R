@@ -294,7 +294,7 @@ test_that("Suggested regions to be ignored can be retrieved for an atlas", {
   expect_equal(length(reg_aparc), 2);
 
   reg_aparc.a2009s= regions_to_ignore('aparc.a2009s');
-  expect_equal(length(reg_aparc.a2009s), 1);
+  expect_equal(length(reg_aparc.a2009s), 2);
 
   reg_nosuchatlas= regions_to_ignore('nosuchatlas');
   expect_equal(length(reg_nosuchatlas), 0);

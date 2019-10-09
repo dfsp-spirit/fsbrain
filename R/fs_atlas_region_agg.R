@@ -490,7 +490,7 @@ regions_to_ignore <- function(atlas) {
   if(atlas == "aparc") {
     return(c("unknown", "corpuscallosum"));
   } else if(atlas == "aparc.a2009s") {
-    return(c("Medial_wall"));
+    return(c("Medial_wall", "Unknown"));
   } else {
     return(c());
   }
