@@ -48,7 +48,7 @@ concat_measures_native <- function(subjects_dir, subjects_list, measures, hemi) 
                 subject_data_len = measure_length_this_subject;    # The first measure is used as a baseline to compare against all others.
             } else {
                 if(subject_data_len != measure_length_this_subject) {
-                    warning(sprintf("Measure '%s' has %d values for subject %d, but expected %d from measure '%s'.\n", measure, measure_length_this_subject, subject_id, subject_data_len, measures[1]));
+                    warning(sprintf("Measure '%s' has %d values for subject %s, but expected %d from measure '%s'.\n", measure, measure_length_this_subject, subject_id, subject_data_len, measures[1]));
                     check_result_ok = FALSE;
                 }
             }
