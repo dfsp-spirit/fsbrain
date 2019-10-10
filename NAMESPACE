@@ -3,6 +3,8 @@
 export(annot.subject)
 export(atlas_agg_group_native)
 export(atlas_agg_group_standard)
+export(concat_measures_native)
+export(concat_measures_standard)
 export(find.subjectsdir.of)
 export(fs.atlas.region.agg)
 export(fs.spread.value.over.region)
