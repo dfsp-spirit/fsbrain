@@ -24,13 +24,13 @@ subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, format
   if(hemi == "both") {
     lh_curvfile = file.path(subjects_dir, subject_id, "surf", sprintf("%s.%s%s", "lh", measure, freesurferformats::fs.get.morph.file.ext.for.format(format)));
     if(!file.exists(lh_curvfile)) {
-      stop(sprintf("Native space lh morphometry file '%s' for subject '%s' measure '%s' hemi '%s' cannot be accessed.\n", curvfile, subject_id, measure, "lh"));
+      stop(sprintf("Native space lh morphometry file '%s' for subject '%s' measure '%s' hemi '%s' cannot be accessed.\n", lh_curvfile, subject_id, measure, "lh"));
     }
     lh_morph_data = freesurferformats::read.fs.morph(lh_curvfile);
 
     rh_curvfile = file.path(subjects_dir, subject_id, "surf", sprintf("%s.%s%s", "rh", measure, freesurferformats::fs.get.morph.file.ext.for.format(format)));
     if(!file.exists(rh_curvfile)) {
-      stop(sprintf("Native space rh morphometry file '%s' for subject '%s' measure '%s' hemi '%s' cannot be accessed.\n", curvfile, subject_id, measure, "rh"));
+      stop(sprintf("Native space rh morphometry file '%s' for subject '%s' measure '%s' hemi '%s' cannot be accessed.\n", rh_curvfile, subject_id, measure, "rh"));
     }
     rh_morph_data = freesurferformats::read.fs.morph(rh_curvfile);
 
