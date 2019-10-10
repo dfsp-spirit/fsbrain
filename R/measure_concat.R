@@ -21,16 +21,45 @@ concat_measures_native <- function(subjects_dir, subjects_list, measures, hemi) 
     }
 
     all_measures_data = list();
+    all_measures_data_length_per_subject = list();
     for (measure in measures) {
         measure_data_all_subjects = c();
+        measure_data_length_per_subject = c();
 
         for (subject_id in subjects_list) {
             measure_data = subject.morph.native(subjects_dir, subject_id, measure, hemi);
             measure_data_all_subjects = append(measure_data_all_subjects, measure_data);
+            measure_data_length_per_subject = append(measure_data_length_per_subject, length(measure_data));
         }
 
         all_measures_data[[measure]] = measure_data_all_subjects;
+        all_measures_data_length_per_subject[[measure]] = measure_data_length_per_subject;
     }
+
+    # Check whether data for all measures has same length
+    check_result_ok = TRUE;
+    for(subject_idx in 1:length(subjects_list)) {
+        subject_id = subjects_list[subject_idx];
+        subject_data_len = -1;
+        for(measure_idx in 1:length(measures)) {
+            measure = measures[measure_idx];
+            measure_length_this_subject = all_measures_data_length_per_subject[[measure]][subject_idx];
+            if(measure_idx == 1) {
+                subject_data_len = measure_length_this_subject;    # The first measure is used as a baseline to compare against all others.
+            } else {
+                if(subject_data_len != measure_length_this_subject) {
+                    warning(sprintf("Measure '%s' has %d values for subject %d, but expected %d from measure '%s'.\n", measure, measure_length_this_subject, subject_id, subject_data_len, measures[1]));
+                    check_result_ok = FALSE;
+                }
+            }
+        }
+    }
+    if(check_result_ok) {
+        cat(sprintf("Check okay.\n"));
+    } else {
+        cat(sprintf("Check NOT okay.\n"));
+    }
+
     return(as.data.frame(all_measures_data));
 }
 
