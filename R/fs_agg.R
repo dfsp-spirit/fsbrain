@@ -153,9 +153,11 @@ group.morph.agg.native <- function(subjects_dir, subjects_list, measure, hemi, a
   if(cast){
     value_column_name = measure;
     colnames(agg_all_subjects) = c("subject_id", "hemi", "measure_name", "measure_value");
+    agg_all_subjects$measure_value = as.numeric(agg_all_subjects$measure_value);
   } else {
     value_column_name = sprintf("%s.%s", hemi, measure);
     colnames(agg_all_subjects) = c("subject_id", value_column_name);
+    agg_all_subjects[[value_column_name]] = as.numeric(agg_all_subjects[[value_column_name]]);
   }
 
   return(agg_all_subjects);
@@ -200,26 +202,28 @@ group.morph.agg.standard <- function(subjects_dir, subjects_list, measure, hemi,
 
     if(nrow(agg_all_subjects) == 0) {
       if(cast) {
-        agg_all_subjects = data.frame(c(as.character(subject_id)), hemi, measure, agg_fun(morph_data), stringsAsFactors = FALSE);
+        agg_all_subjects = data.frame(c(as.character(subject_id)), hemi, measure, as.numeric(agg_fun(morph_data)), stringsAsFactors = FALSE);
       } else {
-        agg_all_subjects = data.frame(c(as.character(subject_id)), agg_fun(morph_data), stringsAsFactors = FALSE);
+        agg_all_subjects = data.frame(c(as.character(subject_id)), as.numeric(agg_fun(morph_data)), stringsAsFactors = FALSE);
       }
     } else {
       if(cast) {
-        agg_all_subjects = rbind(agg_all_subjects, c(as.character(subject_id), hemi, measure, agg_fun(morph_data)));
+        agg_all_subjects = rbind(agg_all_subjects, c(as.character(subject_id), hemi, measure, as.numeric(agg_fun(morph_data))));
       } else {
-        agg_all_subjects = rbind(agg_all_subjects, c(as.character(subject_id), agg_fun(morph_data)));
+        agg_all_subjects = rbind(agg_all_subjects, c(as.character(subject_id), as.numeric(agg_fun(morph_data))));
       }
     }
   }
 
   if(cast){
-    value_column_name = measure;
     colnames(agg_all_subjects) = c("subject_id", "hemi", "measure_name", "measure_value");
+    agg_all_subjects$measure_value = as.numeric(agg_all_subjects$measure_value);
   } else {
     value_column_name = sprintf("%s.%s", hemi, measure);
     colnames(agg_all_subjects) = c("subject_id", value_column_name);
+    agg_all_subjects[[value_column_name]] = as.numeric(agg_all_subjects[[value_column_name]]);
   }
+
   return(agg_all_subjects);
 }
 
@@ -270,8 +274,7 @@ group.multimorph.agg.standard <- function(subjects_dir, subjects_list, measures,
         }
     }
   }
-  print("infunc standard")
-  print(sapply(agg_all_measures_and_hemis, class))
+
   return(agg_all_measures_and_hemis);
 }
 
@@ -321,7 +324,6 @@ group.multimorph.agg.native <- function(subjects_dir, subjects_list, measures, h
       }
     }
   }
-  print("infunc native")
-  print(sapply(agg_all_measures_and_hemis, class))
+
   return(agg_all_measures_and_hemis);
 }

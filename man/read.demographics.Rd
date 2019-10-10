@@ -5,7 +5,8 @@
 \title{Read demographics file}
 \usage{
 read.demographics(demographics_file, column_names, header = TRUE,
-  scale_and_center = FALSE, sep = "\\t", report = TRUE)
+  scale_and_center = FALSE, sep = "", report = TRUE,
+  stringsAsFactors = TRUE)
 }
 \arguments{
 \item{demographics_file, }{string. The path to the file.}
@@ -19,6 +20,8 @@ read.demographics(demographics_file, column_names, header = TRUE,
 \item{sep, }{string. Separator passed to utils::read.table(), defaults to tabulator.}
 
 \item{report, }{logical. Whether to write an overview, i.e., some descriptive statistics for each column, to STDOUT. Defaults to TRUE.}
+
+\item{stringsAsFactors, }{logical. Whether to convert strings in the input data to factors. Defaults to TRUE.}
 }
 \value{
 a dataframe. The data in the file. String columns will be returned as factors, which you may want to adapt afterwards for the subject identifier column.
