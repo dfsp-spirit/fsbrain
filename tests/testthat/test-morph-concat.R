@@ -7,7 +7,7 @@ test_that("Concatination of native space measures works for a single hemisphere"
 
     subjects_list = c("tim", "timcopy");
     measures = c("area", "thickness", "volume");
-    mc = concat_measures_native(subjects_dir, subjects_list, measures, "lh");
+    mc = group.concat.measures.native(subjects_dir, subjects_list, measures, "lh");
     expect_equal(nrow(mc), num_verts_subject1_lh * 2 * 1);   # 2 subjects with 1 hemi each
     expect_equal(ncol(mc), 3);  # 3 measures
     expect_true("area" %in% colnames(mc));
@@ -25,7 +25,7 @@ test_that("Concatination of native space measures works for both hemispheres", {
 
     subjects_list = c("tim", "timcopy");
     measures = c("area", "thickness", "volume");
-    mc = concat_measures_native(subjects_dir, subjects_list, measures, "both");
+    mc = group.concat.measures.native(subjects_dir, subjects_list, measures, "both");
     expect_equal(nrow(mc), num_verts_subject1_both * 2);   # 2 subjects with 1 hemi each
     expect_equal(ncol(mc), 3);  # 3 measures
     expect_true("area" %in% colnames(mc));
@@ -42,7 +42,7 @@ test_that("Concatination of standard space measures works for a single hemispher
 
     subjects_list = c("tim", "timcopy");
     measures = c("area", "thickness", "volume");
-    mc = concat_measures_standard(subjects_dir, subjects_list, measures, "lh", fwhm="10");
+    mc = group.concat.measures.standard(subjects_dir, subjects_list, measures, "lh", fwhm="10");
     expect_equal(nrow(mc), num_verts_fsaverage_per_hemi * 2 * 1);  # 2 subjects with 1 hemi each
     expect_equal(ncol(mc), 3); # 3 measures
     expect_true("area_fwhm10" %in% colnames(mc));
@@ -58,7 +58,7 @@ test_that("Concatination of standard space measures works for both hemispheres",
 
     subjects_list = c("tim", "timcopy");
     measures = c("area", "thickness", "volume");
-    mc = concat_measures_standard(subjects_dir, subjects_list, measures, "both", fwhm="10");
+    mc = group.concat.measures.standard(subjects_dir, subjects_list, measures, "both", fwhm="10");
     expect_equal(nrow(mc), num_verts_fsaverage_per_hemi * 2 * 2);  # 2 subjects with 2 hemis each
     expect_equal(ncol(mc), 3); # 3 measures
     expect_true("area_fwhm10" %in% colnames(mc));

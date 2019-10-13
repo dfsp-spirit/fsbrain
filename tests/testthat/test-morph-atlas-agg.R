@@ -167,7 +167,7 @@ test_that("Writing MGH data spread over regions works", {
     num_verts_bankssts = 1722 # valid for this subject only, ofc
     num_verts_subject1_lh = 149244
 
-    ret = fs.write.region.values(subjects_dir, subject_id, hemi, atlas, region_value_list, "ignored", do_write_file = FALSE);
+    ret = write.region.values(subjects_dir, subject_id, hemi, atlas, region_value_list, "ignored", do_write_file = FALSE);
     data = ret$data;
     expect_equal(typeof(data), "double")
     expect_equal(class(data), "numeric")
@@ -191,7 +191,7 @@ test_that("Writing faverage region values works", {
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip when test data missing, e.g., on travis
     skip_if_not(dir.exists(file.path(subjects_dir, 'fsaverage')), message="Test data for fsaverage missing.")
 
-    ret = fs.write.region.values.fsaverage(hemi, atlas, region_value_list, output_file="/tmp/spread.mgz", template_subjects_dir=subjects_dir);
+    ret = write.region.values.fsaverage(hemi, atlas, region_value_list, output_file="/tmp/spread.mgz", template_subjects_dir=subjects_dir);
     data = ret$data;
     num_verts_fsaverage = 163842
     num_verts_fsaverage_bankssts = 2137
@@ -306,7 +306,7 @@ test_that("Subject annotation works", {
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.")
 
   subject_id = "tim";
-  annot = annot.subject(subjects_dir, subject_id, "lh", "aparc");
+  annot = subject.annot(subjects_dir, subject_id, "lh", "aparc");
 
   num_verts_subject1_lh = 149244
   expect_equal(length(annot$vertices), num_verts_subject1_lh);
@@ -325,14 +325,14 @@ test_that("Merging annotations works", {
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.")
 
   subject_id = "tim";
-  lh_annot = annot.subject(subjects_dir, subject_id, "lh", "aparc");
-  rh_annot = annot.subject(subjects_dir, subject_id, "rh", "aparc");
+  lh_annot = subject.annot(subjects_dir, subject_id, "lh", "aparc");
+  rh_annot = subject.annot(subjects_dir, subject_id, "rh", "aparc");
 
   num_verts_subject1_lh = 149244
   num_verts_subject1_rh = 153333
   num_verts_subject1_both = num_verts_subject1_lh + num_verts_subject1_rh
 
-  annot = merge_hemi_annots(lh_annot, rh_annot);
+  annot = merge.hemi.annots(lh_annot, rh_annot);
   # Ensure vertex-wise data was merged.
   expect_equal(length(annot$vertices), num_verts_subject1_both);
   expect_equal(length(annot$label_codes), num_verts_subject1_both);

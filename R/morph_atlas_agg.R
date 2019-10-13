@@ -102,7 +102,7 @@ atlas_agg_group_native <- function(subjects_dir, subjects_list, measure, hemi, a
     for (subject_id in subjects_list) {
 
         morph_data = subject.morph.native(subjects_dir, subject_id, measure, hemi);
-        annot = annot.subject(subjects_dir, subject_id, hemi, atlas);
+        annot = subject.annot(subjects_dir, subject_id, hemi, atlas);
 
         subject_agg = subject.atlas.agg(morph_data, annot$label_names, agg_fun=agg_fun, requested_label_names = annot$colortable$struct_names);
         subject_agg$subject = subject_id;
@@ -185,7 +185,7 @@ atlas_agg_group_standard <- function(subjects_dir, subjects_list, measure, hemi,
     stop(sprintf("Parameter 'fwhm' must be of type 'character', but is '%s'.\n", typeof(fwhm)));
   }
 
-  annot = annot.subject(subjects_dir, template_subject, hemi, atlas);
+  annot = subject.annot(subjects_dir, template_subject, hemi, atlas);
   agg_all_subjects = data.frame()
   for (subject_id in subjects_list) {
     morph_data = subject.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm=fwhm);
@@ -355,7 +355,7 @@ fs.write.region.aggregated <- function(subjects_dir, subjects_list, measure, hem
 #' @return a named list with the following entries: "data": a vector containing the data. "file_written": string, path to the file that was written, only exists if do_write = TRUE.
 #'
 #' @export
-fs.write.region.values <- function(subjects_dir, subject_id, hemi, atlas, region_value_list, outfile_morph_name, format="mgz", do_write_file = TRUE, output_path = NULL, value_for_unlisted_regions=NaN) {
+write.region.values <- function(subjects_dir, subject_id, hemi, atlas, region_value_list, outfile_morph_name, format="mgz", do_write_file = TRUE, output_path = NULL, value_for_unlisted_regions=NaN) {
   outfile_morph_name = sprintf("%s%s", outfile_morph_name, freesurferformats::fs.get.morph.file.ext.for.format(format)); # append file extension
   output_file_name_no_path = sprintf("%s.%s", hemi, outfile_morph_name);
 
@@ -365,7 +365,7 @@ fs.write.region.values <- function(subjects_dir, subject_id, hemi, atlas, region
     morph_outfile = file.path(output_path, output_file_name_no_path);
   }
 
-  annot = annot.subject(subjects_dir, subject_id, hemi, atlas);
+  annot = subject.annot(subjects_dir, subject_id, hemi, atlas);
 
   spread = fs.spread.value.over.region(annot, region_value_list, value_for_unlisted_regions=value_for_unlisted_regions);
   morph_data = spread$spread_data;
@@ -404,7 +404,7 @@ fs.write.region.values <- function(subjects_dir, subject_id, hemi, atlas, region
 #' @return a named list with the following entries: "data": a vector containing the data. "file_written": string, path to the file that was written, only exists if do_write = TRUE.
 #'
 #' @export
-fs.write.region.values.fsaverage <- function(hemi, atlas, region_value_list, output_file, template_subject='fsaverage', template_subjects_dir=NULL, show_freeview_tip=FALSE, value_for_unlisted_regions=NaN) {
+write.region.values.fsaverage <- function(hemi, atlas, region_value_list, output_file, template_subject='fsaverage', template_subjects_dir=NULL, show_freeview_tip=FALSE, value_for_unlisted_regions=NaN) {
   if(is.null(template_subjects_dir)) {
     ret = find.subjectsdir.of(subject_id=template_subject)
     if(ret$found) {
@@ -416,7 +416,7 @@ fs.write.region.values.fsaverage <- function(hemi, atlas, region_value_list, out
     subjects_dir = template_subjects_dir;
   }
   subject_id = template_subject;
-  annot = annot.subject(subjects_dir, subject_id, hemi, atlas);
+  annot = subject.annot(subjects_dir, subject_id, hemi, atlas);
   spread = fs.spread.value.over.region(annot, region_value_list, value_for_unlisted_regions=value_for_unlisted_regions);
   morph_data = spread$spread_data;
 
@@ -493,7 +493,7 @@ find.subjectsdir.of <- function(subject_id='fsaverage', mustWork=FALSE) {
 #' @return the annotation, as returned by freesurferformats::read.fs.annot().
 #'
 #' @export
-annot.subject <- function(subjects_dir, subject_id, hemi, atlas) {
+subject.annot <- function(subjects_dir, subject_id, hemi, atlas) {
   if(hemi == "both") {
     lh_annot_file = file.path(subjects_dir, subject_id, "label", sprintf("%s.%s.annot", "lh", atlas));
     if(!file.exists(lh_annot_file)) {
@@ -507,7 +507,7 @@ annot.subject <- function(subjects_dir, subject_id, hemi, atlas) {
     }
     rh_annot = freesurferformats::read.fs.annot(rh_annot_file);
 
-    merged_annot = merge_hemi_annots(lh_annot, rh_annot);
+    merged_annot = merge.hemi.annots(lh_annot, rh_annot);
     return(merged_annot);
   }
   else {
@@ -529,7 +529,7 @@ annot.subject <- function(subjects_dir, subject_id, hemi, atlas) {
 #' @return annot, the merged annotation.
 #'
 #' @keywords internal
-merge_hemi_annots <- function(lh_annot, rh_annot) {
+merge.hemi.annots <- function(lh_annot, rh_annot) {
   merged_annot = list();
   merged_annot$colortable = lh_annot$colortable;        # randomly use the lh one, they must be identical for lh nad rh anyways
   merged_annot$colortable_df = lh_annot$colortable_df;  # same
@@ -561,7 +561,7 @@ get.atlas.region.names <- function(atlas, template_subjects_dir=NULL, template_s
   if(is.null(template_subjects_dir)) {
     template_subjects_dir = find.subjectsdir.of(subject_id=template_subject, mustWork = TRUE);
   }
-  annot = annot.subject(template_subjects_dir, template_subject, hemi, atlas);
+  annot = subject.annot(template_subjects_dir, template_subject, hemi, atlas);
   return(annot$colortable$struct_names);
 }
 

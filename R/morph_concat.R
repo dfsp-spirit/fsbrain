@@ -14,7 +14,7 @@
 #'
 #'
 #' @export
-concat_measures_native <- function(subjects_dir, subjects_list, measures, hemi) {
+group.concat.measures.native <- function(subjects_dir, subjects_list, measures, hemi) {
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
@@ -75,7 +75,7 @@ concat_measures_native <- function(subjects_dir, subjects_list, measures, hemi) 
 #'
 #'
 #' @export
-concat_measures_standard <- function(subjects_dir, subjects_list, measures, hemi, fwhm_per_measure) {
+group.concat.measures.standard <- function(subjects_dir, subjects_list, measures, hemi, fwhm_per_measure) {
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
