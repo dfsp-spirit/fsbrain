@@ -14,7 +14,7 @@
 #'
 #'
 #' @export
-fs.atlas.region.agg <- function(vertex_morph_data, vertex_label_names, agg_fun = mean, requested_label_names = c()) {
+subject.atlas.agg <- function(vertex_morph_data, vertex_label_names, agg_fun = mean, requested_label_names = c()) {
 
   if (length(vertex_morph_data) != length(vertex_label_names)) {
       stop(sprintf("Data mismatch: Received morphometry data for %d vertices, but %d labels. Counts must match.\n", length(vertex_morph_data), length(vertex_label_names)));
@@ -104,7 +104,7 @@ atlas_agg_group_native <- function(subjects_dir, subjects_list, measure, hemi, a
         morph_data = subject.morph.native(subjects_dir, subject_id, measure, hemi);
         annot = annot.subject(subjects_dir, subject_id, hemi, atlas);
 
-        subject_agg = fs.atlas.region.agg(morph_data, annot$label_names, agg_fun=agg_fun, requested_label_names = annot$colortable$struct_names);
+        subject_agg = subject.atlas.agg(morph_data, annot$label_names, agg_fun=agg_fun, requested_label_names = annot$colortable$struct_names);
         subject_agg$subject = subject_id;
 
         if(nrow(agg_all_subjects) > 0) {
@@ -190,7 +190,7 @@ atlas_agg_group_standard <- function(subjects_dir, subjects_list, measure, hemi,
   for (subject_id in subjects_list) {
     morph_data = subject.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm=fwhm);
 
-    subject_agg = fs.atlas.region.agg(morph_data, annot$label_names, agg_fun=agg_fun, requested_label_names = annot$colortable$struct_names);
+    subject_agg = subject.atlas.agg(morph_data, annot$label_names, agg_fun=agg_fun, requested_label_names = annot$colortable$struct_names);
     subject_agg$subject = subject_id;
 
     if(nrow(agg_all_subjects) > 0) {
@@ -576,7 +576,7 @@ get.atlas.region.names <- function(atlas, template_subjects_dir=NULL, template_s
 #' @return vector of strings, the region names.
 #'
 #' @export
-regions_to_ignore <- function(atlas) {
+regions.to.ignore <- function(atlas) {
   if(atlas == "aparc") {
     return(c("unknown", "corpuscallosum"));
   } else if(atlas == "aparc.a2009s") {

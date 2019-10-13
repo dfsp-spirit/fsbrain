@@ -1,4 +1,4 @@
-test_that("Aggregation of native space whole brain morph data on subject level works", {
+test_that("Loading of native space whole brain morph data on subject level works", {
   subjects_dir = path.expand("~/data/tim_only")
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
 
@@ -10,7 +10,7 @@ test_that("Aggregation of native space whole brain morph data on subject level w
 })
 
 
-test_that("Aggregation of native space whole brain morph data on subject level works for both hemis", {
+test_that("Loading of native space whole brain morph data on subject level works for both hemis", {
   subjects_dir = path.expand("~/data/tim_only")
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
 
@@ -40,6 +40,7 @@ test_that("Aggregation of native space whole brain morph data on group level wor
   expect_equal(data$subject_id[0], subjects_list[0])
   expect_equal(data$subject_id[1], subjects_list[1])
 })
+
 
 test_that("Aggregation of native space whole brain morph data on group level works with cast set to FALSE", {
   subjects_dir = path.expand("~/data/tim_only")
@@ -102,6 +103,7 @@ test_that("Aggregation of standard space whole brain morph data on group level w
   expect_true("measure_value" %in% cols)
 })
 
+
 test_that("Aggregation of standard space whole brain morph data on group level works for several measures and hemis with cast=FALSE", {
   subjects_dir = path.expand("~/data/tim_only")
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
@@ -121,6 +123,7 @@ test_that("Aggregation of standard space whole brain morph data on group level w
   expect_true("lh.thickness" %in% cols)
   expect_true("rh.thickness" %in% cols)
 })
+
 
 test_that("Aggregation of native space whole brain morph data on group level works for several measures and hemis", {
   subjects_dir = path.expand("~/data/tim_only")

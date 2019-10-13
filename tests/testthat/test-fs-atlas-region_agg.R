@@ -7,14 +7,14 @@ test_that("Aggregation on subject level works", {
   expect_equal(length(ct), length(annot$label_names));  # ensure the data fits together.
 
   # Test without explicitely requesting all possible atlas regions: regions which have no verts assigned in subject will not occur
-  agg = fs.atlas.region.agg(ct, annot$label_names);
+  agg = subject.atlas.agg(ct, annot$label_names);
   expect_equal(nrow(agg), 35);
   expect_false("unknown" %in% agg$region);
   expect_false("corpuscallosum" %in% agg$region);
   expect_true("bankssts" %in% agg$region);
 
   # Test with the default names and aggregation function (mean), but this time with all possible atlas names
-  agg = fs.atlas.region.agg(ct, annot$label_names, requested_label_names = annot$colortable$struct_names);
+  agg = subject.atlas.agg(ct, annot$label_names, requested_label_names = annot$colortable$struct_names);
   expect_equal(class(agg), "data.frame");
   expect_equal(nrow(agg), 36);
   expect_equal(ncol(agg), 2);
@@ -39,7 +39,7 @@ test_that("Aggregation on subject level works", {
 
 
   # Test with custom region names and aggregation function
-  agg2 = fs.atlas.region.agg(ct, annot$label_names, agg_fun = max, requested_label_names=c("bankssts", "nosuchregion"));
+  agg2 = subject.atlas.agg(ct, annot$label_names, agg_fun = max, requested_label_names=c("bankssts", "nosuchregion"));
   expect_equal(class(agg2), "data.frame");
   expect_equal(nrow(agg2), 2);   # Only the 2 explicitely requested regions should occur
   expect_equal(ncol(agg2), 2);
@@ -52,7 +52,7 @@ test_that("Aggregation on subject level works", {
   expect_true(is.nan(max_nosuchregion));
 
   # Test with incorrect input data: mismatch between vertex count and label count
-  expect_error(fs.atlas.region.agg(ct, annot$label_names[1:10]), "Counts must match");
+  expect_error(subject.atlas.agg(ct, annot$label_names[1:10]), "Counts must match");
 })
 
 
@@ -290,13 +290,13 @@ test_that("Region-based aggregation on group level works in native space", {
 
 
 test_that("Suggested regions to be ignored can be retrieved for an atlas", {
-  reg_aparc= regions_to_ignore('aparc');
+  reg_aparc= regions.to.ignore('aparc');
   expect_equal(length(reg_aparc), 2);
 
-  reg_aparc.a2009s= regions_to_ignore('aparc.a2009s');
+  reg_aparc.a2009s= regions.to.ignore('aparc.a2009s');
   expect_equal(length(reg_aparc.a2009s), 2);
 
-  reg_nosuchatlas= regions_to_ignore('nosuchatlas');
+  reg_nosuchatlas= regions.to.ignore('nosuchatlas');
   expect_equal(length(reg_nosuchatlas), 0);
 })
 
