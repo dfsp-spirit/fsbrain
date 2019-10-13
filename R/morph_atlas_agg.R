@@ -74,7 +74,7 @@ subject.atlas.agg <- function(vertex_morph_data, vertex_label_names, agg_fun = m
 #'
 #'
 #' @export
-atlas_agg_group_native <- function(subjects_dir, subjects_list, measure, hemi, atlas, agg_fun = mean, cache_file=NULL) {
+group.agg.atlas.native <- function(subjects_dir, subjects_list, measure, hemi, atlas, agg_fun = mean, cache_file=NULL) {
 
     if(! is.null(cache_file)) {
       if(file.exists(cache_file)) {
@@ -82,7 +82,7 @@ atlas_agg_group_native <- function(subjects_dir, subjects_list, measure, hemi, a
         object_names = load(cache_file, envir = e);
         var_to_restore = "agg_res_df_nt";
         if(var_to_restore %in% object_names) {
-          message(sprintf("atlas_agg_group_native(): Returning cached value from file '%s'. Parameters passed to this function were ignored.\n", cache_file));
+          message(sprintf("group.agg.atlas.native(): Returning cached value from file '%s'. Parameters passed to this function were ignored.\n", cache_file));
           return(e[[var_to_restore]]);
         } else {
           warning(sprintf("Expected object '%s' not in rdata file '%s'.\n", var_to_restore, cache_file));
@@ -118,7 +118,7 @@ atlas_agg_group_native <- function(subjects_dir, subjects_list, measure, hemi, a
     agg_res_df_nt = as.data.frame(agg_res);
 
     if(! is.null(cache_file)) {
-      message(sprintf("atlas_agg_group_standard(): Caching return value in file '%s'.\n", cache_file));
+      message(sprintf("group.agg.atlas.standard(): Caching return value in file '%s'.\n", cache_file));
       save(agg_res_df_nt, file = cache_file);
     }
 
@@ -157,7 +157,7 @@ atlas_agg_group_native <- function(subjects_dir, subjects_list, measure, hemi, a
 #'
 #'
 #' @export
-atlas_agg_group_standard <- function(subjects_dir, subjects_list, measure, hemi, atlas, fwhm, agg_fun = mean, template_subject='fsaverage', cache_file=NULL) {
+group.agg.atlas.standard <- function(subjects_dir, subjects_list, measure, hemi, atlas, fwhm, agg_fun = mean, template_subject='fsaverage', cache_file=NULL) {
 
   if(! is.null(cache_file)) {
     if(file.exists(cache_file)) {
@@ -165,7 +165,7 @@ atlas_agg_group_standard <- function(subjects_dir, subjects_list, measure, hemi,
       object_names = load(cache_file, envir = e);
       var_to_restore = "agg_res_df_std";
       if(var_to_restore %in% object_names) {
-        message(sprintf("atlas_agg_group_standard(): Returning cached value from file '%s'. Parameters passed to this function were ignored.\n", cache_file));
+        message(sprintf("group.agg.atlas.standard(): Returning cached value from file '%s'. Parameters passed to this function were ignored.\n", cache_file));
         return(e[[var_to_restore]]);
       } else {
         warning(sprintf("Expected object '%s' not in rdata file '%s'.\n", var_to_restore, cache_file));
@@ -204,7 +204,7 @@ atlas_agg_group_standard <- function(subjects_dir, subjects_list, measure, hemi,
   agg_res_df_std = as.data.frame(agg_res);
 
   if(! is.null(cache_file)) {
-    message(sprintf("atlas_agg_group_standard(): Caching return value in file '%s'.\n", cache_file));
+    message(sprintf("group.agg.atlas.standard(): Caching return value in file '%s'.\n", cache_file));
     save(agg_res_df_std, file = cache_file);
   }
 
@@ -215,9 +215,9 @@ atlas_agg_group_standard <- function(subjects_dir, subjects_list, measure, hemi,
 
 #' @title Create a named value list from a dataframe.
 #'
-#' @description Given the result of the atlas_agg_group_native() function, extract a named region value list (typically for use with the spread.value.over.region() function) for a single subject.
+#' @description Given the result of the group.agg.atlas.native() function, extract a named region value list (typically for use with the spread.value.over.region() function) for a single subject.
 #'
-#' @param agg_res, a dataframe. The result of calling atlas_agg_group_native().
+#' @param agg_res, a dataframe. The result of calling group.agg.atlas.native().
 #'
 #' @param subject_id, string. A subject identifier, must occur in the subject column of the dataframe agg_res.
 #'
@@ -319,11 +319,11 @@ write.region.aggregated <- function(subjects_dir, subjects_list, measure, hemi, 
       outfile_morph_name = sprintf("agg_%s", measure);  # something like 'agg_thickness'
     }
 
-    agg_res = atlas_agg_group_native(subjects_dir, subjects_list, measure, hemi, atlas, agg_fun = agg_fun);
+    agg_res = group.agg.atlas.native(subjects_dir, subjects_list, measure, hemi, atlas, agg_fun = agg_fun);
 
     for (subject_id in subjects_list) {
         region_value_list = fs.value.list.from.agg.res(agg_res, subject_id);
-        fs.write.region.values(subjects_dir, subject_id, hemi, atlas, region_value_list, outfile_morph_name, format=format);
+        write.region.values(subjects_dir, subject_id, hemi, atlas, region_value_list, outfile_morph_name, format=format);
     }
 }
 

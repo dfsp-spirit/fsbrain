@@ -65,7 +65,7 @@ test_that("Region-based aggregation on group level works in native space", {
     atlas = "aparc"
 
     # Test for mean aggregation
-    agg.res = atlas_agg_group_native(subjects_dir, subjects_list, measure, hemi, atlas);
+    agg.res = group.agg.atlas.native(subjects_dir, subjects_list, measure, hemi, atlas);
 
     expect_equal(nrow(agg.res), 2);   # 2 subjects
     expect_equal(rownames(agg.res), c("tim", "timcopy"));
@@ -88,7 +88,7 @@ test_that("Region-based aggregation on group level works in native space", {
 
 
     # Test for max aggregation
-    agg.res = atlas_agg_group_native(subjects_dir, subjects_list, measure, hemi, atlas, agg_fun = max);
+    agg.res = group.agg.atlas.native(subjects_dir, subjects_list, measure, hemi, atlas, agg_fun = max);
 
     expect_equal(nrow(agg.res), 2);   # 2 subjects
     expect_equal(rownames(agg.res), c("tim", "timcopy"));
@@ -128,7 +128,7 @@ test_that("Spreading a single value over an atlas region works from agg.res resu
     atlas = "aparc"
 
     # Test for mean aggregation
-    agg.res = atlas_agg_group_native(subjects_dir, subjects_list, measure, hemi, atlas);
+    agg.res = group.agg.atlas.native(subjects_dir, subjects_list, measure, hemi, atlas);
     region_value_list = fs.value.list.from.agg.res(agg.res, "tim");
 
     spread = spread.value.over.region(annot, region_value_list);
@@ -234,7 +234,7 @@ test_that("Region-based aggregation on group level works in native space", {
   atlas = "aparc"
 
   # Test for mean aggregation
-  agg.res = atlas_agg_group_standard(subjects_dir, subjects_list, measure, hemi, atlas, fwhm = '10');
+  agg.res = group.agg.atlas.standard(subjects_dir, subjects_list, measure, hemi, atlas, fwhm = '10');
 
   expect_equal(nrow(agg.res), 2);   # 2 subjects
   expect_equal(rownames(agg.res), c("tim", "timcopy"));
@@ -257,7 +257,7 @@ test_that("Region-based aggregation on group level works in native space", {
 
 
   # Test for max aggregation
-  agg.res = atlas_agg_group_standard(subjects_dir, subjects_list, measure, hemi, atlas, fwhm = '10', agg_fun = max);
+  agg.res = group.agg.atlas.standard(subjects_dir, subjects_list, measure, hemi, atlas, fwhm = '10', agg_fun = max);
 
   expect_equal(nrow(agg.res), 2);   # 2 subjects
   expect_equal(rownames(agg.res), c("tim", "timcopy"));
