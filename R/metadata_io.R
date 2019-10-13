@@ -1,3 +1,6 @@
+# Functions to read study meta information, like the subjects list and demographics data, from text files.
+# These files are typically CSV or TSV files (sometimes exported from spreadsheet applications).
+
 #' @title Read subjects file
 #'
 #' @description Load a list of subjects from a subjects file, i.e., a simple text file containing one subject name per line.
