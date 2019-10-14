@@ -104,6 +104,10 @@ group.agg.atlas.native <- function(subjects_dir, subjects_list, measure, hemi, a
         morph_data = subject.morph.native(subjects_dir, subject_id, measure, hemi);
         annot = subject.annot(subjects_dir, subject_id, hemi, atlas);
 
+        if (length(morph_data) != length(annot$label_names)) {
+          stop(sprintf("Data mismatch for subject '%s' native space morphometry measure '%s' hemi '%s': Received morphometry data for %d vertices, but %d labels from atlas '%s' annotation. Counts must match.\n", subject_id, measure, hemi, length(morph_data), length(annot$label_names), atlas));
+        }
+
         subject_agg = subject.atlas.agg(morph_data, annot$label_names, agg_fun=agg_fun, requested_label_names = annot$colortable$struct_names);
         subject_agg$subject = subject_id;
 
@@ -189,6 +193,10 @@ group.agg.atlas.standard <- function(subjects_dir, subjects_list, measure, hemi,
   agg_all_subjects = data.frame()
   for (subject_id in subjects_list) {
     morph_data = subject.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm=fwhm);
+
+    if (length(morph_data) != length(annot$label_names)) {
+      stop(sprintf("Data mismatch for subject '%s' standard space morphometry measure '%s' hemi '%s': Received morphometry data for %d vertices, but %d labels from atlas '%s' annotation for template subject '%s'. Counts must match.\n", subject_id, measure, hemi, length(morph_data), length(annot$label_names), atlas, template_subject));
+    }
 
     subject_agg = subject.atlas.agg(morph_data, annot$label_names, agg_fun=agg_fun, requested_label_names = annot$colortable$struct_names);
     subject_agg$subject = subject_id;
