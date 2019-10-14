@@ -12,7 +12,7 @@
 #' @return a vector of strings. The subject IDs.
 #'
 #' @export
-read.subjects = function(subjects_file, header=FALSE) {
+read.md.subjects = function(subjects_file, header=FALSE) {
     if(! file.exists(subjects_file)) {
         stop(sprintf("Cannot access subjects file '%s'.\n", subjects_file));
     }
@@ -46,7 +46,7 @@ read.subjects = function(subjects_file, header=FALSE) {
 #' @export
 #' @importFrom dplyr "%>%"
 #' @importFrom stats sd
-read.demographics = function(demographics_file, column_names, header=TRUE, scale_and_center=FALSE, sep='', report=TRUE, stringsAsFactors=TRUE) {
+read.md.demographics = function(demographics_file, column_names, header=TRUE, scale_and_center=FALSE, sep='', report=TRUE, stringsAsFactors=TRUE) {
     if(! file.exists(demographics_file)) {
         stop(sprintf("Cannot access demographics file '%s'.\n", demographics_file));
     }
