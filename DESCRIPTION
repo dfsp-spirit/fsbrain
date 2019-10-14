@@ -14,6 +14,7 @@ Imports:
     reshape,
     reshape2,
     freesurferformats (>= 0.1.2),
+    pkgfilecache (>= 0.1.1),
     ggplot2,
     dplyr,
     rgl
