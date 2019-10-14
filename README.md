@@ -1,5 +1,5 @@
 # nitools 
-My personal GNU R utlity functions for structural neuroimaging research. I doubt many others will want them, but feel free to use them.
+A GNU R library for structural neuroimaging. Provides high-level functions to access (read and write) and visualize surface-based brain morphometry data (e.g. cortical thickness) for individual subjects and groups.
 
 
 ## Installation
