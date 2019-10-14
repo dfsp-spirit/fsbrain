@@ -80,7 +80,7 @@ read.md.demographics = function(demographics_file, column_names, header=TRUE, sc
         }
         nonnumeric_type = ""
         cat(sprintf("===Demographics report follows===\n"));
-        cat(sprintf(" *Demographics report notice: pass 'report=FALSE' to read.demographics() to silence this report.\n"));
+        cat(sprintf(" *Demographics report notice: pass 'report=FALSE' to silence this report.\n"));
         cat(sprintf(" *Demographics report for the %d numeric columns (min/mean/max from %d rows):\n", length(numeric_colname), nrow(demographics_df)));
         numeric_desc = data.frame("column"=numeric_colname, min=numeric_colmin, mean=numeric_colmean, max=numeric_colmax);
         print(numeric_desc, row.names = TRUE);
