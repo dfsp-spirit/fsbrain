@@ -2,7 +2,7 @@ Package: nitools
 Type: Package
 Title: Neuroimaging Tools
 Version: 0.0.1
-Author: Tim Schäfer
+Authors@R: person("Tim", "Schäfer", role = c("aut", "cre"), email = "ts+code@rcmd.org", comment = c(ORCID = "0000-0002-3683-8070"))
 Maintainer: Tim Schäfer <ts+code@rcmd.org>
 Description: Provides utility function for analysis of structural neuroimaging data.
 License: MIT + file LICENSE
