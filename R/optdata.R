@@ -6,24 +6,51 @@
 #'
 #' @export
 download_optional_data <- function() {
-    pkg_info = pkgfilecache::get_pkg_info("nitools");        # to identify the package using the cache
+    pkg_info = pkgfilecache::get_pkg_info("nitools");
 
     # Replace these with your optional data files.
-    base_path = c('subjects_dir', 'subject1');
-    local_filenames = list(c(base_path, 'label', 'lh.aparc.a2009s.annot'),
-                           c(base_path, 'label', 'lh.aparc.annot'),
-                           c(base_path, 'label', 'lh.cortex.label'),
-                           c(base_path, 'label', 'rh.aparc.a2009s.annot'),
-                           c(base_path, 'label', 'rh.aparc.annot'),
-                           c(base_path, 'label', 'rh.cortex.label'),
-                           c(base_path, 'mri', 'brain.mgz'),
-                           c(base_path, 'surf', 'lh.thickness'),
-                           c(base_path, 'surf', 'lh.white'),
-                           c(base_path, 'surf', 'rh.thickness'),
-                           c(base_path, 'surf', 'rh.white'));
+    base_path_subject1 = c('subjects_dir', 'subject1');
+    local_filenames_subject1 = list(c(base_path_subject1, 'label', 'lh.aparc.a2009s.annot'),
+                           c(base_path_subject1, 'label', 'lh.aparc.annot'),
+                           c(base_path_subject1, 'label', 'lh.cortex.label'),
+                           c(base_path_subject1, 'label', 'rh.aparc.a2009s.annot'),
+                           c(base_path_subject1, 'label', 'rh.aparc.annot'),
+                           c(base_path_subject1, 'label', 'rh.cortex.label'),
+                           c(base_path_subject1, 'mri', 'brain.mgz'),
+                           c(base_path_subject1, 'surf', 'lh.thickness'),
+                           c(base_path_subject1, 'surf', 'lh.white'),
+                           c(base_path_subject1, 'surf', 'rh.thickness'),
+                           c(base_path_subject1, 'surf', 'rh.white'),
+                           c(base_path_subject1, 'surf', 'lh.thickness.fwhm10.fsaverage.mgh'),
+                           c(base_path_subject1, 'surf', 'rh.thickness.fwhm10.fsaverage.mgh'),
+                           c(base_path_subject1, 'surf', 'lh.area'),
+                           c(base_path_subject1, 'surf', 'rh.area'),
+                           c(base_path_subject1, 'surf', 'lh.area.fwhm10.fsaverage.mgh'),
+                           c(base_path_subject1, 'surf', 'rh.area.fwhm10.fsaverage.mgh')
+                           );
+    base_path_subject2 = c('subjects_dir', 'subject2');
+    local_filenames_subject2 = list(c(base_path_subject2, 'label', 'lh.aparc.a2009s.annot'),
+                                    c(base_path_subject2, 'label', 'lh.aparc.annot'),
+                                    c(base_path_subject2, 'label', 'lh.cortex.label'),
+                                    c(base_path_subject2, 'label', 'rh.aparc.a2009s.annot'),
+                                    c(base_path_subject2, 'label', 'rh.aparc.annot'),
+                                    c(base_path_subject2, 'label', 'rh.cortex.label'),
+                                    c(base_path_subject2, 'mri', 'brain.mgz'),
+                                    c(base_path_subject2, 'surf', 'lh.thickness'),
+                                    c(base_path_subject2, 'surf', 'lh.white'),
+                                    c(base_path_subject2, 'surf', 'rh.thickness'),
+                                    c(base_path_subject2, 'surf', 'rh.white'),
+                                    c(base_path_subject2, 'surf', 'lh.thickness.fwhm10.fsaverage.mgh'),
+                                    c(base_path_subject2, 'surf', 'rh.thickness.fwhm10.fsaverage.mgh'),
+                                    c(base_path_subject2, 'surf', 'lh.area'),
+                                    c(base_path_subject2, 'surf', 'rh.area'),
+                                    c(base_path_subject2, 'surf', 'lh.area.fwhm10.fsaverage.mgh'),
+                                    c(base_path_subject2, 'surf', 'rh.area.fwhm10.fsaverage.mgh')
+                                    );
+    local_filenames = c(local_filenames_subject1, local_filenames_subject2);
 
 
-    md5sums = c('099e738654aedc71cd580256f4f3914b',
+    md5sums_subject1 = c('099e738654aedc71cd580256f4f3914b',
                 'c0ac6e39e3536ef968f1051f908a80c4',
                 '929873a4ae3542331d84e5a97c852824',
                 '31dd188591d11784f9efed66601b9267',
@@ -33,26 +60,48 @@ download_optional_data <- function() {
                 '96d6350a6b158453a0231a1f01cfbd58',
                 'b6d2cdb9793aae3b76c2dcbf03491988',
                 '4ec315e8daa6c3bbda46c36b9188b60f',
-                '8034395bc9fcfa02c05c6cf6559ab97e');
+                '8034395bc9fcfa02c05c6cf6559ab97e',
+                'c58c2dcfc093f409cc1d6a431ac676de',
+                '2ef44d7a40590242c2516930443712e4',
+                '33ac2ccf1cd388e458e2d03fcc5cc3e6',
+                '1e55e15bb468652b5b024daf37c4ec12',
+                '492516bb4e1e31224dba96b2da0d07c4',
+                '4b7d88484182326576218abdce8ac378'
+                );
 
-    ext_urls = c('subjects_dir/subject1/label/lh.aparc.a2009s.annot',
-                 'subjects_dir/subject1/label/lh.aparc.annot',
-                 'subjects_dir/subject1/label/lh.cortex.label',
-                 'subjects_dir/subject1/label/rh.aparc.a2009s.annot',
-                 'subjects_dir/subject1/label/rh.aparc.annot',
-                 'subjects_dir/subject1/label/rh.cortex.label',
-                 'subjects_dir/subject1/mri/brain.mgz',
-                 'subjects_dir/subject1/surf/lh.thickness',
-                 'subjects_dir/subject1/surf/lh.white',
-                 'subjects_dir/subject1/surf/rh.thickness',
-                 'subjects_dir/subject1/surf/rh.white');
+    md5sums_subject2 = md5sums_subject1; # In our example data, subject2 is actually just a copy of subject1, so the md5 hashes are identical.
+    md5sums = c(md5sums_subject1, md5sums_subject2);
+
+    ext_url_subject_part_subject1 = 'subjects_dir/subject1/';
+    ext_url_subject_part_subject2 = 'subjects_dir/subject2/';
+    ext_url_parts_each_subject = c('label/lh.aparc.a2009s.annot',
+                 'label/lh.aparc.annot',
+                 'label/lh.cortex.label',
+                 'label/rh.aparc.a2009s.annot',
+                 'label/rh.aparc.annot',
+                 'label/rh.cortex.label',
+                 'mri/brain.mgz',
+                 'surf/lh.thickness',
+                 'surf/lh.white',
+                 'surf/rh.thickness',
+                 'surf/rh.white',
+                 'surf/lh.thickness.fwhm10.fsaverage.mgh',
+                 'surf/rh.thickness.fwhm10.fsaverage.mgh',
+                 'surf/lh.area',
+                 'surf/rh.area',
+                 'surf/lh.area.fwhm10.fsaverage.mgh',
+                 'surf/rh.area.fwhm10.fsaverage.mgh'
+                 );
+    ext_urls_subject1 = paste(ext_url_subject_part_subject1, ext_url_parts_each_subject, sep='');
+    ext_urls_subject2 = paste(ext_url_subject_part_subject2, ext_url_parts_each_subject, sep='');
+    ext_urls = c(ext_urls_subject1, ext_urls_subject2);
 
     base_url = 'http://rcmd.org/projects/nitestdata/';
     urls = paste(base_url, ext_urls, sep='');
 
     cfiles = pkgfilecache::ensure_files_available(pkg_info, local_filenames, urls, md5sums=md5sums);
     cfiles$file_status = NULL;
-    return(cfiles);
+    return(invisible(cfiles));
 }
 
 #' @title Get file names available in package cache.
@@ -92,5 +141,7 @@ delete_all_optional_data <- function() {
     pkg_info = pkgfilecache::get_pkg_info("nitools");
     return(pkgfilecache::erase_file_cache(pkg_info));
 }
+
+
 
 

@@ -1,10 +1,11 @@
 
 
 test_that("Aggregation of native space whole brain morph data on group level works", {
-  subjects_dir = path.expand("~/data/tim_only")
-  skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
+  nitools::download_optional_data();
+  subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+  skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
 
-  subjects_list = c("tim", "timcopy")
+  subjects_list = c("subject1", "subject2")
   data = group.morph.agg.native(subjects_dir, subjects_list, "thickness", "lh")
 
   expect_equal(class(data), "data.frame")
@@ -20,10 +21,11 @@ test_that("Aggregation of native space whole brain morph data on group level wor
 
 
 test_that("Aggregation of native space whole brain morph data on group level works with cast set to FALSE", {
-  subjects_dir = path.expand("~/data/tim_only")
-  skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
+  nitools::download_optional_data();
+  subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+  skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
 
-  subjects_list = c("tim", "timcopy")
+  subjects_list = c("subject1", "subject2")
   data = group.morph.agg.native(subjects_dir, subjects_list, "thickness", "lh", cast=FALSE)
 
   expect_equal(class(data), "data.frame")
@@ -39,10 +41,11 @@ test_that("Aggregation of native space whole brain morph data on group level wor
 
 
 test_that("Aggregation of standard space whole brain morph data on group level works with cast=TRUE", {
-  subjects_dir = path.expand("~/data/tim_only")
-  skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
+  nitools::download_optional_data();
+  subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+  skip_if_not(dir.exists(subjects_dir), message="Test data missing."); # skip on travis
 
-  subjects_list = c("tim", "timcopy")
+  subjects_list = c("subject1", "subject2")
   data = group.morph.agg.standard(subjects_dir, subjects_list, "thickness", "lh", fwhm="10", cast=TRUE)
 
   expect_equal(class(data), "data.frame")
@@ -59,10 +62,11 @@ test_that("Aggregation of standard space whole brain morph data on group level w
 
 
 test_that("Aggregation of standard space whole brain morph data on group level works for several measures and hemis with cast=FALSE", {
-  subjects_dir = path.expand("~/data/tim_only")
+  nitools::download_optional_data();
+  subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
 
-  subjects_list = c("tim", "timcopy")
+  subjects_list = c("subject1", "subject2")
   data = group.multimorph.agg.standard(subjects_dir, subjects_list, c("thickness", "area"), c("lh", "rh"), fwhm="10", cast=FALSE)
 
   expect_equal(class(data), "data.frame")
@@ -80,10 +84,11 @@ test_that("Aggregation of standard space whole brain morph data on group level w
 
 
 test_that("Aggregation of native space whole brain morph data on group level works for several measures and hemis", {
-  subjects_dir = path.expand("~/data/tim_only")
+  nitools::download_optional_data();
+  subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
 
-  subjects_list = c("tim", "timcopy")
+  subjects_list = c("subject1", "subject2")
   data = group.multimorph.agg.native(subjects_dir, subjects_list, c("thickness", "area"), c("lh", "rh"), cast=FALSE)
 
   expect_equal(class(data), "data.frame")
@@ -101,10 +106,11 @@ test_that("Aggregation of native space whole brain morph data on group level wor
 
 
 test_that("Aggregation of native space whole brain morph data on group level works for several measures and hemis with cast=TRUE", {
-  subjects_dir = path.expand("~/data/tim_only")
+  nitools::download_optional_data();
+  subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
 
-  subjects_list = c("tim", "timcopy")
+  subjects_list = c("subject1", "subject2")
   data = group.multimorph.agg.native(subjects_dir, subjects_list, c("thickness", "area"), c("lh", "rh"), cast=TRUE)
 
   expect_equal(class(data), "data.frame")
@@ -121,10 +127,11 @@ test_that("Aggregation of native space whole brain morph data on group level wor
 
 
 test_that("Aggregation of standard space whole brain morph data on group level works for several measures and hemis with cast=TRUE", {
-  subjects_dir = path.expand("~/data/tim_only")
+  nitools::download_optional_data();
+  subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
 
-  subjects_list = c("tim", "timcopy")
+  subjects_list = c("subject1", "subject2")
   data = group.multimorph.agg.standard(subjects_dir, subjects_list, c("thickness", "area"), c("lh", "rh"), fwhm="10", cast=TRUE)
 
   expect_equal(class(data), "data.frame")
