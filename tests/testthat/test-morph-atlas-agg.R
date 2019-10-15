@@ -57,9 +57,10 @@ test_that("Aggregation on subject level works", {
 
 
 test_that("Region-based aggregation on group level works in native space", {
-    subjects_dir = path.expand("~/data/tim_only")
+    nitools::download_optional_data();
+    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
-    subjects_list = c("tim", "timcopy")
+    subjects_list = c("subject1", "subject2")
     measure = "thickness"
     hemi = "lh"
     atlas = "aparc"
@@ -68,7 +69,7 @@ test_that("Region-based aggregation on group level works in native space", {
     agg.res = group.agg.atlas.native(subjects_dir, subjects_list, measure, hemi, atlas);
 
     expect_equal(nrow(agg.res), 2);   # 2 subjects
-    expect_equal(rownames(agg.res), c("tim", "timcopy"));
+    expect_equal(rownames(agg.res), c("subject1", "subject2"));
     expect_equal(ncol(agg.res), 37);  # 36 atlas region columns + the 1 'subject' column
     expect_true("bankssts" %in% colnames(agg.res));
     expect_equal(class(agg.res), "data.frame");
@@ -91,7 +92,7 @@ test_that("Region-based aggregation on group level works in native space", {
     agg.res = group.agg.atlas.native(subjects_dir, subjects_list, measure, hemi, atlas, agg_fun = max);
 
     expect_equal(nrow(agg.res), 2);   # 2 subjects
-    expect_equal(rownames(agg.res), c("tim", "timcopy"));
+    expect_equal(rownames(agg.res), c("subject1", "subject2"));
 
     expect_equal(ncol(agg.res), 37);  # 36 atlas region columns + the 1 'subject' column
     expect_true("unknown" %in% colnames(agg.res));
@@ -108,7 +109,7 @@ test_that("Region-based aggregation on group level works in native space", {
     expect_equal(max_bankssts_tim, 3.9, tolerance=1e-2);
 
     # Test that extracting a region_value_list from the agg.res result works
-    region_value_list = fs.value.list.from.agg.res(agg.res, "tim");
+    region_value_list = fs.value.list.from.agg.res(agg.res, "subject1");
     expect_equal(length(region_value_list), 36); # only the 36 regions: the 'subject' column has been removed.
     expect_equal(class(region_value_list), "list");
     expect_true("bankssts" %in% names(region_value_list));
@@ -120,16 +121,17 @@ test_that("Spreading a single value over an atlas region works from agg.res resu
     annot_file = system.file("extdata", "lh.aparc.annot.gz", package = "freesurferformats", mustWork = TRUE);
     annot = freesurferformats::read.fs.annot(annot_file);
 
-    subjects_dir = path.expand("~/data/tim_only")
+    nitools::download_optional_data();
+    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip when test data missing, e.g., on travis
-    subjects_list = c("tim", "timcopy")
+    subjects_list = c("subject1", "subject2")
     measure = "thickness"
     hemi = "lh"
     atlas = "aparc"
 
     # Test for mean aggregation
     agg.res = group.agg.atlas.native(subjects_dir, subjects_list, measure, hemi, atlas);
-    region_value_list = fs.value.list.from.agg.res(agg.res, "tim");
+    region_value_list = fs.value.list.from.agg.res(agg.res, "subject1");
 
     spread = spread.value.over.region(annot, region_value_list);
     new_data = spread$spread_data;
@@ -157,9 +159,10 @@ test_that("Spreading a single value over an atlas region works from manually cre
 })
 
 test_that("Writing MGH data spread over regions works", {
-    subjects_dir = path.expand("~/data/tim_only")
+    nitools::download_optional_data();
+    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip when test data missing, e.g., on travis
-    subject_id = "tim"
+    subject_id = "subject1"
     measure = "thickness"
     hemi = "lh"
     atlas = "aparc"
@@ -187,7 +190,8 @@ test_that("Writing faverage region values works", {
     names(region_value_list) = region_names_aparc;
     region_value_list$bankssts= 0.1;
 
-    subjects_dir = path.expand("~/data/tim_only")
+    nitools::download_optional_data();
+    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip when test data missing, e.g., on travis
     skip_if_not(dir.exists(file.path(subjects_dir, 'fsaverage')), message="Test data for fsaverage missing.")
 
@@ -226,9 +230,11 @@ test_that("Atlas region names can be retrieved", {
 
 
 test_that("Region-based aggregation on group level works in native space", {
-  subjects_dir = path.expand("~/data/tim_only")
+  nitools::download_optional_data();
+  subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
-  subjects_list = c("tim", "timcopy")
+  skip_if_not(dir.exists(file.path(subjects_dir, 'fsaverage')), message="Test data for fsaverage missing.");
+  subjects_list = c("subject1", "subject2")
   measure = "thickness"
   hemi = "lh"
   atlas = "aparc"
@@ -237,7 +243,7 @@ test_that("Region-based aggregation on group level works in native space", {
   agg.res = group.agg.atlas.standard(subjects_dir, subjects_list, measure, hemi, atlas, fwhm = '10');
 
   expect_equal(nrow(agg.res), 2);   # 2 subjects
-  expect_equal(rownames(agg.res), c("tim", "timcopy"));
+  expect_equal(rownames(agg.res), c("subject1", "subject2"));
   expect_equal(ncol(agg.res), 37);  # 36 atlas region columns + the 1 'subject' column
   expect_true("bankssts" %in% colnames(agg.res));
   expect_equal(class(agg.res), "data.frame");
@@ -260,7 +266,7 @@ test_that("Region-based aggregation on group level works in native space", {
   agg.res = group.agg.atlas.standard(subjects_dir, subjects_list, measure, hemi, atlas, fwhm = '10', agg_fun = max);
 
   expect_equal(nrow(agg.res), 2);   # 2 subjects
-  expect_equal(rownames(agg.res), c("tim", "timcopy"));
+  expect_equal(rownames(agg.res), c("subject1", "subject2"));
 
   expect_equal(ncol(agg.res), 37);  # 36 atlas region columns + the 1 'subject' column
   expect_true("unknown" %in% colnames(agg.res));
@@ -277,7 +283,7 @@ test_that("Region-based aggregation on group level works in native space", {
   expect_equal(max_bankssts_tim, 3.16, tolerance=1e-2);
 
   # Test that extracting a region_value_list from the agg.res result works
-  region_value_list = fs.value.list.from.agg.res(agg.res, "tim");
+  region_value_list = fs.value.list.from.agg.res(agg.res, "subject1");
   expect_equal(length(region_value_list), 36); # only the 36 regions: the 'subject' column has been removed.
   expect_equal(class(region_value_list), "list");
   expect_true("bankssts" %in% names(region_value_list));
@@ -302,10 +308,11 @@ test_that("Suggested regions to be ignored can be retrieved for an atlas", {
 
 
 test_that("Subject annotation works", {
-  subjects_dir = path.expand("~/data/tim_only")
+  nitools::download_optional_data();
+  subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.")
 
-  subject_id = "tim";
+  subject_id = "subject1";
   annot = subject.annot(subjects_dir, subject_id, "lh", "aparc");
 
   num_verts_subject1_lh = 149244
@@ -321,10 +328,11 @@ test_that("Subject annotation works", {
 
 
 test_that("Merging annotations works", {
-  subjects_dir = path.expand("~/data/tim_only")
+  nitools::download_optional_data();
+  subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.")
 
-  subject_id = "tim";
+  subject_id = "subject1";
   lh_annot = subject.annot(subjects_dir, subject_id, "lh", "aparc");
   rh_annot = subject.annot(subjects_dir, subject_id, "rh", "aparc");
 
