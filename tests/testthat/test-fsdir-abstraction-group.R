@@ -42,3 +42,23 @@ test_that("Loading of standard space whole brain morph data on group level works
     expect_equal(length(data$subject2), num_verts_fsaverage);
 })
 
+
+test_that("Label data can be read on group level", {
+    nitools::download_optional_data();
+    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+    skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
+    subjects_list = c("subject1", "subject2");
+
+    grouplabel = group.label(subjects_dir, subjects_list, "cortex.label", hemi='lh');
+    known_vertex_count_label = 140891
+
+    # Test that the number of entries is correct, and that metadata matches data
+    expect_equal(length(grouplabel), 2);
+    expect_true(is.list(grouplabel));
+    expect_equal(class(grouplabel$subject1), "integer");
+    expect_equal(class(grouplabel$subject2), "integer");
+    expect_equal(length(grouplabel$subject1), known_vertex_count_label);
+    expect_equal(length(grouplabel$subject2), known_vertex_count_label);
+})
+
+
