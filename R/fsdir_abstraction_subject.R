@@ -1,5 +1,5 @@
 # Functions for accessing FreeSurfer subject data, with knowledge on the directory structure.
-# This is an abstraction layer over the freesurferforamts pacakge on subject level.
+# This is an abstraction layer over the freesurferformats package on subject level.
 
 
 #' @title Retrieve native space morphometry data for a single subject.
@@ -160,6 +160,81 @@ subject.filepath.morph.native <- function(subjects_dir, subject_id, measure, hem
 
 
 
+#' @title Construct filepath of any freesurfer file.
+#'
+#' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
+#'
+#' @param subject_id, string. The subject identifier
+#'
+#' @param relative_path_parts, vector of strings. THe path to the file, e.g., c("surf", "lh.area").
+#'
+#' @param hemi, string, one of 'lh', 'rh', or NULL. Defaults to NULL. If a hemisphere name is given, it is added as a prefix to the last entry in relative_path_parts, separated by a dot.
+#'
+#' @param file_tag, string. A one-word description of the file type that will show up in the error message to describe the file if it is missing. Leads to a better error message. Examples: 'morphometry' or 'label'. Only relevant if warn_if_nonexistent is TRUE. Defaults to the empty string.
+#'
+#' @param warn_if_nonexistent, logical. Whether to print a warning if the file does not exist or cannot be accessed. Defaults to FALSE.
+#'
+#'
+#' @return string, the file path.
+#'
+#' @export
+subject.filepath.any <- function(subjects_dir, subject_id, relative_path_parts, hemi=NULL, file_tag="", warn_if_nonexistent=FALSE) {
+
+    if(nchar(file_tag) > 0) {
+        file_tag = sprintf("%s ", file_tag);    # Just for the format of the warning message: avoid missing/duplicate space.
+    }
+
+    if( ! is.null(hemi)) {
+        if(!(hemi %in% c("lh", "rh"))) {
+            stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or NULL if given, but is '%s'.\n", hemi));
+        }
+        hemi_prefix = sprintf("%s.", hemi);
+        # Add hemi prefix to last part, the file name.
+        last_part_mod = sprintf("%s%s", hemi_prefix, relative_path_parts[length(relative_path_parts)]);
+        relative_path_parts[length(relative_path_parts)] = last_part_mod;
+    }
+
+    rel_part = do.call(file.path, as.list(relative_path_parts));
+    somefile = file.path(subjects_dir, subject_id, rel_part);
+
+    if((!file.exists(somefile)) && (warn_if_nonexistent) ) {
+        if(is.null(hemi)) {
+            warning(sprintf("The %sfile '%s' for subject '%s' cannot be accessed.\n", file_tag, somefile, subject_id));
+        } else {
+            warning(sprintf("The %sfile '%s' for subject '%s' hemi '%s' cannot be accessed.\n", file_tag, somefile, subject_id, hemi));
+        }
+    }
+
+    return(somefile);
+}
+
+
+#' @title Retrieve label data for a single subject.
+#'
+#' @description Load a label (like 'label/lh.cortex.label') for a subject from disk. Uses knowledge about the FreeSurfer directory structure to load the correct file.
+#'
+#' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
+#'
+#' @param subject_id, string. The subject identifier
+#'
+#' @param label, string. Name of the label file, without the hemi part (if any), but including the '.label' suffix. E.g., 'cortex.label' for '?h.cortex.label'
+#'
+#' @param hemi, string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.
+#'
+#' @param return_one_based_indices, logical. Whether the indices should be 1-based. Indices are stored zero-based in the file, but R uses 1-based indices. Defaults to TRUE, which means that 1 will be added to all indices read from the file before returning them.
+#'
+#' @return vector with label data: the list of vertex indices in the label.
+#'
+#' @export
+subject.label <- function(subjects_dir, subject_id, label, hemi, return_one_based_indices=TRUE) {
+
+    if(!(hemi %in% c("lh", "rh"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
+    }
+
+    labelfile = subject.filepath.any(subjects_dir, subject_id, c("label", label), hemi=hemi, file_tag="label", warn_if_nonexistent=TRUE);
+    return(freesurferformats::read.fs.label(labelfile, return_one_based_indices=return_one_based_indices));
+}
 
 
 
