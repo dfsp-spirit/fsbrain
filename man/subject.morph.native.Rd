@@ -16,7 +16,7 @@ subject.morph.native(subjects_dir, subject_id, measure, hemi,
 
 \item{hemi, }{string, one of 'lh', 'rh' or 'both'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.}
 
-\item{format, }{string. One of 'mgh', 'mgz', 'curv'. Defaults to 'mgh'.}
+\item{format, }{string. One of 'mgh', 'mgz', 'curv'. Defaults to 'curv'.}
 }
 \value{
 vector with native space morph data

@@ -14,7 +14,7 @@
 #'
 #' @param hemi, string, one of 'lh', 'rh' or 'both'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.
 #'
-#' @param format, string. One of 'mgh', 'mgz', 'curv'. Defaults to 'mgh'.
+#' @param format, string. One of 'mgh', 'mgz', 'curv'. Defaults to 'curv'.
 #'
 #' @return vector with native space morph data
 #'
