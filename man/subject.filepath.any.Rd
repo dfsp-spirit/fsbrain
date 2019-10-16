@@ -26,3 +26,4 @@ string, the file path.
 \description{
 Construct filepath of any freesurfer file.
 }
+\keyword{internal}

@@ -177,7 +177,7 @@ subject.filepath.morph.native <- function(subjects_dir, subject_id, measure, hem
 #'
 #' @return string, the file path.
 #'
-#' @export
+#' @keywords internal
 subject.filepath.any <- function(subjects_dir, subject_id, relative_path_parts, hemi=NULL, file_tag="", warn_if_nonexistent=FALSE) {
 
     if(nchar(file_tag) > 0) {
