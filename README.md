@@ -29,3 +29,30 @@ AppVeyor (Windows): [![AppVeyor build status](https://ci.appveyor.com/api/projec
 ## License
 
 MIT
+
+
+## Citation
+
+You can generate the citation for the version you use by typing the following command in R:
+
+```
+citation("nitools")
+```
+
+This will ouput something like this (but for the version you actually used):
+```
+To cite package ‘nitools’ in publications use:
+
+  Tim Schäfer (2019). nitools: Neuroimaging Tools. R package version
+  0.0.1. https://github.com/dfsp-spirit/nitools
+
+A BibTeX entry for LaTeX users is
+
+  @Manual{,
+    title = {nitools: Neuroimaging Tools},
+    author = {Tim Schäfer},
+    year = {2019},
+    note = {R package version 0.0.1},
+    url = {https://github.com/dfsp-spirit/nitools},
+  }
+```
