@@ -89,7 +89,7 @@ library("nitools")
 hemi = "lh"               # 'lh' or 'rh'
 atlas = "aparc"           # an atlas, e.g., 'aparc', 'aparc.a2009s', 'aparc.DKTatlas'
 
-template_subjects_dir = "/Applications/freesurfer/subjects";    # Some directory where we can find fsaverage. This can be omitted if FREESURFER_HOME is set, the function will find fsaverage in there by default.
+template_subjects_dir = "~/software/freesurfer/subjects";    # Some directory where we can find fsaverage. This can be omitted if FREESURFER_HOME is set, the function will find fsaverage in there by default.
 
 # One can also retrieve all region names of an atlas. This would get all 36 aparc regions:
 region_names_aparc = nitools::get.atlas.region.names('aparc', template_subjects_dir=template_subjects_dir);
