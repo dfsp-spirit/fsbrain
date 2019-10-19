@@ -14,7 +14,7 @@
 #'
 #'
 #' @export
-fs.atlas.region.agg <- function(vertex_morph_data, vertex_label_names, agg_fun = mean, requested_label_names = c()) {
+subject.atlas.agg <- function(vertex_morph_data, vertex_label_names, agg_fun = mean, requested_label_names = c()) {
 
   if (length(vertex_morph_data) != length(vertex_label_names)) {
       stop(sprintf("Data mismatch: Received morphometry data for %d vertices, but %d labels. Counts must match.\n", length(vertex_morph_data), length(vertex_label_names)));
@@ -46,9 +46,11 @@ fs.atlas.region.agg <- function(vertex_morph_data, vertex_label_names, agg_fun =
   return(agg);
 }
 
-#' @title Aggregate morphometry data over brain atlas regions and subjects for a group of subjects.
+
+
+#' @title Aggregate native space morphometry data over brain atlas regions and subjects for a group of subjects.
 #'
-#' @description Aggregate morphometry data over brain atlas regions, e.g., compute the mean thickness value over all regions in an atlas for all subjects. Try visualizing the results, e.g.,:
+#' @description Aggregate native space morphometry data over brain atlas regions, e.g., compute the mean thickness value over all regions in an atlas for all subjects. Try visualizing the results, e.g.,:
 #'
 #'    molten=melt(agg, id=c('subject'));
 #'    ggplot(data=molten, aes(x=variable, y=value, group=subject)) + geom_point() + geom_line() + theme(axis.text.x = element_text(angle = 90, hjust = 1));
@@ -60,57 +62,170 @@ fs.atlas.region.agg <- function(vertex_morph_data, vertex_label_names, agg_fun =
 #'
 #' @param measure, string. Name of the vertex-wise measure of morphometry data file. E.g., "area" or "thickness". Used to construct the name of the morphometry file to be loaded.
 #'
-#' @param hemi, string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.
+#' @param hemi, string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded. If set to 'both', combined data for 'lh' and 'rh' will be used.
 #'
 #' @param atlas, string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.
 #'
 #' @param agg_fun, function. An R function that aggregates data, typically max, mean, min or something similar. Note: this is NOT a string, put the function name without quotes. Defaults to mean.
 #'
+#' @param cache_file, string or NULL. If given, it is interpreted as path of a file, and the data will be cached in the file cache_file in RData format. If the file does not exist yet, the function will run and cache the data in the file. If the file exists, the function will load the data from the file instead of running. The filename should end in '.RData', but that is not enforced or checked in any way. WARNING: If cached data is returned, all parameters passed to this function (with the exception of 'cache_file') are ignored! Whether the cached data is for another subjects_list or hemi is NOT checked! You have to ensure this yourself, by using different filenames. Defaults to NULL.
+#'
 #' @return dataframe with aggregated values for all regions and subjects, with n columns and m rows, where n is the number of subjects and m is the number of regions.
 #'
 #'
 #' @export
-fs.atlas.region.agg.group <- function(subjects_dir, subjects_list, measure, hemi, atlas, agg_fun = mean) {
+group.agg.atlas.native <- function(subjects_dir, subjects_list, measure, hemi, atlas, agg_fun = mean, cache_file=NULL) {
+
+    if(! is.null(cache_file)) {
+      if(file.exists(cache_file)) {
+        e <- new.env();
+        object_names = load(cache_file, envir = e);
+        var_to_restore = "agg_res_df_nt";
+        if(var_to_restore %in% object_names) {
+          message(sprintf("group.agg.atlas.native(): Returning cached value from file '%s'. Parameters passed to this function were ignored.\n", cache_file));
+          return(e[[var_to_restore]]);
+        } else {
+          warning(sprintf("Expected object '%s' not in rdata file '%s'.\n", var_to_restore, cache_file));
+        }
+      }
+    }
+
+    if(!(hemi %in% c("lh", "rh", "both"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
+    }
+
     if (! dir.exists(subjects_dir)) {
         stop(sprintf("Subjects directory '%s' does not exist or cannot be accessed.\n", subjects_dir));
     }
 
     agg_all_subjects = data.frame()
     for (subject_id in subjects_list) {
-        curvfile = file.path(subjects_dir, subject_id, "surf", sprintf("%s.%s", hemi, measure));
 
-        if(!file.exists(curvfile)) {
-            warning(sprintf("Curv file '%s' for subject '%s' measure '%s' cannot be accessed.\n", curvfile, subject_id, measure));
+        morph_data = subject.morph.native(subjects_dir, subject_id, measure, hemi);
+        annot = subject.annot(subjects_dir, subject_id, hemi, atlas);
+
+        if (length(morph_data) != length(annot$label_names)) {
+          stop(sprintf("Data mismatch for subject '%s' native space morphometry measure '%s' hemi '%s': Received morphometry data for %d vertices, but %d labels from atlas '%s' annotation. Counts must match.\n", subject_id, measure, hemi, length(morph_data), length(annot$label_names), atlas));
         }
 
-        morph_data = freesurferformats::read.fs.curv(curvfile);
-
-        annot_file = file.path(subjects_dir, subject_id, "label", sprintf("%s.%s.annot", hemi, atlas));
-        if(!file.exists(annot_file)) {
-            warning(sprintf("Annotation file '%s' for subject '%s' atlas '%s' cannot be accessed.\n", annot_file, subject_id, atlas));
-        }
-        annot = freesurferformats::read.fs.annot(annot_file);
-
-        subject_agg = fs.atlas.region.agg(morph_data, annot$label_names, agg_fun=agg_fun, requested_label_names = annot$colortable$struct_names)
+        subject_agg = subject.atlas.agg(morph_data, annot$label_names, agg_fun=agg_fun, requested_label_names = annot$colortable$struct_names);
         subject_agg$subject = subject_id;
 
         if(nrow(agg_all_subjects) > 0) {
-          agg_all_subjects = rbind(agg_all_subjects, subject_agg)
+          agg_all_subjects = rbind(agg_all_subjects, subject_agg);
         } else {
           agg_all_subjects = subject_agg;
         }
     }
     agg_res = reshape::cast(agg_all_subjects, subject~region, value='aggregated');
     rownames(agg_res) = subjects_list;
-    return(as.data.frame(agg_res));
+    agg_res_df_nt = as.data.frame(agg_res);
+
+    if(! is.null(cache_file)) {
+      message(sprintf("group.agg.atlas.standard(): Caching return value in file '%s'.\n", cache_file));
+      save(agg_res_df_nt, file = cache_file);
+    }
+
+    return(agg_res_df_nt);
 }
+
+
+
+#' @title Aggregate standard space morphometry data over brain atlas regions and subjects for a group of subjects.
+#'
+#' @description Aggregate standard space morphometry data over brain atlas regions, e.g., compute the mean thickness value over all regions in an atlas for all subjects. Try visualizing the results, e.g.,:
+#'
+#'    molten=melt(agg, id=c('subject'));
+#'    ggplot(data=molten, aes(x=variable, y=value, group=subject)) + geom_point() + geom_line() + theme(axis.text.x = element_text(angle = 90, hjust = 1));
+#'
+#'
+#' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
+#'
+#' @param subjects_list, string vector. A vector of subject identifiers that match the directory names within subjects_dir.
+#'
+#' @param measure, string. Name of the vertex-wise measure of morphometry data file. E.g., "area" or "thickness". Used to construct the name of the morphometry file to be loaded.
+#'
+#' @param hemi, string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded. If set to 'both', combined data for 'lh' and 'rh' will be used.
+#'
+#' @param atlas, string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.
+#'
+#' @param fwhm, string. The smoothing setting which was applied when mapping data to the template subject. Usually one of '0', '5', '10', '15', '20', or '25'.
+#'
+#' @param agg_fun, function. An R function that aggregates data, typically max, mean, min or something similar. Note: this is NOT a string, put the function name without quotes. Defaults to mean.
+#'
+#' @param template_subject, string. The template subject name. Defaults to 'fsaverage'. Must have its data in subjects_dir.
+#'
+#' @param cache_file, string or NULL. If given, it is interpreted as path of a file, and the data will be cached in the file cache_file in RData format. If the file does not exist yet, the function will run and cache the data in the file. If the file exists, the function will load the data from the file instead of running. The filename should end in '.RData', but that is not enforced or checked in any way. WARNING: If cached data is returned, all parameters passed to this function (with the exception of 'cache_file') are ignored! Whether the cached data is for another subjects_list or hemi is NOT checked! You have to ensure this yourself, by using different filenames. Defaults to NULL.
+#'
+#' @return dataframe with aggregated values for all regions and subjects, with n columns and m rows, where n is the number of subjects and m is the number of regions.
+#'
+#'
+#' @export
+group.agg.atlas.standard <- function(subjects_dir, subjects_list, measure, hemi, atlas, fwhm, agg_fun = mean, template_subject='fsaverage', cache_file=NULL) {
+
+  if(! is.null(cache_file)) {
+    if(file.exists(cache_file)) {
+      e <- new.env();
+      object_names = load(cache_file, envir = e);
+      var_to_restore = "agg_res_df_std";
+      if(var_to_restore %in% object_names) {
+        message(sprintf("group.agg.atlas.standard(): Returning cached value from file '%s'. Parameters passed to this function were ignored.\n", cache_file));
+        return(e[[var_to_restore]]);
+      } else {
+        warning(sprintf("Expected object '%s' not in rdata file '%s'.\n", var_to_restore, cache_file));
+      }
+    }
+  }
+
+  if(!(hemi %in% c("lh", "rh", "both"))) {
+    stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
+  }
+
+  if (! dir.exists(subjects_dir)) {
+    stop(sprintf("Subjects directory '%s' does not exist or cannot be accessed.\n", subjects_dir));
+  }
+
+  if (typeof(fwhm) != "character") {
+    stop(sprintf("Parameter 'fwhm' must be of type 'character', but is '%s'.\n", typeof(fwhm)));
+  }
+
+  annot = subject.annot(subjects_dir, template_subject, hemi, atlas);
+  agg_all_subjects = data.frame()
+  for (subject_id in subjects_list) {
+    morph_data = subject.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm=fwhm);
+
+    if (length(morph_data) != length(annot$label_names)) {
+      stop(sprintf("Data mismatch for subject '%s' standard space morphometry measure '%s' hemi '%s': Received morphometry data for %d vertices, but %d labels from atlas '%s' annotation for template subject '%s'. Counts must match.\n", subject_id, measure, hemi, length(morph_data), length(annot$label_names), atlas, template_subject));
+    }
+
+    subject_agg = subject.atlas.agg(morph_data, annot$label_names, agg_fun=agg_fun, requested_label_names = annot$colortable$struct_names);
+    subject_agg$subject = subject_id;
+
+    if(nrow(agg_all_subjects) > 0) {
+      agg_all_subjects = rbind(agg_all_subjects, subject_agg);
+    } else {
+      agg_all_subjects = subject_agg;
+    }
+  }
+  agg_res = reshape::cast(agg_all_subjects, subject~region, value='aggregated');
+  rownames(agg_res) = subjects_list;
+  agg_res_df_std = as.data.frame(agg_res);
+
+  if(! is.null(cache_file)) {
+    message(sprintf("group.agg.atlas.standard(): Caching return value in file '%s'.\n", cache_file));
+    save(agg_res_df_std, file = cache_file);
+  }
+
+  return(agg_res_df_std);
+}
+
 
 
 #' @title Create a named value list from a dataframe.
 #'
-#' @description Given the result of the fs.atlas.region.agg.group function, extract a named region value list (typically for use with the fs.spread.value.over.region function) for a single subject.
+#' @description Given the result of the group.agg.atlas.native() function, extract a named region value list (typically for use with the spread.value.over.region() function) for a single subject.
 #'
-#' @param agg_res, a dataframe. The result of calling fs.atlas.region.agg.group.
+#' @param agg_res, a dataframe. The result of calling group.agg.atlas.native().
 #'
 #' @param subject_id, string. A subject identifier, must occur in the subject column of the dataframe agg_res.
 #'
@@ -142,7 +257,7 @@ fs.value.list.from.agg.res <- function(agg_res, subject_id) {
 #' @return named list with following entries: "spread_data": a vector of length n, where n is the number of vertices in the annotation. One could write this to an MGH or curv file for visualization. "regions_not_in_annot": list of regions which are not in the annotation, but in the region_value_list. Their values were ignored.
 #'
 #' @export
-fs.spread.value.over.region <- function(annot, region_value_list, value_for_unlisted_regions=NaN, warn_on_unmatched_list_regions=FALSE, warn_on_unmatched_atlas_regions=FALSE) {
+spread.value.over.region <- function(annot, region_value_list, value_for_unlisted_regions=NaN, warn_on_unmatched_list_regions=FALSE, warn_on_unmatched_atlas_regions=FALSE) {
     num_verts = length(annot$vertices);
     new_data = rep(value_for_unlisted_regions, num_verts);
 
@@ -162,7 +277,7 @@ fs.spread.value.over.region <- function(annot, region_value_list, value_for_unli
     ret_list$regions_not_in_annot = regions_not_in_annot;
 
     if(warn_on_unmatched_list_regions && length(regions_not_in_annot) > 0) {
-      warning(sprintf("fs.spread.value.over.region: Ignored %d regions from 'region_value_list' parameter which do not occur in 'atlas': %s\n", length(regions_not_in_annot), paste(regions_not_in_annot, collapse=", ")));
+      warning(sprintf("spread.value.over.region: Ignored %d regions from 'region_value_list' parameter which do not occur in 'atlas': %s\n", length(regions_not_in_annot), paste(regions_not_in_annot, collapse=", ")));
     }
 
 
@@ -176,7 +291,7 @@ fs.spread.value.over.region <- function(annot, region_value_list, value_for_unli
 
     if(warn_on_unmatched_atlas_regions) {
       if(length(atlas_regions_not_in_list) > 0) {
-          warning(sprintf("fs.spread.value.over.region: Found %d regions from 'atlas' parameter which are not assigned any value in 'region_value_list' (their vertices will get default value): %s\n", length(atlas_regions_not_in_list), paste(atlas_regions_not_in_list, collapse=", ")));
+          warning(sprintf("spread.value.over.region: Found %d regions from 'atlas' parameter which are not assigned any value in 'region_value_list' (their vertices will get default value): %s\n", length(atlas_regions_not_in_list), paste(atlas_regions_not_in_list, collapse=", ")));
       }
     }
 
@@ -207,16 +322,16 @@ fs.spread.value.over.region <- function(annot, region_value_list, value_for_unli
 #' @param format, string. A morphometry file format. One of 'mgh', 'mgz' or 'curv.' The output file name extension will be set accordingly. Defaults to 'mgz'.
 #'
 #' @export
-fs.write.region.aggregated <- function(subjects_dir, subjects_list, measure, hemi, atlas, agg_fun = mean, outfile_morph_name="", format="mgz") {
+write.region.aggregated <- function(subjects_dir, subjects_list, measure, hemi, atlas, agg_fun = mean, outfile_morph_name="", format="mgz") {
     if(nchar(outfile_morph_name)==0) {
       outfile_morph_name = sprintf("agg_%s", measure);  # something like 'agg_thickness'
     }
 
-    agg_res = fs.atlas.region.agg.group(subjects_dir, subjects_list, measure, hemi, atlas, agg_fun = agg_fun);
+    agg_res = group.agg.atlas.native(subjects_dir, subjects_list, measure, hemi, atlas, agg_fun = agg_fun);
 
     for (subject_id in subjects_list) {
         region_value_list = fs.value.list.from.agg.res(agg_res, subject_id);
-        fs.write.region.values(subjects_dir, subject_id, hemi, atlas, region_value_list, outfile_morph_name, format=format);
+        write.region.values(subjects_dir, subject_id, hemi, atlas, region_value_list, outfile_morph_name, format=format);
     }
 }
 
@@ -248,7 +363,7 @@ fs.write.region.aggregated <- function(subjects_dir, subjects_list, measure, hem
 #' @return a named list with the following entries: "data": a vector containing the data. "file_written": string, path to the file that was written, only exists if do_write = TRUE.
 #'
 #' @export
-fs.write.region.values <- function(subjects_dir, subject_id, hemi, atlas, region_value_list, outfile_morph_name, format="mgz", do_write_file = TRUE, output_path = NULL, value_for_unlisted_regions=NaN) {
+write.region.values <- function(subjects_dir, subject_id, hemi, atlas, region_value_list, outfile_morph_name, format="mgz", do_write_file = TRUE, output_path = NULL, value_for_unlisted_regions=NaN) {
   outfile_morph_name = sprintf("%s%s", outfile_morph_name, freesurferformats::fs.get.morph.file.ext.for.format(format)); # append file extension
   output_file_name_no_path = sprintf("%s.%s", hemi, outfile_morph_name);
 
@@ -258,9 +373,9 @@ fs.write.region.values <- function(subjects_dir, subject_id, hemi, atlas, region
     morph_outfile = file.path(output_path, output_file_name_no_path);
   }
 
-  annot = annot.subject(subjects_dir, subject_id, hemi, atlas);
+  annot = subject.annot(subjects_dir, subject_id, hemi, atlas);
 
-  spread = fs.spread.value.over.region(annot, region_value_list, value_for_unlisted_regions=value_for_unlisted_regions);
+  spread = spread.value.over.region(annot, region_value_list, value_for_unlisted_regions=value_for_unlisted_regions);
   morph_data = spread$spread_data;
 
   return_list = list();
@@ -297,7 +412,7 @@ fs.write.region.values <- function(subjects_dir, subject_id, hemi, atlas, region
 #' @return a named list with the following entries: "data": a vector containing the data. "file_written": string, path to the file that was written, only exists if do_write = TRUE.
 #'
 #' @export
-fs.write.region.values.fsaverage <- function(hemi, atlas, region_value_list, output_file, template_subject='fsaverage', template_subjects_dir=NULL, show_freeview_tip=FALSE, value_for_unlisted_regions=NaN) {
+write.region.values.fsaverage <- function(hemi, atlas, region_value_list, output_file, template_subject='fsaverage', template_subjects_dir=NULL, show_freeview_tip=FALSE, value_for_unlisted_regions=NaN) {
   if(is.null(template_subjects_dir)) {
     ret = find.subjectsdir.of(subject_id=template_subject)
     if(ret$found) {
@@ -309,8 +424,8 @@ fs.write.region.values.fsaverage <- function(hemi, atlas, region_value_list, out
     subjects_dir = template_subjects_dir;
   }
   subject_id = template_subject;
-  annot = annot.subject(subjects_dir, subject_id, hemi, atlas);
-  spread = fs.spread.value.over.region(annot, region_value_list, value_for_unlisted_regions=value_for_unlisted_regions);
+  annot = subject.annot(subjects_dir, subject_id, hemi, atlas);
+  spread = spread.value.over.region(annot, region_value_list, value_for_unlisted_regions=value_for_unlisted_regions);
   morph_data = spread$spread_data;
 
   do_write_file = !is.null(output_file);
@@ -383,15 +498,55 @@ find.subjectsdir.of <- function(subject_id='fsaverage', mustWork=FALSE) {
 #'
 #' @param atlas, string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.
 #'
-#' @return the annotation, as returned by freesurferformats::read.fs.annot.
+#' @return the annotation, as returned by freesurferformats::read.fs.annot().
 #'
 #' @export
-annot.subject <- function(subjects_dir, subject_id, hemi, atlas) {
-  annot_file = file.path(subjects_dir, subject_id, "label", sprintf("%s.%s.annot", hemi, atlas));
-  if(!file.exists(annot_file)) {
-    stop(sprintf("Annotation file '%s' for subject '%s' atlas '%s' hemi '%s' cannot be accessed.\n", annot_file, subject_id, atlas, hemi));
+subject.annot <- function(subjects_dir, subject_id, hemi, atlas) {
+  if(hemi == "both") {
+    lh_annot_file = file.path(subjects_dir, subject_id, "label", sprintf("%s.%s.annot", "lh", atlas));
+    if(!file.exists(lh_annot_file)) {
+      stop(sprintf("Annotation lh file '%s' for subject '%s' atlas '%s' hemi '%s' cannot be accessed.\n", annot_file, subject_id, atlas, "lh"));
+    }
+    lh_annot = freesurferformats::read.fs.annot(lh_annot_file);
+
+    rh_annot_file = file.path(subjects_dir, subject_id, "label", sprintf("%s.%s.annot", "rh", atlas));
+    if(!file.exists(rh_annot_file)) {
+      stop(sprintf("Annotation rh file '%s' for subject '%s' atlas '%s' hemi '%s' cannot be accessed.\n", annot_file, subject_id, atlas, "rh"));
+    }
+    rh_annot = freesurferformats::read.fs.annot(rh_annot_file);
+
+    merged_annot = merge.hemi.annots(lh_annot, rh_annot);
+    return(merged_annot);
   }
-  return(freesurferformats::read.fs.annot(annot_file));
+  else {
+    annot_file = file.path(subjects_dir, subject_id, "label", sprintf("%s.%s.annot", hemi, atlas));
+    if(!file.exists(annot_file)) {
+      stop(sprintf("Annotation file '%s' for subject '%s' atlas '%s' hemi '%s' cannot be accessed.\n", annot_file, subject_id, atlas, hemi));
+    }
+    return(freesurferformats::read.fs.annot(annot_file));
+  }
+}
+
+
+#'@title Merge the annotations from two hemispheres into one annot.
+#
+#' @param lh_annot, annot. An annotation, as returned by freesurferformats::read.fs.annot().
+#'
+#' @param rh_annot, annot. An annotation, as returned by freesurferformats::read.fs.annot().
+#'
+#' @return annot, the merged annotation.
+#'
+#' @keywords internal
+merge.hemi.annots <- function(lh_annot, rh_annot) {
+  merged_annot = list();
+  merged_annot$colortable = lh_annot$colortable;        # randomly use the lh one, they must be identical for lh nad rh anyways
+  merged_annot$colortable_df = lh_annot$colortable_df;  # same
+
+  merged_annot$vertices = c(lh_annot$vertices, rh_annot$vertices);
+  merged_annot$label_codes = c(lh_annot$label_codes, rh_annot$label_codes);
+  merged_annot$label_names = c(lh_annot$label_names, rh_annot$label_names);
+  merged_annot$hex_colors_rgb = c(lh_annot$hex_colors_rgb, rh_annot$hex_colors_rgb);
+  return(merged_annot);
 }
 
 
@@ -414,6 +569,27 @@ get.atlas.region.names <- function(atlas, template_subjects_dir=NULL, template_s
   if(is.null(template_subjects_dir)) {
     template_subjects_dir = find.subjectsdir.of(subject_id=template_subject, mustWork = TRUE);
   }
-  annot = annot.subject(template_subjects_dir, template_subject, hemi, atlas);
+  annot = subject.annot(template_subjects_dir, template_subject, hemi, atlas);
   return(annot$colortable$struct_names);
+}
+
+
+
+#'@title Give suggestions for regions to ignore for an atlas.
+#'
+#' @description Give suggestions for regions to ignore for an atlas. These are regions for which many subjects do not have any vertices in them, or the Medial Wall and Unknown regions.
+#'
+#' @param atlas, string. The name of an atlas. Supported strings are 'aparc' and 'aparc.a2009s'.
+#'
+#' @return vector of strings, the region names.
+#'
+#' @export
+regions.to.ignore <- function(atlas) {
+  if(atlas == "aparc") {
+    return(c("unknown", "corpuscallosum"));
+  } else if(atlas == "aparc.a2009s") {
+    return(c("Medial_wall", "Unknown"));
+  } else {
+    return(c());
+  }
 }
