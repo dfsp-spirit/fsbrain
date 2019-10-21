@@ -53,7 +53,7 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, su
 vis.data.on <- function(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface="white", colormap=squash::jet) {
 
     if(is.null(morph_data_lh) && is.null(morph_data_rh)) {
-        stop(sprintf("Only one of morph_data_lh or morph_data_rh can be NULL."));
+        stop(sprintf("Only one of morph_data_lh or morph_data_rh can be NULL.\n"));
     }
 
     coloredmeshes = list();
