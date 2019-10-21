@@ -237,5 +237,46 @@ subject.label <- function(subjects_dir, subject_id, label, hemi, return_one_base
 }
 
 
+#'@title Load an annotation for a subject.
+#'
+#' @description Load a brain surface annotation, i.e., a cortical parcellation based on an atlas, for a subject.
+#'
+#' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
+#'
+#' @param subject_id, string. The subject identifier
+#'
+#' @param hemi, string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.
+#'
+#' @param atlas, string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.
+#'
+#' @return the annotation, as returned by freesurferformats::read.fs.annot().
+#'
+#' @export
+subject.annot <- function(subjects_dir, subject_id, hemi, atlas) {
+    if(hemi == "both") {
+        lh_annot_file = file.path(subjects_dir, subject_id, "label", sprintf("%s.%s.annot", "lh", atlas));
+        if(!file.exists(lh_annot_file)) {
+            stop(sprintf("Annotation lh file '%s' for subject '%s' atlas '%s' hemi '%s' cannot be accessed.\n", annot_file, subject_id, atlas, "lh"));
+        }
+        lh_annot = freesurferformats::read.fs.annot(lh_annot_file);
+
+        rh_annot_file = file.path(subjects_dir, subject_id, "label", sprintf("%s.%s.annot", "rh", atlas));
+        if(!file.exists(rh_annot_file)) {
+            stop(sprintf("Annotation rh file '%s' for subject '%s' atlas '%s' hemi '%s' cannot be accessed.\n", annot_file, subject_id, atlas, "rh"));
+        }
+        rh_annot = freesurferformats::read.fs.annot(rh_annot_file);
+
+        merged_annot = merge.hemi.annots(lh_annot, rh_annot);
+        return(merged_annot);
+    }
+    else {
+        annot_file = file.path(subjects_dir, subject_id, "label", sprintf("%s.%s.annot", hemi, atlas));
+        if(!file.exists(annot_file)) {
+            stop(sprintf("Annotation file '%s' for subject '%s' atlas '%s' hemi '%s' cannot be accessed.\n", annot_file, subject_id, atlas, hemi));
+        }
+        return(freesurferformats::read.fs.annot(annot_file));
+    }
+}
+
 
 

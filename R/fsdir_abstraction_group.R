@@ -101,3 +101,34 @@ group.label <- function(subjects_dir, subjects_list, label, hemi, return_one_bas
     return(all_labels);
 }
 
+
+
+#'@title Load annotations for a group of subjects.
+#'
+#' @description Load a brain surface annotation, i.e., a cortical parcellation based on an atlas, for a group of subjects.
+#'
+#' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
+#'
+#' @param subjects_list, vector of strings. The subject identifiers.
+#'
+#' @param hemi, string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.
+#'
+#' @param atlas, string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.
+#'
+#' @return list of annotations, as returned by freesurferformats::read.fs.annot(). If hemi is 'both', the annotations are the results of merging over the hemispheres for each subject.
+#'
+#' @export
+group.annot <- function(subjects_dir, subjects_list, hemi, atlas) {
+
+    if(!(hemi %in% c("lh", "rh", "both"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
+    }
+
+    all_annots = list();
+    for(subject_id in subjects_list) {
+        all_annots[[subject_id]] = subject.annot(subjects_dir, subject_id, hemi, atlas);
+    }
+
+    return(all_annots);
+}
+
