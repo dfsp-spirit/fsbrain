@@ -256,13 +256,13 @@ subject.annot <- function(subjects_dir, subject_id, hemi, atlas) {
     if(hemi == "both") {
         lh_annot_file = file.path(subjects_dir, subject_id, "label", sprintf("%s.%s.annot", "lh", atlas));
         if(!file.exists(lh_annot_file)) {
-            stop(sprintf("Annotation lh file '%s' for subject '%s' atlas '%s' hemi '%s' cannot be accessed.\n", annot_file, subject_id, atlas, "lh"));
+            stop(sprintf("Annotation lh file '%s' for subject '%s' atlas '%s' hemi '%s' cannot be accessed.\n", lh_annot_file, subject_id, atlas, "lh"));
         }
         lh_annot = freesurferformats::read.fs.annot(lh_annot_file);
 
         rh_annot_file = file.path(subjects_dir, subject_id, "label", sprintf("%s.%s.annot", "rh", atlas));
         if(!file.exists(rh_annot_file)) {
-            stop(sprintf("Annotation rh file '%s' for subject '%s' atlas '%s' hemi '%s' cannot be accessed.\n", annot_file, subject_id, atlas, "rh"));
+            stop(sprintf("Annotation rh file '%s' for subject '%s' atlas '%s' hemi '%s' cannot be accessed.\n", rh_annot_file, subject_id, atlas, "rh"));
         }
         rh_annot = freesurferformats::read.fs.annot(rh_annot_file);
 
@@ -276,6 +276,34 @@ subject.annot <- function(subjects_dir, subject_id, hemi, atlas) {
         }
         return(freesurferformats::read.fs.annot(annot_file));
     }
+}
+
+#'@title Load a surface for a subject.
+#'
+#' @description Load a brain surface for a subject.
+#'
+#' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
+#'
+#' @param subject_id, string. The subject identifier
+#'
+#' @param surface, string. The surface name. E.g., "white", or "pial". Used to construct the name of the surface file to be loaded.
+#'
+#' @param hemi, string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the surface file to be loaded.
+#'
+#' @return the surface, as returned by freesurferformats::read.fs.surface(). A named list containing entries 'vertices' and 'faces'.
+#'
+#' @export
+subject.surface <- function(subjects_dir, subject_id, surface, hemi) {
+
+    if(!(hemi %in% c("lh", "rh"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
+    }
+
+    surface_file = file.path(subjects_dir, subject_id, "surf", sprintf("%s.%s", hemi, surface));
+    if(!file.exists(surface_file)) {
+        stop(sprintf("Surface file '%s' for subject '%s' surface '%s' hemi '%s' cannot be accessed.\n", surface_file, subject_id, surface, hemi));
+    }
+    return(freesurferformats::read.fs.surface(surface_file));
 }
 
 
