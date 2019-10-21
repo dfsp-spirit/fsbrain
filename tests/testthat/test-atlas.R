@@ -45,7 +45,7 @@ test_that("Labels can be extracted from a region of an annotation file for a gro
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
 
     num_verts_bankssts_subject1_lh = 1722;
-    num_verts_bankssts_subject2_lh = 1722;    # subejct2 is a copy of 1
+    num_verts_bankssts_subject2_lh = 1722;    # subject2 is a copy of 1
 
     labels = group.label.from.annot(subjects_dir, subjects_list, 'lh', 'aparc', 'bankssts');
     expect_equal(length(labels), 2);

@@ -5,7 +5,7 @@
 #'
 #' @description The returned label can be used to mask morphometry data, e.g., to set the values of a certain region to NaN or to extract only values from a certain region.
 #'
-#' @param annot, annotation. An annotation for one hemisphere, as returned by subject.annot(). This must be the loaded data, not a path to a file.
+#' @param annotdata, annotation. An annotation for one hemisphere, as returned by subject.annot(). This must be the loaded data, not a path to a file.
 #'
 #' @param region, string. A valid region name for the annotation, i.e., one of the regions of the atlas used to create the annotation.
 #'
@@ -68,7 +68,7 @@ subject.label.from.annot <- function(subjects_dir, subject_id, hemi, atlas, regi
     return(label.from.annotdata(annot, region, return_one_based_indices=return_one_based_indices, invert=invert, error_on_invalid_region=error_on_invalid_region));
 }
 
-#' @title Extract a region from an atlas annotation as a label for a subject.
+#' @title Extract a region from an atlas annotation as a label for a group of subjects.
 #'
 #' @description The returned label can be used to mask morphometry data, e.g., to set the values of a certain region to NaN or to extract only values from a certain region.
 #'
@@ -88,7 +88,7 @@ subject.label.from.annot <- function(subjects_dir, subject_id, hemi, atlas, regi
 #'
 #' @param error_on_invalid_region, logical. Whether to throw an error if the given region does not appear in the region list of the annotation. If set to FALSE, this will be ignored and an empty vertex list will be returned. Defaults to TRUE.
 #'
-#' @return integer vector with label data: the list of vertex indices in the label.
+#' @return named list of integer vectors with label data: for each subject, the list of vertex indices in the label.
 #'
 #' @export
 group.label.from.annot <- function(subjects_dir, subjects_list, hemi, atlas, region, return_one_based_indices=TRUE, invert=FALSE, error_on_invalid_region=TRUE) {

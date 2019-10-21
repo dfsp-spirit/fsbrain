@@ -8,6 +8,8 @@ label.from.annotdata(annotdata, region, return_one_based_indices = TRUE,
   invert = FALSE, error_on_invalid_region = TRUE)
 }
 \arguments{
+\item{annotdata, }{annotation. An annotation for one hemisphere, as returned by subject.annot(). This must be the loaded data, not a path to a file.}
+
 \item{region, }{string. A valid region name for the annotation, i.e., one of the regions of the atlas used to create the annotation.}
 
 \item{return_one_based_indices, }{logical. Whether the indices should be 1-based. Indices are stored zero-based in label files, but R uses 1-based indices. Defaults to TRUE.}
@@ -15,8 +17,6 @@ label.from.annotdata(annotdata, region, return_one_based_indices = TRUE,
 \item{invert, }{logical. If TRUE, return the indices of all vertices which are NOT part of the region. Defaults to FALSE.}
 
 \item{error_on_invalid_region, }{logical. Whether to throw an error if the given region does not appear in the region list of the annotation. If set to FALSE, this will be ignored and an empty vertex list will be returned. Defaults to TRUE.}
-
-\item{annot, }{annotation. An annotation for one hemisphere, as returned by subject.annot(). This must be the loaded data, not a path to a file.}
 }
 \value{
 integer vector with label data: the list of vertex indices in the label. See 'return_one_based_indices' for important information.

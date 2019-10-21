@@ -2,7 +2,7 @@
 % Please edit documentation in R/atlas.R
 \name{group.label.from.annot}
 \alias{group.label.from.annot}
-\title{Extract a region from an atlas annotation as a label for a subject.}
+\title{Extract a region from an atlas annotation as a label for a group of subjects.}
 \usage{
 group.label.from.annot(subjects_dir, subjects_list, hemi, atlas, region,
   return_one_based_indices = TRUE, invert = FALSE,
@@ -26,7 +26,7 @@ group.label.from.annot(subjects_dir, subjects_list, hemi, atlas, region,
 \item{error_on_invalid_region, }{logical. Whether to throw an error if the given region does not appear in the region list of the annotation. If set to FALSE, this will be ignored and an empty vertex list will be returned. Defaults to TRUE.}
 }
 \value{
-integer vector with label data: the list of vertex indices in the label.
+named list of integer vectors with label data: for each subject, the list of vertex indices in the label.
 }
 \description{
 The returned label can be used to mask morphometry data, e.g., to set the values of a certain region to NaN or to extract only values from a certain region.
