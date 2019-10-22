@@ -23,3 +23,9 @@ vis.data.on(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh,
 \description{
 Creates a surface mesh, applies a colormap transform the morphometry data values into colors, and renders the resulting colored mesh in an interactive window. If hemi is 'both', the data is rendered for the wholw brain.
 }
+\seealso{
+Other visualization functions: \code{\link{vis.data.on.fsaverage}},
+  \code{\link{vis.subject.annot}},
+  \code{\link{vis.subject.morph.native}}
+}
+\concept{visualization functions}

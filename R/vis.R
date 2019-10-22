@@ -17,9 +17,22 @@
 #'
 #' @param colormap, a colormap. See the squash package for some colormaps. Defaults to squash::jet.
 #'
+#' @examples
+#' \donttest{
+#'    nitools::download_optional_data();
+#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    vis.subject.morph.native(subjects_dir, 'subject1', 'thickness', 'lh');
+#' }
+#'
+#' @family visualization functions
+#'
 #' @importFrom squash jet
 #' @export
 vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, surface="white", colormap=squash::jet) {
+
+    if(!(hemi %in% c("lh", "rh", "both"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
+    }
 
     if(hemi == "both") {
         lh_cmesh = coloredmesh.from.morph.native(subjects_dir, subject_id, measure, 'lh', surface=surface, colormap=colormap);
@@ -47,6 +60,8 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, su
 #' @param surface, string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
 #'
 #' @param colormap, a colormap. See the squash package for some colormaps. Defaults to squash::jet.
+#'
+#' @family visualization functions
 #'
 #' @importFrom squash jet
 #' @export
@@ -87,6 +102,8 @@ vis.data.on <- function(subjects_dir, vis_subject_id, morph_data_lh, morph_data_
 #'
 #' @param colormap, a colormap. See the squash package for some colormaps. Defaults to squash::jet.
 #'
+#' @family visualization functions
+#'
 #' @importFrom squash jet
 #' @export
 vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage", morph_data_lh, morph_data_rh, surface="white", colormap=squash::jet) {
@@ -113,8 +130,14 @@ vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage",
 #'
 #' @param surface, string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
 #'
+#' @family visualization functions
+#'
 #' @export
 vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi, surface="white") {
+
+    if(!(hemi %in% c("lh", "rh", "both"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
+    }
 
     if(hemi == "both") {
         lh_cmesh = coloredmesh.from.annot(subjects_dir, subject_id, atlas, 'lh', surface=surface);
@@ -173,11 +196,16 @@ vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRU
 #' @importFrom squash cmap makecmap jet
 #' @importFrom rgl tmesh3d rgl.open wire3d
 coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hemi, surface="white", colormap=squash::jet) {
+
+    if(!(hemi %in% c("lh", "rh"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
+    }
+
     morph_data = subject.morph.native(subjects_dir, subject_id, measure, hemi);
     surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
     mesh = rgl::tmesh3d(unlist(surface_data$vertices), unlist(surface_data$faces), homogeneous=FALSE);
     col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
-    return(list("mesh"=mesh, "col"=col));
+    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE));
 }
 
 
@@ -203,6 +231,11 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
 #' @importFrom squash cmap makecmap jet
 #' @importFrom rgl tmesh3d rgl.open wire3d
 coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data, hemi, surface="white", colormap=squash::jet, all_nan_backup_value = 0.0) {
+
+    if(!(hemi %in% c("lh", "rh"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
+    }
+
     surface_data = subject.surface(subjects_dir, vis_subject_id, surface, hemi);
 
     num_verts = nrow(surface_data$vertices);
@@ -243,9 +276,14 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
 #' @importFrom squash cmap makecmap jet
 #' @importFrom rgl tmesh3d rgl.open wire3d
 coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surface="white", colormap=squash::jet) {
+
+    if(!(hemi %in% c("lh", "rh"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
+    }
+
     surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
     annot = subject.annot(subjects_dir, subject_id, hemi, atlas);
     mesh = rgl::tmesh3d(unlist(surface_data$vertices), unlist(surface_data$faces), homogeneous=FALSE);
     col = annot$hex_colors_rgb;
-    return(list("mesh"=mesh, "col"=col));
+    return(list("mesh"=mesh, "col"=col, morph_data_was_all_na=FALSE));
 }

@@ -21,3 +21,9 @@ vis.subject.annot(subjects_dir, subject_id, atlas, hemi,
 \description{
 Creates a surface mesh, loads the colors from the annotation, and renders the resulting colored mesh in an interactive window. If hemi is 'both', the data is rendered for the wholw brain.
 }
+\seealso{
+Other visualization functions: \code{\link{vis.data.on.fsaverage}},
+  \code{\link{vis.data.on}},
+  \code{\link{vis.subject.morph.native}}
+}
+\concept{visualization functions}
