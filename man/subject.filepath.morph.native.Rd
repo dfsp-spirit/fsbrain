@@ -5,7 +5,8 @@
 \title{Construct filepath of native space morphometry data file.}
 \usage{
 subject.filepath.morph.native(subjects_dir, subject_id, measure, hemi,
-  format = "curv", warn_if_nonexistent = FALSE)
+  format = "curv", warn_if_nonexistent = FALSE,
+  error_if_nonexistent = FALSE)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -19,6 +20,8 @@ subject.filepath.morph.native(subjects_dir, subject_id, measure, hemi,
 \item{format, }{string. One of 'mgh', 'mgz', 'curv'. Defaults to 'curv'.}
 
 \item{warn_if_nonexistent, }{logical. Whether to print a warning if the file does not exist or cannot be accessed. Defaults to FALSE.}
+
+\item{error_if_nonexistent, }{logical. Whether to raise an error if the file does not exist or cannot be accessed. Defaults to FALSE.}
 }
 \value{
 string, the file path.

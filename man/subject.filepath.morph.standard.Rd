@@ -6,7 +6,7 @@
 \usage{
 subject.filepath.morph.standard(subjects_dir, subject_id, measure, hemi,
   fwhm = "10", template_subject = "fsaverage", format = "mgh",
-  warn_if_nonexistent = FALSE)
+  warn_if_nonexistent = FALSE, error_if_nonexistent = FALSE)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -24,6 +24,8 @@ subject.filepath.morph.standard(subjects_dir, subject_id, measure, hemi,
 \item{format, }{string. One of 'mgh', 'mgz', 'curv'. Defaults to 'mgh'.}
 
 \item{warn_if_nonexistent, }{logical. Whether to print a warning if the file does not exist or cannot be accessed. Defaults to FALSE.}
+
+\item{error_if_nonexistent, }{logical. Whether to raise an error if the file does not exist or cannot be accessed. Defaults to FALSE.}
 }
 \value{
 string, the file path.

@@ -26,17 +26,17 @@ subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, format
     }
 
     if(hemi == "both") {
-        lh_curvfile = subject.filepath.morph.native(subjects_dir, subject_id, measure, "lh", warn_if_nonexistent=TRUE);
+        lh_curvfile = subject.filepath.morph.native(subjects_dir, subject_id, measure, "lh", error_if_nonexistent=TRUE);
         lh_morph_data = freesurferformats::read.fs.morph(lh_curvfile);
 
-        rh_curvfile = lh_curvfile = subject.filepath.morph.native(subjects_dir, subject_id, measure, "rh", warn_if_nonexistent=TRUE);
+        rh_curvfile = lh_curvfile = subject.filepath.morph.native(subjects_dir, subject_id, measure, "rh", error_if_nonexistent=TRUE);
         rh_morph_data = freesurferformats::read.fs.morph(rh_curvfile);
 
         merged_morph_data = c(lh_morph_data, rh_morph_data);
         return(merged_morph_data);
 
     } else {
-        curvfile = lh_curvfile = subject.filepath.morph.native(subjects_dir, subject_id, measure, hemi, warn_if_nonexistent=TRUE);
+        curvfile = lh_curvfile = subject.filepath.morph.native(subjects_dir, subject_id, measure, hemi, error_if_nonexistent=TRUE);
         return(freesurferformats::read.fs.morph(curvfile));
     }
 }
@@ -69,17 +69,17 @@ subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm
     }
 
     if(hemi == "both") {
-        lh_curvfile = subject.filepath.morph.standard(subjects_dir, subject_id, measure, "lh", fwhm, warn_if_nonexistent=TRUE);
+        lh_curvfile = subject.filepath.morph.standard(subjects_dir, subject_id, measure, "lh", fwhm, error_if_nonexistent=TRUE);
         lh_morph_data = freesurferformats::read.fs.morph(lh_curvfile);
 
-        rh_curvfile = subject.filepath.morph.standard(subjects_dir, subject_id, measure, "rh", fwhm, warn_if_nonexistent=TRUE);
+        rh_curvfile = subject.filepath.morph.standard(subjects_dir, subject_id, measure, "rh", fwhm, error_if_nonexistent=TRUE);
         rh_morph_data = freesurferformats::read.fs.morph(rh_curvfile);
 
         merged_morph_data = c(lh_morph_data, rh_morph_data);
         return(merged_morph_data);
 
     } else {
-        curvfile = subject.filepath.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm, warn_if_nonexistent=TRUE);
+        curvfile = subject.filepath.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm, error_if_nonexistent=TRUE);
         return(freesurferformats::read.fs.morph(curvfile));
     }
 }
@@ -103,10 +103,12 @@ subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm
 #'
 #' @param warn_if_nonexistent, logical. Whether to print a warning if the file does not exist or cannot be accessed. Defaults to FALSE.
 #'
+#' @param error_if_nonexistent, logical. Whether to raise an error if the file does not exist or cannot be accessed. Defaults to FALSE.
+#'
 #' @return string, the file path.
 #'
 #' @export
-subject.filepath.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm='10', template_subject='fsaverage', format='mgh', warn_if_nonexistent=FALSE) {
+subject.filepath.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm='10', template_subject='fsaverage', format='mgh', warn_if_nonexistent=FALSE, error_if_nonexistent=FALSE) {
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
@@ -119,8 +121,14 @@ subject.filepath.morph.standard <- function(subjects_dir, subject_id, measure, h
 
     curvfile = file.path(subjects_dir, subject_id, "surf", sprintf("%s.%s%s.%s%s", hemi, measure, fwhm_tag, template_subject, freesurferformats::fs.get.morph.file.ext.for.format(format)));
 
-    if((!file.exists(curvfile)) && (warn_if_nonexistent) ) {
-        warning(sprintf("Standard space morphometry file '%s' for subject '%s' measure '%s' hemi '%s' fwhm '%s' cannot be accessed.\n", curvfile, subject_id, measure, hemi, fwhm));
+    if(!file.exists(curvfile)) {
+        msg = sprintf("Standard space morphometry file '%s' for subject '%s' measure '%s' hemi '%s' fwhm '%s' cannot be accessed.\n", curvfile, subject_id, measure, hemi, fwhm);
+        if((warn_if_nonexistent)) {
+            warning(msg);
+        }
+        if((error_if_nonexistent)) {
+            stop(msg);
+        }
     }
 
     return(curvfile);
@@ -141,18 +149,26 @@ subject.filepath.morph.standard <- function(subjects_dir, subject_id, measure, h
 #'
 #' @param warn_if_nonexistent, logical. Whether to print a warning if the file does not exist or cannot be accessed. Defaults to FALSE.
 #'
+#' @param error_if_nonexistent, logical. Whether to raise an error if the file does not exist or cannot be accessed. Defaults to FALSE.
+#'
 #' @return string, the file path.
 #'
 #' @export
-subject.filepath.morph.native <- function(subjects_dir, subject_id, measure, hemi, format='curv', warn_if_nonexistent=FALSE) {
+subject.filepath.morph.native <- function(subjects_dir, subject_id, measure, hemi, format='curv', warn_if_nonexistent=FALSE, error_if_nonexistent=FALSE) {
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
 
     curvfile = file.path(subjects_dir, subject_id, "surf", sprintf("%s.%s%s", hemi, measure, freesurferformats::fs.get.morph.file.ext.for.format(format)));
 
-    if((!file.exists(curvfile)) && (warn_if_nonexistent) ) {
-        warning(sprintf("Native space morphometry file '%s' for subject '%s' measure '%s' hemi '%s' cannot be accessed.\n", curvfile, subject_id, measure, hemi));
+    if(!file.exists(curvfile)) {
+        msg = sprintf("Standard space morphometry file '%s' for subject '%s' measure '%s' hemi '%s' cannot be accessed.\n", curvfile, subject_id, measure, hemi);
+        if((warn_if_nonexistent)) {
+            warning(msg);
+        }
+        if((error_if_nonexistent)) {
+            stop(msg);
+        }
     }
 
     return(curvfile);
