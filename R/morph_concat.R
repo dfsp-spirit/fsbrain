@@ -12,6 +12,15 @@
 #'
 #' @return dataframe with concatenated vertex values. Each column contains the values for one measure, concatenated for all subjects. WARNING: This dataframe can get large if you have many subjects.
 #'
+#' @examples
+#' \donttest{
+#'    nitools::download_optional_data();
+#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    subjects_list = c('subject1', 'subject2');
+#'    cm = group.concat.measures.native(subjects_dir, subjects_list,
+#'     c("thickness", "area"), "lh");
+#' }
+#'
 #' @family concatination functions
 #'
 #' @export
@@ -73,6 +82,15 @@ group.concat.measures.native <- function(subjects_dir, subjects_list, measures, 
 #' @param fwhm_per_measure, vector of strings. The fwhm settings to use, for each measure. If this is a string instead of a vector of strings, the same fwhm will be used for all measures.
 #'
 #' @return dataframe with concatenated vertex values. Each column contains the values for one measure, concatenated for all subjects. The column names are a concatination of the measure, "_fwhm", and the fwhm for that measure. WARNING: This dataframe can get large if you have many subjects.
+#'
+#' @examples
+#' \donttest{
+#'    nitools::download_optional_data();
+#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    subjects_list = c('subject1', 'subject2');
+#'    cm = group.concat.measures.standard(subjects_dir, subjects_list,
+#'     c("thickness", "area"), "lh", "10");
+#' }
 #'
 #' @family concatination functions
 #'
