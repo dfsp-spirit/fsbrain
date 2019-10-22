@@ -133,7 +133,7 @@ test_that("Spreading a single value over an atlas region works from agg.res resu
     agg.res = group.agg.atlas.native(subjects_dir, subjects_list, measure, hemi, atlas);
     region_value_list = fs.value.list.from.agg.res(agg.res, "subject1");
 
-    spread = spread.value.over.region(annot, region_value_list);
+    spread = spread.values.over.region(annot, region_value_list);
     new_data = spread$spread_data;
     expect_equal(class(new_data), "numeric");
     expect_equal(length(new_data), length(annot$vertices));
@@ -145,7 +145,7 @@ test_that("Spreading a single value over an atlas region works from manually cre
     annot = freesurferformats::read.fs.annot(annot_file);
 
     region_value_list = list("bankssts"= 0.1, "blah"= 0.3)
-    spread = spread.value.over.region(annot, region_value_list);
+    spread = spread.values.over.region(annot, region_value_list);
     new_data = spread$spread_data;
     expect_equal(class(new_data), "numeric");
     expect_equal(length(new_data), length(annot$vertices));

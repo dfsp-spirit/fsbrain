@@ -27,5 +27,5 @@ numeric vector containing the data.
 Given an atlas and a list that contains one value for each atlas region, create morphometry data in which all region vertices are assigned the value. Can be used to plot stuff like p-values or effect sizes onto brain regions.
 }
 \seealso{
-spread.value.over.subject()
+spread.values.over.subject()
 }
