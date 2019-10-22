@@ -23,6 +23,16 @@ vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh,
 \description{
 Creates a surface mesh, applies a colormap transform the morphometry data values into colors, and renders the resulting colored mesh in an interactive window. If hemi is 'both', the data is rendered for the wholw brain.
 }
+\examples{
+\donttest{
+   nitools::download_optional_data();
+   subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+   morph_data_lh = subject.morph.native(subjects_dir, 'subject1', 'thickness', 'lh');
+   morph_data_rh = NULL;
+   vis.data.on.subject(subjects_dir, 'subject1', morph_data_lh, morph_data_rh);
+}
+
+}
 \seealso{
 Other visualization functions: \code{\link{vis.data.on.fsaverage}},
   \code{\link{vis.subject.annot}},

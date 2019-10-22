@@ -164,45 +164,27 @@ This code will write an MGZ file that can be visualized in FreeView or Matlab/Su
 
 # Data visualization
 
-The visualization functions are based on OpenGL using the rgl package. See the rgl documentation for the requirements. Under MacOS, you will need to have XQuartz installed.
+This package comes with a range of visualization functions. They are based on OpenGL using the rgl package. See the rgl documentation for the requirements. Under MacOS, you will need to have XQuartz installed.
 
-## Rendering surfaces and morphometry data
+## Rendering annotations (or brain parcellations based on an atlas)
 
-You can visualize data directly in GNU R in different ways. If you want an interactive 3-dimensional view of the brain surface, use the `rgl` package. It's a simple mesh renderer that uses an OpenGL backend. It's fast enough to draw meshes with > 300.000 vertices even on old laptops. The `rgl` package is not a dependency of `nitools`, so you'll have to install it.
-
-Let's first load a mesh and an annotation:
+Let's first visualize an annotation:
 
 ```{r, eval = FALSE}
-library("freesurferformats");   # a dependency of nitools, so you have it already
-library("rgl");
-
-sample_subject_dir = file.path(Sys.getenv("FREESURFER_HOME"), "subjects", "bert");       # or whatever you prefer
-
-surf = read.fs.surface(file.path(sample_subject_dir, "surf", "lh.white"));
-annot = read.fs.annot(file.path(sample_subject_dir, "label", "lh.aparc.annot"));
+vis.subject.annot(subjects_dir, 'subject1', 'aparc', 'both');
 ```
 
-Now we can render:
-
-```{r, eval = FALSE}
-mesh = tmesh3d(unlist(surf$vertices), unlist(surf$faces), homogeneous=FALSE);
-rgl.open();
-col = annot$hex_colors_rgb;
-wire3d(mesh, col=col, meshcolor="vertices");
-```
 
 This will give you an interactive window in which you can freely rotate a view similar to the one shown in the following screenshot:
 
 ![**Figure 1**: Atlas regions visualized on a brain surface mesh. Annotation and mesh loaded with `freesurferformats`, and rendered using the `rgl` package.](rgl_brain_aparc.jpg)
 
-
-You could also visualize cortical thickness (continuing the example from above):
+You can also visualize morphometry data:
 
 ```{r, eval = FALSE}
-ct = read.fs.morph(file.path(sample_subject_dir, "surf", "lh.thickness"))   # Load some data to visualize, cortical thickness here
-library(squash); # for colormap functions
-col_ct = cmap(ct, map = makecmap(ct, colFn = jet));  # apply 'jet' colormap to data
-wire3d(mesh, col=col_ct, meshcolor="vertices");
+morph_data_lh = subject.morph.native(subjects_dir, 'subject1', 'thickness', 'lh');
+morph_data_rh = subject.morph.native(subjects_dir, 'subject1', 'thickness', 'rh');
+vis.data.on.subject(subjects_dir, 'subject1', morph_data_lh, morph_data_rh);
 ```
 
 

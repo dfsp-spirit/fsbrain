@@ -61,6 +61,15 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, su
 #'
 #' @param colormap, a colormap. See the squash package for some colormaps. Defaults to squash::jet.
 #'
+#' @examples
+#' \donttest{
+#'    nitools::download_optional_data();
+#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    morph_data_lh = subject.morph.native(subjects_dir, 'subject1', 'thickness', 'lh');
+#'    morph_data_rh = NULL;
+#'    vis.data.on.subject(subjects_dir, 'subject1', morph_data_lh, morph_data_rh);
+#' }
+#'
 #' @family visualization functions
 #'
 #' @importFrom squash jet
@@ -129,6 +138,13 @@ vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage",
 #' @param hemi, string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the label data files to be loaded.
 #'
 #' @param surface, string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
+#'
+#' @examples
+#' \donttest{
+#'    nitools::download_optional_data();
+#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    vis.subject.annot(subjects_dir, 'subject1', 'aparc', 'both');
+#' }
 #'
 #' @family visualization functions
 #'

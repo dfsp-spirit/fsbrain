@@ -21,6 +21,14 @@ vis.subject.annot(subjects_dir, subject_id, atlas, hemi,
 \description{
 Creates a surface mesh, loads the colors from the annotation, and renders the resulting colored mesh in an interactive window. If hemi is 'both', the data is rendered for the wholw brain.
 }
+\examples{
+\donttest{
+   nitools::download_optional_data();
+   subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+   vis.subject.annot(subjects_dir, 'subject1', 'aparc', 'both');
+}
+
+}
 \seealso{
 Other visualization functions: \code{\link{vis.data.on.fsaverage}},
   \code{\link{vis.data.on.subject}},
