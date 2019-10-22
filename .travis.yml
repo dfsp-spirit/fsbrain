@@ -7,3 +7,5 @@ r:
 before_install:
   - sudo apt-get install -y mesa-common-dev libglu1-mesa-dev
 
+script: xvfb-run make test
+
