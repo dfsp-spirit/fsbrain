@@ -27,6 +27,18 @@ named list with entries 'lh' and 'rh'. Each value is a numeric vector containing
 \description{
 Given an atlas and a list that contains one value for each atlas region, create morphometry data in which all region vertices are assigned the value. Can be used to plot stuff like p-values or effect sizes onto brain regions.
 }
+\examples{
+\donttest{
+   nitools::download_optional_data();
+   subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+   lh_region_value_list = list("bankssts"=0.9, "precuneus"=0.7);
+   rh_region_value_list = list("bankssts"=0.5);
+   morph_like_data =
+   spread.values.over.subject(subjects_dir, 'subject1', 'aparc',
+   lh_region_value_list, rh_region_value_list);
+}
+
+}
 \seealso{
 Other atlas functions: \code{\link{get.atlas.region.names}},
   \code{\link{group.agg.atlas.native}},

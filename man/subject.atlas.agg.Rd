@@ -22,6 +22,16 @@ dataframe with aggregated values for all regions, with 2 columns and n rows, whe
 \description{
 Aggregate morphometry data over brain atlas regions, e.g., compute the mean thickness value over all regions in an atlas.
 }
+\examples{
+\donttest{
+   nitools::download_optional_data();
+   subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+   morph_data = subject.morph.native(subjects_dir, 'subject1', 'thickness', 'lh');
+   annot = subject.annot(subjects_dir, 'subject1', 'lh', 'aparc');
+   agg = subject.atlas.agg(morph_data, annot$label_names);
+}
+
+}
 \seealso{
 Other aggregation functions: \code{\link{group.agg.atlas.native}},
   \code{\link{group.agg.atlas.standard}}

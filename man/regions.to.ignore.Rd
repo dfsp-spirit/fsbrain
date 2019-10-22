@@ -15,6 +15,11 @@ vector of strings, the region names.
 \description{
 Give suggestions for regions to ignore for an atlas. These are regions for which many subjects do not have any vertices in them, or the Medial Wall and Unknown regions.
 }
+\examples{
+   aparc_regions_ign = regions.to.ignore('aparc');
+   aparc_a2009s_regions_ign = regions.to.ignore('aparc.a2009s');
+
+}
 \seealso{
 Other atlas functions: \code{\link{get.atlas.region.names}},
   \code{\link{group.agg.atlas.native}},

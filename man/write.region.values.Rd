@@ -36,6 +36,16 @@ a named list with the following entries: "data": a vector containing the data. "
 \description{
 Given an atlas and a list that contains one value for each atlas region, write a morphometry file in which all region vertices are assigned the value. Can be used to plot stuff like p-values or effect sizes onto brain regions.
 }
+\examples{
+\donttest{
+   nitools::download_optional_data();
+   subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+   region_value_list = list("bankssts"=0.9, "precuneus"=0.7);
+   write.region.values(subjects_dir, 'subject1', 'lh', 'aparc',
+    region_value_list, 'pvalues.mgz', do_write_file = FALSE);
+}
+
+}
 \seealso{
 Other output functions: \code{\link{write.region.aggregated}},
   \code{\link{write.region.values.fsaverage}}

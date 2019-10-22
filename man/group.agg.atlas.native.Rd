@@ -31,6 +31,14 @@ Aggregate native space morphometry data over brain atlas regions, e.g., compute 
    molten=melt(agg, id=c('subject'));
    ggplot(data=molten, aes(x=variable, y=value, group=subject)) + geom_point() + geom_line() + theme(axis.text.x = element_text(angle = 90, hjust = 1));
 }
+\examples{
+\donttest{
+   nitools::download_optional_data();
+   subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+   agg = group.agg.atlas.native(subjects_dir, 'subject1', 'thickness', 'lh', 'aparc');
+}
+
+}
 \seealso{
 Other aggregation functions: \code{\link{group.agg.atlas.standard}},
   \code{\link{subject.atlas.agg}}

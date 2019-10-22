@@ -26,6 +26,17 @@ named list with following entries: "spread_data": a vector of length n, where n 
 \description{
 Given an annotation and a list of values (one per brain region), return data that has the values for each region mapped to all region vertices.
 }
+\examples{
+\donttest{
+   nitools::download_optional_data();
+   subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+   annot = subject.annot(subjects_dir, 'subject1', 'lh', 'aparc');
+   region_value_list = list("bankssts"=0.9, "precuneus"=0.7);
+   morph_like_data =
+   spread.values.over.annot(annot, region_value_list, value_for_unlisted_regions=0.0);
+}
+
+}
 \seealso{
 Other atlas functions: \code{\link{get.atlas.region.names}},
   \code{\link{group.agg.atlas.native}},

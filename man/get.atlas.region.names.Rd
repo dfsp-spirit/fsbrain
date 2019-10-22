@@ -22,6 +22,15 @@ vector of strings, the region names.
 \description{
 Determine atlas region names from a subject. WARNING: Not all subjects have all regions of an atlas. You should use an average subject like fsaverage to get all regions.
 }
+\examples{
+\donttest{
+   nitools::download_optional_data();
+   subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+   atlas_regions = get.atlas.region.names('aparc',
+    template_subjects_dir=subjects_dir, template_subject='subject1');
+}
+
+}
 \seealso{
 Other atlas functions: \code{\link{group.agg.atlas.native}},
   \code{\link{group.agg.atlas.standard}},

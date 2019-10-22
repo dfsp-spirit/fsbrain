@@ -12,6 +12,15 @@
 #'
 #' @return dataframe with aggregated values for all regions, with 2 columns and n rows, where n is the number of effective regions. The columns are: "region": string, contains the region name. "aggregated": numeric, contains the result of applying agg_fun to the morphometry data in that region.
 #'
+#' @examples
+#' \donttest{
+#'    nitools::download_optional_data();
+#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    morph_data = subject.morph.native(subjects_dir, 'subject1', 'thickness', 'lh');
+#'    annot = subject.annot(subjects_dir, 'subject1', 'lh', 'aparc');
+#'    agg = subject.atlas.agg(morph_data, annot$label_names);
+#' }
+#'
 #' @family aggregation functions
 #' @family atlas functions
 #'
@@ -73,6 +82,13 @@ subject.atlas.agg <- function(vertex_morph_data, vertex_label_names, agg_fun = m
 #' @param cache_file, string or NULL. If given, it is interpreted as path of a file, and the data will be cached in the file cache_file in RData format. If the file does not exist yet, the function will run and cache the data in the file. If the file exists, the function will load the data from the file instead of running. The filename should end in '.RData', but that is not enforced or checked in any way. WARNING: If cached data is returned, all parameters passed to this function (with the exception of 'cache_file') are ignored! Whether the cached data is for another subjects_list or hemi is NOT checked! You have to ensure this yourself, by using different filenames. Defaults to NULL.
 #'
 #' @return dataframe with aggregated values for all regions and subjects, with n columns and m rows, where n is the number of subjects and m is the number of regions.
+#'
+#' @examples
+#' \donttest{
+#'    nitools::download_optional_data();
+#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    agg = group.agg.atlas.native(subjects_dir, 'subject1', 'thickness', 'lh', 'aparc');
+#' }
 #'
 #' @family aggregation functions
 #' @family atlas functions
@@ -262,6 +278,16 @@ fs.value.list.from.agg.res <- function(agg_res, subject_id) {
 #'
 #' @return named list with following entries: "spread_data": a vector of length n, where n is the number of vertices in the annotation. One could write this to an MGH or curv file for visualization. "regions_not_in_annot": list of regions which are not in the annotation, but in the region_value_list. Their values were ignored.
 #'
+#' @examples
+#' \donttest{
+#'    nitools::download_optional_data();
+#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    annot = subject.annot(subjects_dir, 'subject1', 'lh', 'aparc');
+#'    region_value_list = list("bankssts"=0.9, "precuneus"=0.7);
+#'    morph_like_data =
+#'    spread.values.over.annot(annot, region_value_list, value_for_unlisted_regions=0.0);
+#' }
+#'
 #' @family atlas functions
 #'
 #' @export
@@ -372,6 +398,15 @@ write.region.aggregated <- function(subjects_dir, subjects_list, measure, hemi, 
 #'
 #' @return a named list with the following entries: "data": a vector containing the data. "file_written": string, path to the file that was written, only exists if do_write = TRUE.
 #'
+#' @examples
+#' \donttest{
+#'    nitools::download_optional_data();
+#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    region_value_list = list("bankssts"=0.9, "precuneus"=0.7);
+#'    write.region.values(subjects_dir, 'subject1', 'lh', 'aparc',
+#'     region_value_list, 'pvalues.mgz', do_write_file = FALSE);
+#' }
+#'
 #' @family output functions
 #'
 #' @export
@@ -416,6 +451,15 @@ write.region.values <- function(subjects_dir, subject_id, hemi, atlas, region_va
 #'
 #' @return numeric vector containing the data.
 #'
+#' @examples
+#' \donttest{
+#'    nitools::download_optional_data();
+#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    region_value_list = list("bankssts"=0.9, "precuneus"=0.7);
+#'    morph_like_data =
+#'    spread.values.over.hemi(subjects_dir, 'subject1', 'lh', 'aparc', region_value_list);
+#' }
+#'
 #' @family atlas functions
 #'
 #' @export
@@ -447,6 +491,17 @@ spread.values.over.hemi <- function(subjects_dir, subject_id, hemi, atlas, regio
 #' @param value_for_unlisted_regions, numeric scalar. The value to assign to vertices which are part of atlas regions that are not listed in region_value_list. Defaults to NaN.
 #'
 #' @return named list with entries 'lh' and 'rh'. Each value is a numeric vector containing the data for the respective hemisphere.
+#'
+#' @examples
+#' \donttest{
+#'    nitools::download_optional_data();
+#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    lh_region_value_list = list("bankssts"=0.9, "precuneus"=0.7);
+#'    rh_region_value_list = list("bankssts"=0.5);
+#'    morph_like_data =
+#'    spread.values.over.subject(subjects_dir, 'subject1', 'aparc',
+#'    lh_region_value_list, rh_region_value_list);
+#' }
 #'
 #' @family atlas functions
 #'
@@ -603,6 +658,14 @@ merge.hemi.annots <- function(lh_annot, rh_annot) {
 #'
 #' @return vector of strings, the region names.
 #'
+#' @examples
+#' \donttest{
+#'    nitools::download_optional_data();
+#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    atlas_regions = get.atlas.region.names('aparc',
+#'     template_subjects_dir=subjects_dir, template_subject='subject1');
+#' }
+#'
 #' @family atlas functions
 #'
 #' @export
@@ -623,6 +686,10 @@ get.atlas.region.names <- function(atlas, template_subjects_dir=NULL, template_s
 #' @param atlas, string. The name of an atlas. Supported strings are 'aparc' and 'aparc.a2009s'.
 #'
 #' @return vector of strings, the region names.
+#'
+#' @examples
+#'    aparc_regions_ign = regions.to.ignore('aparc');
+#'    aparc_a2009s_regions_ign = regions.to.ignore('aparc.a2009s');
 #'
 #' @family atlas functions
 #'
