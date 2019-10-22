@@ -22,3 +22,17 @@ dataframe with aggregated values for all regions, with 2 columns and n rows, whe
 \description{
 Aggregate morphometry data over brain atlas regions, e.g., compute the mean thickness value over all regions in an atlas.
 }
+\seealso{
+Other aggregation functions: \code{\link{group.agg.atlas.native}},
+  \code{\link{group.agg.atlas.standard}}
+
+Other atlas functions: \code{\link{get.atlas.region.names}},
+  \code{\link{group.agg.atlas.native}},
+  \code{\link{group.agg.atlas.standard}},
+  \code{\link{regions.to.ignore}},
+  \code{\link{spread.values.over.annot}},
+  \code{\link{spread.values.over.hemi}},
+  \code{\link{spread.values.over.subject}}
+}
+\concept{aggregation functions}
+\concept{atlas functions}

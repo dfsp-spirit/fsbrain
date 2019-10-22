@@ -12,6 +12,7 @@
 #'
 #' @return dataframe with concatenated vertex values. Each column contains the values for one measure, concatenated for all subjects. WARNING: This dataframe can get large if you have many subjects.
 #'
+#' @family concatination functions
 #'
 #' @export
 group.concat.measures.native <- function(subjects_dir, subjects_list, measures, hemi) {
@@ -73,6 +74,7 @@ group.concat.measures.native <- function(subjects_dir, subjects_list, measures, 
 #'
 #' @return dataframe with concatenated vertex values. Each column contains the values for one measure, concatenated for all subjects. The column names are a concatination of the measure, "_fwhm", and the fwhm for that measure. WARNING: This dataframe can get large if you have many subjects.
 #'
+#' @family concatination functions
 #'
 #' @export
 group.concat.measures.standard <- function(subjects_dir, subjects_list, measures, hemi, fwhm_per_measure) {

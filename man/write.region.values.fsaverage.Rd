@@ -31,3 +31,8 @@ a named list with the following entries: "data": a vector containing the data. "
 \description{
 Given an atlas and a list that contains one value for each atlas region, write a morphometry file in which all region vertices are assigned the value. Can be used to plot stuff like p-values or effect sizes onto brain regions.
 }
+\seealso{
+Other output functions: \code{\link{write.region.aggregated}},
+  \code{\link{write.region.values}}
+}
+\concept{output functions}

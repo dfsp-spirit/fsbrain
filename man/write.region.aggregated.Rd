@@ -27,3 +27,8 @@ write.region.aggregated(subjects_dir, subjects_list, measure, hemi, atlas,
 \description{
 Given an atlas, a subjects list and a measure, aggregate the measure over each region (e.g., mean) and write an output morphometry file in which the value for all region vertices is set to the aggregated value.
 }
+\seealso{
+Other output functions: \code{\link{write.region.values.fsaverage}},
+  \code{\link{write.region.values}}
+}
+\concept{output functions}

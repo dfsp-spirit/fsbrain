@@ -12,6 +12,8 @@
 #'
 #' @return dataframe with aggregated values for all regions, with 2 columns and n rows, where n is the number of effective regions. The columns are: "region": string, contains the region name. "aggregated": numeric, contains the result of applying agg_fun to the morphometry data in that region.
 #'
+#' @family aggregation functions
+#' @family atlas functions
 #'
 #' @export
 subject.atlas.agg <- function(vertex_morph_data, vertex_label_names, agg_fun = mean, requested_label_names = c()) {
@@ -72,6 +74,8 @@ subject.atlas.agg <- function(vertex_morph_data, vertex_label_names, agg_fun = m
 #'
 #' @return dataframe with aggregated values for all regions and subjects, with n columns and m rows, where n is the number of subjects and m is the number of regions.
 #'
+#' @family aggregation functions
+#' @family atlas functions
 #'
 #' @export
 group.agg.atlas.native <- function(subjects_dir, subjects_list, measure, hemi, atlas, agg_fun = mean, cache_file=NULL) {
@@ -159,6 +163,8 @@ group.agg.atlas.native <- function(subjects_dir, subjects_list, measure, hemi, a
 #'
 #' @return dataframe with aggregated values for all regions and subjects, with n columns and m rows, where n is the number of subjects and m is the number of regions.
 #'
+#' @family aggregation functions
+#' @family atlas functions
 #'
 #' @export
 group.agg.atlas.standard <- function(subjects_dir, subjects_list, measure, hemi, atlas, fwhm, agg_fun = mean, template_subject='fsaverage', cache_file=NULL) {
@@ -256,6 +262,8 @@ fs.value.list.from.agg.res <- function(agg_res, subject_id) {
 #'
 #' @return named list with following entries: "spread_data": a vector of length n, where n is the number of vertices in the annotation. One could write this to an MGH or curv file for visualization. "regions_not_in_annot": list of regions which are not in the annotation, but in the region_value_list. Their values were ignored.
 #'
+#' @family atlas functions
+#'
 #' @export
 spread.values.over.annot <- function(annot, region_value_list, value_for_unlisted_regions=NaN, warn_on_unmatched_list_regions=FALSE, warn_on_unmatched_atlas_regions=FALSE) {
     num_verts = length(annot$vertices);
@@ -321,6 +329,8 @@ spread.values.over.annot <- function(annot, region_value_list, value_for_unliste
 #'
 #' @param format, string. A morphometry file format. One of 'mgh', 'mgz' or 'curv.' The output file name extension will be set accordingly. Defaults to 'mgz'.
 #'
+#' @family output functions
+#'
 #' @export
 write.region.aggregated <- function(subjects_dir, subjects_list, measure, hemi, atlas, agg_fun = mean, outfile_morph_name="", format="mgz") {
     if(nchar(outfile_morph_name)==0) {
@@ -361,6 +371,8 @@ write.region.aggregated <- function(subjects_dir, subjects_list, measure, hemi, 
 #' @param value_for_unlisted_regions, numeric scalar. The value to assign to vertices which are part of atlas regions that are not listed in region_value_list. Defaults to NaN.
 #'
 #' @return a named list with the following entries: "data": a vector containing the data. "file_written": string, path to the file that was written, only exists if do_write = TRUE.
+#'
+#' @family output functions
 #'
 #' @export
 write.region.values <- function(subjects_dir, subject_id, hemi, atlas, region_value_list, outfile_morph_name, format="mgz", do_write_file = TRUE, output_path = NULL, value_for_unlisted_regions=NaN) {
@@ -404,7 +416,7 @@ write.region.values <- function(subjects_dir, subject_id, hemi, atlas, region_va
 #'
 #' @return numeric vector containing the data.
 #'
-#' @seealso spread.values.over.subject()
+#' @family atlas functions
 #'
 #' @export
 spread.values.over.hemi <- function(subjects_dir, subject_id, hemi, atlas, region_value_list, value_for_unlisted_regions=NaN) {
@@ -436,7 +448,7 @@ spread.values.over.hemi <- function(subjects_dir, subject_id, hemi, atlas, regio
 #'
 #' @return named list with entries 'lh' and 'rh'. Each value is a numeric vector containing the data for the respective hemisphere.
 #'
-#' @seealso spread.values.over.hemi()
+#' @family atlas functions
 #'
 #' @export
 spread.values.over.subject <- function(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, value_for_unlisted_regions=NaN) {
@@ -476,6 +488,8 @@ spread.values.over.subject <- function(subjects_dir, subject_id, atlas, lh_regio
 #' @param value_for_unlisted_regions, numeric scalar. The value to assign to vertices which are part of atlas regions that are not listed in region_value_list. Defaults to NaN.
 #'
 #' @return a named list with the following entries: "data": a vector containing the data. "file_written": string, path to the file that was written, only exists if do_write = TRUE.
+#'
+#' @family output functions
 #'
 #' @export
 write.region.values.fsaverage <- function(hemi, atlas, region_value_list, output_file, template_subject='fsaverage', template_subjects_dir=NULL, show_freeview_tip=FALSE, value_for_unlisted_regions=NaN) {
@@ -589,6 +603,8 @@ merge.hemi.annots <- function(lh_annot, rh_annot) {
 #'
 #' @return vector of strings, the region names.
 #'
+#' @family atlas functions
+#'
 #' @export
 get.atlas.region.names <- function(atlas, template_subjects_dir=NULL, template_subject='fsaverage', hemi='lh') {
   if(is.null(template_subjects_dir)) {
@@ -607,6 +623,8 @@ get.atlas.region.names <- function(atlas, template_subjects_dir=NULL, template_s
 #' @param atlas, string. The name of an atlas. Supported strings are 'aparc' and 'aparc.a2009s'.
 #'
 #' @return vector of strings, the region names.
+#'
+#' @family atlas functions
 #'
 #' @export
 regions.to.ignore <- function(atlas) {

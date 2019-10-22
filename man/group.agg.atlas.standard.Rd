@@ -36,3 +36,17 @@ Aggregate standard space morphometry data over brain atlas regions, e.g., comput
    molten=melt(agg, id=c('subject'));
    ggplot(data=molten, aes(x=variable, y=value, group=subject)) + geom_point() + geom_line() + theme(axis.text.x = element_text(angle = 90, hjust = 1));
 }
+\seealso{
+Other aggregation functions: \code{\link{group.agg.atlas.native}},
+  \code{\link{subject.atlas.agg}}
+
+Other atlas functions: \code{\link{get.atlas.region.names}},
+  \code{\link{group.agg.atlas.native}},
+  \code{\link{regions.to.ignore}},
+  \code{\link{spread.values.over.annot}},
+  \code{\link{spread.values.over.hemi}},
+  \code{\link{spread.values.over.subject}},
+  \code{\link{subject.atlas.agg}}
+}
+\concept{aggregation functions}
+\concept{atlas functions}

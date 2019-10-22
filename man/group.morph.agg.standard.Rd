@@ -33,3 +33,9 @@ dataframe with aggregated values for all subjects, with 2 columns and n rows, wh
 \description{
 Compute the mean (or other aggregates) over all vertices of a subject from standard space morphometry data (like 'surf/lh.area.fwhm10.fsaverage.mgh'). Uses knowledge about the FreeSurfer directory structure to load the correct file.
 }
+\seealso{
+Other global aggregation functions: \code{\link{group.morph.agg.native}},
+  \code{\link{group.multimorph.agg.native}},
+  \code{\link{group.multimorph.agg.standard}}
+}
+\concept{global aggregation functions}

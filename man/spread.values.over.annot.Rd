@@ -26,3 +26,13 @@ named list with following entries: "spread_data": a vector of length n, where n 
 \description{
 Given an annotation and a list of values (one per brain region), return data that has the values for each region mapped to all region vertices.
 }
+\seealso{
+Other atlas functions: \code{\link{get.atlas.region.names}},
+  \code{\link{group.agg.atlas.native}},
+  \code{\link{group.agg.atlas.standard}},
+  \code{\link{regions.to.ignore}},
+  \code{\link{spread.values.over.hemi}},
+  \code{\link{spread.values.over.subject}},
+  \code{\link{subject.atlas.agg}}
+}
+\concept{atlas functions}

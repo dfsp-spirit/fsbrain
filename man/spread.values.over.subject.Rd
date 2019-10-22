@@ -28,5 +28,12 @@ named list with entries 'lh' and 'rh'. Each value is a numeric vector containing
 Given an atlas and a list that contains one value for each atlas region, create morphometry data in which all region vertices are assigned the value. Can be used to plot stuff like p-values or effect sizes onto brain regions.
 }
 \seealso{
-spread.values.over.hemi()
+Other atlas functions: \code{\link{get.atlas.region.names}},
+  \code{\link{group.agg.atlas.native}},
+  \code{\link{group.agg.atlas.standard}},
+  \code{\link{regions.to.ignore}},
+  \code{\link{spread.values.over.annot}},
+  \code{\link{spread.values.over.hemi}},
+  \code{\link{subject.atlas.agg}}
 }
+\concept{atlas functions}
