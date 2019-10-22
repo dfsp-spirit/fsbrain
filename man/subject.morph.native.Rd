@@ -24,6 +24,14 @@ vector with native space morph data
 \description{
 Load native space morphometry data (like 'surf/lh.area') for a subject from disk. Uses knowledge about the FreeSurfer directory structure to load the correct file.
 }
+\examples{
+\donttest{
+   nitools::download_optional_data();
+   subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+   thickness_lh = subject.morph.native(subjects_dir, "subject1", "thickness", "lh");
+}
+
+}
 \seealso{
 Other morphometry data functions: \code{\link{group.morph.native}},
   \code{\link{group.morph.standard}},

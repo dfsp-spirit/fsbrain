@@ -20,6 +20,13 @@
 #'
 #' @family morphometry data functions
 #'
+#' @examples
+#' \donttest{
+#'    nitools::download_optional_data();
+#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    thickness_lh = subject.morph.native(subjects_dir, "subject1", "thickness", "lh");
+#' }
+#'
 #' @export
 subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, format='curv') {
 
@@ -63,6 +70,13 @@ subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, format
 #' @param format, string. One of 'mgh', 'mgz', 'curv'. Defaults to 'mgh'.
 #'
 #' @return vector with standard space morph data
+#'
+#' @examples
+#' \donttest{
+#'    nitools::download_optional_data();
+#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    thickness_lh = subject.morph.standard(subjects_dir, "subject1", "thickness", "lh", fwhm='10');
+#' }
 #'
 #' @family morphometry data functions
 #'
@@ -111,6 +125,11 @@ subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm
 #'
 #' @return string, the file path.
 #'
+#' @examples
+#'    filepath_lh_thickness_std =
+#'    subject.filepath.morph.standard("/media/ext/data/study1", "subject1",
+#'     "thickness", "lh", fwhm="25");
+#'
 #' @export
 subject.filepath.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm='10', template_subject='fsaverage', format='mgh', warn_if_nonexistent=FALSE, error_if_nonexistent=FALSE) {
     if(!(hemi %in% c("lh", "rh"))) {
@@ -156,6 +175,10 @@ subject.filepath.morph.standard <- function(subjects_dir, subject_id, measure, h
 #' @param error_if_nonexistent, logical. Whether to raise an error if the file does not exist or cannot be accessed. Defaults to FALSE.
 #'
 #' @return string, the file path.
+#'
+#' @examples
+#'    filepath_lh_thickness =
+#'    subject.filepath.morph.native("/media/ext/data/study1", "subject1", "thickness", "lh");
 #'
 #' @export
 subject.filepath.morph.native <- function(subjects_dir, subject_id, measure, hemi, format='curv', warn_if_nonexistent=FALSE, error_if_nonexistent=FALSE) {
@@ -247,6 +270,13 @@ subject.filepath.any <- function(subjects_dir, subject_id, relative_path_parts, 
 #'
 #' @family label data functions
 #'
+#' @examples
+#' \donttest{
+#'    nitools::download_optional_data();
+#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    cortex_lh = subject.label(subjects_dir, "subject1", "cortex.label", "lh");
+#' }
+#'
 #' @export
 subject.label <- function(subjects_dir, subject_id, label, hemi, return_one_based_indices=TRUE) {
 
@@ -272,6 +302,13 @@ subject.label <- function(subjects_dir, subject_id, label, hemi, return_one_base
 #' @param atlas, string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.
 #'
 #' @return the annotation, as returned by freesurferformats::read.fs.annot().
+#'
+#' @examples
+#' \donttest{
+#'    nitools::download_optional_data();
+#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    annot_lh = subject.annot(subjects_dir, "subject1", "lh", "aparc");
+#' }
 #'
 #' @family atlas functions
 #'
@@ -315,6 +352,13 @@ subject.annot <- function(subjects_dir, subject_id, hemi, atlas) {
 #' @param hemi, string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the surface file to be loaded.
 #'
 #' @return the surface, as returned by freesurferformats::read.fs.surface(). A named list containing entries 'vertices' and 'faces'.
+#'
+#' @examples
+#' \donttest{
+#'    nitools::download_optional_data();
+#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    lh_white = subject.surface(subjects_dir, "subject1", "white", "lh");
+#' }
 #'
 #' @export
 subject.surface <- function(subjects_dir, subject_id, surface, hemi) {

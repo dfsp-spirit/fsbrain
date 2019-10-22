@@ -21,3 +21,11 @@ the surface, as returned by freesurferformats::read.fs.surface(). A named list c
 \description{
 Load a brain surface for a subject.
 }
+\examples{
+\donttest{
+   nitools::download_optional_data();
+   subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+   lh_white = subject.surface(subjects_dir, "subject1", "white", "lh");
+}
+
+}

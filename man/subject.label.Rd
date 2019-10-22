@@ -24,6 +24,14 @@ integer vector with label data: the list of vertex indices in the label. See 're
 \description{
 Load a label (like 'label/lh.cortex.label') for a subject from disk. Uses knowledge about the FreeSurfer directory structure to load the correct file.
 }
+\examples{
+\donttest{
+   nitools::download_optional_data();
+   subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+   cortex_lh = subject.label(subjects_dir, "subject1", "cortex.label", "lh");
+}
+
+}
 \seealso{
 Other label data functions: \code{\link{group.label}}
 }

@@ -21,6 +21,14 @@ the annotation, as returned by freesurferformats::read.fs.annot().
 \description{
 Load a brain surface annotation, i.e., a cortical parcellation based on an atlas, for a subject.
 }
+\examples{
+\donttest{
+   nitools::download_optional_data();
+   subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+   annot_lh = subject.annot(subjects_dir, "subject1", "lh", "aparc");
+}
+
+}
 \seealso{
 Other atlas functions: \code{\link{get.atlas.region.names}},
   \code{\link{group.agg.atlas.native}},
