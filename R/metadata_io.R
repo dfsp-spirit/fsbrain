@@ -11,6 +11,12 @@
 #'
 #' @return a vector of strings. The subject IDs.
 #'
+#' @examples
+#'    subjects_file = system.file("extdata", "subjects.txt", package = "nitools", mustWork = TRUE);
+#'    subjects_list = read.md.subjects(subjects_file);
+#'
+#' @family metdata functions
+#'
 #' @export
 read.md.subjects = function(subjects_file, header=FALSE) {
     if(! file.exists(subjects_file)) {
@@ -42,6 +48,15 @@ read.md.subjects = function(subjects_file, header=FALSE) {
 #' @param stringsAsFactors, logical. Whether to convert strings in the input data to factors. Defaults to TRUE.
 #'
 #' @return a dataframe. The data in the file. String columns will be returned as factors, which you may want to adapt afterwards for the subject identifier column.
+#'
+#' @family metdata functions
+#'
+#' @examples
+#'    demographics_file =
+#'    system.file("extdata", "demographics.tsv", package = "nitools", mustWork = TRUE);
+#'    column_names = c("subject_id", "group", "age");
+#'    demographics = read.md.demographics(demographics_file,
+#'    column_names = column_names, report = FALSE);
 #'
 #' @export
 #' @importFrom dplyr "%>%"

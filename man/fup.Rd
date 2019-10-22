@@ -15,3 +15,7 @@ string, the input string with the first character transformed to uppercase.
 \description{
 Transform first character of a string to uppercase. This is useful when labeling plots. Important: this function does not know about different encodings, languages or anything, it just calls toupper() for the first character.
 }
+\examples{
+   word_up = fup("word");
+
+}

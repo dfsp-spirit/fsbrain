@@ -29,3 +29,15 @@ a dataframe. The data in the file. String columns will be returned as factors, w
 \description{
 Load a list of subjects and metadata from a demographics file, i.e., a tab-separated file containing an arbitrary number of columns, one of which must be the subject id.
 }
+\examples{
+   demographics_file =
+   system.file("extdata", "demographics.tsv", package = "nitools", mustWork = TRUE);
+   column_names = c("subject_id", "group", "age");
+   demographics = read.md.demographics(demographics_file,
+   column_names = column_names, report = FALSE);
+
+}
+\seealso{
+Other metdata functions: \code{\link{read.md.subjects}}
+}
+\concept{metdata functions}

@@ -6,6 +6,9 @@
 #'
 #' @return string, the input string with the first character transformed to uppercase.
 #'
+#' @examples
+#'    word_up = fup("word");
+#'
 #' @export
 fup <- function(word) {
   substr(word, 1, 1) <- toupper(substr(word, 1, 1));
