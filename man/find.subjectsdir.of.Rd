@@ -12,7 +12,7 @@ find.subjectsdir.of(subject_id = "fsaverage", mustWork = FALSE)
 \item{mustWork}{logical. Whether the function should with an error stop if the directory cannot be found. If this is TRUE, the return value will be only the 'found_at' entry of the list (i.e., only the path of the subjects dir).}
 }
 \value{
-named list with the following entries: "found": logical, whether it was found. "found_at": Only set if found=TRUE, the path to the fsaverage directory (NOT including the fsaverage dir itself).
+named list with the following entries: "found": logical, whether it was found. "found_at": Only set if found=TRUE, the path to the fsaverage directory (NOT including the fsaverage dir itself). See mustWork for important information.
 }
 \description{
 Try to find directory containing the fsaverage subject (or any other subject) by checking the environment variables FREESURFER_HOME and SUBJECTS_DIR.

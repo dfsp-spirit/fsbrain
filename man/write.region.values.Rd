@@ -12,7 +12,7 @@ write.region.values(subjects_dir, subject_id, hemi, atlas,
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
 
-\item{subject_id, }{string. The subejct identifier}
+\item{subject_id, }{string. The subject identifier}
 
 \item{hemi, }{string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.}
 

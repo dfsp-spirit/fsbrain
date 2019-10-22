@@ -266,7 +266,7 @@ spread.value.over.region <- function(annot, region_value_list, value_for_unliste
     regions_not_in_annot = c();
 
     list_region_names = names(region_value_list);
-    for (idx in 1:length(region_value_list)) {
+    for (idx in seq_len(length(region_value_list))) {
       region_name = list_region_names[idx];
       region_value = region_value_list[idx];
       new_data[annot$label_names==region_name] = region_value;
@@ -342,7 +342,7 @@ write.region.aggregated <- function(subjects_dir, subjects_list, measure, hemi, 
 #'
 #' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
 #'
-#' @param subject_id, string. The subejct identifier
+#' @param subject_id, string. The subject identifier
 #'
 #' @param hemi, string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.
 #'
@@ -373,10 +373,7 @@ write.region.values <- function(subjects_dir, subject_id, hemi, atlas, region_va
     morph_outfile = file.path(output_path, output_file_name_no_path);
   }
 
-  annot = subject.annot(subjects_dir, subject_id, hemi, atlas);
-
-  spread = spread.value.over.region(annot, region_value_list, value_for_unlisted_regions=value_for_unlisted_regions);
-  morph_data = spread$spread_data;
+  morph_data = spread.region.values.hemi(subjects_dir, subject_id, hemi, atlas, region_value_list, value_for_unlisted_regions=value_for_unlisted_regions);
 
   return_list = list();
   if (do_write_file) {
@@ -385,6 +382,75 @@ write.region.values <- function(subjects_dir, subject_id, hemi, atlas, region_va
   }
 
   return_list$data = morph_data;
+  return(return_list);
+}
+
+
+#' @title Spread the values in the region_value_list and return them for one hemisphere.
+#'
+#' @description Given an atlas and a list that contains one value for each atlas region, create morphometry data in which all region vertices are assigned the value. Can be used to plot stuff like p-values or effect sizes onto brain regions.
+#'
+#' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
+#'
+#' @param subject_id, string. The subject identifier
+#'
+#' @param hemi, string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.
+#'
+#' @param atlas, string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.
+#'
+#' @param region_value_list, named list. A list in which the names are atlas regions, and the values are the value to write to all vertices of that region.
+#'
+#' @param value_for_unlisted_regions, numeric scalar. The value to assign to vertices which are part of atlas regions that are not listed in region_value_list. Defaults to NaN.
+#'
+#' @return numeric vector containing the data.
+#'
+#' @seealso spread.value.over.subject()
+#'
+#' @export
+spread.value.over.hemi <- function(subjects_dir, subject_id, hemi, atlas, region_value_list, value_for_unlisted_regions=NaN) {
+  if(!(hemi %in% c("lh", "rh"))) {
+    stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
+  }
+
+  annot = subject.annot(subjects_dir, subject_id, hemi, atlas);
+  spread = spread.value.over.region(annot, region_value_list, value_for_unlisted_regions=value_for_unlisted_regions);
+  morph_data = spread$spread_data;
+  return(morph_data);
+}
+
+#' @title Spread the values in the region_value_list and return them for one hemisphere.
+#'
+#' @description Given an atlas and a list that contains one value for each atlas region, create morphometry data in which all region vertices are assigned the value. Can be used to plot stuff like p-values or effect sizes onto brain regions.
+#'
+#' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
+#'
+#' @param subject_id, string. The subject identifier
+#'
+#' @param atlas, string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.
+#'
+#' @param lh_region_value_list, named list. A list in which the names are atlas regions, and the values are the value to write to all vertices of that region. Applied to the left hemisphere.
+#'
+#' @param rh_region_value_list, named list. A list in which the names are atlas regions, and the values are the value to write to all vertices of that region. Applied to the right hemisphere.
+#'
+#' @param value_for_unlisted_regions, numeric scalar. The value to assign to vertices which are part of atlas regions that are not listed in region_value_list. Defaults to NaN.
+#'
+#' @return named list with entries 'lh' and 'rh'. Each value is a numeric vector containing the data for the respective hemisphere.
+#'
+#' @seealso spread.value.over.hemi()
+#'
+#' @export
+spread.value.over.subject <- function(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, value_for_unlisted_regions=NaN) {
+
+  if(is.null(lh_region_value_list)) {
+    lh_region_value_list = list();
+  }
+  if(is.null(rh_region_value_list)) {
+    rh_region_value_list = list();
+  }
+
+  morph_data_lh = spread.value.over.hemi(subjects_dir, subject_id, 'lh', atlas, lh_region_value_list, value_for_unlisted_regions=value_for_unlisted_regions);
+  morph_data_rh = spread.value.over.hemi(subjects_dir, subject_id, 'rh', atlas, rh_region_value_list, value_for_unlisted_regions=value_for_unlisted_regions);
+  return_list = list("lh"=morph_data_lh, "rh"=morph_data_rh);
   return(return_list);
 }
 
@@ -424,9 +490,8 @@ write.region.values.fsaverage <- function(hemi, atlas, region_value_list, output
     subjects_dir = template_subjects_dir;
   }
   subject_id = template_subject;
-  annot = subject.annot(subjects_dir, subject_id, hemi, atlas);
-  spread = spread.value.over.region(annot, region_value_list, value_for_unlisted_regions=value_for_unlisted_regions);
-  morph_data = spread$spread_data;
+
+  morph_data = spread.region.values.hemi(subjects_dir, subject_id, hemi, atlas, region_value_list, value_for_unlisted_regions=value_for_unlisted_regions);
 
   do_write_file = !is.null(output_file);
   return_list = list();
@@ -449,7 +514,7 @@ write.region.values.fsaverage <- function(hemi, atlas, region_value_list, output
 #'
 #' @param mustWork logical. Whether the function should with an error stop if the directory cannot be found. If this is TRUE, the return value will be only the 'found_at' entry of the list (i.e., only the path of the subjects dir).
 #'
-#' @return named list with the following entries: "found": logical, whether it was found. "found_at": Only set if found=TRUE, the path to the fsaverage directory (NOT including the fsaverage dir itself).
+#' @return named list with the following entries: "found": logical, whether it was found. "found_at": Only set if found=TRUE, the path to the fsaverage directory (NOT including the fsaverage dir itself). See mustWork for important information.
 #'
 #' @export
 find.subjectsdir.of <- function(subject_id='fsaverage', mustWork=FALSE) {
@@ -478,7 +543,7 @@ find.subjectsdir.of <- function(subject_id='fsaverage', mustWork=FALSE) {
     if(ret$found) {
       return(ret$found_at);
     } else {
-      stop(sprintf("Could not find subjects dir containing subject '%s'. Checked for directories given by environment variables FREESURFER_HOME and SUBJECTS_DIR.\n", subject_id));
+      stop(sprintf("Could not find subjects dir containing subject '%s' and parameter 'mustWork' is TRUE. Checked for directories given by environment variables FREESURFER_HOME and SUBJECTS_DIR. Please set them by installing FreeSurfer.\n", subject_id));
     }
   }
 

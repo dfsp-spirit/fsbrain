@@ -71,6 +71,33 @@ vis.data.on <- function(subjects_dir, vis_subject_id, morph_data_lh, morph_data_
     vis.coloredmeshes(coloredmeshes);
 }
 
+#' @title Visualize arbitrary data on the fsaverage template subject, if available.
+#'
+#' @description Creates a surface mesh, applies a colormap transform the morphometry data values into colors, and renders the resulting colored mesh in an interactive window. If hemi is 'both', the data is rendered for the whole brain. This function tries to automatically retrieve the subjects dir of the fsaverage template subject by checking the environment variables SUBJECTS_DIR and FREESURFER_HOME for the subject. The subject is required for its surfaces, which are not shipped with this package for licensing reasons.
+#'
+#' @param subjects_dir, string or NULL. The FreeSurfer SUBJECTS_DIR, containing the subdir of vis_subject_id, the subject that you want to use for visualization. If NULL, this function tries to determine it automatically from environment variables. If they are not set, an error is raised.
+#'
+#' @param vis_subject_id, string. The subject identifier from which to obtain the surface for data visualization. Defaults to 'fsaverage'.
+#'
+#' @param morph_data_lh, numeric vector or NULL, the data to visualize on the left hemisphere surface. Must have the same length as the lh surface of the vis_subject_id has vertices. If NULL, this surface will not be rendered. Only one of morph_data_lh or morph_data_rh is allowed to be NULL.
+#'
+#' @param morph_data_rh, numeric vector or NULL, the data to visualize on the right hemisphere surface. Must have the same length as the rh surface of the vis_subject_id has vertices. If NULL, this surface will not be rendered. Only one of morph_data_lh or morph_data_rh is allowed to be NULL.
+#'
+#' @param surface, string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
+#'
+#' @param colormap, a colormap. See the squash package for some colormaps. Defaults to squash::jet.
+#'
+#' @importFrom squash jet
+#' @export
+vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage", morph_data_lh, morph_data_rh, surface="white", colormap=squash::jet) {
+
+    if(is.null(subjects_dir)) {
+        subjects_dir = find.subjectsdir.of(subject_id=vis_subject_id, mustWork = TRUE);
+    }
+
+    vis.data.on(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface=surface, colormap=colormap);
+}
+
 
 #' @title Visualize an annotation for a subject.
 #'
@@ -106,16 +133,25 @@ vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi, surface="wh
 #'
 #' @param coloredmeshes, list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
 #'
+#' @param background string, background color passed to rgl::bg3d()
+#'
+#' @param skip_all_na logical, whether to skip (i.e., not render) meshes in the list that have the property 'morph_data_was_all_na' set to TRUE.
+#'
 #' @keywords internal
-vis.coloredmeshes <- function(coloredmeshes) {
+#' @importFrom rgl open3d bg3d wire3d
+vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRUE) {
 
     if(!is.list(coloredmeshes)) {
         stop("Parameter coloredmeshes must be a list.");
     }
 
-    rgl.open();
+    rgl::open3d();
+    rgl::bg3d(background);
     for(cmesh in coloredmeshes) {
-        wire3d(cmesh$mesh, col=cmesh$col);
+        if(skip_all_na && cmesh$morph_data_was_all_na) {
+            next;
+        }
+        rgl::wire3d(cmesh$mesh, col=cmesh$col);
     }
 }
 
@@ -159,10 +195,14 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
 #'
 #' @param colormap, a colormap. See the squash package for some colormaps. Defaults to squash::jet.
 #'
+#' @param all_nan_backup_value, numeric. If all morph_data values are NA/NaN, no color map can be created. In that case, the values are replaced by this value, and this is indicated in the entry morph_data_was_all_na in the return value. Defaults to 0.0.
+#'
+#' @return named list with entries: "mesh" the rgl::tmesh3d mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value.
+#'
 #' @keywords internal
 #' @importFrom squash cmap makecmap jet
 #' @importFrom rgl tmesh3d rgl.open wire3d
-coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data, hemi, surface="white", colormap=squash::jet) {
+coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data, hemi, surface="white", colormap=squash::jet, all_nan_backup_value = 0.0) {
     surface_data = subject.surface(subjects_dir, vis_subject_id, surface, hemi);
 
     num_verts = nrow(surface_data$vertices);
@@ -171,8 +211,17 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
     }
 
     mesh = rgl::tmesh3d(unlist(surface_data$vertices), unlist(surface_data$faces), homogeneous=FALSE);
+
+    # If all values are NaN, the following call to squash::cmap fails with an error. You have to set different default values for the morphometry data in that case, so that all values are zero or whatever.
+    morph_data_was_all_na = FALSE;
+    if(all(is.na(morph_data))) {
+        warning(sprintf("All %d data values to be passed for visualization on a mesh are NaN, cannot create a colormap. Setting values to all_nan_backup_value '%d' for the visualization only.\n", length(morph_data), all_nan_backup_value));
+        morph_data = as.vector(rep(all_nan_backup_value, length(morph_data)));
+        morph_data_was_all_na = TRUE;
+    }
+
     col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
-    return(list("mesh"=mesh, "col"=col));
+    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=morph_data_was_all_na));
 }
 
 
