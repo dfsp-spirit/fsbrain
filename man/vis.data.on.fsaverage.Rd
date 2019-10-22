@@ -25,7 +25,7 @@ vis.data.on.fsaverage(subjects_dir = NULL,
 Creates a surface mesh, applies a colormap transform the morphometry data values into colors, and renders the resulting colored mesh in an interactive window. If hemi is 'both', the data is rendered for the whole brain. This function tries to automatically retrieve the subjects dir of the fsaverage template subject by checking the environment variables SUBJECTS_DIR and FREESURFER_HOME for the subject. The subject is required for its surfaces, which are not shipped with this package for licensing reasons.
 }
 \seealso{
-Other visualization functions: \code{\link{vis.data.on}},
+Other visualization functions: \code{\link{vis.data.on.subject}},
   \code{\link{vis.subject.annot}},
   \code{\link{vis.subject.morph.native}}
 }

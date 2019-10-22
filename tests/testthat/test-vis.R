@@ -40,7 +40,7 @@ test_that("We can visualize arbitrary data on a subjects surface.", {
     morph_data_lh = rnorm(num_verts_subject1_lh, 2.0, 1.0);
     morph_data_rh = rnorm(num_verts_subject1_rh, 2.0, 1.0);
 
-    vis.data.on(subjects_dir, subject_id, morph_data_lh, morph_data_rh);
+    vis.data.on.subject(subjects_dir, subject_id, morph_data_lh, morph_data_rh);
 })
 
 
@@ -80,11 +80,11 @@ test_that("We can visualize one value per atlas region on a subject.", {
     names(rh_region_value_list) = region_names_aparc;
 
     morph_data = spread.values.over.subject(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, value_for_unlisted_regions=NaN);
-    vis.data.on(subjects_dir, subject_id, morph_data$lh, morph_data$rh);
+    vis.data.on.subject(subjects_dir, subject_id, morph_data$lh, morph_data$rh);
 
     # Test that we can pass NULL data, which should not render that hemisphere.
     morph_data2 = spread.values.over.subject(subjects_dir, subject_id, atlas, NULL, rh_region_value_list, value_for_unlisted_regions=NaN);
-    vis.data.on(subjects_dir, subject_id, morph_data2$lh, morph_data2$rh);
+    vis.data.on.subject(subjects_dir, subject_id, morph_data2$lh, morph_data2$rh);
 })
 
 
