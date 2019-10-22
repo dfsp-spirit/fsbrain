@@ -373,7 +373,7 @@ write.region.values <- function(subjects_dir, subject_id, hemi, atlas, region_va
     morph_outfile = file.path(output_path, output_file_name_no_path);
   }
 
-  morph_data = spread.region.values.hemi(subjects_dir, subject_id, hemi, atlas, region_value_list, value_for_unlisted_regions=value_for_unlisted_regions);
+  morph_data = spread.values.over.hemi(subjects_dir, subject_id, hemi, atlas, region_value_list, value_for_unlisted_regions=value_for_unlisted_regions);
 
   return_list = list();
   if (do_write_file) {
@@ -407,7 +407,7 @@ write.region.values <- function(subjects_dir, subject_id, hemi, atlas, region_va
 #' @seealso spread.value.over.subject()
 #'
 #' @export
-spread.value.over.hemi <- function(subjects_dir, subject_id, hemi, atlas, region_value_list, value_for_unlisted_regions=NaN) {
+spread.values.over.hemi <- function(subjects_dir, subject_id, hemi, atlas, region_value_list, value_for_unlisted_regions=NaN) {
   if(!(hemi %in% c("lh", "rh"))) {
     stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
   }
@@ -436,7 +436,7 @@ spread.value.over.hemi <- function(subjects_dir, subject_id, hemi, atlas, region
 #'
 #' @return named list with entries 'lh' and 'rh'. Each value is a numeric vector containing the data for the respective hemisphere.
 #'
-#' @seealso spread.value.over.hemi()
+#' @seealso spread.values.over.hemi()
 #'
 #' @export
 spread.value.over.subject <- function(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, value_for_unlisted_regions=NaN) {
@@ -448,8 +448,8 @@ spread.value.over.subject <- function(subjects_dir, subject_id, atlas, lh_region
     rh_region_value_list = list();
   }
 
-  morph_data_lh = spread.value.over.hemi(subjects_dir, subject_id, 'lh', atlas, lh_region_value_list, value_for_unlisted_regions=value_for_unlisted_regions);
-  morph_data_rh = spread.value.over.hemi(subjects_dir, subject_id, 'rh', atlas, rh_region_value_list, value_for_unlisted_regions=value_for_unlisted_regions);
+  morph_data_lh = spread.values.over.hemi(subjects_dir, subject_id, 'lh', atlas, lh_region_value_list, value_for_unlisted_regions=value_for_unlisted_regions);
+  morph_data_rh = spread.values.over.hemi(subjects_dir, subject_id, 'rh', atlas, rh_region_value_list, value_for_unlisted_regions=value_for_unlisted_regions);
   return_list = list("lh"=morph_data_lh, "rh"=morph_data_rh);
   return(return_list);
 }
@@ -491,7 +491,7 @@ write.region.values.fsaverage <- function(hemi, atlas, region_value_list, output
   }
   subject_id = template_subject;
 
-  morph_data = spread.region.values.hemi(subjects_dir, subject_id, hemi, atlas, region_value_list, value_for_unlisted_regions=value_for_unlisted_regions);
+  morph_data = spread.values.over.hemi(subjects_dir, subject_id, hemi, atlas, region_value_list, value_for_unlisted_regions=value_for_unlisted_regions);
 
   do_write_file = !is.null(output_file);
   return_list = list();
