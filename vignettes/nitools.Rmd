@@ -11,60 +11,70 @@ In this document, we demonstrate some high-level functions for loading and analy
 
 Note: While this packages provides an abstract access layer to neuroimaging data, it does *not* implement file readers. It uses the 'freesurferformats' package in the background to parse the file formats.
 
-## Accessing morphometry data for groups of subjects
+### Example data used in this document
 
+We will use example data that comes with nitools throughout this manual. Feel free to replace the subjects_dir and subjects_list with data from your study.
 
-To open a single file directly, all you would need is 'freesurferformats':
-
-```{r, eval = FALSE}
-    library("freesurferformats");
-    cortical_thickness = read.fs.morph("study_dir/subject1/surf/lh.thickness");
+```{r, eval = TRUE}
+library("nitools");
+nitools::download_optional_data();
+subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+subjects_list = c("subject1", "subject2");
 ```
 
+# Accessing group data
 
-### Native space
+This section explains how to load raw data for groups of subjects from files.
+
+## Morphometry data for groups
+
+Use *group.morph.native()* and *group.morph.standard()* to load morphometry data for groups from morphometry data files (curv/MGH/MGZ).
+
+## Annotations for groups
+
+Use *group.annot()* to load annotation data for groups from files.
+
+## Labels for groups
+
+Use *group.label()* to load label data for groups from files.
+
+
+# Aggregating morphometry data
+
+This section explains aggregation functions. These allow you to retrieve the mean, max, min, or whatever value over a number of vertices. Aggregation is supported on hemisphere level and on the level of brain atlas regions.
+
+## Aggregating group data over entire hemispheres
+
+### A single morphometry measure in native space
 
 The nitools package provides a high-level interface to access data for groups of subjects. Here, we compute the mean thickness for each subject in native space:
 
-```{r, eval = FALSE}
-    library("nitools");
-    subjects_dir = path.expand("~/data/study1")
-    subjects_list = c("subject1", "subject2", "subject3", "subject4", "subject5")
-    mean_thickness_lh = group.morph.agg.native(subjects_dir, subjects_list, "thickness", "lh", agg_fun=mean)
+```{r, eval = TRUE}
+mean_thickness_lh_native = group.morph.agg.native(subjects_dir, subjects_list, "thickness", "lh", agg_fun=mean);
+mean_thickness_lh_native;
 ```
 
 
-### Standard space
+### A single morphometry measure in standard space
 
 Here, we compute the mean thickness for each subject in standard space:
 
-```{r, eval = FALSE}
-    library("nitools");
-    subjects_dir = path.expand("~/data/study1")
-    subjects_list = c("subject1", "subject2", "subject3", "subject4", "subject5")
-    mean_thickness_lh = group.morph.agg.standard(subjects_dir, subjects_list, "thickness", "lh", fwhm="10", agg_fun=mean)
+```{r, eval = TRUE}
+mean_thickness_lh_std = group.morph.agg.standard(subjects_dir, subjects_list, "thickness", "lh", fwhm="10", agg_fun=mean);
+mean_thickness_lh_std;
 ```
 
 
-## Aggregating over entire hemispheres
-
-### Native space
+### Several measures over several hemispheres in native space
 
 When working with native space data for groups, vertex-wise comparison is not possible and one is often interested in aggregating data or summary statistics. Obtaining these for a group becomes easy with 'nitools':
 
 
-```{r, eval = FALSE}
-  subjects_dir = path.expand("~/data/study1")
-  subjects_list = c("subject1", "subject2", "subject3", "subject4", "subject5")  # You may want to read them from a subjects file instead if you have many
-  data = group.multimorph.agg.native(subjects_dir, subjects_list, c("thickness", "area", "volume"), c("lh", "rh"), agg_fun = mean);
+```{r, eval = TRUE}
+agg_nat = group.multimorph.agg.native(subjects_dir, subjects_list, c("thickness", "area"), c("lh", "rh"), agg_fun = mean);
+head(agg_nat);
 ```
 
-This gives you a dataframe that contains the following columns:
-
-* `subject_id`
-* `hemi`
-* `measure_name`
-* `measure_value`
 
 The measure values are the mean thickness/area/volume over all vertices of the subject, computed from the respective native space morphometry files (e.g., 'subject1/surf/lh.thickness', 'subject2/surf/lh.thickness', and so on).
 
@@ -78,12 +88,13 @@ Note that you can get short format by setting 'cast = FALSE', which will result 
 * `lh.volume`
 * `rh.volume`
 
-### Standard space
+### Several measures over several hemispheres in standard space
 
 You could do the same in standard space with `group.multimorph.agg.standard()`, even though it's less common as typically vertex-wise analysis is used in standard space. This requires that you pass the `fwhm` parameter to identify which smoothing value you want:
 
-```{r, eval = FALSE}
-  data_std = group.multimorph.agg.standard(subjects_dir, subjects_list, c("thickness", "area", "volume"), c("lh", "rh"), fwhm='10', agg_fun = mean);
+```{r, eval = TRUE}
+data_std = group.multimorph.agg.standard(subjects_dir, subjects_list, c("thickness", "area"), c("lh", "rh"), fwhm='10', agg_fun = mean);
+head(data_std);
 ```
 
 Other parameters exist to define the template subject, which defaults to 'fsaverage' in the example above.
@@ -96,34 +107,39 @@ Other parameters exist to define the template subject, which defaults to 'fsaver
 Instead of looking at the full hemispheres, you may want to look at brain regions from some atlas (also called *cortical parcellation*). Examples are the Desikan atlas and the Destrieux atlas, both of which come with FreeSurfer.
 
 
-```{r, eval = FALSE}
-  atlas = 'aparc';         # or 'aparc.a2009s', or 'aparc.DKTatlas'.
-  measure = 'thickness';
-  region_means = nitools::group.agg.atlas.native(subjects_dir, subjects_list, measure, "lh", atlas, agg_fun = mean);
+```{r, eval = TRUE}
+atlas = 'aparc';         # or 'aparc.a2009s', or 'aparc.DKTatlas'.
+measure = 'thickness';
+region_means_native = group.agg.atlas.native(subjects_dir, subjects_list, measure, "lh", atlas, agg_fun = mean);
+head(region_means_native);
 ```
 
-This gives you a dataframe that contains the following columns:
 
-* `subject`
-* `bankssts`
-* `caudalanteriorcingulate`
-* `caudalmiddlefrontal`
-
-Where the first column is the subject, and all others are the region names from the respective atlas (the `aparc` atlas in this example).
-
-The measure values are the mean thickness over all vertices of the respective region of the subject, computed from the respective native space morphometry files (e.g., 'subject1/surf/lh.thickness', 'subject2/surf/lh.thickness', and so on).
+The measure values are the mean thickness over all vertices of the respective region of the subject, computed from the respective native space morphometry files (e.g., 'subject1/surf/lh.thickness', 'subject2/surf/lh.thickness', and so on). The brain parcellation for the subject is read from its annotation file ( 'subject1/label/lh.aparc.annot' in this case).
 
 
 ### Standard space
 
-You could do the same in standard space with `group.agg.atlas.standard()`, even though it's less common as typically vertex-wise analysis is used in standard space. This requires that you pass the `fwhm` parameter to identify which smoothing value you want:
+You could do the same in standard space with `group.agg.atlas.standard()`, even though it's less common as typically vertex-wise analysis is used in standard space. This requires that you pass the `fwhm` parameter to identify which smoothing value you want, and that you have the template subject in the subjects_dir. The template subject defaults to fsaverage.
 
 ```{r, eval = FALSE}
-  region_means_std = nitools::group.agg.atlas.standard(subjects_dir, subjects_list, measure, "lh", atlas, fwhm = '10', agg_fun = mean);
+region_means_std = group.agg.atlas.standard(subjects_dir, subjects_list, measure, "lh", atlas, fwhm = '10', agg_fun = mean);
 ```
 
 Other parameters exist to define the template subject, which defaults to 'fsaverage' in the example above.
 
+
+# Working with atlas data
+
+You can use a mask to analyze (or exclude) data from certain regions. A typical usecase is to ignore the vertices from the medial wall in statistical analyses of the whole hemisphere, or to analyze only vertices from a specific label or atlas region. To archieve this, one could create a mask based on the 'medial_wall' region of the 'aparc.a2009s' atlas, and set all vertices in that region to NA for the subjects. Make sure to use functions that can work with NA values e.g., nanmean instead of mean) when working with the masked data.
+
+## Loading label files
+
+One can load label files from disk using the *subject.label()* and *group.label()* functions.
+
+## Creating a label from an atlas region
+
+One can use the *label.from.annotdata()* function on subject level, or the *group.label.from.annot()* function on group level to create a label from a brain parcellation.
 
 
 ## Mapping one result value to each brain atlas region
@@ -131,8 +147,6 @@ Other parameters exist to define the template subject, which defaults to 'fsaver
 Mapping a single value to an atlas region of a subject (usually a template subject like fsaverage) is useful to display results, like p values or effect sizes, on the brain surface. Here is an example script that uses nitools to do that:
 
 ```{r, eval = FALSE}
-library("nitools")
-
 hemi = "lh"               # 'lh' or 'rh'
 atlas = "aparc"           # an atlas, e.g., 'aparc', 'aparc.a2009s', 'aparc.DKTatlas'
 
@@ -148,8 +162,11 @@ ret = nitools::write.region.values.fsaverage(hemi, atlas, region_value_list, out
 
 This code will write an MGZ file that can be visualized in FreeView or Matlab/Surfstat.
 
+# Data visualization
 
-## Rendering surfaces and data in GNU R for a quick preview
+The visualization functions are based on OpenGL using the rgl package. See the rgl documentation for the requirements. Under MacOS, you will need to have XQuartz installed.
+
+## Rendering surfaces and morphometry data
 
 You can visualize data directly in GNU R in different ways. If you want an interactive 3-dimensional view of the brain surface, use the `rgl` package. It's a simple mesh renderer that uses an OpenGL backend. It's fast enough to draw meshes with > 300.000 vertices even on old laptops. The `rgl` package is not a dependency of `nitools`, so you'll have to install it.
 
