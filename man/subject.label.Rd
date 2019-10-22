@@ -24,3 +24,7 @@ integer vector with label data: the list of vertex indices in the label. See 're
 \description{
 Load a label (like 'label/lh.cortex.label') for a subject from disk. Uses knowledge about the FreeSurfer directory structure to load the correct file.
 }
+\seealso{
+Other label data functions: \code{\link{group.label}}
+}
+\concept{label data functions}

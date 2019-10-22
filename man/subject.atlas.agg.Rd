@@ -29,10 +29,12 @@ Other aggregation functions: \code{\link{group.agg.atlas.native}},
 Other atlas functions: \code{\link{get.atlas.region.names}},
   \code{\link{group.agg.atlas.native}},
   \code{\link{group.agg.atlas.standard}},
+  \code{\link{group.annot}},
   \code{\link{regions.to.ignore}},
   \code{\link{spread.values.over.annot}},
   \code{\link{spread.values.over.hemi}},
-  \code{\link{spread.values.over.subject}}
+  \code{\link{spread.values.over.subject}},
+  \code{\link{subject.annot}}
 }
 \concept{aggregation functions}
 \concept{atlas functions}

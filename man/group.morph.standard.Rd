@@ -28,3 +28,18 @@ named list with standard space morph data, the names are the subject identifiers
 \description{
 Load standard space morphometry data (like 'surf/lh.area') for a group of subjects from disk. Uses knowledge about the FreeSurfer directory structure to load the correct file.
 }
+\examples{
+\donttest{
+   nitools::download_optional_data();
+   subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+   subjects_list = c("subject1", "subject2");
+   data = group.morph.standard(subjects_dir, subjects_list, "thickness", "lh", fwhm='10');
+}
+
+}
+\seealso{
+Other morphometry data functions: \code{\link{group.morph.native}},
+  \code{\link{subject.morph.native}},
+  \code{\link{subject.morph.standard}}
+}
+\concept{morphometry data functions}

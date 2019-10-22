@@ -18,6 +18,16 @@
 #'
 #' @return named list with native space morph data, the names are the subject identifiers from the subjects_list, and the values are morphometry data vectors (of different length, as each subject has a different vertex count in native space).
 #'
+#' @family morphometry data functions
+#'
+#' @examples
+#' \donttest{
+#'    nitools::download_optional_data();
+#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    subjects_list = c("subject1", "subject2");
+#'    data = group.morph.native(subjects_dir, subjects_list, "thickness", "lh");
+#' }
+#'
 #' @export
 group.morph.native <- function(subjects_dir, subjects_list, measure, hemi, format='curv') {
 
@@ -54,6 +64,16 @@ group.morph.native <- function(subjects_dir, subjects_list, measure, hemi, forma
 #'
 #' @return named list with standard space morph data, the names are the subject identifiers from the subjects_list, and the values are morphometry data vectors (all with identical length, the data is mapped to a template subject).
 #'
+#' @family morphometry data functions
+#'
+#' @examples
+#' \donttest{
+#'    nitools::download_optional_data();
+#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    subjects_list = c("subject1", "subject2");
+#'    data = group.morph.standard(subjects_dir, subjects_list, "thickness", "lh", fwhm='10');
+#' }
+#'
 #' @export
 group.morph.standard <- function(subjects_dir, subjects_list, measure, hemi, fwhm='10', template_subject='fsaverage', format='mgh') {
 
@@ -86,6 +106,16 @@ group.morph.standard <- function(subjects_dir, subjects_list, measure, hemi, fwh
 #'
 #' @return named list of integer vectors with label data: Each name is a subject identifier from subjects_list, and the values are lists of the vertex indices in the respective label. See 'return_one_based_indices' for important information.
 #'
+#' @family label data functions
+#'
+#' @examples
+#' \donttest{
+#'    nitools::download_optional_data();
+#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    subjects_list = c("subject1", "subject2");
+#'    labels = group.label(subjects_dir, subjects_list, 'cortex.label', "lh");
+#' }
+#'
 #' @export
 group.label <- function(subjects_dir, subjects_list, label, hemi, return_one_based_indices=TRUE) {
 
@@ -116,6 +146,16 @@ group.label <- function(subjects_dir, subjects_list, label, hemi, return_one_bas
 #' @param atlas, string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.
 #'
 #' @return list of annotations, as returned by freesurferformats::read.fs.annot(). If hemi is 'both', the annotations are the results of merging over the hemispheres for each subject.
+#'
+#' @family atlas functions
+#'
+#'@examples
+#' \donttest{
+#'    nitools::download_optional_data();
+#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    subjects_list = c("subject1", "subject2");
+#'    annotations = group.annot(subjects_dir, subjects_list, "lh", "aparc");
+#' }
 #'
 #' @export
 group.annot <- function(subjects_dir, subjects_list, hemi, atlas) {

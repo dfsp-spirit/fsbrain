@@ -24,3 +24,16 @@ named list of integer vectors with label data: Each name is a subject identifier
 \description{
 Load a label (like 'label/lh.cortex.label') for a group of subjects from disk. Uses knowledge about the FreeSurfer directory structure to load the correct file.
 }
+\examples{
+\donttest{
+   nitools::download_optional_data();
+   subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+   subjects_list = c("subject1", "subject2");
+   labels = group.label(subjects_dir, subjects_list, 'cortex.label', "lh");
+}
+
+}
+\seealso{
+Other label data functions: \code{\link{subject.label}}
+}
+\concept{label data functions}

@@ -28,3 +28,9 @@ vector with standard space morph data
 \description{
 Load standard space morphometry data (like 'surf/lh.area.fwhm10.fsaverage.mgh') for a subject from disk. Uses knowledge about the FreeSurfer directory structure to load the correct file.
 }
+\seealso{
+Other morphometry data functions: \code{\link{group.morph.native}},
+  \code{\link{group.morph.standard}},
+  \code{\link{subject.morph.native}}
+}
+\concept{morphometry data functions}

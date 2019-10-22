@@ -24,3 +24,9 @@ vector with native space morph data
 \description{
 Load native space morphometry data (like 'surf/lh.area') for a subject from disk. Uses knowledge about the FreeSurfer directory structure to load the correct file.
 }
+\seealso{
+Other morphometry data functions: \code{\link{group.morph.native}},
+  \code{\link{group.morph.standard}},
+  \code{\link{subject.morph.standard}}
+}
+\concept{morphometry data functions}

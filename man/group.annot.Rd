@@ -21,3 +21,24 @@ list of annotations, as returned by freesurferformats::read.fs.annot(). If hemi 
 \description{
 Load a brain surface annotation, i.e., a cortical parcellation based on an atlas, for a group of subjects.
 }
+\examples{
+\donttest{
+   nitools::download_optional_data();
+   subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+   subjects_list = c("subject1", "subject2");
+   annotations = group.annot(subjects_dir, subjects_list, "lh", "aparc");
+}
+
+}
+\seealso{
+Other atlas functions: \code{\link{get.atlas.region.names}},
+  \code{\link{group.agg.atlas.native}},
+  \code{\link{group.agg.atlas.standard}},
+  \code{\link{regions.to.ignore}},
+  \code{\link{spread.values.over.annot}},
+  \code{\link{spread.values.over.hemi}},
+  \code{\link{spread.values.over.subject}},
+  \code{\link{subject.annot}},
+  \code{\link{subject.atlas.agg}}
+}
+\concept{atlas functions}

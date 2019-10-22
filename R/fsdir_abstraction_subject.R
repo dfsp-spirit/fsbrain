@@ -18,6 +18,8 @@
 #'
 #' @return vector with native space morph data
 #'
+#' @family morphometry data functions
+#'
 #' @export
 subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, format='curv') {
 
@@ -61,6 +63,8 @@ subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, format
 #' @param format, string. One of 'mgh', 'mgz', 'curv'. Defaults to 'mgh'.
 #'
 #' @return vector with standard space morph data
+#'
+#' @family morphometry data functions
 #'
 #' @export
 subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm='10', template_subject='fsaverage', format='mgh') {
@@ -241,6 +245,8 @@ subject.filepath.any <- function(subjects_dir, subject_id, relative_path_parts, 
 #'
 #' @return integer vector with label data: the list of vertex indices in the label. See 'return_one_based_indices' for important information.
 #'
+#' @family label data functions
+#'
 #' @export
 subject.label <- function(subjects_dir, subject_id, label, hemi, return_one_based_indices=TRUE) {
 
@@ -266,6 +272,8 @@ subject.label <- function(subjects_dir, subject_id, label, hemi, return_one_base
 #' @param atlas, string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.
 #'
 #' @return the annotation, as returned by freesurferformats::read.fs.annot().
+#'
+#' @family atlas functions
 #'
 #' @export
 subject.annot <- function(subjects_dir, subject_id, hemi, atlas) {
