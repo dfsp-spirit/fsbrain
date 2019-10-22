@@ -64,6 +64,7 @@ test_that("We can visualize arbitrary data on the fsaverage surfaces if availabl
 
 
 test_that("We can visualize one value per atlas region on a subject.", {
+    skip("This test has to be run manually and interactively.");
 
     nitools::download_optional_data();
     subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
