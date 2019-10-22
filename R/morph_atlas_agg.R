@@ -223,7 +223,7 @@ group.agg.atlas.standard <- function(subjects_dir, subjects_list, measure, hemi,
 
 #' @title Create a named value list from a dataframe.
 #'
-#' @description Given the result of the group.agg.atlas.native() function, extract a named region value list (typically for use with the spread.values.over.region() function) for a single subject.
+#' @description Given the result of the group.agg.atlas.native() function, extract a named region value list (typically for use with the spread.values.over.annot() function) for a single subject.
 #'
 #' @param agg_res, a dataframe. The result of calling group.agg.atlas.native().
 #'
@@ -257,7 +257,7 @@ fs.value.list.from.agg.res <- function(agg_res, subject_id) {
 #' @return named list with following entries: "spread_data": a vector of length n, where n is the number of vertices in the annotation. One could write this to an MGH or curv file for visualization. "regions_not_in_annot": list of regions which are not in the annotation, but in the region_value_list. Their values were ignored.
 #'
 #' @export
-spread.values.over.region <- function(annot, region_value_list, value_for_unlisted_regions=NaN, warn_on_unmatched_list_regions=FALSE, warn_on_unmatched_atlas_regions=FALSE) {
+spread.values.over.annot <- function(annot, region_value_list, value_for_unlisted_regions=NaN, warn_on_unmatched_list_regions=FALSE, warn_on_unmatched_atlas_regions=FALSE) {
     num_verts = length(annot$vertices);
     new_data = rep(value_for_unlisted_regions, num_verts);
 
@@ -277,7 +277,7 @@ spread.values.over.region <- function(annot, region_value_list, value_for_unlist
     ret_list$regions_not_in_annot = regions_not_in_annot;
 
     if(warn_on_unmatched_list_regions && length(regions_not_in_annot) > 0) {
-      warning(sprintf("spread.values.over.region: Ignored %d regions from 'region_value_list' parameter which do not occur in 'atlas': %s\n", length(regions_not_in_annot), paste(regions_not_in_annot, collapse=", ")));
+      warning(sprintf("spread.values.over.annot: Ignored %d regions from 'region_value_list' parameter which do not occur in 'atlas': %s\n", length(regions_not_in_annot), paste(regions_not_in_annot, collapse=", ")));
     }
 
 
@@ -291,7 +291,7 @@ spread.values.over.region <- function(annot, region_value_list, value_for_unlist
 
     if(warn_on_unmatched_atlas_regions) {
       if(length(atlas_regions_not_in_list) > 0) {
-          warning(sprintf("spread.values.over.region: Found %d regions from 'atlas' parameter which are not assigned any value in 'region_value_list' (their vertices will get default value): %s\n", length(atlas_regions_not_in_list), paste(atlas_regions_not_in_list, collapse=", ")));
+          warning(sprintf("spread.values.over.annot: Found %d regions from 'atlas' parameter which are not assigned any value in 'region_value_list' (their vertices will get default value): %s\n", length(atlas_regions_not_in_list), paste(atlas_regions_not_in_list, collapse=", ")));
       }
     }
 
@@ -413,7 +413,7 @@ spread.values.over.hemi <- function(subjects_dir, subject_id, hemi, atlas, regio
   }
 
   annot = subject.annot(subjects_dir, subject_id, hemi, atlas);
-  spread = spread.values.over.region(annot, region_value_list, value_for_unlisted_regions=value_for_unlisted_regions);
+  spread = spread.values.over.annot(annot, region_value_list, value_for_unlisted_regions=value_for_unlisted_regions);
   morph_data = spread$spread_data;
   return(morph_data);
 }

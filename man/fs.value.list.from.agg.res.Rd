@@ -15,6 +15,6 @@ fs.value.list.from.agg.res(agg_res, subject_id)
 region_value_list, named list of strings. Each name must is a region name from the annotation, and the value is a scalar that resulting from aggregating the morphometry data for that region and subject.
 }
 \description{
-Given the result of the group.agg.atlas.native() function, extract a named region value list (typically for use with the spread.values.over.region() function) for a single subject.
+Given the result of the group.agg.atlas.native() function, extract a named region value list (typically for use with the spread.values.over.annot() function) for a single subject.
 }
 \keyword{internal}
