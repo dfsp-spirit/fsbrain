@@ -79,19 +79,11 @@ test_that("We can visualize one value per atlas region on a subject.", {
     names(rh_region_value_list) = region_names_aparc;
 
     morph_data = spread.value.over.subject(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, value_for_unlisted_regions=NaN);
-    morph_data2 = spread.value.over.subject(subjects_dir, subject_id, atlas, NULL, rh_region_value_list, value_for_unlisted_regions=NaN);
-
     vis.data.on(subjects_dir, subject_id, morph_data$lh, morph_data$rh);
+
+    # Test that we can pass NULL data, which should not render that hemisphere.
+    morph_data2 = spread.value.over.subject(subjects_dir, subject_id, atlas, NULL, rh_region_value_list, value_for_unlisted_regions=NaN);
     vis.data.on(subjects_dir, subject_id, morph_data2$lh, morph_data2$rh);
 })
-
-
-
-
-
-ret = nitools::fs.write.region.values.fsaverage(hemi, atlas, region_value_list, output_file="/tmp/spread.mgz", template_subjects_dir=template_subjects_dir, show_freeview_tip=TRUE);
-
-
-
 
 
