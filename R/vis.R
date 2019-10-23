@@ -164,6 +164,7 @@ vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi, surface="wh
         coloredmeshes = list(cmesh);
     }
     vis.coloredmeshes(coloredmeshes);
+    return(coloredmeshes);
 }
 
 
