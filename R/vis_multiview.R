@@ -26,7 +26,10 @@ vis.mult.coloredmeshes <- function(coloredmeshes, background="white", skip_all_n
     for (view_idx in 1:num_views) {
         rgl::next3d();
         for (mesh_idx in 1:num_sub_meshes) {
-            rgl::shade3d(coloredmeshes[[mesh_idx]]$mesh, col = coloredmeshes[[mesh_idx]]$col);
+            orig_mesh = coloredmeshes[[mesh_idx]]$mesh;
+            rotation_angle = pi/2 * (view_idx - 1);
+            rotated_mesh = rgl::rotate3d(orig_mesh, rotation_angle, 0, 1, 0);
+            rgl::shade3d(rotated_mesh, col = coloredmeshes[[mesh_idx]]$col);
         }
     }
 
