@@ -42,7 +42,7 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, su
         cmesh = coloredmesh.from.morph.native(subjects_dir, subject_id, measure, hemi, surface=surface, colormap=colormap);
         coloredmeshes = list(cmesh);
     }
-    vis.coloredmeshes(coloredmeshes);
+    invisible(vis.coloredmeshes(coloredmeshes));
 }
 
 #' @title Visualize arbitrary data on the surface of any subject.
@@ -92,7 +92,7 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, mor
         coloredmeshes$rh = cmesh_rh;
     }
 
-    vis.coloredmeshes(coloredmeshes);
+    invisible(vis.coloredmeshes(coloredmeshes));
 }
 
 #' @title Visualize arbitrary data on the fsaverage template subject, if available.
@@ -121,7 +121,7 @@ vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage",
         subjects_dir = find.subjectsdir.of(subject_id=vis_subject_id, mustWork = TRUE);
     }
 
-    vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface=surface, colormap=colormap);
+    invisible(vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface=surface, colormap=colormap));
 }
 
 
@@ -163,8 +163,7 @@ vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi, surface="wh
         cmesh = coloredmesh.from.annot(subjects_dir, subject_id, atlas, hemi, surface=surface);
         coloredmeshes = list(cmesh);
     }
-    vis.coloredmeshes(coloredmeshes);
-    return(coloredmeshes);
+    invisible(vis.coloredmeshes(coloredmeshes));
 }
 
 
@@ -193,6 +192,7 @@ vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRU
         }
         rgl::wire3d(cmesh$mesh, col=cmesh$col);
     }
+    invisible(coloredmeshes);
 }
 
 #' @title Create a coloredmesh from native space morphometry data.
@@ -222,7 +222,7 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
     surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
     mesh = rgl::tmesh3d(unlist(surface_data$vertices), unlist(surface_data$faces), homogeneous=FALSE);
     col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
-    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE));
+    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi));
 }
 
 
@@ -270,7 +270,7 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
     }
 
     col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
-    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=morph_data_was_all_na));
+    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=morph_data_was_all_na, "hemi"=hemi));
 }
 
 
@@ -302,5 +302,5 @@ coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surfac
     annot = subject.annot(subjects_dir, subject_id, hemi, atlas);
     mesh = rgl::tmesh3d(unlist(surface_data$vertices), unlist(surface_data$faces), homogeneous=FALSE);
     col = annot$hex_colors_rgb;
-    return(list("mesh"=mesh, "col"=col, morph_data_was_all_na=FALSE));
+    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi));
 }

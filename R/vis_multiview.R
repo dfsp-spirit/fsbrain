@@ -6,8 +6,8 @@
 #' @param background string, background color passed to rgl::bg3d()
 #'
 #' @param skip_all_na logical, whether to skip (i.e., not render) meshes in the list that have the property 'morph_data_was_all_na' set to TRUE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.
-#'
-#' @keywords internal
+#' @export
+# @keywords internal
 #' @importFrom rgl open3d bg3d wire3d
 vis.mult.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRUE) {
 
@@ -16,8 +16,8 @@ vis.mult.coloredmeshes <- function(coloredmeshes, background="white", skip_all_n
     }
     num_sub_meshes = length(coloredmeshes); # The number of submeshes that each object consists of.
 
-    layout_dim_x = 3;
-    layout_dim_y = 2;
+    layout_dim_x = 2;
+    layout_dim_y = 3;
     num_views = layout_dim_x * layout_dim_y;
 
     rgl::open3d();
@@ -32,6 +32,115 @@ vis.mult.coloredmeshes <- function(coloredmeshes, background="white", skip_all_n
             rgl::shade3d(rotated_mesh, col = coloredmeshes[[mesh_idx]]$col);
         }
     }
+
+    rgl::highlevel(integer()); # To trigger display as rglwidget
+}
+
+
+#' @title Visualize a list of colored meshes from several angles.
+#'
+#' @param coloredmeshes, list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
+#'
+#' @param background string, background color passed to rgl::bg3d()
+#'
+#' @param skip_all_na logical, whether to skip (i.e., not render) meshes in the list that have the property 'morph_data_was_all_na' set to TRUE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.
+#' @export
+# @keywords internal
+#' @importFrom rgl open3d bg3d wire3d
+vis.mult.coloredmeshes.stdview4 <- function(coloredmeshes, background="white", skip_all_na=TRUE) {
+
+    draw_labels = TRUE;
+    label_shift_y = -20;
+
+    if(!is.list(coloredmeshes)) {
+        stop("Parameter coloredmeshes must be a list.");
+    }
+    num_sub_meshes = length(coloredmeshes); # The number of submeshes that each object consists of.
+
+    layout_dim_x = 2;
+    layout_dim_y = 2;
+    num_views = layout_dim_x * layout_dim_y;
+
+    lh_meshes = list();
+    rh_meshes = list();
+    for (mesh_idx in 1:num_sub_meshes) {
+        cmesh = coloredmeshes[[mesh_idx]];
+        if(! ('hemi' %in% names(cmesh))) {
+            warning(sprintf("Ignoring coloredmesh # %d which has no hemi value at all.\n", mesh_idx));
+        } else {
+            if(cmesh$hemi == 'lh') {
+                mesh_name = sprintf("mesh%d", mesh_idx);
+                lh_meshes[[mesh_name]] = cmesh;
+                cat(sprintf("Assigning mesh %d named %s to lh\n", mesh_idx, mesh_name));
+            } else if(cmesh$hemi == 'rh') {
+                rh_meshes[[mesh_name]] = cmesh;
+                cat(sprintf("Assigning mesh %d named %s to rh\n", mesh_idx, mesh_name));
+            } else {
+                warning(sprintf("Ignoring mesh # %d with invalid hemi value '%s'.\n", mesh_idx, cmesh$hemi));
+            }
+        }
+    }
+    cat(sprintf("Received %d lh meshes and %d rh meshes. Received %d meshes total.\n", length(lh_meshes), length(rh_meshes), num_sub_meshes));
+
+    rgl::open3d();
+    rgl::bg3d(background);
+    rgl::mfrow3d(layout_dim_x, layout_dim_y);
+
+    # Create the upper left view: draw only the left hemi, from the left
+    rgl::next3d();
+    for (mesh_idx in seq_len(length(lh_meshes))) {     # usually this will only run once for the single lh mesh.
+        orig_mesh = lh_meshes[[mesh_idx]]$mesh;
+        rotation_angle = pi/2;
+        rotated_mesh = rgl::rotate3d(orig_mesh, rotation_angle, 1, 0, 0);
+        rgl::shade3d(rotated_mesh, col = lh_meshes[[mesh_idx]]$col);
+    }
+    rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
+    if(draw_labels) {
+        text3d(0,label_shift_y,0,"lateral lh");
+    }
+
+    # Create the upper right view
+    rgl::next3d();
+    for (mesh_idx in seq_len(length(rh_meshes))) {     # usually this will only run once for the single rh mesh.
+        orig_mesh = rh_meshes[[mesh_idx]]$mesh;
+        rotation_angle = pi/2;
+        rotated_mesh = rgl::rotate3d(orig_mesh, rotation_angle, 1, 0, 0);
+        rgl::shade3d(rotated_mesh, col = rh_meshes[[mesh_idx]]$col);
+    }
+    rgl.viewpoint(90, 0, fov=0, interactive=FALSE);
+    if(draw_labels) {
+        text3d(0,label_shift_y,0,"lateral rh");
+    }
+
+
+    # Create the lower left view
+    rgl::next3d();
+    for (mesh_idx in seq_len(length(lh_meshes))) {     # usually this will only run once for the single lh mesh.
+        orig_mesh = lh_meshes[[mesh_idx]]$mesh;
+        rotation_angle = pi/2;
+        rotated_mesh = rgl::rotate3d(orig_mesh, rotation_angle, 1, 0, 0);
+        rgl::shade3d(rotated_mesh, col = lh_meshes[[mesh_idx]]$col);
+    }
+    rgl.viewpoint(90, 0, fov=0, interactive=FALSE);
+    if(draw_labels) {
+        text3d(0,label_shift_y,0,"medial lh");
+    }
+
+
+    # Create the lower right view
+    rgl::next3d();
+    for (mesh_idx in seq_len(length(rh_meshes))) {     # usually this will only run once for the single lh mesh.
+        orig_mesh = rh_meshes[[mesh_idx]]$mesh;
+        rotation_angle = pi/2;
+        rotated_mesh = rgl::rotate3d(orig_mesh, rotation_angle, 1, 0, 0);
+        rgl::shade3d(rotated_mesh, col = rh_meshes[[mesh_idx]]$col);
+    }
+    rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
+    if(draw_labels) {
+        text3d(0,label_shift_y,0,"medial rh");
+    }
+
+
 
     rgl::highlevel(integer()); # To trigger display as rglwidget
 }
