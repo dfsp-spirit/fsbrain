@@ -216,6 +216,11 @@ vis.mult.coloredmeshes.stdview9 <- function(coloredmeshes, background="white", s
     # Create the bottom central view. Empty, could later draw colorbar here.
     rgl::next3d();
     if(draw_labels) {
+        rgl::text3d(0,label_shift_y,0,"(empty)");
+    } else {
+        # If we do not draw anything, the next3d() calls seems to get ignored,
+        #  and the next image gets places here instead of into the last field.
+        #  Therefore, we draw empty text for now.
         rgl::text3d(0,label_shift_y,0,"");
     }
 

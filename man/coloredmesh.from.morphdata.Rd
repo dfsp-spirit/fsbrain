@@ -24,7 +24,7 @@ coloredmesh.from.morphdata(subjects_dir, vis_subject_id, morph_data, hemi,
 \item{all_nan_backup_value, }{numeric. If all morph_data values are NA/NaN, no color map can be created. In that case, the values are replaced by this value, and this is indicated in the entry morph_data_was_all_na in the return value. Defaults to 0.0.}
 }
 \value{
-named list with entries: "mesh" the rgl::tmesh3d mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value.
+coloredmesh. A named list with entries: "mesh" the rgl::tmesh3d mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
 }
 \description{
 Create a coloredmesh from arbitrary data.

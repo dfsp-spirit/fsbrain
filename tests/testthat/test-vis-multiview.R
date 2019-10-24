@@ -1,5 +1,5 @@
 # These tests are to be run manually and interactively, they are therefore skipped by default.
-# You can run them by copying & pasting the code into an R session. Treat it as examples.
+# You can run them by copying & pasting the code into an R session. Treat them as examples.
 
 test_that("We can visualize morphometry data in multiview.", {
     skip("This test has to be run manually and interactively.");
@@ -15,10 +15,6 @@ test_that("We can visualize morphometry data in multiview.", {
     #vis.mult.coloredmeshes(coloredmeshes, background="white", skip_all_na=TRUE);
     vis.mult.coloredmeshes.stdview4(coloredmeshes, background="white", skip_all_na=TRUE);
     vis.mult.coloredmeshes.stdview9(coloredmeshes, background="white", skip_all_na=TRUE);
-
-
-
-    # done: 1, 0, 1
 
     do_rotations = FALSE;
     if(do_rotations) {

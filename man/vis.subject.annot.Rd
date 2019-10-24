@@ -18,6 +18,9 @@ vis.subject.annot(subjects_dir, subject_id, atlas, hemi,
 
 \item{surface, }{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 }
+\value{
+list of coloredmeshes. The coloredmeshes used for the visualization.
+}
 \description{
 Creates a surface mesh, loads the colors from the annotation, and renders the resulting colored mesh in an interactive window. If hemi is 'both', the data is rendered for the wholw brain.
 }
