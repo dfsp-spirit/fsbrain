@@ -17,6 +17,8 @@
 #'
 #' @param colormap, a colormap. See the squash package for some colormaps. Defaults to squash::jet.
 #'
+#' @return list of coloredmeshes. The coloredmeshes used for the visualization.
+#'
 #' @examples
 #' \donttest{
 #'    nitools::download_optional_data();
@@ -60,6 +62,8 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, su
 #' @param surface, string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
 #'
 #' @param colormap, a colormap. See the squash package for some colormaps. Defaults to squash::jet.
+#'
+#' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
 #' @examples
 #' \donttest{
@@ -111,6 +115,8 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, mor
 #'
 #' @param colormap, a colormap. See the squash package for some colormaps. Defaults to squash::jet.
 #'
+#' @return list of coloredmeshes. The coloredmeshes used for the visualization.
+#'
 #' @family visualization functions
 #'
 #' @importFrom squash jet
@@ -138,6 +144,8 @@ vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage",
 #' @param hemi, string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the label data files to be loaded.
 #'
 #' @param surface, string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
+#'
+#' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
 #' @examples
 #' \donttest{
@@ -183,6 +191,8 @@ vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi, surface="wh
 #'
 #' @param colormap, a colormap. See the squash package for some colormaps. Defaults to squash::jet.
 #'
+#' @return coloredmesh. A named list with entries: "mesh" the rgl::tmesh3d mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
+#'
 #' @keywords internal
 #' @importFrom squash cmap makecmap jet
 #' @importFrom rgl tmesh3d rgl.open wire3d
@@ -216,7 +226,7 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
 #'
 #' @param all_nan_backup_value, numeric. If all morph_data values are NA/NaN, no color map can be created. In that case, the values are replaced by this value, and this is indicated in the entry morph_data_was_all_na in the return value. Defaults to 0.0.
 #'
-#' @return named list with entries: "mesh" the rgl::tmesh3d mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value.
+#' @return coloredmesh. A named list with entries: "mesh" the rgl::tmesh3d mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
 #' @keywords internal
 #' @importFrom squash cmap makecmap jet
@@ -262,6 +272,8 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
 #' @param surface, string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
 #'
 #' @param colormap, a colormap. See the squash package for some colormaps. Defaults to squash::jet.
+#'
+#' @return coloredmesh. A named list with entries: "mesh" the rgl::tmesh3d mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
 #' @keywords internal
 #' @importFrom squash cmap makecmap jet

@@ -14,6 +14,7 @@ test_that("We can visualize morphometry data in multiview.", {
     coloredmeshes = vis.subject.morph.native(subjects_dir, subject_id, measure, 'both');
     #vis.mult.coloredmeshes(coloredmeshes, background="white", skip_all_na=TRUE);
     vis.mult.coloredmeshes.stdview4(coloredmeshes, background="white", skip_all_na=TRUE);
+    vis.mult.coloredmeshes.stdview9(coloredmeshes, background="white", skip_all_na=TRUE);
 
 
 

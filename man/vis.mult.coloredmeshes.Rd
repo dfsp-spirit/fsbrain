@@ -2,7 +2,7 @@
 % Please edit documentation in R/vis_multiview.R
 \name{vis.mult.coloredmeshes}
 \alias{vis.mult.coloredmeshes}
-\title{Visualize a list of colored meshes from several angles.}
+\title{Visualize a list of colored meshes from several angles. Test function, will be removed.}
 \usage{
 vis.mult.coloredmeshes(coloredmeshes, background = "white",
   skip_all_na = TRUE)
@@ -15,5 +15,5 @@ vis.mult.coloredmeshes(coloredmeshes, background = "white",
 \item{skip_all_na}{logical, whether to skip (i.e., not render) meshes in the list that have the property 'morph_data_was_all_na' set to TRUE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.}
 }
 \description{
-Visualize a list of colored meshes from several angles.
+Visualize a list of colored meshes from several angles. Test function, will be removed.
 }
