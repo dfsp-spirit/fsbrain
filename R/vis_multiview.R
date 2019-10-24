@@ -88,7 +88,7 @@ vis.mult.coloredmeshes.stdview4 <- function(coloredmeshes, background="white", s
 
     # Create the upper left view: draw only the left hemi, from the left
     rgl::next3d();
-    vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style);
+    vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style);
     rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
         rgl::text3d(0,label_shift_y,0,"lateral lh");
