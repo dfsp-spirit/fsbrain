@@ -114,3 +114,32 @@ get.rglstyle.default <- function() {
 get.rglstyle.shiny <- function() {
     return(list("shininess"=50, specular="white"));
 }
+
+
+#' @title Sort coloredmeshes into 2 lists by their 'hemi' property.
+#'
+#' @param coloredmeshes list of coloredmeshes
+#'
+#' @return named list with two entries: "lh": list of coloredmeshes that have property hemi set to 'lh'. "rh": list of coloredmeshes that have property hemi set to 'rh'. The rest is ignored.
+#'
+#' @keywords internal
+sort.coloredmeshes.by.hemi <- function(coloredmeshes) {
+    lh_meshes = list();
+    rh_meshes = list();
+    for (mesh_idx in seq_len(length(coloredmeshes))) {
+        cmesh = coloredmeshes[[mesh_idx]];
+        if(! ('hemi' %in% names(cmesh))) {
+            warning(sprintf("Ignoring coloredmesh # %d which has no hemi value at all.\n", mesh_idx));
+        } else {
+            if(cmesh$hemi == 'lh') {
+                mesh_name = sprintf("mesh%d", mesh_idx);
+                lh_meshes[[mesh_name]] = cmesh;
+            } else if(cmesh$hemi == 'rh') {
+                rh_meshes[[mesh_name]] = cmesh;
+            } else {
+                warning(sprintf("Ignoring mesh # %d with invalid hemi value '%s'.\n", mesh_idx, cmesh$hemi));
+            }
+        }
+    }
+    return(list("lh"=lh_meshes, "rh"=rh_meshes));
+}
