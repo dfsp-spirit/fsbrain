@@ -88,12 +88,7 @@ vis.mult.coloredmeshes.stdview4 <- function(coloredmeshes, background="white", s
 
     # Create the upper left view: draw only the left hemi, from the left
     rgl::next3d();
-    for (mesh_idx in seq_len(length(lh_meshes))) {     # usually this will only run once for the single lh mesh.
-        orig_mesh = lh_meshes[[mesh_idx]]$mesh;
-        rotation_angle = pi/2;
-        rotated_mesh = rgl::rotate3d(orig_mesh, rotation_angle, 1, 0, 0);
-        rgl::shade3d(rotated_mesh, col = lh_meshes[[mesh_idx]]$col);
-    }
+    vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style);
     rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
         rgl::text3d(0,label_shift_y,0,"lateral lh");
@@ -101,12 +96,7 @@ vis.mult.coloredmeshes.stdview4 <- function(coloredmeshes, background="white", s
 
     # Create the upper right view
     rgl::next3d();
-    for (mesh_idx in seq_len(length(rh_meshes))) {     # usually this will only run once for the single rh mesh.
-        orig_mesh = rh_meshes[[mesh_idx]]$mesh;
-        rotation_angle = pi/2;
-        rotated_mesh = rgl::rotate3d(orig_mesh, rotation_angle, 1, 0, 0);
-        rgl::shade3d(rotated_mesh, col = rh_meshes[[mesh_idx]]$col);
-    }
+    vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style);
     rgl::rgl.viewpoint(90, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
         rgl::text3d(0,label_shift_y,0,"lateral rh");
@@ -115,12 +105,6 @@ vis.mult.coloredmeshes.stdview4 <- function(coloredmeshes, background="white", s
 
     # Create the lower left view
     rgl::next3d();
-    #for (mesh_idx in seq_len(length(lh_meshes))) {     # usually this will only run once for the single lh mesh.
-    #    orig_mesh = lh_meshes[[mesh_idx]]$mesh;
-    #    rotation_angle = pi/2;
-    #    rotated_mesh = rgl::rotate3d(orig_mesh, rotation_angle, 1, 0, 0);
-    #    rgl::shade3d(rotated_mesh, col = lh_meshes[[mesh_idx]]$col);
-    #}
     vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style);
     rgl::rgl.viewpoint(90, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
@@ -130,15 +114,7 @@ vis.mult.coloredmeshes.stdview4 <- function(coloredmeshes, background="white", s
 
     # Create the lower right view
     rgl::next3d();
-    for (mesh_idx in seq_len(length(rh_meshes))) {     # usually this will only run once for the single lh mesh.
-        orig_mesh = rh_meshes[[mesh_idx]]$mesh;
-        rotation_angle = pi/2;
-        rotated_mesh = rgl::rotate3d(orig_mesh, rotation_angle, 1, 0, 0);
-        #rgl::shade3d(rotated_mesh, col = rh_meshes[[mesh_idx]]$col);
-        rotated_cmesh = rh_meshes[[mesh_idx]];
-        rotated_cmesh$mesh = rotated_mesh;
-        vis.coloredmesh(rotated_cmesh);
-    }
+    vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style);
     rgl::rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
         rgl::text3d(0,label_shift_y,0,"medial rh");
@@ -150,12 +126,26 @@ vis.mult.coloredmeshes.stdview4 <- function(coloredmeshes, background="white", s
 }
 
 
+#' @title Rotate and visualize coloredmeshes, applying a style.
+#'
+#' @param coloredmeshes, list of coloredmeshes. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
+#'
+#' @param rotation_angle, angle in radians. Passed to [rgl:rotated3d()].
+#'
+#' @param x, x value passed to [rgl:rotated3d()].
+#'
+#' @param y, y value passed to [rgl:rotated3d()].
+#'
+#' @param z, z value passed to [rgl:rotated3d()].
+#'
+#' @param style, a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
+
 #' @keywords internal
-vis.rotated.coloredmeshes <- function(coloredmeshes, rotation_angle, ax, ay, az, style="default") {
+vis.rotated.coloredmeshes <- function(coloredmeshes, rotation_angle, x, y, z, style="default") {
     for (mesh_idx in seq_len(length(coloredmeshes))) {     # usually this will only run once for the single mesh of a hemisphere.
         orig_cmesh = coloredmeshes[[mesh_idx]];
         orig_mesh = orig_cmesh$mesh;
-        rotated_mesh = rgl::rotate3d(orig_mesh, rotation_angle, ax, ay, az);
+        rotated_mesh = rgl::rotate3d(orig_mesh, rotation_angle, x, y, z);
         rotated_cmesh = orig_cmesh;         # copy coloredmesh
         rotated_cmesh$mesh = rotated_mesh;  # replace inner mesh with rotated version
         vis.coloredmesh(rotated_cmesh, style=style);
