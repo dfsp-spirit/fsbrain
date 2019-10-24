@@ -45,12 +45,14 @@ vis.mult.coloredmeshes <- function(coloredmeshes, background="white", skip_all_n
 #'
 #' @param skip_all_na logical, whether to skip (i.e., not render) meshes in the list that have the property 'morph_data_was_all_na' set to TRUE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.
 #'
-#' @param draw_labels logical, whether to draw label text for the different views that show information on the view direction and hemisphere displayed in a subplot. Defaults to TRUE.
+#' @param style, a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
+#'
+#' @param draw_labels logical, whether to draw label text for the different views that show information on the view direction and hemisphere displayed in a subplot. Defaults to FALSE.
 #'
 #' @export
 # @keywords internal
-#' @importFrom rgl open3d bg3d wire3d shade3d mfrow3d next3d text3d
-vis.mult.coloredmeshes.stdview4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", draw_labels = TRUE) {
+#' @importFrom rgl open3d bg3d wire3d shade3d mfrow3d next3d text3d rgl.viewpoint
+vis.mult.coloredmeshes.stdview4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", draw_labels = FALSE) {
 
     label_shift_y = -20;
 
@@ -73,7 +75,7 @@ vis.mult.coloredmeshes.stdview4 <- function(coloredmeshes, background="white", s
     # Create the upper left view: draw only the left hemi, from the left
     rgl::next3d();
     vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style);
-    rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
+    rgl::rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
         rgl::text3d(0,label_shift_y,0,"lateral lh");
     }
@@ -117,12 +119,14 @@ vis.mult.coloredmeshes.stdview4 <- function(coloredmeshes, background="white", s
 #'
 #' @param skip_all_na logical, whether to skip (i.e., not render) meshes in the list that have the property 'morph_data_was_all_na' set to TRUE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.
 #'
-#' @param draw_labels logical, whether to draw label text for the different views that show information on the view direction and hemisphere displayed in a subplot. Defaults to TRUE.
+#' @param style, a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
+#'
+#' @param draw_labels logical, whether to draw label text for the different views that show information on the view direction and hemisphere displayed in a subplot. Defaults to FALSE.
 #'
 #' @export
 # @keywords internal
-#' @importFrom rgl open3d bg3d wire3d shade3d mfrow3d next3d text3d
-vis.mult.coloredmeshes.stdview9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", draw_labels = TRUE) {
+#' @importFrom rgl open3d bg3d wire3d shade3d mfrow3d next3d text3d rgl.viewpoint
+vis.mult.coloredmeshes.stdview9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", draw_labels = FALSE) {
 
     label_shift_y = -20;
     label_shift_y_dorsal = -120;
@@ -151,7 +155,7 @@ vis.mult.coloredmeshes.stdview9 <- function(coloredmeshes, background="white", s
     # Create the upper left view: draw only the left hemi, from the left
     rgl::next3d();
     vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style);
-    rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
+    rgl::rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
         rgl::text3d(0,label_shift_y,0,"lateral lh");
     }
@@ -159,7 +163,7 @@ vis.mult.coloredmeshes.stdview9 <- function(coloredmeshes, background="white", s
     # Create the upper central view: draw both hemis from above (top view)
     rgl::next3d();
     vis.rotated.coloredmeshes(coloredmeshes, 0, 1, 0, 0, style=style);
-    rgl.viewpoint(0, 0, fov=0, interactive=FALSE);
+    rgl::rgl.viewpoint(0, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
         rgl::text3d(0,label_shift_y_dorsal,0,"dorsal");
     }
@@ -187,7 +191,7 @@ vis.mult.coloredmeshes.stdview9 <- function(coloredmeshes, background="white", s
     # Create the 2nd row central view: draw both hemis from below (bottom view)
     rgl::next3d();
     vis.rotated.coloredmeshes(coloredmeshes, pi, 1, 0, 0, style=style);
-    rgl.viewpoint(0, 0, fov=0, interactive=FALSE);
+    rgl::rgl.viewpoint(0, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
         rgl::text3d(0,label_shift_y_ventral,0,"ventral");
     }
