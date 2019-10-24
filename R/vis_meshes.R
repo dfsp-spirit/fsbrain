@@ -9,11 +9,13 @@
 #'
 #' @param skip_all_na logical, whether to skip (i.e., not render) meshes in the list that have the property 'morph_data_was_all_na' set to TRUE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.
 #'
+#' @param style, a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
+#'
 #' @return the list of visualized coloredmeshes
 #'
 #' @keywords internal
 #' @importFrom rgl open3d bg3d wire3d
-vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRUE) {
+vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default") {
 
     if(!is.list(coloredmeshes)) {
         stop("Parameter coloredmeshes must be a list.");
@@ -25,7 +27,8 @@ vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRU
         if(skip_all_na && cmesh$morph_data_was_all_na) {
             next;
         }
-        rgl::wire3d(cmesh$mesh, col=cmesh$col);
+        #rgl::wire3d(cmesh$mesh, col=cmesh$col);
+        vis.coloredmesh(cmesh, style = style);
     }
     invisible(coloredmeshes);
 }
@@ -44,7 +47,7 @@ vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRU
 #' @param z, z value passed to [rgl:rotated3d()].
 #'
 #' @param style, a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
-
+#'
 #' @keywords internal
 vis.rotated.coloredmeshes <- function(coloredmeshes, rotation_angle, x, y, z, style="default") {
     for (mesh_idx in seq_len(length(coloredmeshes))) {     # usually this will only run once for the single mesh of a hemisphere.
