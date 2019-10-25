@@ -12,14 +12,18 @@
 #'
 #' @param draw_labels logical, whether to draw label text for the different views that show information on the view direction and hemisphere displayed in a subplot. Defaults to FALSE.
 #'
+#' @param rgloptions, named list. Parameters passed to [rgl::par3d()]. Defaults to the empty list.
+#'
+#' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. Defaults to the empty list.
+#'
 #' @keywords internal
 #' @importFrom rgl open3d bg3d wire3d shade3d mfrow3d next3d text3d rgl.viewpoint
-brainview.si <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", draw_labels = FALSE, rgloptions = list()) {
+brainview.si <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", draw_labels = FALSE, rgloptions = list(), rglactions=list()) {
 
     if(!is.list(coloredmeshes)) {
         stop("Parameter 'coloredmeshes' must be a list.");
     }
-    invisible(vis.coloredmeshes(coloredmeshes, rgloptions = rgloptions));
+    invisible(vis.coloredmeshes(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions));
 }
 
 
@@ -45,14 +49,18 @@ brainview.si <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 #'
 #' @param duration rotation duration value, passed to [rgl::spin3d()]. Defaults to 20.
 #'
+#' @param rgloptions, named list. Parameters passed to [rgl::par3d()]. Defaults to the empty list.
+#'
+#' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. Defaults to the empty list.
+#'
 #' @keywords internal
 #' @importFrom rgl open3d bg3d wire3d shade3d mfrow3d next3d text3d rgl.viewpoint
-brainview.sr <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", draw_labels = FALSE, x=0, y=1, z=0, rpm=15, duration=20, rgloptions = list()) {
+brainview.sr <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", draw_labels = FALSE, x=0, y=1, z=0, rpm=15, duration=20, rgloptions = list(), rglactions=list()) {
 
     if(!is.list(coloredmeshes)) {
         stop("Parameter 'coloredmeshes' must be a list.");
     }
-    invisible(vis.coloredmeshes.rotating(coloredmeshes, x=x, y=y, z=z, rpm=rpm, duration=duration, rgloptions = rgloptions));
+    invisible(vis.coloredmeshes.rotating(coloredmeshes, x=x, y=y, z=z, rpm=rpm, duration=duration, rgloptions = rgloptions, rglactions = rglactions));
 }
 
 
@@ -68,9 +76,13 @@ brainview.sr <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 #'
 #' @param draw_labels logical, whether to draw label text for the different views that show information on the view direction and hemisphere displayed in a subplot. Defaults to FALSE.
 #'
+#' @param rgloptions, named list. Parameters passed to [rgl::par3d()]. Defaults to the empty list.
+#'
+#' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
+#'
 #' @keywords internal
 #' @importFrom rgl open3d bg3d wire3d shade3d mfrow3d next3d text3d rgl.viewpoint
-brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", draw_labels = FALSE, rgloptions = list()) {
+brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", draw_labels = FALSE, rgloptions = list(), rglactions = list()) {
 
     label_shift_y = -20;
 
@@ -129,18 +141,26 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 
     #rgl::highlevel(integer()); # To trigger display as rglwidget
 
-    rglactions = list("snapshot_png"="brain.png");
     perform.rglactions(rglactions);
     invisible(coloredmeshes);
 }
 
 
+#' @title Perform rglactions, like taking screenshots.
+#'
+#' @description Take a list specifying actions and execute them. This function should be called once an rgl scene has been setup and rendered. A typical usecase is to save a screenshot of the scene.
+#'
+#' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
+#'
 #' @keywords internal
+#' @importFrom rgl rgl.snapshot
 perform.rglactions <- function(rglactions) {
-    if("snapshot_png" %in% names(rglactions)) {
-        output_image = rglactions$snapshot_png;
-        rgl::rgl.snapshot(output_image, fmt="png");
-        message(sprintf("Screenshot written to '%s' in dir '%s'.\n", output_image, getwd()));
+    if(is.list(rglactions)) {
+        if("snapshot_png" %in% names(rglactions)) {
+            output_image = path.expand(rglactions$snapshot_png);
+            rgl::rgl.snapshot(output_image, fmt="png");
+            message(sprintf("Screenshot written to '%s' (current working dir is '%s').\n", output_image, getwd()));
+        }
     }
 }
 
@@ -157,9 +177,13 @@ perform.rglactions <- function(rglactions) {
 #'
 #' @param draw_labels logical, whether to draw label text for the different views that show information on the view direction and hemisphere displayed in a subplot. Defaults to FALSE.
 #'
+#' @param rgloptions, named list. Parameters passed to [rgl::par3d()]. Defaults to the empty list.
+#'
+#' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
+#'
 #' @keywords internal
 #' @importFrom rgl open3d bg3d wire3d shade3d mfrow3d next3d text3d rgl.viewpoint
-brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", draw_labels = FALSE, rgloptions = list()) {
+brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", draw_labels = FALSE, rgloptions = list(), rglactions = list()) {
 
     #do_draw_colorbar = FALSE;
 
@@ -284,6 +308,8 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     }
 
     #rgl::highlevel(integer()); # To trigger display as rglwidget
+
+    perform.rglactions(rglactions);
     invisible(coloredmeshes);
 }
 

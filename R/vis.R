@@ -34,7 +34,7 @@
 #'
 #' @importFrom squash jet
 #' @export
-vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, surface="white", colormap=squash::jet, views=c("t4"), rgloptions = list()) {
+vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, surface="white", colormap=squash::jet, views=c("t4"), rgloptions = list(), rglactions = list()) {
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
@@ -49,7 +49,7 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, su
         coloredmeshes = list(cmesh);
     }
 
-    invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions));
+    invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions));
 }
 
 
@@ -64,17 +64,17 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, su
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
 #' @keywords internal
-brainviews <- function(views, coloredmeshes, rgloptions = list()) {
+brainviews <- function(views, coloredmeshes, rgloptions = list(), rglactions = list()) {
     if(length(views)) {
         for(view in views) {
             if(view == "t4") {
-                invisible(brainview.t4(coloredmeshes, rgloptions = rgloptions));
+                invisible(brainview.t4(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions));
             } else if(view == "t9") {
-                invisible(brainview.t9(coloredmeshes, rgloptions = rgloptions));
+                invisible(brainview.t9(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions));
             } else if(view == "si") {
-                invisible(brainview.si(coloredmeshes, rgloptions = rgloptions));
+                invisible(brainview.si(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions));
             } else if(view == "sr") {
-                invisible(brainview.sr(coloredmeshes, rgloptions = rgloptions));
+                invisible(brainview.sr(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions));
             } else {
                 stop(sprintf("Invalid view '%s'. Valid ones include 'si', t4' and 't9'.\n", view));
             }
@@ -120,7 +120,7 @@ brainviews <- function(views, coloredmeshes, rgloptions = list()) {
 #'
 #' @importFrom squash jet
 #' @export
-vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface="white", colormap=squash::jet, views=c('t4'), rgloptions=list()) {
+vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface="white", colormap=squash::jet, views=c('t4'), rgloptions=list(), rglactions = list()) {
 
     if(is.null(morph_data_lh) && is.null(morph_data_rh)) {
         stop(sprintf("Only one of morph_data_lh or morph_data_rh can be NULL.\n"));
@@ -138,7 +138,7 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, mor
         coloredmeshes$rh = cmesh_rh;
     }
 
-    invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions));
+    invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions));
 }
 
 
@@ -168,13 +168,13 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, mor
 #'
 #' @importFrom squash jet
 #' @export
-vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage", morph_data_lh, morph_data_rh, surface="white", colormap=squash::jet, views=c('t4'), rgloptions = list()) {
+vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage", morph_data_lh, morph_data_rh, surface="white", colormap=squash::jet, views=c('t4'), rgloptions = list(), rglactions = list()) {
 
     if(is.null(subjects_dir)) {
         subjects_dir = find.subjectsdir.of(subject_id=vis_subject_id, mustWork = TRUE);
     }
 
-    invisible(vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface=surface, colormap=colormap, views=views, rgloptions=rgloptions));
+    invisible(vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface=surface, colormap=colormap, views=views, rgloptions=rgloptions, rglactions = rglactions));
 }
 
 
@@ -208,7 +208,7 @@ vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage",
 #' @family visualization functions
 #'
 #' @export
-vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi, surface="white", views=c('t4'), rgloptions=list()) {
+vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi, surface="white", views=c('t4'), rgloptions=list(), rglactions = list()) {
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
@@ -223,7 +223,7 @@ vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi, surface="wh
         coloredmeshes = list(cmesh);
     }
 
-    invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions));
+    invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions));
 }
 
 

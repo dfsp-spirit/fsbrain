@@ -6,7 +6,8 @@
 \usage{
 brainview.sr(coloredmeshes, background = "white", skip_all_na = TRUE,
   style = "default", draw_labels = FALSE, x = 0, y = 1, z = 0,
-  rpm = 15, duration = 20, rgloptions = list())
+  rpm = 15, duration = 20, rgloptions = list(),
+  rglactions = list())
 }
 \arguments{
 \item{coloredmeshes, }{list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.}
@@ -28,6 +29,10 @@ brainview.sr(coloredmeshes, background = "white", skip_all_na = TRUE,
 \item{rpm}{rotation rpm value, passed to [rgl::spin3d()]. Defaults to 15.}
 
 \item{duration}{rotation duration value, passed to [rgl::spin3d()]. Defaults to 20.}
+
+\item{rgloptions, }{named list. Parameters passed to [rgl::par3d()]. Defaults to the empty list.}
+
+\item{rglactions, }{named list. A list in which the names are from a set of pre-defined actions. Defaults to the empty list.}
 }
 \description{
 Visualize a list of colored meshes, rotating the camera around them.

@@ -12,9 +12,9 @@ test_that("We can visualize morphometry data in multiview.", {
     surface = 'white';
 
     rgloptions=list("windowRect"=c(50,50,900,900));     # window at position (50,50) on screen, width and height 900
-    rglactions = list("snapshot_png"="brain.png");
+    rglactions = list("snapshot_png"="~/brain.png");
 
-    coloredmeshes = vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('si', 't4', 't9'), rgloptions=rgloptions);
+    coloredmeshes = vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('si', 't4', 't9'), rgloptions=rgloptions, rglactions=rglactions);
     coloredmeshes = vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('sr'));
     #vis.mult.coloredmeshes(coloredmeshes, background="white", skip_all_na=TRUE);
     #brainview.t4(coloredmeshes);

@@ -13,11 +13,13 @@
 #'
 #' @param rgloptions option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));
 #'
+#' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. Defaults to the empty list.
+#'
 #' @return the list of visualized coloredmeshes
 #'
 #' @keywords internal
 #' @importFrom rgl open3d bg3d wire3d
-vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", rgloptions=list()) {
+vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", rgloptions=list(), rglactions=list()) {
 
     if(!is.list(coloredmeshes)) {
         stop("Parameter coloredmeshes must be a list.");
@@ -37,6 +39,7 @@ vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRU
         vis.coloredmesh(cmesh, style = style);
     }
 
+    perform.rglactions(rglactions);
     invisible(coloredmeshes);
 }
 
@@ -63,11 +66,13 @@ vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRU
 #'
 #' @param rgloptions option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));
 #'
+#' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. Defaults to the empty list.
+#'
 #' @return the list of visualized coloredmeshes
 #'
 #' @keywords internal
 #' @importFrom rgl open3d bg3d wire3d
-vis.coloredmeshes.rotating <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", x=0, y=1, z=0, rpm=15, duration=20, rgloptions=list()) {
+vis.coloredmeshes.rotating <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", x=0, y=1, z=0, rpm=15, duration=20, rgloptions=list(), rglactions = list()) {
 
     if(!is.list(coloredmeshes)) {
         stop("Parameter coloredmeshes must be a list.");
@@ -91,6 +96,8 @@ vis.coloredmeshes.rotating <- function(coloredmeshes, background="white", skip_a
     } else {
         warning("Cannot show rotating scene with NULL device.");
     }
+
+    perform.rglactions(rglactions);
     invisible(coloredmeshes);
 }
 
