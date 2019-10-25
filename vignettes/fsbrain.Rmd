@@ -15,7 +15,7 @@ Note: While this packages provides an abstract access layer to neuroimaging data
 
 We will use example data that comes with fsbrain throughout this manual. Feel free to replace the subjects_dir and subjects_list with data from your study.
 
-```{r, eval = TRUE}
+```{r, eval = FALSE}
 library("fsbrain");
 fsbrain::download_optional_data();
 subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -49,7 +49,7 @@ This section explains aggregation functions. These allow you to retrieve the mea
 
 The fsbrain package provides a high-level interface to access data for groups of subjects. Here, we compute the mean thickness for each subject in native space:
 
-```{r, eval = TRUE}
+```{r, eval = FALSE}
 mean_thickness_lh_native = group.morph.agg.native(subjects_dir, subjects_list, "thickness", "lh", agg_fun=mean);
 mean_thickness_lh_native;
 ```
@@ -59,7 +59,7 @@ mean_thickness_lh_native;
 
 Here, we compute the mean thickness for each subject in standard space:
 
-```{r, eval = TRUE}
+```{r, eval = FALSE}
 mean_thickness_lh_std = group.morph.agg.standard(subjects_dir, subjects_list, "thickness", "lh", fwhm="10", agg_fun=mean);
 mean_thickness_lh_std;
 ```
@@ -70,7 +70,7 @@ mean_thickness_lh_std;
 When working with native space data for groups, vertex-wise comparison is not possible and one is often interested in aggregating data or summary statistics. Obtaining these for a group becomes easy with 'fsbrain':
 
 
-```{r, eval = TRUE}
+```{r, eval = FALSE}
 agg_nat = group.multimorph.agg.native(subjects_dir, subjects_list, c("thickness", "area"), c("lh", "rh"), agg_fun = mean);
 head(agg_nat);
 ```
@@ -92,7 +92,7 @@ Note that you can get short format by setting 'cast = FALSE', which will result 
 
 You could do the same in standard space with `group.multimorph.agg.standard()`, even though it's less common as typically vertex-wise analysis is used in standard space. This requires that you pass the `fwhm` parameter to identify which smoothing value you want:
 
-```{r, eval = TRUE}
+```{r, eval = FALSE}
 data_std = group.multimorph.agg.standard(subjects_dir, subjects_list, c("thickness", "area"), c("lh", "rh"), fwhm='10', agg_fun = mean);
 head(data_std);
 ```
@@ -107,7 +107,7 @@ Other parameters exist to define the template subject, which defaults to 'fsaver
 Instead of looking at the full hemispheres, you may want to look at brain regions from some atlas (also called *cortical parcellation*). Examples are the Desikan atlas and the Destrieux atlas, both of which come with FreeSurfer.
 
 
-```{r, eval = TRUE}
+```{r, eval = FALSE}
 atlas = 'aparc';         # or 'aparc.a2009s', or 'aparc.DKTatlas'.
 measure = 'thickness';
 region_means_native = group.agg.atlas.native(subjects_dir, subjects_list, measure, "lh", atlas, agg_fun = mean);
