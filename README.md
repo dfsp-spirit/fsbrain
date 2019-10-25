@@ -1,4 +1,4 @@
-# fsbrain 
+# fsbrain
 A GNU R library for structural neuroimaging. Provides high-level functions to access (read and write) and visualize surface-based brain morphometry data (e.g. cortical thickness) for individual subjects and groups.
 
 ![Vis](./vignettes/rgl_brain_ct.jpg?raw=true "Cortical thickness visualization")
@@ -43,13 +43,13 @@ This will ouput something like this (but for the version you actually used):
 ```
 To cite package ‘fsbrain’ in publications use:
 
-  Tim Schäfer (2019). fsbrain: Managing and visualizing brain surface data. R package version
+  Tim Schäfer (2019). fsbrain: Managing and Visualizing Brain Surface Data. R package version
   0.0.1. https://github.com/dfsp-spirit/fsbrain
 
 A BibTeX entry for LaTeX users is
 
   @Manual{,
-    title = {fsbrain: Managing and visualizing brain surface data},
+    title = {fsbrain: Managing and Visualizing Brain Surface Data},
     author = {Tim Schäfer},
     year = {2019},
     note = {R package version 0.0.1},
