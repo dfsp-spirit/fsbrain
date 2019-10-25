@@ -11,27 +11,89 @@
 #'
 #' @param style, a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
 #'
+#' @param rgloptions option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));
+#'
 #' @return the list of visualized coloredmeshes
 #'
 #' @keywords internal
 #' @importFrom rgl open3d bg3d wire3d
-vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default") {
+vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", rgloptions=list()) {
 
     if(!is.list(coloredmeshes)) {
         stop("Parameter coloredmeshes must be a list.");
     }
 
+    #rgloptions = list(windowRect=c(50,50,1000,1000));
+
     rgl::open3d();
+    do.call(rgl::par3d, rgloptions);
+    Sys.sleep(1);
+
     rgl::bg3d(background);
     for(cmesh in coloredmeshes) {
         if(skip_all_na && cmesh$morph_data_was_all_na) {
             next;
         }
-        #rgl::wire3d(cmesh$mesh, col=cmesh$col);
         vis.coloredmesh(cmesh, style = style);
+    }
+
+    invisible(coloredmeshes);
+}
+
+
+#' @title Visualize a list of colored meshes in a single scene and rotate them.
+#'
+#' @param coloredmeshes, list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
+#'
+#' @param background string, background color passed to rgl::bg3d()
+#'
+#' @param skip_all_na logical, whether to skip (i.e., not render) meshes in the list that have the property 'morph_data_was_all_na' set to TRUE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.
+#'
+#' @param style, a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
+#'
+#' @param x rotation x axis value, passed to [rgl::spin3d()]. Defaults to 0.
+#'
+#' @param y rotation y axis value, passed to [rgl::spin3d()]. Defaults to 1.
+#'
+#' @param z rotation z axis value, passed to [rgl::spin3d()]. Defaults to 0.
+#'
+#' @param rpm rotation rpm value, passed to [rgl::spin3d()]. Defaults to 15.
+#'
+#' @param duration rotation duration value, passed to [rgl::spin3d()]. Defaults to 20.
+#'
+#' @param rgloptions option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));
+#'
+#' @return the list of visualized coloredmeshes
+#'
+#' @keywords internal
+#' @importFrom rgl open3d bg3d wire3d
+vis.coloredmeshes.rotating <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", x=0, y=1, z=0, rpm=15, duration=20, rgloptions=list()) {
+
+    if(!is.list(coloredmeshes)) {
+        stop("Parameter coloredmeshes must be a list.");
+    }
+
+    #rgloptions = list("windowRect"=c(50,50,1000,1000));
+
+    rgl::open3d();
+    do.call(rgl::par3d, rgloptions);
+    Sys.sleep(1);
+    rgl::bg3d(background);
+    for(cmesh in coloredmeshes) {
+        if(skip_all_na && cmesh$morph_data_was_all_na) {
+            next;
+        }
+        vis.coloredmesh(cmesh, style = style);
+    }
+
+    if (!rgl::rgl.useNULL()) {
+        rgl::play3d(rgl::spin3d(axis = c(x, y, z), rpm = rpm), duration = duration);
+    } else {
+        warning("Cannot show rotating scene with NULL device.");
     }
     invisible(coloredmeshes);
 }
+
 
 
 #' @title Rotate and visualize coloredmeshes, applying a style.
@@ -143,3 +205,4 @@ sort.coloredmeshes.by.hemi <- function(coloredmeshes) {
     }
     return(list("lh"=lh_meshes, "rh"=rh_meshes));
 }
+

@@ -17,6 +17,10 @@
 #'
 #' @param colormap, a colormap. See the squash package for some colormaps. Defaults to squash::jet.
 #'
+#' @param views, list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.
+#'
+#' @param rgloptions option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));
+#'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
 #' @examples
@@ -30,7 +34,7 @@
 #'
 #' @importFrom squash jet
 #' @export
-vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, surface="white", colormap=squash::jet) {
+vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, surface="white", colormap=squash::jet, views=c("t4"), rgloptions = list()) {
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
@@ -44,8 +48,42 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, su
         cmesh = coloredmesh.from.morph.native(subjects_dir, subject_id, measure, hemi, surface=surface, colormap=colormap);
         coloredmeshes = list(cmesh);
     }
-    invisible(vis.coloredmeshes(coloredmeshes));
+
+    invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions));
 }
+
+
+#' @title Show one or more views of the given meshes in rgl windows.
+#'
+#' @param views, list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.
+#'
+#' @param coloredmeshes, list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
+#'
+#' @param rgloptions option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));
+#'
+#' @return list of coloredmeshes. The coloredmeshes used for the visualization.
+#'
+#' @keywords internal
+brainviews <- function(views, coloredmeshes, rgloptions = list()) {
+    if(length(views)) {
+        for(view in views) {
+            if(view == "t4") {
+                invisible(brainview.t4(coloredmeshes, rgloptions = rgloptions));
+            } else if(view == "t9") {
+                invisible(brainview.t9(coloredmeshes, rgloptions = rgloptions));
+            } else if(view == "si") {
+                invisible(brainview.si(coloredmeshes, rgloptions = rgloptions));
+            } else if(view == "sr") {
+                invisible(brainview.sr(coloredmeshes, rgloptions = rgloptions));
+            } else {
+                stop(sprintf("Invalid view '%s'. Valid ones include 'si', t4' and 't9'.\n", view));
+            }
+        }
+    } else {
+        invisible(coloredmeshes);
+    }
+}
+
 
 #' @title Visualize arbitrary data on the surface of any subject.
 #'
@@ -63,6 +101,10 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, su
 #'
 #' @param colormap, a colormap. See the squash package for some colormaps. Defaults to squash::jet.
 #'
+#' @param views, list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.
+#'
+#' @param rgloptions option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));
+#'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
 #' @examples
@@ -78,7 +120,7 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, su
 #'
 #' @importFrom squash jet
 #' @export
-vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface="white", colormap=squash::jet) {
+vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface="white", colormap=squash::jet, views=c('t4'), rgloptions=list()) {
 
     if(is.null(morph_data_lh) && is.null(morph_data_rh)) {
         stop(sprintf("Only one of morph_data_lh or morph_data_rh can be NULL.\n"));
@@ -96,8 +138,9 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, mor
         coloredmeshes$rh = cmesh_rh;
     }
 
-    invisible(vis.coloredmeshes(coloredmeshes));
+    invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions));
 }
+
 
 #' @title Visualize arbitrary data on the fsaverage template subject, if available.
 #'
@@ -115,19 +158,23 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, mor
 #'
 #' @param colormap, a colormap. See the squash package for some colormaps. Defaults to squash::jet.
 #'
+#' @param views, list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.
+#'
+#' @param rgloptions option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));
+#'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
 #' @family visualization functions
 #'
 #' @importFrom squash jet
 #' @export
-vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage", morph_data_lh, morph_data_rh, surface="white", colormap=squash::jet) {
+vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage", morph_data_lh, morph_data_rh, surface="white", colormap=squash::jet, views=c('t4'), rgloptions = list()) {
 
     if(is.null(subjects_dir)) {
         subjects_dir = find.subjectsdir.of(subject_id=vis_subject_id, mustWork = TRUE);
     }
 
-    invisible(vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface=surface, colormap=colormap));
+    invisible(vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface=surface, colormap=colormap, views=views, rgloptions=rgloptions));
 }
 
 
@@ -145,6 +192,10 @@ vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage",
 #'
 #' @param surface, string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
 #'
+#' @param views, list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.
+#'
+#' @param rgloptions option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));
+#'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
 #' @examples
@@ -157,7 +208,7 @@ vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage",
 #' @family visualization functions
 #'
 #' @export
-vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi, surface="white") {
+vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi, surface="white", views=c('t4'), rgloptions=list()) {
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
@@ -171,7 +222,8 @@ vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi, surface="wh
         cmesh = coloredmesh.from.annot(subjects_dir, subject_id, atlas, hemi, surface=surface);
         coloredmeshes = list(cmesh);
     }
-    invisible(vis.coloredmeshes(coloredmeshes));
+
+    invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions));
 }
 
 

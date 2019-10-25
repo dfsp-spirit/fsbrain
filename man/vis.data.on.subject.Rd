@@ -5,7 +5,8 @@
 \title{Visualize arbitrary data on the surface of any subject.}
 \usage{
 vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh,
-  morph_data_rh, surface = "white", colormap = squash::jet)
+  morph_data_rh, surface = "white", colormap = squash::jet,
+  views = c("t4"), rgloptions = list())
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, containing the subdir of vis_subject_id, the subject that you want to use for visualization.}
@@ -19,6 +20,10 @@ vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh,
 \item{surface, }{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 
 \item{colormap, }{a colormap. See the squash package for some colormaps. Defaults to squash::jet.}
+
+\item{views, }{list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.}
+
+\item{rgloptions}{option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.

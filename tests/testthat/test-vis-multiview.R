@@ -11,14 +11,22 @@ test_that("We can visualize morphometry data in multiview.", {
     measure = 'thickness';
     surface = 'white';
 
-    coloredmeshes = vis.subject.morph.native(subjects_dir, subject_id, measure, 'both');
+    rgloptions=list("windowRect"=c(50,50,900,900));     # window at position (50,50) on screen, width and height 900
+
+    coloredmeshes = vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('si', 't4', 't9'), rgloptions=rgloptions);
+    coloredmeshes = vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('sr'));
     #vis.mult.coloredmeshes(coloredmeshes, background="white", skip_all_na=TRUE);
-    vis.mult.coloredmeshes.stdview4(coloredmeshes, background="white", skip_all_na=TRUE);
-    vis.mult.coloredmeshes.stdview9(coloredmeshes, background="white", skip_all_na=TRUE);
+    brainview.t4(coloredmeshes);
+    brainview.t9(coloredmeshes);
 
     do_rotations = FALSE;
     if(do_rotations) {
         cmesh = coloredmeshes[[1]]; # 1 = lh , 2 = rh
+
+        # open3d(); shade3d(cmesh$mesh, col=cmesh$col);
+        # rgl.viewpoint(0, 0, fov=0, interactive=FALSE, zoom=.9);
+
+        #r3dDefaults$windowRect <- c(0,50, 1200, 1200)
 
         ax = 1;
         ay = 0;
@@ -28,6 +36,7 @@ test_that("We can visualize morphometry data in multiview.", {
                 for(rotation_angle in c(0, pi, pi/2)) {
                     label_text = sprintf("[%d %d %d] theta=%d, phi=%d, a=%f", ax, ay, az, theta, phi, rotation_angle);
                     open3d(); shade3d(rotate3d(cmesh$mesh, rotation_angle, ax, ay, az), col=cmesh$col); rgl.viewpoint(theta, phi, fov=0, interactive=FALSE, type="modelviewpoint"); text3d(0, -150, 100, label_text);
+
                 }
             }
         }

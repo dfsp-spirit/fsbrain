@@ -5,7 +5,7 @@
 \title{Visualize an annotation for a subject.}
 \usage{
 vis.subject.annot(subjects_dir, subject_id, atlas, hemi,
-  surface = "white")
+  surface = "white", views = c("t4"), rgloptions = list())
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -17,6 +17,10 @@ vis.subject.annot(subjects_dir, subject_id, atlas, hemi,
 \item{hemi, }{string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the label data files to be loaded.}
 
 \item{surface, }{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
+
+\item{views, }{list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.}
+
+\item{rgloptions}{option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.
