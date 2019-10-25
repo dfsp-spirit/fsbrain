@@ -4,7 +4,7 @@ Title: Managing and Visualizing Brain Surface Data
 Version: 0.0.1
 Authors@R: person("Tim", "Schäfer", role = c("aut", "cre"), email = "ts+code@rcmd.org", comment = c(ORCID = "0000-0002-3683-8070"))
 Maintainer: Tim Schäfer <ts+code@rcmd.org>
-Description: Provides utility function for analysis of structural neuroimaging data.
+Description: Provides high-level access to 'FreeSurfer' <http://freesurfer.net/> neuroimaging data on the level of subjects and groups. Load morphometry data, surfaces and brain parcellations based on atlases. Mask data using labels, load data for specific atlas regions only, and visualize the results directly in 'R'.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
