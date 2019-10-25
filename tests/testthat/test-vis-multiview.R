@@ -11,14 +11,17 @@ test_that("We can visualize morphometry data in multiview.", {
     measure = 'thickness';
     surface = 'white';
 
-    rgloptions=list("windowRect"=c(50,50,900,900));     # window at position (50,50) on screen, width and height 900
-    rglactions = list("snapshot_png"="~/brain.png");
+    rgloptions=list("windowRect"=c(50,50,1200,1200));     # the first 2 entries give the position on screen, the rest defines resolution as width, height in px
+    rglactions = list("snapshot_png"="~/fsbrain.png");
 
     coloredmeshes = vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('si', 't4', 't9'), rgloptions=rgloptions, rglactions=rglactions);
     coloredmeshes = vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('sr'));
-    #vis.mult.coloredmeshes(coloredmeshes, background="white", skip_all_na=TRUE);
-    #brainview.t4(coloredmeshes);
-    #brainview.t9(coloredmeshes);
+
+    vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('t4'), rgloptions = rgloptions, rglactions = list("snapshot_png"="~/brain_t4.png"));
+    vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('t9'), rgloptions = rgloptions, rglactions = list("snapshot_png"="~/brain_t9.png"));
+
+    vis.subject.annot(subjects_dir, subject_id, 'aparc', 'both', views=c('t4'), rgloptions = rgloptions, rglactions = list("snapshot_png"="~/annot_t4.png"));
+    vis.subject.annot(subjects_dir, subject_id, 'aparc', 'both', views=c('t9'), rgloptions = rgloptions, rglactions = list("snapshot_png"="~/annot_t9.png"));
 
     do_rotations = FALSE;
     if(do_rotations) {
