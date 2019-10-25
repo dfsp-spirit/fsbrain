@@ -24,8 +24,8 @@ Aggregate morphometry data over brain atlas regions, e.g., compute the mean thic
 }
 \examples{
 \donttest{
-   nitools::download_optional_data();
-   subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+   fsbrain::download_optional_data();
+   subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
    morph_data = subject.morph.native(subjects_dir, 'subject1', 'thickness', 'lh');
    annot = subject.annot(subjects_dir, 'subject1', 'lh', 'aparc');
    agg = subject.atlas.agg(morph_data, annot$label_names);

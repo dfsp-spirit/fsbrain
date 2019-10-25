@@ -12,7 +12,7 @@
 #' @return a vector of strings. The subject IDs.
 #'
 #' @examples
-#'    subjects_file = system.file("extdata", "subjects.txt", package = "nitools", mustWork = TRUE);
+#'    subjects_file = system.file("extdata", "subjects.txt", package = "fsbrain", mustWork = TRUE);
 #'    subjects_list = read.md.subjects(subjects_file);
 #'
 #' @family metdata functions
@@ -53,7 +53,7 @@ read.md.subjects = function(subjects_file, header=FALSE) {
 #'
 #' @examples
 #'    demographics_file =
-#'    system.file("extdata", "demographics.tsv", package = "nitools", mustWork = TRUE);
+#'    system.file("extdata", "demographics.tsv", package = "fsbrain", mustWork = TRUE);
 #'    column_names = c("subject_id", "group", "age");
 #'    demographics = read.md.demographics(demographics_file,
 #'    column_names = column_names, report = FALSE);

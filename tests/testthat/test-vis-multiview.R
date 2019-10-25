@@ -4,9 +4,9 @@
 test_that("We can visualize morphometry data in multiview.", {
     skip("This test has to be run manually and interactively.");
 
-    nitools::download_optional_data();
+    fsbrain::download_optional_data();
 
-    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     subject_id = 'subject1';
     measure = 'thickness';
     surface = 'white';

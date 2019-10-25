@@ -23,8 +23,8 @@ Load a brain surface annotation, i.e., a cortical parcellation based on an atlas
 }
 \examples{
 \donttest{
-   nitools::download_optional_data();
-   subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+   fsbrain::download_optional_data();
+   subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
    subjects_list = c("subject1", "subject2");
    annotations = group.annot(subjects_dir, subjects_list, "lh", "aparc");
 }

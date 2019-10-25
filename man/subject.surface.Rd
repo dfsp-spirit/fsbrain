@@ -23,8 +23,8 @@ Load a brain surface for a subject.
 }
 \examples{
 \donttest{
-   nitools::download_optional_data();
-   subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+   fsbrain::download_optional_data();
+   subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
    lh_white = subject.surface(subjects_dir, "subject1", "white", "lh");
 }
 

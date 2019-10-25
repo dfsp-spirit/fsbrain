@@ -6,7 +6,7 @@
 #'
 #' @export
 download_optional_data <- function() {
-    pkg_info = pkgfilecache::get_pkg_info("nitools");
+    pkg_info = pkgfilecache::get_pkg_info("fsbrain");
 
     # Replace these with your optional data files.
     base_path_subject1 = c('subjects_dir', 'subject1');
@@ -112,7 +112,7 @@ download_optional_data <- function() {
 #'
 #' @export
 list_optional_data <- function() {
-    pkg_info = pkgfilecache::get_pkg_info("nitools");
+    pkg_info = pkgfilecache::get_pkg_info("fsbrain");
     return(pkgfilecache::list_available(pkg_info));
 }
 
@@ -127,7 +127,7 @@ list_optional_data <- function() {
 #'
 #' @export
 get_optional_data_filepath <- function(filename, mustWork=TRUE) {
-    pkg_info = pkgfilecache::get_pkg_info("nitools");
+    pkg_info = pkgfilecache::get_pkg_info("fsbrain");
     return(pkgfilecache::get_filepath(pkg_info, filename, mustWork=mustWork));
 }
 
@@ -138,7 +138,7 @@ get_optional_data_filepath <- function(filename, mustWork=TRUE) {
 #'
 #' @export
 delete_all_optional_data <- function() {
-    pkg_info = pkgfilecache::get_pkg_info("nitools");
+    pkg_info = pkgfilecache::get_pkg_info("fsbrain");
     return(pkgfilecache::erase_file_cache(pkg_info));
 }
 

@@ -18,7 +18,7 @@ a vector of strings. The subject IDs.
 Load a list of subjects from a subjects file, i.e., a simple text file containing one subject name per line.
 }
 \examples{
-   subjects_file = system.file("extdata", "subjects.txt", package = "nitools", mustWork = TRUE);
+   subjects_file = system.file("extdata", "subjects.txt", package = "fsbrain", mustWork = TRUE);
    subjects_list = read.md.subjects(subjects_file);
 
 }

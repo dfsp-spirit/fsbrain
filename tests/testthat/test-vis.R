@@ -4,9 +4,9 @@
 test_that("We can visualize morphometry data.", {
     skip("This test has to be run manually and interactively.");
 
-    nitools::download_optional_data();
+    fsbrain::download_optional_data();
 
-    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     subject_id = 'subject1';
     measure = 'thickness';
     surface = 'white';
@@ -18,9 +18,9 @@ test_that("We can visualize morphometry data.", {
 test_that("We can visualize annotation atlas data.", {
     skip("This test has to be run manually and interactively.");
 
-    nitools::download_optional_data();
+    fsbrain::download_optional_data();
 
-    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     subject_id = 'subject1';
 
     vis.subject.annot(subjects_dir, subject_id, 'aparc', 'both');
@@ -30,8 +30,8 @@ test_that("We can visualize annotation atlas data.", {
 test_that("We can visualize arbitrary data on a subjects surface.", {
     skip("This test has to be run manually and interactively.");
 
-    nitools::download_optional_data();
-    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     subject_id = 'subject1';
 
     num_verts_subject1_lh = 149244;  # We need to know these to generate random data of suitable length.
@@ -66,8 +66,8 @@ test_that("We can visualize arbitrary data on the fsaverage surfaces if availabl
 test_that("We can visualize one value per atlas region on a subject.", {
     skip("This test has to be run manually and interactively.");
 
-    nitools::download_optional_data();
-    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     subject_id = 'subject1';
 
     atlas = "aparc";           # an atlas, e.g., 'aparc', 'aparc.a2009s', 'aparc.DKTatlas'

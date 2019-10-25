@@ -1,6 +1,6 @@
 test_that("A label can be extracted from a region of a loaded annotation", {
-    nitools::download_optional_data();
-    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
 
     num_verts_bankssts_subject1_lh = 1722;
@@ -27,8 +27,8 @@ test_that("A label can be extracted from a region of a loaded annotation", {
 
 
 test_that("A label can be extracted from a region of an annotation file", {
-    nitools::download_optional_data();
-    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
 
     num_verts_bankssts_subject1_lh = 1722;
@@ -39,8 +39,8 @@ test_that("A label can be extracted from a region of an annotation file", {
 
 
 test_that("Labels can be extracted from a region of an annotation file for a group of subjects", {
-    nitools::download_optional_data();
-    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     subjects_list = c('subject1', 'subject2');
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
 

@@ -1,6 +1,6 @@
 test_that("Loading of native space whole brain morph data on group level works", {
-    nitools::download_optional_data();
-    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
 
     subjects_list = c("subject1", "subject2");
@@ -22,8 +22,8 @@ test_that("Loading of native space whole brain morph data on group level works",
 
 
 test_that("Loading of standard space whole brain morph data on group level works", {
-    nitools::download_optional_data();
-    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
 
     subjects_list = c("subject1", "subject2");
@@ -44,8 +44,8 @@ test_that("Loading of standard space whole brain morph data on group level works
 
 
 test_that("Label data can be read on group level", {
-    nitools::download_optional_data();
-    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
     subjects_list = c("subject1", "subject2");
 
@@ -62,8 +62,8 @@ test_that("Label data can be read on group level", {
 })
 
 test_that("Annotation data can be read on group level", {
-    nitools::download_optional_data();
-    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
     subjects_list = c("subject1", "subject2");
 

@@ -38,8 +38,8 @@ Given an atlas and a list that contains one value for each atlas region, write a
 }
 \examples{
 \donttest{
-   nitools::download_optional_data();
-   subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+   fsbrain::download_optional_data();
+   subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
    region_value_list = list("bankssts"=0.9, "precuneus"=0.7);
    write.region.values(subjects_dir, 'subject1', 'lh', 'aparc',
     region_value_list, 'pvalues.mgz', do_write_file = FALSE);

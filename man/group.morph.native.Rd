@@ -26,8 +26,8 @@ Load native space morphometry data (like 'surf/lh.area') for a group of subjects
 }
 \examples{
 \donttest{
-   nitools::download_optional_data();
-   subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+   fsbrain::download_optional_data();
+   subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
    subjects_list = c("subject1", "subject2");
    data = group.morph.native(subjects_dir, subjects_list, "thickness", "lh");
 }

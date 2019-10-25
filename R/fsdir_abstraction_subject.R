@@ -22,8 +22,8 @@
 #'
 #' @examples
 #' \donttest{
-#'    nitools::download_optional_data();
-#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    thickness_lh = subject.morph.native(subjects_dir, "subject1", "thickness", "lh");
 #' }
 #'
@@ -73,8 +73,8 @@ subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, format
 #'
 #' @examples
 #' \donttest{
-#'    nitools::download_optional_data();
-#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    thickness_lh = subject.morph.standard(subjects_dir, "subject1", "thickness", "lh", fwhm='10');
 #' }
 #'
@@ -272,8 +272,8 @@ subject.filepath.any <- function(subjects_dir, subject_id, relative_path_parts, 
 #'
 #' @examples
 #' \donttest{
-#'    nitools::download_optional_data();
-#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    cortex_lh = subject.label(subjects_dir, "subject1", "cortex.label", "lh");
 #' }
 #'
@@ -305,8 +305,8 @@ subject.label <- function(subjects_dir, subject_id, label, hemi, return_one_base
 #'
 #' @examples
 #' \donttest{
-#'    nitools::download_optional_data();
-#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    annot_lh = subject.annot(subjects_dir, "subject1", "lh", "aparc");
 #' }
 #'
@@ -355,8 +355,8 @@ subject.annot <- function(subjects_dir, subject_id, hemi, atlas) {
 #'
 #' @examples
 #' \donttest{
-#'    nitools::download_optional_data();
-#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    lh_white = subject.surface(subjects_dir, "subject1", "white", "lh");
 #' }
 #'

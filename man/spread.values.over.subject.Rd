@@ -29,8 +29,8 @@ Given an atlas and a list that contains one value for each atlas region, create 
 }
 \examples{
 \donttest{
-   nitools::download_optional_data();
-   subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+   fsbrain::download_optional_data();
+   subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
    lh_region_value_list = list("bankssts"=0.9, "precuneus"=0.7);
    rh_region_value_list = list("bankssts"=0.5);
    morph_like_data =

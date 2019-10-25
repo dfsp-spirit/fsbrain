@@ -22,8 +22,8 @@
 #'
 #' @examples
 #' \donttest{
-#'    nitools::download_optional_data();
-#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    subjects_list = c("subject1", "subject2");
 #'    data = group.morph.native(subjects_dir, subjects_list, "thickness", "lh");
 #' }
@@ -68,8 +68,8 @@ group.morph.native <- function(subjects_dir, subjects_list, measure, hemi, forma
 #'
 #' @examples
 #' \donttest{
-#'    nitools::download_optional_data();
-#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    subjects_list = c("subject1", "subject2");
 #'    data = group.morph.standard(subjects_dir, subjects_list, "thickness", "lh", fwhm='10');
 #' }
@@ -110,8 +110,8 @@ group.morph.standard <- function(subjects_dir, subjects_list, measure, hemi, fwh
 #'
 #' @examples
 #' \donttest{
-#'    nitools::download_optional_data();
-#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    subjects_list = c("subject1", "subject2");
 #'    labels = group.label(subjects_dir, subjects_list, 'cortex.label', "lh");
 #' }
@@ -151,8 +151,8 @@ group.label <- function(subjects_dir, subjects_list, label, hemi, return_one_bas
 #'
 #'@examples
 #' \donttest{
-#'    nitools::download_optional_data();
-#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    subjects_list = c("subject1", "subject2");
 #'    annotations = group.annot(subjects_dir, subjects_list, "lh", "aparc");
 #' }

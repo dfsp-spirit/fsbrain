@@ -1,8 +1,8 @@
 
 
 test_that("Aggregation of native space whole brain morph data on group level works", {
-  nitools::download_optional_data();
-  subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+  fsbrain::download_optional_data();
+  subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
 
   subjects_list = c("subject1", "subject2")
@@ -21,8 +21,8 @@ test_that("Aggregation of native space whole brain morph data on group level wor
 
 
 test_that("Aggregation of native space whole brain morph data on group level works with cast set to FALSE", {
-  nitools::download_optional_data();
-  subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+  fsbrain::download_optional_data();
+  subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
 
   subjects_list = c("subject1", "subject2")
@@ -41,8 +41,8 @@ test_that("Aggregation of native space whole brain morph data on group level wor
 
 
 test_that("Aggregation of standard space whole brain morph data on group level works with cast=TRUE", {
-  nitools::download_optional_data();
-  subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+  fsbrain::download_optional_data();
+  subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
   skip_if_not(dir.exists(subjects_dir), message="Test data missing."); # skip on travis
 
   subjects_list = c("subject1", "subject2")
@@ -62,8 +62,8 @@ test_that("Aggregation of standard space whole brain morph data on group level w
 
 
 test_that("Aggregation of standard space whole brain morph data on group level works for several measures and hemis with cast=FALSE", {
-  nitools::download_optional_data();
-  subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+  fsbrain::download_optional_data();
+  subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
 
   subjects_list = c("subject1", "subject2")
@@ -84,8 +84,8 @@ test_that("Aggregation of standard space whole brain morph data on group level w
 
 
 test_that("Aggregation of native space whole brain morph data on group level works for several measures and hemis", {
-  nitools::download_optional_data();
-  subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+  fsbrain::download_optional_data();
+  subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
 
   subjects_list = c("subject1", "subject2")
@@ -106,8 +106,8 @@ test_that("Aggregation of native space whole brain morph data on group level wor
 
 
 test_that("Aggregation of native space whole brain morph data on group level works for several measures and hemis with cast=TRUE", {
-  nitools::download_optional_data();
-  subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+  fsbrain::download_optional_data();
+  subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
 
   subjects_list = c("subject1", "subject2")
@@ -127,8 +127,8 @@ test_that("Aggregation of native space whole brain morph data on group level wor
 
 
 test_that("Aggregation of standard space whole brain morph data on group level works for several measures and hemis with cast=TRUE", {
-  nitools::download_optional_data();
-  subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+  fsbrain::download_optional_data();
+  subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
 
   subjects_list = c("subject1", "subject2")

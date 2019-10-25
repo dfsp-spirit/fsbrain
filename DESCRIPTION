@@ -1,4 +1,4 @@
-Package: nitools
+Package: fsbrain
 Type: Package
 Title: Neuroimaging Tools
 Version: 0.0.1
@@ -8,8 +8,8 @@ Description: Provides utility function for analysis of structural neuroimaging d
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-URL: https://github.com/dfsp-spirit/nitools
-BugReports: https://github.com/dfsp-spirit/nitools/issues
+URL: https://github.com/dfsp-spirit/fsbrain
+BugReports: https://github.com/dfsp-spirit/fsbrain/issues
 Imports:
     reshape,
     reshape2,

@@ -57,8 +57,8 @@ test_that("Aggregation on subject level works", {
 
 
 test_that("Region-based aggregation on group level works in native space", {
-    nitools::download_optional_data();
-    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
     subjects_list = c("subject1", "subject2")
     measure = "thickness"
@@ -121,8 +121,8 @@ test_that("Spreading a single value over an atlas region works from agg.res resu
     annot_file = system.file("extdata", "lh.aparc.annot.gz", package = "freesurferformats", mustWork = TRUE);
     annot = freesurferformats::read.fs.annot(annot_file);
 
-    nitools::download_optional_data();
-    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip when test data missing, e.g., on travis
     subjects_list = c("subject1", "subject2")
     measure = "thickness"
@@ -159,8 +159,8 @@ test_that("Spreading a single value over an atlas region works from manually cre
 })
 
 test_that("Writing MGH data spread over regions works", {
-    nitools::download_optional_data();
-    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip when test data missing, e.g., on travis
     subject_id = "subject1"
     measure = "thickness"
@@ -190,8 +190,8 @@ test_that("Writing faverage region values works", {
     names(region_value_list) = region_names_aparc;
     region_value_list$bankssts= 0.1;
 
-    nitools::download_optional_data();
-    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip when test data missing, e.g., on travis
     skip_if_not(dir.exists(file.path(subjects_dir, 'fsaverage')), message="Test data for fsaverage missing.")
 
@@ -230,8 +230,8 @@ test_that("Atlas region names can be retrieved", {
 
 
 test_that("Region-based aggregation on group level works in native space", {
-  nitools::download_optional_data();
-  subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+  fsbrain::download_optional_data();
+  subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
   skip_if_not(dir.exists(file.path(subjects_dir, 'fsaverage')), message="Test data for fsaverage missing.");
   subjects_list = c("subject1", "subject2")
@@ -308,8 +308,8 @@ test_that("Suggested regions to be ignored can be retrieved for an atlas", {
 
 
 test_that("Subject annotation works", {
-  nitools::download_optional_data();
-  subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+  fsbrain::download_optional_data();
+  subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.")
 
   subject_id = "subject1";
@@ -328,8 +328,8 @@ test_that("Subject annotation works", {
 
 
 test_that("Merging annotations works", {
-  nitools::download_optional_data();
-  subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+  fsbrain::download_optional_data();
+  subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.")
 
   subject_id = "subject1";

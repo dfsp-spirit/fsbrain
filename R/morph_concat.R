@@ -14,8 +14,8 @@
 #'
 #' @examples
 #' \donttest{
-#'    nitools::download_optional_data();
-#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    subjects_list = c('subject1', 'subject2');
 #'    cm = group.concat.measures.native(subjects_dir, subjects_list,
 #'     c("thickness", "area"), "lh");
@@ -85,8 +85,8 @@ group.concat.measures.native <- function(subjects_dir, subjects_list, measures, 
 #'
 #' @examples
 #' \donttest{
-#'    nitools::download_optional_data();
-#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    subjects_list = c('subject1', 'subject2');
 #'    cm = group.concat.measures.standard(subjects_dir, subjects_list,
 #'     c("thickness", "area"), "lh", "10");

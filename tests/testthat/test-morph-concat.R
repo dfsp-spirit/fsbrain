@@ -1,6 +1,6 @@
 test_that("Concatination of native space measures works for a single hemisphere", {
-    nitools::download_optional_data();
-    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
 
     num_verts_subject1_lh = 149244;
@@ -16,8 +16,8 @@ test_that("Concatination of native space measures works for a single hemisphere"
 })
 
 test_that("Concatination of native space measures works for both hemispheres", {
-    nitools::download_optional_data();
-    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
 
     num_verts_subject1_lh = 149244;
@@ -35,8 +35,8 @@ test_that("Concatination of native space measures works for both hemispheres", {
 
 
 test_that("Concatination of standard space measures works for a single hemisphere", {
-    nitools::download_optional_data();
-    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
 
     num_verts_fsaverage_per_hemi = 163842;
@@ -50,8 +50,8 @@ test_that("Concatination of standard space measures works for a single hemispher
 })
 
 test_that("Concatination of standard space measures works for both hemispheres", {
-    nitools::download_optional_data();
-    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
 
     num_verts_fsaverage_per_hemi = 163842;

@@ -33,8 +33,8 @@ Creates a surface mesh, applies a colormap transform the morphometry data values
 }
 \examples{
 \donttest{
-   nitools::download_optional_data();
-   subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+   fsbrain::download_optional_data();
+   subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
    morph_data_lh = subject.morph.native(subjects_dir, 'subject1', 'thickness', 'lh');
    morph_data_rh = NULL;
    vis.data.on.subject(subjects_dir, 'subject1', morph_data_lh, morph_data_rh);

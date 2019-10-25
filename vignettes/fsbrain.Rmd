@@ -1,8 +1,8 @@
 ---
-title: "nitools: Utility Functions for the Analysis of Structural Neuroimaging Data in GNU R"
+title: "fsbrain: Utility Functions for the Analysis of Structural Neuroimaging Data in GNU R"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Analysis of structural neuroimaging data with nitools}
+  %\VignetteIndexEntry{Analysis of structural neuroimaging data with fsbrain}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
@@ -13,12 +13,12 @@ Note: While this packages provides an abstract access layer to neuroimaging data
 
 ### Example data used in this document
 
-We will use example data that comes with nitools throughout this manual. Feel free to replace the subjects_dir and subjects_list with data from your study.
+We will use example data that comes with fsbrain throughout this manual. Feel free to replace the subjects_dir and subjects_list with data from your study.
 
 ```{r, eval = TRUE}
-library("nitools");
-nitools::download_optional_data();
-subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+library("fsbrain");
+fsbrain::download_optional_data();
+subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 subjects_list = c("subject1", "subject2");
 ```
 
@@ -47,7 +47,7 @@ This section explains aggregation functions. These allow you to retrieve the mea
 
 ### A single morphometry measure in native space
 
-The nitools package provides a high-level interface to access data for groups of subjects. Here, we compute the mean thickness for each subject in native space:
+The fsbrain package provides a high-level interface to access data for groups of subjects. Here, we compute the mean thickness for each subject in native space:
 
 ```{r, eval = TRUE}
 mean_thickness_lh_native = group.morph.agg.native(subjects_dir, subjects_list, "thickness", "lh", agg_fun=mean);
@@ -67,7 +67,7 @@ mean_thickness_lh_std;
 
 ### Several measures over several hemispheres in native space
 
-When working with native space data for groups, vertex-wise comparison is not possible and one is often interested in aggregating data or summary statistics. Obtaining these for a group becomes easy with 'nitools':
+When working with native space data for groups, vertex-wise comparison is not possible and one is often interested in aggregating data or summary statistics. Obtaining these for a group becomes easy with 'fsbrain':
 
 
 ```{r, eval = TRUE}
@@ -144,7 +144,7 @@ One can use the *label.from.annotdata()* function on subject level, or the *grou
 
 ## Mapping one result value to each brain atlas region
 
-Mapping a single value to an atlas region of a subject (usually a template subject like fsaverage) is useful to display results, like p values or effect sizes, on the brain surface. Here is an example script that uses nitools to do that:
+Mapping a single value to an atlas region of a subject (usually a template subject like fsaverage) is useful to display results, like p values or effect sizes, on the brain surface. Here is an example script that uses fsbrain to do that:
 
 ```{r, eval = FALSE}
 hemi = "lh"               # 'lh' or 'rh'
@@ -153,11 +153,11 @@ atlas = "aparc"           # an atlas, e.g., 'aparc', 'aparc.a2009s', 'aparc.DKTa
 template_subjects_dir = "~/software/freesurfer/subjects";    # Some directory where we can find fsaverage. This can be omitted if FREESURFER_HOME is set, the function will find fsaverage in there by default.
 
 # One can also retrieve all region names of an atlas. This would get all 36 aparc regions:
-region_names_aparc = nitools::get.atlas.region.names('aparc', template_subjects_dir=template_subjects_dir);
+region_names_aparc = fsbrain::get.atlas.region.names('aparc', template_subjects_dir=template_subjects_dir);
 region_value_list = as.list(rnorm(length(region_names_aparc), mean=5, sd=1.5)); # assign some random normal values for this example. One would put effect size values or whatever here. The order of values has to match the order of the region names.
 names(region_value_list) = region_names_aparc;    # Assign the names to the values.
 
-ret = nitools::write.region.values.fsaverage(hemi, atlas, region_value_list, output_file="/tmp/spread.mgz", template_subjects_dir=template_subjects_dir, show_freeview_tip=TRUE);
+ret = fsbrain::write.region.values.fsaverage(hemi, atlas, region_value_list, output_file="/tmp/spread.mgz", template_subjects_dir=template_subjects_dir, show_freeview_tip=TRUE);
 ```
 
 This code will write an MGZ file that can be visualized in FreeView or Matlab/Surfstat.

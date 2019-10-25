@@ -1,6 +1,6 @@
 test_that("Loading of native space whole brain morph data on subject level works", {
-    nitools::download_optional_data();
-    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
 
     data = subject.morph.native(subjects_dir, "subject1", "thickness", "lh");
@@ -12,8 +12,8 @@ test_that("Loading of native space whole brain morph data on subject level works
 
 
 test_that("Loading of native space whole brain morph data on subject level works for both hemis", {
-    nitools::download_optional_data();
-    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
 
     data = subject.morph.native(subjects_dir, "subject1", "thickness", "both");
@@ -26,8 +26,8 @@ test_that("Loading of native space whole brain morph data on subject level works
 
 
 test_that("Standard space morphometry data can be read on subject level", {
-    nitools::download_optional_data();
-    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
 
     data = subject.morph.standard(subjects_dir, "subject1", "thickness", "lh", fwhm='10', template_subject='fsaverage');
@@ -39,8 +39,8 @@ test_that("Standard space morphometry data can be read on subject level", {
 
 
 test_that("Standard space morphometry data can be read on subject level for both hemis", {
-    nitools::download_optional_data();
-    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
 
     data = subject.morph.standard(subjects_dir, "subject1", "thickness", "both", fwhm='10', template_subject='fsaverage');
@@ -53,8 +53,8 @@ test_that("Standard space morphometry data can be read on subject level for both
 
 
 test_that("Label data can be read on subject level", {
-    nitools::download_optional_data();
-    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
 
     label = subject.label(subjects_dir, "subject1", "cortex.label", hemi='lh');
@@ -69,8 +69,8 @@ test_that("Label data can be read on subject level", {
 
 
 test_that("Surface data can be read on subject level", {
-    nitools::download_optional_data();
-    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
 
     num_verts_subject1_lh = 149244;

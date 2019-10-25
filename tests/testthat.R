@@ -1,4 +1,4 @@
 library(testthat)
-library(nitools)
+library(fsbrain)
 
-test_check("nitools")
+test_check("fsbrain")

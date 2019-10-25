@@ -14,8 +14,8 @@
 #'
 #' @examples
 #' \donttest{
-#'    nitools::download_optional_data();
-#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    morph_data = subject.morph.native(subjects_dir, 'subject1', 'thickness', 'lh');
 #'    annot = subject.annot(subjects_dir, 'subject1', 'lh', 'aparc');
 #'    agg = subject.atlas.agg(morph_data, annot$label_names);
@@ -85,8 +85,8 @@ subject.atlas.agg <- function(vertex_morph_data, vertex_label_names, agg_fun = m
 #'
 #' @examples
 #' \donttest{
-#'    nitools::download_optional_data();
-#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    agg = group.agg.atlas.native(subjects_dir, 'subject1', 'thickness', 'lh', 'aparc');
 #' }
 #'
@@ -280,8 +280,8 @@ fs.value.list.from.agg.res <- function(agg_res, subject_id) {
 #'
 #' @examples
 #' \donttest{
-#'    nitools::download_optional_data();
-#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    annot = subject.annot(subjects_dir, 'subject1', 'lh', 'aparc');
 #'    region_value_list = list("bankssts"=0.9, "precuneus"=0.7);
 #'    morph_like_data =
@@ -400,8 +400,8 @@ write.region.aggregated <- function(subjects_dir, subjects_list, measure, hemi, 
 #'
 #' @examples
 #' \donttest{
-#'    nitools::download_optional_data();
-#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    region_value_list = list("bankssts"=0.9, "precuneus"=0.7);
 #'    write.region.values(subjects_dir, 'subject1', 'lh', 'aparc',
 #'     region_value_list, 'pvalues.mgz', do_write_file = FALSE);
@@ -453,8 +453,8 @@ write.region.values <- function(subjects_dir, subject_id, hemi, atlas, region_va
 #'
 #' @examples
 #' \donttest{
-#'    nitools::download_optional_data();
-#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    region_value_list = list("bankssts"=0.9, "precuneus"=0.7);
 #'    morph_like_data =
 #'    spread.values.over.hemi(subjects_dir, 'subject1', 'lh', 'aparc', region_value_list);
@@ -494,8 +494,8 @@ spread.values.over.hemi <- function(subjects_dir, subject_id, hemi, atlas, regio
 #'
 #' @examples
 #' \donttest{
-#'    nitools::download_optional_data();
-#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    lh_region_value_list = list("bankssts"=0.9, "precuneus"=0.7);
 #'    rh_region_value_list = list("bankssts"=0.5);
 #'    morph_like_data =
@@ -660,8 +660,8 @@ merge.hemi.annots <- function(lh_annot, rh_annot) {
 #'
 #' @examples
 #' \donttest{
-#'    nitools::download_optional_data();
-#'    subjects_dir = nitools::get_optional_data_filepath("subjects_dir");
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    atlas_regions = get.atlas.region.names('aparc',
 #'     template_subjects_dir=subjects_dir, template_subject='subject1');
 #' }
