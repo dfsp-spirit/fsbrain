@@ -129,9 +129,20 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 
     #rgl::highlevel(integer()); # To trigger display as rglwidget
 
+    rglactions = list("snapshot_png"="brain.png");
+    perform.rglactions(rglactions);
     invisible(coloredmeshes);
 }
 
+
+#' @keywords internal
+perform.rglactions <- function(rglactions) {
+    if("snapshot_png" %in% names(rglactions)) {
+        output_image = rglactions$snapshot_png;
+        rgl::rgl.snapshot(output_image, fmt="png");
+        message(sprintf("Screenshot written to '%s' in dir '%s'.\n", output_image, getwd()));
+    }
+}
 
 
 #' @title Visualize a list of colored meshes from nine angles.
