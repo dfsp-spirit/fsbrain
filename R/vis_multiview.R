@@ -55,7 +55,7 @@ brainview.si <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 #'
 #' @keywords internal
 #' @importFrom rgl open3d bg3d wire3d shade3d mfrow3d next3d text3d rgl.viewpoint
-brainview.sr <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", draw_labels = FALSE, x=0, y=1, z=0, rpm=15, duration=20, rgloptions = list(), rglactions=list()) {
+brainview.sr <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", draw_labels = FALSE, x=0, y=0, z=1, rpm=15, duration=10, rgloptions = list(), rglactions=list()) {
 
     if(!is.list(coloredmeshes)) {
         stop("Parameter 'coloredmeshes' must be a list.");
@@ -162,6 +162,20 @@ perform.rglactions <- function(rglactions) {
             message(sprintf("Screenshot written to '%s' (current working dir is '%s').\n", output_image, getwd()));
         }
     }
+}
+
+#' @title Check for a key in names of rglactions.
+#'
+#' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
+#'
+#' @return logical, whether the rglactions instance has the requested key as a name.
+#'
+#' @keywords internal
+rglactions.has.key <- function(rglactions, key) {
+    if(is.list(rglactions)) {
+        return(key %in% names(rglactions));
+    }
+    return(FALSE);
 }
 
 

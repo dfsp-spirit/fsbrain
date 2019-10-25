@@ -13,6 +13,7 @@ test_that("We can visualize morphometry data in multiview.", {
 
     rgloptions=list("windowRect"=c(50,50,1200,1200));     # the first 2 entries give the position on screen, the rest defines resolution as width, height in px
     rglactions = list("snapshot_png"="~/fsbrain.png");
+    rglactionsmovie = list("snapshot_png"="~/fsbrain.png", "movie"="brain_rot");
 
     coloredmeshes = vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('si', 't4', 't9'), rgloptions=rgloptions, rglactions=rglactions);
     coloredmeshes = vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('sr'));
@@ -22,6 +23,8 @@ test_that("We can visualize morphometry data in multiview.", {
 
     vis.subject.annot(subjects_dir, subject_id, 'aparc', 'both', views=c('t4'), rgloptions = rgloptions, rglactions = list("snapshot_png"="~/annot_t4.png"));
     vis.subject.annot(subjects_dir, subject_id, 'aparc', 'both', views=c('t9'), rgloptions = rgloptions, rglactions = list("snapshot_png"="~/annot_t9.png"));
+
+    #vis.subject.annot(subjects_dir, subject_id, 'aparc', 'both', views=c('sr'), rgloptions = rgloptions, rglactions = rglactionsmovie);
 
     do_rotations = FALSE;
     if(do_rotations) {

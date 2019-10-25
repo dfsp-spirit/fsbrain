@@ -78,8 +78,6 @@ vis.coloredmeshes.rotating <- function(coloredmeshes, background="white", skip_a
         stop("Parameter coloredmeshes must be a list.");
     }
 
-    #rgloptions = list("windowRect"=c(50,50,1000,1000));
-
     rgl::open3d();
     do.call(rgl::par3d, rgloptions);
     Sys.sleep(1);
@@ -92,7 +90,13 @@ vis.coloredmeshes.rotating <- function(coloredmeshes, background="white", skip_a
     }
 
     if (!rgl::rgl.useNULL()) {
-        rgl::play3d(rgl::spin3d(axis = c(x, y, z), rpm = rpm), duration = duration);
+        if(rglactions.has.key(rglactions, 'movie')) {
+            movie = rglactions$movie;
+            rgl::movie3d(rgl::spin3d(axis = c(x, y, z), rpm = rpm), duration = duration, movie = movie, dir=path.expand("~"));
+            message(sprintf("Movie written to base file '%s' in home dir.\n", movie));
+        } else {
+            rgl::play3d(rgl::spin3d(axis = c(x, y, z), rpm = rpm), duration = duration);
+        }
     } else {
         warning("Cannot show rotating scene with NULL device.");
     }
