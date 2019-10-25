@@ -43,13 +43,13 @@ This will ouput something like this (but for the version you actually used):
 ```
 To cite package ‘fsbrain’ in publications use:
 
-  Tim Schäfer (2019). fsbrain: Neuroimaging Tools. R package version
+  Tim Schäfer (2019). fsbrain: Managing and visualizing brain surface data. R package version
   0.0.1. https://github.com/dfsp-spirit/fsbrain
 
 A BibTeX entry for LaTeX users is
 
   @Manual{,
-    title = {fsbrain: Neuroimaging Tools},
+    title = {fsbrain: Managing and visualizing brain surface data},
     author = {Tim Schäfer},
     year = {2019},
     note = {R package version 0.0.1},
