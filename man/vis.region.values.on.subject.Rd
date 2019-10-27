@@ -7,7 +7,7 @@
 vis.region.values.on.subject(subjects_dir, subject_id, atlas,
   lh_region_value_list, rh_region_value_list, surface = "white",
   colormap = squash::heat, views = c("t4"), rgloptions = list(),
-  rglactions = list())
+  rglactions = list(), value_for_unlisted_regions = NaN)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, containing the subdir of vis_subject_id, the subject that you want to use for visualization.}
@@ -23,6 +23,8 @@ vis.region.values.on.subject(subjects_dir, subject_id, atlas,
 \item{views, }{list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.}
 
 \item{rgloptions}{option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));}
+
+\item{value_for_unlisted_regions}{numerical scalar or NaN, the value to assign to regions which do not occur in the region_value_lists. Defaults to NaN.}
 
 \item{morph_data_lh, }{numeric vector or NULL, the data to visualize on the left hemisphere surface. Must have the same length as the surface of the vis_subject_id has vertices. If NULL, this surface will not be rendered. Only one of morph_data_lh or morph_data_rh is allowed to be NULL.}
 
