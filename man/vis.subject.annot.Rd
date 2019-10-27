@@ -40,6 +40,7 @@ Creates a surface mesh, loads the colors from the annotation, and renders the re
 \seealso{
 Other visualization functions: \code{\link{vis.data.on.fsaverage}},
   \code{\link{vis.data.on.subject}},
+  \code{\link{vis.region.values.on.subject}},
   \code{\link{vis.subject.morph.native}},
   \code{\link{vis.subject.morph.standard}}
 }
