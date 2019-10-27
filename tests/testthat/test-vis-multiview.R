@@ -51,3 +51,23 @@ test_that("We can visualize morphometry data in multiview.", {
 
 })
 
+
+test_that("We can visualize p values or other arbitrary data, one value per atlas region.", {
+    skip("This test has to be run manually and interactively.");
+    fsbrain::download_optional_data();
+
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+
+    # lh: Manually set data values for some regions (the rest will be assigned the default value, see below):
+    lh_region_value_list = list("bankssts"=0.9, "precuneus"=0.7, "postcentral"=0.8, "lingual"=0.6);
+
+    # rh: retrieve the full list of regions for the atlas, and assign random values for this example:
+    atlas_region_names = get.atlas.region.names('aparc', template_subjects_dir = fsaverage_dir);
+    rh_region_value_list = rnorm(length(atlas_region_names), 3.0, 1.0);
+    names(rh_region_value_list) = atlas_region_names;
+
+    morph_like_data = spread.values.over.subject(subjects_dir, 'subject1', 'aparc', lh_region_value_list, rh_region_value_list);
+
+    vis.data.on.subject(subjects_dir, 'subject1', morph_like_data$lh, morph_like_data$rh, colormap=squash::heat);
+})
+
