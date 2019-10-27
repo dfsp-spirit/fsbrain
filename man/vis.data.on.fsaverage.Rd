@@ -7,7 +7,7 @@
 vis.data.on.fsaverage(subjects_dir = NULL,
   vis_subject_id = "fsaverage", morph_data_lh, morph_data_rh,
   surface = "white", colormap = squash::jet, views = c("t4"),
-  rgloptions = list())
+  rgloptions = list(), rglactions = list())
 }
 \arguments{
 \item{subjects_dir, }{string or NULL. The FreeSurfer SUBJECTS_DIR, containing the subdir of vis_subject_id, the subject that you want to use for visualization. If NULL, this function tries to determine it automatically from environment variables. If they are not set, an error is raised.}
@@ -35,6 +35,7 @@ Creates a surface mesh, applies a colormap transform the morphometry data values
 \seealso{
 Other visualization functions: \code{\link{vis.data.on.subject}},
   \code{\link{vis.subject.annot}},
-  \code{\link{vis.subject.morph.native}}
+  \code{\link{vis.subject.morph.native}},
+  \code{\link{vis.subject.morph.standard}}
 }
 \concept{visualization functions}

@@ -53,9 +53,73 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, su
 }
 
 
-#' @title Show one or more views of the given meshes in rgl windows.
+#' @title Visualize native space morphometry data for a subject.
+#'
+#' @description Creates a surface mesh, applies a colormap transform the morphometry data values into colors, and renders the resulting colored mesh in an interactive window. If hemi is 'both', the data is rendered for the wholw brain.
+#'
+#' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
+#'
+#' @param subject_id, string. The subject identifier.
+#'
+#' @param measure, string. The morphometry data to use. E.g., 'area' or 'thickness.'
+#'
+#' @param hemi, string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the label data files to be loaded.
+#'
+#' @param fwhm, string, smoothing setting. The smoothing part of the filename, typically something like '0', '5', '10', ...,  or '25'.
+#'
+#' @param surface, string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
+#'
+#' @param template_subject The template subject used. This will be used as part of the filename, and its surfaces are loaded for data visualization. Defaults to 'fsaverage'.
+#'
+#' @param template_subjects_dir The template subjects dir. If NULL, the value of the parameter 'subjects_dir' is used. Defaults to NULL. If you have FreeSurfer installed and configured, and are using the standard fsaverage subject, try passing the result of calling 'file.path(Sys.getenv('FREESURFER_HOME'), 'subjects')'.
+#'
+#' @param colormap, a colormap. See the squash package for some colormaps. Defaults to squash::jet.
 #'
 #' @param views, list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.
+#'
+#' @param rgloptions option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));
+#'
+#' @return list of coloredmeshes. The coloredmeshes used for the visualization.
+#'
+#' @examples
+#' \donttest{
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+#'    fsaverage_dir = file.path(Sys.getenv('FREESURFER_HOME'), 'subjects');
+#'    vis.subject.morph.standard(subjects_dir, 'subject1', 'thickness', 'lh', '10', template_subjects_dir=fsaverage_dir);
+#'    # The last command will load the file *<subjects_dir>/subject1/surf/lh.thickness.fwhm10.fsaverage.mgh* and visualize the data on *$FREESURFER_HOME/subjects/fsaverage/surf/lh.white*.
+#' }
+#'
+#' @family visualization functions
+#'
+#' @importFrom squash jet
+#' @export
+vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm, surface="white", template_subject = 'fsaverage', template_subjects_dir = NULL, colormap=squash::jet, views=c("t4"), rgloptions = list(), rglactions = list()) {
+
+    if(!(hemi %in% c("lh", "rh", "both"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
+    }
+
+    if(is.null(template_subjects_dir)) {
+        template_subjects_dir = subjects_dir;
+    }
+
+    if(hemi == "both") {
+        lh_cmesh = coloredmesh.from.morph.standard(subjects_dir, subject_id, measure, 'lh', fwhm, surface=surface, template_subject=template_subject, template_subjects_dir=template_subjects_dir, colormap=colormap);
+        rh_cmesh = coloredmesh.from.morph.standard(subjects_dir, subject_id, measure, 'rh', fwhm, surface=surface, template_subject=template_subject, template_subjects_dir=template_subjects_dir, colormap=colormap);
+        coloredmeshes = list(lh_cmesh, rh_cmesh);
+    } else {
+        cmesh = coloredmesh.from.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm, surface=surface, template_subject=template_subject, template_subjects_dir=template_subjects_dir, colormap=colormap);
+        coloredmeshes = list(cmesh);
+    }
+
+    invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions));
+}
+
+
+#' @title Show one or more views of the given meshes in rgl windows.
+#'
+#' @param views, list of strings. Valid entries include: 'si': single interactive view. 'sr': single rotating view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.
 #'
 #' @param coloredmeshes, list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
 #'
@@ -256,6 +320,48 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
 
     morph_data = subject.morph.native(subjects_dir, subject_id, measure, hemi);
     surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
+    mesh = rgl::tmesh3d(unlist(surface_data$vertices), unlist(surface_data$faces), homogeneous=FALSE);
+    col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
+    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi));
+}
+
+#' @title Create a coloredmesh from standard space morphometry data.
+#'
+#' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
+#'
+#' @param subject_id, string. The subject identifier.
+#'
+#' @param measure, string. The morphometry data to use. E.g., 'area' or 'thickness.'
+#'
+#' @param hemi, string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.
+#'
+#' @param fwhm, string, smoothing setting. The smoothing part of the filename, typically something like '0', '5', '10', ...,  or '25'.
+#'
+#' @param surface, string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
+#'
+#' @param template_subject The template subject used. This will be used as part of the filename, and its surfaces are loaded for data visualization. Defaults to 'fsaverage'.
+#'
+#' @param template_subjects_dir The template subjects dir. If NULL, the value of the parameter 'subjects_dir' is used. Defaults to NULL. If you have FreeSurfer installed and configured, and are using the standard fsaverage subject, try passing the result of calling 'file.path(Sys.getenv('FREESURFER_HOME'), 'subjects')'.
+#'
+#' @param colormap, a colormap. See the squash package for some colormaps. Defaults to squash::jet.
+#'
+#' @return coloredmesh. A named list with entries: "mesh" the rgl::tmesh3d mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
+#'
+#' @keywords internal
+#' @importFrom squash cmap makecmap jet
+#' @importFrom rgl tmesh3d rgl.open wire3d
+coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm, surface="white", template_subject='fsaverage', template_subjects_dir=NULL, colormap=squash::jet) {
+
+    if(!(hemi %in% c("lh", "rh"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
+    }
+
+    if(is.null(template_subjects_dir)) {
+        template_subjects_dir = subjects_dir;
+    }
+
+    morph_data = subject.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm = fwhm);
+    surface_data = subject.surface(template_subjects_dir, template_subject, surface, hemi);
     mesh = rgl::tmesh3d(unlist(surface_data$vertices), unlist(surface_data$faces), homogeneous=FALSE);
     col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
     return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi));

@@ -5,8 +5,8 @@
 \title{Visualize a list of colored meshes, rotating the camera around them.}
 \usage{
 brainview.sr(coloredmeshes, background = "white", skip_all_na = TRUE,
-  style = "default", draw_labels = FALSE, x = 0, y = 1, z = 0,
-  rpm = 15, duration = 20, rgloptions = list(),
+  style = "default", draw_labels = FALSE, x = 0, y = 0, z = 1,
+  rpm = 15, duration = 10, rgloptions = list(),
   rglactions = list())
 }
 \arguments{
