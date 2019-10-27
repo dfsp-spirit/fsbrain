@@ -31,6 +31,8 @@ vis.subject.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm,
 \item{views, }{list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.}
 
 \item{rgloptions}{option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));}
+
+\item{rglactions, }{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.
@@ -43,8 +45,11 @@ Creates a surface mesh, applies a colormap transform the morphometry data values
    fsbrain::download_optional_data();
    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
    fsaverage_dir = file.path(Sys.getenv('FREESURFER_HOME'), 'subjects');
-   vis.subject.morph.standard(subjects_dir, 'subject1', 'thickness', 'lh', '10', template_subjects_dir=fsaverage_dir);
-   # The last command will load the file *<subjects_dir>/subject1/surf/lh.thickness.fwhm10.fsaverage.mgh* and visualize the data on *$FREESURFER_HOME/subjects/fsaverage/surf/lh.white*.
+   vis.subject.morph.standard(subjects_dir, 'subject1', 'thickness', 'lh',
+    '10', template_subjects_dir=fsaverage_dir);
+   # The last command will load the file
+   #  *<subjects_dir>/subject1/surf/lh.thickness.fwhm10.fsaverage.mgh* and
+   #  visualize the data on *$FREESURFER_HOME/subjects/fsaverage/surf/lh.white*.
 }
 
 }

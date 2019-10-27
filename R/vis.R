@@ -21,6 +21,8 @@
 #'
 #' @param rgloptions option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));
 #'
+#' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
+#'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
 #' @examples
@@ -79,6 +81,8 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, su
 #'
 #' @param rgloptions option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));
 #'
+#' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
+#'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
 #' @examples
@@ -86,8 +90,11 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, su
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    fsaverage_dir = file.path(Sys.getenv('FREESURFER_HOME'), 'subjects');
-#'    vis.subject.morph.standard(subjects_dir, 'subject1', 'thickness', 'lh', '10', template_subjects_dir=fsaverage_dir);
-#'    # The last command will load the file *<subjects_dir>/subject1/surf/lh.thickness.fwhm10.fsaverage.mgh* and visualize the data on *$FREESURFER_HOME/subjects/fsaverage/surf/lh.white*.
+#'    vis.subject.morph.standard(subjects_dir, 'subject1', 'thickness', 'lh',
+#'     '10', template_subjects_dir=fsaverage_dir);
+#'    # The last command will load the file
+#'    #  *<subjects_dir>/subject1/surf/lh.thickness.fwhm10.fsaverage.mgh* and
+#'    #  visualize the data on *$FREESURFER_HOME/subjects/fsaverage/surf/lh.white*.
 #' }
 #'
 #' @family visualization functions
@@ -124,6 +131,8 @@ vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, 
 #' @param coloredmeshes, list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
 #'
 #' @param rgloptions option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));
+#'
+#' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
@@ -168,6 +177,8 @@ brainviews <- function(views, coloredmeshes, rgloptions = list(), rglactions = l
 #' @param views, list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.
 #'
 #' @param rgloptions option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));
+#'
+#' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
@@ -226,6 +237,8 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, mor
 #'
 #' @param rgloptions option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));
 #'
+#' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
+#'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
 #' @family visualization functions
@@ -259,6 +272,8 @@ vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage",
 #' @param views, list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.
 #'
 #' @param rgloptions option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));
+#'
+#' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
@@ -302,9 +317,9 @@ vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi, surface="wh
 #'
 #' @param atlas, string. The brain atlas to use. E.g., 'aparc' or 'aparc.a2009s'.
 #'
-#' @param morph_data_lh, numeric vector or NULL, the data to visualize on the left hemisphere surface. Must have the same length as the surface of the vis_subject_id has vertices. If NULL, this surface will not be rendered. Only one of morph_data_lh or morph_data_rh is allowed to be NULL.
+#' @param lh_region_value_list, named list. A list for the left hemisphere in which the names are atlas regions, and the values are the value to write to all vertices of that region.
 #'
-#' @param morph_data_rh, numeric vector or NULL, the data to visualize on the right hemisphere surface. Must have the same length as the surface of the vis_subject_id has vertices. If NULL, this surface will not be rendered. Only one of morph_data_lh or morph_data_rh is allowed to be NULL.
+#' @param rh_region_value_list, named list. A list for the right hemisphere in which the names are atlas regions, and the values are the value to write to all vertices of that region.
 #'
 #' @param surface, string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
 #'
@@ -313,6 +328,8 @@ vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi, surface="wh
 #' @param views, list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.
 #'
 #' @param rgloptions option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));
+#'
+#' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
 #'
 #' @param value_for_unlisted_regions numerical scalar or NaN, the value to assign to regions which do not occur in the region_value_lists. Defaults to NaN.
 #'
@@ -323,13 +340,17 @@ vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi, surface="wh
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    atlas = 'aparc';   # Desikan atlas
-#'    # For the left hemisphere, we just assign a subset of the atlas regions. The others will get the default value.
+#'    # For the left hemisphere, we just assign a subset of the
+#'    # atlas regions. The others will get the default value.
 #'    lh_region_value_list = list("bankssts"=0.9, "precuneus"=0.7, "postcentral"=0.8, "lingual"=0.6);
-#'    # For the right hemisphere, we retrieve the full list of regions for the atlas, and assign random values to all of them.
-#'    atlas_region_names = get.atlas.region.names(atlas, template_subjects_dir = subjects_dir);
+#'    # For the right hemisphere, we retrieve the full list of regions for
+#'    # the atlas, and assign random values to all of them.
+#'    atlas_region_names = get.atlas.region.names(atlas, template_subjects_dir = subjects_dir,
+#'     template_subject='subject1');
 #'    rh_region_value_list = rnorm(length(atlas_region_names), 3.0, 1.0);
 #'    names(rh_region_value_list) = atlas_region_names;
-#'    vis.region.values.on.subject(subjects_dir, 'subject1', atlas, lh_region_value_list, rh_region_value_list);
+#'    vis.region.values.on.subject(subjects_dir, 'subject1', atlas,
+#'     lh_region_value_list, rh_region_value_list);
 #' }
 #'
 #' @family visualization functions
