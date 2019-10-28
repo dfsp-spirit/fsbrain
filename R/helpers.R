@@ -32,9 +32,10 @@ fup <- function(word) {
 #'    full_data = rnorm(50, 3, 1);
 #'    clipped = clip.data.at.quantiles(full_data);
 #'
+#' @importFrom stats quantile
 #' @export
 clip.data.at.quantiles <- function(data, lower=0.05, upper=0.95){
-    quantiles = quantile(data, c(lower, upper), na.rm = TRUE, names = FALSE);
+    quantiles = stats::quantile(data, c(lower, upper), na.rm = TRUE, names = FALSE);
     data[ data < quantiles[1] ] = quantiles[1];
     data[ data > quantiles[2] ] = quantiles[2];
     return(data);
