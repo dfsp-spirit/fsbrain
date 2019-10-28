@@ -59,16 +59,41 @@ test_that("We can visualize p values or other arbitrary data, one value per atla
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     atlas = 'aparc';
 
+    subject = 'fsaverage';
+
     # lh: Manually set data values for some regions (the rest will be assigned the default value for NaNs, which can be set as a parameter of the spread.values.over.subject function.):
     lh_region_value_list = list("bankssts"=0.9, "precuneus"=0.7, "postcentral"=0.8, "lingual"=0.6);
 
     # rh: retrieve the full list of regions for the atlas, and assign random values for this example:
-    atlas_region_names = get.atlas.region.names(atlas, template_subjects_dir = subjects_dir, template_subject='subject1');
+    atlas_region_names = get.atlas.region.names(atlas, template_subjects_dir = subjects_dir, template_subject=subject);
     rh_region_value_list = rnorm(length(atlas_region_names), 3.0, 1.0);
     names(rh_region_value_list) = atlas_region_names;
 
 
-    #### Now use the shortcut function for the same task:
-    vis.region.values.on.subject(subjects_dir, 'subject1', atlas, lh_region_value_list, rh_region_value_list);
+    if(dir.exists(file.path(subjects_dir, subject))) {
+        rgloptions=list("windowRect"=c(0,0,1200,1200), mar=c(0,0,0,0));
+        rglactions = list("snapshot_png"="~/fsbrain_pvalues_fsavg.png");
+        vis.region.values.on.subject(subjects_dir, subject, atlas, lh_region_value_list, rh_region_value_list, rgloptions=rgloptions, rglactions=rglactions);
+    } else {
+        message("Subject not found.");
+    }
+})
+
+
+test_that("We can visualize data on fsaverage if available", {
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+
+    #fsaverage_dir = file.path(Sys.getenv('FREESURFER_HOME'), 'subjects');
+    fsaverage_dir = subjects_dir;
+
+    rgloptions=list("windowRect"=c(50,50,1200,1200));     # the first 2 entries give the position on screen, the rest defines resolution as width, height in px
+    rglactions = list("snapshot_png"="~/fsbrain_t4_fsavg.png");
+
+    if(dir.exists(fsaverage_dir)) {
+         vis.subject.morph.standard(subjects_dir, 'subject1', 'thickness', 'both', '10', template_subjects_dir=fsaverage_dir, rgloptions=rgloptions, rglactions=rglactions);
+    } else {
+        message("No fsaverage found.");
+    }
+
 })
 
