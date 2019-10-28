@@ -90,8 +90,10 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, su
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    fsaverage_dir = file.path(Sys.getenv('FREESURFER_HOME'), 'subjects');
-#'    vis.subject.morph.standard(subjects_dir, 'subject1', 'thickness', 'lh',
-#'     '10', template_subjects_dir=fsaverage_dir);
+#'    if(dir.exists(fsaverage_dir)) {
+#'        vis.subject.morph.standard(subjects_dir, 'subject1', 'thickness', 'lh',
+#'        '10', template_subjects_dir=fsaverage_dir);
+#'    }
 #'    # The last command will load the file
 #'    #  *<subjects_dir>/subject1/surf/lh.thickness.fwhm10.fsaverage.mgh* and
 #'    #  visualize the data on *$FREESURFER_HOME/subjects/fsaverage/surf/lh.white*.
