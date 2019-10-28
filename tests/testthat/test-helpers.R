@@ -7,7 +7,7 @@ test_that("The uppercase function works", {
 
 test_that("Data is clipped correctly", {
     full_data = rnorm(50, 10, 1);
-    clipped = clip.data.at.quantiles(full_data);
+    clipped = clip.data(full_data);
 
     expect_true(min(full_data) <= min(clipped));
     expect_true(max(full_data) >= max(clipped));

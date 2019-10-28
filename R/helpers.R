@@ -16,9 +16,9 @@ fup <- function(word) {
 }
 
 
-#' @title Clip data at quantiles.
+#' @title Clip data at quantiles to remove outliers.
 #'
-#' @description Set all data values outside the given quantile range to the border values. This is usefull to visualize morphometry data with outliers.
+#' @description Set all data values outside the given quantile range to the border values. This is usefull to properly visualize morphometry data that includes outliers. These outliers negatively affect the colormap, as all the non-outlier values become hard to distinguish. This function can be used to filter the data before plotting it.
 #'
 #' @param data, numeric vector. The input data.
 #'
@@ -34,7 +34,7 @@ fup <- function(word) {
 #'
 #' @importFrom stats quantile
 #' @export
-clip.data.at.quantiles <- function(data, lower=0.05, upper=0.95){
+clip.data <- function(data, lower=0.05, upper=0.95){
     quantiles = stats::quantile(data, c(lower, upper), na.rm = TRUE, names = FALSE);
     data[ data < quantiles[1] ] = quantiles[1];
     data[ data > quantiles[2] ] = quantiles[2];
