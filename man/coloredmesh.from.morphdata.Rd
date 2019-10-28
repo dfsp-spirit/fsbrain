@@ -19,7 +19,7 @@ coloredmesh.from.morphdata(subjects_dir, vis_subject_id, morph_data, hemi,
 
 \item{surface, }{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 
-\item{colormap, }{a colormap. See the squash package for some colormaps. Defaults to squash::jet.}
+\item{colormap, }{a colormap function. See the squash package for some colormaps. Defaults to squash::jet.}
 
 \item{all_nan_backup_value, }{numeric. If all morph_data values are NA/NaN, no color map can be created. In that case, the values are replaced by this value, and this is indicated in the entry morph_data_was_all_na in the return value. Defaults to 0.0.}
 }

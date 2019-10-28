@@ -311,6 +311,7 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
         #                     legend=(-3):3, gradient="y", cex = 1.5)
         #    });
         #}
+        # TODO: Currently the colormap is computed separately for each mesh, but it should be the same colormap over all meshes (lh+rh).
     }
 
     # Create the bottom right view
