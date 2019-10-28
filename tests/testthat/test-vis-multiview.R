@@ -81,6 +81,7 @@ test_that("We can visualize p values or other arbitrary data, one value per atla
 
 
 test_that("We can visualize data on fsaverage if available", {
+    skip("This test has to be run manually and interactively.");
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 
     #fsaverage_dir = file.path(Sys.getenv('FREESURFER_HOME'), 'subjects');
