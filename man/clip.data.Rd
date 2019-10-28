@@ -21,6 +21,6 @@ Set all data values outside the given quantile range to the border values. This 
 }
 \examples{
    full_data = rnorm(50, 3, 1);
-   clipped = clip.data.at.quantiles(full_data);
+   clipped = clip.data(full_data);
 
 }
