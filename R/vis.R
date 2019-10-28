@@ -323,7 +323,7 @@ vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi, surface="wh
 #'
 #' @param surface, string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
 #'
-#' @param colormap, a colormap. See the squash package for some colormaps. Defaults to squash::heat.
+#' @param colormap, a colormap function. See the squash package for some colormaps. Defaults to grDevices::heat.colors.
 #'
 #' @param views, list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.
 #'
@@ -356,8 +356,9 @@ vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi, surface="wh
 #' @family visualization functions
 #'
 #' @importFrom squash heat
+#' @importFrom grDevices heat.colors
 #' @export
-vis.region.values.on.subject <- function(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, surface="white", colormap=squash::heat, views=c('t4'), rgloptions=list(), rglactions = list(), value_for_unlisted_regions = NaN) {
+vis.region.values.on.subject <- function(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, surface="white", colormap=grDevices::heat.colors, views=c('t4'), rgloptions=list(), rglactions = list(), value_for_unlisted_regions = NaN) {
     morph_like_data = spread.values.over.subject(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, value_for_unlisted_regions = value_for_unlisted_regions);
     invisible(vis.data.on.subject(subjects_dir, subject_id, morph_like_data$lh, morph_like_data$rh, surface=surface, colormap=colormap, views=views, rgloptions=rgloptions, rglactions=rglactions));
 }
@@ -376,7 +377,7 @@ vis.region.values.on.subject <- function(subjects_dir, subject_id, atlas, lh_reg
 #'
 #' @param surface, string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
 #'
-#' @param colormap, a colormap. See the squash package for some colormaps. Defaults to squash::jet.
+#' @param colormap, a colormap function. See the squash package for some colormaps. Defaults to squash::jet.
 #'
 #' @return coloredmesh. A named list with entries: "mesh" the rgl::tmesh3d mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
@@ -414,7 +415,7 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
 #'
 #' @param template_subjects_dir The template subjects dir. If NULL, the value of the parameter 'subjects_dir' is used. Defaults to NULL. If you have FreeSurfer installed and configured, and are using the standard fsaverage subject, try passing the result of calling 'file.path(Sys.getenv('FREESURFER_HOME'), 'subjects')'.
 #'
-#' @param colormap, a colormap. See the squash package for some colormaps. Defaults to squash::jet.
+#' @param colormap, a colormap function. See the squash package for some colormaps. Defaults to squash::jet.
 #'
 #' @return coloredmesh. A named list with entries: "mesh" the rgl::tmesh3d mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
@@ -451,7 +452,7 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
 #'
 #' @param surface, string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
 #'
-#' @param colormap, a colormap. See the squash package for some colormaps. Defaults to squash::jet.
+#' @param colormap, a colormap function. See the squash package for some colormaps. Defaults to squash::jet.
 #'
 #' @param all_nan_backup_value, numeric. If all morph_data values are NA/NaN, no color map can be created. In that case, the values are replaced by this value, and this is indicated in the entry morph_data_was_all_na in the return value. Defaults to 0.0.
 #'

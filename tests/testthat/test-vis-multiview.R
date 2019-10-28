@@ -63,13 +63,10 @@ test_that("We can visualize p values or other arbitrary data, one value per atla
     lh_region_value_list = list("bankssts"=0.9, "precuneus"=0.7, "postcentral"=0.8, "lingual"=0.6);
 
     # rh: retrieve the full list of regions for the atlas, and assign random values for this example:
-    atlas_region_names = get.atlas.region.names(atlas, template_subjects_dir = fsaverage_dir);
+    atlas_region_names = get.atlas.region.names(atlas, template_subjects_dir = subjects_dir, template_subject='subject1');
     rh_region_value_list = rnorm(length(atlas_region_names), 3.0, 1.0);
     names(rh_region_value_list) = atlas_region_names;
 
-    morph_like_data = spread.values.over.subject(subjects_dir, 'subject1', aparc, lh_region_value_list, rh_region_value_list);
-
-    vis.data.on.subject(subjects_dir, 'subject1', morph_like_data$lh, morph_like_data$rh, colormap=squash::heat);
 
     #### Now use the shortcut function for the same task:
     vis.region.values.on.subject(subjects_dir, 'subject1', atlas, lh_region_value_list, rh_region_value_list);
