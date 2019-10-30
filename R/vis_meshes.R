@@ -15,17 +15,21 @@
 #'
 #' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. Defaults to the empty list.
 #'
+#' @param unify_colormaps, logical. Whether to try to unify the colormaps so one color represents the same value acrosse the meshes. Defaults to TRUE.
+#'
 #' @return the list of visualized coloredmeshes
 #'
 #' @keywords internal
 #' @importFrom rgl open3d bg3d wire3d
-vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", rgloptions=list(), rglactions=list()) {
+vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", rgloptions=list(), rglactions=list(), unify_colormaps=TRUE) {
 
     if(!is.list(coloredmeshes)) {
         stop("Parameter coloredmeshes must be a list.");
     }
 
-    #rgloptions = list(windowRect=c(50,50,1000,1000));
+    if(unify_colormaps) {
+        coloredmeshes = unify.coloredmeshes.colormaps(coloredmeshes);
+    }
 
     rgl::open3d();
     do.call(rgl::par3d, rgloptions);
@@ -68,14 +72,20 @@ vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRU
 #'
 #' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. Defaults to the empty list.
 #'
+#' @param unify_colormaps, logical. Whether to try to unify the colormaps so one color represents the same value acrosse the meshes. Defaults to TRUE.
+#'
 #' @return the list of visualized coloredmeshes
 #'
 #' @keywords internal
 #' @importFrom rgl open3d bg3d wire3d
-vis.coloredmeshes.rotating <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", x=0, y=1, z=0, rpm=15, duration=20, rgloptions=list(), rglactions = list()) {
+vis.coloredmeshes.rotating <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", x=0, y=1, z=0, rpm=15, duration=20, rgloptions=list(), rglactions = list(), unify_colormaps=TRUE) {
 
     if(!is.list(coloredmeshes)) {
         stop("Parameter coloredmeshes must be a list.");
+    }
+
+    if(unify_colormaps) {
+        coloredmeshes = unify.coloredmeshes.colormaps(coloredmeshes);
     }
 
     rgl::open3d();

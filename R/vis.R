@@ -55,6 +55,44 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, su
 }
 
 
+#' @title Recompute the colormaps in the meshes, using data from all meshes.
+#'
+#' @description Running this function on a set of coloredmeshes ensures that one color represents the same data value over all the meshes. This makes sense if you plot the left and right hemisphere of a subject into a plot. This function only works if the meshes comes with a key named 'morph_data' that contains the raw data values. If there is no such data, the given meshes are returned without changes.
+#'
+#' @param coloredmeshes list of coloredmeshes
+#'
+#' @param colormap a colormap function, defaults to [squash::jet].
+#'
+#' @importFrom squash cmap makecmap jet
+#' @keywords internal
+unify.coloredmeshes.colormaps <- function(coloredmeshes, colormap=squash::jet) {
+    if(length(coloredmeshes) <= 1) {
+        return(coloredmeshes);
+    }
+    full_data = c();
+    found_morph_data = FALSE;
+    for(cmesh in coloredmeshes) {
+        if("morph_data" %in% names(cmesh)) {
+            full_data = c(full_data, cmesh$morph_data);
+            found_morph_data = TRUE;
+        }
+    }
+
+    # We have all the data (if any), compute a shared colormap for all the meshes to use.
+    # Note: some meshes come without morph data, e.g., those based on annotations. But for them, we do not need to rescale anyways so thats fine.
+    if(found_morph_data) {
+        coloredmeshes_new_cmap = coloredmeshes;
+        for(cmesh_idx in seq_len(length(coloredmeshes_new_cmap))) {
+            col_rescaled = squash::cmap(coloredmeshes_new_cmap[[cmesh_idx]]$morph_data, map = squash::makecmap(full_data, colFn = colormap));
+            coloredmeshes_new_cmap[[cmesh_idx]]$col = col_rescaled;
+        }
+        return(coloredmeshes_new_cmap);
+    } else {
+        return(coloredmeshes);
+    }
+}
+
+
 #' @title Visualize native space morphometry data for a subject.
 #'
 #' @description Creates a surface mesh, applies a colormap transform the morphometry data values into colors, and renders the resulting colored mesh in an interactive window. If hemi is 'both', the data is rendered for the wholw brain.
@@ -396,7 +434,7 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
     surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
     mesh = rgl::tmesh3d(unlist(surface_data$vertices), unlist(surface_data$faces), homogeneous=FALSE);
     col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
-    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi));
+    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_data));
 }
 
 #' @title Create a coloredmesh from standard space morphometry data.
@@ -438,7 +476,7 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
     surface_data = subject.surface(template_subjects_dir, template_subject, surface, hemi);
     mesh = rgl::tmesh3d(unlist(surface_data$vertices), unlist(surface_data$faces), homogeneous=FALSE);
     col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
-    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi));
+    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_data));
 }
 
 
@@ -486,7 +524,7 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
     }
 
     col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
-    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=morph_data_was_all_na, "hemi"=hemi));
+    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=morph_data_was_all_na, "hemi"=hemi, "morph_data"=morph_data));
 }
 
 
@@ -520,5 +558,5 @@ coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surfac
     annot = subject.annot(subjects_dir, subject_id, hemi, atlas);
     mesh = rgl::tmesh3d(unlist(surface_data$vertices), unlist(surface_data$faces), homogeneous=FALSE);
     col = annot$hex_colors_rgb;
-    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi));
+    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=NULL));
 }

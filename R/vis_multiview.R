@@ -94,7 +94,10 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     layout_dim_y = 2;
     num_views = layout_dim_x * layout_dim_y;
 
+    coloredmeshes = unify.coloredmeshes.colormaps(coloredmeshes);
+
     hemi_sorted_cmeshes = sort.coloredmeshes.by.hemi(coloredmeshes);
+
     lh_meshes = hemi_sorted_cmeshes$lh;
     rh_meshes = hemi_sorted_cmeshes$rh;
 
@@ -212,6 +215,8 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     layout_dim_x = 3;
     layout_dim_y = 3;
     num_views = layout_dim_x * layout_dim_y;
+
+    coloredmeshes = unify.coloredmeshes.colormaps(coloredmeshes);
 
     hemi_sorted_cmeshes = sort.coloredmeshes.by.hemi(coloredmeshes);
     lh_meshes = hemi_sorted_cmeshes$lh;
