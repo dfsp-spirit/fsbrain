@@ -25,6 +25,23 @@ install.packages(c("devtools", "knitr", "testthat"));
 devtools::install_github("dfsp-spirit/fsbrain", build_vignettes=TRUE);
 ```
 
+### System dependencies
+
+The *fsbrain* package itself does not have any system dependencies, however, it uses rgl for rendering. To install the system dependencies for rgl:
+
+#### Linux
+
+Before installing *fsbrain*, run the following command in your system shell (not in R):
+
+```shell
+sudo apt-get install libx11-dev libglu1-mesa-dev libfreetype6-dev 
+```
+
+
+#### MacOS
+
+Recent MacOS versions do not ship with an X11 environment. You will have to install the [xquartz X11 system](https://www.xquartz.org/) if you do not have it already.
+
 ## Documentation
 
 The documentation comes with the package, and includes the built-in help, examples, and a vignette that explains typical workflows.
