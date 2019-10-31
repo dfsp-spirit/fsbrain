@@ -73,7 +73,7 @@ unify.coloredmeshes.colormaps <- function(coloredmeshes, colormap=NULL) {
 
     comb_res = combine.coloredmeshes.data(coloredmeshes);
     full_data = comb_res$full_data;
-    found_morph_data = comb_res$found_morph_data;
+    found_morph_data = comb_res$found_morph_data_in_any;
 
     if(is.null(colormap)) {
         colormap = check.for.coloredmeshes.colormap(coloredmeshes);
@@ -87,6 +87,10 @@ unify.coloredmeshes.colormaps <- function(coloredmeshes, colormap=NULL) {
         if(is.null(colormap)) {
             warning("Parameter 'colormap' is NULL and no cmap_fun found in the mesh(es). Falling back to default colormap squash::jet.");
             colormap = squash::jet;
+        }
+
+        if(! comb_res$found_morph_data_in_all) {
+            warning("Found morph_data only in a subset of the meshes. This should not happen in general.");
         }
 
         coloredmeshes_new_cmap = coloredmeshes;
@@ -105,19 +109,25 @@ unify.coloredmeshes.colormaps <- function(coloredmeshes, colormap=NULL) {
 #'
 #' @param coloredmeshes list of coloredmeshes
 #'
-#' @return list with entries "full_data": a vector of the combined data, can be NULL if none of the meshes have a valid "morph_data" attribute. "dound_morph_data": logical, whether valid data was found.
+#' @return list with entries "full_data": a vector of the combined data, can be NULL if none of the meshes have a valid "morph_data" attribute. "found_morph_data_in_any": logical, whether valid data was found in any of the meshes. "found_morph_data_in_all": logical, whether valid data was found in all of the meshes (FALSE if list of meshes is empty).
 #'
 #' @keywords internal
 combine.coloredmeshes.data <- function(coloredmeshes) {
     full_data = c();
-    found_morph_data = FALSE;
+    found_morph_data_in_any = FALSE;
+    found_morph_data_in_all = TRUE;
+    if(length(coloredmeshes) < 1) {
+        found_morph_data_in_all = FALSE;
+    }
     for(cmesh in coloredmeshes) {
         if("morph_data" %in% names(cmesh) && !(is.null(cmesh$morph_data))) {
             full_data = c(full_data, cmesh$morph_data);
-            found_morph_data = TRUE;
+            found_morph_data_in_any = TRUE;
+        } else {
+            found_morph_data_in_all = FALSE;
         }
     }
-    return(list("full_data"=full_data, "found_morph_data"=found_morph_data));
+    return(list("full_data"=full_data, "found_morph_data_in_any"=found_morph_data_in_any, "found_morph_data_in_all"=found_morph_data_in_all));
 }
 
 

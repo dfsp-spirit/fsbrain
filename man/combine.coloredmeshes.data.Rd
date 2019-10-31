@@ -10,7 +10,7 @@ combine.coloredmeshes.data(coloredmeshes)
 \item{coloredmeshes}{list of coloredmeshes}
 }
 \value{
-list with entries "full_data": a vector of the combined data, can be NULL if none of the meshes have a valid "morph_data" attribute. "dound_morph_data": logical, whether valid data was found.
+list with entries "full_data": a vector of the combined data, can be NULL if none of the meshes have a valid "morph_data" attribute. "found_morph_data_in_any": logical, whether valid data was found in any of the meshes. "found_morph_data_in_all": logical, whether valid data was found in all of the meshes (FALSE if list of meshes is empty).
 }
 \description{
 Combine the data from the coloredmeshes, if any.
