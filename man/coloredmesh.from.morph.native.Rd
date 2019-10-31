@@ -5,7 +5,7 @@
 \title{Create a coloredmesh from native space morphometry data.}
 \usage{
 coloredmesh.from.morph.native(subjects_dir, subject_id, measure, hemi,
-  surface = "white", colormap = squash::jet)
+  surface = "white", colormap = squash::jet, clip = NULL)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -19,6 +19,8 @@ coloredmesh.from.morph.native(subjects_dir, subject_id, measure, hemi,
 \item{surface, }{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 
 \item{colormap, }{a colormap function. See the squash package for some colormaps. Defaults to [squash::jet].}
+
+\item{clip, }{numeric vector of length 2 or NULL. If given, the 2 values are interpreted as lower and upper percentiles, and the morph data is clipped at the given lower and upper percentile (see [fsbrain::clip.data]). Defaults to NULL (no data clipping).}
 }
 \value{
 coloredmesh. A named list with entries: "mesh" the [rgl::tmesh3d] mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
