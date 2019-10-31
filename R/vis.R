@@ -69,18 +69,14 @@ unify.coloredmeshes.colormaps <- function(coloredmeshes, colormap=NULL) {
     if(length(coloredmeshes) <= 1) {
         return(coloredmeshes);
     }
-    full_data = c();
-    found_morph_data = FALSE;
-    for(cmesh in coloredmeshes) {
-        if("morph_data" %in% names(cmesh) && !(is.null(cmesh$morph_data))) {
-            full_data = c(full_data, cmesh$morph_data);
-            found_morph_data = TRUE;
-        }
-        if("cmap_fun" %in% names(cmesh) && !(is.null(cmesh$cmap_fun))) {
-            if(is.null(colormap)) {
-                colormap = cmesh$cmap_fun;
-            }
-        }
+
+
+    comb_res = combine.coloredmeshes.data(coloredmeshes);
+    full_data = comb_res$full_data;
+    found_morph_data = comb_res$found_morph_data;
+
+    if(is.null(colormap)) {
+        colormap = check.for.coloredmeshes.colormap(coloredmeshes);
     }
 
 
@@ -103,6 +99,47 @@ unify.coloredmeshes.colormaps <- function(coloredmeshes, colormap=NULL) {
         return(coloredmeshes);
     }
 }
+
+
+#' @title Combine the data from the coloredmeshes, if any.
+#'
+#' @param coloredmeshes list of coloredmeshes
+#'
+#' @return list with entries "full_data": a vector of the combined data, can be NULL if none of the meshes have a valid "morph_data" attribute. "dound_morph_data": logical, whether valid data was found.
+#'
+#' @keywords internal
+combine.coloredmeshes.data <- function(coloredmeshes) {
+    full_data = c();
+    found_morph_data = FALSE;
+    for(cmesh in coloredmeshes) {
+        if("morph_data" %in% names(cmesh) && !(is.null(cmesh$morph_data))) {
+            full_data = c(full_data, cmesh$morph_data);
+            found_morph_data = TRUE;
+        }
+    }
+    return(list("full_data"=full_data, "found_morph_data"=found_morph_data));
+}
+
+
+#' @title Return the colormap function from the meshes, if any.
+#'
+#' @param coloredmeshes list of coloredmeshes
+#'
+#' @return colormap, a colormap function or NULL if the meshes did not have any.
+#'
+#' @keywords internal
+check.for.coloredmeshes.colormap <- function(coloredmeshes) {
+    colormap = NULL;
+    for(cmesh in coloredmeshes) {
+        if("cmap_fun" %in% names(cmesh) && !(is.null(cmesh$cmap_fun))) {
+            if(is.null(colormap)) {
+                colormap = cmesh$cmap_fun;
+            }
+        }
+    }
+    return(colormap);
+}
+
 
 
 #' @title Visualize native space morphometry data for a subject.
