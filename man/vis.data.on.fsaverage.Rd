@@ -20,7 +20,7 @@ vis.data.on.fsaverage(subjects_dir = NULL,
 
 \item{surface, }{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 
-\item{colormap, }{a colormap. See the squash package for some colormaps. Defaults to squash::jet.}
+\item{colormap, }{a colormap. See the squash package for some colormaps. Defaults to [squash::jet].}
 
 \item{views, }{list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.}
 

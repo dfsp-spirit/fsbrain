@@ -26,7 +26,7 @@ vis.subject.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm,
 
 \item{template_subjects_dir}{The template subjects dir. If NULL, the value of the parameter 'subjects_dir' is used. Defaults to NULL. If you have FreeSurfer installed and configured, and are using the standard fsaverage subject, try passing the result of calling 'file.path(Sys.getenv('FREESURFER_HOME'), 'subjects')'.}
 
-\item{colormap, }{a colormap. See the squash package for some colormaps. Defaults to squash::jet.}
+\item{colormap, }{a colormap. See the squash package for some colormaps. Defaults to [squash::jet].}
 
 \item{views, }{list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.}
 

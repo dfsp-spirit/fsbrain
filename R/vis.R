@@ -15,7 +15,7 @@
 #'
 #' @param surface, string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
 #'
-#' @param colormap, a colormap. See the squash package for some colormaps. Defaults to squash::jet.
+#' @param colormap, a colormap. See the squash package for some colormaps. Defaults to [squash::jet].
 #'
 #' @param views, list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.
 #'
@@ -61,11 +61,11 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, su
 #'
 #' @param coloredmeshes list of coloredmeshes
 #'
-#' @param colormap a colormap function, defaults to [squash::jet].
+#' @param colormap a colormap function, defaults to NULL, which instructs the function to use the colormap found in the "cmap_fun" property of the first mesh in the list that has a valid entry.
 #'
 #' @importFrom squash cmap makecmap jet
 #' @keywords internal
-unify.coloredmeshes.colormaps <- function(coloredmeshes, colormap=squash::jet) {
+unify.coloredmeshes.colormaps <- function(coloredmeshes, colormap=NULL) {
     if(length(coloredmeshes) <= 1) {
         return(coloredmeshes);
     }
@@ -76,11 +76,23 @@ unify.coloredmeshes.colormaps <- function(coloredmeshes, colormap=squash::jet) {
             full_data = c(full_data, cmesh$morph_data);
             found_morph_data = TRUE;
         }
+        if("cmap_fun" %in% names(cmesh) && !(is.null(cmesh$cmap_fun))) {
+            if(is.null(colormap)) {
+                colormap = cmesh$cmap_fun;
+            }
+        }
     }
+
 
     # We have all the data (if any), compute a shared colormap for all the meshes to use.
     # Note: some meshes come without morph data, e.g., those based on annotations. But for them, we do not need to rescale anyways so thats fine.
     if(found_morph_data && length(full_data) > 0) {
+
+        if(is.null(colormap)) {
+            warning("Parameter 'colormap' is NULL and no cmap_fun found in the mesh(es). Falling back to default colormap squash::jet.");
+            colormap = squash::jet;
+        }
+
         coloredmeshes_new_cmap = coloredmeshes;
         for(cmesh_idx in seq_len(length(coloredmeshes_new_cmap))) {
             col_rescaled = squash::cmap(coloredmeshes_new_cmap[[cmesh_idx]]$morph_data, map = squash::makecmap(full_data, colFn = colormap));
@@ -113,7 +125,7 @@ unify.coloredmeshes.colormaps <- function(coloredmeshes, colormap=squash::jet) {
 #'
 #' @param template_subjects_dir The template subjects dir. If NULL, the value of the parameter 'subjects_dir' is used. Defaults to NULL. If you have FreeSurfer installed and configured, and are using the standard fsaverage subject, try passing the result of calling 'file.path(Sys.getenv('FREESURFER_HOME'), 'subjects')'.
 #'
-#' @param colormap, a colormap. See the squash package for some colormaps. Defaults to squash::jet.
+#' @param colormap, a colormap. See the squash package for some colormaps. Defaults to [squash::jet].
 #'
 #' @param views, list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.
 #'
@@ -212,7 +224,7 @@ brainviews <- function(views, coloredmeshes, rgloptions = list(), rglactions = l
 #'
 #' @param surface, string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
 #'
-#' @param colormap, a colormap. See the squash package for some colormaps. Defaults to squash::jet.
+#' @param colormap, a colormap. See the squash package for some colormaps. Defaults to [squash::jet].
 #'
 #' @param views, list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.
 #'
@@ -271,7 +283,7 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, mor
 #'
 #' @param surface, string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
 #'
-#' @param colormap, a colormap. See the squash package for some colormaps. Defaults to squash::jet.
+#' @param colormap, a colormap. See the squash package for some colormaps. Defaults to [squash::jet].
 #'
 #' @param views, list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.
 #'
@@ -363,7 +375,7 @@ vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi, surface="wh
 #'
 #' @param surface, string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
 #'
-#' @param colormap, a colormap function. See the squash package for some colormaps. Defaults to grDevices::heat.colors.
+#' @param colormap, a colormap function. See the squash package for some colormaps. Defaults to [grDevices::heat.colors].
 #'
 #' @param views, list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.
 #'
@@ -417,9 +429,9 @@ vis.region.values.on.subject <- function(subjects_dir, subject_id, atlas, lh_reg
 #'
 #' @param surface, string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
 #'
-#' @param colormap, a colormap function. See the squash package for some colormaps. Defaults to squash::jet.
+#' @param colormap, a colormap function. See the squash package for some colormaps. Defaults to [squash::jet].
 #'
-#' @return coloredmesh. A named list with entries: "mesh" the rgl::tmesh3d mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
+#' @return coloredmesh. A named list with entries: "mesh" the [rgl::tmesh3d] mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
 #' @keywords internal
 #' @importFrom squash cmap makecmap jet
@@ -434,7 +446,7 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
     surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
     mesh = rgl::tmesh3d(unlist(surface_data$vertices), unlist(surface_data$faces), homogeneous=FALSE);
     col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
-    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_data));
+    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap));
 }
 
 #' @title Create a coloredmesh from standard space morphometry data.
@@ -455,9 +467,9 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
 #'
 #' @param template_subjects_dir The template subjects dir. If NULL, the value of the parameter 'subjects_dir' is used. Defaults to NULL. If you have FreeSurfer installed and configured, and are using the standard fsaverage subject, try passing the result of calling 'file.path(Sys.getenv('FREESURFER_HOME'), 'subjects')'.
 #'
-#' @param colormap, a colormap function. See the squash package for some colormaps. Defaults to squash::jet.
+#' @param colormap, a colormap function. See the squash package for some colormaps. Defaults to [squash::jet].
 #'
-#' @return coloredmesh. A named list with entries: "mesh" the rgl::tmesh3d mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
+#' @return coloredmesh. A named list with entries: "mesh" the [rgl::tmesh3d] mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
 #' @keywords internal
 #' @importFrom squash cmap makecmap jet
@@ -476,7 +488,7 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
     surface_data = subject.surface(template_subjects_dir, template_subject, surface, hemi);
     mesh = rgl::tmesh3d(unlist(surface_data$vertices), unlist(surface_data$faces), homogeneous=FALSE);
     col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
-    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_data));
+    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap));
 }
 
 
@@ -492,11 +504,11 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
 #'
 #' @param surface, string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
 #'
-#' @param colormap, a colormap function. See the squash package for some colormaps. Defaults to squash::jet.
+#' @param colormap, a colormap function. See the squash package for some colormaps. Defaults to [squash::jet].
 #'
 #' @param all_nan_backup_value, numeric. If all morph_data values are NA/NaN, no color map can be created. In that case, the values are replaced by this value, and this is indicated in the entry morph_data_was_all_na in the return value. Defaults to 0.0.
 #'
-#' @return coloredmesh. A named list with entries: "mesh" the rgl::tmesh3d mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
+#' @return coloredmesh. A named list with entries: "mesh" the [rgl::tmesh3d] mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
 #' @keywords internal
 #' @importFrom squash cmap makecmap jet
@@ -524,7 +536,7 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
     }
 
     col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
-    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=morph_data_was_all_na, "hemi"=hemi, "morph_data"=morph_data));
+    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=morph_data_was_all_na, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap));
 }
 
 
@@ -541,9 +553,9 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
 #'
 #' @param surface, string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
 #'
-#' @param colormap, a colormap. See the squash package for some colormaps. Defaults to squash::jet.
+#' @param colormap, a colormap. See the squash package for some colormaps. Defaults to [squash::jet].
 #'
-#' @return coloredmesh. A named list with entries: "mesh" the rgl::tmesh3d mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
+#' @return coloredmesh. A named list with entries: "mesh" the [rgl::tmesh3d] mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
 #' @keywords internal
 #' @importFrom squash cmap makecmap jet
@@ -558,5 +570,5 @@ coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surfac
     annot = subject.annot(subjects_dir, subject_id, hemi, atlas);
     mesh = rgl::tmesh3d(unlist(surface_data$vertices), unlist(surface_data$faces), homogeneous=FALSE);
     col = annot$hex_colors_rgb;
-    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=NULL));
+    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=NULL, "cmap_fun"=colormap));
 }

@@ -25,10 +25,10 @@ coloredmesh.from.morph.standard(subjects_dir, subject_id, measure, hemi,
 
 \item{template_subjects_dir}{The template subjects dir. If NULL, the value of the parameter 'subjects_dir' is used. Defaults to NULL. If you have FreeSurfer installed and configured, and are using the standard fsaverage subject, try passing the result of calling 'file.path(Sys.getenv('FREESURFER_HOME'), 'subjects')'.}
 
-\item{colormap, }{a colormap function. See the squash package for some colormaps. Defaults to squash::jet.}
+\item{colormap, }{a colormap function. See the squash package for some colormaps. Defaults to [squash::jet].}
 }
 \value{
-coloredmesh. A named list with entries: "mesh" the rgl::tmesh3d mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
+coloredmesh. A named list with entries: "mesh" the [rgl::tmesh3d] mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
 }
 \description{
 Create a coloredmesh from standard space morphometry data.

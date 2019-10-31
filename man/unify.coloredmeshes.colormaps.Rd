@@ -4,12 +4,12 @@
 \alias{unify.coloredmeshes.colormaps}
 \title{Recompute the colormaps in the meshes, using data from all meshes.}
 \usage{
-unify.coloredmeshes.colormaps(coloredmeshes, colormap = squash::jet)
+unify.coloredmeshes.colormaps(coloredmeshes, colormap = NULL)
 }
 \arguments{
 \item{coloredmeshes}{list of coloredmeshes}
 
-\item{colormap}{a colormap function, defaults to [squash::jet].}
+\item{colormap}{a colormap function, defaults to NULL, which instructs the function to use the colormap found in the "cmap_fun" property of the first mesh in the list that has a valid entry.}
 }
 \description{
 Running this function on a set of coloredmeshes ensures that one color represents the same data value over all the meshes. This makes sense if you plot the left and right hemisphere of a subject into a plot. This function only works if the meshes comes with a key named 'morph_data' that contains the raw data values. If there is no such data, the given meshes are returned without changes.

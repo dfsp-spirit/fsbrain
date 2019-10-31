@@ -23,7 +23,7 @@ vis.region.values.on.subject(subjects_dir, subject_id, atlas,
 
 \item{surface, }{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 
-\item{colormap, }{a colormap function. See the squash package for some colormaps. Defaults to grDevices::heat.colors.}
+\item{colormap, }{a colormap function. See the squash package for some colormaps. Defaults to [grDevices::heat.colors].}
 
 \item{views, }{list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.}
 
