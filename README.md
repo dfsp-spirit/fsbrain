@@ -6,6 +6,18 @@ A GNU R library for structural neuroimaging. Provides high-level functions to ac
 
 ## Installation
 
+### Recommended: install the stable fsbrain version from CRAN
+
+You can find the [fsbrain package on CRAN](https://cran.r-project.org/package=fsbrain), so all you need to do is:
+
+```r
+install.packages("fsbrain");
+```
+
+### Risky: install the dev version of fsbrain with the latest features
+
+This version is not guaranteed to be in a usable state, try at your own risk and run the tests using it.
+
 From an R session:
 
 ```r
