@@ -155,6 +155,10 @@ vis.rotated.coloredmeshes <- function(coloredmeshes, rotation_angle, x, y, z, st
 #' @importFrom fields image.plot
 #' @keywords internal
 draw.colorbar <- function(coloredmeshes) {
+    if(length(coloredmeshes) < 1) {
+        return();
+    }
+
     comb_res = combine.coloredmeshes.data(coloredmeshes);
 
     if(comb_res$found_morph_data_in_any && length(comb_res$full_data) > 0) {

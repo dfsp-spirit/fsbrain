@@ -2,7 +2,7 @@
 % Please edit documentation in R/vis_meshes.R
 \name{vis.coloredmeshes.rotating}
 \alias{vis.coloredmeshes.rotating}
-\title{Visualize a list of colored meshes in a single scene and rotate them.}
+\title{Visualize a list of colored meshes in a single scene and rotate them, movie-style.}
 \usage{
 vis.coloredmeshes.rotating(coloredmeshes, background = "white",
   skip_all_na = TRUE, style = "default", x = 0, y = 1, z = 0,
@@ -36,6 +36,6 @@ vis.coloredmeshes.rotating(coloredmeshes, background = "white",
 the list of visualized coloredmeshes
 }
 \description{
-Visualize a list of colored meshes in a single scene and rotate them.
+Visualize a list of colored meshes in a single scene and rotate them, movie-style.
 }
 \keyword{internal}

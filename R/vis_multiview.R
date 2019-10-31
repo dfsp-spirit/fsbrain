@@ -225,7 +225,7 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     do.call(rgl::par3d, rgloptions);
     Sys.sleep(1);
     rgl::bg3d(background);
-    rgl::mfrow3d(layout_dim_x, layout_dim_y);
+    rgl::mfrow3d(layout_dim_x, layout_dim_y, sharedMouse = TRUE);
 
 
     #  ------------------ Row 1 --------------------
@@ -269,7 +269,7 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 
     # Create the 2nd row central view: draw both hemis from below (bottom view)
     rgl::next3d();
-    vis.rotated.coloredmeshes(coloredmeshes, pi, 1, 0, 0, style=style);
+    vis.rotated.coloredmeshes(coloredmeshes, pi, 1, 0, 0, style=style, draw_colorbar = TRUE);
     rgl::rgl.viewpoint(0, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
         rgl::text3d(0,label_shift_y_ventral,0,"ventral");
@@ -278,7 +278,7 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 
     # Create the 2nd row right view
     rgl::next3d();
-    vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style, draw_colorbar = TRUE);
+    vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style);
     rgl::rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
         rgl::text3d(0,label_shift_y,0,"medial rh");

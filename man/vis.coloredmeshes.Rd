@@ -6,7 +6,7 @@
 \usage{
 vis.coloredmeshes(coloredmeshes, background = "white",
   skip_all_na = TRUE, style = "default", rgloptions = list(),
-  rglactions = list())
+  rglactions = list(), draw_colorbar = FALSE)
 }
 \arguments{
 \item{coloredmeshes, }{list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.}
@@ -20,6 +20,8 @@ vis.coloredmeshes(coloredmeshes, background = "white",
 \item{rgloptions}{option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));}
 
 \item{rglactions, }{named list. A list in which the names are from a set of pre-defined actions. Defaults to the empty list.}
+
+\item{draw_colorbar, }{logical. Whether to draw a colorbar.}
 }
 \value{
 the list of visualized coloredmeshes
