@@ -72,7 +72,7 @@ unify.coloredmeshes.colormaps <- function(coloredmeshes, colormap=squash::jet) {
     full_data = c();
     found_morph_data = FALSE;
     for(cmesh in coloredmeshes) {
-        if("morph_data" %in% names(cmesh)) {
+        if("morph_data" %in% names(cmesh) && !(is.null(cmesh$morph_data))) {
             full_data = c(full_data, cmesh$morph_data);
             found_morph_data = TRUE;
         }
@@ -80,7 +80,7 @@ unify.coloredmeshes.colormaps <- function(coloredmeshes, colormap=squash::jet) {
 
     # We have all the data (if any), compute a shared colormap for all the meshes to use.
     # Note: some meshes come without morph data, e.g., those based on annotations. But for them, we do not need to rescale anyways so thats fine.
-    if(found_morph_data) {
+    if(found_morph_data && length(full_data) > 0) {
         coloredmeshes_new_cmap = coloredmeshes;
         for(cmesh_idx in seq_len(length(coloredmeshes_new_cmap))) {
             col_rescaled = squash::cmap(coloredmeshes_new_cmap[[cmesh_idx]]$morph_data, map = squash::makecmap(full_data, colFn = colormap));
