@@ -1,0 +1,14 @@
+fsbrain Changes
+===============
+
+Version 0.0.2
+--------------
+- Support rglactions and rgloptions to conveniently increase output resolution and create screenshots
+- Scale colormaps over several meshes where appropriate. This ensures that the same color in the left and right hemisphere represents the exact same data value.
+- improve doc strings
+- add helper function to clip data at percentile: clip.data
+
+
+Version 0.0.1
+--------------
+- First release submitted to CRAN.
