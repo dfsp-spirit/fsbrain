@@ -18,7 +18,8 @@ Imports:
     ggplot2,
     dplyr,
     rgl,
-    squash
+    squash,
+    fields
 Suggests:
     knitr,
     rmarkdown,
