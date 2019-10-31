@@ -11,3 +11,4 @@ CHANGES
 ^appveyor\.yml$
 vignettes/fsbrain_curvature_surfaces.jpg
 vignettes/fsbrain_vis_overview.jpg
+web/
