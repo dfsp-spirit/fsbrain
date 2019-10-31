@@ -6,7 +6,7 @@
 \usage{
 brainview.t4(coloredmeshes, background = "white", skip_all_na = TRUE,
   style = "default", draw_labels = FALSE, rgloptions = list(),
-  rglactions = list())
+  rglactions = list(), draw_colorbar = FALSE)
 }
 \arguments{
 \item{coloredmeshes, }{list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.}
@@ -22,6 +22,8 @@ brainview.t4(coloredmeshes, background = "white", skip_all_na = TRUE,
 \item{rgloptions, }{named list. Parameters passed to [rgl::par3d()]. Defaults to the empty list.}
 
 \item{rglactions, }{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.}
+
+\item{draw_colorbar}{logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE.}
 }
 \description{
 Visualize a list of colored meshes from four angles.

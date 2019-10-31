@@ -15,3 +15,4 @@ colormap, a colormap function or NULL if the meshes did not have any.
 \description{
 Return the colormap function from the meshes, if any.
 }
+\keyword{internal}

@@ -6,7 +6,7 @@
 \usage{
 brainview.t9(coloredmeshes, background = "white", skip_all_na = TRUE,
   style = "default", draw_labels = FALSE, rgloptions = list(),
-  rglactions = list())
+  rglactions = list(), draw_colorbar = FALSE)
 }
 \arguments{
 \item{coloredmeshes, }{list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.}
@@ -19,9 +19,11 @@ brainview.t9(coloredmeshes, background = "white", skip_all_na = TRUE,
 
 \item{draw_labels}{logical, whether to draw label text for the different views that show information on the view direction and hemisphere displayed in a subplot. Defaults to FALSE.}
 
-\item{rgloptions, }{named list. Parameters passed to [rgl::par3d()]. Defaults to the empty list.}
+\item{rgloptions, }{named list. Parameters passed to [rgl::par3d()]. Defaults to the empty list. To increase plot resolution to 2000x1600 px, try: \code{rgloptions=list("windowRect"=c(50,50,2000,1600))}.}
 
 \item{rglactions, }{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.}
+
+\item{draw_colorbar}{logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE.}
 }
 \description{
 Visualize a list of colored meshes from nine angles.

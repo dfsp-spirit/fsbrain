@@ -15,3 +15,4 @@ list with entries "full_data": a vector of the combined data, can be NULL if non
 \description{
 Combine the data from the coloredmeshes, if any.
 }
+\keyword{internal}

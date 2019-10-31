@@ -23,6 +23,8 @@
 #'
 #' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
 #'
+#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE.
+#'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
 #' @examples
@@ -36,7 +38,7 @@
 #'
 #' @importFrom squash jet
 #' @export
-vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, surface="white", colormap=squash::jet, views=c("t4"), rgloptions = list(), rglactions = list()) {
+vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, surface="white", colormap=squash::jet, views=c("t4"), rgloptions = list(), rglactions = list(), draw_colorbar = FALSE) {
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
@@ -51,7 +53,7 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, su
         coloredmeshes = list(cmesh);
     }
 
-    invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions));
+    invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar));
 }
 
 
@@ -111,8 +113,7 @@ unify.coloredmeshes.colormaps <- function(coloredmeshes, colormap=NULL) {
 #'
 #' @return list with entries "full_data": a vector of the combined data, can be NULL if none of the meshes have a valid "morph_data" attribute. "found_morph_data_in_any": logical, whether valid data was found in any of the meshes. "found_morph_data_in_all": logical, whether valid data was found in all of the meshes (FALSE if list of meshes is empty).
 #'
-# @keywords internal
-#' @export
+#' @keywords internal
 combine.coloredmeshes.data <- function(coloredmeshes) {
     full_data = c();
     found_morph_data_in_any = FALSE;
@@ -139,8 +140,7 @@ combine.coloredmeshes.data <- function(coloredmeshes) {
 #'
 #' @return colormap, a colormap function or NULL if the meshes did not have any.
 #'
-# @keywords internal
-#' @export
+#' @keywords internal
 check.for.coloredmeshes.colormap <- function(coloredmeshes) {
     colormap = NULL;
     for(cmesh in coloredmeshes) {
@@ -183,6 +183,8 @@ check.for.coloredmeshes.colormap <- function(coloredmeshes) {
 #'
 #' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
 #'
+#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE.
+#'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
 #' @examples
@@ -203,7 +205,7 @@ check.for.coloredmeshes.colormap <- function(coloredmeshes) {
 #'
 #' @importFrom squash jet
 #' @export
-vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm, surface="white", template_subject = 'fsaverage', template_subjects_dir = NULL, colormap=squash::jet, views=c("t4"), rgloptions = list(), rglactions = list()) {
+vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm, surface="white", template_subject = 'fsaverage', template_subjects_dir = NULL, colormap=squash::jet, views=c("t4"), rgloptions = list(), rglactions = list(), draw_colorbar = FALSE) {
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
@@ -222,7 +224,7 @@ vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, 
         coloredmeshes = list(cmesh);
     }
 
-    return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions)));
+    return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar)));
 }
 
 
@@ -236,22 +238,24 @@ vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, 
 #'
 #' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
 #'
+#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE.
+#'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
 #' @keywords internal
-brainviews <- function(views, coloredmeshes, rgloptions = list(), rglactions = list()) {
+brainviews <- function(views, coloredmeshes, rgloptions = list(), rglactions = list(), draw_colorbar = FALSE) {
     if(length(views)) {
         for(view in views) {
             if(view == "t4") {
-                invisible(brainview.t4(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions));
+                invisible(brainview.t4(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar));
             } else if(view == "t9") {
-                invisible(brainview.t9(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions));
+                invisible(brainview.t9(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar));
             } else if(view == "si") {
-                invisible(brainview.si(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions));
+                invisible(brainview.si(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar));
             } else if(view == "sr") {
-                invisible(brainview.sr(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions));
+                invisible(brainview.sr(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar));
             } else {
-                stop(sprintf("Invalid view '%s'. Valid ones include 'si', t4' and 't9'.\n", view));
+                stop(sprintf("Invalid view '%s'. Valid ones include 'si', 'sr', t4' and 't9'.\n", view));
             }
         }
     }
@@ -281,6 +285,8 @@ brainviews <- function(views, coloredmeshes, rgloptions = list(), rglactions = l
 #'
 #' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
 #'
+#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE.
+#'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
 #' @examples
@@ -296,7 +302,7 @@ brainviews <- function(views, coloredmeshes, rgloptions = list(), rglactions = l
 #'
 #' @importFrom squash jet
 #' @export
-vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface="white", colormap=squash::jet, views=c('t4'), rgloptions=list(), rglactions = list()) {
+vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface="white", colormap=squash::jet, views=c('t4'), rgloptions=list(), rglactions = list(), draw_colorbar = FALSE) {
 
     if(is.null(morph_data_lh) && is.null(morph_data_rh)) {
         stop(sprintf("Only one of morph_data_lh or morph_data_rh can be NULL.\n"));
@@ -314,7 +320,7 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, mor
         coloredmeshes$rh = cmesh_rh;
     }
 
-    invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions));
+    invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar));
 }
 
 
@@ -340,19 +346,21 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, mor
 #'
 #' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
 #'
+#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE.
+#'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
 #' @family visualization functions
 #'
 #' @importFrom squash jet
 #' @export
-vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage", morph_data_lh, morph_data_rh, surface="white", colormap=squash::jet, views=c('t4'), rgloptions = list(), rglactions = list()) {
+vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage", morph_data_lh, morph_data_rh, surface="white", colormap=squash::jet, views=c('t4'), rgloptions = list(), rglactions = list(), draw_colorbar = FALSE) {
 
     if(is.null(subjects_dir)) {
         subjects_dir = find.subjectsdir.of(subject_id=vis_subject_id, mustWork = TRUE);
     }
 
-    invisible(vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface=surface, colormap=colormap, views=views, rgloptions=rgloptions, rglactions = rglactions));
+    invisible(vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface=surface, colormap=colormap, views=views, rgloptions=rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar));
 }
 
 
@@ -434,6 +442,8 @@ vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi, surface="wh
 #'
 #' @param value_for_unlisted_regions numerical scalar or NaN, the value to assign to regions which do not occur in the region_value_lists. Defaults to NaN.
 #'
+#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE.
+#'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
 #' @examples
@@ -459,9 +469,9 @@ vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi, surface="wh
 #' @importFrom squash heat
 #' @importFrom grDevices heat.colors
 #' @export
-vis.region.values.on.subject <- function(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, surface="white", colormap=grDevices::heat.colors, views=c('t4'), rgloptions=list(), rglactions = list(), value_for_unlisted_regions = NaN) {
+vis.region.values.on.subject <- function(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, surface="white", colormap=grDevices::heat.colors, views=c('t4'), rgloptions=list(), rglactions = list(), value_for_unlisted_regions = NaN, draw_colorbar = FALSE) {
     morph_like_data = spread.values.over.subject(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, value_for_unlisted_regions = value_for_unlisted_regions);
-    invisible(vis.data.on.subject(subjects_dir, subject_id, morph_like_data$lh, morph_like_data$rh, surface=surface, colormap=colormap, views=views, rgloptions=rgloptions, rglactions=rglactions));
+    invisible(vis.data.on.subject(subjects_dir, subject_id, morph_like_data$lh, morph_like_data$rh, surface=surface, colormap=colormap, views=views, rgloptions=rgloptions, rglactions=rglactions, draw_colorbar = draw_colorbar));
 }
 
 

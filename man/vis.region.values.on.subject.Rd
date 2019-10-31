@@ -8,7 +8,7 @@ vis.region.values.on.subject(subjects_dir, subject_id, atlas,
   lh_region_value_list, rh_region_value_list, surface = "white",
   colormap = grDevices::heat.colors, views = c("t4"),
   rgloptions = list(), rglactions = list(),
-  value_for_unlisted_regions = NaN)
+  value_for_unlisted_regions = NaN, draw_colorbar = FALSE)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, containing the subdir of vis_subject_id, the subject that you want to use for visualization.}
@@ -32,6 +32,8 @@ vis.region.values.on.subject(subjects_dir, subject_id, atlas,
 \item{rglactions, }{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.}
 
 \item{value_for_unlisted_regions}{numerical scalar or NaN, the value to assign to regions which do not occur in the region_value_lists. Defaults to NaN.}
+
+\item{draw_colorbar}{logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE.}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.

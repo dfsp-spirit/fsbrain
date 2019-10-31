@@ -15,7 +15,7 @@
 #'
 #' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. Defaults to the empty list.
 #'
-#' @param draw_colorbar, logical. Whether to draw a colorbar.
+#' @param draw_colorbar, logical. Whether to draw a colorbar. WARNING: Will only show up if there is enough space in the plot area and does not resize properly. Defaults to FALSE.
 #'
 #' @return the list of visualized coloredmeshes
 #'

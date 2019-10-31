@@ -6,7 +6,7 @@
 \usage{
 vis.subject.morph.native(subjects_dir, subject_id, measure, hemi,
   surface = "white", colormap = squash::jet, views = c("t4"),
-  rgloptions = list(), rglactions = list())
+  rgloptions = list(), rglactions = list(), draw_colorbar = FALSE)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -26,6 +26,8 @@ vis.subject.morph.native(subjects_dir, subject_id, measure, hemi,
 \item{rgloptions}{option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));}
 
 \item{rglactions, }{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.}
+
+\item{draw_colorbar}{logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE.}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.

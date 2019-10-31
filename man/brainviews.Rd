@@ -5,7 +5,7 @@
 \title{Show one or more views of the given meshes in rgl windows.}
 \usage{
 brainviews(views, coloredmeshes, rgloptions = list(),
-  rglactions = list())
+  rglactions = list(), draw_colorbar = FALSE)
 }
 \arguments{
 \item{views, }{list of strings. Valid entries include: 'si': single interactive view. 'sr': single rotating view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.}
@@ -15,6 +15,8 @@ brainviews(views, coloredmeshes, rgloptions = list(),
 \item{rgloptions}{option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));}
 
 \item{rglactions, }{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.}
+
+\item{draw_colorbar}{logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE.}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.
