@@ -88,7 +88,7 @@ A BibTeX entry for LaTeX users is
 
 ## More visualization examples
 
-The *fsbrain* package support visualizations of different data, and all data can be displayed in one or more views. The figur below shows some examples:
+The *fsbrain* package support visualizations of different data, and all data can be displayed in one or more views. The figure below shows some examples:
 
 ![Visoverview](./vignettes/fsbrain_vis_overview.jpg?raw=true "Some visualization options from fsbrain")
 
@@ -97,3 +97,7 @@ The *fsbrain* package support visualizations of different data, and all data can
 * **Subfigure C** displays the regions of the Desikan atlas on the white surface of a subject. The colors were loaded from the respective annotation file. The view shows the data in tiles from 4 different angles.
 
 *What* is displayed (morphometry data, atlas regions, arbitray other data), on *which surface* it is displayed, and *how* it is displayed (a single interactive view, 4 tiles, 9 tiles) is independent and can be selected as needed in fsbrain.
+
+Here is a second figure, showing the same data displayed on 3 different surfaces of a subject: A white surface, B pial surface, C inflated surface.
+
+![Vissurfaces](./vignettes/fsbrain_curvature_surfaces.jpg?raw=true "Curvature visualization on different surfaces, rendered with fsbrain")
