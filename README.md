@@ -34,7 +34,7 @@ The *fsbrain* package itself does not have any system dependencies, however, it 
 Before installing *fsbrain*, run the following command in your system shell (not in R):
 
 ```shell
-sudo apt-get install libx11-dev libglu1-mesa-dev libfreetype6-dev 
+sudo apt-get install libx11-dev libglu1-mesa-dev libfreetype6-dev
 ```
 
 
@@ -101,3 +101,6 @@ The *fsbrain* package support visualizations of different data, and all data can
 Here is a second figure, showing the same data (the mean curvature at each vertex) displayed on 3 different surfaces of a subject: **A** white surface, **B** pial surface, **C** inflated surface.
 
 ![Vissurfaces](./web/fsbrain_curvature_surfaces.jpg?raw=true "Curvature visualization on different surfaces, rendered with fsbrain")
+
+
+Want to see brains spin? [Check this out!](./web/fsbrain_movies.md) (WARNING: loads 10 MB webpage with animated gif).
