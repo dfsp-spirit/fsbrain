@@ -76,7 +76,7 @@ vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRU
 #'
 #' @keywords internal
 #' @importFrom rgl open3d bg3d wire3d
-vis.coloredmeshes.rotating <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", x=0, y=1, z=0, rpm=15, duration=20, rgloptions=list(), rglactions = list()) {
+vis.coloredmeshes.rotating <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", x=0, y=0, z=1, rpm=6, duration=10, rgloptions=list(), rglactions = list()) {
 
     if(!is.list(coloredmeshes)) {
         stop("Parameter coloredmeshes must be a list.");
@@ -92,11 +92,12 @@ vis.coloredmeshes.rotating <- function(coloredmeshes, background="white", skip_a
         }
         vis.coloredmesh(cmesh, style = style);
     }
+    rgl::rgl.viewpoint(-90, 0);
 
     if (!rgl::rgl.useNULL()) {
         if(rglactions.has.key(rglactions, 'movie')) {
             movie = rglactions$movie;
-            rgl::movie3d(rgl::spin3d(axis = c(x, y, z), rpm = rpm), duration = duration, movie = movie, dir=path.expand("~"));
+            rgl::movie3d(rgl::spin3d(axis = c(x, y, z), rpm = rpm), duration = duration, movie = movie, fps = 20, dir=path.expand("~"));
             message(sprintf("Movie written to base file '%s' in home dir.\n", movie));
         } else {
             rgl::play3d(rgl::spin3d(axis = c(x, y, z), rpm = rpm), duration = duration);

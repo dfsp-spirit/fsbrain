@@ -90,7 +90,7 @@ A BibTeX entry for LaTeX users is
 
 The *fsbrain* package support visualizations of different data, and all data can be displayed in one or more views. The figure below shows some examples:
 
-![Visoverview](./vignettes/fsbrain_vis_overview.jpg?raw=true "Some visualization options from fsbrain")
+![Visoverview](./web/fsbrain_vis_overview.jpg?raw=true "Some visualization options from fsbrain")
 
 * **Subfigure A** shows the visualization of raw morphometry data (cortical thickness) from native space on the white surface of a subject. The view shows the data in tiles from 8 different angles.
 * **Subfigure B** illustrates arbitrary data (p-values in this case) visualized on the regions of the Desikan atlas, using the surface of the fsaverage (standard space template) subject from FreeSurfer. The view shows the data in tiles from 4 different angles.
@@ -100,4 +100,4 @@ The *fsbrain* package support visualizations of different data, and all data can
 
 Here is a second figure, showing the same data (the mean curvature at each vertex) displayed on 3 different surfaces of a subject: **A** white surface, **B** pial surface, **C** inflated surface.
 
-![Vissurfaces](./vignettes/fsbrain_curvature_surfaces.jpg?raw=true "Curvature visualization on different surfaces, rendered with fsbrain")
+![Vissurfaces](./web/fsbrain_curvature_surfaces.jpg?raw=true "Curvature visualization on different surfaces, rendered with fsbrain")
