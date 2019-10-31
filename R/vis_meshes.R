@@ -168,7 +168,9 @@ draw.colorbar <- function(coloredmeshes) {
         if(! is.null(colormap)) {
             cat(sprintf("Found data of length %d for %d meshes.\n", length(full_data), length(coloredmeshes)));
             col = squash::cmap(full_data, map = squash::makecmap(full_data, colFn = colormap));
+
             rgl::bgplot3d(fields::image.plot(legend.only = TRUE, zlim = range(full_data), col = col, horizontal = TRUE));
+
         } else {
             warning("Requested to draw colorbar, but meshes contain no colormap function. Skipping.");
         }

@@ -44,12 +44,20 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, su
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
     }
 
+
+    if(rglactions.has.key(rglactions, 'clip')) {
+        clip = rglactions$clip;
+    } else {
+        clip = NULL;
+    }
+
+
     if(hemi == "both") {
-        lh_cmesh = coloredmesh.from.morph.native(subjects_dir, subject_id, measure, 'lh', surface=surface, colormap=colormap);
-        rh_cmesh = coloredmesh.from.morph.native(subjects_dir, subject_id, measure, 'rh', surface=surface, colormap=colormap);
+        lh_cmesh = coloredmesh.from.morph.native(subjects_dir, subject_id, measure, 'lh', surface=surface, colormap=colormap, clip = clip);
+        rh_cmesh = coloredmesh.from.morph.native(subjects_dir, subject_id, measure, 'rh', surface=surface, colormap=colormap, clip = clip);
         coloredmeshes = list(lh_cmesh, rh_cmesh);
     } else {
-        cmesh = coloredmesh.from.morph.native(subjects_dir, subject_id, measure, hemi, surface=surface, colormap=colormap);
+        cmesh = coloredmesh.from.morph.native(subjects_dir, subject_id, measure, hemi, surface=surface, colormap=colormap, clip = clip);
         coloredmeshes = list(cmesh);
     }
 
@@ -215,12 +223,18 @@ vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, 
         template_subjects_dir = subjects_dir;
     }
 
+    if(rglactions.has.key(rglactions, 'clip')) {
+        clip = rglactions$clip;
+    } else {
+        clip = NULL;
+    }
+
     if(hemi == "both") {
-        lh_cmesh = coloredmesh.from.morph.standard(subjects_dir, subject_id, measure, 'lh', fwhm, surface=surface, template_subject=template_subject, template_subjects_dir=template_subjects_dir, colormap=colormap);
-        rh_cmesh = coloredmesh.from.morph.standard(subjects_dir, subject_id, measure, 'rh', fwhm, surface=surface, template_subject=template_subject, template_subjects_dir=template_subjects_dir, colormap=colormap);
+        lh_cmesh = coloredmesh.from.morph.standard(subjects_dir, subject_id, measure, 'lh', fwhm, surface=surface, template_subject=template_subject, template_subjects_dir=template_subjects_dir, colormap=colormap, clip = clip);
+        rh_cmesh = coloredmesh.from.morph.standard(subjects_dir, subject_id, measure, 'rh', fwhm, surface=surface, template_subject=template_subject, template_subjects_dir=template_subjects_dir, colormap=colormap, clip = clip);
         coloredmeshes = list(lh_cmesh, rh_cmesh);
     } else {
-        cmesh = coloredmesh.from.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm, surface=surface, template_subject=template_subject, template_subjects_dir=template_subjects_dir, colormap=colormap);
+        cmesh = coloredmesh.from.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm, surface=surface, template_subject=template_subject, template_subjects_dir=template_subjects_dir, colormap=colormap, clip = clip);
         coloredmeshes = list(cmesh);
     }
 
@@ -490,18 +504,25 @@ vis.region.values.on.subject <- function(subjects_dir, subject_id, atlas, lh_reg
 #'
 #' @param colormap, a colormap function. See the squash package for some colormaps. Defaults to [squash::jet].
 #'
+#' @param clip, numeric vector of length 2 or NULL. If given, the 2 values are interpreted as lower and upper percentiles, and the morph data is clipped at the given lower and upper percentile (see [fsbrain::clip.data]). Defaults to NULL (no data clipping).
+#'
 #' @return coloredmesh. A named list with entries: "mesh" the [rgl::tmesh3d] mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
 #' @keywords internal
 #' @importFrom squash cmap makecmap jet
 #' @importFrom rgl tmesh3d rgl.open wire3d
-coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hemi, surface="white", colormap=squash::jet) {
+coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hemi, surface="white", colormap=squash::jet, clip=NULL) {
 
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
 
     morph_data = subject.morph.native(subjects_dir, subject_id, measure, hemi);
+
+    if(! is.null(clip)) {
+        morph_data = clip.data(morph_data, lower=clip[1], upper=clip[2]);
+    }
+
     surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
     mesh = rgl::tmesh3d(unlist(surface_data$vertices), unlist(surface_data$faces), homogeneous=FALSE);
     col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
@@ -528,12 +549,14 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
 #'
 #' @param colormap, a colormap function. See the squash package for some colormaps. Defaults to [squash::jet].
 #'
+#' @param clip, numeric vector of length 2 or NULL. If given, the 2 values are interpreted as lower and upper percentiles, and the morph data is clipped at the given lower and upper percentile (see [fsbrain::clip.data]). Defaults to NULL (no data clipping).
+#'
 #' @return coloredmesh. A named list with entries: "mesh" the [rgl::tmesh3d] mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
 #' @keywords internal
 #' @importFrom squash cmap makecmap jet
 #' @importFrom rgl tmesh3d rgl.open wire3d
-coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm, surface="white", template_subject='fsaverage', template_subjects_dir=NULL, colormap=squash::jet) {
+coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm, surface="white", template_subject='fsaverage', template_subjects_dir=NULL, colormap=squash::jet, clip = NULL) {
 
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
@@ -544,6 +567,11 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
     }
 
     morph_data = subject.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm = fwhm);
+
+    if(! is.null(clip)) {
+        morph_data = clip.data(morph_data, lower=clip[1], upper=clip[2]);
+    }
+
     surface_data = subject.surface(template_subjects_dir, template_subject, surface, hemi);
     mesh = rgl::tmesh3d(unlist(surface_data$vertices), unlist(surface_data$faces), homogeneous=FALSE);
     col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));

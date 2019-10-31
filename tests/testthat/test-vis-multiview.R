@@ -11,8 +11,8 @@ test_that("We can visualize morphometry data in multiview.", {
     measure = 'thickness';
     surface = 'white';
 
-    rgloptions=list("windowRect"=c(50,50,2000,1600));     # the first 2 entries give the position on screen, the rest defines resolution as width, height in px
-    rglactions = list("snapshot_png"="~/fsbrain.png");
+    rgloptions=list("windowRect"=c(20,20,1900,1200));     # the first 2 entries give the position on screen, the rest defines resolution as width, height in px
+    rglactions = list("snapshot_png"="~/fsbrain.png", "clip_data"=c(0.05, 0.95));
     rglactionsmovie = list("snapshot_png"="~/fsbrain.png", "movie"="brain_rot");
 
     coloredmeshes = vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('si', 't4', 't9'), rgloptions=rgloptions, rglactions=rglactions);
