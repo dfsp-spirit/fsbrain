@@ -110,7 +110,7 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 
     # Create the upper left view: draw only the left hemi, from the left
     rgl::next3d();
-    vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style);
+    vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style, draw_colorbar=TRUE);
     rgl::rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
         rgl::text3d(0,label_shift_y,0,"lateral lh");
@@ -136,13 +136,12 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 
     # Create the lower right view
     rgl::next3d();
-    vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style);
+    vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style, draw_colorbar=TRUE);
     rgl::rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
         rgl::text3d(0,label_shift_y,0,"medial rh");
     }
 
-    #rgl::highlevel(integer()); # To trigger display as rglwidget
 
     perform.rglactions(rglactions);
     invisible(coloredmeshes);
@@ -202,7 +201,6 @@ rglactions.has.key <- function(rglactions, key) {
 #' @importFrom rgl open3d bg3d wire3d shade3d mfrow3d next3d text3d rgl.viewpoint
 brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", draw_labels = FALSE, rgloptions = list(), rglactions = list()) {
 
-    #do_draw_colorbar = FALSE;
 
     label_shift_y = -20;
     label_shift_y_dorsal = -120;
@@ -280,7 +278,7 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 
     # Create the 2nd row right view
     rgl::next3d();
-    vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style);
+    vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style, draw_colorbar = TRUE);
     rgl::rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
         rgl::text3d(0,label_shift_y,0,"medial rh");
@@ -298,7 +296,7 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
         rgl::text3d(0,label_shift_y,0,"rostal");
     }
 
-    # Create the bottom central view. Empty, could later draw colorbar here.
+    # Create the bottom central view.
     rgl::next3d();
     if(draw_labels) {
         rgl::text3d(0,label_shift_y,0,"(empty)");
@@ -308,15 +306,6 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
         #  Therefore, we draw empty text for now.
         rgl::text3d(0,label_shift_y,0,"");
 
-        #if(do_draw_colorbar) {
-        #    rgl::bgplot3d({
-        #        graphics::plot.new();
-        #        plotrix::color.legend(0.1, 0.1, 0.9, 0.9,
-        #                     rect.col=grDevices::rainbow(1000),
-        #                     legend=(-3):3, gradient="y", cex = 1.5)
-        #    });
-        #}
-        # TODO: Currently the colormap is computed separately for each mesh, but it should be the same colormap over all meshes (lh+rh).
     }
 
     # Create the bottom right view
@@ -327,9 +316,8 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
         rgl::text3d(0,label_shift_y,0,"caudal");
     }
 
-    #rgl::highlevel(integer()); # To trigger display as rglwidget
 
     perform.rglactions(rglactions);
-    invisible(coloredmeshes);
+    return(invisible(coloredmeshes));
 }
 

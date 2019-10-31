@@ -15,11 +15,13 @@
 #'
 #' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. Defaults to the empty list.
 #'
+#' @param draw_colorbar, logical. Whether to draw a colorbar.
+#'
 #' @return the list of visualized coloredmeshes
 #'
 #' @keywords internal
 #' @importFrom rgl open3d bg3d wire3d
-vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", rgloptions=list(), rglactions=list()) {
+vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", rgloptions=list(), rglactions=list(), draw_colorbar=FALSE) {
 
     if(!is.list(coloredmeshes)) {
         stop("Parameter coloredmeshes must be a list.");
@@ -37,12 +39,16 @@ vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRU
         vis.coloredmesh(cmesh, style = style);
     }
 
+    if(draw_colorbar) {
+        draw.colorbar(coloredmeshes);
+    }
+
     perform.rglactions(rglactions);
     invisible(coloredmeshes);
 }
 
 
-#' @title Visualize a list of colored meshes in a single scene and rotate them.
+#' @title Visualize a list of colored meshes in a single scene and rotate them, movie-style.
 #'
 #' @param coloredmeshes, list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
 #'
@@ -119,8 +125,10 @@ vis.coloredmeshes.rotating <- function(coloredmeshes, background="white", skip_a
 #'
 #' @param style, a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
 #'
+#' @param draw_colorbar, logical. Whether to draw a colorbar.
+#'
 #' @keywords internal
-vis.rotated.coloredmeshes <- function(coloredmeshes, rotation_angle, x, y, z, style="default") {
+vis.rotated.coloredmeshes <- function(coloredmeshes, rotation_angle, x, y, z, style="default", draw_colorbar=FALSE) {
     for (mesh_idx in seq_len(length(coloredmeshes))) {     # usually this will only run once for the single mesh of a hemisphere.
         orig_cmesh = coloredmeshes[[mesh_idx]];
         orig_mesh = orig_cmesh$mesh;
@@ -128,6 +136,40 @@ vis.rotated.coloredmeshes <- function(coloredmeshes, rotation_angle, x, y, z, st
         rotated_cmesh = orig_cmesh;         # copy coloredmesh
         rotated_cmesh$mesh = rotated_mesh;  # replace inner mesh with rotated version
         vis.coloredmesh(rotated_cmesh, style=style);
+    }
+
+    if(draw_colorbar) {
+        draw.colorbar(coloredmeshes);
+    }
+}
+
+
+#' @title Draw a coloredbar into the current plot.
+#'
+#' @description Requires a rgl 3d visualisation to be open that already contains a rendered object.
+#'
+#' @param coloredmeshes, list of coloredmeshes. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
+#'
+#' @importFrom rgl bgplot3d
+#' @importFrom squash cmap makecmap
+#' @importFrom fields image.plot
+#' @keywords internal
+draw.colorbar <- function(coloredmeshes) {
+    comb_res = combine.coloredmeshes.data(coloredmeshes);
+
+    if(comb_res$found_morph_data_in_any && length(comb_res$full_data) > 0) {
+        full_data = comb_res$full_data;
+
+        colormap = check.for.coloredmeshes.colormap(coloredmeshes);
+        if(! is.null(colormap)) {
+            cat(sprintf("Found data of length %d for %d meshes.\n", length(full_data), length(coloredmeshes)));
+            col = squash::cmap(full_data, map = squash::makecmap(full_data, colFn = colormap));
+            rgl::bgplot3d(fields::image.plot(legend.only = TRUE, zlim = range(full_data), col = col, horizontal = TRUE));
+        } else {
+            warning("Requested to draw colorbar, but meshes contain no colormap function. Skipping.");
+        }
+    } else {
+        warning("Requested to draw colorbar, but meshes contain no data. Skipping.");
     }
 }
 

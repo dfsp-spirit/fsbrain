@@ -111,7 +111,8 @@ unify.coloredmeshes.colormaps <- function(coloredmeshes, colormap=NULL) {
 #'
 #' @return list with entries "full_data": a vector of the combined data, can be NULL if none of the meshes have a valid "morph_data" attribute. "found_morph_data_in_any": logical, whether valid data was found in any of the meshes. "found_morph_data_in_all": logical, whether valid data was found in all of the meshes (FALSE if list of meshes is empty).
 #'
-#' @keywords internal
+# @keywords internal
+#' @export
 combine.coloredmeshes.data <- function(coloredmeshes) {
     full_data = c();
     found_morph_data_in_any = FALSE;
@@ -127,6 +128,7 @@ combine.coloredmeshes.data <- function(coloredmeshes) {
             found_morph_data_in_all = FALSE;
         }
     }
+    full_data = sort(full_data);
     return(list("full_data"=full_data, "found_morph_data_in_any"=found_morph_data_in_any, "found_morph_data_in_all"=found_morph_data_in_all));
 }
 
@@ -137,7 +139,8 @@ combine.coloredmeshes.data <- function(coloredmeshes) {
 #'
 #' @return colormap, a colormap function or NULL if the meshes did not have any.
 #'
-#' @keywords internal
+# @keywords internal
+#' @export
 check.for.coloredmeshes.colormap <- function(coloredmeshes) {
     colormap = NULL;
     for(cmesh in coloredmeshes) {
@@ -219,7 +222,7 @@ vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, 
         coloredmeshes = list(cmesh);
     }
 
-    invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions));
+    return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions)));
 }
 
 
@@ -251,9 +254,8 @@ brainviews <- function(views, coloredmeshes, rgloptions = list(), rglactions = l
                 stop(sprintf("Invalid view '%s'. Valid ones include 'si', t4' and 't9'.\n", view));
             }
         }
-    } else {
-        invisible(coloredmeshes);
     }
+    return(invisible(coloredmeshes));
 }
 
 
