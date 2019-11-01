@@ -7,7 +7,7 @@ These are movies created using the [fsbrain R package](https://CRAN.R-project.or
 **Movie 1:** Rotating visualization of mean curvature plotted onto the white surface of a subject (native space).
 
 
-# Larger versions
+# More descriptors and brain parcellations
 
 Have some bandwidth to spare? Try some of these large versions for different surface-based measures:
 
