@@ -9,5 +9,5 @@ services:
   - xvfb
 
 before_install:
-  - sudo apt-get install -y mesa-common-dev libglu1-mesa-dev
+  - sudo apt-get install -y mesa-common-dev libglu1-mesa-dev libmagick++-dev
 

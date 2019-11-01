@@ -34,14 +34,15 @@ The *fsbrain* package itself does not have any system dependencies, however, it 
 
 Before installing *fsbrain*, run the following command in your system shell (not in R):
 
+Debian-based, e.g., Ubuntu:
 ```shell
-sudo apt-get install libx11-dev libglu1-mesa-dev libfreetype6-dev
+sudo apt-get install libmagick++-dev libx11-dev libglu1-mesa-dev mesa-common-dev libfreetype6-dev
 ```
 
 
 #### MacOS System dependencies
 
-Recent MacOS versions do not ship with an X11 environment. You will have to install the [xquartz X11 system](https://www.xquartz.org/) if you do not have it already.
+Recent MacOS versions do not ship with an X11 environment. You will have to install the [xquartz X11 system](https://www.xquartz.org/) if you do not have it already. If you want to create GIF movies, make sure you have imagemagick installed (easiest via [homebrew](https://brew.sh/): `brew install imagemagick@6`).
 
 ## Documentation
 
@@ -82,7 +83,7 @@ To cite package ‘freesurferformats’ in publications use:
 
 A BibTeX entry for LaTeX users is
 
- 
+
   @Manual{,
     title = {fsbrain: Managing and Visualizing Brain Surface Data},
     author = {Tim Schäfer},
