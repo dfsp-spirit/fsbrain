@@ -57,7 +57,7 @@ AppVeyor (Windows): [![AppVeyor build status](https://ci.appveyor.com/api/projec
 
 ## License
 
-[MIT](https://opensource.org/licenses/MIT)
+The *fsbrain* pacakge is [free software](https://en.wikipedia.org/wiki/Free_software), published under the [MIT license](https://opensource.org/licenses/MIT).
 
 Note: The file LICENSE in this repository is a CRAN license template only (as required by CRAN) and does not contain the full MIT  license text. See the file [LICENSE_FULL](./LICENSE_FULL) for the full license text.
 
