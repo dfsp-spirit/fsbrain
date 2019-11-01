@@ -79,7 +79,7 @@ citation("fsbrain")
 This will ouput something like this (but for the version you actually used):
 ```
 
-To cite package ‘freesurferformats’ in publications use:
+To cite package ‘fsbrain’ in a publications use:
 
   Tim Schäfer (2019). fsbrain: Managing and Visualizing Brain Surface Data. R package version
   0.0.1. https://CRAN.R-project.org/package=fsbrain
