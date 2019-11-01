@@ -3,6 +3,7 @@ A GNU R library for structural neuroimaging. Provides high-level functions to ac
 
 ![Vis](./vignettes/rgl_brain_ct.jpg?raw=true "Cortical thickness visualization")
 
+[See more visualization examples](#visualization-examples)
 
 ## Installation
 
@@ -91,7 +92,7 @@ A BibTeX entry for LaTeX users is
   }
 ```
 
-## More visualization examples
+## Visualization examples
 
 The *fsbrain* package support visualizations of different data, and all data can be displayed in one or more views. The figure below shows some examples:
 
