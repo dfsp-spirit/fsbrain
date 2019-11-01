@@ -6,4 +6,4 @@ These are movies created using the [fsbrain R package](https://CRAN.R-project.or
 
 **Movie 1:** Rotating visualization of mean curvature plotted onto the white surface of a subject (native space).
 
-Have some bandwidth to spare? [Larger version (12.8 MB)](./fsbrain_ezgif_annot_large.gif) or [even larger version (19.8 MB)](./fsbrain_ezgif_annot_insane.gif).
+Have some bandwidth to spare? [Larger version (12.8 MB)](./fsbrain_ezgif_annot_large.gif)
