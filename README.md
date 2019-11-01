@@ -29,7 +29,7 @@ devtools::install_github("dfsp-spirit/fsbrain", build_vignettes=TRUE);
 
 The *fsbrain* package itself does not have any system dependencies, however, it uses rgl for rendering. To install the system dependencies for rgl:
 
-#### Linux
+#### Linux System dependencies
 
 Before installing *fsbrain*, run the following command in your system shell (not in R):
 
@@ -38,7 +38,7 @@ sudo apt-get install libx11-dev libglu1-mesa-dev libfreetype6-dev
 ```
 
 
-#### MacOS
+#### MacOS System dependencies
 
 Recent MacOS versions do not ship with an X11 environment. You will have to install the [xquartz X11 system](https://www.xquartz.org/) if you do not have it already.
 
@@ -57,7 +57,9 @@ AppVeyor (Windows): [![AppVeyor build status](https://ci.appveyor.com/api/projec
 
 ## License
 
-MIT
+[MIT](https://opensource.org/licenses/MIT)
+
+Note: The file LICENSE in this repository is a CRAN license template only (as required by CRAN) and does not contain the full MIT  license text. See the file [LICENSE_FULL](./LICENSE_FULL) for the full license text.
 
 
 ## Citation
