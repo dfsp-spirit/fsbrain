@@ -32,11 +32,15 @@ The *fsbrain* package itself does not have any system dependencies, however, it 
 
 #### Linux System dependencies
 
-Before installing *fsbrain*, run the following command in your system shell (not in R):
+R packages are compiled under Linnux, so you need some libraries. Before installing *fsbrain*, run the following command in your system shell (not in R):
 
-Debian-based, e.g., Ubuntu:
+deb-based distros (Debian, Ubuntu, ...):
 ```shell
 sudo apt-get install libmagick++-dev libx11-dev libglu1-mesa-dev mesa-common-dev libfreetype6-dev
+```
+rpm-based distros (Fedora, CentOS, RHEL, ...):
+```shell
+sudo yum install ImageMagick-c++-devel
 ```
 
 
