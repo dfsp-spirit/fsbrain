@@ -105,4 +105,4 @@ Here is a second figure, showing the same data (the mean curvature at each verte
 ![Vissurfaces](./web/fsbrain_curvature_surfaces.jpg?raw=true "Curvature visualization on different surfaces, rendered with fsbrain")
 
 
-Want to see brains spin? [Check this out!](./web/fsbrain_movies.md) (WARNING: loads 8 MB webpage with animated gif).
+Want to see brains spin? [Check this out.](./web/fsbrain_movies.md) (WARNING: loads 8 MB webpage with animated gif).
