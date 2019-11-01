@@ -19,7 +19,7 @@ write.region.values.fsaverage(hemi, atlas, region_value_list, output_file,
 
 \item{template_subject}{string, template subject name. Defaults to 'fsaverage'.}
 
-\item{template_subjects_dir}{string, the path to the subjects directory containing the template subject directory. If this is NULL, the function will try to find it using the environment, see the function 'find.subjectsdir.of' for details. Defaults to NULL.}
+\item{template_subjects_dir}{string, the path to the subjects directory containing the template subject directory. If this is NULL, the function will try to find it using the environment, see the function [find.subjectsdir.of()] for details. Defaults to NULL.}
 
 \item{show_freeview_tip}{logical, whether to print the freeview command on howto use the overlay to the console. (Only happens if the output_file is not NULL.)}
 

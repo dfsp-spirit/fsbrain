@@ -2,6 +2,7 @@
 
 export(clip.data)
 export(delete_all_optional_data)
+export(download_fsaverage)
 export(download_optional_data)
 export(find.subjectsdir.of)
 export(fup)

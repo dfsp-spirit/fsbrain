@@ -1,6 +1,6 @@
 #' @title Download optional data for this package if required.
 #'
-#' @description Ensure that the optioanl data is available locally in the package cache. Will try to download the data only if it is not available.
+#' @description Ensure that the optioanl data is available locally in the package cache. Will try to download the data only if it is not available. This data is not required for the package to work, but it is used in the examples, in the unit tests and also in the example code from the vignette. Downloading it is highly recommended.
 #'
 #' @return Named list. The list has entries: "available": vector of strings. The names of the files that are available in the local file cache. You can access them using get_optional_data_file(). "missing": vector of strings. The names of the files that this function was unable to retrieve.
 #'
@@ -100,9 +100,90 @@ download_optional_data <- function() {
     urls = paste(base_url, ext_urls, sep='');
 
     cfiles = pkgfilecache::ensure_files_available(pkg_info, local_filenames, urls, md5sums=md5sums);
-    cfiles$file_status = NULL;
+    cfiles$file_status = NULL; # not exposed to end user
     return(invisible(cfiles));
 }
+
+#' @title Download the FreeSurfer v6 fsaverage subject.
+#'
+#' @description Download some relevant files from the FreeSurfer v6 fsaverage subject. The files are subject to the FreeSurfer software license, see parameter 'accept_freesurfer_license' for details. This data is not required for the package to work. If you are working on a machine that has FreeSurfer installed, you already have this data anyways and do not need it. If not, it is very convenient to have it if you are using the fsaverage template subject to analyze your standard space data, as it is required for visualization of such data.
+#'
+#' @param accept_freesurfer_license logical, whether you accept the FreeSurfer license for fsaverage, available at https://surfer.nmr.mgh.harvard.edu/fswiki/FreeSurferSoftwareLicense. Defaults to FALSE.
+#'
+#' @return Named list. The list has entries: "available": vector of strings. The names of the files that are available in the local file cache. You can access them using get_optional_data_file(). "missing": vector of strings. The names of the files that this function was unable to retrieve.
+#'
+#' @export
+download_fsaverage <- function(accept_freesurfer_license=FALSE) {
+
+    if(! accept_freesurfer_license) {
+        cat(sprintf("Nothing downloaded. You have to accept the FreeSurfer license to download and use fsaverage.\n"));
+        cat(sprintf("Read the license at https://surfer.nmr.mgh.harvard.edu/fswiki/FreeSurferSoftwareLicense and set parameter 'accept_freesurfer_license' to TRUE if you accept it.\n"));
+        return();
+    }
+
+    pkg_info = pkgfilecache::get_pkg_info("fsbrain");
+    base_path_fsaverage = c('subjects_dir', 'fsaverage');
+    local_filenames = list(c(base_path_fsaverage, 'label', 'lh.aparc.a2009s.annot'),
+                                    c(base_path_fsaverage, 'label', 'rh.aparc.a2009s.annot'),
+                                    c(base_path_fsaverage, 'label', 'lh.aparc.annot'),
+                                    c(base_path_fsaverage, 'label', 'rh.aparc.annot'),
+                                    c(base_path_fsaverage, 'label', 'lh.cortex.label'),
+                                    c(base_path_fsaverage, 'label', 'rh.cortex.label'),
+                                    c(base_path_fsaverage, 'mri', 'brain.mgz'),
+                                    c(base_path_fsaverage, 'surf', 'lh.white'),
+                                    c(base_path_fsaverage, 'surf', 'rh.white'),
+                                    c(base_path_fsaverage, 'surf', 'lh.pial'),
+                                    c(base_path_fsaverage, 'surf', 'rh.pial'),
+                                    c(base_path_fsaverage, 'surf', 'lh.inflated'),
+                                    c(base_path_fsaverage, 'surf', 'rh.inflated'),
+                                    c(base_path_fsaverage, 'LICENSE')
+    );
+
+
+
+    md5sums = c('b4310b1e4435defaf27fc7ee98199e6a',
+                '6077dc6cb42dd8c48bb382672d65743c',
+                'bf0b488994657435cdddac5f107d21e8',
+                '8f504caddedfde367a40501da6222809',
+                '578f81e9946a76eb1c42d897d07da4a7',
+                'c8f59de23e9f90f18e96e9d037e42799',
+                'b8bc4b5854f2d5e66d5c4f95d4f9cf63',
+                'cbffce8198e0e10c17f79f6ae0454af5', # lh.white
+                '1159a9ee160b1b0c76e0bb9ae789b9be',
+                'c53c1f70ae8971e1c04bd19e3277fa14',
+                '71f11c33db672360d7589c7dbd0e4a3f',
+                '95df985980d7eefa009ac104589ee3c5',
+                'bb4d58289aefcdf8d017e45e531c4807',
+                'b39610adfe02fdce2ad9d30797c567b3'    # LICENSE
+    );
+
+
+
+    ext_url_subject_part_fsaverage = 'subjects_dir/fsaverage/';
+    ext_url_parts_each_subject = c('label/lh.aparc.a2009s.annot',
+                                   'label/rh.aparc.a2009s.annot',
+                                   'label/lh.aparc.annot',
+                                   'label/rh.aparc.annot',
+                                   'label/lh.cortex.label',
+                                   'label/rh.cortex.label',
+                                   'mri/brain.mgz',
+                                   'surf/lh.white',
+                                   'surf/rh.white',
+                                   'surf/lh.pial',
+                                   'surf/rh.pial',
+                                   'surf/lh.inflated',
+                                   'surf/rh.inflated',
+                                   'LICENSE'
+    );
+    ext_urls = paste(ext_url_subject_part_fsaverage, ext_url_parts_each_subject, sep='');
+    base_url = 'http://rcmd.org/projects/nitestdata/';
+    urls = paste(base_url, ext_urls, sep='');
+
+    cfiles = pkgfilecache::ensure_files_available(pkg_info, local_filenames, urls, md5sums=md5sums);
+    cfiles$file_status = NULL; # not exposed to end user
+    return(invisible(cfiles));
+}
+
 
 #' @title Get file names available in package cache.
 #'
@@ -123,7 +204,7 @@ list_optional_data <- function() {
 #'
 #' @param mustWork, logical. Whether an error should be created if the file does not exist. If mustWork=FALSE and the file does not exist, the empty string is returned.
 #'
-#' @return string. The full path to the file in the package cache. Use this in your application code to open the file.
+#' @return string. The full path to the file in the package cache or the empty string if there is no such file available. Use this in your application code to open the file.
 #'
 #' @export
 get_optional_data_filepath <- function(filename, mustWork=TRUE) {

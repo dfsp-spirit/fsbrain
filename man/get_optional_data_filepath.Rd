@@ -12,7 +12,7 @@ get_optional_data_filepath(filename, mustWork = TRUE)
 \item{mustWork, }{logical. Whether an error should be created if the file does not exist. If mustWork=FALSE and the file does not exist, the empty string is returned.}
 }
 \value{
-string. The full path to the file in the package cache. Use this in your application code to open the file.
+string. The full path to the file in the package cache or the empty string if there is no such file available. Use this in your application code to open the file.
 }
 \description{
 Access a single file from the package cache by its file name.

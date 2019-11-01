@@ -536,7 +536,7 @@ spread.values.over.subject <- function(subjects_dir, subject_id, atlas, lh_regio
 #'
 #' @param template_subject string, template subject name. Defaults to 'fsaverage'.
 #'
-#' @param template_subjects_dir string, the path to the subjects directory containing the template subject directory. If this is NULL, the function will try to find it using the environment, see the function 'find.subjectsdir.of' for details. Defaults to NULL.
+#' @param template_subjects_dir string, the path to the subjects directory containing the template subject directory. If this is NULL, the function will try to find it using the environment, see the function [find.subjectsdir.of()] for details. Defaults to NULL.
 #'
 #' @param show_freeview_tip logical, whether to print the freeview command on howto use the overlay to the console. (Only happens if the output_file is not NULL.)
 #'
@@ -575,9 +575,9 @@ write.region.values.fsaverage <- function(hemi, atlas, region_value_list, output
   return(return_list);
 }
 
-#' @title Find the subject directory containing the fsaverage subject on disk.
+#' @title Find the subject directory containing the fsaverage subject (or others) on disk.
 #'
-#' @description Try to find directory containing the fsaverage subject (or any other subject) by checking the environment variables FREESURFER_HOME and SUBJECTS_DIR.
+#' @description Try to find directory containing the fsaverage subject (or any other subject) by checking in the following places and returning the first path where it is found: first, the directory given by the environment variable SUBJECTS_DIR, then in the subir 'subjects' of the directory given by the environment variable FREESURFER_HOME, and finally the base dir of the package cache. See the function [fsbrain::download_fsaverage()] if you want to download fsaverage to your package cache and ensure it always gets found, no matter whether the environment variables are set or not.
 #'
 #' @param subject_id string, the subject id of the subject. Defaults to 'fsaverage'.
 #'
@@ -590,15 +590,6 @@ find.subjectsdir.of <- function(subject_id='fsaverage', mustWork=FALSE) {
   ret = list();
   ret$found = FALSE;
 
-  fs_home=Sys.getenv("FREESURFER_HOME");
-  if(nchar(fs_home) > 0) {
-    guessed_path = file.path(fs_home, "subjects", subject_id);
-    if(dir.exists(guessed_path)) {
-        ret$found = TRUE;
-        ret$found_at = file.path(fs_home, "subjects");
-    }
-  }
-
   subj_dir=Sys.getenv("SUBJECTS_DIR");
   if(nchar(subj_dir) > 0) {
     guessed_path = file.path(subj_dir, subject_id);
@@ -608,11 +599,27 @@ find.subjectsdir.of <- function(subject_id='fsaverage', mustWork=FALSE) {
     }
   }
 
+  fs_home=Sys.getenv("FREESURFER_HOME");
+  if(nchar(fs_home) > 0) {
+    guessed_path = file.path(fs_home, "subjects", subject_id);
+    if(dir.exists(guessed_path)) {
+        ret$found = TRUE;
+        ret$found_at = file.path(fs_home, "subjects");
+    }
+  }
+
+  guessed_path = get_optional_data_filepath(file.path("subjects_dir", "fsaverage"));
+  if(dir.exists(guessed_path)) {
+    ret$found = TRUE;
+    ret$found_at = get_optional_data_filepath(file.path("subjects_dir"));
+  }
+
+
   if(mustWork) {
     if(ret$found) {
       return(ret$found_at);
     } else {
-      stop(sprintf("Could not find subjects dir containing subject '%s' and parameter 'mustWork' is TRUE. Checked for directories given by environment variables FREESURFER_HOME and SUBJECTS_DIR. Please set them by installing FreeSurfer.\n", subject_id));
+      stop(sprintf("Could not find subjects dir containing subject '%s' and parameter 'mustWork' is TRUE. Checked for directories given by environment variables FREESURFER_HOME and SUBJECTS_DIR and in package cache. Please set the environment variables by installing and configuring FreeSurfer.\n Or, if you want to download fsaverage without installing FreeSurfer, have a look at the 'download_fsaverage' function in this package.\n", subject_id));
     }
   }
 
