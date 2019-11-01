@@ -45,8 +45,8 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, su
     }
 
 
-    if(rglactions.has.key(rglactions, 'clip')) {
-        clip = rglactions$clip;
+    if(rglactions.has.key(rglactions, 'clip_data')) {
+        clip = rglactions$clip_data;
     } else {
         clip = NULL;
     }
@@ -223,8 +223,8 @@ vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, 
         template_subjects_dir = subjects_dir;
     }
 
-    if(rglactions.has.key(rglactions, 'clip')) {
-        clip = rglactions$clip;
+    if(rglactions.has.key(rglactions, 'clip_data')) {
+        clip = rglactions$clip_data;
     } else {
         clip = NULL;
     }

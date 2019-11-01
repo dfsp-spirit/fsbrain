@@ -109,8 +109,10 @@ test_that("We can record a gif movie of a rotating brain.", {
     measure = 'thickness';
     surface = 'white';
 
+    movie_base_filename = sprintf("brain_rot_%s_%s_%s", subject_id, measure, surface);
+
     rgloptions=list("windowRect"=c(20,20,600,600));     # the first 2 entries give the position on screen, the rest defines resolution as width, height in px
-    rglactions = list("movie"="brain_rot", "clip_data"=c(0.05, 0.95)); # The "movie" action will write the movie to a file named "brain_rot.gif" in your HOME.
+    rglactions = list("movie"=movie_base_filename, "clip_data"=c(0.05, 0.95)); # The "movie" action will write the movie to a file named "brain_rot.gif" in your HOME.
 
     # Creating a movie requires the rotating view ('sr' for 'single rotating'). The action will be silently ignored in all other views.
     vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('sr'), rgloptions=rgloptions, rglactions=rglactions);

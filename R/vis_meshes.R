@@ -98,7 +98,8 @@ vis.coloredmeshes.rotating <- function(coloredmeshes, background="white", skip_a
         if(rglactions.has.key(rglactions, 'movie')) {
             movie = rglactions$movie;
             rgl::movie3d(rgl::spin3d(axis = c(x, y, z), rpm = rpm), duration = duration, movie = movie, fps = 20, dir=path.expand("~"));
-            message(sprintf("Movie written to base file '%s' in home dir.\n", movie));
+            expected_movie_path = file.path(path.expand("~"), sprintf("%s.gif", movie));
+            message(sprintf("Tried to write gif movie to user home, check file '%s'.\n", expected_movie_path));
         } else {
             rgl::play3d(rgl::spin3d(axis = c(x, y, z), rpm = rpm), duration = duration);
         }
