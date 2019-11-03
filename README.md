@@ -1,7 +1,7 @@
 # fsbrain
 A GNU R library for structural neuroimaging. Provides high-level functions to access (read and write) and visualize surface-based brain morphometry data (e.g. cortical thickness) for individual subjects and groups.
 
-![Vis](./vignettes/rgl_brain_ct.jpg?raw=true "Cortical thickness visualization")
+![Vis](./vignettes/rgl_brain_ct.jpg?raw=true "Cortical thickness visualization, created with fsbrain")
 
 [See more visualization examples](#visualization-examples)
 
