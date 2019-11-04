@@ -106,7 +106,7 @@ test_that("We can record a gif movie of a rotating brain.", {
 
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     subject_id = 'subject1';
-    rgloptions=list("windowRect"=c(20,20,600,600));     # the first 2 entries give the position on screen, the rest defines resolution as width, height in px
+    rgloptions=list("windowRect"=c(50,50,600,600));     # the first 2 entries give the position on screen, the rest defines resolution as width, height in px
     surface = 'white';
 
     measures_native = c('volume', 'thickness', 'curv', 'pial_lgi', 'truncation', 'sulc', 'area');
@@ -128,11 +128,11 @@ test_that("We can record a gif movie of a rotating brain.", {
 
     # Creating a movie from standard space data (mapped to fsaverage, and displayed on fsaverage):
     measures_std = c('volume', 'thickness', 'curv', 'pial_lgi', 'truncation', 'sulc', 'area');
-    subjects_dir = path.expand("~/data/tim_only")
+    #subjects_dir = path.expand("~/data/tim_only")
     fwhm = '10';
     for (measure in measures_std) {
-        rglactions = list("movie"=sprintf("brain_rot_%s_%s_%s_std_fwhm%s", subject_id, measure, surface, fwhm));
-        vis.subject.morph.standard(subjects_dir, 'tim', measure, 'both', fwhm, views=c('sr'), rgloptions=rgloptions, rglactions=rglactions);
+        rglactions = list("movie"=sprintf("fsbrain_rot_%s_std_fwhm%s", measure, fwhm));
+        vis.subject.morph.standard(subjects_dir, subject_id, measure, 'both', fwhm, views=c('sr'), rgloptions=rgloptions, rglactions=rglactions);
     }
 })
 
