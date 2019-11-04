@@ -166,7 +166,7 @@ This code will write an MGZ file that can be visualized in FreeView or Matlab/Su
 
 This package comes with a range of visualization functions. They are based on OpenGL using the rgl package. See the rgl documentation for the requirements. Under MacOS, you will need to have XQuartz installed.
 
-## Rendering annotations (or brain parcellations based on an atlas)
+## Visualizing annotations (brain parcellations based on an atlas)
 
 Let's first visualize an annotation:
 
@@ -179,16 +179,93 @@ This will give you an interactive window in which you can freely rotate a view s
 
 ![**Figure 1**: Atlas regions visualized on a brain surface mesh. Annotation and mesh loaded with `freesurferformats`, and rendered using the `rgl` package.](rgl_brain_aparc.jpg)
 
+## Visualizing morphometry data
+
 You can also visualize morphometry data:
+
+```{r, eval = FALSE}
+vis.subject.morph.native(subjects_dir, 'subject', 'thickness', hemi='both', views=c('si'))
+```
+
+You want want to load the data first if you want to do advanced pre-processing or other computations before visualizing it:
+
 
 ```{r, eval = FALSE}
 morph_data_lh = subject.morph.native(subjects_dir, 'subject1', 'thickness', 'lh');
 morph_data_rh = subject.morph.native(subjects_dir, 'subject1', 'thickness', 'rh');
-vis.data.on.subject(subjects_dir, 'subject1', morph_data_lh, morph_data_rh);
+# Do something with the morph_data here.
+vis.data.on.subject(subjects_dir, 'subject1', morph_data_lh, morph_data_rh, views=c('si'));
 ```
 
 
 ![**Figure 2**: Cortical thickness data visualized on a brain mesh. Morphometry data and mesh loaded with `freesurferformats`, mesh rendered using the `rgl` package.](rgl_brain_ct.jpg)
 
 
-If you prefer a 2D view that shows brain regions from different viewports in cartoon style, you may want to try the `ggseg` package instead.
+## Different views
+
+You can visualize the data in different views. So far, we have used only the *si* view. The following views are available:
+
+* **si** or *single interactive* view: renders a single instance of the mesh and allows the user to interactively explore the scene (rotate/zoom with the mouse). This view is good for live inspection of data during analysis.
+* **sr** or *single rotating* view: renders a single instance of the mesh rotates the camera around the mesh. Can be combined with *rglactions* (see section 'Creating movies' below) to create animated GIF images. This view is good for live inspection of data, and the resulting movies can be used in presentations.
+* **t4** or *tiled, 4 angles* view: renders the meshes from four different angles. This kind of view is often used in publications.
+* **t8** or *tiled, 8 angles* view: renders the meshes from eight different angles. This kind of view is often used in publications.
+
+To change the view, set the view parameter in any visualization function. You can specify more than one view if needed:
+
+
+```{r, eval = FALSE}
+vis.subject.morph.native(subjects_dir, 'subject', 'thickness', hemi='both', views=c('t4', 't9'))
+```
+
+
+## Changing the visualisation surface
+
+By default, the data is visualized on the white surface. For some data, other surfaces may be more apppropriate. You can visualize the data on any FreeSurfer surface you have available. To do this, just set the *surface* parameter in any visualization function. The most commonly used surfaces and *white*, *pial* and *inflated*. Examples:
+
+```{r, eval = FALSE}
+vis.subject.morph.native(subjects_dir, 'subject', 'thickness', hemi='both', views=c('si'), surface='inflated')
+```
+
+
+## Changing the resolution of figures (or other rgloptions)
+
+The resolution of rgl windows is set in the call to `rgl::par3d`. You can pass arbitrary options to the call by specifying the parameter `rgloptions` when calling any visualization function. Here is an example that increases the resolution of the output window to 800x800 pixels and opens the window at screen position 50, 50:
+
+
+```{r, eval = FALSE}
+rgloptions = list("windowRect"=c(50,50,1000,1000));
+vis.subject.morph.native(subjects_dir, 'subject', 'thickness', hemi='both', views=c('si'), rgloptions=rgloptions)
+```
+
+Note that for some OpenGL implementations, it may lead to artifacts or other problems if the window is not fully visible while actions like taking a screenshot or creating a movie are performed. In such a case you may have to adapt the position of the window on the screen (the first 2 parameters of the *windowRect* setting).
+
+See the documentation of rgl::par3d for all available options.
+
+
+## Saving screenshots and creating GIF movies (and other rglactions)
+
+The rglactions parameter can be passed to any visualization function to trigger certain actions during the visualization. These are actions like saving a screenshot or a movie or animation in GIF format. Some rglactions only make sense in certain views (e.g., recording a movie only makes sense in animated views, i.e., the *sr* view). Views will silently ignore actions which do not make sense for them.
+
+The following rglactions are available:
+
+* 
+
+Here is an example that creates a GIF movie in your HOME directory:
+
+```{r, eval = FALSE}
+subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+subject_id = 'subject1';
+rgloptions=list("windowRect"=c(50,50,600,600));     # the first 2 entries give the position on screen, the rest defines resolution as width, height in px
+surface = 'white';
+measure = 'thickness';
+movie_base_filename = sprintf("fsbrain_%s_%s_%s", subject_id, measure, surface);
+rglactions = list("movie"=movie_base_filename, "clip_data"=c(0.05, 0.95));
+# Creating a movie requires the rotating view ('sr' for 'single rotating'). The action will be silently ignored in all other views.
+vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('sr'), rgloptions=rgloptions, rglactions=rglactions);
+```
+
+The movie will be saved under the name 'fsbrain_subject1_thickness_white.gif' in your home directory. You can tweak it in whatever external software you like if needed. E.g., if you would like the animation to loop forever, you could use the *convert* command line utility that comes with ImageMagick from your OS shell:
+
+```
+convert -loop 0 fsbrain_subject1_thickness_white.gif fsbrain_subject1_thickness_white_loop_inf.gif
+```
