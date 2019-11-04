@@ -106,15 +106,33 @@ test_that("We can record a gif movie of a rotating brain.", {
 
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     subject_id = 'subject1';
-    measure = 'thickness';
+    rgloptions=list("windowRect"=c(20,20,600,600));     # the first 2 entries give the position on screen, the rest defines resolution as width, height in px
     surface = 'white';
 
-    movie_base_filename = sprintf("brain_rot_%s_%s_%s", subject_id, measure, surface);
+    measures_native = c('volume', 'thickness', 'curv', 'pial_lgi', 'truncation', 'sulc', 'area');
+    for (measure in measures_native) {
+        movie_base_filename = sprintf("brain_rot_%s_%s_%s", subject_id, measure, surface);
+        rglactions = list("movie"=movie_base_filename, "clip_data"=c(0.05, 0.95)); # The "movie" action will write the movie to a file named "brain_rot.gif" in your HOME.
+        # Creating a movie requires the rotating view ('sr' for 'single rotating'). The action will be silently ignored in all other views.
+        vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('sr'), rgloptions=rgloptions, rglactions=rglactions);
+    }
 
-    rgloptions=list("windowRect"=c(20,20,600,600));     # the first 2 entries give the position on screen, the rest defines resolution as width, height in px
-    rglactions = list("movie"=movie_base_filename, "clip_data"=c(0.05, 0.95)); # The "movie" action will write the movie to a file named "brain_rot.gif" in your HOME.
+    ### Now make an annotation movie
+    atlases = c('aparc', 'aparc.a2009s');
+    for (atlas in atlases) {
+        rglactions = list("movie"=sprintf("brain_rot_%s_%s_%s", subject_id, atlas, surface));
+        vis.subject.annot(subjects_dir, subject_id, atlas, 'both', views=c('sr'), rgloptions=rgloptions, rglactions=rglactions);
+    }
 
-    # Creating a movie requires the rotating view ('sr' for 'single rotating'). The action will be silently ignored in all other views.
-    vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('sr'), rgloptions=rgloptions, rglactions=rglactions);
+
+
+    # Creating a movie from standard space data (mapped to fsaverage, and displayed on fsaverage):
+    measures_std = c('volume', 'thickness', 'curv', 'pial_lgi', 'truncation', 'sulc', 'area');
+    subjects_dir = path.expand("~/data/tim_only")
+    fwhm = '10';
+    for (measure in measures_std) {
+        rglactions = list("movie"=sprintf("brain_rot_%s_%s_%s_std_fwhm%s", subject_id, measure, surface, fwhm));
+        vis.subject.morph.standard(subjects_dir, 'tim', measure, 'both', fwhm, views=c('sr'), rgloptions=rgloptions, rglactions=rglactions);
+    }
 })
 
