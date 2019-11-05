@@ -270,15 +270,13 @@ The resolution of rgl windows is set in the call to `rgl::par3d`. You can pass a
 
 
 ```{r, eval = FALSE}
-rgloptions = list("windowRect"=c(50,50,1000,1000));
+rgloptions = list("windowRect"=c(50, 50, 1000, 1000));
 vis.subject.morph.native(subjects_dir, 'subject', 'thickness', hemi='both', views=c('si'), rgloptions=rgloptions)
 ```
 
 See the documentation of rgl::par3d for all available options.
 
-Note that for some OpenGL implementations, it may lead to artifacts or other problems if the window is not fully visible while actions like taking a screenshot or creating a movie are performed. In such a case you may have to adapt the position of the window on the screen (the first 2 parameters of the *windowRect* setting) to make it fully visible. This means you should **not** perform other actions on the machine while a movie is being recorded, as taking away the focus from the rgl window or opening other windows over it may lead to artifacts.
-
-
+Note that for some OpenGL implementations, it may lead to artifacts or other problems if the window is not fully visible while actions like taking a screenshot or creating a movie are performed. In such a case you may have to adapt the position of the window on the screen (the first 2 parameters of the *windowRect* setting) to make it fully visible if parts of it are off-screen. This also means you should **not** perform other actions on the machine while a movie is being recorded, as taking away the focus from the rgl window or opening other windows on top of it may lead to artifacts.
 
 
 ## Saving screenshots and creating GIF movies (and other rglactions)
