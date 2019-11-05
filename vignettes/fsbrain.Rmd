@@ -298,7 +298,7 @@ Here is an example that creates a GIF movie in your HOME directory:
 ```{r, eval = FALSE}
 subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 subject_id = 'subject1';
-rgloptions=list("windowRect"=c(50,50,600,600));     # the first 2 entries give the position on screen, the rest defines resolution as width, height in px
+rgloptions=list("windowRect"=c(50, 50, 600, 600));     # the first 2 entries give the position on screen, the rest defines resolution as width, height in px
 surface = 'white';
 measure = 'thickness';
 movie_base_filename = sprintf("fsbrain_%s_%s_%s", subject_id, measure, surface);
@@ -307,7 +307,12 @@ rglactions = list("movie"=movie_base_filename, "clip_data"=c(0.05, 0.95));
 vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('sr'), rgloptions=rgloptions, rglactions=rglactions);
 ```
 
-The movie will be saved under the name 'fsbrain_subject1_thickness_white.gif' in your home directory. You can tweak it in whatever external software you like if needed. E.g., if you would like the animation to loop forever, you could use the *convert* command line utility that comes with [ImageMagick](https://imagemagick.org/). Run it from your operating system shell (not within R):
+
+The movie will be saved under the name 'fsbrain_subject1_thickness_white.gif' in your home directory.
+
+#### Postprocessing
+
+You can tweak the output GIF in whatever external software you like if needed. E.g., if you would like the animation to loop forever, you could use the *convert* command line utility that comes with [ImageMagick](https://imagemagick.org/). Run it from your operating system shell (not within R):
 
 ```
 convert -loop 0 fsbrain_subject1_thickness_white.gif fsbrain_subject1_thickness_white_loop_inf.gif
