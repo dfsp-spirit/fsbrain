@@ -5,7 +5,8 @@ Version 0.0.2
 --------------
 - Support rglactions and rgloptions to conveniently increase output resolution and create screenshots
 - Scale colormaps over several meshes where appropriate. This ensures that the same color in the left and right hemisphere represents the exact same data value.
-- Improve doc strings
+- Add new high-level visualization functions
+- Improve doc strings of many functions
 - Add helper function to clip data at percentile: clip.data
 - Lots of work on the vignette
 
