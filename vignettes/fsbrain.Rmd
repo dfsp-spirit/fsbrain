@@ -274,9 +274,11 @@ rgloptions = list("windowRect"=c(50,50,1000,1000));
 vis.subject.morph.native(subjects_dir, 'subject', 'thickness', hemi='both', views=c('si'), rgloptions=rgloptions)
 ```
 
-Note that for some OpenGL implementations, it may lead to artifacts or other problems if the window is not fully visible while actions like taking a screenshot or creating a movie are performed. In such a case you may have to adapt the position of the window on the screen (the first 2 parameters of the *windowRect* setting).
-
 See the documentation of rgl::par3d for all available options.
+
+Note that for some OpenGL implementations, it may lead to artifacts or other problems if the window is not fully visible while actions like taking a screenshot or creating a movie are performed. In such a case you may have to adapt the position of the window on the screen (the first 2 parameters of the *windowRect* setting) to make it fully visible. This means you should **not** perform other actions on the machine while a movie is being recorded, as taking away the focus from the rgl window or opening other windows over it may lead to artifacts.
+
+
 
 
 ## Saving screenshots and creating GIF movies (and other rglactions)
@@ -285,7 +287,13 @@ The rglactions parameter can be passed to any visualization function to trigger 
 
 The following rglactions are available:
 
-* 
+* Take a screenshot in PNG format. Key: "**snapshot_png**". Value: string, the path of the output file, including the file extension. Path expansion is performed. Example: `rglactions = list("snapshot_png"="~/fsbrain.png")`. 
+* Record a movie. Only handled in rotating views like `sr`. Key: "**movie**". Value: string, the base filename of the movie. The movie will be saved in your home directory, with file extension gif. Example: `rglactions = list("movie"="fsbrain_rotating_brain")`
+* Clip the data to remove outliers before visualization. Data smaller than the lower percentile and larger than the upper percentile will be set to the respective percentile value. Required to visualize data with outliers or extreme values, like mean of Gaussian curvature. Key: "**clip_data**". Value: vector of length 2 with the lower and upper percentile. Example: `rglactions = list("clip_data"=c(0.05, 0.95))`
+
+The actions can be combined, e.g., to clip the data and take a screenshot: `rglactions = list("clip_data"=c(0.05, 0.95), "snapshot_png"="~/fsbrain.png")`.
+
+### Example: Creating a GIF animation (movie)
 
 Here is an example that creates a GIF movie in your HOME directory:
 
@@ -301,7 +309,7 @@ rglactions = list("movie"=movie_base_filename, "clip_data"=c(0.05, 0.95));
 vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('sr'), rgloptions=rgloptions, rglactions=rglactions);
 ```
 
-The movie will be saved under the name 'fsbrain_subject1_thickness_white.gif' in your home directory. You can tweak it in whatever external software you like if needed. E.g., if you would like the animation to loop forever, you could use the *convert* command line utility that comes with ImageMagick from your OS shell:
+The movie will be saved under the name 'fsbrain_subject1_thickness_white.gif' in your home directory. You can tweak it in whatever external software you like if needed. E.g., if you would like the animation to loop forever, you could use the *convert* command line utility that comes with [ImageMagick](https://imagemagick.org/). Run it from your operating system shell (not within R):
 
 ```
 convert -loop 0 fsbrain_subject1_thickness_white.gif fsbrain_subject1_thickness_white_loop_inf.gif
