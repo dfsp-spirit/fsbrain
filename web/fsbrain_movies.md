@@ -1,10 +1,10 @@
 # fsbrain movies
 
-These are movies created using the [fsbrain R package](https://CRAN.R-project.org/package=fsbrain), with a lot of help from [rgl](https://CRAN.R-project.org/package=rgl) and some polish from [ezgif](http://ezgif.com).
+These are animations created using the [fsbrain R package](https://CRAN.R-project.org/package=fsbrain), with a lot of help from [rgl](https://CRAN.R-project.org/package=rgl) and some polish from [ezgif](http://ezgif.com).
 
 ![Vissurfaces](./fsbrain_morphnat_curv_web.gif?raw=true "Rotating brain mesh with mean curvature plotted onto it, rendered with fsbrain")
 
-**Movie 1:** Rotating visualization of mean curvature plotted onto the white surface of a subject (native space).
+**Animation 1:** Rotating visualization of mean curvature plotted onto the white surface of a subject (native space).
 
 
 # More descriptors and brain parcellations
