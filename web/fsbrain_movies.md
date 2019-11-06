@@ -31,3 +31,5 @@ Here is some standard space data, smoothed at FWHM 10 and visualized on the *fsa
 * [Sulcal depth (11 MB)](./fsbrain_morphstd_sulc_fwhm10.gif)
 * [Cortical thickness (11 MB)](./fsbrain_morphstd_thickness_fwhm10.gif)
 * [Cortical volume (11 MB)](./fsbrain_morphstd_volume_fwhm10.gif)
+
+Please [cite the fsbrain package](https://github.com/dfsp-spirit/fsbrain#citation) when using these animations.
