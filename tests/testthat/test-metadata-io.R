@@ -12,7 +12,7 @@ test_that("Demographics file with header can be read with stringsAsFactors = TRU
   demogr_file = system.file("extdata", "demographics.tsv", package = "fsbrain", mustWork = TRUE);
   column_names = c("subject_id", "group", "age");
   demographics = read.md.demographics(demogr_file, column_names = column_names, report = FALSE);
-  expect_equal(nrow(demographics), 4);
+  expect_equal(nrow(demographics), 6);
   expect_equal(ncol(demographics), 3);
   expect_equal(class(demographics$subject_id), "factor");
   expect_equal(class(demographics$group), "factor");
@@ -20,7 +20,7 @@ test_that("Demographics file with header can be read with stringsAsFactors = TRU
 
   # Run with report to ensure it does not error
   demographics = read.md.demographics(demogr_file, column_names = column_names, report = TRUE);
-  expect_equal(nrow(demographics), 4);
+  expect_equal(nrow(demographics), 6);
   expect_equal(ncol(demographics), 3);
 })
 
@@ -28,15 +28,15 @@ test_that("Demographics file with header can be read with stringsAsFactors = FAL
   demogr_file = system.file("extdata", "demographics.tsv", package = "fsbrain", mustWork = TRUE);
   column_names = c("subject_id", "group", "age");
   demographics = read.md.demographics(demogr_file, column_names = column_names, report = FALSE, stringsAsFactors = FALSE);
-  expect_equal(nrow(demographics), 4);
+  expect_equal(nrow(demographics), 6);
   expect_equal(ncol(demographics), 3);
   expect_equal(class(demographics$subject_id), "character");
   expect_equal(class(demographics$group), "character");
   expect_equal(class(demographics$age), "integer");
 
   # Run with report to ensure it does not error
-  demographics = read.md.demographics(demogr_file, column_names = column_names, report = TRUE, stringsAsFactors = FALSE);
-  expect_equal(nrow(demographics), 4);
+  demographics = read.md.demographics(demogr_file, column_names = column_names, report = TRUE, stringsAsFactors = FALSE, group_column="group");
+  expect_equal(nrow(demographics), 6);
   expect_equal(ncol(demographics), 3);
 
 })
