@@ -9,6 +9,7 @@ Version 0.0.2
 - Improve doc strings of many functions
 - Add helper function to clip data at percentile: clip.data
 - Lots of work on the vignette
+- Require freesurferformats version >= 0.1.4 for surface loading fix
 
 
 Version 0.0.1
