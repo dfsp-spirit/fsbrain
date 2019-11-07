@@ -25,11 +25,13 @@ test_that("Demographics reports can be generated.", {
   column_names = c("subject_id", "group", "age");
   demographics = read.md.demographics(demogr_file, column_names = column_names);
 
-  report_unpaired = report.on.demographics(demographics, group_column_name="group");
+  # The expect_warning wrapper in the next line ignores the warning from the t.test function that it cannot compute exact p-values with ties.
+  expect_warning(report_unpaired <- report.on.demographics(demographics, group_column_name="group"));
   expect_equal(length(report_unpaired), 10);  # check number of lines in report
 
-  report_paired = report.on.demographics(demographics, group_column_name="group", paired=TRUE);
+  report_paired <- report.on.demographics(demographics, group_column_name="group", paired=TRUE);
   expect_equal(length(report_paired), 9);   # check number of lines in report
+  print(report_paired);
 })
 
 
@@ -42,12 +44,6 @@ test_that("Demographics file with header can be read with stringsAsFactors = FAL
   expect_equal(class(demographics$subject_id), "character");
   expect_equal(class(demographics$group), "character");
   expect_equal(class(demographics$age), "integer");
-
-  # Run with report to ensure it does not error
-  demographics = read.md.demographics(demogr_file, column_names = column_names, report = TRUE, stringsAsFactors = FALSE, group_column="group");
-  expect_equal(nrow(demographics), 6);
-  expect_equal(ncol(demographics), 3);
-
 })
 
 
