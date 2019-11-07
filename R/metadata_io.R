@@ -120,7 +120,7 @@ report.on.demographics = function(demographics_df, group_column_name=NULL, paire
       }
     }
 
-    report_lines = c(report_lines, sprintf("===Demographics report follows==="));
+    report_lines = c(report_lines, sprintf("===Demographics report for %d subjects follows===", nrow(demographics_df)));
 
     numeric_colname = c();
     numeric_colmin = c();
@@ -155,13 +155,20 @@ report.on.demographics = function(demographics_df, group_column_name=NULL, paire
       group1_data = subset(demographics_df, demographics_df[[group_column_name]] == group1_name);
       group2_data = subset(demographics_df, demographics_df[[group_column_name]] == group2_name);
 
-      report_lines = c(report_lines, sprintf(" *Found group column with 2 levels: %d subjects belong to group '%s', %d to '%s'.", nrow(group1_data), group1_name, nrow(group2_data), group2_name));
       if(!(nrow(group1_data) >= 3 && nrow(group2_data) >= 3)) {
         run_group_tests = FALSE;
         warning(sprintf("The group '%s' has %d members, and the group '%s' has %d. Both groups must have at least 3 members to run group tests, skipping tests.\n", group1_name, nrow(group1_data), group2_name, nrow(group2_data)));
       }
     }
 
+    if(run_group_tests) {
+      if(paired) {
+        paired_tag = "paired";
+      } else {
+        paired_tag = "unpaired";
+      }
+      report_lines = c(report_lines, sprintf("* Found group column with 2 levels: %d subjects belong to group '%s', %d to '%s'. Running %s tests for mean differences on numeric columns.", nrow(group1_data), group1_name, nrow(group2_data), group2_name, paired_tag));
+    }
     for (colname in colnames(demographics_df)) {
         coldata = demographics_df[[colname]];
         if(is.numeric(coldata)) {
@@ -186,24 +193,26 @@ report.on.demographics = function(demographics_df, group_column_name=NULL, paire
 
 
     if(length(numeric_colname) > 0) {
-      report_lines = c(report_lines, sprintf(" *Demographics report for the %d numeric columns (min/mean/max/NAcount from %d rows):", length(numeric_colname), nrow(demographics_df)));
-      numeric_desc = data.frame("column"=numeric_colname, min=numeric_colmin, mean=numeric_colmean, max=numeric_colmax);
+      report_lines = c(report_lines, sprintf("* Demographics report for the %d numeric columns:", length(numeric_colname)));
+      report_lines = c(report_lines, sprintf("    column min mean max num_NA"));
       for(numeric_col_idx in seq_len(length(numeric_colname))) {
-        report_lines = c(report_lines, sprintf("%s %f %f %f %d", numeric_colname[numeric_col_idx], numeric_colmin[numeric_col_idx], numeric_colmean[numeric_col_idx], numeric_colmax[numeric_col_idx], numeric_nacount[numeric_col_idx]));
+        report_lines = c(report_lines, sprintf("    %s %f %f %f %d", numeric_colname[numeric_col_idx], numeric_colmin[numeric_col_idx], numeric_colmean[numeric_col_idx], numeric_colmax[numeric_col_idx], numeric_nacount[numeric_col_idx]));
       }
     }
 
     if(length(factor_colname) > 0) {
-      report_lines = c(report_lines, sprintf(" *Demographics report for the %d factor columns (numlevels/NAcount from %d rows):", length(factor_colname), nrow(demographics_df)));
+      report_lines = c(report_lines, sprintf("* Demographics report for the %d factor columns:", length(factor_colname)));
+      report_lines = c(report_lines, sprintf("    column num_levels num_NA"));
       for(factor_col_idx in seq_len(length(factor_colname))) {
-        report_lines = c(report_lines, sprintf("%s %d %d", factor_colname[factor_col_idx], factor_numlevels[factor_col_idx], factor_nacount[factor_col_idx]));
+        report_lines = c(report_lines, sprintf("    %s %d %d", factor_colname[factor_col_idx], factor_numlevels[factor_col_idx], factor_nacount[factor_col_idx]));
       }
     }
 
     if(length(string_colname) > 0) {
-      report_lines = c(report_lines, sprintf(" *Demographics report for the %d character columns (numunique/NAcountfrom %d rows):", length(string_colname), nrow(demographics_df)));
+      report_lines = c(report_lines, sprintf("* Demographics report for the %d character columns:", length(string_colname)));
+      report_lines = c(report_lines, sprintf("    column num_unique num_NA"));
       for(string_col_idx in seq_len(length(string_colname))) {
-        report_lines = c(report_lines, sprintf("%s %d %d", string_colname[string_col_idx], string_numunique[string_col_idx], string_nacount[string_col_idx]));
+        report_lines = c(report_lines, sprintf("    %s %d %d", string_colname[string_col_idx], string_numunique[string_col_idx], string_nacount[string_col_idx]));
       }
     }
 
@@ -262,31 +271,31 @@ test.numerical.meandiff.unpaired <- function(colname, group1_name, group2_name, 
   ftest_res = stats::var.test(group1_data_column, group2_data_column);
   var_equal = (ftest_res$p.value > 0.05);
   if(! var_equal) {
-    test_lines = c(test_lines, sprintf(" Demographics column '%s': variance not equal between groups with p=%f", colname, ftest_res$p.value));
+    test_lines = c(test_lines, sprintf("  - Demographics column '%s': variance not equal between groups with p=%f", colname, ftest_res$p.value));
   }
 
   # Test whether data follows normal distribution
   shap_res_group1 = stats::shapiro.test(group1_data_column);
   both_columns_look_normal = TRUE;
   if(shap_res_group1$p.value < 0.05) {
-    test_lines = c(test_lines, sprintf(" Demographics column '%s': Data for group '%s' does not seem to follow a normal distribution (shapiro.test p.value=%f).", colname, group1_name, shap_res_group1$p.value));
+    test_lines = c(test_lines, sprintf(" - Demographics column '%s': Data for group '%s' does not seem to follow a normal distribution (shapiro.test p.value=%f).", colname, group1_name, shap_res_group1$p.value));
     both_columns_look_normal = FALSE;
   }
   shap_res_group2 = stats::shapiro.test(group2_data_column);
   if(shap_res_group2$p.value < 0.05) {
-    test_lines = c(test_lines, sprintf(" Demographics column '%s': Data for group '%s' does not seem to follow a normal distribution (shapiro.test p.value=%f).", colname, group2_name, shap_res_group2$p.value));
+    test_lines = c(test_lines, sprintf(" - Demographics column '%s': Data for group '%s' does not seem to follow a normal distribution (shapiro.test p.value=%f).", colname, group2_name, shap_res_group2$p.value));
     both_columns_look_normal = FALSE;
   }
 
 
   # Test for significant mean difference using parametric method, taking the variance result into account
   ttest_res = stats::t.test(group1_data_column, group2_data_column, var.equal=var_equal);
-  test_lines = c(test_lines, sprintf(" Demographics column '%s': p=%f for t.test for different group means", colname, ttest_res$p.value));
+  test_lines = c(test_lines, sprintf(" - Demographics column '%s': p=%f for t.test for different group means", colname, ttest_res$p.value));
   if(!both_columns_look_normal) {
-    test_lines = c(test_lines, sprintf(" Demographics column '%s': WARNING: non-normal data detected, consider ignoring the ttest result and using the following wilcox test result instead.\n", colname));
+    test_lines = c(test_lines, sprintf(" - Demographics column '%s': WARNING: non-normal data detected, consider ignoring the ttest result and using the following wilcox test result instead.\n", colname));
   }
   wilcox_res = stats::wilcox.test(group1_data_column, group2_data_column);
-  test_lines = c(test_lines, sprintf(" Demographics column '%s': p=%f for wilcox test for different group means.\n", colname, wilcox_res$p.value));
+  test_lines = c(test_lines, sprintf(" - Demographics column '%s': p=%f for wilcox test for different group means.\n", colname, wilcox_res$p.value));
   return(test_lines);
 }
 
@@ -324,16 +333,16 @@ test.numerical.meandiff.paired <- function(colname, condition1_name, condition2_
   shap_res_differences = stats::shapiro.test(differences);
   differences_are_not_normal = FALSE;
   if(shap_res_differences$p.value < 0.05) {
-    test_lines = c(test_lines, sprintf(" Demographics column '%s': Differences between the 2 groups do not seem to follow a normal distribution (shapiro.test p.value=%f).", colname, shap_res_differences$p.value));
+    test_lines = c(test_lines, sprintf(" - Demographics column '%s': Differences between the 2 groups do not seem to follow a normal distribution (shapiro.test p.value=%f).", colname, shap_res_differences$p.value));
     differences_are_not_normal = TRUE;
   }
 
   ttest_res = stats::t.test(condition1_data_column, condition2_data_column, paired=TRUE);
-  test_lines = c(test_lines, sprintf(" Demographics column '%s': p=%f for paired t.test for different group means", colname, ttest_res$p.value));
+  test_lines = c(test_lines, sprintf(" - Demographics column '%s': p=%f for paired t.test for different group means", colname, ttest_res$p.value));
   if(differences_are_not_normal) {
-    test_lines = c(test_lines, sprintf(" Demographics column '%s': WARNING: non-normal data detected, consider ignoring the paired ttest result and using the following paired wilcox test result instead.\n", colname));
+    test_lines = c(test_lines, sprintf(" - Demographics column '%s': WARNING: non-normal data detected, consider ignoring the paired ttest result and using the following paired wilcox test result instead.\n", colname));
     wilcox_res = stats::wilcox.test(condition1_data_column, condition2_data_column, paired=TRUE);
-    test_lines = c(test_lines, sprintf(" Demographics column '%s': p=%f for wilcox test for different group means.\n", colname, wilcox_res$p.value));
+    test_lines = c(test_lines, sprintf(" - Demographics column '%s': p=%f for wilcox test for different group means.\n", colname, wilcox_res$p.value));
   }
   return(test_lines);
 }
