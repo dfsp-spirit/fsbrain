@@ -28,7 +28,7 @@ devtools::install_github("dfsp-spirit/fsbrain", build_vignettes=TRUE);
 
 ### System dependencies
 
-The *fsbrain* package itself does not have any system dependencies, however, it uses rgl for rendering. To install the system dependencies for rgl:
+The *fsbrain* package itself does not have any system dependencies, however, it uses [rgl](https://CRAN.R-project.org/package=rgl) for rendering. To install the system dependencies for rgl:
 
 #### Linux System dependencies
 
@@ -53,13 +53,25 @@ Recent MacOS versions do not ship with an X11 environment. You will have to inst
 The documentation comes with the package, and includes the built-in help, examples, and a vignette that explains typical workflows.
 
 
-## Unit tests and Continuous Integration (CI)
+## Unit tests / Continuous integration (CI)
 
-The unit tests are run on Continuous Integration for both Linux and Windows:
 
-Travis (Linux):  [![Build Status](https://travis-ci.org/dfsp-spirit/fsbrain.svg?branch=master)](https://travis-ci.org/dfsp-spirit/fsbrain)
+This package comes with [lots of unit tests](./tests/testthat/). To run them, in a clean R session:
 
-AppVeyor (Windows): [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/dfsp-spirit/fsbrain?branch=master&svg=true)](https://ci.appveyor.com/project/dfsp-spirit/fsbrain)
+```r
+library(devtools)
+library(fsbrain)
+devtools::check()
+```
+
+Continuous integration results: 
+
+[![Build Status](https://travis-ci.org/dfsp-spirit/fsbrain.svg?branch=master)](https://travis-ci.org/dfsp-spirit/fsbrain) Travis CI under Linux
+
+[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/dfsp-spirit/fsbrain?branch=master&svg=true)](https://ci.appveyor.com/project/dfsp-spirit/fsbrain) AppVeyor CI under Windows
+
+The displayed status represents the development version. Don't worry if you are using the stable version from CRAN and CI is currently failing, development happens on master.
+
 
 ## License
 
