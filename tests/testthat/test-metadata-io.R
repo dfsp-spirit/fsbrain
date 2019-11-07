@@ -27,10 +27,10 @@ test_that("Demographics reports can be generated.", {
 
   # The expect_warning wrapper in the next line ignores the warning from the t.test function that it cannot compute exact p-values with ties.
   expect_warning(report_unpaired <- report.on.demographics(demographics, group_column_name="group"));
-  expect_equal(length(report_unpaired), 10);  # check number of lines in report
+  expect_equal(length(report_unpaired), 9);  # check number of lines in report
 
   report_paired <- report.on.demographics(demographics, group_column_name="group", paired=TRUE);
-  expect_equal(length(report_paired), 9);   # check number of lines in report
+  expect_equal(length(report_paired), 8);   # check number of lines in report
   print(report_paired);
 })
 

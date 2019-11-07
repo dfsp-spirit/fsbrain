@@ -185,22 +185,26 @@ report.on.demographics = function(demographics_df, group_column_name=NULL, paire
     }
 
 
-
-    report_lines = c(report_lines, sprintf(" *Demographics report for the %d numeric columns (min/mean/max/NAcount from %d rows):", length(numeric_colname), nrow(demographics_df)));
-
-    numeric_desc = data.frame("column"=numeric_colname, min=numeric_colmin, mean=numeric_colmean, max=numeric_colmax);
-    for(numeric_col_idx in seq_len(length(numeric_colname))) {
-      report_lines = c(report_lines, sprintf("%s %f %f %f %d", numeric_colname[numeric_col_idx], numeric_colmin[numeric_col_idx], numeric_colmean[numeric_col_idx], numeric_colmax[numeric_col_idx], numeric_nacount[numeric_col_idx]));
+    if(length(numeric_colname) > 0) {
+      report_lines = c(report_lines, sprintf(" *Demographics report for the %d numeric columns (min/mean/max/NAcount from %d rows):", length(numeric_colname), nrow(demographics_df)));
+      numeric_desc = data.frame("column"=numeric_colname, min=numeric_colmin, mean=numeric_colmean, max=numeric_colmax);
+      for(numeric_col_idx in seq_len(length(numeric_colname))) {
+        report_lines = c(report_lines, sprintf("%s %f %f %f %d", numeric_colname[numeric_col_idx], numeric_colmin[numeric_col_idx], numeric_colmean[numeric_col_idx], numeric_colmax[numeric_col_idx], numeric_nacount[numeric_col_idx]));
+      }
     }
 
-    report_lines = c(report_lines, sprintf(" *Demographics report for the %d factor columns (numlevels/NAcount from %d rows):", length(factor_colname), nrow(demographics_df)));
-    for(factor_col_idx in seq_len(length(factor_colname))) {
-      report_lines = c(report_lines, sprintf("%s %d %d", factor_colname[factor_col_idx], factor_numlevels[factor_col_idx], factor_nacount[factor_col_idx]));
+    if(length(factor_colname) > 0) {
+      report_lines = c(report_lines, sprintf(" *Demographics report for the %d factor columns (numlevels/NAcount from %d rows):", length(factor_colname), nrow(demographics_df)));
+      for(factor_col_idx in seq_len(length(factor_colname))) {
+        report_lines = c(report_lines, sprintf("%s %d %d", factor_colname[factor_col_idx], factor_numlevels[factor_col_idx], factor_nacount[factor_col_idx]));
+      }
     }
 
-    report_lines = c(report_lines, sprintf(" *Demographics report for the %d character columns (numunique/NAcountfrom %d rows):", length(string_colname), nrow(demographics_df)));
-    for(string_col_idx in seq_len(length(string_colname))) {
-      report_lines = c(report_lines, sprintf("%s %d %d", string_colname[string_col_idx], string_numunique[string_col_idx], string_nacount[string_col_idx]));
+    if(length(string_colname) > 0) {
+      report_lines = c(report_lines, sprintf(" *Demographics report for the %d character columns (numunique/NAcountfrom %d rows):", length(string_colname), nrow(demographics_df)));
+      for(string_col_idx in seq_len(length(string_colname))) {
+        report_lines = c(report_lines, sprintf("%s %d %d", string_colname[string_col_idx], string_numunique[string_col_idx], string_nacount[string_col_idx]));
+      }
     }
 
     return(report_lines);
