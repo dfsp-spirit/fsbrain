@@ -100,10 +100,14 @@ read.md.demographics = function(demographics_file, column_names, header=TRUE, sc
 #'
 #' @param group_column_name, string or NULL. If given, the column name of the group column. It must be a factor column with 2 levels. Enables group-comparison tests. Defaults to NULL.
 #'
+#' @param paired Whether the data of the two groups if paired (repeated measurements). Only relevant if group_column_name is given and tests for group differences are included in the report. Defaults to FALSE.
+#'
+#' @return vector of character strings, the lines of the demographics report.
+#'
 #' @export
 #' @importFrom dplyr "%>%"
 #' @importFrom stats sd var.test t.test shapiro.test wilcox.test
-report.on.demographics = function(demographics_df, group_column_name=NULL) {
+report.on.demographics = function(demographics_df, group_column_name=NULL, paired=FALSE) {
 
     report_lines = c();
 
@@ -164,7 +168,7 @@ report.on.demographics = function(demographics_df, group_column_name=NULL) {
             numeric_colmax = c(numeric_colmax, max(coldata));
             numeric_nacount = c(numeric_nacount, sum(is.na(coldata)));
             if(run_group_tests) {
-              test_lines = test.numerical.meandiff(colname, group1_name, group2_name, group1_data[[colname]], group2_data[[colname]], isPaired = FALSE);
+              report_lines = c(report_lines, test.numerical.meandiff(colname, group1_name, group2_name, group1_data[[colname]], group2_data[[colname]], paired = paired));
             }
         } else if (is.factor(demographics_df[[colname]])) {
             factor_colname = c(factor_colname, colname);
@@ -195,20 +199,53 @@ report.on.demographics = function(demographics_df, group_column_name=NULL) {
     for(string_col_idx in seq_len(length(string_colname))) {
       report_lines = c(report_lines, sprintf("%s\t%d\t%d", string_colname[string_col_idx], string_numunique[string_col_idx], string_nacount[string_col_idx]));
     }
+
+    return(report_lines);
 }
 
-
+#' @title Perform tests for group differences on paired or unpaired data for two groups.
+#'
+#' @description This function is intended to give you a quick overview of your demographics data, it is in no way intended to replace a detailed analysis of your data. You should always visualize and analyze your data interactively instead of relying on automated methods like this. Outliers and are very common in real-world data while perfectly normal data is very rare, multiple testing may affect your results. Look at your data!
+#'
+#' @param colname string, the name of the data (used to label the data in the output)
+#'
+#' @param group1_name string, the name of the first group (used to label the data in the output)
+#'
+#' @param group2_name string, the name of the first group (used to label the data in the output)
+#'
+#' @param group1_data_column the data for group1 as a numerical vector. Typically a column from your demographics dataframe.
+#'
+#' @param group2_data_column the data for group2 as a numerical vector. Typically a column from your demographics dataframe.
+#'
+#' @param paired logical, whether the data is paired (repeated measures).
+#'
+#' @return vector of strings, the lines of the report. You can print to STDOUT or write it to a file.
+#'
 #' @keywords internal
-test.numerical.meandiff <- function(colname, group1_name, group2_name, group1_data_column, group2_data_column, isPaired) {
-  if(isPaired) {
-    warning("Paired testing not implemented yet. Skipping group-level tests.\n");
-    return(c());
+test.numerical.meandiff <- function(colname, group1_name, group2_name, group1_data_column, group2_data_column, paired) {
+  if(paired) {
+    return(test.numerical.meandiff.paired(colname, group1_name, group2_name, group1_data_column, group2_data_column));
   } else {
     return(test.numerical.meandiff.unpaired(colname, group1_name, group2_name, group1_data_column, group2_data_column));
   }
 }
 
-
+#' @title Perform tests for group differences on unpaired data for two groups.
+#'
+#' @description This function is intended to give you a quick overview of your demographics data, it is in no way intended to replace a detailed analysis of your data. You should always visualize and analyze your data interactively instead of relying on automated methods like this. Outliers and are very common in real-world data while perfectly normal data is very rare, multiple testing may affect your results. Look at your data!
+#'
+#' @param colname string, the name of the data (used to label the data in the output)
+#'
+#' @param group1_name string, the name of the first group (used to label the data in the output)
+#'
+#' @param group2_name string, the name of the first group (used to label the data in the output)
+#'
+#' @param group1_data_column the data for group1 as a numerical vector. Typically a column from your demographics dataframe.
+#'
+#' @param group2_data_column the data for group2 as a numerical vector. Typically a column from your demographics dataframe.
+#'
+#' @return vector of strings, the lines of the report. You can print to STDOUT or write it to a file.
+#'
 #' @keywords internal
 #' @importFrom dplyr "%>%"
 #' @importFrom stats sd var.test t.test shapiro.test wilcox.test
@@ -245,4 +282,54 @@ test.numerical.meandiff.unpaired <- function(colname, group1_name, group2_name, 
   test_lines = c(test_lines, sprintf(" Demographics column '%s': p=%f for wilcox test for different group means.\n", colname, wilcox_res$p.value));
   return(test_lines);
 }
+
+
+#' @title Perform tests for group differences on paired data (repeated measurements) for two conditions or time points.
+#'
+#' @description This function is intended to give you a quick overview of your demographics data, it is in no way intended to replace a detailed analysis of your data. You should always visualize and analyze your data interactively instead of relying on automated methods like this. Outliers and are very common in real-world data while perfectly normal data is very rare, multiple testing may affect your results. Look at your data!
+#'
+#' @param colname string, the name of the data (used to label the data in the output)
+#'
+#' @param condition1_name string, the name of the first condition (used to label the data in the output)
+#'
+#' @param condition2_name string, the name of the first condition (used to label the data in the output)
+#'
+#' @param condition1_data_column the data for condition1 as a numerical vector. Typically a column from your demographics dataframe.
+#'
+#' @param condition2_data_column the data for condition2 as a numerical vector. Typically a column from your demographics dataframe.
+#'
+#' @return vector of strings, the lines of the report. You can print to STDOUT or write it to a file.
+#'
+#' @keywords internal
+#' @importFrom dplyr "%>%"
+#' @importFrom stats sd var.test t.test shapiro.test wilcox.test
+test.numerical.meandiff.paired <- function(colname, condition1_name, condition2_name, condition1_data_column, condition2_data_column) {
+  test_lines = c();
+
+  if(length(condition1_data_column) != length(condition2_data_column)) {
+    warning(sprintf("Data for condition 1 has %d observations, but condition 2 has %d. Counts must match, skipping tests.\n", length(condition1_data_column), length(condition2_data_column)));
+    return(test_lines);
+  }
+
+  # Compute differences between the two conditions
+  differences = condition1_data_column - condition2_data_column;
+  # Test whether the differences follow normal distribution
+  shap_res_differences = stats::shapiro.test(differences);
+  differences_are_not_normal = FALSE;
+  if(shap_res_differences$p.value < 0.05) {
+    test_lines = c(test_lines, sprintf(" Demographics column '%s': Differences between the 2 groups do not seem to follow a normal distribution (shapiro.test p.value=%f).", colname, shap_res_differences$p.value));
+    differences_are_not_normal = TRUE;
+  }
+
+  ttest_res = stats::t.test(condition1_data_column, condition2_data_column, paired=TRUE);
+  test_lines = c(test_lines, sprintf(" Demographics column '%s': p=%f for paired t.test for different group means", colname, ttest_res$p.value));
+  if(differences_are_not_normal) {
+    test_lines = c(test_lines, sprintf(" Demographics column '%s': WARNING: non-normal data detected, consider ignoring the paired ttest result and using the following paired wilcox test result instead.\n", colname));
+    wilcox_res = stats::wilcox.test(condition1_data_column, condition2_data_column, paired=TRUE);
+    test_lines = c(test_lines, sprintf(" Demographics column '%s': p=%f for wilcox test for different group means.\n", colname, wilcox_res$p.value));
+  }
+  return(test_lines);
+}
+
+
 

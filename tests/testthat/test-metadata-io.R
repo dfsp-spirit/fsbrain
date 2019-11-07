@@ -11,18 +11,27 @@ test_that("Subjects file can  be read", {
 test_that("Demographics file with header can be read with stringsAsFactors = TRUE", {
   demogr_file = system.file("extdata", "demographics.tsv", package = "fsbrain", mustWork = TRUE);
   column_names = c("subject_id", "group", "age");
-  demographics = read.md.demographics(demogr_file, column_names = column_names, report = FALSE);
+  demographics = read.md.demographics(demogr_file, column_names = column_names);
   expect_equal(nrow(demographics), 6);
   expect_equal(ncol(demographics), 3);
   expect_equal(class(demographics$subject_id), "factor");
   expect_equal(class(demographics$group), "factor");
   expect_equal(class(demographics$age), "integer");
-
-  # Run with report to ensure it does not error
-  demographics = read.md.demographics(demogr_file, column_names = column_names, report = TRUE);
-  expect_equal(nrow(demographics), 6);
-  expect_equal(ncol(demographics), 3);
 })
+
+
+test_that("Demographics reports can be generated.", {
+  demogr_file = system.file("extdata", "demographics.tsv", package = "fsbrain", mustWork = TRUE);
+  column_names = c("subject_id", "group", "age");
+  demographics = read.md.demographics(demogr_file, column_names = column_names);
+
+  report_unpaired = report.on.demographics(demographics, group_column_name="group");
+  expect_equal(length(report_unpaired), 10);  # check number of lines in report
+
+  report_paired = report.on.demographics(demographics, group_column_name="group", paired=TRUE);
+  expect_equal(length(report_paired), 9);   # check number of lines in report
+})
+
 
 test_that("Demographics file with header can be read with stringsAsFactors = FALSE", {
   demogr_file = system.file("extdata", "demographics.tsv", package = "fsbrain", mustWork = TRUE);
