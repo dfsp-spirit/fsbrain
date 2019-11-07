@@ -47,6 +47,8 @@ read.md.subjects = function(subjects_file, header=FALSE) {
 #'
 #' @param stringsAsFactors, logical. Whether to convert strings in the input data to factors. Defaults to TRUE.
 #'
+#' @param group_column_name, string or NULL. If given, the column name of the group column. It must be a factor column with 2 levels. Enables group-comparison tests. Defaults to NULL.
+#'
 #' @return a dataframe. The data in the file. String columns will be returned as factors, which you may want to adapt afterwards for the subject identifier column.
 #'
 #' @family metdata functions
@@ -88,6 +90,7 @@ read.md.demographics = function(demographics_file, column_names, header=TRUE, sc
 
     if(report) {
       report_lines = c(report_lines, sprintf("===End of Demographics Report==="));
+      cat(paste(report_lines, sep="\n"));
     }
 
     return(demographics_df);

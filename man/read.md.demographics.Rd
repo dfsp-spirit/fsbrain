@@ -22,6 +22,8 @@ read.md.demographics(demographics_file, column_names, header = TRUE,
 \item{report, }{logical. Whether to write an overview, i.e., some descriptive statistics for each column, to STDOUT. Defaults to FALSE. See [fsbrain::report.on.demographics].}
 
 \item{stringsAsFactors, }{logical. Whether to convert strings in the input data to factors. Defaults to TRUE.}
+
+\item{group_column_name, }{string or NULL. If given, the column name of the group column. It must be a factor column with 2 levels. Enables group-comparison tests. Defaults to NULL.}
 }
 \value{
 a dataframe. The data in the file. String columns will be returned as factors, which you may want to adapt afterwards for the subject identifier column.
