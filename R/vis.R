@@ -356,6 +356,26 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, mor
     invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar));
 }
 
+#' @export
+vis.mask.on.subject <- function(subjects_dir, vis_subject_id, mask_lh, mask_rh, surface="white", colormap=squash::rainbow2, views=c('t4'), rgloptions=list(), rglactions = list(), draw_colorbar = FALSE) {
+
+    if(is.null(mask_lh) && is.null(mask_rh)) {
+        stop(sprintf("Only one of mask_lh or mask_rh can be NULL.\n"));
+    }
+
+    coloredmeshes = list();
+
+    if(! is.null(mask_lh)) {
+        coloredmeshes$lh = coloredmesh.from.mask(subjects_dir, vis_subject_id, mask_lh, 'lh', surface=surface, colormap=colormap);
+    }
+
+    if(! is.null(mask_rh)) {
+        coloredmeshes$rh = coloredmesh.from.mask(subjects_dir, vis_subject_id, mask_rh, 'rh', surface=surface, colormap=colormap);
+    }
+
+    invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar));
+}
+
 
 #' @title Visualize arbitrary data on the fsaverage template subject, if available.
 #'
@@ -708,6 +728,20 @@ coloredmesh.from.label <- function(subjects_dir, subject_id, label, hemi, surfac
     surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
     label_data = subject.label(subjects_dir, subject_id, label, hemi);
     mask = mask.from.labeldata.for.hemi(list(label_data), nrow(surface_data$vertices));
+    return(coloredmesh.from.mask(subjects_dir, subject_id, mask, hemi, surface=surface, colormap=colormap, surface_data=surface_data));
+}
+
+#' @export
+coloredmesh.from.mask <- function(subjects_dir, subject_id, mask, hemi, surface="white", colormap=squash::rainbow2, surface_data=NULL) {
+
+    if(!(hemi %in% c("lh", "rh"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
+    }
+
+    if(is.null(surface_data)) {
+        surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
+    }
+
     morph_like_data = as.integer(mask);
     mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
     col = squash::cmap(morph_like_data, map = squash::makecmap(morph_like_data, colFn = colormap));

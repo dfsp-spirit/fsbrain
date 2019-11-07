@@ -160,10 +160,21 @@ test_that("A region from an atlas can be converted to a label and visualized.", 
     subject_id = 'subject1';
     surface = 'white';
     hemi = 'both';
-    annot = 'aparc';
+    atlas = 'aparc';
     region = 'bankssts';
 
-    # TODO: implement this test
+
+    lh_annot = subject.annot(subjects_dir, subject_id, 'lh', atlas);
+    rh_annot = subject.annot(subjects_dir, subject_id, 'rh', atlas);
+    lh_label = label.from.annotdata(lh_annot, region);
+    rh_label = label.from.annotdata(rh_annot, region);
+    lh_mask = mask.from.labeldata.for.hemi(lh_label, length(lh_annot$vertices));
+    rh_mask = mask.from.labeldata.for.hemi(rh_label, length(rh_annot$vertices));
+
+    # edit the mask: add the vertices from another region to it:
+    #region2 = ''
+
+    vis.mask.on.subject(subjects_dir, subject_id, lh_mask, rh_mask);
 })
 
 
