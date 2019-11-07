@@ -31,7 +31,6 @@ test_that("Demographics reports can be generated.", {
 
   report_paired <- report.on.demographics(demographics, group_column_name="group", paired=TRUE);
   expect_equal(length(report_paired), 10);   # check number of lines in report
-  print(report_paired);
 })
 
 
