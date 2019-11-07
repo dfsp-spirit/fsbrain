@@ -524,7 +524,7 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
     }
 
     surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
-    mesh = rgl::tmesh3d(unlist(surface_data$vertices), unlist(surface_data$faces), homogeneous=FALSE);
+    mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
     col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
     return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap));
 }
@@ -573,7 +573,7 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
     }
 
     surface_data = subject.surface(template_subjects_dir, template_subject, surface, hemi);
-    mesh = rgl::tmesh3d(unlist(surface_data$vertices), unlist(surface_data$faces), homogeneous=FALSE);
+    mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
     col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
     return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap));
 }
@@ -613,7 +613,7 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
         stop(sprintf("Received %d data values, but the hemi '%s' '%s' surface of visualization subject '%s' in dir '%s' has %d vertices. Counts must match.\n", length(morph_data), hemi, surface, vis_subject_id, subjects_dir, num_verts));
     }
 
-    mesh = rgl::tmesh3d(unlist(surface_data$vertices), unlist(surface_data$faces), homogeneous=FALSE);
+    mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
 
     # If all values are NaN, the following call to squash::cmap fails with an error. We reset the data here to avoid that.
     morph_data_was_all_na = FALSE;
@@ -655,7 +655,7 @@ coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surfac
 
     surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
     annot = subject.annot(subjects_dir, subject_id, hemi, atlas);
-    mesh = rgl::tmesh3d(unlist(surface_data$vertices), unlist(surface_data$faces), homogeneous=FALSE);
+    mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
     col = annot$hex_colors_rgb;
     return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=NULL, "cmap_fun"=colormap));
 }
