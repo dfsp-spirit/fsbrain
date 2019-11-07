@@ -33,6 +33,8 @@ Load a label (like 'label/lh.cortex.label') for a subject from disk. Uses knowle
 
 }
 \seealso{
-Other label data functions: \code{\link{group.label}}
+Other label data functions: \code{\link{group.label}},
+  \code{\link{labeldata.from.mask}},
+  \code{\link{mask.from.labeldata.for.hemi}}
 }
 \concept{label data functions}

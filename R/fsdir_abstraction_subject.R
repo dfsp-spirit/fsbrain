@@ -288,6 +288,65 @@ subject.label <- function(subjects_dir, subject_id, label, hemi, return_one_base
     return(freesurferformats::read.fs.label(labelfile, return_one_based_indices=return_one_based_indices));
 }
 
+#' @title Create a binary mask from labels.
+#'
+#' @description Create a binary mask for the data of a single hemisphere from one or more labels. A label contains the vertex indices which are part of it, but often having a mask in more convenient.
+#'
+#' @param labels, list of labels. A label is just a vector of vertex indices. It can be created manually, but is typically loaded from a label file using [fsbrain::subject.label].
+#'
+#' @param num_vertices_in_hemi, integer. The number of vertices of the surface for which the mask is created. This must be for a single hemisphere.
+#'
+#' @param invert_labels logical, whether to invert the label data.
+#'
+#' @param existing_mask an existing mask to modify or NULL. If it is NULL, a new mask will be created before applying any labels, and the values set during initialization of this new mask are the negation of the 'invert_label' parameter. Defaults to NULL.
+#'
+#' @return logical vector. The mask. It contains a logical value for each vertex. By default, the vertex indices from the labels are FALSE and the rest are TRUE, but this can be changed with the parameter 'invert_labels'.
+#'
+#' @family label data functions
+#'
+#' @export
+mask.from.labeldata.for.hemi <- function(labels, num_vertices_in_hemi, invert_labels=FALSE, existing_mask=NULL) {
+    if(is.null(existing_mask)) {
+        mask = rep(!invert_labels, num_vertices_in_hemi);
+    } else {
+        if(! is.logical(existing_mask)) {
+            stop("Parameter 'existing_mask' must be logical vector if given.");
+        }
+        if(length(existing_mask) != num_vertices_in_hemi) {
+            stop(sprintf("The mask supplied in parameter 'existing_mask' has %d entries but parameter 'num_vertices_in_hemi' is %d. Numbers must match.\n", length(existing_mask), num_vertices_in_hemi));
+        }
+        mask = existing_mask;
+    }
+    for(label_idx in seq_len(length(labels))) {
+        label = unlist(labels[label_idx]);
+        if(max(label) > num_vertices_in_hemi) {
+            stop(sprintf("Label #%d contains vertex index %d, but parameter 'num_vertices_in_hemi' is only %d. Vertex index must no exceed vertex count.\n", label_idx, max(label), num_vertices_in_hemi));
+        }
+        mask[label] = invert_labels;
+    }
+    return(mask);
+}
+
+#' @title Create labeldata from a mask.
+#'
+#' @description Create labeldata from a mask. This function is trivial and only calls [base::which] after performing basic sanity checks.
+#'
+#' @param mask a logical vector
+#'
+#' @param invert Whether to report the inverse the mask before determining the indices. Defaults to FALSE.
+#'
+#' @return labeldata. The list of indices which are TRUE in the mask (or the ones which FALSE if 'invert' is TRUE).
+#'
+#' @family label data functions
+#'
+#' @export
+labeldata.from.mask <- function(mask, invert=FALSE) {
+    if(! is.logical(mask)) {
+        stop("Parameter 'mask' must be logical vector.");
+    }
+    return(which(mask != invert));
+}
+
 
 #'@title Load an annotation for a subject.
 #'

@@ -34,6 +34,8 @@ Load a label (like 'label/lh.cortex.label') for a group of subjects from disk. U
 
 }
 \seealso{
-Other label data functions: \code{\link{subject.label}}
+Other label data functions: \code{\link{labeldata.from.mask}},
+  \code{\link{mask.from.labeldata.for.hemi}},
+  \code{\link{subject.label}}
 }
 \concept{label data functions}

@@ -83,3 +83,43 @@ test_that("Surface data can be read on subject level", {
 })
 
 
+test_that("A plain or inverted new mask can be created for single hemisphere data", {
+    labels = list(c(4,6), c(8,11, 4));
+
+    expected_mask_inverted = c(FALSE, FALSE, FALSE, TRUE, FALSE, TRUE, FALSE, TRUE, FALSE, FALSE, TRUE);
+    expected_mask = !expected_mask_inverted;
+
+    mask = mask.from.labeldata.for.hemi(labels, 11);
+    expect_equal(mask, expected_mask);
+
+    mask_inv = mask.from.labeldata.for.hemi(labels, 11, invert_labels=TRUE);
+    expect_equal(mask_inv, expected_mask_inverted);
+})
+
+
+test_that("Creating a mask and specifying too few vertices fails", {
+    labels = list(c(4,6), c(8,11, 4));
+    expect_error(mask = mask.from.labeldata.for.hemi(labels, 9));   # 9 is bad if the highest index in the labels is 11
+})
+
+
+test_that("An existing mask can be modified by applying more labels", {
+    labels = list(c(1,2), c(6,7));
+
+    existing_mask = c(TRUE, TRUE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE);
+
+    edited_mask = mask.from.labeldata.for.hemi(labels, 10, existing_mask = existing_mask);
+    expect_equal(edited_mask, c(FALSE, FALSE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE));
+})
+
+
+test_that("An existing mask can be modified by applying more inverted labels", {
+    labels = list(c(1,2), c(6,7));
+
+    existing_mask = c(TRUE, TRUE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE);
+
+    edited_mask = mask.from.labeldata.for.hemi(labels, 10, existing_mask = existing_mask, invert_labels=TRUE);
+    expect_equal(edited_mask, c(TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE));
+})
+
+

@@ -136,3 +136,34 @@ test_that("We can record a gif movie of a rotating brain.", {
     }
 })
 
+
+test_that("A label can be visualized.", {
+    skip("This test has to be run manually and interactively.");
+
+    fsbrain::download_optional_data();
+
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+    subject_id = 'subject1';
+    surface = 'white';
+    hemi = 'both';
+    label = 'cortex.label';
+
+    vis.subject.label(subjects_dir, subject_id, label, hemi);
+})
+
+test_that("A region from an atlas can be converted to a label and visualized.", {
+    skip("This test has to be run manually and interactively.");
+
+    fsbrain::download_optional_data();
+
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+    subject_id = 'subject1';
+    surface = 'white';
+    hemi = 'both';
+    annot = 'aparc';
+    region = 'bankssts';
+
+    # TODO: implement this test
+})
+
+
