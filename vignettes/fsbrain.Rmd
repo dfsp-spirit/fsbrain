@@ -299,7 +299,7 @@ vis.subject.annot(subjects_dir, 'subject1', 'aparc', 'both', views=c('si'));
 
 This will give you an interactive window in which you can freely rotate a view similar to the one shown in the following screenshot:
 
-![**Figure 1**: Atlas regions visualized on a brain surface mesh.](rgl_brain_aparc.jpg)
+![**Figure 1**: Atlas regions visualized on a brain surface mesh.](fsbrain_aparc.jpg)
 
 ### Visualizing morphometry data
 
@@ -320,7 +320,7 @@ vis.data.on.subject(subjects_dir, 'subject1', morph_data_lh, morph_data_rh, view
 ```
 
 
-![**Figure 2**: Cortical thickness data visualized on a brain mesh.](rgl_brain_ct.jpg)
+![**Figure 2**: Cortical thickness data visualized on a brain mesh.](fsbrain_ct.jpg)
 
 
 ### Visualizing labels
