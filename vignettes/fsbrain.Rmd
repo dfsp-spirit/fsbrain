@@ -41,8 +41,8 @@ groupdata_nat = group.morph.native(subjects_dir, subjects_list, "thickness", "lh
 As this is native space data, the data for all subjects have different lengths because the subject's brain meshes have different vertex counts. Therefore, `groupdata` is a named list. Let us determine the number of vertices and the mean cortical thickness of 'subject1':
 
 ```{r, eval = FALSE}
-subject = 'subject1';
-cat(sprintf("Subject '%s' has %d vertices and the mean cortical thickness of the left hemi is %f.\n", subject, length(groupdata_nat[[subject]]), mean(groupdata_nat[[subject]])));
+subject_id = 'subject1';
+cat(sprintf("Subject '%s' has %d vertices and the mean cortical thickness of the left hemi is %f.\n", subject_id, length(groupdata_nat[[subject_id]]), mean(groupdata_nat[[subject_id]])));
 # Output: Subject 'subject1' has 149244 vertices and the mean cortical thickness of the left hemi is 2.437466.
 ```
 
@@ -65,14 +65,55 @@ Note that 163842 is the number of vertices of the template subject fsaverage.
 
 ## Labels for groups
 
-Use *group.label()* to load label data for groups from files. A label is like a binary mask of vertex numbers, which defines a set of vertices. E.g., all vertices of a certain brain region. 
+Use *group.label()* to load label data for groups from files. A label is like a binary mask of vertex numbers, which defines a set of vertices. E.g., all vertices of a certain brain region. In the following examples, we load labels for our group of subjects:
+
+```{r, eval = FALSE}
+grouplabels = group.label(subjects_dir, subjects_list, "cortex.label", hemi='lh');
+cat(sprintf("The left hemisphere cortex label of subject1 includes %d vertices.\n", length(grouplabels$subject1)));
+# output: The left hemisphere cortex label of subject1 includes 140891 vertices.
+```
+
+
+### Labels and masks
+
+You can turn a label (or the combination of several labels) into a mask. A mask for a surface is a logical vector that contains one value for each vertex in the surface. Masks are very convenient for selecting subsets of your data for analysis. Here is an example that first creates a label from a region of an annotation, then it creates a mask from the label. Finally, it modifies the existing mask by adding more vertices from a second region:
+
+```{r, eval = FALSE}
+surface = 'white';
+hemi = 'both';
+atlas = 'aparc';
+region = 'bankssts';
+
+# Create a mask from a region of an annotation:
+lh_annot = subject.annot(subjects_dir, subject_id, 'lh', atlas);
+rh_annot = subject.annot(subjects_dir, subject_id, 'rh', atlas);
+lh_label = label.from.annotdata(lh_annot, region);
+rh_label = label.from.annotdata(rh_annot, region);
+lh_mask = mask.from.labeldata.for.hemi(lh_label, length(lh_annot$vertices));
+rh_mask = mask.from.labeldata.for.hemi(rh_label, length(rh_annot$vertices));
+
+# Edit the mask: add the vertices from another region to it:
+region2 = 'medialorbitofrontal';
+lh_label2 = label.from.annotdata(lh_annot, region2);
+rh_label2 = label.from.annotdata(rh_annot, region2);
+lh_mask2 = mask.from.labeldata.for.hemi(lh_label2, length(lh_annot$vertices),
+  existing_mask = lh_mask);
+rh_mask2 = mask.from.labeldata.for.hemi(rh_label2, length(rh_annot$vertices),
+  existing_mask = rh_mask);
+```
+
 
 ## Annotations for groups
 
 An annotation, also known as a *brain surface parcellatio*n, is the result of applying an *atlas* to a subject. It consists of a set of labels (see above, one for each region) and a colortable.
 
-Use *group.annot()* to load annotation data for groups from files.
+Use *group.annot()* to load annotation data for groups from files:
 
+```{r, eval = FALSE}
+groupannot = group.annot(subjects_dir, subjects_list, 'lh', 'aparc');
+cat(sprintf("The left hemi of subject2 has %d vertices, and vertex 10 is in region '%s'.\n", length(groupannot$subject2$vertices), groupannot$subject2$label_names[10]));
+# output: The left hemi of subject2 has 149244 vertices, and vertex 10 is in region 'lateraloccipital'.
+```
 
 # Aggregating morphometry data
 
