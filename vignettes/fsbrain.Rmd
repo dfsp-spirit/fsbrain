@@ -20,6 +20,7 @@ library("fsbrain");
 fsbrain::download_optional_data();
 subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 subjects_list = c("subject1", "subject2");
+subject_id = 'subject1';       # for function which use one subject only
 ```
 
 Here, we manually defined the list of subjects. Typically, you would read the subjects and associated demographics or clinical data from a CSV file with standard R function like `read.table`, and you would have way more subjects of course.
@@ -266,17 +267,20 @@ Mapping a single value to an atlas region of a subject (usually a template subje
 hemi = "lh"               # 'lh' or 'rh'
 atlas = "aparc"           # an atlas, e.g., 'aparc', 'aparc.a2009s', 'aparc.DKTatlas'
 
-template_subjects_dir = "~/software/freesurfer/subjects";    # Some directory where we can find fsaverage. This can be omitted if FREESURFER_HOME is set, the function will find fsaverage in there by default.
+# Some directory where we can find fsaverage. This can be omitted if FREESURFER_HOME or SUBJECTS_DIR is set, the function will find fsaverage in there by default. Also see the function download_fsaverage().
+template_subjects_dir = "~/software/freesurfer/subjects";    
 
 # One can also retrieve all region names of an atlas. This would get all 36 aparc regions:
 region_names_aparc = fsbrain::get.atlas.region.names('aparc', template_subjects_dir=template_subjects_dir);
 region_value_list = as.list(rnorm(length(region_names_aparc), mean=5, sd=1.5)); # assign some random normal values for this example. One would put effect size values or whatever here. The order of values has to match the order of the region names.
 names(region_value_list) = region_names_aparc;    # Assign the names to the values.
 
-ret = fsbrain::write.region.values.fsaverage(hemi, atlas, region_value_list, output_file="/tmp/spread.mgz", template_subjects_dir=template_subjects_dir, show_freeview_tip=TRUE);
+ret = fsbrain::write.region.values.fsaverage(hemi, atlas, region_value_list, output_file="/tmp/lh_spread.mgz", template_subjects_dir=template_subjects_dir, show_freeview_tip=TRUE);
 ```
 
-This code will write an MGZ file that can be visualized in FreeView or Matlab/Surfstat.
+This code will write an MGZ file that can be visualized in FreeView or Matlab/Surfstat. Setting the parameter `show_freeview_tip` to TRUE as in the example will print the command line to visualize the data in FreeView.
+
+The data can also be visualized directly in *fsbrain*, see the section *Visualizing results of region-based analyses* below.
 
 # Data visualization
 
@@ -289,7 +293,7 @@ This package comes with a range of visualization functions. They are based on Op
 Let's first visualize an annotation:
 
 ```{r, eval = FALSE}
-vis.subject.annot(subjects_dir, 'subject1', 'aparc', 'both');
+vis.subject.annot(subjects_dir, 'subject1', 'aparc', 'both', views=c('si'));
 ```
 
 
@@ -354,6 +358,35 @@ vis.mask.on.subject(subjects_dir, subject_id, lh_mask, rh_mask);
 ```
 
 
+### Visualizing results of region-based analyses
+
+The result of a region-based analysis often is one result value (e.g., a p-value or an effect size) per atlas region. In the following example, we visualize such data on the *fsaverage* template subject, but you can use any subject of course.
+
+
+```{r, eval = FALSE}
+atlas = 'aparc';
+template_subject = 'fsaverage';
+# Some directory where we can find the template_subject. This can be omitted if FREESURFER_HOME or SUBJECTS_DIR is set and the template subject is in one of them. In that case, the function will find fsaverage in there by default. Also see the function download_fsaverage().
+template_subjects_dir = "~/software/freesurfer/subjects";    # adapt to your machine
+
+
+# For the left hemi, we manually set data values for some regions.
+lh_region_value_list = list("bankssts"=0.9, "precuneus"=0.7, "postcentral"=0.8, "lingual"=0.6);
+
+# For the right hemisphere, we do something a little bit more complex: first get all atlas region names:
+atlas_region_names = get.atlas.region.names(atlas, template_subjects_dir=template_subjects_dir, template_subject=template_subject);
+# As mentioned above, if you have fsaverage in your SUBJECTS_DIR or FREESURFER_HOME is set, you could replace the last line with:
+#atlas_region_names = get.atlas.region.names(atlas);
+
+# OK, now that we can check all region names. We will now assign a random value to each region:
+rh_region_value_list = rnorm(length(atlas_region_names), 3.0, 1.0);         # create 36 random values with mean 3 and stddev 1
+names(rh_region_value_list) = atlas_region_names;                           # use the region names we retrieved earlier
+
+# Now we have region_value_lists for both hemispheres. Time to visualize them:
+vis.region.values.on.subject(template_subjects_dir, template_subject, atlas, lh_region_value_list, rh_region_value_list);
+```
+
+See the help for the `vis.region.values.on.subject` function for more options, including the option to define the default value for the regions which do not appear in the given lists.
 
 
 ## General visualization options
