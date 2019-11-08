@@ -9,7 +9,7 @@ vignette: >
 
 In this document, we demonstrate some high-level functions for loading and analysing structural neuroimaging data preprocessed with [FreeSurfer](https://surfer.nmr.mgh.harvard.edu). FreeSurfer stores its output in a directory structure with fixed subfolder names. This package implements several high-level functions that allow the user to access surface-based brain structure data for large groups of subjects with very little code. It also supports the computation of simple statistics for individual brain structures or brain atlas regions for brain morphometry measures. Statistical analysis can then be performed using standard methods implemented in other packages. The results can be visualized on brain meshes (typically on a template subject like *fsaverage*) in various ways.
 
-Note: While this packages provides an abstract access layer to neuroimaging data, it does *not* implement file readers. It uses the 'freesurferformats' package in the background to parse the file formats.
+Note: While this packages provides an abstract access layer to neuroimaging data, it does *not* implement file readers. It uses the [freesurferformats package](https://github.com/dfsp-spirit/freesurferformats) in the background to parse the file formats.
 
 ### Example data used in this document
 
@@ -248,20 +248,30 @@ Other parameters exist to define the template subject, which defaults to 'fsaver
 
 # Working with atlas data
 
-You can use a mask to analyze (or exclude) data from certain regions. A typical usecase is to ignore the vertices from the medial wall in statistical analyses of the whole hemisphere, or to analyze only vertices from a specific label or atlas region. To archieve this, one could create a mask based on the 'medial_wall' region of the 'aparc.a2009s' atlas, and set all vertices in that region to NA for the subjects. Make sure to use functions that can work with NA values e.g., nanmean instead of mean) when working with the masked data.
 
-## Loading label files
-
-One can load label files from disk using the *subject.label()* and *group.label()* functions.
 
 ## Creating a label from an atlas region
 
-One can use the *label.from.annotdata()* function on subject level, or the *group.label.from.annot()* function on group level to create a label from a brain parcellation.
+One can use the *label.from.annotdata()* function on subject level, or the *group.label.from.annot()* function on group level to create a label from a brain parcellation. Here is an example on the subject level:
+
+```{r, eval = FALSE}
+surface = 'white';
+hemi = 'both';
+atlas = 'aparc';
+region = 'bankssts';
+
+# Create a label from a region of an annotation or atlas:
+lh_annot = subject.annot(subjects_dir, subject_id, 'lh', atlas);
+rh_annot = subject.annot(subjects_dir, subject_id, 'rh', atlas);
+lh_label = label.from.annotdata(lh_annot, region);
+rh_label = label.from.annotdata(rh_annot, region);
+```
 
 
 ## Mapping one result value to each brain atlas region
 
-Mapping a single value to an atlas region of a subject (usually a template subject like fsaverage) is useful to display results, like p values or effect sizes, on the brain surface. Here is an example script that uses fsbrain to do that:
+Mapping a single value to an atlas region of a subject (usually a template subject like *fsaverage*) is useful to display results, like p values or effect sizes, on the brain surface.It is common to visualize this on a template subject, like *fsaverage*. We do that for one hemisphere in the next example:
+
 
 ```{r, eval = FALSE}
 hemi = "lh"               # 'lh' or 'rh'
@@ -270,21 +280,22 @@ atlas = "aparc"           # an atlas, e.g., 'aparc', 'aparc.a2009s', 'aparc.DKTa
 # Some directory where we can find fsaverage. This can be omitted if FREESURFER_HOME or SUBJECTS_DIR is set, the function will find fsaverage in there by default. Also see the function download_fsaverage().
 template_subjects_dir = "~/software/freesurfer/subjects";    
 
-# One can also retrieve all region names of an atlas. This would get all 36 aparc regions:
-region_names_aparc = fsbrain::get.atlas.region.names('aparc', template_subjects_dir=template_subjects_dir);
-region_value_list = as.list(rnorm(length(region_names_aparc), mean=5, sd=1.5)); # assign some random normal values for this example. One would put effect size values or whatever here. The order of values has to match the order of the region names.
-names(region_value_list) = region_names_aparc;    # Assign the names to the values.
+region_value_list = list("bankssts"=0.9, "precuneus"=0.7, "postcentral"=0.8, "lingual"=0.6);
 
 ret = fsbrain::write.region.values.fsaverage(hemi, atlas, region_value_list, output_file="/tmp/lh_spread.mgz", template_subjects_dir=template_subjects_dir, show_freeview_tip=TRUE);
+# output:
+# To visualize these region values, try:
+#  freeview -f ${FREESURFER_HOME}/subjects/fsaverage/surf/lh.white:overlay=/tmp/lh_spread.mgz:overlay_method=linearopaque:overlay_threshold=0,100,percentile
 ```
 
 This code will write an MGZ file that can be visualized in FreeView or Matlab/Surfstat. Setting the parameter `show_freeview_tip` to TRUE as in the example will print the command line to visualize the data in FreeView.
 
-The data can also be visualized directly in *fsbrain*, see the section *Visualizing results of region-based analyses* below.
+The data can also be visualized directly in *fsbrain*, see the section *Visualizing results of region-based analyses* below. The functions listed there can also work with data from both hemispheres at once. See **Figure 3B** for example output.
+
 
 # Data visualization
 
-This package comes with a range of visualization functions. They are based on OpenGL using the rgl package. See the rgl documentation for the requirements. Under MacOS, you will need to have XQuartz installed.
+This package comes with a range of visualization functions. They are based on OpenGL using the [rgl package](https://CRAN.R-project.org/package=rgl).
 
 ## Visualizing different types of data
 
@@ -471,9 +482,9 @@ vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('sr'
 ```
 
 
-The movie will be saved under the name 'fsbrain_subject1_thickness_white.gif' in your home directory.
+The movie will be saved under the name 'fsbrain_subject1_thickness_white.gif' in your home directory. See the [fsbrain project website](https://github.com/dfsp-spirit/fsbrain/blob/master/web/fsbrain_movies.md) for example output movies.
 
-##### Postprocessing
+##### Postprocessing the movies
 
 You can tweak the output GIF in whatever external software you like if needed. E.g., if you would like the animation to loop forever, you could use the *convert* command line utility that comes with [ImageMagick](https://imagemagick.org/). Run it from your operating system shell (not within R):
 
