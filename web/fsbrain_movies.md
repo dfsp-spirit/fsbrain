@@ -1,6 +1,6 @@
 # fsbrain movies
 
-These are animations created using the [fsbrain R package](https://CRAN.R-project.org/package=fsbrain), with a lot of help from [rgl](https://CRAN.R-project.org/package=rgl) and some polish from [ezgif](http://ezgif.com).
+These are animations created using the [fsbrain R package](https://CRAN.R-project.org/package=fsbrain), with a lot of help from [rgl](https://CRAN.R-project.org/package=rgl) and some polish from [ImageMagick](https://imagemagick.org).
 
 ![Vissurfaces](./fsbrain_morphnat_curv_web.gif?raw=true "Rotating brain mesh with mean curvature plotted onto it, rendered with fsbrain")
 
