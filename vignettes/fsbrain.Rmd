@@ -299,7 +299,7 @@ vis.subject.annot(subjects_dir, 'subject1', 'aparc', 'both', views=c('si'));
 
 This will give you an interactive window in which you can freely rotate a view similar to the one shown in the following screenshot:
 
-![**Figure 1**: Atlas regions visualized on a brain surface mesh. Annotation and mesh loaded with `freesurferformats`, and rendered using the `rgl` package.](rgl_brain_aparc.jpg)
+![**Figure 1**: Atlas regions visualized on a brain surface mesh.](rgl_brain_aparc.jpg)
 
 ### Visualizing morphometry data
 
@@ -320,7 +320,7 @@ vis.data.on.subject(subjects_dir, 'subject1', morph_data_lh, morph_data_rh, view
 ```
 
 
-![**Figure 2**: Cortical thickness data visualized on a brain mesh. Morphometry data and mesh loaded with `freesurferformats`, mesh rendered using the `rgl` package.](rgl_brain_ct.jpg)
+![**Figure 2**: Cortical thickness data visualized on a brain mesh.](rgl_brain_ct.jpg)
 
 
 ### Visualizing labels
@@ -389,6 +389,9 @@ vis.region.values.on.subject(template_subjects_dir, template_subject, atlas, lh_
 See the help for the `vis.region.values.on.subject` function for more options, including the option to define the default value for the regions which do not appear in the given lists.
 
 
+![**Figure 3**: Various fsbrain visualizations. *A* Native space morphometry data. *B* Results of a region-based analysis. *C* An atlas.](fsbrain_vis_views.jpg)
+
+
 ## General visualization options
 
 ### Different views
@@ -407,6 +410,8 @@ To change the view, set the view parameter in any visualization function. You ca
 vis.subject.morph.native(subjects_dir, 'subject', 'thickness', hemi='both', views=c('t4', 't9'))
 ```
 
+See *Figure 3A* for an example of view *t9* and *Figure 3B* for an example of view *t4*.
+
 
 ### Changing the visualisation surface
 
@@ -415,6 +420,11 @@ By default, the data is visualized on the white surface. For some data, other su
 ```{r, eval = FALSE}
 vis.subject.morph.native(subjects_dir, 'subject', 'thickness', hemi='both', views=c('si'), surface='inflated')
 ```
+
+See *Figure 4* for examples for the different surfaces.
+
+
+![**Figure 4**: Different visualization surfaces. *A* white surface. *B* pial surface. *C* inflated surface.](fsbrain_vis_surfaces.jpg)
 
 
 ### Changing the resolution of figures (or other rgloptions)
