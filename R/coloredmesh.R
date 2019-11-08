@@ -1,4 +1,105 @@
-# Functions for generating coloredmeshes from data.
+# Functions for generating coloredmeshes from data and managing their colormaps.
+
+
+
+#' @title Recompute the colormaps in the meshes, using data from all meshes.
+#'
+#' @description Running this function on a set of coloredmeshes ensures that one color represents the same data value over all the meshes. This makes sense if you plot the left and right hemisphere of a subject into a plot. This function only works if the meshes comes with a key named 'morph_data' that contains the raw data values. If there is no such data, the given meshes are returned without changes.
+#'
+#' @param coloredmeshes list of coloredmeshes
+#'
+#' @param colormap a colormap function, defaults to NULL, which instructs the function to use the colormap found in the "cmap_fun" property of the first mesh in the list that has a valid entry.
+#'
+#' @importFrom squash cmap makecmap jet
+#' @keywords internal
+unify.coloredmeshes.colormaps <- function(coloredmeshes, colormap=NULL) {
+    if(length(coloredmeshes) <= 1) {
+        return(coloredmeshes);
+    }
+
+
+    comb_res = combine.coloredmeshes.data(coloredmeshes);
+    full_data = comb_res$full_data;
+    found_morph_data = comb_res$found_morph_data_in_any;
+
+    if(is.null(colormap)) {
+        colormap = check.for.coloredmeshes.colormap(coloredmeshes);
+    }
+
+
+    # We have all the data (if any), compute a shared colormap for all the meshes to use.
+    # Note: some meshes come without morph data, e.g., those based on annotations. But for them, we do not need to rescale anyways so thats fine.
+    if(found_morph_data && length(full_data) > 0) {
+
+        if(is.null(colormap)) {
+            warning("Parameter 'colormap' is NULL and no cmap_fun found in the mesh(es). Falling back to default colormap squash::jet.");
+            colormap = squash::jet;
+        }
+
+        if(! comb_res$found_morph_data_in_all) {
+            warning("Found morph_data only in a subset of the meshes. This should not happen in general.");
+        }
+
+        coloredmeshes_new_cmap = coloredmeshes;
+        for(cmesh_idx in seq_len(length(coloredmeshes_new_cmap))) {
+            col_rescaled = squash::cmap(coloredmeshes_new_cmap[[cmesh_idx]]$morph_data, map = squash::makecmap(full_data, colFn = colormap));
+            coloredmeshes_new_cmap[[cmesh_idx]]$col = col_rescaled;
+        }
+        return(coloredmeshes_new_cmap);
+    } else {
+        return(coloredmeshes);
+    }
+}
+
+
+#' @title Combine the data from the coloredmeshes, if any.
+#'
+#' @param coloredmeshes list of coloredmeshes
+#'
+#' @return list with entries "full_data": a vector of the combined data, can be NULL if none of the meshes have a valid "morph_data" attribute. "found_morph_data_in_any": logical, whether valid data was found in any of the meshes. "found_morph_data_in_all": logical, whether valid data was found in all of the meshes (FALSE if list of meshes is empty).
+#'
+#' @keywords internal
+combine.coloredmeshes.data <- function(coloredmeshes) {
+    full_data = c();
+    found_morph_data_in_any = FALSE;
+    found_morph_data_in_all = TRUE;
+    if(length(coloredmeshes) < 1) {
+        found_morph_data_in_all = FALSE;
+    }
+    for(cmesh in coloredmeshes) {
+        if("morph_data" %in% names(cmesh) && !(is.null(cmesh$morph_data))) {
+            full_data = c(full_data, cmesh$morph_data);
+            found_morph_data_in_any = TRUE;
+        } else {
+            found_morph_data_in_all = FALSE;
+        }
+    }
+    full_data = sort(full_data);
+    return(list("full_data"=full_data, "found_morph_data_in_any"=found_morph_data_in_any, "found_morph_data_in_all"=found_morph_data_in_all));
+}
+
+
+#' @title Return the colormap function from the meshes, if any.
+#'
+#' @param coloredmeshes list of coloredmeshes
+#'
+#' @return colormap, a colormap function or NULL if the meshes did not have any.
+#'
+#' @keywords internal
+check.for.coloredmeshes.colormap <- function(coloredmeshes) {
+    colormap = NULL;
+    for(cmesh in coloredmeshes) {
+        if("cmap_fun" %in% names(cmesh) && !(is.null(cmesh$cmap_fun))) {
+            if(is.null(colormap)) {
+                colormap = cmesh$cmap_fun;
+            }
+        }
+    }
+    return(colormap);
+}
+
+
+
 
 #' @title Create a coloredmesh from native space morphometry data.
 #'
@@ -235,6 +336,9 @@ coloredmesh.from.mask <- function(subjects_dir, subject_id, mask, hemi, surface=
     }
 
     morph_like_data = as.integer(mask);
+
+    morph_like_data[mask == 1L] = NA;     # set positive values to NA so they get rendered as background.
+
     mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
     col = squash::cmap(morph_like_data, map = squash::makecmap(morph_like_data, colFn = colormap));
     return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_like_data, "cmap_fun"=colormap));
