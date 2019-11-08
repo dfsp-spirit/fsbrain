@@ -101,7 +101,7 @@ This will ouput something like this (but for the version you actually used):
 To cite package ‘fsbrain’ in a publications use:
 
   Tim Schäfer (2019). fsbrain: Managing and Visualizing Brain Surface Data. R package version
-  0.0.1. https://CRAN.R-project.org/package=fsbrain
+  0.0.2. https://CRAN.R-project.org/package=fsbrain
 
 
 A BibTeX entry for LaTeX users is
@@ -111,7 +111,7 @@ A BibTeX entry for LaTeX users is
     title = {fsbrain: Managing and Visualizing Brain Surface Data},
     author = {Tim Schäfer},
     year = {2019},
-    note = {R package version 0.0.1},
+    note = {R package version 0.0.2},
     url = {https://CRAN.R-project.org/package=fsbrain},
   }
 ```
