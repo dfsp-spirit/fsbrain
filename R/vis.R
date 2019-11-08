@@ -3,7 +3,7 @@
 
 #' @title Visualize native space morphometry data for a subject.
 #'
-#' @description Creates a surface mesh, applies a colormap transform the morphometry data values into colors, and renders the resulting colored mesh in an interactive window. If hemi is 'both', the data is rendered for the wholw brain.
+#' @description Creates a surface mesh, applies a colormap transform the morphometry data values into colors, and renders the resulting colored mesh in an interactive window. If hemi is 'both', the data is rendered for the whole brain.
 #'
 #' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
 #'
@@ -64,6 +64,48 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, su
     invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar));
 }
 
+
+#' @title Visualize a label for a subject.
+#'
+#' @description Visualize a label for a subject. A label is jsut a logical vector with one entry for each vertex in the mesh.
+#'
+#' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
+#'
+#' @param subject_id, string. The subject identifier.
+#'T
+#' @param label, string. Name of the label file, without the hemi part (if any), but including the '.label' suffix. E.g., 'cortex.label' for '?h.cortex.label'.
+#'
+#' @param hemi, string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the label data files to be loaded.
+#'
+#' @param surface, string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
+#'
+#' @param colormap, a colormap. See the squash package for some colormaps. Defaults to [squash::rainbow2].
+#'
+#' @param views, list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.
+#'
+#' @param rgloptions option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));
+#'
+#' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
+#'
+#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE.
+#'
+#' @return list of coloredmeshes. The coloredmeshes used for the visualization.
+#'
+#' @examples
+#' \donttest{
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+#'    subject_id = 'subject1';
+#'    surface = 'white';
+#'    hemi = 'both';
+#'    label = 'cortex.label';
+#'    vis.subject.label(subjects_dir, subject_id, label, hemi);
+#' }
+#'
+#' @family visualization functions
+#' @family label functions
+#'
+#' @importFrom squash rainbow2
 #' @export
 vis.subject.label <- function(subjects_dir, subject_id, label, hemi, surface="white", colormap=squash::rainbow2, views=c("t4"), rgloptions = list(), rglactions = list(), draw_colorbar = FALSE) {
 
@@ -184,7 +226,7 @@ check.for.coloredmeshes.colormap <- function(coloredmeshes) {
 
 #' @title Visualize native space morphometry data for a subject.
 #'
-#' @description Creates a surface mesh, applies a colormap transform the morphometry data values into colors, and renders the resulting colored mesh in an interactive window. If hemi is 'both', the data is rendered for the wholw brain.
+#' @description Creates a surface mesh, applies a colormap transform the morphometry data values into colors, and renders the resulting colored mesh in an interactive window. If hemi is 'both', the data is rendered for the whole brain.
 #'
 #' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
 #'
@@ -298,7 +340,7 @@ brainviews <- function(views, coloredmeshes, rgloptions = list(), rglactions = l
 
 #' @title Visualize arbitrary data on the surface of any subject.
 #'
-#' @description Creates a surface mesh, applies a colormap transform the morphometry data values into colors, and renders the resulting colored mesh in an interactive window. If hemi is 'both', the data is rendered for the wholw brain.
+#' @description Creates a surface mesh, applies a colormap transform the morphometry data values into colors, and renders the resulting colored mesh in an interactive window. If hemi is 'both', the data is rendered for the whole brain.
 #'
 #' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, containing the subdir of vis_subject_id, the subject that you want to use for visualization.
 #'
@@ -356,6 +398,67 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, mor
     invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar));
 }
 
+
+#' @title Visualize a vertex mask on the surface of a subject.
+#'
+#' @description A mask is a logical vector that contains one value per vertex. You can create it manually, or use functions like [fsbrain::mask.from.labeldata.for.hemi] to create and modify it. Check the example for this function.
+#'
+#' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, containing the subdir of vis_subject_id, the subject that you want to use for visualization.
+#'
+#' @param vis_subject_id, string. The subject identifier from which to obtain the surface for data visualization. Example: 'fsaverage'.
+#'
+#' @param mask_lh, logical vector or NULL, the mask to visualize on the left hemisphere surface. Must have the same length as the lh surface of the vis_subject_id has vertices. If NULL, this surface will not be rendered. Only one of mask_lh or mask_rh is allowed to be NULL.
+#'
+#' @param mask_rh, logical vector or NULL, the mask to visualize on the right hemisphere surface. Must have the same length as the rh surface of the vis_subject_id has vertices. If NULL, this surface will not be rendered. Only one of mask_lh or mask_rh is allowed to be NULL.
+#'
+#' @param surface, string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
+#'
+#' @param colormap, a colormap. See the squash package for some colormaps. Defaults to [squash::jet].
+#'
+#' @param views, list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.
+#'
+#' @param rgloptions option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));
+#'
+#' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
+#'
+#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE.
+#'
+#' @return list of coloredmeshes. The coloredmeshes used for the visualization.
+#'
+#' @examples
+#' \donttest{
+#'    fsbrain::download_optional_data();
+#'
+#'   # Define the data to use:
+#'   subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+#'   subject_id = 'subject1';
+#'   surface = 'white';
+#'   hemi = 'both';
+#'   atlas = 'aparc';
+#'   region = 'bankssts';
+#'
+#'   # Create a mask from a region of an annotation:
+#'   lh_annot = subject.annot(subjects_dir, subject_id, 'lh', atlas);
+#'   rh_annot = subject.annot(subjects_dir, subject_id, 'rh', atlas);
+#'   lh_label = label.from.annotdata(lh_annot, region);
+#'   rh_label = label.from.annotdata(rh_annot, region);
+#'   lh_mask = mask.from.labeldata.for.hemi(lh_label, length(lh_annot$vertices));
+#'   rh_mask = mask.from.labeldata.for.hemi(rh_label, length(rh_annot$vertices));
+#'
+#'   # Edit the mask: add the vertices from another region to it:
+#'   region2 = 'medialorbitofrontal';
+#'   lh_label2 = label.from.annotdata(lh_annot, region2);
+#'   rh_label2 = label.from.annotdata(rh_annot, region2);
+#'   lh_mask2 = mask.from.labeldata.for.hemi(lh_label2, length(lh_annot$vertices),
+#'    existing_mask = lh_mask);
+#'   rh_mask2 = mask.from.labeldata.for.hemi(rh_label2, length(rh_annot$vertices),
+#'    existing_mask = rh_mask);
+#'   # Visualize the mask:
+#'   vis.mask.on.subject(subjects_dir, subject_id, lh_mask2, rh_mask2);
+#' }
+#'
+#' @family mask functions
+#' @importFrom squash rainbow2
 #' @export
 vis.mask.on.subject <- function(subjects_dir, vis_subject_id, mask_lh, mask_rh, surface="white", colormap=squash::rainbow2, views=c('t4'), rgloptions=list(), rglactions = list(), draw_colorbar = FALSE) {
 
@@ -419,7 +522,7 @@ vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage",
 
 #' @title Visualize an annotation for a subject.
 #'
-#' @description Creates a surface mesh, loads the colors from the annotation, and renders the resulting colored mesh in an interactive window. If hemi is 'both', the data is rendered for the wholw brain.
+#' @description Creates a surface mesh, loads the colors from the annotation, and renders the resulting colored mesh in an interactive window. If hemi is 'both', the data is rendered for the whole brain.
 #'
 #' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
 #'
@@ -731,6 +834,27 @@ coloredmesh.from.label <- function(subjects_dir, subject_id, label, hemi, surfac
     return(coloredmesh.from.mask(subjects_dir, subject_id, mask, hemi, surface=surface, colormap=colormap, surface_data=surface_data));
 }
 
+
+
+#' @title Create a coloredmesh from a mask.
+#'
+#' @param subjects_dir string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
+#'
+#' @param subject_id string. The subject identifier.
+#'
+#' @param mask logical vector, contains one logical value per vertex.
+#'
+#' @param hemi string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.
+#'
+#' @param surface string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
+#'
+#' @param colormap a colormap. See the squash package for some colormaps. Defaults to [squash::rainbow2].
+#'
+#' @param surface_data optional surface object, as returned by [fsbrain::subject.surface]. If given, used instead of loading the surface data from disk (which users of this function may already have done). Defaults to NULL.
+#'
+#' @return coloredmesh. A named list with entries: "mesh" the [rgl::tmesh3d] mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
+#'
+#' @family mask functions
 #' @export
 coloredmesh.from.mask <- function(subjects_dir, subject_id, mask, hemi, surface="white", colormap=squash::rainbow2, surface_data=NULL) {
 

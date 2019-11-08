@@ -22,9 +22,44 @@ logical vector. The mask. It contains a logical value for each vertex. By defaul
 \description{
 Create a binary mask for the data of a single hemisphere from one or more labels. A label contains the vertex indices which are part of it, but often having a mask in more convenient.
 }
+\examples{
+\donttest{
+   fsbrain::download_optional_data();
+
+  # Define the data to use:
+  subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+  subject_id = 'subject1';
+  surface = 'white';
+  hemi = 'both';
+  atlas = 'aparc';
+  region = 'bankssts';
+
+  # Create a mask from a region of an annotation:
+  lh_annot = subject.annot(subjects_dir, subject_id, 'lh', atlas);
+  rh_annot = subject.annot(subjects_dir, subject_id, 'rh', atlas);
+  lh_label = label.from.annotdata(lh_annot, region);
+  rh_label = label.from.annotdata(rh_annot, region);
+  lh_mask = mask.from.labeldata.for.hemi(lh_label, length(lh_annot$vertices));
+  rh_mask = mask.from.labeldata.for.hemi(rh_label, length(rh_annot$vertices));
+
+  # Edit the mask: add the vertices from another region to it:
+  region2 = 'medialorbitofrontal';
+  lh_label2 = label.from.annotdata(lh_annot, region2);
+  rh_label2 = label.from.annotdata(rh_annot, region2);
+  lh_mask2 = mask.from.labeldata.for.hemi(lh_label2, length(lh_annot$vertices),
+   existing_mask = lh_mask);
+  rh_mask2 = mask.from.labeldata.for.hemi(rh_label2, length(rh_annot$vertices),
+   existing_mask = rh_mask);
+}
+
+}
 \seealso{
 Other label data functions: \code{\link{group.label}},
   \code{\link{labeldata.from.mask}},
   \code{\link{subject.label}}
+
+Other mask functions: \code{\link{coloredmesh.from.mask}},
+  \code{\link{vis.mask.on.subject}}
 }
 \concept{label data functions}
+\concept{mask functions}

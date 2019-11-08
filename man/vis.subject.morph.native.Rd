@@ -33,7 +33,7 @@ vis.subject.morph.native(subjects_dir, subject_id, measure, hemi,
 list of coloredmeshes. The coloredmeshes used for the visualization.
 }
 \description{
-Creates a surface mesh, applies a colormap transform the morphometry data values into colors, and renders the resulting colored mesh in an interactive window. If hemi is 'both', the data is rendered for the wholw brain.
+Creates a surface mesh, applies a colormap transform the morphometry data values into colors, and renders the resulting colored mesh in an interactive window. If hemi is 'both', the data is rendered for the whole brain.
 }
 \examples{
 \donttest{
@@ -48,6 +48,7 @@ Other visualization functions: \code{\link{vis.data.on.fsaverage}},
   \code{\link{vis.data.on.subject}},
   \code{\link{vis.region.values.on.subject}},
   \code{\link{vis.subject.annot}},
+  \code{\link{vis.subject.label}},
   \code{\link{vis.subject.morph.standard}}
 }
 \concept{visualization functions}
