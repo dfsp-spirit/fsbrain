@@ -48,9 +48,16 @@ sudo yum install ImageMagick-c++-devel
 
 Recent MacOS versions do not ship with an X11 environment. You will have to install the [xquartz X11 system](https://www.xquartz.org/) if you do not have it already. If you want to create GIF movies, make sure you have imagemagick installed (easiest via [homebrew](https://brew.sh/): `brew install imagemagick@6`).
 
-## Documentation
 
-The documentation comes with the package, and includes the built-in help, examples, and a vignette that explains typical workflows.
+## Full Documentation
+
+The documentation can be accessed from within an R session after you have loaded the *fsbrain* package:
+
+* A detailed vignette with explanations and examples for the functions of the package is included, run `browseVignettes("fsbrain")` to see the vignettes. You can also open the vignette directly:
+  * learn how to load and visualize neuroimaging data and results: `vignette("fsbrain")` [read online at CRAN](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain.html)  
+* Help for a specific function can be accessed in the usual R manner: `?<function>`, where you replace `<function>` with a function name. Like this: `?group.morph.native`.
+* Run `example(<function>)` to see a live demo that uses the function `<function>`. Like this: `example(group.morph.native)`.
+* The [unit tests](./tests/testthat/) that come with this package are essentially a list of examples that illustrate how to use the functions.
 
 
 ## Unit tests / Continuous integration (CI)
