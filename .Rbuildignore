@@ -4,6 +4,7 @@
 ^\.DS_Store$
 .*/\.DS_Store$
 .DS_Store$
+^README\.md$
 README_DEVELOPMENT.md
 LICENSE_FULL
 CHANGES
