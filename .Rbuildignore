@@ -10,3 +10,4 @@ CHANGES
 \.travis\.yml
 ^appveyor\.yml$
 web/
+^doc$
