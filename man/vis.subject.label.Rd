@@ -55,6 +55,8 @@ Other visualization functions: \code{\link{vis.data.on.fsaverage}},
   \code{\link{vis.subject.annot}},
   \code{\link{vis.subject.morph.native}},
   \code{\link{vis.subject.morph.standard}}
+
+Other label functions: \code{\link{vis.labeldata.on.subject}}
 }
 \concept{label functions}
 \concept{visualization functions}

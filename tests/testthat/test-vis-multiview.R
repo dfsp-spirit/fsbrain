@@ -183,3 +183,24 @@ test_that("A region from an atlas can be converted to a label and visualized.", 
 })
 
 
+test_that("We can visualize label data or arbitrary sets of vertices.", {
+    skip("This test has to be run manually and interactively.");
+    fsbrain::download_optional_data();
+    subject_id = 'subject1';
+    surface = 'white';  # If possible, use the 'inflated' surface instead: it is much easier to find the vertices on it. We do not
+    #  use it here because the inflated surface is not shipped with the example data for this package to reduce download size.
+
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+
+    # For the left hemi, we just specify 3 vertices. They are very small in the high-resolution mesh and may be hard to spot.
+    lh_labeldata = c(1000, 1001, 1002);
+
+    # For the right hemi, we extend the neighborhood around our vertices of interest for the visualization. This makes the a lot easier to spot.
+    rh_labeldata = c(5000)
+    rh_surface = subject.surface(subjects_dir, subject_id, surface, 'rh');
+    rh_labeldata_neighborhood = mesh.vertex.neighbors(rh_surface, rh_labeldata);   # extend neighborhood
+    rh_labeldata_neighborhood = mesh.vertex.neighbors(rh_surface, rh_labeldata_neighborhood$vertices);   # extend neighborhood again
+
+    # Hint: Check the area around the visual cortex when searching for the vertices in interactive mode.
+    vis.labeldata.on.subject(subjects_dir, subject_id, lh_labeldata, rh_labeldata_neighborhood$vertices, views=c('si'), surface=surface);
+})

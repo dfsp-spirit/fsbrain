@@ -148,6 +148,7 @@ test_that("We can build a mask from an atlas region and edit it", {
     rh_label2 = label.from.annotdata(rh_annot, region2);
     lh_mask2 = mask.from.labeldata.for.hemi(lh_label2, length(lh_annot$vertices), existing_mask = lh_mask);
     rh_mask2 = mask.from.labeldata.for.hemi(rh_label2, length(rh_annot$vertices), existing_mask = rh_mask);
+    expect_equal(1L, 1L); # force to run the test (tests without any asserts are skipped)
 })
 
 

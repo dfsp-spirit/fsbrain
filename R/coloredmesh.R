@@ -278,7 +278,7 @@ coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surfac
 #'
 #' @param subject_id string. The subject identifier.
 #'
-#' @param label string. Name of the label file, without the hemi part (if any), but including the '.label' suffix. E.g., 'cortex.label' for '?h.cortex.label'
+#' @param label string or vector of integers. If a string, the name of the label file, without the hemi part (if any), but including the '.label' suffix. E.g., 'cortex.label' for '?h.cortex.label'. Alternatively, the already loaded label data as a vector of integers.
 #'
 #' @param hemi string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.
 #'
@@ -298,7 +298,13 @@ coloredmesh.from.label <- function(subjects_dir, subject_id, label, hemi, surfac
     }
 
     surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
-    label_data = subject.label(subjects_dir, subject_id, label, hemi);
+
+    if(is.character(label)) {
+        label_data = subject.label(subjects_dir, subject_id, label, hemi);
+    } else {
+        label_data = label;
+    }
+
     mask = mask.from.labeldata.for.hemi(list(label_data), nrow(surface_data$vertices));
     return(coloredmesh.from.mask(subjects_dir, subject_id, mask, hemi, surface=surface, colormap=colormap, surface_data=surface_data));
 }

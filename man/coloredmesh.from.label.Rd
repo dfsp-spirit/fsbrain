@@ -12,7 +12,7 @@ coloredmesh.from.label(subjects_dir, subject_id, label, hemi,
 
 \item{subject_id}{string. The subject identifier.}
 
-\item{label}{string. Name of the label file, without the hemi part (if any), but including the '.label' suffix. E.g., 'cortex.label' for '?h.cortex.label'}
+\item{label}{string or vector of integers. If a string, the name of the label file, without the hemi part (if any), but including the '.label' suffix. E.g., 'cortex.label' for '?h.cortex.label'. Alternatively, the already loaded label data as a vector of integers.}
 
 \item{hemi}{string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.}
 

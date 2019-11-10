@@ -383,6 +383,74 @@ vis.mask.on.subject <- function(subjects_dir, vis_subject_id, mask_lh, mask_rh, 
 }
 
 
+#' @title Visualize a label on the surface of a subject.
+#'
+#' @description Visualizes a label. Note that a label is just a set of vertices, and that you can use this function to visualize sets of vertices, e.g., to see where on the mesh a certain vertex lies. It may be helpful the visualize the vertex with its neighbors, because otherwise it may be too small to spot. Use the function [fsbrain::mesh.vertex.neighbors] to get them. It is advisable to set the view to the interactive 'si' mode and use the 'inflated' surface to identify single vertices.
+#'
+#' @param subjects_dir string. The FreeSurfer SUBJECTS_DIR, containing the subdir of vis_subject_id, the subject that you want to use for visualization.
+#'
+#' @param vis_subject_id, string The subject identifier from which to obtain the surface for data visualization. Example: 'fsaverage'.
+#'
+#' @param lh_labeldata  integer vector of vertex indices for the left hemisphere
+#'
+#' @param rh_labeldata integer vector of vertex indices for the right hemisphere
+#'
+#' @param surface string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
+#'
+#' @param colormap a colormap. See the squash package for some colormaps. Defaults to [squash::jet].
+#'
+#' @param views list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.
+#'
+#' @param rgloptions option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));
+#'
+#' @param rglactions named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
+#'
+#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE.
+#'
+#' @return list of coloredmeshes. The coloredmeshes used for the visualization.
+#'
+#' @examples
+#' \donttest{
+#'    fsbrain::download_optional_data();
+#'
+#'   # Define the data to use:
+#'   subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+#'   lh_labeldata = c(1000, 1001, 1002);   # only the vertices, will be tiny.
+#'   subject_id = 'subject1';
+#'   surface = 'white'; # Should use 'inflated', but we do not currently
+#'                      # ship it for the example subject to reduce download size.
+#'
+#'   # For the right hemi, extend them to neighborhood for better visibility:
+#'   rh_labeldata = c(500, 5000);
+#'   rh_surface = subject.surface(subjects_dir, subject_id, surface, 'rh');
+#'   rh_labeldata_neighborhood = mesh.vertex.neighbors(rh_surface, rh_labeldata);
+#'   vis.labeldata.on.subject(subjects_dir, subject_id, lh_labeldata,
+#'    rh_labeldata_neighborhood$vertices, surface=surface, views=c('si'));
+#' }
+#'
+#' @family label functions
+#' @importFrom squash rainbow2
+#' @export
+vis.labeldata.on.subject <- function(subjects_dir, vis_subject_id, lh_labeldata, rh_labeldata, surface="white", colormap=squash::rainbow2, views=c('t4'), rgloptions=list(), rglactions = list(), draw_colorbar = FALSE) {
+
+    if(is.null(lh_labeldata) && is.null(rh_labeldata)) {
+        stop(sprintf("Only one of lh_labeldata or rh_labeldata can be NULL.\n"));
+    }
+
+    coloredmeshes = list();
+
+    if(! is.null(lh_labeldata)) {
+        coloredmeshes$lh = coloredmesh.from.label(subjects_dir, vis_subject_id, lh_labeldata, 'lh', surface=surface, colormap=colormap);
+    }
+
+    if(! is.null(rh_labeldata)) {
+        coloredmeshes$rh = coloredmesh.from.label(subjects_dir, vis_subject_id, rh_labeldata, 'rh', surface=surface, colormap=colormap);
+    }
+
+    invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar));
+}
+
+
 #' @title Visualize arbitrary data on the fsaverage template subject, if available.
 #'
 #' @description Creates a surface mesh, applies a colormap transform the morphometry data values into colors, and renders the resulting colored mesh in an interactive window. If hemi is 'both', the data is rendered for the whole brain. This function tries to automatically retrieve the subjects dir of the fsaverage template subject by checking the environment variables SUBJECTS_DIR and FREESURFER_HOME for the subject. The subject is required for its surfaces, which are not shipped with this package for licensing reasons.

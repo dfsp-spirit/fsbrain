@@ -1,6 +1,11 @@
 fsbrain Changes
 ===============
 
+Version 0.0.3
+-------------
+- Add function to visualize arbitrary vertices and label data (vis.labeldata.on.subject) and a function to compute the neighbors of a vertex (mesh.vertex.neighbors)
+
+
 Version 0.0.2
 --------------
 - Support rglactions and rgloptions to conveniently increase output resolution and create screenshots
