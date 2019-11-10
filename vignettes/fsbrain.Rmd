@@ -346,6 +346,35 @@ vis.subject.label(subjects_dir, subject_id, label, hemi);
 ```
 
 
+#### Visualizing your clusters or arbitrary vertices
+
+Labels are just sets of vertices, and you can use the `vis.labeldata.on.subject` function to visualize arbitrary sets of vertices. This is very helpful when debugging code or analyzing your results. E.g., you may have performed some analyis and found some significant clusters. You can visualize the cluster (see example for lh below), or maybe you just want to see the position of the vertex with the highest effect size in the cluster.
+
+If you are visualizing single vertices, they become very different to find on the mesh. You can use the helper function `mesh.vertex.neighbors` to compute the direct neighbors of the vertex (or several vertices) as illustrated below for the right hemisphere. If you then visualize the whole neighborhood, it should be possible to spot it. 
+
+*Hint*: It becomes even easier to spot your vertices of interest if you use the infalted surface, as the vertex may be hidden in a sulcus when using the white or inflated surfaces.
+
+
+```{r, eval = FALSE}
+surface = 'white';  # If possible, use the 'inflated' surface instead: it is much easier to find the vertices on it. We do not
+#  use it here because the inflated surface is not shipped with the example data for this package to reduce download size.
+
+# For the left hemi, we just specify 3 vertices. They are very small in the high-resolution mesh and may be hard to spot.
+my_lh_result_cluster_vertices = c(1000, 1001, 1002);  # Would be a lot more than just 3 in real life, and they would be adjacent (these are not).
+lh_labeldata = my_lh_result_cluster_vertices;
+
+# For the right hemi, we extend the neighborhood around our vertices of interest for the visualization. This makes the a lot easier to spot.
+my_highest_effect_size_vertex = 5000;
+rh_labeldata = c(my_highest_effect_size_vertex);
+rh_surface = subject.surface(subjects_dir, subject_id, surface, 'rh');
+rh_labeldata_neighborhood = mesh.vertex.neighbors(rh_surface, rh_labeldata);   # extend neighborhood for better visibility
+rh_labeldata_neighborhood = mesh.vertex.neighbors(rh_surface, rh_labeldata_neighborhood$vertices);   # extend neighborhood again
+
+# Hint: Check the area around the visual cortex when searching for the vertices in interactive mode.
+vis.labeldata.on.subject(subjects_dir, subject_id, lh_labeldata, rh_labeldata_neighborhood$vertices, views=c('si'), surface=surface);
+```
+
+
 ### Visualizing masks
 
 In the following example, we create a mask by combining several labels and visualize it:
