@@ -95,7 +95,7 @@ You can generate the citation for the version you use by typing the following co
 citation("fsbrain")
 ```
 
-This will ouput something like this (but for the version you actually used, which is important reproducibility):
+This will ouput something like this (but for the version you actually used, which is important for reproducibility):
 ```
 
 To cite package ‘fsbrain’ in a publications use:
