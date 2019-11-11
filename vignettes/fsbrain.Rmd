@@ -535,7 +535,7 @@ subject_id = 'subject1';
 rgloptions=list("windowRect"=c(50, 50, 1000, 1000));     # larger plot
 surface = 'white';
 measure = 'thickness';
-vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('t4'), rgloptions=rgloptions, draw_colorbar = TRUE);
+vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('si'), rgloptions=rgloptions, draw_colorbar = TRUE);
 ```
 
 ![**Figure 5**: Colorbar integrated into the rgl plot.](colorbar_bgplot3d.jpg)
