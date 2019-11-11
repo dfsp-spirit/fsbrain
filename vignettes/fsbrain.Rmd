@@ -520,3 +520,41 @@ You can tweak the output GIF in whatever external software you like if needed. E
 ```
 convert -loop 0 fsbrain_subject1_thickness_white.gif fsbrain_subject1_thickness_white_loop_inf.gif
 ```
+
+### Drawing colorbars
+
+Adding 2D colorbars to a 3D plot has some technical limitations, and fsbrain currently gives you 2 options to get a colorbar for your plot.
+
+#### Plotting a colorbar in the background of a 3D plot
+
+The first option is to use the `draw_colorbar` parameter of the visualization functions that support it (all for which it makes sense e.g., `vis.subject.morph.native()`, `vis.subject.morph.standard()`, `vis.data.on.subject()` and many more). This tries to draw a colorbar into the background of the rgl 3D plot. This is experimental and only works if there is enough space in the plot area. This means that it depends on the `views` parameter and the size of the rgl device whether or not there is enough space to draw the colorbar. If there is not enough space, the colorbar may not show up at all or it may be empty. You can use the rgloptions parameter to all these functions to increase the size of the rgl device. Example (continued from above):
+
+```{r, eval = FALSE}
+subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+subject_id = 'subject1';
+rgloptions=list("windowRect"=c(50, 50, 1000, 1000));     # larger plot
+surface = 'white';
+measure = 'thickness';
+vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('t4'), rgloptions=rgloptions, draw_colorbar = TRUE);
+```
+
+![**Figure 5**: Colorbar integrated into the rgl plot.](colorbar_bgplot3d.jpg)
+
+Another limitation of this is that the position of the colorbar may not be what you want when using tiled views. It is ok for showing the data to colleagues in a presentation at some informal meeting for most people, but for a figure in a publication, you may want more control over the colorbar appearance and position. In that case, you should use a separate plot for the colorbar.
+
+#### Plotting a colorbar to a separate 2D plot
+
+This option plots a colorbar for the data of your meshes into a separate 2D plot. You can export the colorbar plot to a graphics file and create the final version of your figure in standard image manipulation software like Inkscape. To do this, you can use the invisible return value of all visualization functions in combination with the `coloredmesh.plot.colorbar.separate()` function:
+
+```{r, eval = FALSE}
+subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+coloredmeshes = vis.subject.morph.native(subjects_dir, 'subject1', 'thickness', 'lh', views=c('t4'), colormap=squash::jet);
+coloredmesh.plot.colorbar.separate(coloredmeshes, horizontal=TRUE);
+```
+
+![**Figure 6**: Separate horizontal colorbar.](colorbar_separate.jpg)
+
+
+See the help for the `coloredmesh.plot.colorbar.separate()` function for more customization options.
+
+

@@ -33,7 +33,7 @@ vis.region.values.on.subject(subjects_dir, subject_id, atlas,
 
 \item{value_for_unlisted_regions}{numerical scalar or NaN, the value to assign to regions which do not occur in the region_value_lists. Defaults to NaN.}
 
-\item{draw_colorbar}{logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE.}
+\item{draw_colorbar}{logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See [fsbrain::coloredmesh.plot.colorbar.separate] for an alternative.}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.

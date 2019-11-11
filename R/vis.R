@@ -23,7 +23,7 @@
 #'
 #' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
 #'
-#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE.
+#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See [fsbrain::coloredmesh.plot.colorbar.separate] for an alternative.
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
@@ -87,7 +87,7 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, su
 #'
 #' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
 #'
-#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE.
+#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See [fsbrain::coloredmesh.plot.colorbar.separate] for an alternative.
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
@@ -155,7 +155,7 @@ vis.subject.label <- function(subjects_dir, subject_id, label, hemi, surface="wh
 #'
 #' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
 #'
-#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE.
+#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See [fsbrain::coloredmesh.plot.colorbar.separate] for an alternative.
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
@@ -216,7 +216,7 @@ vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, 
 #'
 #' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
 #'
-#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE.
+#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See [fsbrain::coloredmesh.plot.colorbar.separate] for an alternative.
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
@@ -263,7 +263,7 @@ brainviews <- function(views, coloredmeshes, rgloptions = list(), rglactions = l
 #'
 #' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
 #'
-#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE.
+#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See [fsbrain::coloredmesh.plot.colorbar.separate] for an alternative.
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
@@ -324,7 +324,7 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, mor
 #'
 #' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
 #'
-#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE.
+#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See [fsbrain::coloredmesh.plot.colorbar.separate] for an alternative.
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
@@ -405,7 +405,7 @@ vis.mask.on.subject <- function(subjects_dir, vis_subject_id, mask_lh, mask_rh, 
 #'
 #' @param rglactions named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
 #'
-#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE.
+#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See [fsbrain::coloredmesh.plot.colorbar.separate] for an alternative.
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
@@ -473,7 +473,7 @@ vis.labeldata.on.subject <- function(subjects_dir, vis_subject_id, lh_labeldata,
 #'
 #' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
 #'
-#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE.
+#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See [fsbrain::coloredmesh.plot.colorbar.separate] for an alternative.
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
@@ -569,7 +569,7 @@ vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi, surface="wh
 #'
 #' @param value_for_unlisted_regions numerical scalar or NaN, the value to assign to regions which do not occur in the region_value_lists. Defaults to NaN.
 #'
-#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE.
+#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See [fsbrain::coloredmesh.plot.colorbar.separate] for an alternative.
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'

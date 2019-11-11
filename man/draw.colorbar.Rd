@@ -2,14 +2,18 @@
 % Please edit documentation in R/vis_meshes.R
 \name{draw.colorbar}
 \alias{draw.colorbar}
-\title{Draw a coloredbar into the current plot.}
+\title{Draw coloredbar into background of current plot.}
 \usage{
-draw.colorbar(coloredmeshes)
+draw.colorbar(coloredmeshes, horizontal = TRUE, num_steps = 100)
 }
 \arguments{
-\item{coloredmeshes, }{list of coloredmeshes. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.}
+\item{coloredmeshes}{list of coloredmeshes. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.}
+
+\item{horizontal}{logical, whether the colorbar should be drawn in horizontal oritentation. Defaults to TRUE.}
+
+\item{num_steps}{integer, number of steps to use for the colorbar. Defaults to 100.}
 }
 \description{
-Requires a rgl 3d visualisation to be open that already contains a rendered object.
+Requires a rgl 3d visualisation to be open that already contains a rendered object. Uses [rgl::bgplot3d] to add a colorbar in the background of the plot. Experimental.
 }
 \keyword{internal}
