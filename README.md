@@ -43,6 +43,7 @@ rpm-based distros (Fedora, CentOS, RHEL, ...):
 sudo yum install ImageMagick-c++-devel
 ```
 
+You can check the *SystemRequirements* section on the [rgl page at CRAN](https://CRAN.R-project.org/package=rgl) for the full list.
 
 #### MacOS System dependencies
 
