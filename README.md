@@ -28,11 +28,13 @@ devtools::install_github("dfsp-spirit/fsbrain", build_vignettes=TRUE);
 
 ### System dependencies
 
-The *fsbrain* package itself does not have any system dependencies, however, it uses [rgl](https://CRAN.R-project.org/package=rgl) for rendering. To install the system dependencies for rgl:
+The *fsbrain* package itself does not have any system dependencies, however, it uses rgl for rendering. You can check the *SystemRequirements* section on the [rgl page at CRAN](https://CRAN.R-project.org/package=rgl) for the full list of rgl dependencies.
+
+To install the system dependencies for rgl:
 
 #### Linux System dependencies
 
-R packages are compiled under Linnux, so you need some libraries. Before installing *fsbrain*, run the following command in your system shell (not in R):
+R packages are compiled under Linux, so you need some dev libraries. Before installing *fsbrain*, run the following command in your system shell (not in R):
 
 deb-based distros (Debian, Ubuntu, ...):
 ```shell
@@ -42,8 +44,6 @@ rpm-based distros (Fedora, CentOS, RHEL, ...):
 ```shell
 sudo yum install ImageMagick-c++-devel
 ```
-
-You can check the *SystemRequirements* section on the [rgl page at CRAN](https://CRAN.R-project.org/package=rgl) for the full list.
 
 #### MacOS System dependencies
 
