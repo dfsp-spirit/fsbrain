@@ -42,7 +42,7 @@ sudo apt-get install libmagick++-dev libx11-dev libglu1-mesa-dev mesa-common-dev
 ```
 rpm-based distros (Fedora, CentOS, RHEL, ...):
 ```shell
-sudo yum install ImageMagick-c++-devel mesa-libGLU-devel freetype-devel
+sudo yum install ImageMagick-c++-devel libX11-devel mesa-libGLU-devel freetype-devel
 ```
 
 #### MacOS System dependencies
