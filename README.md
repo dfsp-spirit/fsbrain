@@ -3,7 +3,9 @@ A GNU R library for structural neuroimaging. Provides high-level functions to ac
 
 ![Vis](./vignettes/fsbrain_ct.jpg?raw=true "Cortical thickness visualization, created with fsbrain")
 
-[See more visualization examples](#visualization-examples)
+
+[Installation](#installation) | [Documentation](#documentation) | [Unit tests](#unit-tests-and-continuous-integration) | [License](#license) | [Citation](#citation) | [Contributing](#contributing) |
+[Visualization examples](#visualization-examples)
 
 ## Installation
 
@@ -50,7 +52,7 @@ sudo yum install ImageMagick-c++-devel libX11-devel mesa-libGLU-devel freetype-d
 Recent MacOS versions do not ship with an X11 environment. You will have to install the [xquartz X11 system](https://www.xquartz.org/) if you do not have it already. If you want to create GIF movies, make sure you have imagemagick installed (easiest via [homebrew](https://brew.sh/): `brew install imagemagick@6`).
 
 
-## Full Documentation
+## Documentation
 
 The documentation can be accessed from within an R session after you have loaded the *fsbrain* package:
 
@@ -61,7 +63,7 @@ The documentation can be accessed from within an R session after you have loaded
 * The [unit tests](./tests/testthat/) that come with this package are essentially a list of examples that illustrate how to use the functions.
 
 
-## Unit tests / Continuous integration (CI)
+## Unit tests and Continuous integration
 
 
 This package comes with [lots of unit tests](./tests/testthat/). To run them, in a clean R session:
