@@ -17,7 +17,7 @@ install.packages("fsbrain");
 
 ### Risky: install the dev version of fsbrain with the latest features
 
-This version is not guaranteed to be in a usable state, try at your own risk and run the tests using it.
+This version is not guaranteed to be in a usable state, try at your own risk and run the tests before using it.
 
 From an R session:
 
