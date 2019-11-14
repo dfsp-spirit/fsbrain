@@ -15,6 +15,7 @@ Have some bandwidth to spare? Try some of these large versions for different sur
 * [Mean curvature (12.8 MB)](./fsbrain_morphnat_curv.gif)
 * [Jacobian white (9.3 MB)](./fsbrain_morphnat_jacobian_white.gif)
 * [Sulcal depth (9.0 MB)](./fsbrain_morphnat_sulc.gif)
+* [Mean Geodesic distance](./fsbrain_morphnat_geodesic_white.gif)
 
 
 Here are some brain surface parcellations:
