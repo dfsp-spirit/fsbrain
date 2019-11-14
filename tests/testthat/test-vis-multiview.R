@@ -204,3 +204,65 @@ test_that("We can visualize label data or arbitrary sets of vertices.", {
     # Hint: Check the area around the visual cortex when searching for the vertices in interactive mode.
     vis.labeldata.on.subject(subjects_dir, subject_id, lh_labeldata, rh_labeldata_neighborhood$vertices, views=c('si'), surface=surface);
 })
+
+
+test_that("We can combine an output view with a separate colormap.", {
+    skip("This test has to be run manually and interactively.");
+
+    fsbrain::download_optional_data();
+
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+    subject_id = 'subject1';
+    measure = 'thickness';
+    surface = 'white';
+
+    output_width = 550; # in px
+    output_height = output_width;
+    cbar_height = 150;  # We cannot set this much smaller without getting errors, we will instead crop the resulting image in imagemagick below.
+    output_main_image = path.expand("~/fsbrain_img_main.png");
+    output_cbar_image = path.expand("~/fsbrain_img_cbar.png");
+    output_main_movie = "fsbrain_mov_main";
+
+    rgloptions=list("windowRect"=c(20, 20, output_width, output_height));
+    rglactions = list("snapshot_png"=output_main_image, "movie"=output_main_movie);
+
+    coloredmeshes = vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('sr'), rgloptions=rgloptions, rglactions=rglactions);
+    coloredmesh.plot.colorbar.separate(coloredmeshes, png_options = list("filename"=output_cbar_image, "width"=output_width, "height"=cbar_height));
+
+
+    ## The following are some ideas on how to combine the colorbar and another image using imagemagick.
+    ## The colorbar shouldis displayed below the full image here.
+    ## These are to be run on the command line of the OS, but we could turn them into R code with the 'magick' package later I guess.
+    #
+    # cd ~
+
+    ## Remove the whitespace around the colorbar:
+    # convert fsbrain_img_cbar.png -trim +repage fsbrain_img_cbar_min.png
+
+    ## Vertically append the colorbar below the main image
+    # convert fsbrain_img_main.png fsbrain_img_cbar_min.png -gravity center -background white -append fsbrain_img_combined.png
+
+
+    ## Append the colorbar below the gif movie: this is a bit more tricky. We have to split the gif into its
+    ## frames, append to them, then recombine.
+
+
+    ## One may want to crop something from the top of the colorbar image before combining the images, to reduce white space.
+    ## In this example, we remove the 20 px at the top.
+    # convert fsbrain_img_cbar.png -gravity North -chop 1x80 fsbrain_img_cbar_cropped.gif
+    # convert fsbrain_img_cbar_min.png fsbrain_img_cbar_min.gif
+
+    ## Split the animated gif into frames:
+    # convert fsbrain_mov_main.gif -coalesce frames-%03d.gif
+    ## We may want to crop a bit from the frames as well.
+    ## In this example, we remove the 40 px at the bottom.
+    # for FRAME in frames*; do convert $FRAME -gravity South -chop 1x40 $FRAME; done
+
+    ## Now combine colorbar and image for each frame:
+    # for FRAME in frames*; do montage $FRAME fsbrain_img_cbar_cropped.gif -tile 1x2 -geometry +0+0 -background white $FRAME; done
+
+    ## And finally create a new animated gif from all the frames:
+    # convert -delay 5 -loop 0 -layers optimize frames* fsbrain_mov_combined.gif
+
+    ## This will give you the image and the rotating brain gif animation, both with a suitable colorbar at the bottom of the image/animation.
+})
