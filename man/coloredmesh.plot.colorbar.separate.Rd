@@ -6,26 +6,20 @@
 \usage{
 coloredmesh.plot.colorbar.separate(
   coloredmeshes,
-  horizontal = TRUE,
-  num_steps = 100,
-  zlim = NULL,
-  symm = FALSE,
   show = TRUE,
+  makecmap_extra_options = list(n = 128),
+  image.plot_extra_options = list(horizontal = TRUE),
   png_options = NULL
 )
 }
 \arguments{
 \item{coloredmeshes}{list of coloredmeshes. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.}
 
-\item{horizontal}{logical, whether the colorbar should be drawn in horizontal oritentation. Defaults to TRUE.}
-
-\item{num_steps}{integer, the number of steps to use for the colorbar. Defaults to 100.}
-
-\item{zlim}{numerical vector of length 2. The data range for the colorbar, as returned by [base::range]. Defaults to the full (finite) range of the data of the coloredmeshes.}
-
-\item{symm}{logical, whether to extend the colormap mapping domain to be symmetric around zero, useful to ensure that the zero value gets a neutral color for divergent colormaps. Defaults to FALSE.}
-
 \item{show}{logical, Whether to open the resulting plot in R. Defaults to TRUE.}
+
+\item{makecmap_extra_options}{named list of extra optins to pass to [squash::makecmap]. This can be used to overwrite the colormap function, explicitely set the color for NA data values, or whatever. The first mandatory data argument is passed in from the coloredmesh data already and "colFn" is also set based on the coloredmeshes, so there is no need to pass these. Your list will be merged with the internal options, so you could overwrite named arguments if needed.}
+
+\item{image.plot_extra_options}{named list of extra optins to pass to [fields::image.plot]. This can be used to add a legend to the colorbar, rotate the colorbar, or whatever. The options "legend_only", "zlim", and "col" are computed and set for you  by this function, so there is no need to pass these. Your list will be merged with the internal options, so you could overwrite named arguments if needed.}
 
 \item{png_options}{Options to pass to [grDevices::png]], see the docs of that function for details. Allow you to save the plot as a png bitmap image. Example: \code{png_options = list("filename"="outfile.png", "width"=800)}. Defaults to NULL, which will not save anything.}
 }
