@@ -249,9 +249,9 @@ brainviews <- function(views, coloredmeshes, rgloptions = list(), rglactions = l
 #'
 #' @param vis_subject_id, string. The subject identifier from which to obtain the surface for data visualization. Example: 'fsaverage'.
 #'
-#' @param morph_data_lh, numeric vector or NULL, the data to visualize on the left hemisphere surface. Must have the same length as the surface of the vis_subject_id has vertices. If NULL, this surface will not be rendered. Only one of morph_data_lh or morph_data_rh is allowed to be NULL.
+#' @param morph_data_lh, numeric vector or character string or NULL, the data to visualize on the left hemisphere surface. If a string, it is treated as a filename and data is loaded from it first. When it is a numerical vector, this is assumed to be the data already. The data must have the same length as the surface of the vis_subject_id has vertices. If NULL, this surface will not be rendered. Only one of morph_data_lh or morph_data_rh is allowed to be NULL.
 #'
-#' @param morph_data_rh, numeric vector or NULL, the data to visualize on the right hemisphere surface. Must have the same length as the surface of the vis_subject_id has vertices. If NULL, this surface will not be rendered. Only one of morph_data_lh or morph_data_rh is allowed to be NULL.
+#' @param morph_data_rh, numeric vector or character string or NULL, the data to visualize on the right hemisphere surface. If a string, it is treated as a filename and data is loaded from it first. When it is a numerical vector, this is assumed to be the data already.  The data must have the same length as the surface of the vis_subject_id has vertices. If NULL, this surface will not be rendered. Only one of morph_data_lh or morph_data_rh is allowed to be NULL.
 #'
 #' @param surface, string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
 #'
@@ -289,11 +289,21 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, mor
     coloredmeshes = list();
 
     if(! is.null(morph_data_lh)) {
+
+        if(is.character(morph_data_lh)) {    # Treat is as a filename
+            morph_data_lh = freesurferformats::read.fs.morph(morph_data_lh);
+        }
+
         cmesh_lh = coloredmesh.from.morphdata(subjects_dir, vis_subject_id, morph_data_lh, 'lh', surface=surface, colormap=colormap);
         coloredmeshes$lh = cmesh_lh;
     }
 
     if(! is.null(morph_data_rh)) {
+
+        if(is.character(morph_data_rh)) {    # Treat is as a filename
+            morph_data_rh = freesurferformats::read.fs.morph(morph_data_rh);
+        }
+
         cmesh_rh = coloredmesh.from.morphdata(subjects_dir, vis_subject_id, morph_data_rh, 'rh', surface=surface, colormap=colormap);
         coloredmeshes$rh = cmesh_rh;
     }
