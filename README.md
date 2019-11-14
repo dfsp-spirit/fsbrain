@@ -24,7 +24,7 @@ This version is not guaranteed to be in a usable state, try at your own risk and
 From an R session:
 
 ```r
-install.packages(c("devtools", "knitr", "testthat"));
+install.packages(c("devtools", "knitr", "rmarkdown", "testthat"));
 devtools::install_github("dfsp-spirit/fsbrain", build_vignettes=TRUE);
 ```
 
