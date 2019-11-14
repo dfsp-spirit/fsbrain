@@ -4,8 +4,13 @@
 \alias{subject.label}
 \title{Retrieve label data for a single subject.}
 \usage{
-subject.label(subjects_dir, subject_id, label, hemi,
-  return_one_based_indices = TRUE)
+subject.label(
+  subjects_dir,
+  subject_id,
+  label,
+  hemi,
+  return_one_based_indices = TRUE
+)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -33,8 +38,9 @@ Load a label (like 'label/lh.cortex.label') for a subject from disk. Uses knowle
 
 }
 \seealso{
-Other label data functions: \code{\link{group.label}},
-  \code{\link{labeldata.from.mask}},
-  \code{\link{mask.from.labeldata.for.hemi}}
+Other label data functions: 
+\code{\link{group.label}()},
+\code{\link{labeldata.from.mask}()},
+\code{\link{mask.from.labeldata.for.hemi}()}
 }
 \concept{label data functions}

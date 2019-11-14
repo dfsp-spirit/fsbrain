@@ -4,8 +4,15 @@
 \alias{group.morph.standard}
 \title{Retrieve standard space morphometry data for a group of subjects.}
 \usage{
-group.morph.standard(subjects_dir, subjects_list, measure, hemi,
-  fwhm = "10", template_subject = "fsaverage", format = "mgh")
+group.morph.standard(
+  subjects_dir,
+  subjects_list,
+  measure,
+  hemi,
+  fwhm = "10",
+  template_subject = "fsaverage",
+  format = "mgh"
+)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -38,8 +45,9 @@ Load standard space morphometry data (like 'surf/lh.area') for a group of subjec
 
 }
 \seealso{
-Other morphometry data functions: \code{\link{group.morph.native}},
-  \code{\link{subject.morph.native}},
-  \code{\link{subject.morph.standard}}
+Other morphometry data functions: 
+\code{\link{group.morph.native}()},
+\code{\link{subject.morph.native}()},
+\code{\link{subject.morph.standard}()}
 }
 \concept{morphometry data functions}

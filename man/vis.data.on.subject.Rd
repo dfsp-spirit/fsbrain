@@ -4,19 +4,27 @@
 \alias{vis.data.on.subject}
 \title{Visualize arbitrary data on the surface of any subject.}
 \usage{
-vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh,
-  morph_data_rh, surface = "white", colormap = squash::jet,
-  views = c("t4"), rgloptions = list(), rglactions = list(),
-  draw_colorbar = FALSE)
+vis.data.on.subject(
+  subjects_dir,
+  vis_subject_id,
+  morph_data_lh,
+  morph_data_rh,
+  surface = "white",
+  colormap = squash::jet,
+  views = c("t4"),
+  rgloptions = list(),
+  rglactions = list(),
+  draw_colorbar = FALSE
+)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, containing the subdir of vis_subject_id, the subject that you want to use for visualization.}
 
 \item{vis_subject_id, }{string. The subject identifier from which to obtain the surface for data visualization. Example: 'fsaverage'.}
 
-\item{morph_data_lh, }{numeric vector or NULL, the data to visualize on the left hemisphere surface. Must have the same length as the surface of the vis_subject_id has vertices. If NULL, this surface will not be rendered. Only one of morph_data_lh or morph_data_rh is allowed to be NULL.}
+\item{morph_data_lh, }{numeric vector or character string or NULL, the data to visualize on the left hemisphere surface. If a string, it is treated as a filename and data is loaded from it first. When it is a numerical vector, this is assumed to be the data already. The data must have the same length as the surface of the vis_subject_id has vertices. If NULL, this surface will not be rendered. Only one of morph_data_lh or morph_data_rh is allowed to be NULL.}
 
-\item{morph_data_rh, }{numeric vector or NULL, the data to visualize on the right hemisphere surface. Must have the same length as the surface of the vis_subject_id has vertices. If NULL, this surface will not be rendered. Only one of morph_data_lh or morph_data_rh is allowed to be NULL.}
+\item{morph_data_rh, }{numeric vector or character string or NULL, the data to visualize on the right hemisphere surface. If a string, it is treated as a filename and data is loaded from it first. When it is a numerical vector, this is assumed to be the data already.  The data must have the same length as the surface of the vis_subject_id has vertices. If NULL, this surface will not be rendered. Only one of morph_data_lh or morph_data_rh is allowed to be NULL.}
 
 \item{surface, }{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 
@@ -47,11 +55,12 @@ Creates a surface mesh, applies a colormap transform the morphometry data values
 
 }
 \seealso{
-Other visualization functions: \code{\link{vis.data.on.fsaverage}},
-  \code{\link{vis.region.values.on.subject}},
-  \code{\link{vis.subject.annot}},
-  \code{\link{vis.subject.label}},
-  \code{\link{vis.subject.morph.native}},
-  \code{\link{vis.subject.morph.standard}}
+Other visualization functions: 
+\code{\link{vis.data.on.fsaverage}()},
+\code{\link{vis.region.values.on.subject}()},
+\code{\link{vis.subject.annot}()},
+\code{\link{vis.subject.label}()},
+\code{\link{vis.subject.morph.native}()},
+\code{\link{vis.subject.morph.standard}()}
 }
 \concept{visualization functions}

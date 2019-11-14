@@ -32,6 +32,7 @@ A measure is something like 'thickness' or 'area'. This function concatenates th
 
 }
 \seealso{
-Other concatination functions: \code{\link{group.concat.measures.standard}}
+Other concatination functions: 
+\code{\link{group.concat.measures.standard}()}
 }
 \concept{concatination functions}

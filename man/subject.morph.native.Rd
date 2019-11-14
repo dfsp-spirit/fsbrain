@@ -4,8 +4,7 @@
 \alias{subject.morph.native}
 \title{Retrieve native space morphometry data for a single subject.}
 \usage{
-subject.morph.native(subjects_dir, subject_id, measure, hemi,
-  format = "curv")
+subject.morph.native(subjects_dir, subject_id, measure, hemi, format = "curv")
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -33,8 +32,9 @@ Load native space morphometry data (like 'surf/lh.area') for a subject from disk
 
 }
 \seealso{
-Other morphometry data functions: \code{\link{group.morph.native}},
-  \code{\link{group.morph.standard}},
-  \code{\link{subject.morph.standard}}
+Other morphometry data functions: 
+\code{\link{group.morph.native}()},
+\code{\link{group.morph.standard}()},
+\code{\link{subject.morph.standard}()}
 }
 \concept{morphometry data functions}

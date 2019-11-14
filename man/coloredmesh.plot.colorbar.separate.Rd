@@ -4,8 +4,13 @@
 \alias{coloredmesh.plot.colorbar.separate}
 \title{Draw colorbar for coloredmeshes in separate 2D plot.}
 \usage{
-coloredmesh.plot.colorbar.separate(coloredmeshes, horizontal = TRUE,
-  num_steps = 100, zlim = NULL, symm = FALSE)
+coloredmesh.plot.colorbar.separate(
+  coloredmeshes,
+  horizontal = TRUE,
+  num_steps = 100,
+  zlim = NULL,
+  symm = FALSE
+)
 }
 \arguments{
 \item{coloredmeshes}{list of coloredmeshes. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.}

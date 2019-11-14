@@ -4,8 +4,14 @@
 \alias{subject.filepath.any}
 \title{Construct filepath of any freesurfer file.}
 \usage{
-subject.filepath.any(subjects_dir, subject_id, relative_path_parts,
-  hemi = NULL, file_tag = "", warn_if_nonexistent = FALSE)
+subject.filepath.any(
+  subjects_dir,
+  subject_id,
+  relative_path_parts,
+  hemi = NULL,
+  file_tag = "",
+  warn_if_nonexistent = FALSE
+)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}

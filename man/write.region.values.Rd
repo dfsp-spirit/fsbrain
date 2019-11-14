@@ -4,10 +4,18 @@
 \alias{write.region.values}
 \title{Write one value per atlas region for a subject.}
 \usage{
-write.region.values(subjects_dir, subject_id, hemi, atlas,
-  region_value_list, outfile_morph_name, format = "mgz",
-  do_write_file = TRUE, output_path = NULL,
-  value_for_unlisted_regions = NaN)
+write.region.values(
+  subjects_dir,
+  subject_id,
+  hemi,
+  atlas,
+  region_value_list,
+  outfile_morph_name,
+  format = "mgz",
+  do_write_file = TRUE,
+  output_path = NULL,
+  value_for_unlisted_regions = NaN
+)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -47,7 +55,8 @@ Given an atlas and a list that contains one value for each atlas region, write a
 
 }
 \seealso{
-Other output functions: \code{\link{write.region.aggregated}},
-  \code{\link{write.region.values.fsaverage}}
+Other output functions: 
+\code{\link{write.region.aggregated}()},
+\code{\link{write.region.values.fsaverage}()}
 }
 \concept{output functions}

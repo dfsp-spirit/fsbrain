@@ -4,9 +4,18 @@
 \alias{vis.subject.morph.native}
 \title{Visualize native space morphometry data for a subject.}
 \usage{
-vis.subject.morph.native(subjects_dir, subject_id, measure, hemi,
-  surface = "white", colormap = squash::jet, views = c("t4"),
-  rgloptions = list(), rglactions = list(), draw_colorbar = FALSE)
+vis.subject.morph.native(
+  subjects_dir,
+  subject_id,
+  measure,
+  hemi,
+  surface = "white",
+  colormap = squash::jet,
+  views = c("t4"),
+  rgloptions = list(),
+  rglactions = list(),
+  draw_colorbar = FALSE
+)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -44,11 +53,12 @@ Creates a surface mesh, applies a colormap transform the morphometry data values
 
 }
 \seealso{
-Other visualization functions: \code{\link{vis.data.on.fsaverage}},
-  \code{\link{vis.data.on.subject}},
-  \code{\link{vis.region.values.on.subject}},
-  \code{\link{vis.subject.annot}},
-  \code{\link{vis.subject.label}},
-  \code{\link{vis.subject.morph.standard}}
+Other visualization functions: 
+\code{\link{vis.data.on.fsaverage}()},
+\code{\link{vis.data.on.subject}()},
+\code{\link{vis.region.values.on.subject}()},
+\code{\link{vis.subject.annot}()},
+\code{\link{vis.subject.label}()},
+\code{\link{vis.subject.morph.standard}()}
 }
 \concept{visualization functions}
