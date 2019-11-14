@@ -198,21 +198,27 @@ draw.colorbar <- function(coloredmeshes, horizontal=TRUE, num_steps=100) {
 #'
 #' @param symm logical, whether to extend the colormap mapping domain to be symmetric around zero, useful to ensure that the zero value gets a neutral color for divergent colormaps. Defaults to FALSE.
 #'
+#' @param show logical, Whether to open the resulting plot in R. Defaults to TRUE.
+#'
+#' @param png_options Options to pass to [grDevices::png]], see the docs of that function for details. Allow you to save the plot as a png bitmap image. Example: \code{png_options = list("filename"="outfile.png", "width"=800)}. Defaults to NULL, which will not save anything.
+#'
 #' @return named list with the following entries: "full_data": the combined data from all coloredmeshes (can be NULL if they have no data). "colormap": the colormap function from the coloredmeshes (can be NULL if they have none).
 #'
 #' @examples
 #' \donttest{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
-#'    coloredmeshes = vis.subject.morph.native(subjects_dir, 'subject1', 'thickness', 'lh', views=c('t4'));
+#'    coloredmeshes = vis.subject.morph.native(subjects_dir, 'subject1',
+#'     'thickness', 'lh', views=c('t4'));
 #'    coloredmesh.plot.colorbar.separate(coloredmeshes);
 #' }
 #'
 #' @importFrom fields image.plot
 #' @importFrom squash cmap makecmap
 #' @importFrom graphics plot.new
+#' @importFrom grDevices png pdf dev.off
 #' @export
-coloredmesh.plot.colorbar.separate <- function (coloredmeshes, horizontal=TRUE, num_steps=100, zlim=NULL, symm=FALSE) {
+coloredmesh.plot.colorbar.separate <- function (coloredmeshes, horizontal=TRUE, num_steps=100, zlim=NULL, symm=FALSE, show=TRUE, png_options=NULL) {
 
     ret_list = list("full_data"=NULL, "colormap"=NULL);
 
@@ -232,12 +238,22 @@ coloredmesh.plot.colorbar.separate <- function (coloredmeshes, horizontal=TRUE, 
 
         if(! is.null(colormap)) {
             col = squash::cmap(full_data, map = squash::makecmap(full_data, n = num_steps, colFn = colormap, symm=symm));
-
-            plot.new();
             if (is.null(zlim)) {
                 zlim <- base::range( c(seq(min(full_data), max(full_data)), finite=TRUE));
             }
-            fields::image.plot(legend.only=TRUE, zlim=zlim, horizontal=horizontal, col = col);
+
+            if(show) {
+                plot.new();
+                fields::image.plot(legend.only=TRUE, zlim=zlim, horizontal=horizontal, col = col);
+            }
+
+            if(! is.null(png_options)) {
+                do.call(png, png_options);
+                plot.new();
+                fields::image.plot(legend.only=TRUE, zlim=zlim, horizontal=horizontal, col = col);
+                dev.off();
+            }
+
 
         } else {
             message("Requested to draw separate colorbar, but meshes contain no colormap function. Skipping.");

@@ -9,7 +9,9 @@ coloredmesh.plot.colorbar.separate(
   horizontal = TRUE,
   num_steps = 100,
   zlim = NULL,
-  symm = FALSE
+  symm = FALSE,
+  show = TRUE,
+  png_options = NULL
 )
 }
 \arguments{
@@ -22,6 +24,10 @@ coloredmesh.plot.colorbar.separate(
 \item{zlim}{numerical vector of length 2. The data range for the colorbar, as returned by [base::range]. Defaults to the full (finite) range of the data of the coloredmeshes.}
 
 \item{symm}{logical, whether to extend the colormap mapping domain to be symmetric around zero, useful to ensure that the zero value gets a neutral color for divergent colormaps. Defaults to FALSE.}
+
+\item{show}{logical, Whether to open the resulting plot in R. Defaults to TRUE.}
+
+\item{png_options}{Options to pass to [grDevices::png]], see the docs of that function for details. Allow you to save the plot as a png bitmap image. Example: \code{png_options = list("filename"="outfile.png", "width"=800)}. Defaults to NULL, which will not save anything.}
 }
 \value{
 named list with the following entries: "full_data": the combined data from all coloredmeshes (can be NULL if they have no data). "colormap": the colormap function from the coloredmeshes (can be NULL if they have none).
@@ -33,7 +39,8 @@ Draw a colorbar for the coloredmeshes to a separate 2D plot. Due to the suboptim
 \donttest{
    fsbrain::download_optional_data();
    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
-   coloredmeshes = vis.subject.morph.native(subjects_dir, 'subject1', 'thickness', 'lh', views=c('t4'));
+   coloredmeshes = vis.subject.morph.native(subjects_dir, 'subject1',
+    'thickness', 'lh', views=c('t4'));
    coloredmesh.plot.colorbar.separate(coloredmeshes);
 }
 
