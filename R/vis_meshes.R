@@ -209,6 +209,8 @@ draw.colorbar <- function(coloredmeshes, horizontal=TRUE, num_steps=100) {
 #'    coloredmesh.plot.colorbar.separate(coloredmeshes);
 #' }
 #'
+#' @family colorbar functions
+#'
 #' @importFrom fields image.plot
 #' @importFrom squash cmap makecmap
 #' @importFrom graphics plot.new

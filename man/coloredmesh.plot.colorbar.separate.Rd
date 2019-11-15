@@ -39,3 +39,9 @@ Draw a colorbar for the coloredmeshes to a separate 2D plot. Due to the suboptim
 }
 
 }
+\seealso{
+Other colorbar functions: 
+\code{\link{combine.colorbar.with.brainview.animation}()},
+\code{\link{combine.colorbar.with.brainview.image}()}
+}
+\concept{colorbar functions}

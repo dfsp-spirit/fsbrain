@@ -3,6 +3,8 @@
 export(clip.data)
 export(coloredmesh.from.mask)
 export(coloredmesh.plot.colorbar.separate)
+export(combine.colorbar.with.brainview.animation)
+export(combine.colorbar.with.brainview.image)
 export(delete_all_optional_data)
 export(download_fsaverage)
 export(download_optional_data)
