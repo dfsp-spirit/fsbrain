@@ -239,9 +239,11 @@ coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=TRUE, makecma
             makecmap_options_internal = list(full_data, colFn = colormap);
             makecmap_options = modifyList(makecmap_options_internal, makecmap_extra_options);
             col = squash::cmap(full_data, map = do.call(squash::makecmap, makecmap_options));
+            ret_list$col = col;
 
             zlim = base::range( c(seq(min(full_data), max(full_data)), finite=TRUE));
-            image.plot_options_internal = list(legend.only=TRUE, zlim=zlim, col = col);
+            ret_list$zlim = zlim;
+            image.plot_options_internal = list(legend.only=TRUE, zlim=zlim, col = col, add=TRUE, graphics.reset=TRUE);
             image.plot_options = modifyList(image.plot_options_internal, image.plot_extra_options);
             if(show) {
                 plot.new();

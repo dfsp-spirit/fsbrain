@@ -27,11 +27,13 @@ combine.colorbar.with.brainview.image <- function(brainview_img, colorbar_img, o
         width_main = magick::image_info(main_img)$width;
         width_cbar = magick::image_info(cbar_img)$width;
 
+        # Add a white border below the main image if requested. This leaves more space for the colorbar.
         if(extend_brainview_img_height_by != 0L) {
             extend_dims = sprintf("%dx%d", width_main, (height_main + extend_brainview_img_height_by));
             main_img = magick::image_extent(main_img, extend_dims, gravity="north", color="white");
         }
 
+        # Overlay the colorbar over the bottom part of the main image.
         combined_img = magick::image_composite(main_img, magick::image_trim(cbar_img), gravity="south", offset=offset);
         magick::image_write(combined_img, path = output_img);
         if(! silent) {
@@ -58,9 +60,11 @@ combine.colorbar.with.brainview.image <- function(brainview_img, colorbar_img, o
 #'
 #' @param silent logical, whether to silence all messages
 #'
+#' @param allow_colorbar_shrink logical, whether to shrink the colorbar to the width of the animation in case it is considerably wider (more than 20 percent). Defaults to TRUE.
+#'
 #' @family colorbar functions
 #' @export
-combine.colorbar.with.brainview.animation <- function(brain_animation, colorbar_img, output_animation, offset="+0+0", extend_brainview_img_height_by=0L, silent=FALSE) {
+combine.colorbar.with.brainview.animation <- function(brain_animation, colorbar_img, output_animation, offset="+0+0", extend_brainview_img_height_by=0L, silent=FALSE, allow_colorbar_shrink=TRUE) {
     if (requireNamespace("magick", quietly = TRUE)) {
         # brain_animation = "~/fsbrain_mov_main.gif"; colorbar_img = "~/fsbrain_img_cbar.gif"; extend_brainview_img_height_by = 20; offset="+0+0"; extend_brainview_img_height_by = 20;
 
@@ -71,15 +75,38 @@ combine.colorbar.with.brainview.animation <- function(brain_animation, colorbar_
         width_mov = max(magick::image_info(main_mov)$width);
         width_cbar = magick::image_info(cbar_img)$width;
 
+
         # Add a lower border to each frame in the original gif if requested. This solves the problem that the brain may overlap with the colorbar.
         if(extend_brainview_img_height_by != 0L) {
             extend_dims = sprintf("%dx%d", width_mov, (height_mov + extend_brainview_img_height_by));
             main_mov = magick::image_extent(main_mov, extend_dims, gravity="north", color="white");
         }
 
+        # Crop all unneeded whitespace around the colorbar (remove all white borders).
         cbar_img_trimmed = magick::image_trim(cbar_img);
+        width_cbar_trimmed = magick::image_info(cbar_img_trimmed)$width;
+
+        if(width_cbar_trimmed > 1.2 * width_mov) {
+            message(sprintf("The colorbar (width %d px) is considerably wider than the animation (%d px) even after trimming. The colorbar may not fit onto the canvas and will be cut off. Please ensure roughly equal size.\n", width_cbar_trimmed, width_mov));
+            if(allow_colorbar_shrink) {
+                cbar_img_trimmed = magick::image_resize(cbar_img_trimmed, sprintf("%dx", width_mov));
+                message("Colorbar resized.");
+            }
+        }
+
+        # Create a composite image (the colorbar overlayed over the lower part of the image) for each frame in the animation.
+        if(! silent) {
+            message("Adding colorbar to all frames of the animation...");
+        }
         frames = magick::image_composite(main_mov, cbar_img_trimmed, gravity="south", offset=offset);
+
+        # Create a new animation from the frames.
+        if(! silent) {
+            message("Creating new animation from the frames...");
+        }
         animation = magick::image_animate(frames, fps = 20, loop = 0);
+
+        # Save the new animation to a gif image.
         magick::image_write(animation, path = output_animation);
         if(! silent) {
             message(sprintf("Combined animation with colorbar written to '%s'.\n", output_animation));
