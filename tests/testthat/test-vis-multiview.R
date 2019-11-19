@@ -273,3 +273,13 @@ test_that("We can combine an output view with a separate colormap.", {
 
     ## This will give you the image and the rotating brain gif animation, both with a suitable colorbar at the bottom of the image/animation.
 })
+
+
+### Some ideas for creating an MP4 movie from the frames of the GIF animation (on the OS command line): ###
+#
+# 1) split the GIF into frames: convert truncation_with_cbar_720x720.gif -coalesce frames-%03d.png
+# 2) ffmpeg -framerate 20 -i frames-%03d.png -c:v libx264 -pix_fmt yuv420p brain_once.mp4
+# It may be better to make the video loop 3 times, so the user has more time to view it:
+# 3a) for i in {1..3}; do printf "file '%s'\n" brain_once.mp4 >> vidlist.txt; done
+# 3b) ffmpeg -f concat -i vidlist.txt -c copy brain_looped.mp4
+
