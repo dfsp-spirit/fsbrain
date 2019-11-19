@@ -213,10 +213,10 @@ test_that("We can combine an output view with a separate colormap.", {
 
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     subject_id = 'subject1';
-    measure = 'truncation';
+    measure = 'sulc';
     surface = 'white';
 
-    output_width = 550; # in px
+    output_width = 1200; # in px
     output_height = output_width;
     cbar_height = output_height;  # We cannot set this much smaller without getting errors, we will instead crop the resulting image in imagemagick below.
     output_main_image = path.expand("~/fsbrain_img_main.png");
@@ -226,6 +226,11 @@ test_that("We can combine an output view with a separate colormap.", {
 
     rgloptions=list("windowRect"=c(80, 80, output_width, output_height));
     rglactions = list("snapshot_png"=output_main_image, "movie"=output_main_movie_file_noext);
+
+    # Some measures need a bit of cleanup:
+    if(measure %in% c("curv", "thickness")) {
+        rglactions$clip_data = c(0.05, 0.95);
+    }
 
     coloredmeshes = vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('sr'), rgloptions=rgloptions, rglactions=rglactions);
 
@@ -277,9 +282,11 @@ test_that("We can combine an output view with a separate colormap.", {
 
 ### Some ideas for creating an MP4 movie from the frames of the GIF animation (on the OS command line): ###
 #
-# 1) split the GIF into frames: convert truncation_with_cbar_720x720.gif -coalesce frames-%03d.png
-# 2) ffmpeg -framerate 20 -i frames-%03d.png -c:v libx264 -pix_fmt yuv420p brain_once.mp4
+# 1) split the GIF into frames: convert anim_with_cbar.gif -coalesce frames-%03d.png
+# 2) encode to MP4 using ffmpeg with libx264 codec: ffmpeg -framerate 20 -i frames-%03d.png -c:v libx264 -crf 18 -pix_fmt yuv420p brain_once.mp4
 # It may be better to make the video loop 3 times, so the user has more time to view it:
 # 3a) for i in {1..3}; do printf "file '%s'\n" brain_once.mp4 >> vidlist.txt; done
 # 3b) ffmpeg -f concat -i vidlist.txt -c copy brain_looped.mp4
+# If you intend to upload to youtube or other video streaming platforms, you may want to optimize the file for them to get good quality:
+# 4) ffmpeg -i brain_looped.mp4 -vf yadif,format=yuv420p -c:v libx264 -crf 18 -bf 2 -c:a aac -q:a 1 -ac 2 -ar 48000 -use_editlist 0 -movflags +faststart brain_looped_opt_streaming.mp4
 
