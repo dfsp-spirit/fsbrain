@@ -21,15 +21,14 @@ Give suggestions for regions to ignore for an atlas. These are regions for which
 
 }
 \seealso{
-Other atlas functions: 
-\code{\link{get.atlas.region.names}()},
-\code{\link{group.agg.atlas.native}()},
-\code{\link{group.agg.atlas.standard}()},
-\code{\link{group.annot}()},
-\code{\link{spread.values.over.annot}()},
-\code{\link{spread.values.over.hemi}()},
-\code{\link{spread.values.over.subject}()},
-\code{\link{subject.annot}()},
-\code{\link{subject.atlas.agg}()}
+Other atlas functions: \code{\link{get.atlas.region.names}},
+  \code{\link{group.agg.atlas.native}},
+  \code{\link{group.agg.atlas.standard}},
+  \code{\link{group.annot}},
+  \code{\link{spread.values.over.annot}},
+  \code{\link{spread.values.over.hemi}},
+  \code{\link{spread.values.over.subject}},
+  \code{\link{subject.annot}},
+  \code{\link{subject.atlas.agg}}
 }
 \concept{atlas functions}

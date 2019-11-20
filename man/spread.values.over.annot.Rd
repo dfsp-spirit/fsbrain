@@ -4,13 +4,10 @@
 \alias{spread.values.over.annot}
 \title{Spread a single value for a region to all region vertices.}
 \usage{
-spread.values.over.annot(
-  annot,
-  region_value_list,
+spread.values.over.annot(annot, region_value_list,
   value_for_unlisted_regions = NaN,
   warn_on_unmatched_list_regions = FALSE,
-  warn_on_unmatched_atlas_regions = FALSE
-)
+  warn_on_unmatched_atlas_regions = FALSE)
 }
 \arguments{
 \item{annot, }{annotation. The result of calling fs.read.annot.}
@@ -41,15 +38,14 @@ Given an annotation and a list of values (one per brain region), return data tha
 
 }
 \seealso{
-Other atlas functions: 
-\code{\link{get.atlas.region.names}()},
-\code{\link{group.agg.atlas.native}()},
-\code{\link{group.agg.atlas.standard}()},
-\code{\link{group.annot}()},
-\code{\link{regions.to.ignore}()},
-\code{\link{spread.values.over.hemi}()},
-\code{\link{spread.values.over.subject}()},
-\code{\link{subject.annot}()},
-\code{\link{subject.atlas.agg}()}
+Other atlas functions: \code{\link{get.atlas.region.names}},
+  \code{\link{group.agg.atlas.native}},
+  \code{\link{group.agg.atlas.standard}},
+  \code{\link{group.annot}},
+  \code{\link{regions.to.ignore}},
+  \code{\link{spread.values.over.hemi}},
+  \code{\link{spread.values.over.subject}},
+  \code{\link{subject.annot}},
+  \code{\link{subject.atlas.agg}}
 }
 \concept{atlas functions}

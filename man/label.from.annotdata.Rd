@@ -4,13 +4,8 @@
 \alias{label.from.annotdata}
 \title{Extract a region from an annotation as a label.}
 \usage{
-label.from.annotdata(
-  annotdata,
-  region,
-  return_one_based_indices = TRUE,
-  invert = FALSE,
-  error_on_invalid_region = TRUE
-)
+label.from.annotdata(annotdata, region, return_one_based_indices = TRUE,
+  invert = FALSE, error_on_invalid_region = TRUE)
 }
 \arguments{
 \item{annotdata, }{annotation. An annotation for one hemisphere, as returned by subject.annot(). This must be the loaded data, not a path to a file.}

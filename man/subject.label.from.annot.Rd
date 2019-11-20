@@ -4,16 +4,9 @@
 \alias{subject.label.from.annot}
 \title{Extract a region from an atlas annotation as a label for a subject.}
 \usage{
-subject.label.from.annot(
-  subjects_dir,
-  subject_id,
-  hemi,
-  atlas,
-  region,
-  return_one_based_indices = TRUE,
-  invert = FALSE,
-  error_on_invalid_region = TRUE
-)
+subject.label.from.annot(subjects_dir, subject_id, hemi, atlas, region,
+  return_one_based_indices = TRUE, invert = FALSE,
+  error_on_invalid_region = TRUE)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}

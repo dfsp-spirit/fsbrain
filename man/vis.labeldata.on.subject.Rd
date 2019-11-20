@@ -4,18 +4,10 @@
 \alias{vis.labeldata.on.subject}
 \title{Visualize a label on the surface of a subject.}
 \usage{
-vis.labeldata.on.subject(
-  subjects_dir,
-  vis_subject_id,
-  lh_labeldata,
-  rh_labeldata,
-  surface = "white",
-  colormap = squash::rainbow2,
-  views = c("t4"),
-  rgloptions = list(),
-  rglactions = list(),
-  draw_colorbar = FALSE
-)
+vis.labeldata.on.subject(subjects_dir, vis_subject_id, lh_labeldata,
+  rh_labeldata, surface = "white", colormap = squash::rainbow2,
+  views = c("t4"), rgloptions = list(), rglactions = list(),
+  draw_colorbar = FALSE)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, containing the subdir of vis_subject_id, the subject that you want to use for visualization.}
@@ -65,7 +57,6 @@ Visualizes a label. Note that a label is just a set of vertices, and that you ca
 
 }
 \seealso{
-Other label functions: 
-\code{\link{vis.subject.label}()}
+Other label functions: \code{\link{vis.subject.label}}
 }
 \concept{label functions}

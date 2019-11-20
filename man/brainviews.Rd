@@ -4,13 +4,8 @@
 \alias{brainviews}
 \title{Show one or more views of the given meshes in rgl windows.}
 \usage{
-brainviews(
-  views,
-  coloredmeshes,
-  rgloptions = list(),
-  rglactions = list(),
-  draw_colorbar = FALSE
-)
+brainviews(views, coloredmeshes, rgloptions = list(),
+  rglactions = list(), draw_colorbar = FALSE)
 }
 \arguments{
 \item{views, }{list of strings. Valid entries include: 'si': single interactive view. 'sr': single rotating view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.}

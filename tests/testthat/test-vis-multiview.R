@@ -213,7 +213,7 @@ test_that("We can combine an output view with a separate colormap.", {
 
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     subject_id = 'subject1';
-    measure = 'sulc';
+    measure = 'jacobian_white';
     surface = 'white';
 
     output_width = 1200; # in px
@@ -228,7 +228,7 @@ test_that("We can combine an output view with a separate colormap.", {
     rglactions = list("snapshot_png"=output_main_image, "movie"=output_main_movie_file_noext);
 
     # Some measures need a bit of cleanup:
-    if(measure %in% c("curv", "thickness")) {
+    if(measure %in% c("curv", "thickness", "jacobian_white")) {
         rglactions$clip_data = c(0.05, 0.95);
     }
 
