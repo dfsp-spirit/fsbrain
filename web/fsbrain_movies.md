@@ -7,7 +7,7 @@ These are animations created using the [fsbrain R package](https://github.com/df
 **Animation 1:** Rotating visualization of mean curvature plotted onto the white surface of a subject (native space).
 
 
-# More descriptors and brain parcellations
+# More descriptors and brain parcellations (GIF format)
 
 Have some bandwidth to spare? Try some of these large versions for different surface-based morphometry measures in native space:
 
@@ -33,4 +33,10 @@ Here is some standard space data, smoothed at FWHM 10 and visualized on the *fsa
 * [Cortical thickness (11 MB)](./fsbrain_morphstd_thickness_fwhm10.gif)
 * [Cortical volume (11 MB)](./fsbrain_morphstd_volume_fwhm10.gif)
 
-Please [cite the fsbrain package](https://github.com/dfsp-spirit/fsbrain#citation) when using these animations.
+
+# Encoded videos
+
+If you prefer videos over gif animations, you can check out the [fsbrain channel on vimeo](https://vimeo.com/channels/fsbrain). These videos were created from the animation frames using [ffmpeg](https://www.ffmpeg.org/).
+
+
+Please [cite the fsbrain package](https://github.com/dfsp-spirit/fsbrain#citation) when using these animations/videos.
