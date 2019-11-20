@@ -36,7 +36,7 @@ Here is some standard space data, smoothed at FWHM 10 and visualized on the *fsa
 
 # Encoded videos
 
-If you prefer videos over gif animations, you can check out the [fsbrain channel on vimeo](https://vimeo.com/channels/fsbrain). These videos were created from the animation frames using [ffmpeg](https://www.ffmpeg.org/).
+If you prefer videos over GIF animations, you can check out the [fsbrain channel on vimeo](https://vimeo.com/channels/fsbrain). These videos were created from the animation frames using [ffmpeg](https://www.ffmpeg.org/).
 
 
 Please [cite the fsbrain package](https://github.com/dfsp-spirit/fsbrain#citation) when using these animations/videos.
