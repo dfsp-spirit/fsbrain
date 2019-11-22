@@ -63,6 +63,22 @@ cat(sprintf("Data length is %d for subject1, %d for subject2.\n", length(groupda
 
 Note that 163842 is the number of vertices of the template subject fsaverage.
 
+### Automatically masking the medial wall when accessing morphometry data
+
+Typically the vertices of the medial wall are excluded from the analysis, as they are not part of the cortex. If you have the files `label/lh.cortex.label` and `label/rh.cortex.label` available for your subjects, you can automatically mask non-cortex data. The morhometry values for the vertices outside the cortex will then be set to NA. To do this, pass the parameter `cortex_only = TRUE` to the morphometry data functions. Here is an example:
+
+```{r, eval = FALSE}
+# Load the full hemisphere data, including media wall:
+fulldata = group.morph.native(subjects_dir, subjects_list, "thickness", "lh");
+mean(fulldata$subject1);
+
+# This time, restrict data to the cerebral cortex:
+cortexdata = group.morph.native(subjects_dir, subjects_list, "thickness", "lh", cortex_only=TRUE);
+mean(cortexdata$subject1, na.rm=TRUE);
+```
+
+This also works for standard space data. Keep in mind that in that case, you need to have the files `label/lh.cortex.label` and `label/rh.cortex.label` available for your *template* subject.
+
 
 ## Labels for groups
 
@@ -119,6 +135,7 @@ cat(sprintf("The left hemi of subject2 has %d vertices, and vertex 10 is in regi
 # Aggregating morphometry data
 
 This section explains aggregation functions. These allow you to retrieve the mean, max, min, or whatever value over a number of vertices. Aggregation is supported on hemisphere level and on the level of brain atlas regions.
+
 
 ## Aggregating group data over entire hemispheres
 
@@ -203,6 +220,17 @@ head(data_std);
 
 Other parameters exist to define the template subject, which defaults to 'fsaverage' in the example above.
 
+
+### Automatically masking the medial wall when aggregating
+
+For the hemisphere level, one can also automatically mask data from the medial wall, as explained above. The only thing to keep in mind is that your aggregation function must be able to cope with NA values in this case. If the function requires a special parameter to be passed to it for this to work out, use the `agg_fun_extra_params` parameter. Here is an example with `mean` as the aggregation function:
+
+```{r, eval = FALSE}
+data_std_cortex = group.multimorph.agg.standard(subjects_dir, subjects_list, c("thickness", "area"), c("lh", "rh"), fwhm='10', agg_fun = mean, cortex_only=TRUE,  agg_fun_extra_params=list("na.rm"=TRUE));
+head(data_std_cortex);
+```
+
+This will ensure that `mean` gets passed the extra parameter `na.rm=TRUE`. You will have to adapt this based on the aggregation function.
 
 ## Aggregating over atlas regions
 
