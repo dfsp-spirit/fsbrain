@@ -165,3 +165,25 @@ test_that("Aggregation of standard space whole brain morph data on group level w
   expect_true("measure_name" %in% cols)
   expect_true("measure_value" %in% cols)
 })
+
+
+test_that("Aggregation of native space whole brain morph data on group level restricted to the cortex works for several measures and hemis", {
+  fsbrain::download_optional_data();
+  subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+  skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
+
+  subjects_list = c("subject1", "subject2")
+  data = group.multimorph.agg.native(subjects_dir, subjects_list, c("thickness", "area"), c("lh", "rh"), cast=FALSE, cortex_only=TRUE, agg_fun=mean, agg_fun_extra_params=list("na.rm"=TRUE));
+
+  expect_equal(class(data), "data.frame")
+  expect_equal(nrow(data), 2)
+  expect_equal(ncol(data), 5)
+  expect_equal(data$subject_id[0], subjects_list[0])
+  expect_equal(data$subject_id[1], subjects_list[1])
+  cols = colnames(data)
+  expect_true("subject_id" %in% cols)
+  expect_true("lh.area" %in% cols)
+  expect_true("rh.area" %in% cols)
+  expect_true("lh.thickness" %in% cols)
+  expect_true("rh.thickness" %in% cols)
+})
