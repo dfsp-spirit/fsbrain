@@ -5,6 +5,7 @@ Version 0.0.3
 -------------
 - Add function to visualize arbitrary vertices and label data (vis.labeldata.on.subject) and a function to compute the neighbors of a vertex (mesh.vertex.neighbors)
 - The vis.data.on.subject function now accepts a character string for the lh_morphdata and rh_morphdata arguments. If a string, it is treated as a filepath and the data is loaded from that file.
+- Add the logical parameter 'cortex_only' to various native space morphometry functions (including subject.morph.native, group.morph.native, group.morph.agg.native na group.multimorph.agg.native). When set to TRUE, this parameter will limit the data to vertices which are part of the cortex (as defined by the label file label//h.cortex.label for the respective subject). This allows one to ignore the data from the medial wall in all of these functions.
 
 
 Version 0.0.2
