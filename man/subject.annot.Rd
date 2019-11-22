@@ -7,13 +7,13 @@
 subject.annot(subjects_dir, subject_id, hemi, atlas)
 }
 \arguments{
-\item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
+\item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
 
-\item{subject_id, }{string. The subject identifier}
+\item{subject_id}{string. The subject identifier}
 
-\item{hemi, }{string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.}
+\item{hemi}{string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.}
 
-\item{atlas, }{string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.}
+\item{atlas}{string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.}
 }
 \value{
 the annotation, as returned by [freesurferformats::read.fs.annot()]. It is a named list, enties are: "vertices" vector of n vertex indices, starting with 0. "label_codes": vector of n integers, each entry is a color code, i.e., a value from the 5th column in the table structure included in the "colortable" entry (see below). "label_names": the n brain structure names for the vertices, already retrieved from the colortable using the code. "hex_colors_rgb": Vector of hex color for each vertex.
@@ -31,14 +31,15 @@ Load a brain surface annotation, i.e., a cortical parcellation based on an atlas
 
 }
 \seealso{
-Other atlas functions: \code{\link{get.atlas.region.names}},
-  \code{\link{group.agg.atlas.native}},
-  \code{\link{group.agg.atlas.standard}},
-  \code{\link{group.annot}},
-  \code{\link{regions.to.ignore}},
-  \code{\link{spread.values.over.annot}},
-  \code{\link{spread.values.over.hemi}},
-  \code{\link{spread.values.over.subject}},
-  \code{\link{subject.atlas.agg}}
+Other atlas functions: 
+\code{\link{get.atlas.region.names}()},
+\code{\link{group.agg.atlas.native}()},
+\code{\link{group.agg.atlas.standard}()},
+\code{\link{group.annot}()},
+\code{\link{regions.to.ignore}()},
+\code{\link{spread.values.over.annot}()},
+\code{\link{spread.values.over.hemi}()},
+\code{\link{spread.values.over.subject}()},
+\code{\link{subject.atlas.agg}()}
 }
 \concept{atlas functions}

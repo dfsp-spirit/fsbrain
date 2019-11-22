@@ -63,7 +63,8 @@ subject.atlas.agg <- function(vertex_morph_data, vertex_label_names, agg_fun = m
 #'
 #' @description Aggregate native space morphometry data over brain atlas regions, e.g., compute the mean thickness value over all regions in an atlas for all subjects. Try visualizing the results, e.g.,:
 #'
-#'    molten=melt(agg, id=c('subject'));
+#'    molten=reshape::melt(agg, id=c('subject'));
+#'    library('ggplot2');
 #'    ggplot(data=molten, aes(x=variable, y=value, group=subject)) + geom_point() + geom_line() + theme(axis.text.x = element_text(angle = 90, hjust = 1));
 #'
 #'

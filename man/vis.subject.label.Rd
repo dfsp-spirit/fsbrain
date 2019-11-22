@@ -4,9 +4,18 @@
 \alias{vis.subject.label}
 \title{Visualize a label for a subject.}
 \usage{
-vis.subject.label(subjects_dir, subject_id, label, hemi,
-  surface = "white", colormap = squash::rainbow2, views = c("t4"),
-  rgloptions = list(), rglactions = list(), draw_colorbar = FALSE)
+vis.subject.label(
+  subjects_dir,
+  subject_id,
+  label,
+  hemi,
+  surface = "white",
+  colormap = squash::rainbow2,
+  views = c("t4"),
+  rgloptions = list(),
+  rglactions = list(),
+  draw_colorbar = FALSE
+)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -49,14 +58,18 @@ Visualize a label for a subject. A label is jsut a logical vector with one entry
 
 }
 \seealso{
-Other visualization functions: \code{\link{vis.data.on.fsaverage}},
-  \code{\link{vis.data.on.subject}},
-  \code{\link{vis.region.values.on.subject}},
-  \code{\link{vis.subject.annot}},
-  \code{\link{vis.subject.morph.native}},
-  \code{\link{vis.subject.morph.standard}}
+Other visualization functions: 
+\code{\link{vis.data.on.fsaverage}()},
+\code{\link{vis.data.on.subject}()},
+\code{\link{vis.region.values.on.subject}()},
+\code{\link{vis.subject.annot}()},
+\code{\link{vis.subject.morph.native}()},
+\code{\link{vis.subject.morph.standard}()}
 
-Other label functions: \code{\link{vis.labeldata.on.subject}}
+Other label functions: 
+\code{\link{apply.label.to.morphdata}()},
+\code{\link{apply.labeldata.to.morphdata}()},
+\code{\link{vis.labeldata.on.subject}()}
 }
 \concept{label functions}
 \concept{visualization functions}

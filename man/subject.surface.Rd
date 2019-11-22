@@ -7,13 +7,13 @@
 subject.surface(subjects_dir, subject_id, surface, hemi)
 }
 \arguments{
-\item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
+\item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
 
-\item{subject_id, }{string. The subject identifier}
+\item{subject_id}{string. The subject identifier}
 
-\item{surface, }{string. The surface name. E.g., "white", or "pial". Used to construct the name of the surface file to be loaded.}
+\item{surface}{string. The surface name. E.g., "white", or "pial". Used to construct the name of the surface file to be loaded.}
 
-\item{hemi, }{string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the surface file to be loaded.}
+\item{hemi}{string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the surface file to be loaded.}
 }
 \value{
 the surface, as returned by freesurferformats::read.fs.surface(). A named list containing entries 'vertices' and 'faces'.

@@ -6,15 +6,17 @@
 #'
 #' @description Load native space morphometry data (like 'surf/lh.area') for a subject from disk. Uses knowledge about the FreeSurfer directory structure to load the correct file.
 #'
-#' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
+#' @param subjects_dir string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
 #'
-#' @param subject_id, string. The subject identifier
+#' @param subject_id string. The subject identifier
 #'
-#' @param measure, string. Name of the vertex-wise measure of morphometry data file. E.g., "area" or "thickness". Used to construct the name of the morphometry file to be loaded.
+#' @param measure string. Name of the vertex-wise measure of morphometry data file. E.g., "area" or "thickness". Used to construct the name of the morphometry file to be loaded.
 #'
-#' @param hemi, string, one of 'lh', 'rh' or 'both'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.
+#' @param hemi string, one of 'lh', 'rh' or 'both'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.
 #'
-#' @param format, string. One of 'mgh', 'mgz', 'curv'. Defaults to 'curv'.
+#' @param format string. One of 'mgh', 'mgz', 'curv'. Defaults to 'curv'.
+#'
+#' @param cortex_only logical, whether the data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the subject. Defaults to FALSE.
 #'
 #' @return vector with native space morph data
 #'
@@ -28,7 +30,7 @@
 #' }
 #'
 #' @export
-subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, format='curv') {
+subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, format='curv', cortex_only=FALSE) {
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
@@ -37,17 +39,91 @@ subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, format
     if(hemi == "both") {
         lh_curvfile = subject.filepath.morph.native(subjects_dir, subject_id, measure, "lh", error_if_nonexistent=TRUE);
         lh_morph_data = freesurferformats::read.fs.morph(lh_curvfile);
+        if(cortex_only) {
+            lh_morph_data = apply.label.to.morphdata(lh_morph_data, subjects_dir, subject_id, "lh", 'cortex');
+        }
 
         rh_curvfile = lh_curvfile = subject.filepath.morph.native(subjects_dir, subject_id, measure, "rh", error_if_nonexistent=TRUE);
         rh_morph_data = freesurferformats::read.fs.morph(rh_curvfile);
+        if(cortex_only) {
+            rh_morph_data = apply.label.to.morphdata(rh_morph_data, subjects_dir, subject_id, "rh", 'cortex');
+        }
 
         merged_morph_data = c(lh_morph_data, rh_morph_data);
         return(merged_morph_data);
 
     } else {
-        curvfile = lh_curvfile = subject.filepath.morph.native(subjects_dir, subject_id, measure, hemi, error_if_nonexistent=TRUE);
-        return(freesurferformats::read.fs.morph(curvfile));
+        curvfile = subject.filepath.morph.native(subjects_dir, subject_id, measure, hemi, error_if_nonexistent=TRUE);
+        morph_data = freesurferformats::read.fs.morph(curvfile);
+        if(cortex_only) {
+            morph_data = apply.label.to.morphdata(morph_data, subjects_dir, subject_id, hemi, 'cortex');
+        }
+        return(morph_data);
     }
+}
+
+#' @title Load a label from file and apply it to morphometry data.
+#'
+#' @description This function will set all values in morphdata which are *not* part of the label loaded from the file to NA (or whatever is specified by 'masked_data_value'). This is typically used to ignore values which are not part of the cortex (or any other label) during your analysis.
+#'
+#' @param morphdata numerical vector, the morphometry data for one hemisphere
+#'
+#' @param subjects_dir string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
+#'
+#' @param subject_id string. The subject identifier
+#'
+#' @param hemi string, one of 'lh', 'rh' or 'both'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.
+#'
+#' @param label string. Name of the label file, without the hemi part (if any), optionally including the '.label' suffix. E.g., 'cortex.label' or 'cortex' for '?h.cortex.label'.
+#'
+#' @param masked_data_value numerical, the value to set for all morphometry data values of vertices which are *not* part of the label. Defaults to NA.
+#'
+#' @return numerical vector, the masked data.
+#'
+#' @family label functions
+#' @family morphometry data functions
+#'
+#' @export
+apply.label.to.morphdata <- function(morphdata, subjects_dir, subject_id, hemi, label, masked_data_value=NA) {
+
+    if(!(hemi %in% c("lh", "rh"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
+    }
+
+    if(! is.character(label)) {
+        stop("Parameter 'label' must be a character string,: the filename of the label file.");
+    }
+
+    labeldata = subject.label(subjects_dir, subject_id, label, hemi);
+    return(apply.labeldata.to.morphdata(morphdata, labeldata, masked_data_value=masked_data_value));
+}
+
+
+#' @title Apply a label to morphometry data.
+#'
+#' @description This function will set all values in morphdata which are *not* part of the labeldata to NA (or whatever is specified by 'masked_data_value'). This is typically used to ignore values which are not part of the cortex (or any other label) during your analysis.
+#'
+#' @param morphdata numerical vector, the morphometry data for one hemisphere
+#'
+#' @param labeldata integer vector. A label as returned by [subject.label()].
+#'
+#' @param masked_data_value numerical, the value to set for all morphometry data values of vertices which are *not* part of the label. Defaults to NA.
+#'
+#' @return numerical vector, the masked data.
+#'
+#' @family label functions
+#' @family morphometry data functions
+#'
+#' @export
+apply.labeldata.to.morphdata <- function(morphdata, labeldata, masked_data_value=NA) {
+
+    if(max(labeldata) > length(morphdata)) {
+        stop(sprintf("The largest vertex index in the labeldata is %d, but the morphdata contains only %d entries. Label does not fit to morpometry data.\n", max(labeldata), length(morphdata)));
+    }
+
+    mask = mask.from.labeldata.for.hemi(labeldata, length(morphdata));
+    morphdata[mask] = masked_data_value;
+    return(morphdata);
 }
 
 
@@ -55,19 +131,19 @@ subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, format
 #'
 #' @description Load standard space morphometry data (like 'surf/lh.area.fwhm10.fsaverage.mgh') for a subject from disk. Uses knowledge about the FreeSurfer directory structure to load the correct file.
 #'
-#' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
+#' @param subjects_dir string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
 #'
-#' @param subject_id, string. The subject identifier
+#' @param subject_id string. The subject identifier
 #'
-#' @param measure, string. Name of the vertex-wise measure of morphometry data file. E.g., "area" or "thickness". Used to construct the name of the morphometry file to be loaded.
+#' @param measure string. Name of the vertex-wise measure of morphometry data file. E.g., "area" or "thickness". Used to construct the name of the morphometry file to be loaded.
 #'
-#' @param hemi, string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.
+#' @param hemi string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.
 #'
-#' @param fwhm, string. Smoothing as string, e.g. '10' or '25'.
+#' @param fwhm string. Smoothing as string, e.g. '10' or '25'.
 #'
-#' @param template_subject, string. Template subject name, defaults to 'fsaverage'.
+#' @param template_subject string. Template subject name, defaults to 'fsaverage'.
 #'
-#' @param format, string. One of 'mgh', 'mgz', 'curv'. Defaults to 'mgh'.
+#' @param format string. One of 'mgh', 'mgz', 'curv'. Defaults to 'mgh'.
 #'
 #' @return vector with standard space morph data
 #'
@@ -105,23 +181,23 @@ subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm
 
 #' @title Construct filepath of standard space morphometry data file.
 #'
-#' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
+#' @param subjects_dir string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
 #'
-#' @param subject_id, string. The subject identifier
+#' @param subject_id string. The subject identifier
 #'
-#' @param measure, string. Name of the vertex-wise measure of morphometry data file. E.g., "area" or "thickness". Used to construct the name of the morphometry file to be loaded.
+#' @param measure string. Name of the vertex-wise measure of morphometry data file. E.g., "area" or "thickness". Used to construct the name of the morphometry file to be loaded.
 #'
-#' @param hemi, string, one of 'lh' or 'rh'. The hemisphere name.
+#' @param hemi string, one of 'lh' or 'rh'. The hemisphere name.
 #'
-#' @param fwhm, string. Smoothing as string, e.g. '10' or '25'. Defaults to '10'.
+#' @param fwhm string. Smoothing as string, e.g. '10' or '25'. Defaults to '10'.
 #'
-#' @param template_subject, string. Template subject name, defaults to 'fsaverage'.
+#' @param template_subject string. Template subject name, defaults to 'fsaverage'.
 #'
-#' @param format, string. One of 'mgh', 'mgz', 'curv'. Defaults to 'mgh'.
+#' @param format string. One of 'mgh', 'mgz', 'curv'. Defaults to 'mgh'.
 #'
-#' @param warn_if_nonexistent, logical. Whether to print a warning if the file does not exist or cannot be accessed. Defaults to FALSE.
+#' @param warn_if_nonexistent logical. Whether to print a warning if the file does not exist or cannot be accessed. Defaults to FALSE.
 #'
-#' @param error_if_nonexistent, logical. Whether to raise an error if the file does not exist or cannot be accessed. Defaults to FALSE.
+#' @param error_if_nonexistent logical. Whether to raise an error if the file does not exist or cannot be accessed. Defaults to FALSE.
 #'
 #' @return string, the file path.
 #'
@@ -160,19 +236,19 @@ subject.filepath.morph.standard <- function(subjects_dir, subject_id, measure, h
 
 #' @title Construct filepath of native space morphometry data file.
 #'
-#' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
+#' @param subjects_dir string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
 #'
-#' @param subject_id, string. The subject identifier
+#' @param subject_id string. The subject identifier
 #'
-#' @param measure, string. Name of the vertex-wise measure of morphometry data file. E.g., "area" or "thickness". Used to construct the name of the morphometry file to be loaded.
+#' @param measure string. Name of the vertex-wise measure of morphometry data file. E.g., "area" or "thickness". Used to construct the name of the morphometry file to be loaded.
 #'
-#' @param hemi, string, one of 'lh' or 'rh'. The hemisphere name.
+#' @param hemi string, one of 'lh' or 'rh'. The hemisphere name.
 #'
 #' @param format, string. One of 'mgh', 'mgz', 'curv'. Defaults to 'curv'.
 #'
-#' @param warn_if_nonexistent, logical. Whether to print a warning if the file does not exist or cannot be accessed. Defaults to FALSE.
+#' @param warn_if_nonexistent logical. Whether to print a warning if the file does not exist or cannot be accessed. Defaults to FALSE.
 #'
-#' @param error_if_nonexistent, logical. Whether to raise an error if the file does not exist or cannot be accessed. Defaults to FALSE.
+#' @param error_if_nonexistent logical. Whether to raise an error if the file does not exist or cannot be accessed. Defaults to FALSE.
 #'
 #' @return string, the file path.
 #'
@@ -205,15 +281,15 @@ subject.filepath.morph.native <- function(subjects_dir, subject_id, measure, hem
 
 #' @title Construct filepath of any freesurfer file.
 #'
-#' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
+#' @param subjects_dir string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
 #'
-#' @param subject_id, string. The subject identifier
+#' @param subject_id string. The subject identifier
 #'
-#' @param relative_path_parts, vector of strings. THe path to the file, e.g., c("surf", "lh.area").
+#' @param relative_path_parts vector of strings. THe path to the file, e.g., c("surf", "lh.area").
 #'
-#' @param hemi, string, one of 'lh', 'rh', or NULL. Defaults to NULL. If a hemisphere name is given, it is added as a prefix to the last entry in relative_path_parts, separated by a dot.
+#' @param hemi string, one of 'lh', 'rh', or NULL. Defaults to NULL. If a hemisphere name is given, it is added as a prefix to the last entry in relative_path_parts, separated by a dot.
 #'
-#' @param file_tag, string. A one-word description of the file type that will show up in the error message to describe the file if it is missing. Leads to a better error message. Examples: 'morphometry' or 'label'. Only relevant if warn_if_nonexistent is TRUE. Defaults to the empty string.
+#' @param file_tag string. A one-word description of the file type that will show up in the error message to describe the file if it is missing. Leads to a better error message. Examples: 'morphometry' or 'label'. Only relevant if warn_if_nonexistent is TRUE. Defaults to the empty string.
 #'
 #' @param warn_if_nonexistent, logical. Whether to print a warning if the file does not exist or cannot be accessed. Defaults to FALSE.
 #'
@@ -256,15 +332,15 @@ subject.filepath.any <- function(subjects_dir, subject_id, relative_path_parts, 
 #'
 #' @description Load a label (like 'label/lh.cortex.label') for a subject from disk. Uses knowledge about the FreeSurfer directory structure to load the correct file.
 #'
-#' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
+#' @param subjects_dir string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
 #'
-#' @param subject_id, string. The subject identifier
+#' @param subject_id string. The subject identifier
 #'
-#' @param label, string. Name of the label file, without the hemi part (if any), but including the '.label' suffix. E.g., 'cortex.label' for '?h.cortex.label'
+#' @param label string. Name of the label file, without the hemi part (if any), but including the '.label' suffix. E.g., 'cortex.label' for '?h.cortex.label'. You can also pass just the label (e.g., 'cortex'): if the string does not end with the suffix '.label', that suffix gets added auomatically.
 #'
-#' @param hemi, string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.
+#' @param hemi string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.
 #'
-#' @param return_one_based_indices, logical. Whether the indices should be 1-based. Indices are stored zero-based in the file, but R uses 1-based indices. Defaults to TRUE, which means that 1 will be added to all indices read from the file before returning them.
+#' @param return_one_based_indices logical. Whether the indices should be 1-based. Indices are stored zero-based in the file, but R uses 1-based indices. Defaults to TRUE, which means that 1 will be added to all indices read from the file before returning them.
 #'
 #' @return integer vector with label data: the list of vertex indices in the label. See 'return_one_based_indices' for important information.
 #'
@@ -284,6 +360,14 @@ subject.label <- function(subjects_dir, subject_id, label, hemi, return_one_base
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
 
+    if(! is.character(label)) {
+        stop("Parameter 'label' must be a character string.");
+    }
+
+    if(! endsWith(label, '.label')) {
+        label = paste(label, ".label", sep="");
+    }
+
     labelfile = subject.filepath.any(subjects_dir, subject_id, c("label", label), hemi=hemi, file_tag="label", warn_if_nonexistent=TRUE);
     return(freesurferformats::read.fs.label(labelfile, return_one_based_indices=return_one_based_indices));
 }
@@ -292,9 +376,9 @@ subject.label <- function(subjects_dir, subject_id, label, hemi, return_one_base
 #'
 #' @description Create a binary mask for the data of a single hemisphere from one or more labels. A label contains the vertex indices which are part of it, but often having a mask in more convenient.
 #'
-#' @param labels, list of labels. A label is just a vector of vertex indices. It can be created manually, but is typically loaded from a label file using [fsbrain::subject.label].
+#' @param labels list of labels. A label is just a vector of vertex indices. It can be created manually, but is typically loaded from a label file using [fsbrain::subject.label].
 #'
-#' @param num_vertices_in_hemi, integer. The number of vertices of the surface for which the mask is created. This must be for a single hemisphere.
+#' @param num_vertices_in_hemi integer. The number of vertices of the surface for which the mask is created. This must be for a single hemisphere.
 #'
 #' @param invert_labels logical, whether to invert the label data.
 #'
@@ -383,13 +467,13 @@ labeldata.from.mask <- function(mask, invert=FALSE) {
 #'
 #' @description Load a brain surface annotation, i.e., a cortical parcellation based on an atlas, for a subject.
 #'
-#' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
+#' @param subjects_dir string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
 #'
-#' @param subject_id, string. The subject identifier
+#' @param subject_id string. The subject identifier
 #'
-#' @param hemi, string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.
+#' @param hemi string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.
 #'
-#' @param atlas, string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.
+#' @param atlas string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.
 #'
 #' @return the annotation, as returned by [freesurferformats::read.fs.annot()]. It is a named list, enties are: "vertices" vector of n vertex indices, starting with 0. "label_codes": vector of n integers, each entry is a color code, i.e., a value from the 5th column in the table structure included in the "colortable" entry (see below). "label_names": the n brain structure names for the vertices, already retrieved from the colortable using the code. "hex_colors_rgb": Vector of hex color for each vertex.
 #'      The "colortable" is another named list with 3 entries: "num_entries": int, number of brain structures. "struct_names": vector of strings, the brain structure names. "table": numeric matrix with num_entries rows and 5 colums. The 5 columns are: 1 = color red channel, 2=color blue channel, 3=color green channel, 4=color alpha channel, 5=unique color code. "colortable_df": The same information as a dataframe. Contains the extra columns "hex_color_string_rgb" and "hex_color_string_rgba" that hold the color as an RGB(A) hex string, like "#rrggbbaa".
@@ -434,13 +518,13 @@ subject.annot <- function(subjects_dir, subject_id, hemi, atlas) {
 #'
 #' @description Load a brain surface for a subject.
 #'
-#' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
+#' @param subjects_dir string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
 #'
-#' @param subject_id, string. The subject identifier
+#' @param subject_id string. The subject identifier
 #'
-#' @param surface, string. The surface name. E.g., "white", or "pial". Used to construct the name of the surface file to be loaded.
+#' @param surface string. The surface name. E.g., "white", or "pial". Used to construct the name of the surface file to be loaded.
 #'
-#' @param hemi, string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the surface file to be loaded.
+#' @param hemi string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the surface file to be loaded.
 #'
 #' @return the surface, as returned by freesurferformats::read.fs.surface(). A named list containing entries 'vertices' and 'faces'.
 #'

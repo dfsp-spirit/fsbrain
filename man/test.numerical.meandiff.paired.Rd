@@ -4,8 +4,13 @@
 \alias{test.numerical.meandiff.paired}
 \title{Perform tests for group differences on paired data (repeated measurements) for two conditions or time points.}
 \usage{
-test.numerical.meandiff.paired(colname, condition1_name, condition2_name,
-  condition1_data_column, condition2_data_column)
+test.numerical.meandiff.paired(
+  colname,
+  condition1_name,
+  condition2_name,
+  condition1_data_column,
+  condition2_data_column
+)
 }
 \arguments{
 \item{colname}{string, the name of the data (used to label the data in the output)}

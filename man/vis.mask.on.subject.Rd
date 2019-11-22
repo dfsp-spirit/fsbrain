@@ -4,9 +4,18 @@
 \alias{vis.mask.on.subject}
 \title{Visualize a vertex mask on the surface of a subject.}
 \usage{
-vis.mask.on.subject(subjects_dir, vis_subject_id, mask_lh, mask_rh,
-  surface = "white", colormap = squash::rainbow2, views = c("t4"),
-  rgloptions = list(), rglactions = list(), draw_colorbar = FALSE)
+vis.mask.on.subject(
+  subjects_dir,
+  vis_subject_id,
+  mask_lh,
+  mask_rh,
+  surface = "white",
+  colormap = squash::rainbow2,
+  views = c("t4"),
+  rgloptions = list(),
+  rglactions = list(),
+  draw_colorbar = FALSE
+)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, containing the subdir of vis_subject_id, the subject that you want to use for visualization.}
@@ -69,7 +78,8 @@ A mask is a logical vector that contains one value per vertex. You can create it
 
 }
 \seealso{
-Other mask functions: \code{\link{coloredmesh.from.mask}},
-  \code{\link{mask.from.labeldata.for.hemi}}
+Other mask functions: 
+\code{\link{coloredmesh.from.mask}()},
+\code{\link{mask.from.labeldata.for.hemi}()}
 }
 \concept{mask functions}

@@ -4,28 +4,36 @@
 \alias{subject.filepath.morph.standard}
 \title{Construct filepath of standard space morphometry data file.}
 \usage{
-subject.filepath.morph.standard(subjects_dir, subject_id, measure, hemi,
-  fwhm = "10", template_subject = "fsaverage", format = "mgh",
-  warn_if_nonexistent = FALSE, error_if_nonexistent = FALSE)
+subject.filepath.morph.standard(
+  subjects_dir,
+  subject_id,
+  measure,
+  hemi,
+  fwhm = "10",
+  template_subject = "fsaverage",
+  format = "mgh",
+  warn_if_nonexistent = FALSE,
+  error_if_nonexistent = FALSE
+)
 }
 \arguments{
-\item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
+\item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
 
-\item{subject_id, }{string. The subject identifier}
+\item{subject_id}{string. The subject identifier}
 
-\item{measure, }{string. Name of the vertex-wise measure of morphometry data file. E.g., "area" or "thickness". Used to construct the name of the morphometry file to be loaded.}
+\item{measure}{string. Name of the vertex-wise measure of morphometry data file. E.g., "area" or "thickness". Used to construct the name of the morphometry file to be loaded.}
 
-\item{hemi, }{string, one of 'lh' or 'rh'. The hemisphere name.}
+\item{hemi}{string, one of 'lh' or 'rh'. The hemisphere name.}
 
-\item{fwhm, }{string. Smoothing as string, e.g. '10' or '25'. Defaults to '10'.}
+\item{fwhm}{string. Smoothing as string, e.g. '10' or '25'. Defaults to '10'.}
 
-\item{template_subject, }{string. Template subject name, defaults to 'fsaverage'.}
+\item{template_subject}{string. Template subject name, defaults to 'fsaverage'.}
 
-\item{format, }{string. One of 'mgh', 'mgz', 'curv'. Defaults to 'mgh'.}
+\item{format}{string. One of 'mgh', 'mgz', 'curv'. Defaults to 'mgh'.}
 
-\item{warn_if_nonexistent, }{logical. Whether to print a warning if the file does not exist or cannot be accessed. Defaults to FALSE.}
+\item{warn_if_nonexistent}{logical. Whether to print a warning if the file does not exist or cannot be accessed. Defaults to FALSE.}
 
-\item{error_if_nonexistent, }{logical. Whether to raise an error if the file does not exist or cannot be accessed. Defaults to FALSE.}
+\item{error_if_nonexistent}{logical. Whether to raise an error if the file does not exist or cannot be accessed. Defaults to FALSE.}
 }
 \value{
 string, the file path.

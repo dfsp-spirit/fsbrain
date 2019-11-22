@@ -4,10 +4,13 @@
 \alias{coloredmesh.plot.colorbar.separate}
 \title{Draw colorbar for coloredmeshes in separate 2D plot.}
 \usage{
-coloredmesh.plot.colorbar.separate(coloredmeshes, show = TRUE,
+coloredmesh.plot.colorbar.separate(
+  coloredmeshes,
+  show = TRUE,
   makecmap_extra_options = list(n = 128),
   image.plot_extra_options = list(horizontal = TRUE),
-  png_options = NULL)
+  png_options = NULL
+)
 }
 \arguments{
 \item{coloredmeshes}{list of coloredmeshes. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.}
@@ -37,7 +40,8 @@ Draw a colorbar for the coloredmeshes to a separate 2D plot. Due to the suboptim
 
 }
 \seealso{
-Other colorbar functions: \code{\link{combine.colorbar.with.brainview.animation}},
-  \code{\link{combine.colorbar.with.brainview.image}}
+Other colorbar functions: 
+\code{\link{combine.colorbar.with.brainview.animation}()},
+\code{\link{combine.colorbar.with.brainview.image}()}
 }
 \concept{colorbar functions}

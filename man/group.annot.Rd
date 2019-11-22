@@ -31,14 +31,15 @@ Load a brain surface annotation, i.e., a cortical parcellation based on an atlas
 
 }
 \seealso{
-Other atlas functions: \code{\link{get.atlas.region.names}},
-  \code{\link{group.agg.atlas.native}},
-  \code{\link{group.agg.atlas.standard}},
-  \code{\link{regions.to.ignore}},
-  \code{\link{spread.values.over.annot}},
-  \code{\link{spread.values.over.hemi}},
-  \code{\link{spread.values.over.subject}},
-  \code{\link{subject.annot}},
-  \code{\link{subject.atlas.agg}}
+Other atlas functions: 
+\code{\link{get.atlas.region.names}()},
+\code{\link{group.agg.atlas.native}()},
+\code{\link{group.agg.atlas.standard}()},
+\code{\link{regions.to.ignore}()},
+\code{\link{spread.values.over.annot}()},
+\code{\link{spread.values.over.hemi}()},
+\code{\link{spread.values.over.subject}()},
+\code{\link{subject.annot}()},
+\code{\link{subject.atlas.agg}()}
 }
 \concept{atlas functions}
