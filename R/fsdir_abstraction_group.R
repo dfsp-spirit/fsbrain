@@ -64,6 +64,8 @@ group.morph.native <- function(subjects_dir, subjects_list, measure, hemi, forma
 #'
 #' @param format, string. One of 'mgh', 'mgz', 'curv'. Defaults to 'mgh'.
 #'
+#' @param cortex_only logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the template subject. Defaults to FALSE.
+#'
 #' @return named list with standard space morph data, the names are the subject identifiers from the subjects_list, and the values are morphometry data vectors (all with identical length, the data is mapped to a template subject).
 #'
 #' @family morphometry data functions
@@ -73,11 +75,15 @@ group.morph.native <- function(subjects_dir, subjects_list, measure, hemi, forma
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    subjects_list = c("subject1", "subject2");
-#'    data = group.morph.standard(subjects_dir, subjects_list, "thickness", "lh", fwhm='10');
+#'    fulldata = group.morph.standard(subjects_dir, subjects_list, "thickness", "lh", fwhm='10');
+#'    mean(fulldata$subject1);
+#'
+#'    cortexdata = group.morph.standard(subjects_dir, subjects_list, "thickness", "lh", fwhm='10', cortex_only=TRUE);
+#'    mean(cortexdata$subject1, na.rm=TRUE);
 #' }
 #'
 #' @export
-group.morph.standard <- function(subjects_dir, subjects_list, measure, hemi, fwhm='10', template_subject='fsaverage', format='mgh') {
+group.morph.standard <- function(subjects_dir, subjects_list, measure, hemi, fwhm='10', template_subject='fsaverage', format='mgh', cortex_only=FALSE) {
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
@@ -85,7 +91,7 @@ group.morph.standard <- function(subjects_dir, subjects_list, measure, hemi, fwh
 
     data_all_subjects = list();
     for(subject_id in subjects_list) {
-        data_all_subjects[[subject_id]] = subject.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm=fwhm, template_subject=template_subject, format=format);
+        data_all_subjects[[subject_id]] = subject.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm=fwhm, template_subject=template_subject, format=format, cortex_only=cortex_only);
     }
 
     return(data_all_subjects);

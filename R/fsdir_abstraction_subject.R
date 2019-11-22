@@ -145,6 +145,8 @@ apply.labeldata.to.morphdata <- function(morphdata, labeldata, masked_data_value
 #'
 #' @param format string. One of 'mgh', 'mgz', 'curv'. Defaults to 'mgh'.
 #'
+#' @param cortex_only logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the template subject. Defaults to FALSE.
+#'
 #' @return vector with standard space morph data
 #'
 #' @examples
@@ -157,7 +159,7 @@ apply.labeldata.to.morphdata <- function(morphdata, labeldata, masked_data_value
 #' @family morphometry data functions
 #'
 #' @export
-subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm='10', template_subject='fsaverage', format='mgh') {
+subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm='10', template_subject='fsaverage', format='mgh', cortex_only=FALSE) {
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
     }
@@ -165,16 +167,26 @@ subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm
     if(hemi == "both") {
         lh_curvfile = subject.filepath.morph.standard(subjects_dir, subject_id, measure, "lh", fwhm, error_if_nonexistent=TRUE);
         lh_morph_data = freesurferformats::read.fs.morph(lh_curvfile);
+        if(cortex_only) {
+            lh_morph_data = apply.label.to.morphdata(lh_morph_data, subjects_dir, template_subject, "lh", 'cortex');
+        }
 
         rh_curvfile = subject.filepath.morph.standard(subjects_dir, subject_id, measure, "rh", fwhm, error_if_nonexistent=TRUE);
         rh_morph_data = freesurferformats::read.fs.morph(rh_curvfile);
+        if(cortex_only) {
+            rh_morph_data = apply.label.to.morphdata(rh_morph_data, subjects_dir, template_subject, "rh", 'cortex');
+        }
 
         merged_morph_data = c(lh_morph_data, rh_morph_data);
         return(merged_morph_data);
 
     } else {
         curvfile = subject.filepath.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm, error_if_nonexistent=TRUE);
-        return(freesurferformats::read.fs.morph(curvfile));
+        morph_data = freesurferformats::read.fs.morph(curvfile);
+        if(cortex_only) {
+            morph_data = apply.label.to.morphdata(morph_data, subjects_dir, template_subject, hemi, 'cortex');
+        }
+        return(morph_data);
     }
 }
 
