@@ -26,7 +26,16 @@
 #' \donttest{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+#'
+#'    # Load the full data:
 #'    thickness_lh = subject.morph.native(subjects_dir, "subject1", "thickness", "lh");
+#'    mean(thickness_lh);  # prints 2.437466
+#'
+#'    # Load the data again, but this time exclude the medial wall:
+#'    thickness_lh_cortex = subject.morph.native(subjects_dir, "subject1", "thickness",
+#'     "lh", cortex_only=TRUE);
+#'    mean(thickness_lh_cortex, na.rm=TRUE);     # prints 2.544132
+#'    vis.data.on.subject(subjects_dir, "subject1", thickness_lh_cortex, NULL);
 #' }
 #'
 #' @export
