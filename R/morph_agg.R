@@ -228,6 +228,16 @@ group.multimorph.agg.standard <- function(subjects_dir, subjects_list, measures,
 #'
 #' @family global aggregation functions
 #'
+#' @examples
+#' \donttest{
+#'     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+#'     subjects_list = c("subject1", "subject2")
+#'     data = group.multimorph.agg.native(subjects_dir, subjects_list, c("thickness", "area"),
+#'      c("lh", "rh"), cast=FALSE, cortex_only=TRUE, agg_fun=mean,
+#'      agg_fun_extra_params=list("na.rm"=TRUE));
+#'     head(data);
+#' }
+#'
 #' @export
 group.multimorph.agg.native <- function(subjects_dir, subjects_list, measures, hemis, agg_fun = mean, format='curv', cast=TRUE, cortex_only=FALSE, agg_fun_extra_params=NULL) {
   agg_all_measures_and_hemis = data.frame();
