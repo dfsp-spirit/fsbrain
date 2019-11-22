@@ -78,7 +78,8 @@ group.morph.native <- function(subjects_dir, subjects_list, measure, hemi, forma
 #'    fulldata = group.morph.standard(subjects_dir, subjects_list, "thickness", "lh", fwhm='10');
 #'    mean(fulldata$subject1);
 #'
-#'    cortexdata = group.morph.standard(subjects_dir, subjects_list, "thickness", "lh", fwhm='10', cortex_only=TRUE);
+#'    cortexdata = group.morph.standard(subjects_dir, subjects_list, "thickness",
+#'     "lh", fwhm='10', cortex_only=TRUE);
 #'    mean(cortexdata$subject1, na.rm=TRUE);
 #' }
 #'

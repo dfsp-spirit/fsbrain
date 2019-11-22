@@ -107,12 +107,16 @@ group.morph.agg.native <- function(subjects_dir, subjects_list, measure, hemi, a
 #'
 #' @param cast, logical. Whether the columns should be database style, i.e., separate columns for everything.
 #'
+#' @param cortex_only logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the subjects. Also not that the aggregation function will need to be able to cope with NA values if you set this to TRUE. You can use 'agg_fun_extra_params' if needed to achieve that, depending on the function. Foe example, if you use the [mean()] function, you could set \code{agg_fun_extra_params=list("na.rm"=TRUE)} to get the mean of the vertices which are not masked. Defaults to FALSE.
+#'
+#' @param agg_fun_extra_params named list, extra parameters to pass to the aggregation function 'agg_fun' besides the loaded morphometry data. This is useful if you have masked the data and need to ignore NA values in the agg_fun.
+#'
 #' @return dataframe with aggregated values for all subjects, with 2 columns and n rows, where n is the number of subjects. The 2 columns are 'subject_id' and '<hemi>.<measure>' (e.g., "lh.thickness"), the latter contains the aggregated data.
 #'
 #' @family global aggregation functions
 #'
 #' @export
-group.morph.agg.standard <- function(subjects_dir, subjects_list, measure, hemi, fwhm, agg_fun = mean, template_subject='fsaverage', format='mgh', cast=TRUE) {
+group.morph.agg.standard <- function(subjects_dir, subjects_list, measure, hemi, fwhm, agg_fun = mean, template_subject='fsaverage', format='mgh', cast=TRUE, cortex_only=FALSE, agg_fun_extra_params=NULL) {
   if(!(hemi %in% c("lh", "rh", "both"))) {
     stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both but is '%s'.\n", hemi));
   }
@@ -120,17 +124,25 @@ group.morph.agg.standard <- function(subjects_dir, subjects_list, measure, hemi,
   for (subject_id in subjects_list) {
     morph_data = subject.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm=fwhm, template_subject=template_subject, format=format);
 
+    # Merge extra arguments to pass to the aggregation function.
+    agg_fun_default_params = list(morph_data);
+    if( ! is.null(agg_fun_extra_params)) {
+      agg_fun_params = modifyList(agg_fun_default_params, agg_fun_extra_params);
+    } else {
+      agg_fun_params = agg_fun_default_params;
+    }
+
     if(nrow(agg_all_subjects) == 0) {
       if(cast) {
-        agg_all_subjects = data.frame(c(as.character(subject_id)), hemi, measure, as.numeric(agg_fun(morph_data)), stringsAsFactors = FALSE);
+        agg_all_subjects = data.frame(c(as.character(subject_id)), hemi, measure, as.numeric(do.call(agg_fun, agg_fun_params)), stringsAsFactors = FALSE);
       } else {
-        agg_all_subjects = data.frame(c(as.character(subject_id)), as.numeric(agg_fun(morph_data)), stringsAsFactors = FALSE);
+        agg_all_subjects = data.frame(c(as.character(subject_id)), as.numeric(do.call(agg_fun, agg_fun_params)), stringsAsFactors = FALSE);
       }
     } else {
       if(cast) {
-        agg_all_subjects = rbind(agg_all_subjects, c(as.character(subject_id), hemi, measure, as.numeric(agg_fun(morph_data))));
+        agg_all_subjects = rbind(agg_all_subjects, c(as.character(subject_id), hemi, measure, as.numeric(do.call(agg_fun, agg_fun_params))));
       } else {
-        agg_all_subjects = rbind(agg_all_subjects, c(as.character(subject_id), as.numeric(agg_fun(morph_data))));
+        agg_all_subjects = rbind(agg_all_subjects, c(as.character(subject_id), as.numeric(do.call(agg_fun, agg_fun_params))));
       }
     }
   }
@@ -170,19 +182,23 @@ group.morph.agg.standard <- function(subjects_dir, subjects_list, measure, hemi,
 #'
 #' @param cast, Whether a separate 'hemi' column should exist.
 #'
+#' @param cortex_only logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the subjects. Also not that the aggregation function will need to be able to cope with NA values if you set this to TRUE. You can use 'agg_fun_extra_params' if needed to achieve that, depending on the function. Foe example, if you use the [mean()] function, you could set \code{agg_fun_extra_params=list("na.rm"=TRUE)} to get the mean of the vertices which are not masked. Defaults to FALSE.
+#'
+#' @param agg_fun_extra_params named list, extra parameters to pass to the aggregation function 'agg_fun' besides the loaded morphometry data. This is useful if you have masked the data and need to ignore NA values in the agg_fun.
+#'
 #' @return dataframe with aggregated values over all measures and hemis for all subjects, with m columns and n rows, where n is the number of subjects. The m columns are 'subject_id' and '<hemi>.<measure>' (e.g., "lh.thickness") for all combinations of hemi and measure, the latter contains the aggregated data.
 #'
 #' @family global aggregation functions
 #'
 #' @export
-group.multimorph.agg.standard <- function(subjects_dir, subjects_list, measures, hemis, fwhm, agg_fun = mean, template_subject='fsaverage', format='mgh', cast=TRUE) {
+group.multimorph.agg.standard <- function(subjects_dir, subjects_list, measures, hemis, fwhm, agg_fun = mean, template_subject='fsaverage', format='mgh', cast=TRUE, cortex_only=FALSE, agg_fun_extra_params=NULL) {
   agg_all_measures_and_hemis = data.frame();
   for (hemi in hemis) {
     if(!(hemi %in% c("lh", "rh", "both"))) {
       stop(sprintf("Each entry in the parameter 'hemis' must be one of 'lh', 'rh' or 'both, but the current one is '%s'.\n", hemi));
     }
     for (measure in measures) {
-        measure_hemi_data = group.morph.agg.standard(subjects_dir, subjects_list, measure, hemi, fwhm, agg_fun = agg_fun, template_subject=template_subject, format=format, cast=cast);
+        measure_hemi_data = group.morph.agg.standard(subjects_dir, subjects_list, measure, hemi, fwhm, agg_fun = agg_fun, template_subject=template_subject, format=format, cast=cast, cortex_only=cortex_only, agg_fun_extra_params=agg_fun_extra_params);
 
         if(nrow(agg_all_measures_and_hemis) == 0) {
           agg_all_measures_and_hemis = measure_hemi_data;
@@ -246,7 +262,7 @@ group.multimorph.agg.native <- function(subjects_dir, subjects_list, measures, h
       stop(sprintf("Each entry in the parameter 'hemis' must be one of 'lh', 'rh' or 'both' but the current one is '%s'.\n", hemi));
     }
     for (measure in measures) {
-      measure_hemi_data = group.morph.agg.native(subjects_dir, subjects_list, measure, hemi, agg_fun = agg_fun, format=format, cast=cast);
+      measure_hemi_data = group.morph.agg.native(subjects_dir, subjects_list, measure, hemi, agg_fun = agg_fun, format=format, cast=cast, cortex_only=cortex_only, agg_fun_extra_params=agg_fun_extra_params);
 
       if(nrow(agg_all_measures_and_hemis) == 0) {
         agg_all_measures_and_hemis = measure_hemi_data;
