@@ -5,8 +5,28 @@ test_that("Aggregation of native space whole brain morph data on group level wor
   subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
 
-  subjects_list = c("subject1", "subject2")
-  data = group.morph.agg.native(subjects_dir, subjects_list, "thickness", "lh")
+  subjects_list = c("subject1", "subject2");
+  data = group.morph.agg.native(subjects_dir, subjects_list, "thickness", "lh");
+
+  expect_equal(class(data), "data.frame")
+  expect_equal(nrow(data), 2)  # the 2 subjects
+  expect_equal(ncol(data), 4)  # 4 rows, see below
+  expect_true("subject_id" %in% colnames(data))
+  expect_true("hemi" %in% colnames(data))
+  expect_true("measure_name" %in% colnames(data))
+  expect_true("measure_value" %in% colnames(data))
+  expect_equal(data$subject_id[0], subjects_list[0])
+  expect_equal(data$subject_id[1], subjects_list[1])
+})
+
+
+test_that("Aggregation of native space whole brain morph data restricted to the cortex on group level works", {
+  fsbrain::download_optional_data();
+  subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+  skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
+
+  subjects_list = c("subject1", "subject2");
+  data = group.morph.agg.native(subjects_dir, subjects_list, "thickness", "lh", cortex_only=TRUE, agg_fun=mean, agg_fun_extra_params=list("na.rm"=TRUE));
 
   expect_equal(class(data), "data.frame")
   expect_equal(nrow(data), 2)  # the 2 subjects

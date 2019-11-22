@@ -18,29 +18,53 @@
 #'
 #' @param cast, logical. Whether the format of the returned data frame should be cast, i.e., whether a separate 'hemi' column should be introduced. If this is set to FALSE, the following will be returned: a dataframe with 2 columns and n rows, where n is the number of subjects. The 2 columns are 'subject_id' and '<hemi>.<measure>' (e.g., "lh.thickness"), the latter contains the aggregated data. See the description of the return value for the default case (cast=TRUE). Defaults to TRUE.
 #'
+#' @param cortex_only logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the subjects. Also not that the aggregation function will need to be able to cope with NA values if you set this to TRUE. You can use 'agg_fun_extra_params' if needed to achieve that, depending on the function. Foe example, if you use the [mean()] function, you could set \code{agg_fun_extra_params=list("na.rm"=TRUE)} to get the mean of the vertices which are not masked. Defaults to FALSE.
+#'
+#' @param agg_fun_extra_params named list, extra parameters to pass to the aggregation function 'agg_fun' besides the loaded morphometry data. This is useful if you have masked the data and need to ignore NA values in the agg_fun.
+#'
 #' @return dataframe with aggregated values for all subjects, with 3 columns and n rows, where n is the number of subjects. The 3 columns are 'subject_id', 'hemi', and '<measure>' (e.g., "thickness"), the latter contains the aggregated data.
 #'
 #' @family global aggregation functions
 #'
+#' @examples
+#' \donttest{
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+#'    subjects_list = c("subject1", "subject2");
+#'    fulldata = group.morph.agg.native(subjects_dir, subjects_list, "thickness", "lh");
+#'    head(fulldata);
+#' }
+#'
 #' @export
-group.morph.agg.native <- function(subjects_dir, subjects_list, measure, hemi, agg_fun = mean, cast=TRUE, format='curv') {
+#' @importFrom utils modifyList
+group.morph.agg.native <- function(subjects_dir, subjects_list, measure, hemi, agg_fun = mean, cast=TRUE, format='curv', cortex_only=FALSE, agg_fun_extra_params=NULL) {
   if(!(hemi %in% c("lh", "rh", "both"))) {
     stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both but is '%s'.\n", hemi));
   }
+
   agg_all_subjects = data.frame();
   for (subject_id in subjects_list) {
       morph_data = subject.morph.native(subjects_dir, subject_id, measure, hemi, format=format);
+
+      # Merge extra arguments to pass to the aggregation function.
+      agg_fun_default_params = list(morph_data);
+      if( ! is.null(agg_fun_extra_params)) {
+        agg_fun_params = modifyList(agg_fun_default_params, agg_fun_extra_params);
+      } else {
+        agg_fun_params = agg_fun_default_params;
+      }
+
       if(nrow(agg_all_subjects) == 0) {
         if(cast) {
-          agg_all_subjects = data.frame(c(as.character(subject_id)), hemi, measure, agg_fun(morph_data), stringsAsFactors = FALSE);
+          agg_all_subjects = data.frame(c(as.character(subject_id)), hemi, measure, do.call(agg_fun, agg_fun_params), stringsAsFactors = FALSE);
         } else {
-          agg_all_subjects = data.frame(c(as.character(subject_id)), agg_fun(morph_data), stringsAsFactors = FALSE);
+          agg_all_subjects = data.frame(c(as.character(subject_id)), do.call(agg_fun, agg_fun_params), stringsAsFactors = FALSE);
         }
       } else {
         if(cast) {
-          agg_all_subjects = rbind(agg_all_subjects, c(as.character(subject_id), hemi, measure, agg_fun(morph_data)));
+          agg_all_subjects = rbind(agg_all_subjects, c(as.character(subject_id), hemi, measure, do.call(agg_fun, agg_fun_params)));
         } else {
-          agg_all_subjects = rbind(agg_all_subjects, c(as.character(subject_id), agg_fun(morph_data)));
+          agg_all_subjects = rbind(agg_all_subjects, c(as.character(subject_id), do.call(agg_fun, agg_fun_params)));
         }
       }
   }
