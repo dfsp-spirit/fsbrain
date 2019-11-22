@@ -16,6 +16,8 @@
 #'
 #' @param format, string. One of 'mgh', 'mgz', 'curv'. Defaults to 'curv'.
 #'
+#' @param cortex_only logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the subjects. Defaults to FALSE.
+#'
 #' @return named list with native space morph data, the names are the subject identifiers from the subjects_list, and the values are morphometry data vectors (of different length, as each subject has a different vertex count in native space).
 #'
 #' @family morphometry data functions
@@ -29,7 +31,7 @@
 #' }
 #'
 #' @export
-group.morph.native <- function(subjects_dir, subjects_list, measure, hemi, format='curv') {
+group.morph.native <- function(subjects_dir, subjects_list, measure, hemi, format='curv', cortex_only=FALSE) {
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
@@ -37,7 +39,7 @@ group.morph.native <- function(subjects_dir, subjects_list, measure, hemi, forma
 
     data_all_subjects = list();
     for(subject_id in subjects_list) {
-        data_all_subjects[[subject_id]] = subject.morph.native(subjects_dir, subject_id, measure, hemi, format=format);
+        data_all_subjects[[subject_id]] = subject.morph.native(subjects_dir, subject_id, measure, hemi, format=format, cortex_only=cortex_only);
     }
 
    return(data_all_subjects);
