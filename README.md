@@ -4,8 +4,7 @@ A GNU R library for structural neuroimaging. Provides high-level functions to ac
 ![Vis](./vignettes/fsbrain_ct.jpg?raw=true "Cortical thickness visualization, created with fsbrain")
 
 
-[Installation](#installation) | [Documentation](#documentation) | [Unit tests](#unit-tests-and-continuous-integration) | [License](#license) | [Citation](#citation) | [Contributing](#contributing) |
-[Visualization examples](#visualization-examples)
+[Installation](#installation) | [Documentation](#documentation) | [Unit tests](#unit-tests-and-continuous-integration) | [License](#license) | [Citation](#citation) | [Visualization examples](#visualization-examples) | [Contributing](#contributing)
 
 ## Installation
 
@@ -119,10 +118,6 @@ A BibTeX entry for LaTeX users is
   }
 ```
 
-## Contributing
-
-Please refer to [CONTRIBUTING.md](./CONTRIBUTING.md).
-
 
 ## Visualization examples
 
@@ -144,5 +139,9 @@ Here is a second figure, showing the same data (the mean curvature at each verte
 
 Want to see brains spin? [Check this out.](./web/fsbrain_movies.md) (WARNING: loads 8 MB webpage with animated gif).
 
+
+## Contributing
+
+Please refer to [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 If you have any questions or want to contact me, please [open an issue](https://github.com/dfsp-spirit/fsbrain/issues).
