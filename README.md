@@ -121,7 +121,7 @@ A BibTeX entry for LaTeX users is
 
 ## Contributing
 
-I am very happy to accept [pull requests](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request), provided you are fine with publishing your work under the [license of this project](#license). If your PR is not just a fix but changes or adds lots of code, please get in touch by [opening an issue](https://github.com/dfsp-spirit/fsbrain/issues) before starting the project so we can discuss it first. Development currently happends on master.
+Please refer to [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 
 ## Visualization examples
@@ -143,3 +143,6 @@ Here is a second figure, showing the same data (the mean curvature at each verte
 ### Animations and videos
 
 Want to see brains spin? [Check this out.](./web/fsbrain_movies.md) (WARNING: loads 8 MB webpage with animated gif).
+
+
+If you have any questions or want to contact me, please [open an issue](https://github.com/dfsp-spirit/fsbrain/issues).
