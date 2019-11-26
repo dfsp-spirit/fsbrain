@@ -57,10 +57,18 @@ Creates a surface mesh, applies a colormap transform the morphometry data values
 \seealso{
 Other visualization functions: 
 \code{\link{vis.data.on.fsaverage}()},
+\code{\link{vis.labeldata.on.subject}()},
+\code{\link{vis.mask.on.subject}()},
 \code{\link{vis.region.values.on.subject}()},
 \code{\link{vis.subject.annot}()},
 \code{\link{vis.subject.label}()},
 \code{\link{vis.subject.morph.native}()},
 \code{\link{vis.subject.morph.standard}()}
+
+Other morphometry visualization functions: 
+\code{\link{vis.data.on.fsaverage}()},
+\code{\link{vis.subject.morph.native}()},
+\code{\link{vis.subject.morph.standard}()}
 }
+\concept{morphometry visualization functions}
 \concept{visualization functions}

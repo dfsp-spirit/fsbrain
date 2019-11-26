@@ -14,7 +14,8 @@ coloredmesh.from.morph.standard(
   template_subject = "fsaverage",
   template_subjects_dir = NULL,
   colormap = squash::jet,
-  clip = NULL
+  clip = NULL,
+  cortex_only = FALSE
 )
 }
 \arguments{
@@ -37,9 +38,11 @@ coloredmesh.from.morph.standard(
 \item{colormap, }{a colormap function. See the squash package for some colormaps. Defaults to [squash::jet].}
 
 \item{clip, }{numeric vector of length 2 or NULL. If given, the 2 values are interpreted as lower and upper percentiles, and the morph data is clipped at the given lower and upper percentile (see [fsbrain::clip.data]). Defaults to NULL (no data clipping).}
+
+\item{cortex_only}{logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the template subject. Defaults to FALSE.}
 }
 \value{
-coloredmesh. A named list with entries: "mesh" the [rgl::tmesh3d] mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
+coloredmesh. A named list with entries: "mesh" the [rgl::tmesh3d()] mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
 }
 \description{
 Create a coloredmesh from standard space morphometry data.

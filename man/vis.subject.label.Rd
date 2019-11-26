@@ -61,6 +61,8 @@ Visualize a label for a subject. A label is jsut a logical vector with one entry
 Other visualization functions: 
 \code{\link{vis.data.on.fsaverage}()},
 \code{\link{vis.data.on.subject}()},
+\code{\link{vis.labeldata.on.subject}()},
+\code{\link{vis.mask.on.subject}()},
 \code{\link{vis.region.values.on.subject}()},
 \code{\link{vis.subject.annot}()},
 \code{\link{vis.subject.morph.native}()},

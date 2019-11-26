@@ -69,5 +69,16 @@ Other label functions:
 \code{\link{apply.label.to.morphdata}()},
 \code{\link{apply.labeldata.to.morphdata}()},
 \code{\link{vis.subject.label}()}
+
+Other visualization functions: 
+\code{\link{vis.data.on.fsaverage}()},
+\code{\link{vis.data.on.subject}()},
+\code{\link{vis.mask.on.subject}()},
+\code{\link{vis.region.values.on.subject}()},
+\code{\link{vis.subject.annot}()},
+\code{\link{vis.subject.label}()},
+\code{\link{vis.subject.morph.native}()},
+\code{\link{vis.subject.morph.standard}()}
 }
 \concept{label functions}
+\concept{visualization functions}

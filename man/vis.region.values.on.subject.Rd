@@ -73,9 +73,15 @@ This function can be used for rendering a single value (color) for all vertices 
 Other visualization functions: 
 \code{\link{vis.data.on.fsaverage}()},
 \code{\link{vis.data.on.subject}()},
+\code{\link{vis.labeldata.on.subject}()},
+\code{\link{vis.mask.on.subject}()},
 \code{\link{vis.subject.annot}()},
 \code{\link{vis.subject.label}()},
 \code{\link{vis.subject.morph.native}()},
 \code{\link{vis.subject.morph.standard}()}
+
+Other region-based visualization functions: 
+\code{\link{vis.subject.annot}()}
 }
+\concept{region-based visualization functions}
 \concept{visualization functions}

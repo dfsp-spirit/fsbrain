@@ -8,8 +8,8 @@ vis.subject.morph.standard(
   subjects_dir,
   subject_id,
   measure,
-  hemi,
-  fwhm,
+  hemi = "both",
+  fwhm = "10",
   surface = "white",
   template_subject = "fsaverage",
   template_subjects_dir = NULL,
@@ -17,7 +17,8 @@ vis.subject.morph.standard(
   views = c("t4"),
   rgloptions = list(),
   rglactions = list(),
-  draw_colorbar = FALSE
+  draw_colorbar = FALSE,
+  cortex_only = FALSE
 )
 }
 \arguments{
@@ -46,6 +47,8 @@ vis.subject.morph.standard(
 \item{rglactions, }{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.}
 
 \item{draw_colorbar}{logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See [fsbrain::coloredmesh.plot.colorbar.separate] for an alternative.}
+
+\item{cortex_only}{logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the subject. Defaults to FALSE.}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.
@@ -72,9 +75,17 @@ Creates a surface mesh, applies a colormap transform the morphometry data values
 Other visualization functions: 
 \code{\link{vis.data.on.fsaverage}()},
 \code{\link{vis.data.on.subject}()},
+\code{\link{vis.labeldata.on.subject}()},
+\code{\link{vis.mask.on.subject}()},
 \code{\link{vis.region.values.on.subject}()},
 \code{\link{vis.subject.annot}()},
 \code{\link{vis.subject.label}()},
 \code{\link{vis.subject.morph.native}()}
+
+Other morphometry visualization functions: 
+\code{\link{vis.data.on.fsaverage}()},
+\code{\link{vis.data.on.subject}()},
+\code{\link{vis.subject.morph.native}()}
 }
+\concept{morphometry visualization functions}
 \concept{visualization functions}

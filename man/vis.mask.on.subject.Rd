@@ -81,5 +81,16 @@ A mask is a logical vector that contains one value per vertex. You can create it
 Other mask functions: 
 \code{\link{coloredmesh.from.mask}()},
 \code{\link{mask.from.labeldata.for.hemi}()}
+
+Other visualization functions: 
+\code{\link{vis.data.on.fsaverage}()},
+\code{\link{vis.data.on.subject}()},
+\code{\link{vis.labeldata.on.subject}()},
+\code{\link{vis.region.values.on.subject}()},
+\code{\link{vis.subject.annot}()},
+\code{\link{vis.subject.label}()},
+\code{\link{vis.subject.morph.native}()},
+\code{\link{vis.subject.morph.standard}()}
 }
 \concept{mask functions}
+\concept{visualization functions}

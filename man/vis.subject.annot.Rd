@@ -8,7 +8,7 @@ vis.subject.annot(
   subjects_dir,
   subject_id,
   atlas,
-  hemi,
+  hemi = "both",
   surface = "white",
   views = c("t4"),
   rgloptions = list(),
@@ -50,9 +50,15 @@ Creates a surface mesh, loads the colors from the annotation, and renders the re
 Other visualization functions: 
 \code{\link{vis.data.on.fsaverage}()},
 \code{\link{vis.data.on.subject}()},
+\code{\link{vis.labeldata.on.subject}()},
+\code{\link{vis.mask.on.subject}()},
 \code{\link{vis.region.values.on.subject}()},
 \code{\link{vis.subject.label}()},
 \code{\link{vis.subject.morph.native}()},
 \code{\link{vis.subject.morph.standard}()}
+
+Other region-based visualization functions: 
+\code{\link{vis.region.values.on.subject}()}
 }
+\concept{region-based visualization functions}
 \concept{visualization functions}

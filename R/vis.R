@@ -5,25 +5,27 @@
 #'
 #' @description Creates a surface mesh, applies a colormap transform the morphometry data values into colors, and renders the resulting colored mesh in an interactive window. If hemi is 'both', the data is rendered for the whole brain.
 #'
-#' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
+#' @param subjects_dir string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
 #'
-#' @param subject_id, string. The subject identifier.
+#' @param subject_id string. The subject identifier.
 #'
-#' @param measure, string. The morphometry data to use. E.g., 'area' or 'thickness.'
+#' @param measure string. The morphometry data to use. E.g., 'area' or 'thickness.'
 #'
-#' @param hemi, string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the label data files to be loaded.
+#' @param hemi string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the label data files to be loaded.
 #'
-#' @param surface, string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
+#' @param surface string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
 #'
-#' @param colormap, a colormap. See the squash package for some colormaps. Defaults to [squash::jet].
+#' @param colormap a colormap. See the squash package for some colormaps. Defaults to [squash::jet].
 #'
-#' @param views, list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.
+#' @param views list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.
 #'
 #' @param rgloptions option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));
 #'
-#' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
+#' @param rglactions named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
 #'
-#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See [fsbrain::coloredmesh.plot.colorbar.separate] for an alternative.
+#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See [fsbrain::coloredmesh.plot.colorbar.separate()] for an alternative.
+#'
+#' @param cortex_only logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the subject. Defaults to FALSE.
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
@@ -35,10 +37,11 @@
 #' }
 #'
 #' @family visualization functions
+#' @family morphometry visualization functions
 #'
 #' @importFrom squash jet
 #' @export
-vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, surface="white", colormap=squash::jet, views=c("t4"), rgloptions = list(), rglactions = list(), draw_colorbar = FALSE) {
+vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi="both", surface="white", colormap=squash::jet, views=c("t4"), rgloptions = list(), rglactions = list(), draw_colorbar = FALSE, cortex_only=FALSE) {
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
@@ -53,11 +56,11 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, su
 
 
     if(hemi == "both") {
-        lh_cmesh = coloredmesh.from.morph.native(subjects_dir, subject_id, measure, 'lh', surface=surface, colormap=colormap, clip = clip);
-        rh_cmesh = coloredmesh.from.morph.native(subjects_dir, subject_id, measure, 'rh', surface=surface, colormap=colormap, clip = clip);
+        lh_cmesh = coloredmesh.from.morph.native(subjects_dir, subject_id, measure, 'lh', surface=surface, colormap=colormap, clip=clip, cortex_only=cortex_only);
+        rh_cmesh = coloredmesh.from.morph.native(subjects_dir, subject_id, measure, 'rh', surface=surface, colormap=colormap, clip=clip, cortex_only=cortex_only);
         coloredmeshes = list(lh_cmesh, rh_cmesh);
     } else {
-        cmesh = coloredmesh.from.morph.native(subjects_dir, subject_id, measure, hemi, surface=surface, colormap=colormap, clip = clip);
+        cmesh = coloredmesh.from.morph.native(subjects_dir, subject_id, measure, hemi, surface=surface, colormap=colormap, clip=clip, cortex_only=cortex_only);
         coloredmeshes = list(cmesh);
     }
 
@@ -157,6 +160,8 @@ vis.subject.label <- function(subjects_dir, subject_id, label, hemi, surface="wh
 #'
 #' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See [fsbrain::coloredmesh.plot.colorbar.separate] for an alternative.
 #'
+#' @param cortex_only logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the subject. Defaults to FALSE.
+#'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
 #' @examples
@@ -174,10 +179,11 @@ vis.subject.label <- function(subjects_dir, subject_id, label, hemi, surface="wh
 #' }
 #'
 #' @family visualization functions
+#' @family morphometry visualization functions
 #'
 #' @importFrom squash jet
 #' @export
-vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm, surface="white", template_subject = 'fsaverage', template_subjects_dir = NULL, colormap=squash::jet, views=c("t4"), rgloptions = list(), rglactions = list(), draw_colorbar = FALSE) {
+vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi="both", fwhm="10", surface="white", template_subject = 'fsaverage', template_subjects_dir = NULL, colormap=squash::jet, views=c("t4"), rgloptions = list(), rglactions = list(), draw_colorbar = FALSE, cortex_only = FALSE) {
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
@@ -194,11 +200,11 @@ vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, 
     }
 
     if(hemi == "both") {
-        lh_cmesh = coloredmesh.from.morph.standard(subjects_dir, subject_id, measure, 'lh', fwhm, surface=surface, template_subject=template_subject, template_subjects_dir=template_subjects_dir, colormap=colormap, clip = clip);
-        rh_cmesh = coloredmesh.from.morph.standard(subjects_dir, subject_id, measure, 'rh', fwhm, surface=surface, template_subject=template_subject, template_subjects_dir=template_subjects_dir, colormap=colormap, clip = clip);
+        lh_cmesh = coloredmesh.from.morph.standard(subjects_dir, subject_id, measure, 'lh', fwhm, surface=surface, template_subject=template_subject, template_subjects_dir=template_subjects_dir, colormap=colormap, clip=clip, cortex_only=cortex_only);
+        rh_cmesh = coloredmesh.from.morph.standard(subjects_dir, subject_id, measure, 'rh', fwhm, surface=surface, template_subject=template_subject, template_subjects_dir=template_subjects_dir, colormap=colormap, clip=clip, cortex_only=cortex_only);
         coloredmeshes = list(lh_cmesh, rh_cmesh);
     } else {
-        cmesh = coloredmesh.from.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm, surface=surface, template_subject=template_subject, template_subjects_dir=template_subjects_dir, colormap=colormap, clip = clip);
+        cmesh = coloredmesh.from.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm, surface=surface, template_subject=template_subject, template_subjects_dir=template_subjects_dir, colormap=colormap, clip=clip, cortex_only=cortex_only);
         coloredmeshes = list(cmesh);
     }
 
@@ -277,6 +283,7 @@ brainviews <- function(views, coloredmeshes, rgloptions = list(), rglactions = l
 #' }
 #'
 #' @family visualization functions
+#' @family morphometry visualization functions
 #'
 #' @importFrom squash jet
 #' @export
@@ -290,7 +297,7 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, mor
 
     if(! is.null(morph_data_lh)) {
 
-        if(is.character(morph_data_lh)) {    # Treat is as a filename
+        if(is.character(morph_data_lh)) {    # Treat it as a filename
             morph_data_lh = freesurferformats::read.fs.morph(morph_data_lh);
         }
 
@@ -300,7 +307,7 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, mor
 
     if(! is.null(morph_data_rh)) {
 
-        if(is.character(morph_data_rh)) {    # Treat is as a filename
+        if(is.character(morph_data_rh)) {    # Treat it as a filename
             morph_data_rh = freesurferformats::read.fs.morph(morph_data_rh);
         }
 
@@ -371,6 +378,8 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, mor
 #' }
 #'
 #' @family mask functions
+#' @family visualization functions
+#'
 #' @importFrom squash rainbow2
 #' @export
 vis.mask.on.subject <- function(subjects_dir, vis_subject_id, mask_lh, mask_rh, surface="white", colormap=squash::rainbow2, views=c('t4'), rgloptions=list(), rglactions = list(), draw_colorbar = FALSE) {
@@ -439,6 +448,8 @@ vis.mask.on.subject <- function(subjects_dir, vis_subject_id, mask_lh, mask_rh, 
 #' }
 #'
 #' @family label functions
+#' @family visualization functions
+#'
 #' @importFrom squash rainbow2
 #' @export
 vis.labeldata.on.subject <- function(subjects_dir, vis_subject_id, lh_labeldata, rh_labeldata, surface="white", colormap=squash::rainbow2, views=c('t4'), rgloptions=list(), rglactions = list(), draw_colorbar = FALSE) {
@@ -488,6 +499,7 @@ vis.labeldata.on.subject <- function(subjects_dir, vis_subject_id, lh_labeldata,
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
 #' @family visualization functions
+#' @family morphometry visualization functions
 #'
 #' @importFrom squash jet
 #' @export
@@ -531,9 +543,10 @@ vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage",
 #' }
 #'
 #' @family visualization functions
+#' @family region-based visualization functions
 #'
 #' @export
-vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi, surface="white", views=c('t4'), rgloptions=list(), rglactions = list()) {
+vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi='both', surface="white", views=c('t4'), rgloptions=list(), rglactions = list()) {
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
@@ -602,6 +615,7 @@ vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi, surface="wh
 #' }
 #'
 #' @family visualization functions
+#' @family region-based visualization functions
 #'
 #' @importFrom squash heat
 #' @importFrom grDevices heat.colors
