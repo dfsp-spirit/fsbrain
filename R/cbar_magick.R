@@ -10,15 +10,17 @@
 #'
 #' @param output_img path to output image that including the file extension
 #'
-#' @param offset offset string passed to [magick::image_composite]. Allows you to shift the location of the colorbar in the final image.
+#' @param offset offset string passed to [magick::image_composite()]. Allows you to shift the location of the colorbar in the final image.
 #'
 #' @param extend_brainview_img_height_by integer value in pixels, the size of the lower border to add to the brainview_img. Use this if the lower part of the colorbar is off the image canvas.
 #'
 #' @param silent logical, whether to silence all messages
 #'
+#' @param allow_colorbar_shrink logical, whether to shrink the colorbar to the width of the animation in case it is considerably wider (more than 20 percent). Defaults to TRUE.
+#'
 #' @family colorbar functions
 #' @export
-combine.colorbar.with.brainview.image <- function(brainview_img, colorbar_img, output_img, offset="+0+0", extend_brainview_img_height_by=0L, silent=FALSE) {
+combine.colorbar.with.brainview.image <- function(brainview_img, colorbar_img, output_img, offset="+0+0", extend_brainview_img_height_by=0L, silent=FALSE, allow_colorbar_shrink=TRUE) {
     if (requireNamespace("magick", quietly = TRUE)) {
         main_img = magick::image_read(brainview_img);
         cbar_img = magick::image_read(colorbar_img);
@@ -31,6 +33,19 @@ combine.colorbar.with.brainview.image <- function(brainview_img, colorbar_img, o
         if(extend_brainview_img_height_by != 0L) {
             extend_dims = sprintf("%dx%d", width_main, (height_main + extend_brainview_img_height_by));
             main_img = magick::image_extent(main_img, extend_dims, gravity="north", color="white");
+        }
+
+        if(width_cbar > 1.2 * width_main) {
+            if(allow_colorbar_shrink) {
+                cbar_img = magick::image_resize(cbar_img, sprintf("%dx", width_main));
+                if(! silent) {
+                    message(sprintf("Colorbar resized to with %d px.\n", width_main));
+                }
+            } else {
+                if(!silent) {
+                    message(sprintf("The colorbar (width %d px) is considerably wider than the main image (%d px). The colorbar may not fit onto the canvas and will be cut off. Please ensure roughly equal size.\n", width_cbar, width_main));
+                }
+            }
         }
 
         # Overlay the colorbar over the bottom part of the main image.
@@ -54,7 +69,7 @@ combine.colorbar.with.brainview.image <- function(brainview_img, colorbar_img, o
 #'
 #' @param output_animation path to output image in gif format, must include the '.gif' file extension
 #'
-#' @param offset offset string passed to [magick::image_composite]. Allows you to shift the location of the colorbar in the final image.
+#' @param offset offset string passed to [magick::image_composite()]. Allows you to shift the location of the colorbar in the final image.
 #'
 #' @param extend_brainview_img_height_by integer value in pixels, the size of the lower border to add to the brainview_img. Use this if the lower part of the colorbar is off the image canvas.
 #'
@@ -87,10 +102,15 @@ combine.colorbar.with.brainview.animation <- function(brain_animation, colorbar_
         width_cbar_trimmed = magick::image_info(cbar_img_trimmed)$width;
 
         if(width_cbar_trimmed > 1.2 * width_mov) {
-            message(sprintf("The colorbar (width %d px) is considerably wider than the animation (%d px) even after trimming. The colorbar may not fit onto the canvas and will be cut off. Please ensure roughly equal size.\n", width_cbar_trimmed, width_mov));
             if(allow_colorbar_shrink) {
                 cbar_img_trimmed = magick::image_resize(cbar_img_trimmed, sprintf("%dx", width_mov));
-                message("Colorbar resized.");
+                if(! silent) {
+                    message(sprintf("Colorbar resized to width %d px.\n", width_mov));
+                }
+            } else {
+                if(!silent) {
+                    message(sprintf("The colorbar (width %d px) is considerably wider than the animation (%d px) even after trimming. The colorbar may not fit onto the canvas and will be cut off. Please ensure roughly equal size.\n", width_cbar_trimmed, width_mov));
+                }
             }
         }
 

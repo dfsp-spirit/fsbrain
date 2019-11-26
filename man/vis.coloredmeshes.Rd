@@ -23,11 +23,11 @@ vis.coloredmeshes(
 
 \item{style, }{a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.}
 
-\item{rgloptions}{option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));}
+\item{rgloptions}{option list passed to [rgl::par3d()]. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))};}
 
 \item{rglactions, }{named list. A list in which the names are from a set of pre-defined actions. Defaults to the empty list.}
 
-\item{draw_colorbar, }{logical. Whether to draw a colorbar. WARNING: Will only show up if there is enough space in the plot area and does not resize properly. Defaults to FALSE. See [fsbrain::coloredmesh.plot.colorbar.separate] for an alternative.}
+\item{draw_colorbar, }{logical. Whether to draw a colorbar. WARNING: Will only show up if there is enough space in the plot area and does not resize properly. Defaults to FALSE. See [fsbrain::coloredmesh.plot.colorbar.separate()] for an alternative.}
 }
 \value{
 the list of visualized coloredmeshes

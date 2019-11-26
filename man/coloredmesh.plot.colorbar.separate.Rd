@@ -17,11 +17,11 @@ coloredmesh.plot.colorbar.separate(
 
 \item{show}{logical, Whether to open the resulting plot in R. Defaults to TRUE.}
 
-\item{makecmap_extra_options}{named list of extra optins to pass to [squash::makecmap]. This can be used to overwrite the colormap function, explicitely set the color for NA data values, or whatever. The first mandatory data argument is passed in from the coloredmesh data already and "colFn" is also set based on the coloredmeshes, so there is no need to pass these. Your list will be merged with the internal options, so you could overwrite named arguments if needed.}
+\item{makecmap_extra_options}{named list of extra optins to pass to [squash::makecmap()]. This can be used to overwrite the colormap function, explicitely set the color for NA data values, or whatever. The first mandatory data argument is passed in from the coloredmesh data already and "colFn" is also set based on the coloredmeshes, so there is no need to pass these. Your list will be merged with the internal options, so you could overwrite named arguments if needed.}
 
-\item{image.plot_extra_options}{named list of extra optins to pass to [fields::image.plot]. This can be used to add a legend to the colorbar, rotate the colorbar, or whatever. The options "legend_only", "zlim", and "col" are computed and set for you  by this function, so there is no need to pass these. Your list will be merged with the internal options, so you could overwrite named arguments if needed.}
+\item{image.plot_extra_options}{named list of extra optins to pass to [fields::image.plot()]. This can be used to add a legend to the colorbar, rotate the colorbar, or whatever. The options "legend_only", "zlim", and "col" are computed and set for you  by this function, so there is no need to pass these. Your list will be merged with the internal options, so you could overwrite named arguments if needed.}
 
-\item{png_options}{Options to pass to [grDevices::png]], see the docs of that function for details. Allow you to save the plot as a png bitmap image. Example: \code{png_options = list("filename"="outfile.png", "width"=800)}. Defaults to NULL, which will not save anything.}
+\item{png_options}{Options to pass to [grDevices::png()], see the docs of that function for details. Allow you to save the plot as a png bitmap image. Example: \code{png_options = list("filename"="outfile.png", "width"=800)}. Defaults to NULL, which will not save anything.}
 }
 \value{
 named list with the following entries: "full_data": the combined data from all coloredmeshes (can be NULL if they have no data). "colormap": the colormap function from the coloredmeshes (can be NULL if they have none).
@@ -36,6 +36,11 @@ Draw a colorbar for the coloredmeshes to a separate 2D plot. Due to the suboptim
    coloredmeshes = vis.subject.morph.native(subjects_dir, 'subject1',
     'thickness', 'lh', views=c('t4'));
    coloredmesh.plot.colorbar.separate(coloredmeshes);
+
+   # Or plot a colorbar with a label:
+   coloredmesh.plot.colorbar.separate(coloredmeshes,
+    image.plot_extra_options = list("legend.lab"="Thickness [mm]",
+    horizontal=TRUE, legend.cex=1.5, legend.line=-3));
 }
 
 }

@@ -14,6 +14,6 @@ draw.colorbar(coloredmeshes, horizontal = TRUE, num_steps = 100)
 \item{num_steps}{integer, number of steps to use for the colorbar. Defaults to 100.}
 }
 \description{
-Requires a rgl 3d visualisation to be open that already contains a rendered object. Uses [rgl::bgplot3d] to add a colorbar in the background of the plot. Experimental.
+Requires a rgl 3d visualisation to be open that already contains a rendered object. Uses [rgl::bgplot3d()] to add a colorbar in the background of the plot. Experimental.
 }
 \keyword{internal}
