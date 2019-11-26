@@ -153,7 +153,7 @@ combine.colorbar.with.brainview.animation <- function(brain_animation, colorbar_
 
         # Create a new animation from the frames.
         if(! silent) {
-            message("Creating new animation from the frames...");
+            message("Creating new animation from the frames. This can take a while...");
         }
         animation = magick::image_animate(frames, fps = 20, loop = 0);
 

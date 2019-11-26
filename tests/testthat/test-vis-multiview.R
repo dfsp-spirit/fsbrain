@@ -214,14 +214,15 @@ test_that("We can combine an output view with a separate colormap.", {
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     subject_id = 'subject1';
     measure = 'jacobian_white';
+    measure_legend_text = "Jacobian white";
     surface = 'white';
 
     output_width = 1200; # in px
     output_height = output_width;
     cbar_height = output_height;  # We cannot set this much smaller without getting errors, we will instead crop the resulting image in imagemagick below.
-    output_main_image = path.expand("~/fsbrain_img_main.png");
-    output_cbar_image = path.expand("~/fsbrain_img_cbar.png");
-    output_main_movie_file_noext = "fsbrain_mov_main";
+    output_main_image = path.expand(sprintf("~/fsbrain_img_main_%s.png", measure));
+    output_cbar_image = path.expand(sprintf("~/fsbrain_img_cbar_%s.png", measure));
+    output_main_movie_file_noext = sprintf("fsbrain_mov_main_%s", measure);
     output_main_movie = sprintf("~/%s.gif", output_main_movie_file_noext);
 
     rgloptions=list("windowRect"=c(80, 80, output_width, output_height));
@@ -232,12 +233,12 @@ test_that("We can combine an output view with a separate colormap.", {
         rglactions$clip_data = c(0.05, 0.95);
     }
 
-    coloredmeshes = vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('sr'), rgloptions=rgloptions, rglactions=rglactions);
+    coloredmeshes = vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('sr'), rgloptions=rgloptions, rglactions=rglactions, cortex_only=TRUE);
 
-    #coloredmesh.plot.colorbar.separate(coloredmeshes, png_options = list("filename"=output_cbar_image, "width"=output_width, "height"=cbar_height));
+    #coloredmesh.plot.colorbar.separate(coloredmeshes, png_options = list("filename"=output_cbar_image, "width"=output_width, "height"=cbar_height), image.plot_extra_options = list("legend.lab"=measure_legend_text, horizontal=TRUE, legend.cex=1.5, legend.line=-3));
     # You will have to manually export the cbar with the settings above. Programmatically saving it seems to result in missing colors in the bar
-    # for some reason.
-    coloredmesh.plot.colorbar.separate(coloredmeshes);
+    # for some reason. UPDATE: This seems to happen only for some OpenGL implementations (i.e., it is hardware/system dependent). Try it on your machine.
+    coloredmesh.plot.colorbar.separate(coloredmeshes, image.plot_extra_options = list("legend.lab"=measure_legend_text, horizontal=TRUE, legend.cex=1.5, legend.line=-3));
 
     combine.colorbar.with.brainview.animation(output_main_movie, output_cbar_image, "~/anim_with_cbar.gif");
 

@@ -198,6 +198,8 @@ draw.colorbar <- function(coloredmeshes, horizontal=TRUE, num_steps=100) {
 #'
 #' @param png_options Options to pass to [grDevices::png()], see the docs of that function for details. Allow you to save the plot as a png bitmap image. Example: \code{png_options = list("filename"="outfile.png", "width"=800)}. Defaults to NULL, which will not save anything.
 #'
+#' @param silent logical, whether to suppress messages. Defaults to FALSE.
+#'
 #' @return named list with the following entries: "full_data": the combined data from all coloredmeshes (can be NULL if they have no data). "colormap": the colormap function from the coloredmeshes (can be NULL if they have none).
 #'
 #' @examples
@@ -222,7 +224,7 @@ draw.colorbar <- function(coloredmeshes, horizontal=TRUE, num_steps=100) {
 #' @importFrom grDevices png pdf dev.off
 #' @importFrom utils modifyList
 #' @export
-coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=TRUE, makecmap_extra_options = list("n"=128), image.plot_extra_options = list("horizontal"=TRUE), png_options=NULL) {
+coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=TRUE, makecmap_extra_options = list("n"=128), image.plot_extra_options = list("horizontal"=TRUE), png_options=NULL, silent=FALSE) {
 
     ret_list = list("full_data"=NULL, "colormap"=NULL);
 
@@ -260,6 +262,11 @@ coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=TRUE, makecma
                 plot.new();
                 do.call(fields::image.plot, image.plot_options);
                 dev.off();
+                if(! is.null(png_options$filename)) {
+                    if(! silent) {
+                        message(sprintf("Colorbar image written to file '%s'.\n", png_options$filename));
+                    }
+                }
             }
 
 
