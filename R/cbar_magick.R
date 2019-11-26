@@ -38,21 +38,24 @@ combine.colorbar.with.brainview.image <- function(brainview_img, colorbar_img, o
             main_img = magick::image_extent(main_img, extend_dims, gravity="north", color="white");
         }
 
-        if(width_cbar > 1.2 * width_main) {
+        # Trim the colorbar (remove all whitespace around it):
+        cbar_img_trimmed = magick::image_trim(cbar_img);
+        width_cbar_trimmed = magick::image_info(cbar_img_trimmed)$width;
+
+        if(width_cbar_trimmed > 1.2 * width_main) {
             if(allow_colorbar_shrink) {
-                cbar_img = magick::image_resize(cbar_img, sprintf("%dx", width_main));
+                cbar_img_trimmed = magick::image_resize(cbar_img_trimmed, sprintf("%dx", width_main));
                 if(! silent) {
-                    message(sprintf("Colorbar resized to with %d px.\n", width_main));
+                    message(sprintf("Colorbar resized to width %d px.\n", width_main));
                 }
             } else {
                 if(!silent) {
-                    message(sprintf("The colorbar (width %d px) is considerably wider than the main image (%d px). The colorbar may not fit onto the canvas and will be cut off. Please ensure roughly equal size.\n", width_cbar, width_main));
+                    message(sprintf("The colorbar (width %d px) is considerably wider than the main image (%d px). The colorbar may not fit onto the canvas and will be cut off. Please ensure roughly equal size.\n", width_cbar_trimmed, width_main));
                 }
             }
         }
 
-        # Trim the colorbar (remvoe all whitespace around it):
-        cbar_img_trimmed = magick::image_trim(cbar_img);
+
 
         # So far, the colorbar has been trimmed, and this looks bad in the final image because its lowest pixel is directly at the image border.
         # This looks like something has been (almost) cut off. To counteract this, we add a very thin lower white border back to the colorbar.
