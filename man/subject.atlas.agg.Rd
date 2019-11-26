@@ -4,12 +4,8 @@
 \alias{subject.atlas.agg}
 \title{Aggregate morphometry data over brain atlas regions for a subject.}
 \usage{
-subject.atlas.agg(
-  vertex_morph_data,
-  vertex_label_names,
-  agg_fun = mean,
-  requested_label_names = c()
-)
+subject.atlas.agg(vertex_morph_data, vertex_label_names, agg_fun = mean,
+  requested_label_names = c())
 }
 \arguments{
 \item{vertex_morph_data, }{numeric vector. The morphometry data, one value per vertex. The morphometry data are typically loaded from an MGZ or curv format file with the read.fs.curv or read.fs.mgh functions.}
@@ -37,20 +33,18 @@ Aggregate morphometry data over brain atlas regions, e.g., compute the mean thic
 
 }
 \seealso{
-Other aggregation functions: 
-\code{\link{group.agg.atlas.native}()},
-\code{\link{group.agg.atlas.standard}()}
+Other aggregation functions: \code{\link{group.agg.atlas.native}},
+  \code{\link{group.agg.atlas.standard}}
 
-Other atlas functions: 
-\code{\link{get.atlas.region.names}()},
-\code{\link{group.agg.atlas.native}()},
-\code{\link{group.agg.atlas.standard}()},
-\code{\link{group.annot}()},
-\code{\link{regions.to.ignore}()},
-\code{\link{spread.values.over.annot}()},
-\code{\link{spread.values.over.hemi}()},
-\code{\link{spread.values.over.subject}()},
-\code{\link{subject.annot}()}
+Other atlas functions: \code{\link{get.atlas.region.names}},
+  \code{\link{group.agg.atlas.native}},
+  \code{\link{group.agg.atlas.standard}},
+  \code{\link{group.annot}},
+  \code{\link{regions.to.ignore}},
+  \code{\link{spread.values.over.annot}},
+  \code{\link{spread.values.over.hemi}},
+  \code{\link{spread.values.over.subject}},
+  \code{\link{subject.annot}}
 }
 \concept{aggregation functions}
 \concept{atlas functions}

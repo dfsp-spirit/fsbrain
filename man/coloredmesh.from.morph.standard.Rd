@@ -4,19 +4,10 @@
 \alias{coloredmesh.from.morph.standard}
 \title{Create a coloredmesh from standard space morphometry data.}
 \usage{
-coloredmesh.from.morph.standard(
-  subjects_dir,
-  subject_id,
-  measure,
-  hemi,
-  fwhm,
-  surface = "white",
-  template_subject = "fsaverage",
-  template_subjects_dir = NULL,
-  colormap = squash::jet,
-  clip = NULL,
-  cortex_only = FALSE
-)
+coloredmesh.from.morph.standard(subjects_dir, subject_id, measure, hemi,
+  fwhm, surface = "white", template_subject = "fsaverage",
+  template_subjects_dir = NULL, colormap = squash::jet, clip = NULL,
+  cortex_only = FALSE)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}

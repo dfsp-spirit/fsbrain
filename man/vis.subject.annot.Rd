@@ -4,16 +4,9 @@
 \alias{vis.subject.annot}
 \title{Visualize an annotation for a subject.}
 \usage{
-vis.subject.annot(
-  subjects_dir,
-  subject_id,
-  atlas,
-  hemi = "both",
-  surface = "white",
-  views = c("t4"),
-  rgloptions = list(),
-  rglactions = list()
-)
+vis.subject.annot(subjects_dir, subject_id, atlas, hemi = "both",
+  surface = "white", views = c("t4"), rgloptions = list(),
+  rglactions = list())
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -47,18 +40,16 @@ Creates a surface mesh, loads the colors from the annotation, and renders the re
 
 }
 \seealso{
-Other visualization functions: 
-\code{\link{vis.data.on.fsaverage}()},
-\code{\link{vis.data.on.subject}()},
-\code{\link{vis.labeldata.on.subject}()},
-\code{\link{vis.mask.on.subject}()},
-\code{\link{vis.region.values.on.subject}()},
-\code{\link{vis.subject.label}()},
-\code{\link{vis.subject.morph.native}()},
-\code{\link{vis.subject.morph.standard}()}
+Other visualization functions: \code{\link{vis.data.on.fsaverage}},
+  \code{\link{vis.data.on.subject}},
+  \code{\link{vis.labeldata.on.subject}},
+  \code{\link{vis.mask.on.subject}},
+  \code{\link{vis.region.values.on.subject}},
+  \code{\link{vis.subject.label}},
+  \code{\link{vis.subject.morph.native}},
+  \code{\link{vis.subject.morph.standard}}
 
-Other region-based visualization functions: 
-\code{\link{vis.region.values.on.subject}()}
+Other region-based visualization functions: \code{\link{vis.region.values.on.subject}}
 }
 \concept{region-based visualization functions}
 \concept{visualization functions}

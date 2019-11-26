@@ -4,17 +4,9 @@
 \alias{group.agg.atlas.standard}
 \title{Aggregate standard space morphometry data over brain atlas regions and subjects for a group of subjects.}
 \usage{
-group.agg.atlas.standard(
-  subjects_dir,
-  subjects_list,
-  measure,
-  hemi,
-  atlas,
-  fwhm,
-  agg_fun = mean,
-  template_subject = "fsaverage",
-  cache_file = NULL
-)
+group.agg.atlas.standard(subjects_dir, subjects_list, measure, hemi, atlas,
+  fwhm, agg_fun = mean, template_subject = "fsaverage",
+  cache_file = NULL)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -45,20 +37,18 @@ Aggregate standard space morphometry data over brain atlas regions, e.g., comput
    ggplot(data=molten, aes(x=variable, y=value, group=subject)) + geom_point() + geom_line() + theme(axis.text.x = element_text(angle = 90, hjust = 1));
 }
 \seealso{
-Other aggregation functions: 
-\code{\link{group.agg.atlas.native}()},
-\code{\link{subject.atlas.agg}()}
+Other aggregation functions: \code{\link{group.agg.atlas.native}},
+  \code{\link{subject.atlas.agg}}
 
-Other atlas functions: 
-\code{\link{get.atlas.region.names}()},
-\code{\link{group.agg.atlas.native}()},
-\code{\link{group.annot}()},
-\code{\link{regions.to.ignore}()},
-\code{\link{spread.values.over.annot}()},
-\code{\link{spread.values.over.hemi}()},
-\code{\link{spread.values.over.subject}()},
-\code{\link{subject.annot}()},
-\code{\link{subject.atlas.agg}()}
+Other atlas functions: \code{\link{get.atlas.region.names}},
+  \code{\link{group.agg.atlas.native}},
+  \code{\link{group.annot}},
+  \code{\link{regions.to.ignore}},
+  \code{\link{spread.values.over.annot}},
+  \code{\link{spread.values.over.hemi}},
+  \code{\link{spread.values.over.subject}},
+  \code{\link{subject.annot}},
+  \code{\link{subject.atlas.agg}}
 }
 \concept{aggregation functions}
 \concept{atlas functions}

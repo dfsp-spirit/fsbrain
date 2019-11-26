@@ -4,16 +4,11 @@
 \alias{brainviews}
 \title{Show one or more views of the given meshes in rgl windows.}
 \usage{
-brainviews(
-  views,
-  coloredmeshes,
-  rgloptions = list(),
-  rglactions = list(),
-  draw_colorbar = FALSE
-)
+brainviews(views, coloredmeshes, rgloptions = list(),
+  rglactions = list(), draw_colorbar = FALSE)
 }
 \arguments{
-\item{views, }{list of strings. Valid entries include: 'si': single interactive view. 'sr': single rotating view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.}
+\item{views, }{list of strings. Valid entries include: 'si': single interactive view. 'sd_<angle>': singe defined view from angle <angle>. The <angle> must be one of the strings 'lateral_lh', 'dorsal', 'lateral_rh', 'medial_lh', 'ventral', 'medial_rh', 'rostral' or 'caudal'. Example: 'sd_caudal'. 'sr': single rotating view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.}
 
 \item{coloredmeshes, }{list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.}
 

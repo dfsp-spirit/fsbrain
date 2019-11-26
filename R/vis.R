@@ -214,7 +214,7 @@ vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi="
 
 #' @title Show one or more views of the given meshes in rgl windows.
 #'
-#' @param views, list of strings. Valid entries include: 'si': single interactive view. 'sr': single rotating view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.
+#' @param views, list of strings. Valid entries include: 'si': single interactive view. 'sd_<angle>': singe defined view from angle <angle>. The <angle> must be one of the strings 'lateral_lh', 'dorsal', 'lateral_rh', 'medial_lh', 'ventral', 'medial_rh', 'rostral' or 'caudal'. Example: 'sd_caudal'. 'sr': single rotating view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.
 #'
 #' @param coloredmeshes, list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
 #'
@@ -238,8 +238,11 @@ brainviews <- function(views, coloredmeshes, rgloptions = list(), rglactions = l
                 invisible(brainview.si(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar));
             } else if(view == "sr") {
                 invisible(brainview.sr(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar));
+            } else if(startsWith(view, "sd_")) {
+                angle = substr(view, 4, nchar(view));
+                invisible(brainview.sd(coloredmeshes, angle, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar));
             } else {
-                stop(sprintf("Invalid view '%s'. Valid ones include 'si', 'sr', t4' and 't9'.\n", view));
+                stop(sprintf("Invalid view '%s'. Valid ones include 'si', 'sr', 'sd_<angle>', 't4' and 't9'.\n", view));
             }
         }
     }

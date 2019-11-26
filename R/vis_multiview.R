@@ -191,7 +191,7 @@ rglactions.has.key <- function(rglactions, key) {
 #'
 #' @param coloredmeshes, list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
 #'
-#' @param background string, background color passed to rgl::bg3d()
+#' @param background string, background color passed to [rgl::bg3d()].
 #'
 #' @param skip_all_na logical, whether to skip (i.e., not render) meshes in the list that have the property 'morph_data_was_all_na' set to TRUE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.
 #'
@@ -301,7 +301,7 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     vis.rotated.coloredmeshes(coloredmeshes, pi/2, 1, 0, 0, style=style);
     rgl.viewpoint(0, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
-        rgl::text3d(0,label_shift_y,0,"rostal");
+        rgl::text3d(0,label_shift_y,0,"rostral");
     }
 
     # Create the bottom central view.
@@ -322,6 +322,80 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     rgl::rgl.viewpoint(180, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
         rgl::text3d(0,label_shift_y,0,"caudal");
+    }
+
+
+    perform.rglactions(rglactions);
+    return(invisible(coloredmeshes));
+}
+
+
+#' @title Visualize a list of colored meshes from a single defined angle.
+#'
+#' @param coloredmeshes, list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
+#'
+#' @param view_angle string, the view angle. One of 'lateral_lh', 'dorsal', 'lateral_rh', 'medial_lh', 'ventral', 'medial_rh', 'rostral' or 'caudal'.
+#'
+#' @param background string, background color passed to [rgl::bg3d()].
+#'
+#' @param skip_all_na logical, whether to skip (i.e., not render) meshes in the list that have the property 'morph_data_was_all_na' set to TRUE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.
+#'
+#' @param style, a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
+#'
+#' @param rgloptions, named list. Parameters passed to [rgl::par3d()]. Defaults to the empty list. To increase plot resolution to 2000x1600 px, try: \code{rgloptions=list("windowRect"=c(50,50,2000,1600))}.
+#'
+#' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
+#'
+#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE.
+#'
+#' @keywords internal
+#' @importFrom rgl open3d bg3d rgl.viewpoint
+brainview.sd <- function(coloredmeshes, view_angle, background="white", skip_all_na=TRUE, style="default", rgloptions = list(), rglactions = list(), draw_colorbar = FALSE) {
+
+
+    if(!is.list(coloredmeshes)) {
+        stop("Parameter 'coloredmeshes' must be a list.");
+    }
+
+    coloredmeshes = unify.coloredmeshes.colormaps(coloredmeshes);
+
+    hemi_sorted_cmeshes = sort.coloredmeshes.by.hemi(coloredmeshes);
+    lh_meshes = hemi_sorted_cmeshes$lh;
+    rh_meshes = hemi_sorted_cmeshes$rh;
+
+
+    rgl::open3d();
+    do.call(rgl::par3d, rgloptions);
+    Sys.sleep(1);
+    rgl::bg3d(background);
+
+
+    if(view_angle == "lateral_lh") {
+        vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style, draw_colorbar = draw_colorbar);
+        rgl::rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
+    } else if (view_angle == "dorsal") {
+        vis.rotated.coloredmeshes(coloredmeshes, 0, 1, 0, 0, style=style, draw_colorbar = draw_colorbar);
+        rgl::rgl.viewpoint(0, 0, fov=0, interactive=FALSE);
+    } else if(view_angle == "lateral_rh") {
+        vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style, draw_colorbar = draw_colorbar);
+        rgl::rgl.viewpoint(90, 0, fov=0, interactive=FALSE);
+    } else if(view_angle == "medial_lh") {
+        vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style, draw_colorbar = draw_colorbar);
+        rgl::rgl.viewpoint(90, 0, fov=0, interactive=FALSE);
+    } else if(view_angle == "ventral") {
+        vis.rotated.coloredmeshes(coloredmeshes, pi, 1, 0, 0, style=style, draw_colorbar = draw_colorbar);
+        rgl::rgl.viewpoint(0, 0, fov=0, interactive=FALSE);
+    } else if(view_angle == "medial_rh") {
+        vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style, draw_colorbar = draw_colorbar);
+        rgl::rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
+    } else if(view_angle == "rostral") {
+        vis.rotated.coloredmeshes(coloredmeshes, pi/2, 1, 0, 0, style=style, draw_colorbar = draw_colorbar);
+        rgl.viewpoint(0, 0, fov=0, interactive=FALSE);
+    } else if(view_angle == "caudal") {
+        vis.rotated.coloredmeshes(coloredmeshes, pi/2, 1, 0, 0, style=style, draw_colorbar = draw_colorbar);
+        rgl::rgl.viewpoint(180, 0, fov=0, interactive=FALSE);
+    } else {
+        stop(sprintf("Invalid view_angle '%s'. Must be one of 'lateral_lh', 'dorsal', 'lateral_rh', 'medial_lh', 'ventral', 'medial_rh', 'rostral' or 'caudal'.\n", view_angle));
     }
 
 
