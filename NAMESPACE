@@ -2,6 +2,7 @@
 
 export(apply.label.to.morphdata)
 export(apply.labeldata.to.morphdata)
+export(arrange.brainview.images)
 export(clip.data)
 export(coloredmesh.from.mask)
 export(coloredmesh.plot.colorbar.separate)

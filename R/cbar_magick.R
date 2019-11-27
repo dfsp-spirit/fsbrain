@@ -23,7 +23,7 @@
 combine.colorbar.with.brainview.image <- function(brainview_img, colorbar_img, output_img, offset="+0+0", extend_brainview_img_height_by=0L, silent=FALSE, allow_colorbar_shrink=TRUE) {
     if (requireNamespace("magick", quietly = TRUE)) {
 
-        background_color = "white"; # Background color to use, e.g., when extending images.
+        background_color = "white"; # Background color to use when extending images.
 
         main_img = magick::image_read(brainview_img);
         cbar_img = magick::image_read(colorbar_img);

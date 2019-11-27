@@ -160,17 +160,27 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 #'
 #' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
 #'
+#' @param at_index integer, the index to use in case of vectorized entries. Allows using different output_images for different views or similar.
+#'
 #' @keywords internal
 #' @importFrom rgl rgl.snapshot
-perform.rglactions <- function(rglactions) {
+perform.rglactions <- function(rglactions, at_index=NULL) {
     if(is.list(rglactions)) {
         if("snapshot_png" %in% names(rglactions)) {
-            output_image = path.expand(rglactions$snapshot_png);
+            if(length(rglactions$snapshot_png) == 1 || is.null(at_index)) {
+                output_image = path.expand(rglactions$snapshot_png);
+            } else {
+                if(length(rglactions$snapshot_png) < at_index) {
+                    warning(sprintf("Requested rglaction at_index '%d' but only %d entries exist for action 'snapshot_png'.\n", at_index, length(rglactions$snapshot_png)));
+                }
+                output_image = path.expand(rglactions$snapshot_png[[at_index]]);
+            }
             rgl::rgl.snapshot(output_image, fmt="png");
             message(sprintf("Screenshot written to '%s' (current working dir is '%s').\n", output_image, getwd()));
         }
     }
 }
+
 
 #' @title Check for a key in names of rglactions.
 #'
@@ -334,7 +344,7 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 #'
 #' @param coloredmeshes, list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
 #'
-#' @param view_angle string, the view angle. One of 'lateral_lh', 'dorsal', 'lateral_rh', 'medial_lh', 'ventral', 'medial_rh', 'rostral' or 'caudal'. See \code{\link[fsbrain]{get.view.angle.names}}.
+#' @param view_angle character string, the view angle. One of 'lateral_lh', 'dorsal', 'lateral_rh', 'medial_lh', 'ventral', 'medial_rh', 'rostral' or 'caudal'. See \code{\link[fsbrain]{get.view.angle.names}}.
 #'
 #' @param background string, background color passed to \code{\link[rgl]{bg3d}}.
 #'
@@ -398,8 +408,8 @@ brainview.sd <- function(coloredmeshes, view_angle, background="white", skip_all
         stop(sprintf("Invalid view_angle '%s'. Must be one of 'lateral_lh', 'dorsal', 'lateral_rh', 'medial_lh', 'ventral', 'medial_rh', 'rostral' or 'caudal'.\n", view_angle));
     }
 
-
     perform.rglactions(rglactions);
+
     return(invisible(coloredmeshes));
 }
 

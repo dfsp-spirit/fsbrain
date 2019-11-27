@@ -11,7 +11,7 @@ brainview.sd(coloredmeshes, view_angle, background = "white",
 \arguments{
 \item{coloredmeshes, }{list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.}
 
-\item{view_angle}{string, the view angle. One of 'lateral_lh', 'dorsal', 'lateral_rh', 'medial_lh', 'ventral', 'medial_rh', 'rostral' or 'caudal'. See \code{\link[fsbrain]{get.view.angle.names}}.}
+\item{view_angle}{character string, the view angle. One of 'lateral_lh', 'dorsal', 'lateral_rh', 'medial_lh', 'ventral', 'medial_rh', 'rostral' or 'caudal'. See \code{\link[fsbrain]{get.view.angle.names}}.}
 
 \item{background}{string, background color passed to \code{\link[rgl]{bg3d}}.}
 
