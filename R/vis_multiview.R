@@ -4,7 +4,7 @@
 #'
 #' @param coloredmeshes, list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
 #'
-#' @param background string, background color passed to rgl::bg3d()
+#' @param background string, background color passed to \code{\link[rgl]{bg3d}}.
 #'
 #' @param skip_all_na logical, whether to skip (i.e., not render) meshes in the list that have the property 'morph_data_was_all_na' set to TRUE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.
 #'
@@ -12,7 +12,7 @@
 #'
 #' @param draw_labels logical, whether to draw label text for the different views that show information on the view direction and hemisphere displayed in a subplot. Defaults to FALSE.
 #'
-#' @param rgloptions, named list. Parameters passed to [rgl::par3d()]. Defaults to the empty list.
+#' @param rgloptions, named list. Parameters passed to \code{\link[rgl]{par3d}}. Defaults to the empty list.
 #'
 #' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. Defaults to the empty list.
 #'
@@ -33,7 +33,7 @@ brainview.si <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 #'
 #' @param coloredmeshes, list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
 #'
-#' @param background string, background color passed to rgl::bg3d()
+#' @param background string, background color passed to \code{\link[rgl]{bg3d}}.
 #'
 #' @param skip_all_na logical, whether to skip (i.e., not render) meshes in the list that have the property 'morph_data_was_all_na' set to TRUE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.
 #'
@@ -41,17 +41,17 @@ brainview.si <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 #'
 #' @param draw_labels logical, whether to draw label text for the different views that show information on the view direction and hemisphere displayed in a subplot. Defaults to FALSE.
 #'
-#' @param x rotation x axis value, passed to [rgl::spin3d()]. Defaults to 0.
+#' @param x rotation x axis value, passed to \code{\link[rgl]{spin3d}}. Defaults to 0.
 #'
-#' @param y rotation y axis value, passed to [rgl::spin3d()]. Defaults to 1.
+#' @param y rotation y axis value, passed to \code{\link[rgl]{spin3d}}. Defaults to 1.
 #'
-#' @param z rotation z axis value, passed to [rgl::spin3d()]. Defaults to 0.
+#' @param z rotation z axis value, passed to \code{\link[rgl]{spin3d}}. Defaults to 0.
 #'
-#' @param rpm rotation rpm value, passed to [rgl::spin3d()]. Defaults to 15.
+#' @param rpm rotation rpm value, passed to \code{\link[rgl]{spin3d}}. Defaults to 15.
 #'
-#' @param duration rotation duration value, passed to [rgl::spin3d()]. Defaults to 20.
+#' @param duration rotation duration value, passed to \code{\link[rgl]{spin3d}}. Defaults to 20.
 #'
-#' @param rgloptions, named list. Parameters passed to [rgl::par3d()]. Defaults to the empty list.
+#' @param rgloptions, named list. Parameters passed to \code{\link[rgl]{par3d}}. Defaults to the empty list.
 #'
 #' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. Defaults to the empty list.
 #'
@@ -72,7 +72,7 @@ brainview.sr <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 #'
 #' @param coloredmeshes, list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
 #'
-#' @param background string, background color passed to rgl::bg3d()
+#' @param background string, background color passed to \code{\link[rgl]{bg3d}}.
 #'
 #' @param skip_all_na logical, whether to skip (i.e., not render) meshes in the list that have the property 'morph_data_was_all_na' set to TRUE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.
 #'
@@ -80,7 +80,7 @@ brainview.sr <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 #'
 #' @param draw_labels logical, whether to draw label text for the different views that show information on the view direction and hemisphere displayed in a subplot. Defaults to FALSE.
 #'
-#' @param rgloptions, named list. Parameters passed to [rgl::par3d()]. Defaults to the empty list.
+#' @param rgloptions, named list. Parameters passed to \code{\link[rgl]{par3d}}. Defaults to the empty list.
 #'
 #' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
 #'
@@ -191,7 +191,7 @@ rglactions.has.key <- function(rglactions, key) {
 #'
 #' @param coloredmeshes, list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
 #'
-#' @param background string, background color passed to [rgl::bg3d()].
+#' @param background string, background color passed to \code{\link[rgl]{bg3d}}.
 #'
 #' @param skip_all_na logical, whether to skip (i.e., not render) meshes in the list that have the property 'morph_data_was_all_na' set to TRUE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.
 #'
@@ -199,7 +199,7 @@ rglactions.has.key <- function(rglactions, key) {
 #'
 #' @param draw_labels logical, whether to draw label text for the different views that show information on the view direction and hemisphere displayed in a subplot. Defaults to FALSE.
 #'
-#' @param rgloptions, named list. Parameters passed to [rgl::par3d()]. Defaults to the empty list. To increase plot resolution to 2000x1600 px, try: \code{rgloptions=list("windowRect"=c(50,50,2000,1600))}.
+#' @param rgloptions, named list. Parameters passed to \code{\link[rgl]{par3d}}. Defaults to the empty list. To increase plot resolution to 2000x1600 px, try: \code{rgloptions=list("windowRect"=c(50,50,2000,1600))}.
 #'
 #' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
 #'
@@ -334,15 +334,15 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 #'
 #' @param coloredmeshes, list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
 #'
-#' @param view_angle string, the view angle. One of 'lateral_lh', 'dorsal', 'lateral_rh', 'medial_lh', 'ventral', 'medial_rh', 'rostral' or 'caudal'.
+#' @param view_angle string, the view angle. One of 'lateral_lh', 'dorsal', 'lateral_rh', 'medial_lh', 'ventral', 'medial_rh', 'rostral' or 'caudal'. See \code{\link[fsbrain]{get.view.angle.names}}.
 #'
-#' @param background string, background color passed to [rgl::bg3d()].
+#' @param background string, background color passed to \code{\link[rgl]{bg3d}}.
 #'
 #' @param skip_all_na logical, whether to skip (i.e., not render) meshes in the list that have the property 'morph_data_was_all_na' set to TRUE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.
 #'
 #' @param style, a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
 #'
-#' @param rgloptions, named list. Parameters passed to [rgl::par3d()]. Defaults to the empty list. To increase plot resolution to 2000x1600 px, try: \code{rgloptions=list("windowRect"=c(50,50,2000,1600))}.
+#' @param rgloptions, named list. Parameters passed to \code{\link[rgl]{par3d}}. Defaults to the empty list. To increase plot resolution to 2000x1600 px, try: \code{rgloptions=list("windowRect"=c(50,50,2000,1600))}.
 #'
 #' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
 #'

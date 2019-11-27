@@ -11,7 +11,7 @@ brainview.t4(coloredmeshes, background = "white", skip_all_na = TRUE,
 \arguments{
 \item{coloredmeshes, }{list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.}
 
-\item{background}{string, background color passed to rgl::bg3d()}
+\item{background}{string, background color passed to \code{\link[rgl]{bg3d}}.}
 
 \item{skip_all_na}{logical, whether to skip (i.e., not render) meshes in the list that have the property 'morph_data_was_all_na' set to TRUE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.}
 
@@ -19,7 +19,7 @@ brainview.t4(coloredmeshes, background = "white", skip_all_na = TRUE,
 
 \item{draw_labels}{logical, whether to draw label text for the different views that show information on the view direction and hemisphere displayed in a subplot. Defaults to FALSE.}
 
-\item{rgloptions, }{named list. Parameters passed to [rgl::par3d()]. Defaults to the empty list.}
+\item{rgloptions, }{named list. Parameters passed to \code{\link[rgl]{par3d}}. Defaults to the empty list.}
 
 \item{rglactions, }{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.}
 

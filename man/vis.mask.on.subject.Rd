@@ -19,15 +19,15 @@ vis.mask.on.subject(subjects_dir, vis_subject_id, mask_lh, mask_rh,
 
 \item{surface, }{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 
-\item{colormap, }{a colormap. See the squash package for some colormaps. Defaults to [squash::jet].}
+\item{colormap, }{a colormap. See the squash package for some colormaps. Defaults to \code{\link[squash]{jet}}.}
 
 \item{views, }{list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.}
 
-\item{rgloptions}{option list passed to [rgl::par3d()]. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))}}
+\item{rgloptions}{option list passed to \code{\link[rgl]{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))}}
 
 \item{rglactions, }{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.}
 
-\item{draw_colorbar}{logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See [fsbrain::coloredmesh.plot.colorbar.separate] for an alternative.}
+\item{draw_colorbar}{logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See \code{\link[fsbrain]{coloredmesh.plot.colorbar.separate}} for an alternative.}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.
