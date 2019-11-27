@@ -5,7 +5,7 @@
 \title{Combine several brainview images into a new figure.}
 \usage{
 arrange.brainview.images(brainview_images, output_img,
-  colorbar_img = NULL, silent = FALSE, arrange = TRUE)
+  colorbar_img = NULL, silent = FALSE, grid_like = TRUE)
 }
 \arguments{
 \item{brainview_images}{vector of character strings, paths to the brainview images, usually in PNG format}
@@ -16,7 +16,7 @@ arrange.brainview.images(brainview_images, output_img,
 
 \item{silent}{logical, whether to suppress messages}
 
-\item{arrange}{logical, whether to arrange the images ina grid-like fashion. If FALSE, they will all be merged horizontally.}
+\item{grid_like}{logical, whether to arrange the images in a grid-like fashion. If FALSE, they will all be merged horizontally.}
 }
 \description{
 Combine several brainview images into a new figure.

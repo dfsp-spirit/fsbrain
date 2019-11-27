@@ -12,10 +12,10 @@
 #'
 #' @param silent logical, whether to suppress messages
 #'
-#' @param arrange logical, whether to arrange the images ina grid-like fashion. If FALSE, they will all be merged horizontally.
+#' @param grid_like logical, whether to arrange the images in a grid-like fashion. If FALSE, they will all be merged horizontally.
 #'
 #' @export
-arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=NULL, silent=FALSE, arrange=TRUE) {
+arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=NULL, silent=FALSE, grid_like=TRUE) {
 
     if (requireNamespace("magick", quietly = TRUE)) {
 
