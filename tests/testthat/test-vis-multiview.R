@@ -307,18 +307,7 @@ test_that("We can construct a tight layout image by merging several sd views.", 
     #views = get.view.angle.names(angle_set = "t4");
     views = get.view.angle.names(angle_set = "t9");
     merged_img = "~/fsbrain_merged_brainviews.png";
-
-
-    view_images = sprintf("~/fsbrain_tmp_%s.png", views);
     rgloptions=list("windowRect"=c(80,80,500,500));     # the first 2 entries give the position on screen, the rest defines resolution as width, height in px
 
-    # Create the temporary images
-    for(view_idx in seq_len(length(views))) {
-        view = views[[view_idx]];
-        view_image = view_images[[view_idx]];
-        coloredmeshes = vis.subject.morph.native(subjects_dir, subject_id, measure, views=c(view), rgloptions=rgloptions, rglactions=list("snapshot_png"=view_image));
-    }
-
-    # Now merge them into one
-    arrange.brainview.images(view_images, merged_img);
+    vislayout.subject.morph.native(subjects_dir, "subject1", "curv", cortex_only=TRUE, rglactions=list("clip_data"=c(0.05, 0.95)));
 })

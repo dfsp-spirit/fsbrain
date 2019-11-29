@@ -72,7 +72,8 @@ Other visualization functions: \code{\link{vis.data.on.fsaverage}},
 
 Other morphometry visualization functions: \code{\link{vis.data.on.fsaverage}},
   \code{\link{vis.data.on.subject}},
-  \code{\link{vis.subject.morph.native}}
+  \code{\link{vis.subject.morph.native}},
+  \code{\link{vislayout.subject.morph.native}}
 }
 \concept{morphometry visualization functions}
 \concept{visualization functions}

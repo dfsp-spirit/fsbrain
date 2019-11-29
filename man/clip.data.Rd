@@ -9,9 +9,9 @@ clip.data(data, lower = 0.05, upper = 0.95)
 \arguments{
 \item{data, }{numeric vector. The input data.}
 
-\item{lower, }{numeric. The probability for the lower quantile, defaults to 0.05.}
+\item{lower, }{numeric. The probability for the lower quantile, defaults to `0.05`.}
 
-\item{upper, }{numeric. The probability for the upper quantile, defaults to 0.95.}
+\item{upper, }{numeric. The probability for the upper quantile, defaults to `0.95`.}
 }
 \value{
 numeric vector. The output data.

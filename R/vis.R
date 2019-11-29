@@ -254,11 +254,13 @@ brainviews <- function(views, coloredmeshes, rgloptions = list(), rglactions = l
 
 #' @title Get list of valid view angle names.
 #'
+#' @description The returned strings are used as constants to identify a view of type `sd_<angle>`. They can be used to construct entries for the parameter `views` of functions like \code{\link[fsbrain]{vis.subject.morph.native}}, or directly as parameter 'view_angles' for functions like \code{\link[fsbrain]{vislayout.subject.morph.native}}.
+#'
 #' @param add_sd_prefix logical, whether the prefix 'sd_' should be added to the string. This will construct full view names. If set to false, only the substring after the prefix 'sd_' will be returned. This is used internally only and should not be needed in general.
 #'
-#' @param angle_set string, which view subset to return. Available subsets are: 'all' (or alias 't9'): for all 9 angles. 't4': for the t4 views. 'medial': the 2 medial views, one for each hemi. 'lateral': the 2 lateral views, one for each hemi.
+#' @param angle_set string, which view subset to return. Available subsets are: 'all' (or alias 't9'): for all 9 angles. 't4': for the t4 views. 'medial': the 2 medial views, one for each hemi. 'lateral': the 2 lateral views, one for each hemi. 'lh': medial and laterial for the left hemisphere. 'rh': medial and laterial for the right hemisphere.
 #'
-#' @return vector of character strings, all valid view angle strings. These strings are used as constants to identify a view of type `sd_<angle>`. They can be used to construct entries for the parameter `views` of functions like \code{\link[fsbrain]{vis.subject.morph.native}}.
+#' @return vector of character strings, all valid view angle strings.
 #' @export
 get.view.angle.names <- function(add_sd_prefix=TRUE, angle_set="all") {
     if(angle_set == "all" || angle_set == "t9") {
@@ -269,6 +271,10 @@ get.view.angle.names <- function(add_sd_prefix=TRUE, angle_set="all") {
         angles = c('medial_lh', 'medial_rh');
     } else if(angle_set == "lateral") {
         angles = c('lateral_lh', 'lateral_rh');
+    } else if(angle_set == "lh") {
+        angles = c('lateral_lh', 'medial_lh');
+    }  else if(angle_set == "rh") {
+        angles = c('lateral_rh', 'medial_rh');
     } else {
         stop(sprintf("Invalid 'angle_set' parameter: '%s'.\n", angle_set));
     }

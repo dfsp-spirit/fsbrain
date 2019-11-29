@@ -535,7 +535,7 @@ subject.annot <- function(subjects_dir, subject_id, hemi, atlas) {
     }
 }
 
-#'@title Load a surface for a subject.
+#' @title Load a surface for a subject.
 #'
 #' @description Load a brain surface for a subject.
 #'
@@ -555,6 +555,8 @@ subject.annot <- function(subjects_dir, subject_id, hemi, atlas) {
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    lh_white = subject.surface(subjects_dir, "subject1", "white", "lh");
 #' }
+#'
+#' @family surface mesh functions
 #'
 #' @export
 subject.surface <- function(subjects_dir, subject_id, surface, hemi) {

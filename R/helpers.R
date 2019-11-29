@@ -1,6 +1,6 @@
 #' @title Transform first character of a string to uppercase.
 #'
-#' @description Transform first character of a string to uppercase. This is useful when labeling plots. Important: this function does not know about different encodings, languages or anything, it just calls toupper() for the first character.
+#' @description Transform first character of a string to uppercase. This is useful when labeling plots. Important: this function does not know about different encodings, languages or anything, it just calls \code{\link[base]{toupper}} for the first character.
 #'
 #' @param word, string. Any string.
 #'
@@ -22,9 +22,9 @@ fup <- function(word) {
 #'
 #' @param data, numeric vector. The input data.
 #'
-#' @param lower, numeric. The probability for the lower quantile, defaults to 0.05.
+#' @param lower, numeric. The probability for the lower quantile, defaults to `0.05`.
 #'
-#' @param upper, numeric. The probability for the upper quantile, defaults to 0.95.
+#' @param upper, numeric. The probability for the upper quantile, defaults to `0.95`.
 #'
 #' @return numeric vector. The output data.
 #'
@@ -46,11 +46,13 @@ clip.data <- function(data, lower=0.05, upper=0.95){
 #'
 #' @description Given a set of query vertex indices and a mesh *m*, compute all vertices which are adjacent to the query vertices in the mesh. A vertex *u* is *adjacent* to another vertex *v* iff there exists an edge *e = (u, v)* in *m*. While you could call this function repeatedly with the old output as its new input to extend the neighborhood, you should maybe use a proper graph library for this.
 #'
-#' @param surface a surface as returned by functions like [fsbrain::subject.surface].
+#' @param surface a surface as returned by functions like \code{\link[fsbrain]{subject.surface}}.
 #'
 #' @param source_vertices Vector of source vertex indices.
 #'
 #' @return the neighbors as a list with two entries: "faces": an vector of the face indices of all faces the source_vertices are a part of. "vertices": an n x 3 matrix of the vertex indices of all vertices of the faces in the 'faces' property. These vertex indices contain the indices of the source_vertices themselves, and they can of course contain duplicates (but not within a single row of the matrix) in the case that two of the source_vertices share a neighbor.
+#'
+#' @family surface mesh functions
 #'
 #' @export
 mesh.vertex.neighbors <- function(surface, source_vertices) {
