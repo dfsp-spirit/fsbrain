@@ -292,22 +292,18 @@ test_that("We can combine an output view with a separate colormap.", {
 # 4) ffmpeg -i brain_looped.mp4 -vf yadif,format=yuv420p -c:v libx264 -crf 18 -bf 2 -c:a aac -q:a 1 -ac 2 -ar 48000 -use_editlist 0 -movflags +faststart brain_looped_opt_streaming.mp4
 
 
-
 test_that("We can construct a tight layout image by merging several sd views.", {
     skip("This test has to be run manually and interactively.");
 
     fsbrain::download_optional_data();
 
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
-    subject_id = 'subject1';
-    measure = 'thickness';
-    surface = 'white';
 
-    #views = get.view.angle.names(angle_set = "lateral");
-    #views = get.view.angle.names(angle_set = "t4");
-    views = get.view.angle.names(angle_set = "t9");
+        views = get.view.angle.names(angle_set = "t9");
     merged_img = "~/fsbrain_merged_brainviews.png";
     rgloptions=list("windowRect"=c(80,80,500,500));     # the first 2 entries give the position on screen, the rest defines resolution as width, height in px
 
-    vislayout.subject.morph.native(subjects_dir, "subject1", "curv", cortex_only=TRUE, rglactions=list("clip_data"=c(0.05, 0.95)));
+    coloredmeshes = vis.subject.morph.native(subjects_dir, "subject1", "thickness", cortex_only=TRUE, rglactions=list("clip_data"=c(0.05, 0.95)), views=NULL);
+    vislayout.from.coloredmeshes(coloredmeshes);
 })
+

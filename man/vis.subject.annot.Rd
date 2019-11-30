@@ -56,7 +56,7 @@ Other visualization functions:
 \code{\link{vis.subject.label}()},
 \code{\link{vis.subject.morph.native}()},
 \code{\link{vis.subject.morph.standard}()},
-\code{\link{vislayout.coloredmeshes}()}
+\code{\link{vislayout.from.coloredmeshes}()}
 
 Other region-based visualization functions: 
 \code{\link{vis.region.values.on.subject}()}

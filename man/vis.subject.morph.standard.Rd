@@ -81,13 +81,12 @@ Other visualization functions:
 \code{\link{vis.subject.annot}()},
 \code{\link{vis.subject.label}()},
 \code{\link{vis.subject.morph.native}()},
-\code{\link{vislayout.coloredmeshes}()}
+\code{\link{vislayout.from.coloredmeshes}()}
 
 Other morphometry visualization functions: 
 \code{\link{vis.data.on.fsaverage}()},
 \code{\link{vis.data.on.subject}()},
-\code{\link{vis.subject.morph.native}()},
-\code{\link{vislayout.subject.morph.native}()}
+\code{\link{vis.subject.morph.native}()}
 }
 \concept{morphometry visualization functions}
 \concept{visualization functions}

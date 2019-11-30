@@ -30,6 +30,6 @@ list of coloredmeshes. The coloredmeshes used for the visualization.
 Show one or more views of the given meshes in rgl windows.
 }
 \seealso{
-get.view.angle.names
+\code{\link[fsbrain]{get.view.angle.names}}
 }
 \keyword{internal}

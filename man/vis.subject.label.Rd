@@ -67,7 +67,7 @@ Other visualization functions:
 \code{\link{vis.subject.annot}()},
 \code{\link{vis.subject.morph.native}()},
 \code{\link{vis.subject.morph.standard}()},
-\code{\link{vislayout.coloredmeshes}()}
+\code{\link{vislayout.from.coloredmeshes}()}
 
 Other label functions: 
 \code{\link{apply.label.to.morphdata}()},

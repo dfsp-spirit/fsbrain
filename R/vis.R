@@ -226,7 +226,7 @@ vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi="
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
-#' @seealso get.view.angle.names
+#' @seealso \code{\link[fsbrain]{get.view.angle.names}}
 #'
 #' @keywords internal
 brainviews <- function(views, coloredmeshes, rgloptions = list(), rglactions = list(), draw_colorbar = FALSE) {
@@ -254,7 +254,7 @@ brainviews <- function(views, coloredmeshes, rgloptions = list(), rglactions = l
 
 #' @title Get list of valid view angle names.
 #'
-#' @description The returned strings are used as constants to identify a view of type `sd_<angle>`. They can be used to construct entries for the parameter `views` of functions like \code{\link[fsbrain]{vis.subject.morph.native}}, or directly as parameter 'view_angles' for functions like \code{\link[fsbrain]{vislayout.subject.morph.native}}.
+#' @description The returned strings are used as constants to identify a view of type `sd_<angle>`. They can be used to construct entries for the parameter `views` of functions like \code{\link[fsbrain]{vis.subject.morph.native}}, or directly as parameter 'view_angles' for functions like \code{\link[fsbrain]{vislayout.from.coloredmeshes}}.
 #'
 #' @param add_sd_prefix logical, whether the prefix 'sd_' should be added to the string. This will construct full view names. If set to false, only the substring after the prefix 'sd_' will be returned. This is used internally only and should not be needed in general.
 #'
