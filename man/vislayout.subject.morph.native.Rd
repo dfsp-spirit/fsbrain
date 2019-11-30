@@ -4,12 +4,21 @@
 \alias{vislayout.subject.morph.native}
 \title{Combine several brainview images into a new figure.}
 \usage{
-vislayout.subject.morph.native(subjects_dir, subject_id, measure,
-  hemi = "both", surface = "white", colormap = squash::jet,
+vislayout.subject.morph.native(
+  subjects_dir,
+  subject_id,
+  measure,
+  hemi = "both",
+  surface = "white",
+  colormap = squash::jet,
   view_angles = get.view.angle.names(angle_set = "t4"),
-  rgloptions = list(), rglactions = list(), cortex_only = FALSE,
-  output_img = "fsbrain_arranged.png", silent = FALSE,
-  grid_like = TRUE)
+  rgloptions = list(),
+  rglactions = list(),
+  cortex_only = FALSE,
+  output_img = "fsbrain_arranged.png",
+  silent = FALSE,
+  grid_like = TRUE
+)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -48,7 +57,7 @@ Create a tight layout view from several angles. Creates separate `sd_<angle>` im
 \donttest{
    fsbrain::download_optional_data();
    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
-   vislayout.subject.morph.native(subjects_dir, "subject1", "curv",
+   vislayout.subject.morph.native(subjects_dir, "subject1", "thickness",
     cortex_only=TRUE, rglactions=list("clip_data"=c(0.05, 0.95)),
     view_angles=get.view.angle.names(angle_set="medial"),
     output_img=tempfile(fileext=".png"));
@@ -57,9 +66,10 @@ Create a tight layout view from several angles. Creates separate `sd_<angle>` im
 
 }
 \seealso{
-Other morphometry visualization functions: \code{\link{vis.data.on.fsaverage}},
-  \code{\link{vis.data.on.subject}},
-  \code{\link{vis.subject.morph.native}},
-  \code{\link{vis.subject.morph.standard}}
+Other morphometry visualization functions: 
+\code{\link{vis.data.on.fsaverage}()},
+\code{\link{vis.data.on.subject}()},
+\code{\link{vis.subject.morph.native}()},
+\code{\link{vis.subject.morph.standard}()}
 }
 \concept{morphometry visualization functions}

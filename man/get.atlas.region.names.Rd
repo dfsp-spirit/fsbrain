@@ -4,8 +4,12 @@
 \alias{get.atlas.region.names}
 \title{Determine atlas region names from a subject.}
 \usage{
-get.atlas.region.names(atlas, template_subjects_dir = NULL,
-  template_subject = "fsaverage", hemi = "lh")
+get.atlas.region.names(
+  atlas,
+  template_subjects_dir = NULL,
+  template_subject = "fsaverage",
+  hemi = "lh"
+)
 }
 \arguments{
 \item{atlas, }{string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.}
@@ -32,14 +36,15 @@ Determine atlas region names from a subject. WARNING: Not all subjects have all 
 
 }
 \seealso{
-Other atlas functions: \code{\link{group.agg.atlas.native}},
-  \code{\link{group.agg.atlas.standard}},
-  \code{\link{group.annot}},
-  \code{\link{regions.to.ignore}},
-  \code{\link{spread.values.over.annot}},
-  \code{\link{spread.values.over.hemi}},
-  \code{\link{spread.values.over.subject}},
-  \code{\link{subject.annot}},
-  \code{\link{subject.atlas.agg}}
+Other atlas functions: 
+\code{\link{group.agg.atlas.native}()},
+\code{\link{group.agg.atlas.standard}()},
+\code{\link{group.annot}()},
+\code{\link{regions.to.ignore}()},
+\code{\link{spread.values.over.annot}()},
+\code{\link{spread.values.over.hemi}()},
+\code{\link{spread.values.over.subject}()},
+\code{\link{subject.annot}()},
+\code{\link{subject.atlas.agg}()}
 }
 \concept{atlas functions}

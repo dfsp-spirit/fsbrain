@@ -115,19 +115,18 @@ arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=
 #' \donttest{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
-#'    vislayout.subject.morph.native(subjects_dir, "subject1", "curv",
+#'    vislayout.subject.morph.native(subjects_dir, "subject1", "thickness",
 #'     cortex_only=TRUE, rglactions=list("clip_data"=c(0.05, 0.95)),
 #'     view_angles=get.view.angle.names(angle_set="medial"),
 #'     output_img=tempfile(fileext=".png"));
 #' }
 #'
-
 #'
 #' @family morphometry visualization functions
 #' @export
 vislayout.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi="both", surface="white", colormap=squash::jet, view_angles=get.view.angle.names(angle_set = "t4"), rgloptions=list(), rglactions=list(), cortex_only=FALSE, output_img="fsbrain_arranged.png", silent=FALSE, grid_like=TRUE) {
 
-    if (requireNamespace("magick", quietly = TRUE)) {
+    if(requireNamespace("magick", quietly = TRUE)) {
         view_images = tempfile(view_angles, fileext = ".png");   # generate one temporary file name for each image
 
         # Create the temporary images at the temp paths
@@ -149,6 +148,71 @@ vislayout.subject.morph.native <- function(subjects_dir, subject_id, measure, he
         # Now merge them into one
         arrange.brainview.images(view_images, output_img, silent=silent, grid_like=grid_like);
     } else {
-        warning("The 'magick' package must be installed to use this functionality. Image  with manual layout NOT written.");
+        warning("The 'magick' package must be installed to use this functionality. Image with manual layout NOT written.");
     }
 }
+
+
+#' @title Visualize coloredmeshes from several angles and combine the images into a new figure.
+#'
+#' @description Create a tight layout view of coloredmeshes from several angles. Creates separate `sd_<angle>` images, then crops and finally merges them into a single output image with image magick. The `coloredmeshes` to pass to this function are usually obtained by running any `vis*` function (like \code{\link[fsbrain]{vis.subject.morph.native}}, \code{\link[fsbrain]{vis.subject.morph.standard}}, \code{\link[fsbrain]{vis.subject.label}}, \code{\link[fsbrain]{vis.subject.annot}}, and others). That means you can use this function to visualize all kinds of data, e.g., morphometry data in native and standard space, labels, and brain atlases.
+#
+#' @param coloredmeshes, list of coloredmesh. A coloredmesh is a named list as returned by the `coloredmesh.from*` functions (like \code{\link[fsbrain]{coloredmesh.from.morph.native}}). It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh. Note that the `vis*` functions (like \code{\link[fsbrain]{vis.subject.morph.native}}) all return a list of coloredmeshes.
+#'
+#' @param view_angles list of strings. See \code{\link[fsbrain]{get.view.angle.names}} for all valid strings.
+#'
+#' @param rgloptions option list passed to \code{\link[rgl]{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))}.
+#'
+#' @param rglactions named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
+#'
+#' @param output_img string, path to the output file. Defaults to "fsbrain_arranged.png"
+#'
+#' @param silent logical, whether to suppress all messages
+#'
+#' @param grid_like logical, whether to arrange the images in a grid-like fashion. If FALSE, they will all be merged horizontally. Passed to \code{\link[fsbrain]{arrange.brainview.images}}.
+#'
+#' @return list of coloredmeshes. The coloredmeshes used for the visualization.
+#'
+#' @examples
+#' \donttest{
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+#'    # Use any vis function to get coloredmeshes. You can visualize morphometry,
+#'    #  labels, an atlas, whatever. You can suppress the view unless you need it.
+#'    coloredmeshes = vis.subject.morph.native(subjects_dir, "subject1", "thickness",
+#'     cortex_only=TRUE, rglactions=list("clip_data"=c(0.05, 0.95)),
+#'     views=NULL);
+#'    # The meshes contain the surface, data, and color information and can be visualized:
+#'    vislayout.coloredmeshes(coloredmeshes);
+#' }
+#'
+#'
+#' @family visualization functions
+#' @export
+vislayout.coloredmeshes <- function(coloredmeshes, view_angles=get.view.angle.names(angle_set = "t4"), rgloptions=list(), rglactions=list(), output_img="fsbrain_arranged.png", silent=FALSE, grid_like=TRUE) {
+
+    if (requireNamespace("magick", quietly = TRUE)) {
+        view_images = tempfile(view_angles, fileext = ".png");   # generate one temporary file name for each image
+
+        # Create the temporary images at the temp paths
+        for(view_idx in seq_len(length(view_angles))) {
+            view = view_angles[[view_idx]];
+            view_image = view_images[[view_idx]];
+
+            internal_rglactions = list("snapshot_png"=view_image);
+            if(rglactions.has.key(rglactions, "snapshot_png")) {
+                warning("The key 'snapshot_png' in the 'rglactions' parameter is not supported for this function, it will be ignored. Use 'output_img' instead.");
+                rglactions$snapshot_png = NULL;
+            }
+            final_rglactions = modifyList(rglactions, internal_rglactions);
+
+            brainviews(c(view), coloredmeshes, rgloptions = rgloptions, rglactions = final_rglactions);
+        }
+
+        # Now merge them into one
+        arrange.brainview.images(view_images, output_img, silent=silent, grid_like=grid_like);
+    } else {
+        warning("The 'magick' package must be installed to use this functionality. Image with manual layout NOT written.");
+    }
+}
+

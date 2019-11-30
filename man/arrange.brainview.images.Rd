@@ -4,8 +4,13 @@
 \alias{arrange.brainview.images}
 \title{Combine several brainview images into a new figure.}
 \usage{
-arrange.brainview.images(brainview_images, output_img,
-  colorbar_img = NULL, silent = FALSE, grid_like = TRUE)
+arrange.brainview.images(
+  brainview_images,
+  output_img,
+  colorbar_img = NULL,
+  silent = FALSE,
+  grid_like = TRUE
+)
 }
 \arguments{
 \item{brainview_images}{vector of character strings, paths to the brainview images, usually in PNG format}

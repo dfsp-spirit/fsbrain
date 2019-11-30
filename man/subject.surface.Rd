@@ -30,6 +30,7 @@ Load a brain surface for a subject.
 
 }
 \seealso{
-Other surface mesh functions: \code{\link{mesh.vertex.neighbors}}
+Other surface mesh functions: 
+\code{\link{mesh.vertex.neighbors}()}
 }
 \concept{surface mesh functions}

@@ -18,6 +18,7 @@ the neighbors as a list with two entries: "faces": an vector of the face indices
 Given a set of query vertex indices and a mesh *m*, compute all vertices which are adjacent to the query vertices in the mesh. A vertex *u* is *adjacent* to another vertex *v* iff there exists an edge *e = (u, v)* in *m*. While you could call this function repeatedly with the old output as its new input to extend the neighborhood, you should maybe use a proper graph library for this.
 }
 \seealso{
-Other surface mesh functions: \code{\link{subject.surface}}
+Other surface mesh functions: 
+\code{\link{subject.surface}()}
 }
 \concept{surface mesh functions}

@@ -4,8 +4,16 @@
 \alias{write.region.aggregated}
 \title{Write data aggregated over regions to morphometry file for group.}
 \usage{
-write.region.aggregated(subjects_dir, subjects_list, measure, hemi, atlas,
-  agg_fun = mean, outfile_morph_name = "", format = "mgz")
+write.region.aggregated(
+  subjects_dir,
+  subjects_list,
+  measure,
+  hemi,
+  atlas,
+  agg_fun = mean,
+  outfile_morph_name = "",
+  format = "mgz"
+)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -28,7 +36,8 @@ write.region.aggregated(subjects_dir, subjects_list, measure, hemi, atlas,
 Given an atlas, a subjects list and a measure, aggregate the measure over each region (e.g., mean) and write an output morphometry file in which the value for all region vertices is set to the aggregated value.
 }
 \seealso{
-Other output functions: \code{\link{write.region.values.fsaverage}},
-  \code{\link{write.region.values}}
+Other output functions: 
+\code{\link{write.region.values.fsaverage}()},
+\code{\link{write.region.values}()}
 }
 \concept{output functions}
