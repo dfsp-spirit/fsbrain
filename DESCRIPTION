@@ -12,7 +12,6 @@ URL: https://github.com/dfsp-spirit/fsbrain
 BugReports: https://github.com/dfsp-spirit/fsbrain/issues
 Imports:
     reshape,
-    reshape2,
     freesurferformats (>= 0.1.4),
     pkgfilecache (>= 0.1.1),
     dplyr,
