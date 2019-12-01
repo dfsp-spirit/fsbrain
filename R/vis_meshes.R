@@ -188,15 +188,15 @@ draw.colorbar <- function(coloredmeshes, horizontal=TRUE, num_steps=100) {
 #'
 #' @description Draw a colorbar for the coloredmeshes to a separate 2D plot. Due to the suboptimal handling of colorbar drawing in the three-dimensional multi-panel views, it is often desirable to plot the colorbar in a separate window, export it from there and then manually add it to the final plot version in some image manipulation software like Inkscape. If you need more control over the colormap than offered by this function (e.g., setting the color value for NA values or making a symmetric colormap to ensure that the zero point for divergent colormaps is a neutral color), you should write custom code, and the return value from this function will come in handy to do that.
 #'
-#' @param coloredmeshes list of coloredmeshes. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
+#' @param coloredmeshes list of coloredmeshes. A coloredmesh is a named list as returned by the `coloredmesh.from` functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh. The `vis*` functions (like \code{\link[fsbrain]{vis.subject.morph.native}}) all return a list of coloredmeshes.
 #'
-#' @param show logical, Whether to open the resulting plot in R. Defaults to TRUE.
+#' @param show logical, Whether to open the resulting plot. Defaults to TRUE.
 #'
-#' @param makecmap_extra_options named list of extra optins to pass to [squash::makecmap()]. This can be used to overwrite the colormap function, explicitely set the color for NA data values, or whatever. The first mandatory data argument is passed in from the coloredmesh data already and "colFn" is also set based on the coloredmeshes, so there is no need to pass these. Your list will be merged with the internal options, so you could overwrite named arguments if needed.
+#' @param makecmap_extra_options named list of extra optins to pass to \code{\link[squash]{makecmap}}. This can be used to overwrite the colormap function, explicitely set the color for NA data values, or whatever. The first mandatory data argument is passed in from the coloredmesh data already and "colFn" is also set based on the coloredmeshes, so there is no need to pass these. Your list will be merged with the internal options, so you could overwrite named arguments if needed.
 #'
-#' @param image.plot_extra_options named list of extra optins to pass to [fields::image.plot()]. This can be used to add a legend to the colorbar, rotate the colorbar, or whatever. The options "legend_only", "zlim", and "col" are computed and set for you  by this function, so there is no need to pass these. Your list will be merged with the internal options, so you could overwrite named arguments if needed.
+#' @param image.plot_extra_options named list of extra optins to pass to \code{\link[fields]{image.plot}}. This can be used to add a legend to the colorbar, rotate the colorbar, or whatever. The options "legend_only", "zlim", and "col" are computed and set for you  by this function, so there is no need to pass these. Your list will be merged with the internal options, so you could overwrite named arguments if needed.
 #'
-#' @param png_options Options to pass to [grDevices::png()], see the docs of that function for details. Allow you to save the plot as a png bitmap image. Example: \code{png_options = list("filename"="outfile.png", "width"=800)}. Defaults to NULL, which will not save anything.
+#' @param png_options Options to pass to \code{\link[grDevices]{png}}, see the docs of that function for details. Allow you to save the plot as a png bitmap image. Example: \code{png_options = list("filename"="outfile.png", "width"=800)}. Defaults to NULL, which will not save anything.
 #'
 #' @param silent logical, whether to suppress messages. Defaults to FALSE.
 #'

@@ -9,7 +9,9 @@ arrange.brainview.images(
   output_img,
   colorbar_img = NULL,
   silent = FALSE,
-  grid_like = TRUE
+  grid_like = TRUE,
+  border_geometry = "5x5",
+  background_color = "white"
 )
 }
 \arguments{
@@ -22,6 +24,10 @@ arrange.brainview.images(
 \item{silent}{logical, whether to suppress messages}
 
 \item{grid_like}{logical, whether to arrange the images in a grid-like fashion. If FALSE, they will all be merged horizontally.}
+
+\item{border_geometry}{string, a geometry string passed to \code{\link[magick]{image_border}} to define the borders to add to each image tile. The default value adds 5 pixels, both horizontally and vertically.}
+
+\item{background_color}{string, a valid ImageMagick color string such as "white" or "#000080". The color to use when extending images (e.g., when creating the border)}
 }
 \description{
 Combine several brainview images into a new figure.
