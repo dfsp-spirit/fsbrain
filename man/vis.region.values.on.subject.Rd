@@ -15,7 +15,7 @@ vis.region.values.on.subject(
   views = c("t4"),
   rgloptions = list(),
   rglactions = list(),
-  value_for_unlisted_regions = NaN,
+  value_for_unlisted_regions = NA,
   draw_colorbar = FALSE
 )
 }

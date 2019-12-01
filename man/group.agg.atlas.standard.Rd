@@ -39,10 +39,21 @@ group.agg.atlas.standard(
 dataframe with aggregated values for all regions and subjects, with n columns and m rows, where n is the number of subjects and m is the number of regions.
 }
 \description{
-Aggregate standard space morphometry data over brain atlas regions, e.g., compute the mean thickness value over all regions in an atlas for all subjects. Try visualizing the results, e.g.,:
+Aggregate standard space morphometry data over brain atlas regions, e.g., compute the mean thickness value over all regions in an atlas for all subjects.
+}
+\examples{
+\donttest{
+   fsbrain::download_optional_data();
+   subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+   agg = group.agg.atlas.standard(subjects_dir, c('subject1', 'subject2'),
+    'thickness', 'lh', 'aparc', fwhm='10');
+   # Visualize the mean values. Could use any subject, typically
+   #  one would use fsaverage. Here we use subject1:
+   agg$subject = NULL;   # remove non-numeric column.
+   vis.region.values.on.subject(subjects_dir, 'subject1', 'aparc',
+    lh_region_value_list=colMeans(agg), rh_region_value_list=NULL);
+}
 
-   molten=melt(agg, id=c('subject'));
-   ggplot(data=molten, aes(x=variable, y=value, group=subject)) + geom_point() + geom_line() + theme(axis.text.x = element_text(angle = 90, hjust = 1));
 }
 \seealso{
 Other aggregation functions: 

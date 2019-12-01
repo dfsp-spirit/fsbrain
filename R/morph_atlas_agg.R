@@ -61,12 +61,7 @@ subject.atlas.agg <- function(vertex_morph_data, vertex_label_names, agg_fun = m
 
 #' @title Aggregate native space morphometry data over brain atlas regions and subjects for a group of subjects.
 #'
-#' @description Aggregate native space morphometry data over brain atlas regions, e.g., compute the mean thickness value over all regions in an atlas for all subjects. Try visualizing the results, e.g.,:
-#'
-#'    molten=reshape::melt(agg, id=c('subject'));
-#'    library('ggplot2');
-#'    ggplot(data=molten, aes(x=variable, y=value, group=subject)) + geom_point() + geom_line() + theme(axis.text.x = element_text(angle = 90, hjust = 1));
-#'
+#' @description Aggregate native space morphometry data over brain atlas regions, e.g., compute the mean thickness value over all regions in an atlas for all subjects.
 #'
 #' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
 #'
@@ -88,7 +83,13 @@ subject.atlas.agg <- function(vertex_morph_data, vertex_label_names, agg_fun = m
 #' \donttest{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
-#'    agg = group.agg.atlas.native(subjects_dir, 'subject1', 'thickness', 'lh', 'aparc');
+#'    agg = group.agg.atlas.native(subjects_dir, c('subject1', 'subject2'),
+#'     'thickness', 'lh', 'aparc');
+#'    # Visualize the mean values. Could use any subject, typically
+#'    # one would use fsaverage. Here we use subject1:
+#'    agg$subject = NULL;   # remove non-numeric column.
+#'    vis.region.values.on.subject(subjects_dir, 'subject1', 'aparc',
+#'     lh_region_value_list=colMeans(agg), rh_region_value_list=NULL);
 #' }
 #'
 #' @family aggregation functions
@@ -154,11 +155,7 @@ group.agg.atlas.native <- function(subjects_dir, subjects_list, measure, hemi, a
 
 #' @title Aggregate standard space morphometry data over brain atlas regions and subjects for a group of subjects.
 #'
-#' @description Aggregate standard space morphometry data over brain atlas regions, e.g., compute the mean thickness value over all regions in an atlas for all subjects. Try visualizing the results, e.g.,:
-#'
-#'    molten=melt(agg, id=c('subject'));
-#'    ggplot(data=molten, aes(x=variable, y=value, group=subject)) + geom_point() + geom_line() + theme(axis.text.x = element_text(angle = 90, hjust = 1));
-#'
+#' @description Aggregate standard space morphometry data over brain atlas regions, e.g., compute the mean thickness value over all regions in an atlas for all subjects.
 #'
 #' @param subjects_dir, string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
 #'
@@ -179,6 +176,19 @@ group.agg.atlas.native <- function(subjects_dir, subjects_list, measure, hemi, a
 #' @param cache_file, string or NULL. If given, it is interpreted as path of a file, and the data will be cached in the file cache_file in RData format. If the file does not exist yet, the function will run and cache the data in the file. If the file exists, the function will load the data from the file instead of running. The filename should end in '.RData', but that is not enforced or checked in any way. WARNING: If cached data is returned, all parameters passed to this function (with the exception of 'cache_file') are ignored! Whether the cached data is for another subjects_list or hemi is NOT checked! You have to ensure this yourself, by using different filenames. Defaults to NULL.
 #'
 #' @return dataframe with aggregated values for all regions and subjects, with n columns and m rows, where n is the number of subjects and m is the number of regions.
+#'
+#' @examples
+#' \donttest{
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+#'    agg = group.agg.atlas.standard(subjects_dir, c('subject1', 'subject2'),
+#'     'thickness', 'lh', 'aparc', fwhm='10');
+#'    # Visualize the mean values. Could use any subject, typically
+#'    #  one would use fsaverage. Here we use subject1:
+#'    agg$subject = NULL;   # remove non-numeric column.
+#'    vis.region.values.on.subject(subjects_dir, 'subject1', 'aparc',
+#'     lh_region_value_list=colMeans(agg), rh_region_value_list=NULL);
+#' }
 #'
 #' @family aggregation functions
 #' @family atlas functions
@@ -509,17 +519,16 @@ spread.values.over.hemi <- function(subjects_dir, subject_id, hemi, atlas, regio
 #' @export
 spread.values.over.subject <- function(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, value_for_unlisted_regions=NaN) {
 
-  if(is.null(lh_region_value_list)) {
-    lh_region_value_list = list();
-  }
-  if(is.null(rh_region_value_list)) {
-    rh_region_value_list = list();
-  }
+    return_list = list();
 
-  morph_data_lh = spread.values.over.hemi(subjects_dir, subject_id, 'lh', atlas, lh_region_value_list, value_for_unlisted_regions=value_for_unlisted_regions);
-  morph_data_rh = spread.values.over.hemi(subjects_dir, subject_id, 'rh', atlas, rh_region_value_list, value_for_unlisted_regions=value_for_unlisted_regions);
-  return_list = list("lh"=morph_data_lh, "rh"=morph_data_rh);
-  return(return_list);
+    if(!is.null(lh_region_value_list)) {
+        return_list$lh = spread.values.over.hemi(subjects_dir, subject_id, 'lh', atlas, lh_region_value_list, value_for_unlisted_regions=value_for_unlisted_regions);
+    }
+
+    if(! is.null(rh_region_value_list)) {
+        return_list$rh = spread.values.over.hemi(subjects_dir, subject_id, 'rh', atlas, rh_region_value_list, value_for_unlisted_regions=value_for_unlisted_regions);
+    }
+    return(return_list);
 }
 
 

@@ -659,7 +659,7 @@ vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi='both', surf
 #' @importFrom squash heat
 #' @importFrom grDevices heat.colors
 #' @export
-vis.region.values.on.subject <- function(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, surface="white", colormap=grDevices::heat.colors, views=c('t4'), rgloptions=list(), rglactions = list(), value_for_unlisted_regions = NaN, draw_colorbar = FALSE) {
+vis.region.values.on.subject <- function(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, surface="white", colormap=grDevices::heat.colors, views=c('t4'), rgloptions=list(), rglactions = list(), value_for_unlisted_regions = NA, draw_colorbar = FALSE) {
     morph_like_data = spread.values.over.subject(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, value_for_unlisted_regions = value_for_unlisted_regions);
     return(invisible(vis.data.on.subject(subjects_dir, subject_id, morph_like_data$lh, morph_like_data$rh, surface=surface, colormap=colormap, views=views, rgloptions=rgloptions, rglactions=rglactions, draw_colorbar = draw_colorbar)));
 }
