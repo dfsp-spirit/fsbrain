@@ -8,6 +8,8 @@ Version 0.0.3
 - Add the logical parameter 'cortex_only' to various native space morphometry functions (including subject.morph.native, group.morph.native, group.morph.agg.native na group.multimorph.agg.native). When set to TRUE, this parameter will limit the data to vertices which are part of the cortex (as defined by the label file label//h.cortex.label for the respective subject). This allows one to ignore the data from the medial wall in all of these functions.
 - Also add 'cortex_only' parameter for the equivalent standard space functions and the morphometry visualization functions.
 - Add more examples to various functions, extend the vignette with latest changes and new functionality.
+- Remove unused dependencies
+- Add function vislayout.from.coloredmeshes which allows one to create a tight layout visualization from arbitrary angle sets
 
 
 Version 0.0.2
