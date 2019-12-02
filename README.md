@@ -115,8 +115,14 @@ A BibTeX entry for LaTeX users is
     year = {2019},
     note = {R package version 0.0.2},
     url = {https://CRAN.R-project.org/package=fsbrain},
+    doi = {10.5281/zenodo.3559816},
   }
 ```
+
+The Digital Object Identifier (DOI) for freesurferformats is: [10.5281/zenodo.3559816](https://dx.doi.org/10.5281/zenodo.3559816)
+
+Note that this DOI always points to the latest version, so be sure to still include the package version in the citation.
+
 
 
 ## Visualization examples
