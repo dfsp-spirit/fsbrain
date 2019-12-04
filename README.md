@@ -103,7 +103,7 @@ This will ouput something like this (but for the version you actually used, whic
 To cite package ‘fsbrain’ in a publications use:
 
   Tim Schäfer (2019). fsbrain: Managing and Visualizing Brain Surface Data. R package version
-  0.0.2. https://CRAN.R-project.org/package=fsbrain
+  0.0.3. https://CRAN.R-project.org/package=fsbrain
 
 
 A BibTeX entry for LaTeX users is
@@ -113,10 +113,16 @@ A BibTeX entry for LaTeX users is
     title = {fsbrain: Managing and Visualizing Brain Surface Data},
     author = {Tim Schäfer},
     year = {2019},
-    note = {R package version 0.0.2},
+    note = {R package version 0.0.3},
     url = {https://CRAN.R-project.org/package=fsbrain},
+    doi = {10.5281/zenodo.3559816},
   }
 ```
+
+The Digital Object Identifier (DOI) for fsbrain is: [10.5281/zenodo.3559816](https://dx.doi.org/10.5281/zenodo.3559816)
+
+Note that this DOI always points to the latest version, so be sure to still include the package version in the citation.
+
 
 
 ## Visualization examples
