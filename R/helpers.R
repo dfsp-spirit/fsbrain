@@ -62,3 +62,33 @@ mesh.vertex.neighbors <- function(surface, source_vertices) {
 }
 
 
+#' @title Draw a 3D line from vertex to vertex
+#'
+#' @description To get a nice path along the surface, pass the vertex indices along a geodesic path.
+#'
+#' @param surface_vertices matrix of surface vertex coordinates, as returned by subject.surface, member "vertices"
+#'
+#' @param path_vertex_indices vector of vertex indices, the path
+#'
+#' @export
+#' @importFrom rgl segments3d material3d
+vis.path.along.verts <- function(surface_vertices, path_vertex_indices) {
+  path_vertex_coords = surface_vertices[path_vertex_indices,];
+  path_segments = c();
+
+  for(vertex_row_idx in seq_len(nrow(path_vertex_coords))) {
+    path_segments = c(path_segments, path_vertex_coords[vertex_row_idx,]);
+    if(vertex_row_idx > 1 && vertex_row_idx < nrow(path_vertex_coords)) {
+      # Add the vertex again, because the segment function always takes pairs of start and end point.
+      # We want the old end point to be the next start point, so we have to duplicate the coords.
+      path_segments = c(path_segments, path_vertex_coords[vertex_row_idx,]);
+    }
+  }
+
+
+  path = matrix(path_segments, byrow = TRUE, ncol=3);
+  rgl::material3d(size=2.0, lwd=2.0, color=c("red"), point_antialias=TRUE, line_antialias=TRUE);
+  rgl::segments3d(path[,1], path[,2], path[,3]);
+}
+
+
