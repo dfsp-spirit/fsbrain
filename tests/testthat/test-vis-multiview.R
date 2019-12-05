@@ -299,11 +299,11 @@ test_that("We can construct a tight layout image by merging several sd views.", 
 
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 
-        views = get.view.angle.names(angle_set = "t9");
+    view_angles = get.view.angle.names(angle_set = "t9");
     merged_img = "~/fsbrain_merged_brainviews.png";
-    rgloptions=list("windowRect"=c(80,80,500,500));     # the first 2 entries give the position on screen, the rest defines resolution as width, height in px
+    rgloptions=list("windowRect"=c(80,80,1000,1000));     # the first 2 entries give the position on screen, the rest defines resolution as width, height in px
 
     coloredmeshes = vis.subject.morph.native(subjects_dir, "subject1", "thickness", cortex_only=TRUE, rglactions=list("clip_data"=c(0.05, 0.95)), views=NULL);
-    vislayout.from.coloredmeshes(coloredmeshes);
+    vislayout.from.coloredmeshes(coloredmeshes, view_angles=view_angles);
 })
 
