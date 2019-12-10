@@ -4,7 +4,7 @@ These are animations created using the [fsbrain R package](https://github.com/df
 
 ![Vissurfaces](./fsbrain_morphnat_curv_web.gif?raw=true "Rotating brain mesh with mean curvature plotted onto it, rendered with fsbrain")
 
-**Animation 1:** Rotating visualization of mean curvature plotted onto the white surface of a subject (native space).
+**Animation 1:** Rotating visualization of [mean curvature](https://en.wikipedia.org/wiki/Mean_curvature) plotted onto the white surface of a subject (native space).
 
 
 # More descriptors and brain parcellations (GIF format)
