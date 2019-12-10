@@ -9,7 +9,8 @@ group.concat.measures.standard(
   subjects_list,
   measures,
   hemi,
-  fwhm_per_measure
+  fwhm_per_measure,
+  cortex_only = FALSE
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ group.concat.measures.standard(
 \item{hemi, }{string, one of 'lh', 'rh' or 'both'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.}
 
 \item{fwhm_per_measure, }{vector of strings. The fwhm settings to use, for each measure. If this is a string instead of a vector of strings, the same fwhm will be used for all measures.}
+
+\item{cortex_only}{logical, whether to set non-cortex data to NA}
 }
 \value{
 dataframe with concatenated vertex values. Each column contains the values for one measure, concatenated for all subjects. The column names are a concatination of the measure, "_fwhm", and the fwhm for that measure. WARNING: This dataframe can get large if you have many subjects.

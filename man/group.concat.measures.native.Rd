@@ -4,7 +4,13 @@
 \alias{group.concat.measures.native}
 \title{Concatenate native space data for a group of subjects.}
 \usage{
-group.concat.measures.native(subjects_dir, subjects_list, measures, hemi)
+group.concat.measures.native(
+  subjects_dir,
+  subjects_list,
+  measures,
+  hemi,
+  cortex_only = FALSE
+)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -14,6 +20,8 @@ group.concat.measures.native(subjects_dir, subjects_list, measures, hemi)
 \item{measures, }{vector of strings. Names of the vertex-wise morhometry measures. E.g., c("area", "thickness"). Used to construct the names of the morphometry file to be loaded. The data of each measure will be one column in the resulting dataframe.}
 
 \item{hemi, }{string, one of 'lh', 'rh' or 'both'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.}
+
+\item{cortex_only}{logical, whether to set non-cortex data to NA}
 }
 \value{
 dataframe with concatenated vertex values. Each column contains the values for one measure, concatenated for all subjects. WARNING: This dataframe can get large if you have many subjects.
