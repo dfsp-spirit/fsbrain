@@ -137,7 +137,7 @@ The *fsbrain* package support visualizations of different data, and all data can
 
 *What* is displayed (morphometry data, atlas regions, arbitray other data), on *which surface* it is displayed, and *how* it is displayed (a single interactive view, 4 tiles, 9 tiles) is independent and can be selected as needed in fsbrain.
 
-Here is a second figure, showing the same data (the mean curvature at each vertex) displayed on 3 different surfaces of a subject: **A** white surface, **B** pial surface, **C** inflated surface.
+Here is a second figure, showing the same data (the [mean curvature](https://en.wikipedia.org/wiki/Mean_curvature) at each vertex) displayed on 3 different surfaces of a subject: **A** white surface, **B** pial surface, **C** inflated surface.
 
 ![Vissurfaces](./web/fsbrain_curvature_surfaces.jpg?raw=true "Curvature visualization on different surfaces, rendered with fsbrain")
 
