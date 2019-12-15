@@ -92,3 +92,31 @@ vis.path.along.verts <- function(surface_vertices, path_vertex_indices) {
 }
 
 
+label.border.vertices <- function(surface, label_vertices) {
+    neighborhood = mesh.vertex.neighbors(surface, label_vertices);
+    edges = face.edges(surface, neighborhood$faces); # Not 100% correct: the faces here are all faces touching any of the vertices.
+    # It would be better to restrict this to faces which are made up ONLY of vertices in label_vertices.
+    ec = uniqueRowCounts(edges); # Count how often each edge occurs
+    border_edges = ec[ec$N==1][,1:2]; # Border edges occur only once, as the other face they touch is not part of the label.
+    border_vertices = unique(as.vector(t(border_edges)));
+    # Now retrieve the faces from the neighborhood that include any border vertex.
+
+
+}
+
+#' @title Enumerate all edges of the given faces.
+face.edges <- function(surface, face_indices) {
+    e1 = surface$faces[face_indices, 1:2];
+    e2 = surface$faces[face_indices, 2:3];
+    e3 = surface$faces[face_indices, c(3,1)];
+    return(rbind(e1, e2, e3));
+}
+
+
+# based on the f6prime function from
+# https://stackoverflow.com/questions/28485735/fastest-way-to-count-the-occurrences-of-each-unique-column-in-a-matrix-in-r
+uniqueRowCounts = function(mat) {
+    dt = as.data.table(mat);
+    return(dt[, .N, by = names(dt)]);
+}
+
