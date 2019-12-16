@@ -9,3 +9,4 @@ mesh.vertex.included.faces(surface, source_vertices)
 \description{
 Return all faces which are made up completely of the listed vertices.
 }
+\keyword{internal}

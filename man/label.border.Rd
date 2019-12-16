@@ -6,6 +6,14 @@
 \usage{
 label.border(surface, label_vertices, inner_only = TRUE)
 }
+\arguments{
+\item{surface}{A surface mesh, as loaded by \code{\link[fsbrain]{subject.surface}}.}
+
+\item{label_vertices}{list of vertex indices. This function only makes sense if they form a patch on the surface, but that is not checked.}
+}
+\value{
+the vertex indices which form the border of the label
+}
 \description{
 Compute border of a label.
 }

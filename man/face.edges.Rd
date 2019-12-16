@@ -9,3 +9,4 @@ face.edges(surface, face_indices)
 \description{
 Enumerate all edges of the given faces.
 }
+\keyword{internal}
