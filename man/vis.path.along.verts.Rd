@@ -7,10 +7,19 @@
 vis.path.along.verts(surface_vertices, path_vertex_indices)
 }
 \arguments{
-\item{surface_vertices}{matrix of surface vertex coordinates, as returned by subject.surface, member "vertices"}
+\item{surface_vertices}{float matrix of size (n, 3), the surface vertex coordinates, as returned by \code{\link[fsbrain]{subject.surface}}, member "vertices"}
 
 \item{path_vertex_indices}{vector of vertex indices, the path}
 }
 \description{
 To get a nice path along the surface, pass the vertex indices along a geodesic path.
 }
+\seealso{
+Other surface mesh functions: 
+\code{\link{face.edges}()},
+\code{\link{label.border}()},
+\code{\link{mesh.vertex.included.faces}()},
+\code{\link{mesh.vertex.neighbors}()},
+\code{\link{subject.surface}()}
+}
+\concept{surface mesh functions}

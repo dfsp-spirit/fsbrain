@@ -63,9 +63,18 @@ mesh.vertex.neighbors <- function(surface, source_vertices) {
 
 
 #' @title Return all faces which are made up completely of the listed vertices.
+#'
+#' @param surface_mesh surface mesh, as loaded by \code{\link[fsbrain]{subject.surface}}
+#'
+#' @param source_vertices integer vector, the vertex indices.
+#'
+#' @return integer vector, the face indices
+#'
+#' @family surface mesh functions
+#'
 #' @keywords internal
-mesh.vertex.included.faces <- function(surface, source_vertices) {
-  return(which(apply(surface$faces, 1, function(face_vertidx) all(face_vertidx %in% source_vertices))));
+mesh.vertex.included.faces <- function(surface_mesh, source_vertices) {
+  return(which(apply(surface_mesh$faces, 1, function(face_vertidx) all(face_vertidx %in% source_vertices))));
 }
 
 
@@ -73,9 +82,11 @@ mesh.vertex.included.faces <- function(surface, source_vertices) {
 #'
 #' @description To get a nice path along the surface, pass the vertex indices along a geodesic path.
 #'
-#' @param surface_vertices matrix of surface vertex coordinates, as returned by subject.surface, member "vertices"
+#' @param surface_vertices float matrix of size (n, 3), the surface vertex coordinates, as returned by \code{\link[fsbrain]{subject.surface}}, member "vertices"
 #'
 #' @param path_vertex_indices vector of vertex indices, the path
+#'
+#' @family surface mesh functions
 #'
 #' @export
 #' @importFrom rgl segments3d material3d
@@ -92,7 +103,6 @@ vis.path.along.verts <- function(surface_vertices, path_vertex_indices) {
     }
   }
 
-
   path = matrix(path_segments, byrow = TRUE, ncol=3);
   rgl::material3d(size=2.0, lwd=2.0, color=c("red"), point_antialias=TRUE, line_antialias=TRUE);
   rgl::segments3d(path[,1], path[,2], path[,3]);
@@ -101,23 +111,27 @@ vis.path.along.verts <- function(surface_vertices, path_vertex_indices) {
 
 #' @title Compute border of a label.
 #'
-#' @param surface A surface mesh, as loaded by \code{\link[fsbrain]{subject.surface}}.
+#' @param surface_mesh surface mesh, as loaded by \code{\link[fsbrain]{subject.surface}}
 #'
-#' @param label_vertices list of vertex indices. This function only makes sense if they form a patch on the surface, but that is not checked.
+#' @param label_vertices integer vector, the vertex indices. This function only makes sense if they form a patch on the surface, but that is not checked.
+#'
+#' @param inner_only logical, whether only faces consisting only of label_vertices should be considered to be label faces. If FALSE, faces containing at least one label vertex will be used. Defaults to TRUE. Leave this alone if in doubt, especially if you want to draw several label borders which are directly adjacent on the surface.
 #'
 #' @return the vertex indices which form the border of the label
 #'
+#' @family surface mesh functions
+#'
 #' @export
 #' @importFrom data.table as.data.table
-label.border <- function(surface, label_vertices, inner_only=TRUE) {
+label.border <- function(surface_mesh, label_vertices, inner_only=TRUE) {
     if(inner_only) {
-      label_faces = mesh.vertex.included.faces(surface, label_vertices);
+      label_faces = mesh.vertex.included.faces(surface_mesh, label_vertices);
     } else {
-      label_faces = mesh.vertex.neighbors(surface, label_vertices)$faces;
+      label_faces = mesh.vertex.neighbors(surface_mesh, label_vertices)$faces;
     }
-    label_edges = face.edges(surface, label_faces);
+    label_edges = face.edges(surface_mesh, label_faces);
 
-    cat(sprintf("Found %d label faces and %d label edges based on the %d label_vertices.\n", length(label_faces), nrow(label_edges), length(label_vertices)))
+    #cat(sprintf("Found %d label faces and %d label edges based on the %d label_vertices.\n", length(label_faces), nrow(label_edges), length(label_vertices)))
 
     label_edges_sorted = t(apply(label_edges, 1, sort)) %>%  as.data.frame();
     edge_dt = data.table::as.data.table(label_edges_sorted);
@@ -125,21 +139,30 @@ label.border <- function(surface, label_vertices, inner_only=TRUE) {
     border_edges = edgecount_dt[edgecount_dt$N==1][,1:2]; # Border edges occur only once, as the other face they touch is not part of the label.
 
 
-    cat(sprintf("Counted %d unique edges, out of those there were %d border edges which occured only once.\n", nrow(edgecount_dt), nrow(border_edges)));
+    #cat(sprintf("Counted %d unique edges, out of those there were %d border edges which occured only once.\n", nrow(edgecount_dt), nrow(border_edges)));
     border_vertices = unique(as.vector(t(border_edges)));
     # Now retrieve the faces from the neighborhood that include any border vertex.
-    border_faces = mesh.vertex.included.faces(surface, border_vertices);
-    cat(sprintf("Based on the %d border edges, identified %d border vertices and %d border faces.\n", nrow(border_edges), length(border_vertices), length(border_faces)))
+    border_faces = mesh.vertex.included.faces(surface_mesh, border_vertices);
+    #cat(sprintf("Based on the %d border edges, identified %d border vertices and %d border faces.\n", nrow(border_edges), length(border_vertices), length(border_faces)))
     return(list("vertices"=border_vertices, "edges"=border_edges, "faces"=border_faces));
 }
 
 
 #' @title Enumerate all edges of the given faces.
+#'
+#' @param surface_mesh surface mesh, as loaded by \code{\link[fsbrain]{subject.surface}}
+#'
+#' @param face_indices integer vector, the face indices
+#'
+#' @return integer matrix of size (n, 2) where n is the number of edges. The indices (source and target vertex) in each row are **not** sorted.
+#'
+#' @family surface mesh functions
+#'
 #' @keywords internal
-face.edges <- function(surface, face_indices) {
-    e1 = surface$faces[face_indices, 1:2];
-    e2 = surface$faces[face_indices, 2:3];
-    e3 = surface$faces[face_indices, c(3,1)];
+face.edges <- function(surface_mesh, face_indices) {
+    e1 = surface_mesh$faces[face_indices, 1:2];
+    e2 = surface_mesh$faces[face_indices, 2:3];
+    e3 = surface_mesh$faces[face_indices, c(3,1)];
     return(rbind(e1, e2, e3));
 }
 

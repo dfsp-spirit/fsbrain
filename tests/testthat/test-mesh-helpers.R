@@ -14,8 +14,9 @@ test_that("Label border can be computed", {
     lh_label = label.from.annotdata(lh_annot, region);
 
     # Load a surface
-    lh_surf = subject.surface(subjects_dir, subject_idurface, hemi);
+    lh_surf = subject.surface(subjects_dir, subject_id, surface, hemi);
 
     lh_label_border = label.border(lh_surf, lh_label);
     #vis.labeldata.on.subject(subjects_dir, subject_id, lh_label_border$vertices, NULL);
+    expect_equal(length(lh_label_border$vertices), 188);
 })

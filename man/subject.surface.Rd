@@ -31,6 +31,10 @@ Load a brain surface for a subject.
 }
 \seealso{
 Other surface mesh functions: 
-\code{\link{mesh.vertex.neighbors}()}
+\code{\link{face.edges}()},
+\code{\link{label.border}()},
+\code{\link{mesh.vertex.included.faces}()},
+\code{\link{mesh.vertex.neighbors}()},
+\code{\link{vis.path.along.verts}()}
 }
 \concept{surface mesh functions}

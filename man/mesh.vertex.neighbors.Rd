@@ -19,6 +19,10 @@ Given a set of query vertex indices and a mesh *m*, compute all vertices which a
 }
 \seealso{
 Other surface mesh functions: 
-\code{\link{subject.surface}()}
+\code{\link{face.edges}()},
+\code{\link{label.border}()},
+\code{\link{mesh.vertex.included.faces}()},
+\code{\link{subject.surface}()},
+\code{\link{vis.path.along.verts}()}
 }
 \concept{surface mesh functions}

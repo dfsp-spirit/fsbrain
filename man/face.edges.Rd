@@ -4,9 +4,26 @@
 \alias{face.edges}
 \title{Enumerate all edges of the given faces.}
 \usage{
-face.edges(surface, face_indices)
+face.edges(surface_mesh, face_indices)
+}
+\arguments{
+\item{surface_mesh}{surface mesh, as loaded by \code{\link[fsbrain]{subject.surface}}}
+
+\item{face_indices}{integer vector, the face indices}
+}
+\value{
+integer matrix of size (n, 2) where n is the number of edges. The indices (source and target vertex) in each row are **not** sorted.
 }
 \description{
 Enumerate all edges of the given faces.
 }
+\seealso{
+Other surface mesh functions: 
+\code{\link{label.border}()},
+\code{\link{mesh.vertex.included.faces}()},
+\code{\link{mesh.vertex.neighbors}()},
+\code{\link{subject.surface}()},
+\code{\link{vis.path.along.verts}()}
+}
+\concept{surface mesh functions}
 \keyword{internal}
