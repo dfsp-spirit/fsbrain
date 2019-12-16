@@ -62,6 +62,13 @@ mesh.vertex.neighbors <- function(surface, source_vertices) {
 }
 
 
+#' @title Return all faces which are made up completely of the listed vertices.
+#' @export
+mesh.vertex.included.faces <- function(surface, source_vertices) {
+  return(which(apply(surface$faces, 1, function(face_vertidx) all(face_vertidx %in% source_vertices))));
+}
+
+
 #' @title Draw a 3D line from vertex to vertex
 #'
 #' @description To get a nice path along the surface, pass the vertex indices along a geodesic path.
@@ -92,19 +99,40 @@ vis.path.along.verts <- function(surface_vertices, path_vertex_indices) {
 }
 
 
-label.border.vertices <- function(surface, label_vertices) {
-    neighborhood = mesh.vertex.neighbors(surface, label_vertices);
-    edges = face.edges(surface, neighborhood$faces); # Not 100% correct: the faces here are all faces touching any of the vertices.
-    # It would be better to restrict this to faces which are made up ONLY of vertices in label_vertices.
-    ec = uniqueRowCounts(edges); # Count how often each edge occurs
-    border_edges = ec[ec$N==1][,1:2]; # Border edges occur only once, as the other face they touch is not part of the label.
+#' @title Compute border of a label.
+#' @export
+#' @importFrom data.table as.data.table
+#' @importFrom dplyr distinct
+label.border <- function(surface, label_vertices, inner_only=TRUE) {
+  cat(sprintf("fock yeah first\n"));
+    if(inner_only) {
+      label_faces = mesh.vertex.included.faces(surface, label_vertices);
+    } else {
+      label_faces = mesh.vertex.neighbors(surface, label_vertices)$faces;
+    }
+    label_edges = face.edges(surface, label_faces);
+
+    cat(sprintf("Found %d label faces and %d label edges based on the %d label_vertices.\n", length(label_faces), nrow(label_edges), length(label_vertices)))
+
+    label_edges_sorted = t(apply(label_edges, 1, sort)) %>%  as.data.frame();
+    cat(sprintf("fock yeah 1\n"));
+    edge_dt = data.table::as.data.table(label_edges_sorted);
+    edgecount_dt = edge_dt[, .N, by = names(edge_dt)]; # add column 'N' which contains the counts (i.e., how often each edge occurs over all faces).
+    border_edges = edgecount_dt[edgecount_dt$N==1][,1:2]; # Border edges occur only once, as the other face they touch is not part of the label.
+
+
+    cat(sprintf("Counted %d unique edges, out of those there were %d border edges which occured only once.\n", nrow(edgecount_dt), nrow(border_edges)));
     border_vertices = unique(as.vector(t(border_edges)));
     # Now retrieve the faces from the neighborhood that include any border vertex.
-
-
+    border_faces = mesh.vertex.included.faces(surface, border_vertices);
+    cat(sprintf("Based on the %d border edges, identified %d border vertices and %d border faces.\n", nrow(border_edges), length(border_vertices), length(border_faces)))
+    cat(sprintf("fock yeah finally\n"));
+    return(list("vertices"=border_vertices, "edges"=border_edges, "faces"=border_faces));
 }
 
+
 #' @title Enumerate all edges of the given faces.
+#' @export
 face.edges <- function(surface, face_indices) {
     e1 = surface$faces[face_indices, 1:2];
     e2 = surface$faces[face_indices, 2:3];
@@ -113,10 +141,10 @@ face.edges <- function(surface, face_indices) {
 }
 
 
-# based on the f6prime function from
-# https://stackoverflow.com/questions/28485735/fastest-way-to-count-the-occurrences-of-each-unique-column-in-a-matrix-in-r
-uniqueRowCounts = function(mat) {
-    dt = as.data.table(mat);
-    return(dt[, .N, by = names(dt)]);
+#' @export
+test.surface <- function() {
+  return(list("vertices"=matrix(c(0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 3.0, 3.0, 3.0, 4.0, 4.0, 4.0, 5.0, 5.0, 5.0, 6.0, 6.0, 6.0), ncol=3, byrow = TRUE), "faces"=matrix(c(1,2,3,1,2,4,2,5,4,2,6,5,2,3,6), ncol=3, byrow = TRUE)));
 }
+
+
 
