@@ -122,7 +122,7 @@ vis.path.along.verts <- function(surface_vertices, path_vertex_indices) {
 #' @family surface mesh functions
 #'
 #' @export
-#' @importFrom data.table as.data.table
+#' @importFrom data.table as.data.table .N
 label.border <- function(surface_mesh, label_vertices, inner_only=TRUE) {
     if(inner_only) {
       label_faces = mesh.vertex.included.faces(surface_mesh, label_vertices);
