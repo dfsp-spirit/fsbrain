@@ -52,3 +52,20 @@ test_that("Labels can be extracted from a region of an annotation file for a gro
     expect_equal(length(labels$subject1), num_verts_bankssts_subject1_lh);
     expect_equal(length(labels$subject2), num_verts_bankssts_subject2_lh);
 })
+
+
+test_that("Labels can be merged into an annotation", {
+    label1 = c(46666, 46777);
+    label2 = c(99888, 99889);
+    label_vertices = list("region1"=label1, "region2"=label2);
+    colortable_df = data.frame("struct_index"=seq(0, 2), "struct_name"=c("unknown", "region1", "region2"), "r"=c(255L, 255L, 0L), "g"=c(255L, 0L, 255L), "b"=c(255L, 0L, 0L), "a"=c(0L, 0L, 0L));
+    annot = label.to.annot(label_vertices, colortable_df, 100000);
+
+    expect_equal(length(annot$vertices), 100000);
+    expect_equal(length(annot$label_codes), 100000);
+    expect_equal(length(annot$label_names), 100000);
+    expect_equal(length(annot$hex_colors_rgb), 100000);
+
+    expect_equal(nrow(annot$colortable_df), 3);
+    expect_equal(nrow(annot$colortable$table), 3);
+})

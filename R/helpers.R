@@ -50,24 +50,35 @@ clip.data <- function(data, lower=0.05, upper=0.95){
 #'
 #' @param source_vertices Vector of source vertex indices.
 #'
-#' @param k positive integer, how often to repeat the procedure and grow the neighborhood, using the output `vertices` as the `source_vertices` for the next iteration.
+#' @param k positive integer, how often to repeat the procedure and grow the neighborhood, using the output `vertices` as the `source_vertices` for the next iteration. Warning: settings this to high values will be very slow for large meshes.
+#'
+#' @param restrict_to_vertices integer vector of vertex indices. If given, the neighborhood growth will be limited to the given vertex indices. Defaults to NULL, which means the neighborhood is not restricted.
 #'
 #' @return the neighborhood as a list with two entries: "faces": integer vector, the face indices of all faces the source_vertices are a part of. "vertices": integer vector, the unique vertex indices of all vertices of the faces in the 'faces' property. These vertex indices include the indices of the source_vertices themselves.
 #'
 #' @family surface mesh functions
 #'
 #' @export
-mesh.vertex.neighbors <- function(surface, source_vertices, k=1L) {
+mesh.vertex.neighbors <- function(surface, source_vertices, k=1L, restrict_to_vertices=NULL) {
     if(k < 1L) {
-        stop("Parameter k must be a positive integer.");
+      stop("Parameter k must be a positive integer.");
     }
     vertex_indices = source_vertices;
+    if(is.null(restrict_to_vertices)) {
+      max_neighborhood_size = nrow(surface$vertices);
+    } else {
+      max_neighborhood_size = length(restrict_to_vertices);
+    }
     for(iter_idx in seq_len(k)) {
+      if(is.null(restrict_to_vertices)) {
         face_indices = which(apply(surface$faces, 1, function(face_vertidx) any(face_vertidx %in% vertex_indices)));
-        vertex_indices = unique(as.vector(surface$faces[face_indices, ]));
-        if(length(vertex_indices) == nrow(surface$vertices)) {
-            break; # Neighborhood is already covering the whole mesh.
-        }
+      } else {
+        face_indices = which(apply(surface$faces, 1, function(face_vertidx) any(face_vertidx %in% vertex_indices) && all(face_vertidx %in% restrict_to_vertices)));
+      }
+      vertex_indices = unique(as.vector(surface$faces[face_indices, ]));
+      if(length(vertex_indices) == max_neighborhood_size) {
+          break; # Neighborhood is already covering the whole mesh / allowed area.
+      }
     }
     return(list("vertices"=vertex_indices, "faces"=face_indices))
 }
@@ -128,13 +139,15 @@ vis.path.along.verts <- function(surface_vertices, path_vertex_indices) {
 #'
 #' @param inner_only logical, whether only faces consisting only of label_vertices should be considered to be label faces. If FALSE, faces containing at least one label vertex will be used. Defaults to TRUE. Leave this alone if in doubt, especially if you want to draw several label borders which are directly adjacent on the surface.
 #'
-#' @return the vertex indices which form the border of the label
+#' @param expand_inwards integer, border thickness extension. If given, once the border has been computed, it is extended by the given graph distance. It is guaranteed that the border only extends inwards, i.e., it will never extend to vertices which are not part of the label.
+#'
+#' @return the border as a list with the following entries: `vertices`: integer vector, the vertex indices of the border. `edges`: integer matrix of size (n, 2) for n edges. Each row defines an edge by its start and target vertex. `faces`: integer vector, the face indices of the border.
 #'
 #' @family surface mesh functions
 #'
 #' @export
 #' @importFrom data.table as.data.table .N
-label.border <- function(surface_mesh, label_vertices, inner_only=TRUE) {
+label.border <- function(surface_mesh, label_vertices, inner_only=TRUE, expand_inwards=0L) {
     if(inner_only) {
       label_faces = mesh.vertex.included.faces(surface_mesh, label_vertices);
     } else {
@@ -145,15 +158,28 @@ label.border <- function(surface_mesh, label_vertices, inner_only=TRUE) {
     #cat(sprintf("Found %d label faces and %d label edges based on the %d label_vertices.\n", length(label_faces), nrow(label_edges), length(label_vertices)))
 
     label_edges_sorted = t(apply(label_edges, 1, sort)) %>%  as.data.frame();
+    #print(head(label_edges_sorted));
     edge_dt = data.table::as.data.table(label_edges_sorted);
     edgecount_dt = edge_dt[, .N, by = names(edge_dt)]; # add column 'N' which contains the counts (i.e., how often each edge occurs over all faces).
     border_edges = edgecount_dt[edgecount_dt$N==1][,1:2]; # Border edges occur only once, as the other face they touch is not part of the label.
 
     #cat(sprintf("Counted %d unique edges, out of those there were %d border edges which occured only once.\n", nrow(edgecount_dt), nrow(border_edges)));
     border_vertices = unique(as.vector(t(border_edges)));
+
+    if(expand_inwards > 0L) {
+      num_before_expansion = length(border_vertices);
+      border_vertices = mesh.vertex.neighbors(surface_mesh, border_vertices, k=expand_inwards, restrict_to_vertices=label_vertices)$vertices;
+      #cat(sprintf("Expanded border by %d, this increased the border vertex count from %d to %d.\n", expand_inwards, num_before_expansion, length(border_vertices)));
+    }
+
     # Now retrieve the faces from the neighborhood that include any border vertex.
     border_faces = mesh.vertex.included.faces(surface_mesh, border_vertices);
-    #cat(sprintf("Based on the %d border edges, identified %d border vertices and %d border faces.\n", nrow(border_edges), length(border_vertices), length(border_faces)))
+
+    if(expand_inwards > 0L) {
+      # We still need to recompute the border edges based on the updated vertices (and derived faces).
+      border_edges = face.edges(surface_mesh, border_faces);
+    }
+
     return(list("vertices"=border_vertices, "edges"=border_edges, "faces"=border_faces));
 }
 

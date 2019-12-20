@@ -4,14 +4,17 @@
 \alias{mesh.vertex.neighbors}
 \title{Compute neighborhood of a vertex}
 \usage{
-mesh.vertex.neighbors(surface, source_vertices, k = 1L)
+mesh.vertex.neighbors(surface, source_vertices, k = 1L,
+  restrict_to_vertices = NULL)
 }
 \arguments{
 \item{surface}{a surface as returned by functions like \code{\link[fsbrain]{subject.surface}}.}
 
 \item{source_vertices}{Vector of source vertex indices.}
 
-\item{k}{positive integer, how often to repeat the procedure and grow the neighborhood, using the output `vertices` as the `source_vertices` for the next iteration.}
+\item{k}{positive integer, how often to repeat the procedure and grow the neighborhood, using the output `vertices` as the `source_vertices` for the next iteration. Warning: settings this to high values will be very slow for large meshes.}
+
+\item{restrict_to_vertices}{integer vector of vertex indices. If given, the neighborhood growth will be limited to the given vertex indices. Defaults to NULL, which means the neighborhood is not restricted.}
 }
 \value{
 the neighborhood as a list with two entries: "faces": integer vector, the face indices of all faces the source_vertices are a part of. "vertices": integer vector, the unique vertex indices of all vertices of the faces in the 'faces' property. These vertex indices include the indices of the source_vertices themselves.
@@ -20,11 +23,10 @@ the neighborhood as a list with two entries: "faces": integer vector, the face i
 Given a set of query vertex indices and a mesh *m*, compute all vertices which are adjacent to the query vertices in the mesh. A vertex *u* is *adjacent* to another vertex *v* iff there exists an edge *e = (u, v)* in *m*. While you could call this function repeatedly with the old output as its new input to extend the neighborhood, you should maybe use a proper graph library for this.
 }
 \seealso{
-Other surface mesh functions: 
-\code{\link{face.edges}()},
-\code{\link{label.border}()},
-\code{\link{mesh.vertex.included.faces}()},
-\code{\link{subject.surface}()},
-\code{\link{vis.path.along.verts}()}
+Other surface mesh functions: \code{\link{face.edges}},
+  \code{\link{label.border}},
+  \code{\link{mesh.vertex.included.faces}},
+  \code{\link{subject.surface}},
+  \code{\link{vis.path.along.verts}}
 }
 \concept{surface mesh functions}

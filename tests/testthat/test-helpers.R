@@ -26,5 +26,5 @@ test_that("The neigborhood of a vertex is computed correctly", {
   source_vertices = c(1);
   n = mesh.vertex.neighbors(surface, source_vertices);
   expect_equal(n$faces, c(1,3,5))
-  expect_equal(n$vertices, matrix(c(1,2,6,1,97,2,1,6,97), nrow=3, byrow=TRUE));
+  expect_equal(n$vertices, c(1,2,97,6));
 })

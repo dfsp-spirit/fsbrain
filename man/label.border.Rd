@@ -4,7 +4,8 @@
 \alias{label.border}
 \title{Compute border of a label.}
 \usage{
-label.border(surface_mesh, label_vertices, inner_only = TRUE)
+label.border(surface_mesh, label_vertices, inner_only = TRUE,
+  expand_inwards = 0L)
 }
 \arguments{
 \item{surface_mesh}{surface mesh, as loaded by \code{\link[fsbrain]{subject.surface}}}
@@ -12,19 +13,20 @@ label.border(surface_mesh, label_vertices, inner_only = TRUE)
 \item{label_vertices}{integer vector, the vertex indices. This function only makes sense if they form a patch on the surface, but that is not checked.}
 
 \item{inner_only}{logical, whether only faces consisting only of label_vertices should be considered to be label faces. If FALSE, faces containing at least one label vertex will be used. Defaults to TRUE. Leave this alone if in doubt, especially if you want to draw several label borders which are directly adjacent on the surface.}
+
+\item{expand_inwards}{integer, border thickness extension. If given, once the border has been computed, it is extended by the given graph distance. It is guaranteed that the border only extends inwards, i.e., it will never extend to vertices which are not part of the label.}
 }
 \value{
-the vertex indices which form the border of the label
+the border as a list with the following entries: `vertices`: integer vector, the vertex indices of the border. `edges`: integer matrix of size (n, 2) for n edges. Each row defines an edge by its start and target vertex. `faces`: integer vector, the face indices of the border.
 }
 \description{
 Compute border of a label.
 }
 \seealso{
-Other surface mesh functions: 
-\code{\link{face.edges}()},
-\code{\link{mesh.vertex.included.faces}()},
-\code{\link{mesh.vertex.neighbors}()},
-\code{\link{subject.surface}()},
-\code{\link{vis.path.along.verts}()}
+Other surface mesh functions: \code{\link{face.edges}},
+  \code{\link{mesh.vertex.included.faces}},
+  \code{\link{mesh.vertex.neighbors}},
+  \code{\link{subject.surface}},
+  \code{\link{vis.path.along.verts}}
 }
 \concept{surface mesh functions}

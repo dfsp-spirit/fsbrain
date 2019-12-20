@@ -15,11 +15,10 @@ vis.path.along.verts(surface_vertices, path_vertex_indices)
 To get a nice path along the surface, pass the vertex indices along a geodesic path.
 }
 \seealso{
-Other surface mesh functions: 
-\code{\link{face.edges}()},
-\code{\link{label.border}()},
-\code{\link{mesh.vertex.included.faces}()},
-\code{\link{mesh.vertex.neighbors}()},
-\code{\link{subject.surface}()}
+Other surface mesh functions: \code{\link{face.edges}},
+  \code{\link{label.border}},
+  \code{\link{mesh.vertex.included.faces}},
+  \code{\link{mesh.vertex.neighbors}},
+  \code{\link{subject.surface}}
 }
 \concept{surface mesh functions}
