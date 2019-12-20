@@ -111,7 +111,7 @@ group.label.from.annot <- function(subjects_dir, subjects_list, hemi, atlas, reg
 #'
 #' @param label_vertices_by_region named list of integer vectors, the keys are strings which define region names, and the values are integer vectors: the vertex indices of the region.
 #'
-#' @param colortable_df dataframe, a colortable. It must contain the columns 'struct_name', 'r', 'g', 'b', and 'a'. All other columns will be derived if missing. The entries in 'struct_name' must match keys from the 'label_vertices_by_region' parameter. There must be one more row in here than there are labels. This row identifies the 'unknown' region (see also parameter 'index_of_unknown_region').
+#' @param colortable_df NULL or dataframe, a colortable. It must contain the columns 'struct_name', 'r', 'g', 'b', and 'a'. All other columns will be derived if missing. The entries in 'struct_name' must match keys from the 'label_vertices_by_region' parameter. There must be one more row in here than there are labels. This row identifies the 'unknown' region (see also parameter 'index_of_unknown_region'). If NULL, a colortable will be auto-generated.
 #'
 #' @param num_vertices_in_surface integer, total number of vertices in the surface mesh
 #'
@@ -129,13 +129,26 @@ group.label.from.annot <- function(subjects_dir, subjects_list, hemi, atlas, reg
 #'   colortable_df = data.frame("struct_index"=seq(0, 2),
 #'    "struct_name"=c("unknown", "region1", "region2"),
 #'    "r"=c(255L, 255L, 0L), "g"=c(255L, 0L, 255L), "b"=c(255L, 0L, 0L), "a"=c(0L, 0L, 0L));
-#'   annot = label.to.annot(label_vertices, colortable_df, 100000);
+#'   annot = label.to.annot(label_vertices, 100000, colortable_df);
 #'
-#' @importFrom grDevices rgb
+#' @importFrom grDevices rgb col2rgb
+#' @importFrom squash rainbow2
 #' @export
-label.to.annot <- function(label_vertices_by_region, colortable_df, num_vertices_in_surface, index_of_unknown_region=1L) {
-    if(length(label_vertices_by_region) != nrow(colortable_df) - 1L) {
-        stop(sprintf("Number of regions in 'label_vertices_by_region' (%d) must match number of rows in colortable minus one (is %d).\n", length(label_vertices_by_region), nrow(colortable_df)));
+label.to.annot <- function(label_vertices_by_region, num_vertices_in_surface, colortable_df=NULL, index_of_unknown_region=1L) {
+    if(is.null(colortable_df)) {
+        # Automatically generate a colortable_df
+        num_regions_including_unknown = length(label_vertices_by_region) + 1;
+        rgb255colors = grDevices::col2rgb(squash::rainbow2(num_regions_including_unknown), alpha = TRUE);
+        r = rgb255colors[1,];
+        g = rgb255colors[2,];
+        b = rgb255colors[3,];
+        a = rgb255colors[4,];
+        colortable_df = data.frame("struct_index"=seq(0, num_regions_including_unknown-1), "struct_name"=c("unknown", names(label_vertices_by_region)), "r"=r, "g"=g, "b"=b, "a"=a);
+
+    } else {
+        if(length(label_vertices_by_region) != nrow(colortable_df) - 1L) {
+            stop(sprintf("Number of regions in 'label_vertices_by_region' (%d) must match number of rows in colortable minus one (is %d).\n", length(label_vertices_by_region), nrow(colortable_df)));
+        }
     }
 
     num_vertices_in_surface = as.integer(num_vertices_in_surface);

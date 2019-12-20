@@ -59,7 +59,7 @@ test_that("Labels can be merged into an annotation", {
     label2 = c(99888, 99889);
     label_vertices = list("region1"=label1, "region2"=label2);
     colortable_df = data.frame("struct_index"=seq(0, 2), "struct_name"=c("unknown", "region1", "region2"), "r"=c(255L, 255L, 0L), "g"=c(255L, 0L, 255L), "b"=c(255L, 0L, 0L), "a"=c(0L, 0L, 0L));
-    annot = label.to.annot(label_vertices, colortable_df, 100000);
+    annot = label.to.annot(label_vertices, 100000, colortable_df);
 
     expect_equal(length(annot$vertices), 100000);
     expect_equal(length(annot$label_codes), 100000);

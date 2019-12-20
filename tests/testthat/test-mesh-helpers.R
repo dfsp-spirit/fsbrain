@@ -46,4 +46,10 @@ test_that("Label border can be computed, thickened and visualized", {
     l3_border_thick = label.border(mesh, l3$vertices, expand_inwards=2L);
 
     vis.labeldata.on.subject(subjects_dir, subject_id, c(l1$vertices, l2_border$vertices, l3_border_thick$vertices), NULL, surface = "inflated");
+
+    # Another way to visualize this would be by constructing a mask from the several labels. Or by merging them into an annotation:
+    label_vertices_by_region = list("region1"=l1$vertices, "region2"=l2_border$vertices, "region3"=l3_border_thick$vertices);
+    annot = label.to.annot(label_vertices_by_region, nrow(mesh$vertices));
+    vis.subject.annot(subjects_dir, subject_id, annot, hemi, surface = "inflated");
 })
+
