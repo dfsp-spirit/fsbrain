@@ -65,6 +65,9 @@ mesh.vertex.neighbors <- function(surface, source_vertices, k=1L) {
     for(iter_idx in seq_len(k)) {
         face_indices = which(apply(surface$faces, 1, function(face_vertidx) any(face_vertidx %in% vertex_indices)));
         vertex_indices = unique(as.vector(surface$faces[face_indices, ]));
+        if(length(vertex_indices) == nrow(surface$vertices)) {
+            break; # Neighborhood is already covering the whole mesh.
+        }
     }
     return(list("vertices"=vertex_indices, "faces"=face_indices))
 }
