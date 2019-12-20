@@ -4,15 +4,15 @@
 \alias{label.to.annot}
 \title{Merge several labels into an annotation}
 \usage{
-label.to.annot(label_vertices_by_region, colortable_df,
-  num_vertices_in_surface, index_of_unknown_region = 1L)
+label.to.annot(label_vertices_by_region, num_vertices_in_surface,
+  colortable_df = NULL, index_of_unknown_region = 1L)
 }
 \arguments{
 \item{label_vertices_by_region}{named list of integer vectors, the keys are strings which define region names, and the values are integer vectors: the vertex indices of the region.}
 
-\item{colortable_df}{dataframe, a colortable. It must contain the columns 'struct_name', 'r', 'g', 'b', and 'a'. All other columns will be derived if missing. The entries in 'struct_name' must match keys from the 'label_vertices_by_region' parameter. There must be one more row in here than there are labels. This row identifies the 'unknown' region (see also parameter 'index_of_unknown_region').}
-
 \item{num_vertices_in_surface}{integer, total number of vertices in the surface mesh}
+
+\item{colortable_df}{NULL or dataframe, a colortable. It must contain the columns 'struct_name', 'r', 'g', 'b', and 'a'. All other columns will be derived if missing. The entries in 'struct_name' must match keys from the 'label_vertices_by_region' parameter. There must be one more row in here than there are labels. This row identifies the 'unknown' region (see also parameter 'index_of_unknown_region'). If NULL, a colortable will be auto-generated.}
 
 \item{index_of_unknown_region}{positive integer, the index of the row in 'colortable_df' that defines the 'unknown' or 'background' region to which all vertices will be assigned which are *not* part of any of the given labels.}
 }
@@ -30,7 +30,7 @@ Merge several labels and a colortable into an annotation.
   colortable_df = data.frame("struct_index"=seq(0, 2),
    "struct_name"=c("unknown", "region1", "region2"),
    "r"=c(255L, 255L, 0L), "g"=c(255L, 0L, 255L), "b"=c(255L, 0L, 0L), "a"=c(0L, 0L, 0L));
-  annot = label.to.annot(label_vertices, colortable_df, 100000);
+  annot = label.to.annot(label_vertices, 100000, colortable_df);
 
 }
 \seealso{

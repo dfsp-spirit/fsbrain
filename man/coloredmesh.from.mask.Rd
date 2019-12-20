@@ -19,12 +19,12 @@ coloredmesh.from.mask(subjects_dir, subject_id, mask, hemi,
 
 \item{surface}{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 
-\item{colormap}{a colormap. See the squash package for some colormaps. Defaults to [squash::rainbow2].}
+\item{colormap}{a colormap. See the squash package for some colormaps. Defaults to \code{\link[squash]{rainbow2}}.}
 
-\item{surface_data}{optional surface object, as returned by [fsbrain::subject.surface]. If given, used instead of loading the surface data from disk (which users of this function may already have done). Defaults to NULL.}
+\item{surface_data}{optional surface object, as returned by \code{\link[fsbrain]{subject.surface}}. If given, used instead of loading the surface data from disk (which users of this function may already have done). Defaults to NULL.}
 }
 \value{
-coloredmesh. A named list with entries: "mesh" the [rgl::tmesh3d] mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
+coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
 }
 \description{
 Create a coloredmesh from a mask.

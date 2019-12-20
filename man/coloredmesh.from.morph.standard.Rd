@@ -10,25 +10,25 @@ coloredmesh.from.morph.standard(subjects_dir, subject_id, measure, hemi,
   cortex_only = FALSE)
 }
 \arguments{
-\item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
+\item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
 
-\item{subject_id, }{string. The subject identifier.}
+\item{subject_id}{string. The subject identifier.}
 
-\item{measure, }{string. The morphometry data to use. E.g., 'area' or 'thickness.'}
+\item{measure}{string. The morphometry data to use. E.g., 'area' or 'thickness.'}
 
-\item{hemi, }{string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.}
+\item{hemi}{string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.}
 
-\item{fwhm, }{string, smoothing setting. The smoothing part of the filename, typically something like '0', '5', '10', ...,  or '25'.}
+\item{fwhm}{string, smoothing setting. The smoothing part of the filename, typically something like '0', '5', '10', ...,  or '25'.}
 
-\item{surface, }{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
+\item{surface}{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 
 \item{template_subject}{The template subject used. This will be used as part of the filename, and its surfaces are loaded for data visualization. Defaults to 'fsaverage'.}
 
 \item{template_subjects_dir}{The template subjects dir. If NULL, the value of the parameter 'subjects_dir' is used. Defaults to NULL. If you have FreeSurfer installed and configured, and are using the standard fsaverage subject, try passing the result of calling 'file.path(Sys.getenv('FREESURFER_HOME'), 'subjects')'.}
 
-\item{colormap, }{a colormap function. See the squash package for some colormaps. Defaults to [squash::jet].}
+\item{colormap}{a colormap function. See the squash package for some colormaps. Defaults to \code{\link[squash]{jet}}.}
 
-\item{clip, }{numeric vector of length 2 or NULL. If given, the 2 values are interpreted as lower and upper percentiles, and the morph data is clipped at the given lower and upper percentile (see [fsbrain::clip.data]). Defaults to NULL (no data clipping).}
+\item{clip}{numeric vector of length 2 or NULL. If given, the 2 values are interpreted as lower and upper percentiles, and the morph data is clipped at the given lower and upper percentile (see [fsbrain::clip.data]). Defaults to NULL (no data clipping).}
 
 \item{cortex_only}{logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the template subject. Defaults to FALSE.}
 }
