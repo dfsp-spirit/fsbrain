@@ -96,7 +96,8 @@ mesh.vertex.neighbors <- function(surface, source_vertices, k=1L, restrict_to_ve
 #'
 #' @keywords internal
 mesh.vertex.included.faces <- function(surface_mesh, source_vertices) {
-  return(which(apply(surface_mesh$faces, 1, function(face_vertidx) all(face_vertidx %in% source_vertices))));
+  #return(which(apply(surface_mesh$faces, 1, function(face_vertidx) all(face_vertidx %in% source_vertices))));
+  return(which((mesh$faces[,1] %in% bankssts & mesh$faces[,2] %in% bankssts & mesh$faces[,3] %in% bankssts)));
 }
 
 
