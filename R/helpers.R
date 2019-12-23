@@ -174,6 +174,11 @@ vis.path.along.verts <- function(surface_vertices, path_vertex_indices) {
 #' @export
 #' @importFrom data.table as.data.table .N
 label.border <- function(surface_mesh, label_vertices, inner_only=TRUE, expand_inwards=0L) {
+
+    if(length(label_vertices) == 0L) {
+        return(list("vertices"=c(), "edges"=c(), "faces"=c()));
+    }
+
     if(inner_only) {
       label_faces = mesh.vertex.included.faces(surface_mesh, label_vertices);
     } else {
@@ -182,8 +187,12 @@ label.border <- function(surface_mesh, label_vertices, inner_only=TRUE, expand_i
     label_edges = face.edges(surface_mesh, label_faces);
 
     #cat(sprintf("Found %d label faces and %d label edges based on the %d label_vertices.\n", length(label_faces), nrow(label_edges), length(label_vertices)))
+    if(nrow(label_edges) <= 0L) {
+        # return early in this case, because otherwise the line that computes border_edges below will fail (because the $N==1 part will return no rows)
+        return(list("vertices"=c(), "edges"=c(), "faces"=c()));
+    }
 
-    label_edges_sorted = t(apply(label_edges, 1, sort)) %>%  as.data.frame();
+    label_edges_sorted = t(apply(label_edges, 1, sort)) %>%  as.data.frame();    # Sort start and target vertex within edge to count edges (u,v) and (v,u) as 2 occurrences of same edge later.
     #print(head(label_edges_sorted));
     edge_dt = data.table::as.data.table(label_edges_sorted);
     edgecount_dt = edge_dt[, .N, by = names(edge_dt)]; # add column 'N' which contains the counts (i.e., how often each edge occurs over all faces).
