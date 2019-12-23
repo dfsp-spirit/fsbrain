@@ -53,3 +53,22 @@ test_that("Label border can be computed, thickened and visualized", {
     vis.subject.annot(subjects_dir, subject_id, annot, hemi, surface = "inflated");
 })
 
+
+test_that("The borders of all annotation regions can be computed", {
+    skip("This test has to be run manually and interactively.");
+
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+    skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
+
+    subject_id = 'subject1';
+    surface = 'white';
+    hemi = 'lh';
+
+    # Load surface mesh
+    annot = subject.annot(subjects_dir, subject_id, hemi, "aparc");
+    mesh = subject.surface(subjects_dir, subject_id, surface, hemi);
+    col = annot.outline(annot, mesh);
+})
+
+

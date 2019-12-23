@@ -117,9 +117,10 @@ annot.outline <- function(annotdata, surface_mesh, background="white") {
     col = rep(background, length(annotdata$vertices));
     for(region_idx in seq_len(annotdata$colortable$num_entries)) {
         region_name = annotdata$colortable$struct_names[[region_idx]];
-        label_vertices = label.from.annotdata(annotdata, region_name, invert = TRUE, error_on_invalid_region = FALSE);
+        cat(sprintf("Computing outline for region %d of %d: '%s'\n", region_idx, annotdata$colortable$num_entries, region_name));
+        label_vertices = label.from.annotdata(annotdata, region_name, error_on_invalid_region = FALSE);
         label_border = label.border(surface_mesh, label_vertices);
-        col[label_border$vertices] = annot$colortable_df$hex_color_string_rgba[[region_idx]];
+        col[label_border$vertices] = as.character(annot$colortable_df$hex_color_string_rgba[[region_idx]]);
     }
     return(col);
 }
