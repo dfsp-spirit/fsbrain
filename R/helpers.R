@@ -71,9 +71,11 @@ mesh.vertex.neighbors <- function(surface, source_vertices, k=1L, restrict_to_ve
     }
     for(iter_idx in seq_len(k)) {
       if(is.null(restrict_to_vertices)) {
-        face_indices = which(apply(surface$faces, 1, function(face_vertidx) any(face_vertidx %in% vertex_indices)));
+        #face_indices = which(apply(surface$faces, 1, function(face_vertidx) any(face_vertidx %in% vertex_indices)));
+        face_indices = which(surface$faces[,1] %in% vertex_indices | surface$faces[,2] %in% vertex_indices | surface$faces[,3] %in% vertex_indices);
       } else {
-        face_indices = which(apply(surface$faces, 1, function(face_vertidx) any(face_vertidx %in% vertex_indices) && all(face_vertidx %in% restrict_to_vertices)));
+        #face_indices = which(apply(surface$faces, 1, function(face_vertidx) any(face_vertidx %in% vertex_indices) && all(face_vertidx %in% restrict_to_vertices)));
+        face_indices = which((surface$faces[,1] %in% restrict_to_vertices & surface$faces[,2] %in% restrict_to_vertices & surface$faces[,3] %in% restrict_to_vertices) & (surface$faces[,1] %in% vertex_indices | surface$faces[,2] %in% vertex_indices | surface$faces[,3] %in% vertex_indices));
       }
       vertex_indices = unique(as.vector(surface$faces[face_indices, ]));
       if(length(vertex_indices) == max_neighborhood_size) {
@@ -97,7 +99,7 @@ mesh.vertex.neighbors <- function(surface, source_vertices, k=1L, restrict_to_ve
 #' @keywords internal
 mesh.vertex.included.faces <- function(surface_mesh, source_vertices) {
   #return(which(apply(surface_mesh$faces, 1, function(face_vertidx) all(face_vertidx %in% source_vertices))));
-  return(which((mesh$faces[,1] %in% bankssts & mesh$faces[,2] %in% bankssts & mesh$faces[,3] %in% bankssts)));
+  return(which(mesh$faces[,1] %in% source_vertices & mesh$faces[,2] %in% source_vertices & mesh$faces[,3] %in% source_vertices));
 }
 
 
@@ -191,7 +193,7 @@ label.border <- function(surface_mesh, label_vertices, inner_only=TRUE, expand_i
     label_edges = face.edges(surface_mesh, label_faces);
 
     #cat(sprintf("Found %d label faces and %d label edges based on the %d label_vertices.\n", length(label_faces), nrow(label_edges), length(label_vertices)))
-    if(nrow(label_edges) <= 0L) {
+    if(nrow(label_edges) == 0L) {
         # return early in this case, because otherwise the line that computes border_edges below will fail (because the $N==1 part will return no rows)
         return(list("vertices"=c(), "edges"=c(), "faces"=c()));
     }

@@ -55,20 +55,20 @@ test_that("Label border can be computed, thickened and visualized", {
 
 
 test_that("The borders of all annotation regions can be computed", {
-    skip("This test has to be run manually and interactively.");
+    skip("This test has to be run manually and interactively. It takes some time.");
 
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
 
     subject_id = 'subject1';
-    surface = 'white';
+    surface = 'inflated';
     hemi = 'lh';
 
     # Load surface mesh
     annot = subject.annot(subjects_dir, subject_id, hemi, "aparc");
     mesh = subject.surface(subjects_dir, subject_id, surface, hemi);
-    vertex_colors = annot.outline(annot, mesh);
+    vertex_colors = annot.outline(annot, mesh);  # What we came for: compute outlines of all annot regions
 
     cm = coloredmesh.custom(mesh, vertex_colors, hemi);
     vislayout.from.coloredmeshes(list("lh"=cm), view_angles = c('sd_lateral_lh'));
