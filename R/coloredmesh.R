@@ -143,6 +143,29 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
 }
 
 
+#' @title Create a coloredmesh from a mesh and custom vertex colors.
+#'
+#' @description Allows you to manually assign arbitrary colors to all mesh vertices.
+#'
+#' @param surface_data a surface mesh
+#'
+#' @param vertex_colors vector of n colors, where *n* is the number of vertices in the mesh
+#'
+#' @param hemi character string, one of 'lh' or 'rh'
+#'
+#' @param colormap_used colormap function used, optional. Will be set as metadata. Defaults to NULL.
+#'
+#' @param morph_data the morphometry data used to create the colors, optional. Will be set as metadata. Defaults to NULL.
+#'
+#' @return a coloredmesh
+#'
+#' @export
+coloredmesh.custom <- function(surface_data, vertex_colors, hemi, colormap_used=NULL, morph_data=NULL) {
+    mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
+    return(list("mesh"=mesh, "col"=vertex_colors, "morph_data_was_all_na"=is.null(morph_data), "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap_used));
+}
+
+
 #' @title Create a coloredmesh from standard space morphometry data.
 #'
 #' @param subjects_dir string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.

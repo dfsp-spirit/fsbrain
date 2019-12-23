@@ -68,7 +68,10 @@ test_that("The borders of all annotation regions can be computed", {
     # Load surface mesh
     annot = subject.annot(subjects_dir, subject_id, hemi, "aparc");
     mesh = subject.surface(subjects_dir, subject_id, surface, hemi);
-    col = annot.outline(annot, mesh);
+    vertex_colors = annot.outline(annot, mesh);
+
+    cm = coloredmesh.custom(mesh, vertex_colors, hemi);
+    vislayout.from.coloredmeshes(list("lh"=cm), view_angles = c('sd_lateral_lh'));
 })
 
 
