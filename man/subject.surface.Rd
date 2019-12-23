@@ -16,7 +16,7 @@ subject.surface(subjects_dir, subject_id, surface, hemi)
 \item{hemi}{string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the surface file to be loaded.}
 }
 \value{
-the surface, as returned by freesurferformats::read.fs.surface(). A named list containing entries 'vertices' and 'faces'.
+the surface, as returned by \code{\link[freesurferformats]{read.fs.surface}}. A named list containing entries 'vertices' and 'faces'.
 }
 \description{
 Load a brain surface for a subject.
@@ -30,10 +30,11 @@ Load a brain surface for a subject.
 
 }
 \seealso{
-Other surface mesh functions: \code{\link{face.edges}},
-  \code{\link{label.border}},
-  \code{\link{mesh.vertex.included.faces}},
-  \code{\link{mesh.vertex.neighbors}},
-  \code{\link{vis.path.along.verts}}
+Other surface mesh functions: 
+\code{\link{face.edges}()},
+\code{\link{label.border}()},
+\code{\link{mesh.vertex.included.faces}()},
+\code{\link{mesh.vertex.neighbors}()},
+\code{\link{vis.path.along.verts}()}
 }
 \concept{surface mesh functions}

@@ -114,7 +114,7 @@ apply.label.to.morphdata <- function(morphdata, subjects_dir, subject_id, hemi, 
 #'
 #' @param morphdata numerical vector, the morphometry data for one hemisphere
 #'
-#' @param labeldata integer vector. A label as returned by [subject.label()].
+#' @param labeldata integer vector. A label as returned by \code{\link[fsbrain]{subject.label}}.
 #'
 #' @param masked_data_value numerical, the value to set for all morphometry data values of vertices which are *not* part of the label. Defaults to NA.
 #'
@@ -397,7 +397,7 @@ subject.label <- function(subjects_dir, subject_id, label, hemi, return_one_base
 #'
 #' @description Create a binary mask for the data of a single hemisphere from one or more labels. A label contains the vertex indices which are part of it, but often having a mask in more convenient.
 #'
-#' @param labels list of labels. A label is just a vector of vertex indices. It can be created manually, but is typically loaded from a label file using [fsbrain::subject.label].
+#' @param labels list of labels. A label is just a vector of vertex indices. It can be created manually, but is typically loaded from a label file using \code{\link[fsbrain]{subject.label}}.
 #'
 #' @param num_vertices_in_hemi integer. The number of vertices of the surface for which the mask is created. This must be for a single hemisphere.
 #'
@@ -465,7 +465,7 @@ mask.from.labeldata.for.hemi <- function(labels, num_vertices_in_hemi, invert_la
 
 #' @title Create labeldata from a mask.
 #'
-#' @description Create labeldata from a mask. This function is trivial and only calls [base::which] after performing basic sanity checks.
+#' @description Create labeldata from a mask. This function is trivial and only calls \code{\link[base]{which}} after performing basic sanity checks.
 #'
 #' @param mask a logical vector
 #'
@@ -496,7 +496,7 @@ labeldata.from.mask <- function(mask, invert=FALSE) {
 #'
 #' @param atlas string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.
 #'
-#' @return the annotation, as returned by [freesurferformats::read.fs.annot()]. It is a named list, enties are: "vertices" vector of n vertex indices, starting with 0. "label_codes": vector of n integers, each entry is a color code, i.e., a value from the 5th column in the table structure included in the "colortable" entry (see below). "label_names": the n brain structure names for the vertices, already retrieved from the colortable using the code. "hex_colors_rgb": Vector of hex color for each vertex.
+#' @return the annotation, as returned by \code{\link[freesurferformats]{read.fs.annot}}. It is a named list, enties are: "vertices" vector of n vertex indices, starting with 0. "label_codes": vector of n integers, each entry is a color code, i.e., a value from the 5th column in the table structure included in the "colortable" entry (see below). "label_names": the n brain structure names for the vertices, already retrieved from the colortable using the code. "hex_colors_rgb": Vector of hex color for each vertex.
 #'      The "colortable" is another named list with 3 entries: "num_entries": int, number of brain structures. "struct_names": vector of strings, the brain structure names. "table": numeric matrix with num_entries rows and 5 colums. The 5 columns are: 1 = color red channel, 2=color blue channel, 3=color green channel, 4=color alpha channel, 5=unique color code. "colortable_df": The same information as a dataframe. Contains the extra columns "hex_color_string_rgb" and "hex_color_string_rgba" that hold the color as an RGB(A) hex string, like "#rrggbbaa".
 #'
 #' @examples
@@ -547,7 +547,7 @@ subject.annot <- function(subjects_dir, subject_id, hemi, atlas) {
 #'
 #' @param hemi string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the surface file to be loaded.
 #'
-#' @return the surface, as returned by freesurferformats::read.fs.surface(). A named list containing entries 'vertices' and 'faces'.
+#' @return the surface, as returned by \code{\link[freesurferformats]{read.fs.surface}}. A named list containing entries 'vertices' and 'faces'.
 #'
 #' @examples
 #' \donttest{

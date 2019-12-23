@@ -258,12 +258,14 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
 #'
 #' @param colormap a colormap. See the squash package for some colormaps. Defaults to \code{\link[squash]{jet}}. Not relevant for annotations, ignored.
 #'
+#' @param outline logical, whether to draw an outline only instead of filling the regions. Defaults to FALSE. Only makes sense if you did not pass an outline already. The current implementation for outline computation is rather slow, so setting this to TRUE will considerably increase computation time.
+#'
 #' @return coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
 #' @keywords internal
 #' @importFrom squash cmap makecmap jet
 #' @importFrom rgl tmesh3d rgl.open wire3d
-coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surface="white", colormap=squash::jet) {
+coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surface="white", colormap=squash::jet, outline=FALSE) {
 
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
@@ -277,7 +279,11 @@ coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surfac
         annot = atlas;
     }
     mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
-    col = annot$hex_colors_rgb;
+    if(outline) {
+        col = annot.outline(annot, surface_data);
+    } else {
+        col = annot$hex_colors_rgb;
+    }
     return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=NULL, "cmap_fun"=colormap));
 }
 

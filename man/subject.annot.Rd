@@ -16,7 +16,7 @@ subject.annot(subjects_dir, subject_id, hemi, atlas)
 \item{atlas}{string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.}
 }
 \value{
-the annotation, as returned by [freesurferformats::read.fs.annot()]. It is a named list, enties are: "vertices" vector of n vertex indices, starting with 0. "label_codes": vector of n integers, each entry is a color code, i.e., a value from the 5th column in the table structure included in the "colortable" entry (see below). "label_names": the n brain structure names for the vertices, already retrieved from the colortable using the code. "hex_colors_rgb": Vector of hex color for each vertex.
+the annotation, as returned by \code{\link[freesurferformats]{read.fs.annot}}. It is a named list, enties are: "vertices" vector of n vertex indices, starting with 0. "label_codes": vector of n integers, each entry is a color code, i.e., a value from the 5th column in the table structure included in the "colortable" entry (see below). "label_names": the n brain structure names for the vertices, already retrieved from the colortable using the code. "hex_colors_rgb": Vector of hex color for each vertex.
      The "colortable" is another named list with 3 entries: "num_entries": int, number of brain structures. "struct_names": vector of strings, the brain structure names. "table": numeric matrix with num_entries rows and 5 colums. The 5 columns are: 1 = color red channel, 2=color blue channel, 3=color green channel, 4=color alpha channel, 5=unique color code. "colortable_df": The same information as a dataframe. Contains the extra columns "hex_color_string_rgb" and "hex_color_string_rgba" that hold the color as an RGB(A) hex string, like "#rrggbbaa".
 }
 \description{
@@ -31,18 +31,19 @@ Load a brain surface annotation, i.e., a cortical parcellation based on an atlas
 
 }
 \seealso{
-Other atlas functions: \code{\link{get.atlas.region.names}},
-  \code{\link{group.agg.atlas.native}},
-  \code{\link{group.agg.atlas.standard}},
-  \code{\link{group.annot}},
-  \code{\link{group.label.from.annot}},
-  \code{\link{label.from.annotdata}},
-  \code{\link{label.to.annot}},
-  \code{\link{regions.to.ignore}},
-  \code{\link{spread.values.over.annot}},
-  \code{\link{spread.values.over.hemi}},
-  \code{\link{spread.values.over.subject}},
-  \code{\link{subject.atlas.agg}},
-  \code{\link{subject.label.from.annot}}
+Other atlas functions: 
+\code{\link{get.atlas.region.names}()},
+\code{\link{group.agg.atlas.native}()},
+\code{\link{group.agg.atlas.standard}()},
+\code{\link{group.annot}()},
+\code{\link{group.label.from.annot}()},
+\code{\link{label.from.annotdata}()},
+\code{\link{label.to.annot}()},
+\code{\link{regions.to.ignore}()},
+\code{\link{spread.values.over.annot}()},
+\code{\link{spread.values.over.hemi}()},
+\code{\link{spread.values.over.subject}()},
+\code{\link{subject.atlas.agg}()},
+\code{\link{subject.label.from.annot}()}
 }
 \concept{atlas functions}

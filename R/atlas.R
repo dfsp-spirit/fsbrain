@@ -24,7 +24,7 @@ label.from.annotdata <- function(annotdata, region, return_one_based_indices=TRU
 
     if(error_on_invalid_region) {
         if(!(region %in% annotdata$label_names)) {
-            stop(sprintf("Region '%s' is not a valid region for the given annotation (which has %d regions). Set 'error_on_invalid_region' to FALSE to avoid this error.\n", region, length(annotdata$label_names)));
+            stop(sprintf("Region '%s' is not a valid region for the given annotation (which has %d regions). Set 'error_on_invalid_region' to FALSE to avoid this error.\n", region, annotdata$colortable$num_entries));
         }
     }
 

@@ -4,9 +4,17 @@
 \alias{vis.subject.annot}
 \title{Visualize an annotation for a subject.}
 \usage{
-vis.subject.annot(subjects_dir, subject_id, atlas, hemi = "both",
-  surface = "white", views = c("t4"), rgloptions = list(),
-  rglactions = list())
+vis.subject.annot(
+  subjects_dir,
+  subject_id,
+  atlas,
+  hemi = "both",
+  surface = "white",
+  views = c("t4"),
+  rgloptions = list(),
+  rglactions = list(),
+  outline = FALSE
+)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -24,6 +32,8 @@ vis.subject.annot(subjects_dir, subject_id, atlas, hemi = "both",
 \item{rgloptions}{option list passed to \code{\link[rgl]{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))}}
 
 \item{rglactions, }{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.}
+
+\item{outline}{logical, whether to draw an outline only instead of filling the regions. Defaults to FALSE.}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.
@@ -40,17 +50,19 @@ Creates a surface mesh, loads the colors from the annotation, and renders the re
 
 }
 \seealso{
-Other visualization functions: \code{\link{vis.data.on.fsaverage}},
-  \code{\link{vis.data.on.subject}},
-  \code{\link{vis.labeldata.on.subject}},
-  \code{\link{vis.mask.on.subject}},
-  \code{\link{vis.region.values.on.subject}},
-  \code{\link{vis.subject.label}},
-  \code{\link{vis.subject.morph.native}},
-  \code{\link{vis.subject.morph.standard}},
-  \code{\link{vislayout.from.coloredmeshes}}
+Other visualization functions: 
+\code{\link{vis.data.on.fsaverage}()},
+\code{\link{vis.data.on.subject}()},
+\code{\link{vis.labeldata.on.subject}()},
+\code{\link{vis.mask.on.subject}()},
+\code{\link{vis.region.values.on.subject}()},
+\code{\link{vis.subject.label}()},
+\code{\link{vis.subject.morph.native}()},
+\code{\link{vis.subject.morph.standard}()},
+\code{\link{vislayout.from.coloredmeshes}()}
 
-Other region-based visualization functions: \code{\link{vis.region.values.on.subject}}
+Other region-based visualization functions: 
+\code{\link{vis.region.values.on.subject}()}
 }
 \concept{region-based visualization functions}
 \concept{visualization functions}

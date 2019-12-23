@@ -100,6 +100,31 @@ mesh.vertex.included.faces <- function(surface_mesh, source_vertices) {
 }
 
 
+#' @title Compute outline vertex colors from annotation.
+#'
+#' @description For each region in an atlas, compute the outer border and color the respective vertices in the region-specific color from the annot's colortable.
+#'
+#' @param annot an annotation, as returned by functions like \code{\link[fsbrain]{subject.annot}}.
+#'
+#' @param surface_mesh brain surface mesh, as returned by functions like \code{\link[fsbrain]{subject.surface}}.
+#'
+#' @param background color, the background color to assign to the non-border parts of the regions. Defaults to 'white'.
+#'
+#' @return vector of colors, one color for each mesh vertex
+#'
+#' @export
+annot.outline <- function(annotdata, surface_mesh, background="white") {
+    col = rep(background, length(annotdata$vertices));
+    for(region_idx in seq_len(annotdata$colortable$num_entries)) {
+        region_name = annotdata$colortable$struct_names[[region_idx]];
+        label_vertices = label.from.annotdata(annotdata, region_name, invert = TRUE, error_on_invalid_region = FALSE);
+        label_border = label.border(surface_mesh, label_vertices);
+        col[label_border$vertices] = annot$colortable_df$hex_color_string_rgba[[region_idx]];
+    }
+    return(col);
+}
+
+
 #' @title Draw a 3D line from vertex to vertex
 #'
 #' @description To get a nice path along the surface, pass the vertex indices along a geodesic path.

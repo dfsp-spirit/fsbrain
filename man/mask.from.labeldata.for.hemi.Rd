@@ -4,11 +4,15 @@
 \alias{mask.from.labeldata.for.hemi}
 \title{Create a binary mask from labels.}
 \usage{
-mask.from.labeldata.for.hemi(labels, num_vertices_in_hemi,
-  invert_labels = FALSE, existing_mask = NULL)
+mask.from.labeldata.for.hemi(
+  labels,
+  num_vertices_in_hemi,
+  invert_labels = FALSE,
+  existing_mask = NULL
+)
 }
 \arguments{
-\item{labels}{list of labels. A label is just a vector of vertex indices. It can be created manually, but is typically loaded from a label file using [fsbrain::subject.label].}
+\item{labels}{list of labels. A label is just a vector of vertex indices. It can be created manually, but is typically loaded from a label file using \code{\link[fsbrain]{subject.label}}.}
 
 \item{num_vertices_in_hemi}{integer. The number of vertices of the surface for which the mask is created. This must be for a single hemisphere.}
 
@@ -54,12 +58,14 @@ Create a binary mask for the data of a single hemisphere from one or more labels
 
 }
 \seealso{
-Other label data functions: \code{\link{group.label}},
-  \code{\link{labeldata.from.mask}},
-  \code{\link{subject.label}}
+Other label data functions: 
+\code{\link{group.label}()},
+\code{\link{labeldata.from.mask}()},
+\code{\link{subject.label}()}
 
-Other mask functions: \code{\link{coloredmesh.from.mask}},
-  \code{\link{vis.mask.on.subject}}
+Other mask functions: 
+\code{\link{coloredmesh.from.mask}()},
+\code{\link{vis.mask.on.subject}()}
 }
 \concept{label data functions}
 \concept{mask functions}

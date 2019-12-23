@@ -572,6 +572,8 @@ vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage",
 #'
 #' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
 #'
+#' @param outline logical, whether to draw an outline only instead of filling the regions. Defaults to FALSE.
+#'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
 #' @examples
@@ -585,18 +587,18 @@ vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage",
 #' @family region-based visualization functions
 #'
 #' @export
-vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi='both', surface="white", views=c('t4'), rgloptions=list(), rglactions = list()) {
+vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi='both', surface="white", views=c('t4'), rgloptions=list(), rglactions = list(), outline=FALSE) {
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
     }
 
     if(hemi == "both") {
-        lh_cmesh = coloredmesh.from.annot(subjects_dir, subject_id, atlas, 'lh', surface=surface);
-        rh_cmesh = coloredmesh.from.annot(subjects_dir, subject_id, atlas, 'rh', surface=surface);
+        lh_cmesh = coloredmesh.from.annot(subjects_dir, subject_id, atlas, 'lh', surface=surface, outline=outline);
+        rh_cmesh = coloredmesh.from.annot(subjects_dir, subject_id, atlas, 'rh', surface=surface, outline=outline);
         coloredmeshes = list(lh_cmesh, rh_cmesh);
     } else {
-        cmesh = coloredmesh.from.annot(subjects_dir, subject_id, atlas, hemi, surface=surface);
+        cmesh = coloredmesh.from.annot(subjects_dir, subject_id, atlas, hemi, surface=surface, outline=outline);
         coloredmeshes = list(cmesh);
     }
 
