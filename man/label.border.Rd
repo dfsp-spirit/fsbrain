@@ -8,7 +8,8 @@ label.border(
   surface_mesh,
   label_vertices,
   inner_only = TRUE,
-  expand_inwards = 0L
+  expand_inwards = 0L,
+  derive = FALSE
 )
 }
 \arguments{
@@ -19,9 +20,11 @@ label.border(
 \item{inner_only}{logical, whether only faces consisting only of label_vertices should be considered to be label faces. If FALSE, faces containing at least one label vertex will be used. Defaults to TRUE. Leave this alone if in doubt, especially if you want to draw several label borders which are directly adjacent on the surface.}
 
 \item{expand_inwards}{integer, border thickness extension. If given, once the border has been computed, it is extended by the given graph distance. It is guaranteed that the border only extends inwards, i.e., it will never extend to vertices which are not part of the label.}
+
+\item{derive}{logical, whether the returned result should also include the border edges and faces in addition to the border vertices. Takes longer if requested, defaults to FALSE.}
 }
 \value{
-the border as a list with the following entries: `vertices`: integer vector, the vertex indices of the border. `edges`: integer matrix of size (n, 2) for n edges. Each row defines an edge by its start and target vertex. `faces`: integer vector, the face indices of the border.
+the border as a list with the following entries: `vertices`: integer vector, the vertex indices of the border. Iff the parameter `derive` is TRUE, the following two additional fields are included: `edges`: integer matrix of size (n, 2) for n edges. Each row defines an edge by its start and target vertex. `faces`: integer vector, the face indices of the border.
 }
 \description{
 Compute border of a label.

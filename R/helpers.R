@@ -173,13 +173,15 @@ vis.path.along.verts <- function(surface_vertices, path_vertex_indices) {
 #'
 #' @param expand_inwards integer, border thickness extension. If given, once the border has been computed, it is extended by the given graph distance. It is guaranteed that the border only extends inwards, i.e., it will never extend to vertices which are not part of the label.
 #'
-#' @return the border as a list with the following entries: `vertices`: integer vector, the vertex indices of the border. `edges`: integer matrix of size (n, 2) for n edges. Each row defines an edge by its start and target vertex. `faces`: integer vector, the face indices of the border.
+#' @param derive logical, whether the returned result should also include the border edges and faces in addition to the border vertices. Takes longer if requested, defaults to FALSE.
+#'
+#' @return the border as a list with the following entries: `vertices`: integer vector, the vertex indices of the border. Iff the parameter `derive` is TRUE, the following two additional fields are included: `edges`: integer matrix of size (n, 2) for n edges. Each row defines an edge by its start and target vertex. `faces`: integer vector, the face indices of the border.
 #'
 #' @family surface mesh functions
 #'
 #' @export
 #' @importFrom data.table as.data.table .N
-label.border <- function(surface_mesh, label_vertices, inner_only=TRUE, expand_inwards=0L) {
+label.border <- function(surface_mesh, label_vertices, inner_only=TRUE, expand_inwards=0L, derive=FALSE) {
 
     if(length(label_vertices) == 0L) {
         return(list("vertices"=c(), "edges"=c(), "faces"=c()));
@@ -211,6 +213,10 @@ label.border <- function(surface_mesh, label_vertices, inner_only=TRUE, expand_i
       num_before_expansion = length(border_vertices);
       border_vertices = mesh.vertex.neighbors(surface_mesh, border_vertices, k=expand_inwards, restrict_to_vertices=label_vertices)$vertices;
       #cat(sprintf("Expanded border by %d, this increased the border vertex count from %d to %d.\n", expand_inwards, num_before_expansion, length(border_vertices)));
+    }
+
+    if(! derive) {
+        return(list("vertices"=border_vertices));
     }
 
     # Now retrieve the faces from the neighborhood that include any border vertex.
