@@ -114,6 +114,9 @@ mesh.vertex.included.faces <- function(surface_mesh, source_vertices) {
 #'
 #' @export
 annot.outline <- function(annotdata, surface_mesh, background="white") {
+    if(length(annotdata$vertices) != nrow(surface_mesh$vertices)) {
+        stop(sprintf("Annotation is for %d vertices but mesh contains %d, vertex counts must match.\n", length(annotdata$vertices), nrow(surface_mesh$vertices)));
+    }
     col = rep(background, length(annotdata$vertices));
     for(region_idx in seq_len(annotdata$colortable$num_entries)) {
         region_name = annotdata$colortable$struct_names[[region_idx]];
