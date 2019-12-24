@@ -47,7 +47,7 @@ test_that("Label border can be computed, thickened and visualized", {
 
     vis.labeldata.on.subject(subjects_dir, subject_id, c(l1$vertices, l2_border$vertices, l3_border_thick$vertices), NULL, surface = "inflated");
 
-    # Another way to visualize this would be by constructing a mask from the several labels. Or by merging them into an annotation:
+    # Another way to visualize this would be by constructing a mask from several labels. Or by merging them into an annotation:
     label_vertices_by_region = list("region1"=l1$vertices, "region2"=l2_border$vertices, "region3"=l3_border_thick$vertices);
     annot = label.to.annot(label_vertices_by_region, nrow(mesh$vertices));
     vis.subject.annot(subjects_dir, subject_id, annot, hemi, surface = "inflated");
@@ -69,6 +69,17 @@ test_that("The borders of all annotation regions can be computed", {
     annot = subject.annot(subjects_dir, subject_id, hemi, "aparc");
     mesh = subject.surface(subjects_dir, subject_id, surface, hemi);
     vertex_colors = annot.outline(annot, mesh);  # What we came for: compute outlines of all annot regions
+
+
+    # We could show morphometry data (or whatever) in the white inner parts, but that is a bit overkill imo.
+    # It is still demonstrated here:
+    show_background_morph = TRUE;
+    if(show_background_morph) {
+        ct = subject.morph.native(subjects_dir, subject_id, "thickness", hemi);
+        vertex_colors_thickness = adjustcolor(squash::cmap(ct, map = squash::makecmap(ct, colFn = squash::jet)), alpha.f = 0.5);
+        wi = which(vertex_colors=="white");
+        vertex_colors[vertex_colors=="white"] = vertex_colors_thickness[wi];
+    }
 
     cm = coloredmesh.custom(mesh, vertex_colors, hemi);
     vislayout.from.coloredmeshes(list("lh"=cm), view_angles = c('sd_lateral_lh'));
