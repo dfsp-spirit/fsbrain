@@ -99,7 +99,7 @@ mesh.vertex.neighbors <- function(surface, source_vertices, k=1L, restrict_to_ve
 #' @keywords internal
 mesh.vertex.included.faces <- function(surface_mesh, source_vertices) {
   #return(which(apply(surface_mesh$faces, 1, function(face_vertidx) all(face_vertidx %in% source_vertices))));
-  return(which(mesh$faces[,1] %in% source_vertices & mesh$faces[,2] %in% source_vertices & mesh$faces[,3] %in% source_vertices));
+  return(which(surface_mesh$faces[,1] %in% source_vertices & surface_mesh$faces[,2] %in% source_vertices & surface_mesh$faces[,3] %in% source_vertices));
 }
 
 
@@ -113,20 +113,26 @@ mesh.vertex.included.faces <- function(surface_mesh, source_vertices) {
 #'
 #' @param background color, the background color to assign to the non-border parts of the regions. Defaults to 'white'.
 #'
+#' @param silent logical, whether to suppress status messages.
+#'
+#' @param expand_inwards integer, additional thickness of the borders. Increases computation time, defaults to 0L.
+#'
 #' @return vector of colors, one color for each mesh vertex
 #'
 #' @export
-annot.outline <- function(annotdata, surface_mesh, background="white") {
+annot.outline <- function(annotdata, surface_mesh, background="white", silent=FALSE, expand_inwards=0L) {
     if(length(annotdata$vertices) != nrow(surface_mesh$vertices)) {
         stop(sprintf("Annotation is for %d vertices but mesh contains %d, vertex counts must match.\n", length(annotdata$vertices), nrow(surface_mesh$vertices)));
     }
     col = rep(background, length(annotdata$vertices));
     for(region_idx in seq_len(annotdata$colortable$num_entries)) {
         region_name = annotdata$colortable$struct_names[[region_idx]];
-        cat(sprintf("Computing outline for region %d of %d: '%s'\n", region_idx, annotdata$colortable$num_entries, region_name));
+        if(!silent) {
+          message(sprintf("Computing outline for region %d of %d: '%s'\n", region_idx, annotdata$colortable$num_entries, region_name));
+        }
         label_vertices = label.from.annotdata(annotdata, region_name, error_on_invalid_region = FALSE);
-        label_border = label.border(surface_mesh, label_vertices);
-        col[label_border$vertices] = as.character(annot$colortable_df$hex_color_string_rgba[[region_idx]]);
+        label_border = label.border(surface_mesh, label_vertices, expand_inwards=expand_inwards);
+        col[label_border$vertices] = as.character(annotdata$colortable_df$hex_color_string_rgba[[region_idx]]);
     }
     return(col);
 }

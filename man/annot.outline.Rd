@@ -4,12 +4,22 @@
 \alias{annot.outline}
 \title{Compute outline vertex colors from annotation.}
 \usage{
-annot.outline(annotdata, surface_mesh, background = "white")
+annot.outline(
+  annotdata,
+  surface_mesh,
+  background = "white",
+  silent = FALSE,
+  expand_inwards = 0L
+)
 }
 \arguments{
 \item{surface_mesh}{brain surface mesh, as returned by functions like \code{\link[fsbrain]{subject.surface}}.}
 
 \item{background}{color, the background color to assign to the non-border parts of the regions. Defaults to 'white'.}
+
+\item{silent}{logical, whether to suppress status messages.}
+
+\item{expand_inwards}{integer, additional thickness of the borders. Increases computation time, defaults to 0L.}
 
 \item{annot}{an annotation, as returned by functions like \code{\link[fsbrain]{subject.annot}}.}
 }
