@@ -107,7 +107,7 @@ mesh.vertex.included.faces <- function(surface_mesh, source_vertices) {
 #'
 #' @description For each region in an atlas, compute the outer border and color the respective vertices in the region-specific color from the annot's colortable.
 #'
-#' @param annot an annotation, as returned by functions like \code{\link[fsbrain]{subject.annot}}.
+#' @param annotdata an annotation, as returned by functions like \code{\link[fsbrain]{subject.annot}}.
 #'
 #' @param surface_mesh brain surface mesh, as returned by functions like \code{\link[fsbrain]{subject.surface}}.
 #'

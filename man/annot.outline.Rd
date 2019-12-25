@@ -13,6 +13,8 @@ annot.outline(
 )
 }
 \arguments{
+\item{annotdata}{an annotation, as returned by functions like \code{\link[fsbrain]{subject.annot}}.}
+
 \item{surface_mesh}{brain surface mesh, as returned by functions like \code{\link[fsbrain]{subject.surface}}.}
 
 \item{background}{color, the background color to assign to the non-border parts of the regions. Defaults to 'white'.}
@@ -20,8 +22,6 @@ annot.outline(
 \item{silent}{logical, whether to suppress status messages.}
 
 \item{expand_inwards}{integer, additional thickness of the borders. Increases computation time, defaults to 0L.}
-
-\item{annot}{an annotation, as returned by functions like \code{\link[fsbrain]{subject.annot}}.}
 }
 \value{
 vector of colors, one color for each mesh vertex
