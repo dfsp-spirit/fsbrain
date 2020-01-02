@@ -1,11 +1,11 @@
-# Functions for volume-based rendering.
+# Functions for volume loading.
 
 
 #' @title Read a brain volume.
 #'
-#' @description Load na brain volume (like 'mri/brain.mgz') for a subject from disk. Uses knowledge about the FreeSurfer directory structure to load the correct file.
+#' @description Load a brain volume (like `mri/brain.mgz`) for a subject from disk. Uses knowledge about the FreeSurfer directory structure to load the correct file.
 #'
-#' @param subjects_dir character string, the FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
+#' @param subjects_dir character string, the FreeSurfer `SUBJECTS_DIR`, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
 #'
 #' @param subject_id character string, the subject identifier.
 #'
@@ -32,6 +32,16 @@ subject.volume <- function(subjects_dir, subject_id, volume, format='AUTO') {
 }
 
 
+#' @title Find files with the given base name that exist.
+#'
+#' @param filepath character string, path to a file without extension
+#'
+#' @param precedence vector of character strings, the file extensions to check.
+#'
+#' @param error_if_none logical, whether to raise an error if none of the files exist
+#'
+#' @return character string, the path to the first existing file (or NULL if none of them exists).
+#'
 #' @keywords internal
 readable.volume <- function(filepath, precedence=c('.mgh', '.mgz'), error_if_none=TRUE) {
     candidate_files = paste(filepath, precedence, sep='');
