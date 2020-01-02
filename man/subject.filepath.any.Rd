@@ -14,11 +14,11 @@ subject.filepath.any(
 )
 }
 \arguments{
-\item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
+\item{subjects_dir}{character string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
 
-\item{subject_id}{string. The subject identifier}
+\item{subject_id}{character string. The subject identifier.}
 
-\item{relative_path_parts}{vector of strings. THe path to the file, e.g., c("surf", "lh.area").}
+\item{relative_path_parts}{vector of strings. The path to the file, e.g., c("surf", "lh.area").}
 
 \item{hemi}{string, one of 'lh', 'rh', or NULL. Defaults to NULL. If a hemisphere name is given, it is added as a prefix to the last entry in relative_path_parts, separated by a dot.}
 
