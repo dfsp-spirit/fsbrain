@@ -86,8 +86,8 @@ vol.boundary.mask <- function(volume, plane=1L) {
     maximg = apply(volume, axes, max);
     foreground_indices = which(maximg > 0, arr.ind=TRUE);
 
-    width = dim(volume)[axes[1]];
-    height = dim(volume)[axes[2]];
+    height = dim(volume)[axes[1]];
+    width = dim(volume)[axes[2]];
 
     mask = matrix(rep(0L, width*height), nrow=height);
     mask[foreground_indices] = 1L;
@@ -159,7 +159,7 @@ vol.plane.axes <- function(plane_name) {
         return(c(2L, 3L));
     } else if(plane_name == "coronal") {
         return(c(1L, 2L))
-    } else {
+    } else { # axial
         return(c(1L, 3L));
     }
 }
