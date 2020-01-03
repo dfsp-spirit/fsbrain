@@ -30,7 +30,11 @@ subject.volume <- function(subjects_dir, subject_id, volume, format='AUTO', drop
     } else {
         volume_file = paste(volume_filepath_noext, ".", format, sep='');
     }
-    return(freesurferformats::read.fs.mgh(volume_file, drop_empty_dims=drop_empty_dims));
+    if(drop_empty_dims) {
+        return(drop(freesurferformats::read.fs.mgh(volume_file)));
+    } else {
+        return(freesurferformats::read.fs.mgh(volume_file));
+    }
 }
 
 
