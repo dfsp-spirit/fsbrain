@@ -19,6 +19,7 @@
 #'
 # @keywords internal
 #' @importFrom grDevices gray.colors
+#' @importFrom graphics image
 #' @export
 vol.slice <- function(volume, slice_index=NULL, frame=1L, axis=1L, show=FALSE) {
     if(axis < 1 | axis > 3) {
