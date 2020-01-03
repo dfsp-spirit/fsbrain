@@ -13,10 +13,12 @@
 #'
 #' @param format string. One of 'mgh', 'mgz', 'AUTO'. If left at the default value 'AUTO', the function will look for files with extensions 'mgh' and 'mgz' (in that order) and use the first one that exists.
 #'
+#' @param drop_empty_dims logical, whether to drop empty dimensions of the returned data
+#'
 #' @return numerical array, the voxel data.
 #'
 #' @export
-subject.volume <- function(subjects_dir, subject_id, volume, format='AUTO') {
+subject.volume <- function(subjects_dir, subject_id, volume, format='AUTO', drop_empty_dims=TRUE) {
     if(!(format %in% c('AUTO', 'mgh', 'mgz'))) {
         stop(sprintf("The volume format must be one of ('AUTO', 'mgh', 'mgz') but is '%s'.\n", format));
     }
@@ -28,7 +30,7 @@ subject.volume <- function(subjects_dir, subject_id, volume, format='AUTO') {
     } else {
         volume_file = paste(volume_filepath_noext, ".", format, sep='');
     }
-    return(drop(freesurferformats::read.fs.mgh(volume_file)));
+    return(freesurferformats::read.fs.mgh(volume_file, drop_empty_dims=drop_empty_dims));
 }
 
 

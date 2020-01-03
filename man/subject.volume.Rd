@@ -2,10 +2,25 @@
 % Please edit documentation in R/volume.R
 \name{subject.volume}
 \alias{subject.volume}
-\title{Read a volume.}
+\title{Read a brain volume.}
 \usage{
-subject.volume(subjects_dir, subject_id, volume, format = "AUTO")
+subject.volume(subjects_dir, subject_id, volume, format = "AUTO",
+  drop_empty_dims = TRUE)
+}
+\arguments{
+\item{subjects_dir}{character string, the FreeSurfer `SUBJECTS_DIR`, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
+
+\item{subject_id}{character string, the subject identifier.}
+
+\item{volume}{character string, name of the volume file without file extension. Examples: `brain` or `aseg`.}
+
+\item{format}{string. One of 'mgh', 'mgz', 'AUTO'. If left at the default value 'AUTO', the function will look for files with extensions 'mgh' and 'mgz' (in that order) and use the first one that exists.}
+
+\item{drop_empty_dims}{logical, whether to drop empty dimensions of the returned data}
+}
+\value{
+numerical array, the voxel data.
 }
 \description{
-Read a volume.
+Load a brain volume (like `mri/brain.mgz`) for a subject from disk. Uses knowledge about the FreeSurfer directory structure to load the correct file.
 }
