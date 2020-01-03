@@ -44,8 +44,17 @@ test_that("The axes dimensions are correct in the bounding mask result", {
 
     plane = c(2,3);
     bmask = vol.boundary.mask(brain, plane);
-    expect_equal(dim(bmask), plane);
+    expect_equal(dim(bmask), dimensions[plane]);
+
+    plane2 = c(1,3);
+    bmask = vol.boundary.mask(brain, plane2);
+    expect_equal(dim(bmask), dimensions[plane2]);
+
+    plane3 = c(1,2);
+    bmask = vol.boundary.mask(brain, plane3);
+    expect_equal(dim(bmask), dimensions[plane3]);
 })
+
 
 test_that("The axes dimensions are correct in the bounding box result", {
     dimensions = c(5L, 8L, 3L);
