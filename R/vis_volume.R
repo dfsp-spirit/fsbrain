@@ -91,11 +91,12 @@ vol.boundary.mask <- function(volume, plane=1L) {
 
     mask = matrix(rep(0L, width*height), nrow=height);
     mask[foreground_indices] = 1L;
+    #cat(sprintf(" Using axes '%s', dimension of mask is '%s'.\n", paste(axes, collapse=", "), paste(dim(mask), collapse=", ")));
     return(mask);
 }
 
 
-#' @title Compute 3D boundary box of a volume.
+#' @title Compute 3D bounding box of a volume.
 #'
 #' @description Compute the axis-aligned foreground bounding box of a 3D volume, i.e. the inner foreground area that must be retained if you want to remove all background from the corners of the volume. The foreground is determined by thresholding, such that all values greater than 0 are considered foreground. See \code{\link[fsbrain]{vol.boundary.mask}} for details.
 #'
@@ -108,13 +109,15 @@ vol.boundary.box <- function(volume) {
     if(length(dim(volume)) != 3) {
         stop(sprintf("Volume must have exactly 3 dimensions but has %d.\n", length(dim(volume))));
     }
-    min_index_per_axis = rep(-1, 3);
-    max_index_per_axis = rep(-1, 3);
+    min_index_per_axis = rep(-1L, 3);
+    max_index_per_axis = rep(-1L, 3);
     for(axis in c(1L, 2L, 3L)) {
         mmask = vol.boundary.mask(volume, axis);
-        colmax = apply(mmask, 2, max);
+        colmax = apply(mmask, 1, max);
         min_index_per_axis[axis] = Position(function(x) x >= 1L, colmax, right=FALSE);
         max_index_per_axis[axis] = Position(function(x) x >= 1L, colmax, right=TRUE);
+        #cat(sprintf("At axis %d, determined min=%d, max=%d (used columns of the %d rows and %d colums).\n", axis, min_index_per_axis[axis], max_index_per_axis[axis], nrow(mmask), ncol(mmask)));
+        #print(colmax);
     }
     return(list("from"=min_index_per_axis, "to"=max_index_per_axis));
 }
@@ -140,11 +143,11 @@ vol.plane.axes <- function(plane_name) {
         } else if(length(plane_name) == 1L) {
             # Treat it as an axis, and return the plane that is orthogonal to the axis
             if(plane_name == 1L) {
-                return(c(2L, 3L));
-            } else if(plane_name == 2L) {
-                return(c(1L, 3L));
-            } else if(plane_name == 3L) {
                 return(c(1L, 2L));
+            } else if(plane_name == 2L) {
+                return(c(2L, 3L));
+            } else if(plane_name == 3L) {
+                return(c(3L, 1L));
             } else {
                 stop("If plane is an integer (vector), the values must be in range 1..3");
             }
@@ -160,7 +163,7 @@ vol.plane.axes <- function(plane_name) {
     } else if(plane_name == "coronal") {
         return(c(1L, 2L))
     } else { # axial
-        return(c(1L, 3L));
+        return(c(3L, 1L));
     }
 }
 

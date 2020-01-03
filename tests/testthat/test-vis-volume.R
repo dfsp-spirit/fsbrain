@@ -23,8 +23,8 @@ test_that("The axis-aligned bounding box of a 3D brain image can be computed", {
     brain = subject.volume(subjects_dir, subject_id, 'brain');
 
     bbox = vol.boundary.box(brain);
-    expect_equal(bbox$from, c(17L, 17L, 14L));
-    expect_equal(bbox$to, c(194L, 194L, 166L));
+    expect_equal(bbox$from, c(61L, 14L, 17L));
+    expect_equal(bbox$to, c(195L, 166L, 194L));
 })
 
 
@@ -83,13 +83,13 @@ test_that("Axes are derived from a plane definition as expected", {
     expect_equal(vol.plane.axes(c(1,3)), c(1,3));
 
     # Test when given as plane index
-    expect_equal(vol.plane.axes(1), c(2,3));
-    expect_equal(vol.plane.axes(2), c(1,3));
-    expect_equal(vol.plane.axes(3), c(1,2));
+    expect_equal(vol.plane.axes(1), c(1,2));
+    expect_equal(vol.plane.axes(2), c(2,3));
+    expect_equal(vol.plane.axes(3), c(3,1));
 
     # Test with axis names
     expect_equal(vol.plane.axes("sagittal"), c(2,3));
-    expect_equal(vol.plane.axes("axial"), c(1,3));
+    expect_equal(vol.plane.axes("axial"), c(3,1));
     expect_equal(vol.plane.axes("coronal"), c(1,2));
 })
 
