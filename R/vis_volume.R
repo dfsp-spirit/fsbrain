@@ -1,4 +1,5 @@
-# Functions for volume rendering. Totally WIP.
+# Functions for volume manipulation and rendering.
+# The 3D imaging functions are designed to work on gray-scale (single channel) images.
 
 
 #' @title Extract and visualize a slice of a 3D image stack.
@@ -17,7 +18,6 @@
 #'
 #' @return slice data. If `slice_index` is a scalar, a numerical 2D matrix (a 2D image from the stack). Otherwise, a numerical 3D array that contains the selected 2D images.
 #'
-# @keywords internal
 #' @importFrom grDevices gray.colors
 #' @importFrom graphics image
 #' @export
@@ -35,6 +35,7 @@ vol.slice <- function(volume, slice_index=NULL, frame=1L, axis=1L, show=FALSE) {
     }
 
     if(is.null(slice_index)) {
+        # Select a middle slice, the first one is often (almost) empty.
         slice_index = as.integer(round(dim(vol3d)[axis] / 2));
     }
 
@@ -69,23 +70,25 @@ vol.slice <- function(volume, slice_index=NULL, frame=1L, axis=1L, show=FALSE) {
 
 #' @title Compute foreground pixels over the whole 3D imagestack.
 #'
-#' @description Compute, over all images in a stack along an axis, the foreground and background pixels as a binary mask. A pixel is a `foreground` pixel iff its value is greater than 0 in at least one of the slices. A pixel is a `background` pixel iff its value is exactly 0 in all slices.
+#' @description Compute, over all images in a stack along an axis, the foreground and background pixels as a binary mask. A pixel is a `foreground` pixel iff its value is greater than the `threshold` parameter in at least one of the slices. A pixel is a `background` pixel iff its value is below or euqal to the `threshold` in all slices.
 #'
 #' @param volume a 3D image volume
 #'
 #' @param plane integer vector of length 2 or something that will be turned into one by \code{\link[fsbrain]{vol.plane.axes}}.
 #'
+#' @param threshold numerical, the threshold intensity used to separate background and foreground. All voxels with intensity values greater than this value will be considered `foreground` voxels.
+#'
 #' @return integer 2D matrix with dimensions of a slice of the volume. Positions set to 1 are `foreground` pixels and positions set to 0 are `background` pixels (see `Details` section).
 #'
 #'
 #' @export
-vol.boundary.mask <- function(volume, plane=1L) {
+vol.boundary.mask <- function(volume, plane=1L, threshold=0L) {
     axes = vol.plane.axes(plane);
     if(length(dim(volume)) != 3) {
         stop(sprintf("Volume must have exactly 3 dimensions but has %d.\n", length(dim(volume))));
     }
     maximg = apply(volume, axes, max);
-    foreground_indices = which(maximg > 0, arr.ind=TRUE);
+    foreground_indices = which(maximg > threshold_gt, arr.ind=TRUE);
 
     height = dim(volume)[axes[1]];
     width = dim(volume)[axes[2]];
@@ -103,22 +106,23 @@ vol.boundary.mask <- function(volume, plane=1L) {
 #'
 #' @param volume a 3D image volume
 #'
+#' @param threshold numerical, the threshold intensity used to separate background and foreground. All voxels with intensity values greater than this value will be considered `foreground` voxels.
+#'
 #' @return named list with 2 entries: `from` is an integer vector of length 3, defining the minimal (x,y,z) foreground indices. `to` is an integer vector of length 3, defining the maximal (x,y,z) foreground indices.
 #'
 #' @export
-vol.boundary.box <- function(volume) {
+vol.boundary.box <- function(volume, threshold=0L) {
     if(length(dim(volume)) != 3) {
         stop(sprintf("Volume must have exactly 3 dimensions but has %d.\n", length(dim(volume))));
     }
     min_index_per_axis = rep(-1L, 3);
     max_index_per_axis = rep(-1L, 3);
     for(axis in c(1L, 2L, 3L)) {
-        mmask = vol.boundary.mask(volume, axis);
+        mmask = vol.boundary.mask(volume, axis, threshold=threshold);
         colmax = apply(mmask, 1, max);
         min_index_per_axis[axis] = Position(function(x) x >= 1L, colmax, right=FALSE);
         max_index_per_axis[axis] = Position(function(x) x >= 1L, colmax, right=TRUE);
         #cat(sprintf("At axis %d, determined min=%d, max=%d (used columns of the %d rows and %d colums).\n", axis, min_index_per_axis[axis], max_index_per_axis[axis], nrow(mmask), ncol(mmask)));
-        #print(colmax);
     }
     return(list("from"=min_index_per_axis, "to"=max_index_per_axis));
 }
@@ -129,25 +133,25 @@ vol.boundary.box <- function(volume) {
 #'
 #' @description This function assumes that the volume is in the standard FreeSurfer orientation, as returned by reading a volume with functions like \code{\link[fsbrain]{subject.volume}}.
 #'
-#' @param plane_name string, one of "axial", "coronal", or "sagittal". If this is an integer vector of length 2 already, it is returned as given. If it is a single integer, it is interpreted as an axis index, and the plane orthogonal to the axis is returned.
+#' @param plane integer or string. If a string, one of "axial", "coronal", or "sagittal". If this is an integer vector of length 2 already, it is returned as given. If it is a single integer, it is interpreted as an axis index, and the plane orthogonal to the axis is returned. A warning on using the plane names: these only make sense if the volume is in the expected orientation, no checking whatsoever on this is performed.
 #'
 #' @return integer vector of length 2, the axes indices.
 #'
 #' @keywords internal
-vol.plane.axes <- function(plane_name) {
-    if(is.double(plane_name)) {
-        plane_name = as.integer(plane_name);
+vol.plane.axes <- function(plane) {
+    if(is.double(plane)) {
+        plane = as.integer(plane);
     }
-    if(is.integer(plane_name)) {
-        if(length(plane_name) == 2L) {   # Already done. We do not check whether the contents makes sense in this case.
-            return(plane_name);
-        } else if(length(plane_name) == 1L) {
+    if(is.integer(plane)) {
+        if(length(plane) == 2L) {   # Already done. We do not check whether the contents makes sense in this case.
+            return(plane);
+        } else if(length(plane) == 1L) {
             # Treat it as an axis, and return the plane that is orthogonal to the axis
-            if(plane_name == 1L) {
+            if(plane == 1L) {
                 return(c(1L, 2L));
-            } else if(plane_name == 2L) {
+            } else if(plane == 2L) {
                 return(c(2L, 3L));
-            } else if(plane_name == 3L) {
+            } else if(plane == 3L) {
                 return(c(3L, 1L));
             } else {
                 stop("If plane is an integer (vector), the values must be in range 1..3");
@@ -156,15 +160,37 @@ vol.plane.axes <- function(plane_name) {
             stop("If plane is an integer vector, it must have length 1 or 2.");
         }
     }
-    if(!(plane_name %in% c("axial", "coronal", "sagittal"))) {
-        stop(sprintf("Parameter 'plane_name' must be on of c('axial', 'coronal', 'sagittal') but is '%s'.\n", plane_name));
+    if(!(plane %in% c("axial", "coronal", "sagittal"))) {
+        stop(sprintf("Parameter 'plane' must be on of c('axial', 'coronal', 'sagittal') but is '%s'.\n", plane));
     }
-    if(plane_name == "sagittal") {
+    if(plane == "sagittal") {
         return(c(2L, 3L));
-    } else if(plane_name == "coronal") {
+    } else if(plane == "coronal") {
         return(c(1L, 2L))
     } else { # axial
         return(c(3L, 1L));
+    }
+}
+
+
+#' @title Translate names and indices of planes.
+#'
+#' @description Translate names and indices of 3D image planes. The names only make sense if the volume is in the default FreeSurfer orientation.
+#'
+#' @param plane NULL, a plane index, or a plane name.
+#'
+#' @return if `plane` is NULL, all available planes and their indices as a named list. If `plane` is an integer (a plane index), its name. If `plane` is an characters string (a plane name), its index.
+#' @export
+vol.planes <- function(plane=NULL) {
+    planes = list("coronal"=1, "sagittal"=2, "axial"=3);
+    if(is.null(plane)) {
+        return(planes);
+    } else {
+        if(is.character(plane)) {
+            return(planes[[plane]]);
+        } else {
+            return(names(planes)[plane]);
+        }
     }
 }
 
@@ -175,21 +201,25 @@ vol.plane.axes <- function(plane_name) {
 #'
 #' @param volume a 3D image volume
 #'
-#' @param axis positive integer in range 1L..3L, the axis to use.
+#' @param axis positive integer in range 1L..3L or an axis name, the axis to use.
 #'
-#' @param intensity_scale integer, value by which to scale the intensities in the volume to reach range [0, 1]. Set to 1 for no scaling. Defaults to 255, which is suitable for 8 bit image data.
+#' @param intensity_scale integer, value by which to scale the intensities in the volume to the range `[0, 1]`. Set to 1 for no scaling. Defaults to 255, which is suitable for 8 bit image data.
 #'
 #' @return a vectorized ImageMagick image, containing one subimage per slice. This can be interpreted as an animation or whatever.
 #'
 #' @export
 vol.imagestack <- function(volume, axis=1L, intensity_scale=255) {
-    if(axis < 1 | axis > 3) {
+    if(is.character(axis)) {
+        axis = vol.planes(axis);
+    }
+    axis = as.integer(axis);
+    if(axis < 1L | axis > 3L) {
         stop(sprintf("Axis must be integer with value 1, 2 or 3 but is %d.\n", axis));
     }
     if(length(dim(volume)) != 3) {
         stop(sprintf("Volume must have exactly 3 dimensions but has %d.\n", length(dim(volume))));
     }
-    image_list = apply(volume, 1, function(x){magick::image_read(grDevices::as.raster(x / intensity_scale))});
+    image_list = apply(volume, axis, function(x){magick::image_read(grDevices::as.raster(x / intensity_scale))});
     image_stack = Reduce(c, image_list);
     return(image_stack);
 }

@@ -4,8 +4,13 @@
 \alias{subject.volume}
 \title{Read a brain volume.}
 \usage{
-subject.volume(subjects_dir, subject_id, volume, format = "AUTO",
-  drop_empty_dims = TRUE)
+subject.volume(
+  subjects_dir,
+  subject_id,
+  volume,
+  format = "AUTO",
+  drop_empty_dims = TRUE
+)
 }
 \arguments{
 \item{subjects_dir}{character string, the FreeSurfer `SUBJECTS_DIR`, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}

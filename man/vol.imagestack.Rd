@@ -11,7 +11,7 @@ vol.imagestack(volume, axis = 1L, intensity_scale = 255)
 
 \item{axis}{positive integer in range 1L..3L, the axis to use.}
 
-\item{intensity_scale}{integer, value by which to scale the intensities in the volume to reach range [0, 1]. Set to 1 for no scaling. Defaults to 255, which is suitable for 8 bit image data.}
+\item{intensity_scale}{integer, value by which to scale the intensities in the volume to the range `[0, 1]`. Set to 1 for no scaling. Defaults to 255, which is suitable for 8 bit image data.}
 }
 \value{
 a vectorized ImageMagick image, containing one subimage per slice. This can be interpreted as an animation or whatever.

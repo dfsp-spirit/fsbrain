@@ -9,8 +9,14 @@ test_that("A brain volume can be turned into an animation", {
     subject_id = "subject1";
     brain = subject.volume(subjects_dir, subject_id, 'brain');
 
-    brain_stack = vol.imagestack(brain);
-    magick::image_write(magick::image_animate(brain_stack, fps = 20), "MRI.gif");
+    # compute bbox to exclude empty outer parts
+    bbox = vol.boundary.box(brain);
+    foreground = brain[bbox$from[1]:bbox$to[1], bbox$from[2]:bbox$to[2], bbox$from[3]:bbox$to[3]];
+
+    for(imgplane in c("coronal", "sagittal", "axial")) {
+        brain_stack = vol.imagestack(foreground, imgplane);
+        magick::image_write(magick::image_animate(brain_stack, fps = 20), sprintf("MRI_%s.gif", imgplane));
+    }
 })
 
 
@@ -25,6 +31,10 @@ test_that("The axis-aligned bounding box of a 3D brain image can be computed", {
     bbox = vol.boundary.box(brain);
     expect_equal(bbox$from, c(61L, 14L, 17L));
     expect_equal(bbox$to, c(195L, 166L, 194L));
+
+    # Now select the inner foreground volume as a new image:
+    foreground = brain[bbox$from[1]:bbox$to[1], bbox$from[2]:bbox$to[2], bbox$from[3]:bbox$to[3]];
+    expect_equal(dim(foreground), c(135L, 153L, 178L));
 })
 
 

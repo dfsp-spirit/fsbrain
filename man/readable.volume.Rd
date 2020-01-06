@@ -4,8 +4,7 @@
 \alias{readable.volume}
 \title{Find files with the given base name that exist.}
 \usage{
-readable.volume(filepath, precedence = c(".mgh", ".mgz"),
-  error_if_none = TRUE)
+readable.volume(filepath, precedence = c(".mgh", ".mgz"), error_if_none = TRUE)
 }
 \arguments{
 \item{filepath}{character string, path to a file without extension}
