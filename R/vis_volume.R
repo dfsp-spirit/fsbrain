@@ -14,6 +14,10 @@
 #'
 #' @param axis positive integer, the axis to use when indexing the slices. Defaults to 1.
 #'
+#' @param rotation integer, rotation in degrees. Defaults to 0 (no ratation). Must be a multiple of 90 if given. Currently only supported if slice_index is scalar.
+#'
+#' @param flip logical, whether to flip the slice. Currently only supported if slice_index is scalar.
+#'
 #' @param show logical, whether to display the slice. Will display the first slice only if `slice_index` is a vector and print information on the slice to stdout. Defaults to `FALSE`.
 #'
 #' @return slice data. If `slice_index` is a scalar, a numerical 2D matrix (a 2D image from the stack). Otherwise, a numerical 3D array that contains the selected 2D images.
@@ -21,7 +25,7 @@
 #' @importFrom grDevices gray.colors
 #' @importFrom graphics image
 #' @export
-vol.slice <- function(volume, slice_index=NULL, frame=1L, axis=1L, show=FALSE) {
+vol.slice <- function(volume, slice_index=NULL, frame=1L, axis=1L, rotation=0L, flip=FALSE, show=FALSE) {
     if(axis < 1 | axis > 3) {
         stop(sprintf("Axis must be integer with value 1, 2 or 3 but is %d.\n", axis));
     }
@@ -52,6 +56,22 @@ vol.slice <- function(volume, slice_index=NULL, frame=1L, axis=1L, show=FALSE) {
         slice = vol3d[,,slice_index];
     }
 
+    if(rotation != 0L) {
+        if(length(slice_index) == 1) {
+            slice = rotate2D(slice, rotation);
+        } else {
+            warning("Rotation request ignored for multi-slice index.");
+        }
+    }
+
+    if(flip) {
+        if(length(slice_index) == 1) {
+            slice = flip2D(slice);
+        } else {
+            warning("Flip request ignored for multi-slice index.");
+        }
+    }
+
     if(show) {
         if(length(slice_index) > 1) {
             shown_slice_index = slice_index[1];    # shown_slice_index is the index of the slice in the volume (not in the vector of requested slices)
@@ -65,6 +85,62 @@ vol.slice <- function(volume, slice_index=NULL, frame=1L, axis=1L, show=FALSE) {
         image(shown_slice, col=grDevices::gray.colors(n=255, 0.0, 1.0), useRaster = TRUE);
     }
     return(slice);
+}
+
+#' @title Flip a 2D matrix.
+#'
+#' @param slice a 2D matrix
+#'
+#' @return 2D matrix, the flipped matrix
+#'
+#' @export
+flip2D <- function(slice) {
+    if(length(dim(slice)) != 2L) {
+        stop("Slice must be a 2D matrix.");
+    }
+    return(as.matrix(rev(as.data.frame(rotate2D(slice, degrees=180L)))));
+}
+
+#' @title Rotate a 2D matrix in 90 degree steps.
+#'
+#' @param slice a 2D matrix
+#'
+#' @param degrees integer, must be a (positive or negative) multiple of 90
+#'
+#' @return 2D matrix, the rotated matrix
+#'
+#' @export
+rotate2D <- function(slice, degrees=90) {
+    if(length(dim(slice)) != 2L) {
+        stop("Slice must be a 2D matrix.");
+    }
+    degrees = as.integer(degrees %% 360L);
+    if(!degrees %in% as.integer(c(0, 90, 180, 270))) {
+        stop("Parameter 'degrees' must be a multiple of 90 (it can be negative).");
+    }
+    if(degrees == 0L) {
+        return(slice);
+    } else if(degrees == 270) {
+        return(rotate90(slice, times=1L, clockwise=FALSE));
+    } else if(degrees == 180) {
+        return(rotate90(slice, times=2L));
+    } else {  # 90
+        return(rotate90(slice));
+    }
+}
+
+
+#' @title Rotate 2D matrix clockwise in 90 degree steps.
+#' @keywords internal
+rotate90 <- function(mtx, times=1L, clockwise=TRUE) {
+    for(i in seq_len(times)) {
+        if(clockwise) {
+            mtx = t(apply(mtx, 2, rev));
+        } else {
+            mtx = apply(t(mtx), 2, rev);
+        }
+    }
+    return(mtx);
 }
 
 
@@ -222,5 +298,10 @@ vol.imagestack <- function(volume, axis=1L, intensity_scale=255) {
     image_list = apply(volume, axis, function(x){magick::image_read(grDevices::as.raster(x / intensity_scale))});
     image_stack = Reduce(c, image_list);
     return(image_stack);
+}
+
+#' @title Draw a lightbox from a volume.
+vol.lightbox(volume, bbox_thr=0L, axis=1L, slice_arrange=c(5,5)) {
+
 }
 
