@@ -4,17 +4,9 @@
 \alias{group.multimorph.agg.native}
 \title{Aggregate native space morphometry data for multiple measures over hemispheres for a group of subjects.}
 \usage{
-group.multimorph.agg.native(
-  subjects_dir,
-  subjects_list,
-  measures,
-  hemis,
-  agg_fun = mean,
-  format = "curv",
-  cast = TRUE,
-  cortex_only = FALSE,
-  agg_fun_extra_params = NULL
-)
+group.multimorph.agg.native(subjects_dir, subjects_list, measures, hemis,
+  agg_fun = mean, format = "curv", cast = TRUE,
+  cortex_only = FALSE, agg_fun_extra_params = NULL)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -53,9 +45,8 @@ Compute the mean (or other aggregates) over all vertices of a subject from nativ
 
 }
 \seealso{
-Other global aggregation functions: 
-\code{\link{group.morph.agg.native}()},
-\code{\link{group.morph.agg.standard}()},
-\code{\link{group.multimorph.agg.standard}()}
+Other global aggregation functions: \code{\link{group.morph.agg.native}},
+  \code{\link{group.morph.agg.standard}},
+  \code{\link{group.multimorph.agg.standard}}
 }
 \concept{global aggregation functions}

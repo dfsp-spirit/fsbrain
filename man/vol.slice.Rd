@@ -4,7 +4,8 @@
 \alias{vol.slice}
 \title{Extract and visualize a slice of a 3D image stack.}
 \usage{
-vol.slice(volume, slice_index = NULL, frame = 1L, axis = 1L, show = FALSE)
+vol.slice(volume, slice_index = NULL, frame = 1L, axis = 1L,
+  rotation = 0L, flip = FALSE, show = FALSE)
 }
 \arguments{
 \item{volume}{a 3D or 4D image volume. Note that empty dimensions will be dropped before any processing, and the remaining volume must have 3 or 4 dimensions.}
@@ -14,6 +15,10 @@ vol.slice(volume, slice_index = NULL, frame = 1L, axis = 1L, show = FALSE)
 \item{frame}{positive integer, optional. The frame (time point) to use, only relevant for 4D volumes. The last dimension is assumed to be the time dimension in that case.}
 
 \item{axis}{positive integer, the axis to use when indexing the slices. Defaults to 1.}
+
+\item{rotation}{integer, rotation in degrees. Defaults to 0 (no ratation). Must be a multiple of 90 if given. Currently only supported if slice_index is scalar.}
+
+\item{flip}{logical, whether to flip the slice. Currently only supported if slice_index is scalar.}
 
 \item{show}{logical, whether to display the slice. Will display the first slice only if `slice_index` is a vector and print information on the slice to stdout. Defaults to `FALSE`.}
 }

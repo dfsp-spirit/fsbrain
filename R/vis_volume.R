@@ -164,7 +164,7 @@ vol.boundary.mask <- function(volume, plane=1L, threshold=0L) {
         stop(sprintf("Volume must have exactly 3 dimensions but has %d.\n", length(dim(volume))));
     }
     maximg = apply(volume, axes, max);
-    foreground_indices = which(maximg > threshold_gt, arr.ind=TRUE);
+    foreground_indices = which(maximg > threshold, arr.ind=TRUE);
 
     height = dim(volume)[axes[1]];
     width = dim(volume)[axes[2]];
@@ -279,7 +279,7 @@ vol.planes <- function(plane=NULL) {
 #'
 #' @param axis positive integer in range 1L..3L or an axis name, the axis to use.
 #'
-#' @param intensity_scale integer, value by which to scale the intensities in the volume to the range `[0, 1]`. Set to 1 for no scaling. Defaults to 255, which is suitable for 8 bit image data.
+#' @param intensity_scale integer, value by which to scale the intensities in the volume to the range `[0, 1]`. Set to NULL for no scaling. Defaults to 255, which is suitable for 8 bit image data.
 #'
 #' @return a vectorized ImageMagick image, containing one subimage per slice. This can be interpreted as an animation or whatever.
 #'
@@ -295,13 +295,74 @@ vol.imagestack <- function(volume, axis=1L, intensity_scale=255) {
     if(length(dim(volume)) != 3) {
         stop(sprintf("Volume must have exactly 3 dimensions but has %d.\n", length(dim(volume))));
     }
-    image_list = apply(volume, axis, function(x){magick::image_read(grDevices::as.raster(x / intensity_scale))});
+    if(is.null(intensity_scale)) {
+        image_list = apply(volume, axis, function(x){magick::image_read(x)});
+    } else {
+        image_list = apply(volume, axis, function(x){magick::image_read(grDevices::as.raster(x / intensity_scale))});
+    }
     image_stack = Reduce(c, image_list);
     return(image_stack);
 }
 
-#' @title Draw a lightbox from a volume.
-vol.lightbox(volume, bbox_thr=0L, axis=1L, slice_arrange=c(5,5)) {
 
+#' @title Generate colors for a 3D volume, based on the activation data and a colormap.
+#'
+#' @description Applies the colormap function to the data, then sets the alpha value (transparency) to full in all areas without any activation. Feel free to clip data or whatever before passing it, so that all your no-activation data has the same value.
+#'
+#' @param volume a 3D array, the activation data (or p-values, effect sizes, or whatever)
+#'
+#' @param colormap_fn function, a colormap function
+#'
+#' @param no_act_value numerical scalar, the value from the data in 'volume' that means no activation. The colors for this value will be fully transparent.
+#'
+#' @return a 3D matrix of color strings, with the same dimensions as the input volume
+#'
+#' @importFrom squash makecmap blueorange cmap
+#' @importFrom grDevices adjustcolor
+#' @export
+vol.overlay.colors.from.activation <- function(volume, colormap_fn=squash::blueorange, no_act_value=0) {
+    col = squash::cmap(volume, map = squash::makecmap(volume, colFn = colormap_fn));
+    no_act = which(volume == no_act_value);
+    no_act_colors = col[no_act];
+    no_act_colors = grDevices::adjustcolor(no_act_colors, 1.0);
+    col[no_act] = no_act_colors;
+    return(col);
+}
+
+
+#' @title Draw a lightbox from a volume.
+#'
+#' @description If overlay_colors are given, the volume will be used as the background, and it will only be visible where overlay_colors has transparency.
+#' @export
+vol.lightbox <- function(volume, bbox_thr=0L, axis=1L, slice_arrange=c(5,5), overlay_colors=NULL) {
+    with_colors = !(is.null(overlay_colors));
+    if(with_colors) {
+        if(dim(volume) != dim(overlay_colors)) {
+            stop("If 'overlay_colors' are given, they must have the same dimension as the 'volume'. Hint: use RGB color strings.");
+        }
+    }
+
+    # Compute and apply bounding box, if needed to both the background volume and the activation data
+    if(!is.null(bbox_thr)) {
+        bbox = vol.boundary.box(volume);
+        volume = volume[bbox$from[1]:bbox$to[1], bbox$from[2]:bbox$to[2], bbox$from[3]:bbox$to[3]];
+        if(with_colors) {
+            overlay_colors = overlay_colors[bbox$from[1]:bbox$to[1], bbox$from[2]:bbox$to[2], bbox$from[3]:bbox$to[3]];
+            if(dim(volume) != dim(overlay_colors)) {
+                stop("Bug: the 'overlay_colors' must have the same dimension as the 'volume' after bounding box application to both.");
+            }
+        }
+    }
+
+    # Compute background volume color strings from intensity values
+    volume_colors = array(rgb(volume, volume, volume), dim(volume)); # try magick::image_read(vol.slice(volume_colors))
+
+    # If needed, merge the volume and the activation colors into a single image.
+    #if(with_colors) {
+    #    TODO: merge
+    #}
+
+
+    return(volume_colors);
 }
 
