@@ -163,11 +163,16 @@ vol.boundary.mask <- function(volume, plane=1L, threshold=0L) {
     if(length(dim(volume)) != 3) {
         stop(sprintf("Volume must have exactly 3 dimensions but has %d.\n", length(dim(volume))));
     }
-    maximg = apply(volume, axes, max);
-    foreground_indices = which(maximg > threshold, arr.ind=TRUE);
 
     height = dim(volume)[axes[1]];
     width = dim(volume)[axes[2]];
+
+    if(is.null(threshold)) {
+        return(matrix(rep(1L, width*height), nrow=height));
+    }
+
+    maximg = apply(volume, axes, max);
+    foreground_indices = which(maximg > threshold, arr.ind=TRUE);
 
     mask = matrix(rep(0L, width*height), nrow=height);
     mask[foreground_indices] = 1L;
@@ -313,19 +318,19 @@ vol.imagestack <- function(volume, axis=1L, intensity_scale=255) {
 #'
 #' @param colormap_fn function, a colormap function
 #'
-#' @param no_act_value numerical scalar, the value from the data in 'volume' that means no activation. The colors for this value will be fully transparent.
+#' @param no_act_source_value numerical scalar, the value from the data in 'volume' that means no activation. The output colors for this value will be set to `NA`.
 #'
 #' @return a 3D matrix of color strings, with the same dimensions as the input volume
 #'
 #' @importFrom squash makecmap blueorange cmap
 #' @importFrom grDevices adjustcolor
 #' @export
-vol.overlay.colors.from.activation <- function(volume, colormap_fn=squash::blueorange, no_act_value=0) {
+vol.overlay.colors.from.activation <- function(volume, colormap_fn=squash::blueorange, no_act_source_value=0) {
     col = squash::cmap(volume, map = squash::makecmap(volume, colFn = colormap_fn));
-    no_act = which(volume == no_act_value);
-    no_act_colors = col[no_act];
-    no_act_colors = grDevices::adjustcolor(no_act_colors, 1.0);
-    col[no_act] = no_act_colors;
+    no_act_indices = which(volume == no_act_source_value);
+    #no_act_colors = col[no_act_indices];
+    #no_act_colors = grDevices::adjustcolor(no_act_colors, 1.0);
+    col[no_act_indices] = NA;
     return(col);
 }
 
@@ -334,35 +339,49 @@ vol.overlay.colors.from.activation <- function(volume, colormap_fn=squash::blueo
 #'
 #' @description If overlay_colors are given, the volume will be used as the background, and it will only be visible where overlay_colors has transparency.
 #' @export
-vol.lightbox <- function(volume, bbox_thr=0L, axis=1L, slice_arrange=c(5,5), overlay_colors=NULL) {
-    with_colors = !(is.null(overlay_colors));
-    if(with_colors) {
-        if(dim(volume) != dim(overlay_colors)) {
-            stop("If 'overlay_colors' are given, they must have the same dimension as the 'volume'. Hint: use RGB color strings.");
-        }
-    }
+vol.lightbox <- function(volume, axis=1L, slice_arrange=c(5,5)) {
 
-    # Compute and apply bounding box, if needed to both the background volume and the activation data
-    if(!is.null(bbox_thr)) {
-        bbox = vol.boundary.box(volume);
-        volume = volume[bbox$from[1]:bbox$to[1], bbox$from[2]:bbox$to[2], bbox$from[3]:bbox$to[3]];
-        if(with_colors) {
-            overlay_colors = overlay_colors[bbox$from[1]:bbox$to[1], bbox$from[2]:bbox$to[2], bbox$from[3]:bbox$to[3]];
-            if(dim(volume) != dim(overlay_colors)) {
-                stop("Bug: the 'overlay_colors' must have the same dimension as the 'volume' after bounding box application to both.");
-            }
-        }
-    }
-
-    # Compute background volume color strings from intensity values
-    volume_colors = array(rgb(volume, volume, volume), dim(volume)); # try magick::image_read(vol.slice(volume_colors))
-
-    # If needed, merge the volume and the activation colors into a single image.
-    #if(with_colors) {
-    #    TODO: merge
-    #}
-
-
-    return(volume_colors);
+    return(volume);
 }
+
+
+#' @title Merge background volume and overlay to new colors.
+#'
+#' @param volume 3D array, can be numeric (gray-scale intensity values) or color strings. If numeric, the intensity values must be in range `[0, 1]`.
+#'
+#' @param overlay_colors 3D array of color strings, values which are not part of the overlay (and should display background in the result) must have `NA` instead of a color string. Must have same dimensions as the `volume`.
+#'
+#' @param bbox_threshold numerical, the threshold intensity used to separate background and foreground. All voxels with intensity values greater than this value in the background `volume` will be considered `foreground` voxels. Background-only slices at the borders of the volume will be discarded. Pass `NULL` to use the full image without applying any bounding box.
+#'
+#' @return 3D array of color strings, the merged colors
+#'
+#' @importFrom grDevices rgb
+#' @export
+vol.merge <- function(volume, overlay_colors, bbox_threshold=0L) {
+    if(!(all.equal(dim(volume), dim(overlay_colors)))) {
+        stop("If 'overlay_colors' are given, they must have the same dimension as the 'volume'. Hint: use RGB color strings.");
+    }
+    bbox = vol.boundary.box(volume, threshold=bbox_threshold);
+    volume = volume[bbox$from[1]:bbox$to[1], bbox$from[2]:bbox$to[2], bbox$from[3]:bbox$to[3]];
+
+    overlay_colors = overlay_colors[bbox$from[1]:bbox$to[1], bbox$from[2]:bbox$to[2], bbox$from[3]:bbox$to[3]];
+
+    # Compute background volume color strings from intensity values if needed.
+    if(is.numeric(volume)) {
+        message("Converting volume from intensities to color strings.");
+        volume = array(grDevices::rgb(volume, volume, volume), dim(volume)); # try magick::image_read(vol.slice(volume))
+    }
+
+    # Same for the overlay
+    if(is.numeric(overlay_colors)) {
+        message("Converting overlay_colors from intensities to color strings.");
+        overlay_colors = array(grDevices::rgb(overlay_colors, overlay_colors, overlay_colors), dim(overlay_colors));
+    }
+
+    # Copy background colors into NA voxels of the activation.
+    no_act_indices = which(is.na(overlay_colors), arr.ind=F);
+    overlay_colors[no_act_indices] = volume[no_act_indices];
+    return(overlay_colors);
+}
+
 

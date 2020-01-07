@@ -5,14 +5,14 @@
 \title{Generate colors for a 3D volume, based on the activation data and a colormap.}
 \usage{
 vol.overlay.colors.from.activation(volume,
-  colormap_fn = squash::blueorange, no_act_value = 0)
+  colormap_fn = squash::blueorange, no_act_source_value = 0)
 }
 \arguments{
 \item{volume}{a 3D array, the activation data (or p-values, effect sizes, or whatever)}
 
 \item{colormap_fn}{function, a colormap function}
 
-\item{no_act_value}{numerical scalar, the value from the data in 'volume' that means no activation. The colors for this value will be fully transparent.}
+\item{no_act_source_value}{numerical scalar, the value from the data in 'volume' that means no activation. The output colors for this value will be set to `NA`.}
 }
 \value{
 a 3D matrix of color strings, with the same dimensions as the input volume

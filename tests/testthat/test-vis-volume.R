@@ -103,3 +103,26 @@ test_that("Axes are derived from a plane definition as expected", {
     expect_equal(vol.plane.axes("coronal"), c(1,2));
 })
 
+
+test_that("A brain volume can be turned into an animation", {
+
+    skip("This test has to be run manually and interactively. It also requires the 'magick' package (ImageMagick for R).");
+
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+    skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
+
+    subject_id = "subject1";
+    brain = subject.volume(subjects_dir, subject_id, 'brain');
+
+    # Generate some demo activation data
+    activation = array(rep(0L, dim(brain)[1]*dim(brain)[2]*dim(brain)[3]), dim(brain));
+    activation[90:100, 90:100, 90:100] = 1L;
+
+    overlay_colors = vol.overlay.colors.from.activation(activation);
+    merged_img = vol.merge(volume, overlay_colors);
+
+    magick::image_read(vol.slice(merged_img, 95));
+})
+
+

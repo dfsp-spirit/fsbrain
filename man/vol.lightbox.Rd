@@ -4,8 +4,7 @@
 \alias{vol.lightbox}
 \title{Draw a lightbox from a volume.}
 \usage{
-vol.lightbox(volume, bbox_thr = 0L, axis = 1L, slice_arrange = c(5,
-  5), overlay_colors = NULL)
+vol.lightbox(volume, axis = 1L, slice_arrange = c(5, 5))
 }
 \description{
 If overlay_colors are given, the volume will be used as the background, and it will only be visible where overlay_colors has transparency.
