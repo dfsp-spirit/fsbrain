@@ -378,8 +378,14 @@ vol.merge <- function(volume, overlay_colors, bbox_threshold=0L) {
         overlay_colors = array(grDevices::rgb(overlay_colors, overlay_colors, overlay_colors), dim(overlay_colors));
     }
 
+    if(!(all.equal(dim(volume), dim(overlay_colors)))) {
+        stop("Bug: dim of 'volume' does not match 'overlay_colors' anymore");
+    }
+
     # Copy background colors into NA voxels of the activation.
     no_act_indices = which(is.na(overlay_colors), arr.ind=F);
+    num_voxels_total = dim(overlay_colors)[1] * dim(overlay_colors)[2] * dim(overlay_colors)[3];
+    message(sprintf("Out of %d voxels, %d are background and %d are foreground.\n", num_voxels_total, no_act_indices, (num_voxels_total - no_act_indices)));
     overlay_colors[no_act_indices] = volume[no_act_indices];
     return(overlay_colors);
 }

@@ -104,7 +104,7 @@ test_that("Axes are derived from a plane definition as expected", {
 })
 
 
-test_that("A brain volume can be turned into an animation", {
+test_that("A brain volume and an overlay can be merged", {
 
     skip("This test has to be run manually and interactively. It also requires the 'magick' package (ImageMagick for R).");
 
@@ -113,16 +113,18 @@ test_that("A brain volume can be turned into an animation", {
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
 
     subject_id = "subject1";
-    brain = subject.volume(subjects_dir, subject_id, 'brain');
+    brain = subject.volume(subjects_dir, subject_id, 'brain') / 255;
+    #nobrain = array()
 
     # Generate some demo activation data
     activation = array(rep(0L, dim(brain)[1]*dim(brain)[2]*dim(brain)[3]), dim(brain));
-    activation[90:100, 90:100, 90:100] = 1L;
+    activation[90:110, 90:110, 90:110] = 1L;  # set some values in the center to activated
 
     overlay_colors = vol.overlay.colors.from.activation(activation);
-    merged_img = vol.merge(volume, overlay_colors);
+    merged = vol.merge(brain, overlay_colors);
 
-    magick::image_read(vol.slice(merged_img, 95));
+    slice_img = magick::image_read(vol.slice(merged, 95));
+    magick::image_write(slice_img, path="brain_slice.png");
 })
 
 
