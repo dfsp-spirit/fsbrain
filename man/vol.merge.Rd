@@ -4,7 +4,12 @@
 \alias{vol.merge}
 \title{Merge background volume and overlay to new colors.}
 \usage{
-vol.merge(volume, overlay_colors, bbox_threshold = 0L)
+vol.merge(
+  volume,
+  overlay_colors,
+  bbox_threshold = 0L,
+  forced_overlay_color = NULL
+)
 }
 \arguments{
 \item{volume}{3D array, can be numeric (gray-scale intensity values) or color strings. If numeric, the intensity values must be in range `[0, 1]`.}
@@ -12,6 +17,8 @@ vol.merge(volume, overlay_colors, bbox_threshold = 0L)
 \item{overlay_colors}{3D array of color strings, values which are not part of the overlay (and should display background in the result) must have `NA` instead of a color string. Must have same dimensions as the `volume`.}
 
 \item{bbox_threshold}{numerical, the threshold intensity used to separate background and foreground. All voxels with intensity values greater than this value in the background `volume` will be considered `foreground` voxels. Background-only slices at the borders of the volume will be discarded. Pass `NULL` to use the full image without applying any bounding box.}
+
+\item{forced_overlay_color}{NULL or an rgb color string, like '#FF0000' for red. If NULL, the activation colors will be used as foreground colors. Otherwise, the given color will be for all foreground vertices.}
 }
 \value{
 3D array of color strings, the merged colors

@@ -119,12 +119,13 @@ test_that("A brain volume and an overlay can be merged", {
     # Generate some demo activation data
     activation = array(rep(0L, dim(brain)[1]*dim(brain)[2]*dim(brain)[3]), dim(brain));
     activation[90:110, 90:110, 90:110] = 1L;  # set some values in the center to activated
+    activation[90:110, 50:90, 50:60] = -1L;
 
     overlay_colors = vol.overlay.colors.from.activation(activation);
-    merged = vol.merge(brain, overlay_colors);
+    merged = vol.merge(brain, overlay_colors, bbox_threshold = NULL);   # deactivate bbox computation, so the index does not shift.
 
-    slice_img = magick::image_read(vol.slice(merged, 95));
-    magick::image_write(slice_img, path="brain_slice.png");
+    #magick::image_write(vol.slice(merged, 95), path="brain_slice.png");
+    magick::image_read(vol.slice(merged, 95));
 })
 
 
