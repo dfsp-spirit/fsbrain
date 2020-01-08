@@ -203,7 +203,6 @@ vol.boundary.box <- function(volume, threshold=0L) {
         colmax = apply(mmask, 1, max);
         min_index_per_axis[axis] = Position(function(x) x >= 1L, colmax, right=FALSE);
         max_index_per_axis[axis] = Position(function(x) x >= 1L, colmax, right=TRUE);
-        #cat(sprintf("At axis %d, determined min=%d, max=%d (used columns of the %d rows and %d colums).\n", axis, min_index_per_axis[axis], max_index_per_axis[axis], nrow(mmask), ncol(mmask)));
     }
     return(list("from"=min_index_per_axis, "to"=max_index_per_axis));
 }
@@ -341,9 +340,9 @@ vol.overlay.colors.from.activation <- function(volume, colormap_fn=squash::blueo
 #'
 #' @param axis positive integer in range 1L..3L, the axis to use.
 #'
-#' @param nrow positive integer, the number of subimages per row in the output image. If `NULL`, automatically computed from the number of slices and the `ncol` parameter.
+#' @param per_row positive integer, the number of subimages per row in the output image. If `NULL`, automatically computed from the number of slices and the `per_col` parameter.
 #'
-#' @param ncol positive integer, the number of subimages per row in the output image. If `NULL`, automatically computed from the number of slices and the `nrow` parameter.
+#' @param per_col positive integer, the number of subimages per column in the output image. If `NULL`, automatically computed from the number of slices and the `per_row` parameter.
 #'
 #' @param border_geometry string, a geometry string passed to \code{\link[magick]{image_border}} to define the borders to add to each image tile. The default value adds 5 pixels, both horizontally and vertically.
 #'
@@ -351,7 +350,7 @@ vol.overlay.colors.from.activation <- function(volume, colormap_fn=squash::blueo
 #'
 #' @description If overlay_colors are given, the volume will be used as the background, and it will only be visible where overlay_colors has transparency.
 #' @export
-vol.lightbox <- function(volume, slices=-5, axis=1L, nrow=5L, ncol=NULL, border_geometry="5x5", background_color = "#000000") {
+vol.lightbox <- function(volume, slices=-5, axis=1L, per_row=5L, per_col=NULL, border_geometry="5x5", background_color = "#000000") {
     if(length(dim(volume)) != 3) {
         stop("Volume must have exactly 3 dimensions.");
     }
@@ -365,10 +364,10 @@ vol.lightbox <- function(volume, slices=-5, axis=1L, nrow=5L, ncol=NULL, border_
     slice_indices = get.slice.indices(dim(volume), axis, slices);
 
     # Get the subset of requested slices as a 3D image
-    slices = vol.slice(volume, slice_index=slice_indices, axis=axis);
+    img_slices = vol.slice(volume, slice_index=slice_indices, axis=axis);
 
     # Transform the slices into an ImageMagick stack of 2D images
-    images = vol.imagestack(slices, axis=axis);
+    images = vol.imagestack(img_slices, axis=axis);
 
     # Add tiny border
     if(!((is.null(border_geometry) | is.null(background_color)))) {
@@ -377,10 +376,46 @@ vol.lightbox <- function(volume, slices=-5, axis=1L, nrow=5L, ncol=NULL, border_
     }
 
     # Arrange the stack of images
-    # For now, just put all into one long strip
-    merged_img = magick::image_append(images);
+    merged_img = magick.grid(images, per_row=per_row, per_col=per_col);
 
     return(merged_img);
+}
+
+
+#' @title Arrange a multi-frame ImageMagick image into a grid.
+#'
+#' @description Arrange all subimages of the given ImageMagick image into a single 2D image, that contains the subimages arranged in a grid-like structure.
+#'
+#' @param magickimage an ImageMagick image
+#'
+#' @param per_row positive integer, the number of subimages per row in the output image. If `NULL`, automatically computed from the number of slices and the `per_col` parameter.
+#'
+#' @param per_col positive integer, the number of subimages per column in the output image. If `NULL`, automatically computed from the number of slices and the `per_row` parameter.
+#'
+#' @keywords internal
+magick.grid <- function(magickimage, per_row=5L, per_col=NULL) {
+    images = magickimage;
+    num_subimages = length(images);
+    if(is.null(per_row) & is.null(per_col)) {
+        # If both are none, just return one horizontal strip of images.
+        return(magick::image_append(images));
+    }
+
+    if(!(is.null(per_row) | is.null(per_col))) {
+        # Both are given, let's see whether they make sense.
+        expected_per_row = ceiling(num_subimages / as.double(per_col));
+        if(per_row != expected_per_row) {
+            warning(sprintf("Changing 'per_row' value from %d to %d based on %d subimages and %d per column.\n", per_row, expected_per_row, num_subimages, per_col));
+            per_row = expected_per_row;
+        }
+    } else {
+        if(is.null(per_row)) {
+            per_row = ceiling(num_subimages / as.double(per_col));
+        } else {
+            per_col = ceiling(num_subimages / as.double(per_row));
+        }
+    }
+
 }
 
 
