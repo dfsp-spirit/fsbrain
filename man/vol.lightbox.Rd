@@ -2,9 +2,32 @@
 % Please edit documentation in R/vis_volume.R
 \name{vol.lightbox}
 \alias{vol.lightbox}
-\title{Draw a lightbox from a volume.}
+\title{Draw a lightbox view from volume slices.}
 \usage{
-vol.lightbox(volume, axis = 1L, slice_arrange = c(5, 5))
+vol.lightbox(
+  volume,
+  slices = -5,
+  axis = 1L,
+  nrow = 5L,
+  ncol = NULL,
+  border_geometry = "5x5",
+  background_color = "#000000"
+)
+}
+\arguments{
+\item{volume}{3D array, can be numeric (gray-scale intensity values) or color strings. If numeric, the intensity values must be in range `[0, 1]`.}
+
+\item{slices}{slice index definition. If a vector of integers, interpreted as slice indices. If a single negative interger `-n`, interpreted as every `nth` slice, starting at slice 1. The character string 'all' or the value `NULL` will be interpreted as *all slices*.}
+
+\item{axis}{positive integer in range 1L..3L, the axis to use.}
+
+\item{nrow}{positive integer, the number of subimages per row in the output image. If `NULL`, automatically computed from the number of slices and the `ncol` parameter.}
+
+\item{ncol}{positive integer, the number of subimages per row in the output image. If `NULL`, automatically computed from the number of slices and the `nrow` parameter.}
+
+\item{border_geometry}{string, a geometry string passed to \code{\link[magick]{image_border}} to define the borders to add to each image tile. The default value adds 5 pixels, both horizontally and vertically.}
+
+\item{background_color}{string, a valid ImageMagick color string such as "white" or "#000080". The color to use when extending images (e.g., when creating the border). Defaults to black.}
 }
 \description{
 If overlay_colors are given, the volume will be used as the background, and it will only be visible where overlay_colors has transparency.

@@ -82,7 +82,7 @@ vol.slice <- function(volume, slice_index=NULL, frame=1L, axis=1L, rotation=0L, 
         }
 
         message(sprintf("Slice %d/%d at axis %d, with dimensions '%s'.\n", shown_slice_index, dim(vol3d)[axis], axis, paste(dim(shown_slice), collapse="x")));
-        image(shown_slice, col=grDevices::gray.colors(n=255, 0.0, 1.0), useRaster = TRUE);
+        graphics::image(shown_slice, col=grDevices::gray.colors(n=255, 0.0, 1.0), useRaster = TRUE);
     }
     return(slice);
 }
@@ -280,11 +280,11 @@ vol.planes <- function(plane=NULL) {
 #'
 #' @description Create an image from each slice along the axis, then stack those into an ImageMagick image stack.
 #'
-#' @param volume a 3D image volume
+#' @param volume a 3D image volume. Can be numeric, or something that can be read directly by \code{\link[magick]{image_read}} in 2D matrices (slices along the axis), e.g., a 3D array of color strings.
 #'
 #' @param axis positive integer in range 1L..3L or an axis name, the axis to use.
 #'
-#' @param intensity_scale integer, value by which to scale the intensities in the volume to the range `[0, 1]`. Set to NULL for no scaling. Defaults to 255, which is suitable for 8 bit image data.
+#' @param intensity_scale integer, value by which to scale the intensities in the volume to the range `[0, 1]`. Only used for numeric volumes. Set to NULL for data that can be read directly by \code{\link[magick]{image_read}}, and to 1 for intensity data that requires no scaling. Defaults to 255, which is suitable for 8 bit image data.
 #'
 #' @return a vectorized ImageMagick image, containing one subimage per slice. This can be interpreted as an animation or whatever.
 #'
@@ -300,7 +300,7 @@ vol.imagestack <- function(volume, axis=1L, intensity_scale=255) {
     if(length(dim(volume)) != 3) {
         stop(sprintf("Volume must have exactly 3 dimensions but has %d.\n", length(dim(volume))));
     }
-    if(is.null(intensity_scale)) {
+    if(is.null(intensity_scale) | !is.numeric(volume)) {
         image_list = apply(volume, axis, function(x){magick::image_read(x)});
     } else {
         image_list = apply(volume, axis, function(x){magick::image_read(grDevices::as.raster(x / intensity_scale))});
@@ -328,20 +328,99 @@ vol.imagestack <- function(volume, axis=1L, intensity_scale=255) {
 vol.overlay.colors.from.activation <- function(volume, colormap_fn=squash::blueorange, no_act_source_value=0) {
     col = squash::cmap(volume, map = squash::makecmap(volume, colFn = colormap_fn));
     no_act_indices = which(volume == no_act_source_value, arr.ind = TRUE);
-    #no_act_colors = col[no_act_indices];
-    #no_act_colors = grDevices::adjustcolor(no_act_colors, 1.0);
     col[no_act_indices] = NA;
     return(col);
 }
 
 
-#' @title Draw a lightbox from a volume.
+#' @title Draw a lightbox view from volume slices.
+#'
+#' @param volume 3D array, can be numeric (gray-scale intensity values) or color strings. If numeric, the intensity values must be in range `[0, 1]`.
+#'
+#' @param slices slice index definition. If a vector of integers, interpreted as slice indices. If a single negative interger `-n`, interpreted as every `nth` slice, starting at slice 1. The character string 'all' or the value `NULL` will be interpreted as *all slices*.
+#'
+#' @param axis positive integer in range 1L..3L, the axis to use.
+#'
+#' @param nrow positive integer, the number of subimages per row in the output image. If `NULL`, automatically computed from the number of slices and the `ncol` parameter.
+#'
+#' @param ncol positive integer, the number of subimages per row in the output image. If `NULL`, automatically computed from the number of slices and the `nrow` parameter.
+#'
+#' @param border_geometry string, a geometry string passed to \code{\link[magick]{image_border}} to define the borders to add to each image tile. The default value adds 5 pixels, both horizontally and vertically.
+#'
+#' @param background_color string, a valid ImageMagick color string such as "white" or "#000080". The color to use when extending images (e.g., when creating the border). Defaults to black.
 #'
 #' @description If overlay_colors are given, the volume will be used as the background, and it will only be visible where overlay_colors has transparency.
 #' @export
-vol.lightbox <- function(volume, axis=1L, slice_arrange=c(5,5)) {
+vol.lightbox <- function(volume, slices=-5, axis=1L, nrow=5L, ncol=NULL, border_geometry="5x5", background_color = "#000000") {
+    if(length(dim(volume)) != 3) {
+        stop("Volume must have exactly 3 dimensions.");
+    }
 
-    return(volume);
+    axis = as.integer(axis);
+    if(axis < 1L | axis > 3L) {
+        stop(sprintf("Axis must be integer with value 1, 2 or 3 but is %d.\n", axis));
+    }
+
+    # Compute the slice indices from the slice definition
+    slice_indices = get.slice.indices(dim(volume), axis, slices);
+
+    # Get the subset of requested slices as a 3D image
+    slices = vol.slice(volume, slice_index=slice_indices, axis=axis);
+
+    # Transform the slices into an ImageMagick stack of 2D images
+    images = vol.imagestack(slices, axis=axis);
+
+    # Add tiny border
+    if(!((is.null(border_geometry) | is.null(background_color)))) {
+        message("Applying border to individual images.");
+        images = magick::image_border(images, background_color, border_geometry);
+    }
+
+    # Arrange the stack of images
+    # For now, just put all into one long strip
+    merged_img = magick::image_append(images);
+
+    return(merged_img);
+}
+
+
+#' @title Compute slice indices from slice definition.
+#'
+#' @param voldim integer vector, the dimension of the volume
+#'
+#' @param axis integer, the axis
+#'
+#' @param slices slice index definition. If a vector of integers, interpreted as slice indices. If a single negative interger `-n`, interpreted as every `nth` slice, starting at slice 1. The character string 'all' or the value `NULL` will be interpreted as *all slices*.
+#'
+#' @return integer vector, the computed slice indices. They are guaranteed to be valid indices into the volume.
+#'
+#' @keywords internal
+get.slice.indices <- function(voldim, axis, slices) {
+    num_slices_in_volume = voldim[axis];    # along the requested axis
+    if(is.numeric(slices)) {
+        if(length(slices) == 1 & slices < 0L) {
+            # every nth slice
+            return(seq.int(from=1L, to=num_slices_in_volume, by=abs(slices)))
+        } else {
+            if(any(slices > num_slices_in_volume)) {
+                stop(sprintf("The %d requested slice indices include %d which are out of bounds, volume has %d slices along axis %d.\n", length(slices), length(which(slices > num_slices_in_volume)), num_slices_in_volume, axis));
+            }
+            if(any(slices < 0)) {
+                stop(sprintf("The %d requested slice indices include %d negative ones which are invalid.\n", length(slices), length(which(slices < 0))));
+            }
+            return(slices);
+        }
+    } else if(is.character(slices)) {
+        if(slices == "all") {
+            return(seq_len(num_slices_in_volume));
+        } else {
+            stop(sprintf("Slice definition character string '%s' not recognized.", slices));
+        }
+    } else if (is.null(slices)) {
+        return(seq_len(num_slices_in_volume));
+    } else {
+        stop("Invalid slice definition.");
+    }
 }
 
 

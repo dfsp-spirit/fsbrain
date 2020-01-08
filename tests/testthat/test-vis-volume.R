@@ -114,7 +114,6 @@ test_that("A brain volume and an overlay can be merged", {
 
     subject_id = "subject1";
     brain = subject.volume(subjects_dir, subject_id, 'brain') / 255;
-    #nobrain = array()
 
     # Generate some demo activation data
     activation = array(rep(0L, dim(brain)[1]*dim(brain)[2]*dim(brain)[3]), dim(brain));
@@ -122,10 +121,14 @@ test_that("A brain volume and an overlay can be merged", {
     activation[90:110, 50:90, 50:60] = -1L;
 
     overlay_colors = vol.overlay.colors.from.activation(activation);
-    merged = vol.merge(brain, overlay_colors, bbox_threshold = NULL);   # deactivate bbox computation, so the index does not shift.
+    merged = vol.merge(brain, overlay_colors, bbox_threshold = NULL);   # Deactivate bbox computation, so the index does not shift. Feel free to remove the 'bbox_threshold = NULL' part, but keep in mind then that slice 95 below will not be the correct slice index anymore to look for the activation.
 
-    #magick::image_write(vol.slice(merged, 95), path="brain_slice.png");
+    # Done. Look at a single slice of the result:
     magick::image_read(vol.slice(merged, 95));
+
+    # Now test that the merged image can be visualized as a lightbox:
+    lb = vol.lightbox(merged);       # This is large, so it is better to write it to disk and open in an external viewer.
+    magick::image_write(merged, path="brain_lightbox.png");
 })
 
 
