@@ -4,15 +4,8 @@
 \alias{vol.slice}
 \title{Extract and visualize a slice of a 3D image stack.}
 \usage{
-vol.slice(
-  volume,
-  slice_index = NULL,
-  frame = 1L,
-  axis = 1L,
-  rotation = 0L,
-  flip = FALSE,
-  show = FALSE
-)
+vol.slice(volume, slice_index = NULL, frame = 1L, axis = 1L,
+  rotation = 0L, flip = FALSE, show = FALSE)
 }
 \arguments{
 \item{volume}{a 3D or 4D image volume. Note that empty dimensions will be dropped before any processing, and the remaining volume must have 3 or 4 dimensions.}

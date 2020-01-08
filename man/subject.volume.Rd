@@ -4,13 +4,8 @@
 \alias{subject.volume}
 \title{Read a brain volume.}
 \usage{
-subject.volume(
-  subjects_dir,
-  subject_id,
-  volume,
-  format = "AUTO",
-  drop_empty_dims = TRUE
-)
+subject.volume(subjects_dir, subject_id, volume, format = "AUTO",
+  drop_empty_dims = TRUE, with_header = FALSE)
 }
 \arguments{
 \item{subjects_dir}{character string, the FreeSurfer `SUBJECTS_DIR`, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -21,10 +16,12 @@ subject.volume(
 
 \item{format}{string. One of 'mgh', 'mgz', 'AUTO'. If left at the default value 'AUTO', the function will look for files with extensions 'mgh' and 'mgz' (in that order) and use the first one that exists.}
 
-\item{drop_empty_dims}{logical, whether to drop empty dimensions of the returned data}
+\item{drop_empty_dims}{logical, whether to drop empty dimensions of the returned data. Passed to \code{\link[freesurferformats]{read.fs.mgh}}.}
+
+\item{with_header}{logical. Whether to return the header as well. If TRUE, return a named list with entries "data" and "header". The latter is another named list which contains the header data. These header entries exist: "dtype": int, one of: 0=MRI_UCHAR; 1=MRI_INT; 3=MRI_FLOAT; 4=MRI_SHORT. "voldim": integer vector. The volume (=data) dimensions. E.g., c(256, 256, 256, 1). These header entries may exist: "vox2ras_matrix" (exists if "ras_good_flag" is 1), "mr_params" (exists if "has_mr_params" is 1). Passed to \code{\link[freesurferformats]{read.fs.mgh}}.}
 }
 \value{
-numerical array, the voxel data.
+numerical array, the voxel data. If `with_header`, the full volume datastructure (see above).
 }
 \description{
 Load a brain volume (like `mri/brain.mgz`) for a subject from disk. Uses knowledge about the FreeSurfer directory structure to load the correct file.

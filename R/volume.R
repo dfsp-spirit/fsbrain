@@ -13,12 +13,14 @@
 #'
 #' @param format string. One of 'mgh', 'mgz', 'AUTO'. If left at the default value 'AUTO', the function will look for files with extensions 'mgh' and 'mgz' (in that order) and use the first one that exists.
 #'
-#' @param drop_empty_dims logical, whether to drop empty dimensions of the returned data
+#' @param drop_empty_dims logical, whether to drop empty dimensions of the returned data. Passed to \code{\link[freesurferformats]{read.fs.mgh}}.
 #'
-#' @return numerical array, the voxel data.
+#' @param with_header logical. Whether to return the header as well. If TRUE, return a named list with entries "data" and "header". The latter is another named list which contains the header data. These header entries exist: "dtype": int, one of: 0=MRI_UCHAR; 1=MRI_INT; 3=MRI_FLOAT; 4=MRI_SHORT. "voldim": integer vector. The volume (=data) dimensions. E.g., c(256, 256, 256, 1). These header entries may exist: "vox2ras_matrix" (exists if "ras_good_flag" is 1), "mr_params" (exists if "has_mr_params" is 1). Passed to \code{\link[freesurferformats]{read.fs.mgh}}.
+#'
+#' @return numerical array, the voxel data. If `with_header`, the full volume datastructure (see above).
 #'
 #' @export
-subject.volume <- function(subjects_dir, subject_id, volume, format='AUTO', drop_empty_dims=TRUE) {
+subject.volume <- function(subjects_dir, subject_id, volume, format='AUTO', drop_empty_dims=TRUE, with_header=FALSE) {
     if(!(format %in% c('AUTO', 'mgh', 'mgz'))) {
         stop(sprintf("The volume format must be one of ('AUTO', 'mgh', 'mgz') but is '%s'.\n", format));
     }
@@ -30,11 +32,8 @@ subject.volume <- function(subjects_dir, subject_id, volume, format='AUTO', drop
     } else {
         volume_file = paste(volume_filepath_noext, ".", format, sep='');
     }
-    if(drop_empty_dims) {
-        return(drop(freesurferformats::read.fs.mgh(volume_file)));
-    } else {
-        return(freesurferformats::read.fs.mgh(volume_file));
-    }
+
+    return(freesurferformats::read.fs.mgh(volume_file, drop_empty_dims=drop_empty_dims, with_header=with_header));
 }
 
 

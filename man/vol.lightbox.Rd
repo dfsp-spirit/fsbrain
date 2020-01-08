@@ -4,15 +4,9 @@
 \alias{vol.lightbox}
 \title{Draw a lightbox view from volume slices.}
 \usage{
-vol.lightbox(
-  volume,
-  slices = -5,
-  axis = 1L,
-  nrow = 5L,
-  ncol = NULL,
-  border_geometry = "5x5",
-  background_color = "#000000"
-)
+vol.lightbox(volume, slices = -5, axis = 1L, per_row = 5L,
+  per_col = NULL, border_geometry = "5x5",
+  background_color = "#000000")
 }
 \arguments{
 \item{volume}{3D array, can be numeric (gray-scale intensity values) or color strings. If numeric, the intensity values must be in range `[0, 1]`.}
@@ -21,9 +15,9 @@ vol.lightbox(
 
 \item{axis}{positive integer in range 1L..3L, the axis to use.}
 
-\item{nrow}{positive integer, the number of subimages per row in the output image. If `NULL`, automatically computed from the number of slices and the `ncol` parameter.}
+\item{per_row}{positive integer, the number of subimages per row in the output image. If `NULL`, automatically computed from the number of slices and the `per_col` parameter.}
 
-\item{ncol}{positive integer, the number of subimages per row in the output image. If `NULL`, automatically computed from the number of slices and the `nrow` parameter.}
+\item{per_col}{positive integer, the number of subimages per column in the output image. If `NULL`, automatically computed from the number of slices and the `per_row` parameter.}
 
 \item{border_geometry}{string, a geometry string passed to \code{\link[magick]{image_border}} to define the borders to add to each image tile. The default value adds 5 pixels, both horizontally and vertically.}
 

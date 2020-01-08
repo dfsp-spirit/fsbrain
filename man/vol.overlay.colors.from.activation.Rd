@@ -4,11 +4,8 @@
 \alias{vol.overlay.colors.from.activation}
 \title{Generate colors for a 3D volume, based on the activation data and a colormap.}
 \usage{
-vol.overlay.colors.from.activation(
-  volume,
-  colormap_fn = squash::blueorange,
-  no_act_source_value = 0
-)
+vol.overlay.colors.from.activation(volume,
+  colormap_fn = squash::blueorange, no_act_source_value = 0)
 }
 \arguments{
 \item{volume}{a 3D array, the activation data (or p-values, effect sizes, or whatever)}
