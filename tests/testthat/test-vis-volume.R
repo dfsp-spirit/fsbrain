@@ -128,7 +128,7 @@ test_that("A brain volume and an overlay can be merged", {
 
     # Now test that the merged image can be visualized as a lightbox:
     lb = vol.lightbox(merged);       # This is large, so it is better to write it to disk and open in an external viewer.
-    magick::image_write(merged, path="brain_lightbox.png");
+    magick::image_write(lb, path="brain_lightbox.png");
 })
 
 
