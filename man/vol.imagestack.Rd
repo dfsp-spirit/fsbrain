@@ -7,7 +7,7 @@
 vol.imagestack(volume, axis = 1L, intensity_scale = 255)
 }
 \arguments{
-\item{volume}{a 3D image volume. Can be numeric, or something that can be read directly by \code{\link[magick]{image_read}} in 2D matrices (slices along the axis), e.g., a 3D array of color strings.}
+\item{volume}{a 3D image volume. Can be numeric, or something that can be read directly by \code{\link[magick]{image_read}} in 2D matrices (slices along the axis), e.g., a 3D array of color strings. If a 2D matrix is passed, the resulting stack will contain a single image.}
 
 \item{axis}{positive integer in range 1L..3L or an axis name, the axis to use.}
 

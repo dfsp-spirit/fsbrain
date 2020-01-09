@@ -4,7 +4,7 @@
 
 #' @title Extract and visualize a slice of a 3D image stack.
 #'
-#' @description Extracts one or more 2D slices from a 3D image (or a frame of a 4D image). Optionally, visualizes the first of the selected slices.
+#' @description Extracts one or more 2D slices from a 3D image (or a frame of a 4D image). Optionally, visualizes the first of the selected slices. To display the result, you can use \code{\link[fsbrain]{vol.lightbox}}.
 #'
 #' @param volume a 3D or 4D image volume. Note that empty dimensions will be dropped before any processing, and the remaining volume must have 3 or 4 dimensions.
 #'
@@ -18,14 +18,12 @@
 #'
 #' @param flip NULL or one of the character strings 'vertically' or 'horizontally'. Note that flipping *horizontally* means that the image will be mirrored along the central *vertical* axis. If `NULL` is passed, nothing is flipped. Flipping occurs after rotation.
 #'
-#' @param show logical, whether to display the slice. Will display the first slice only if `slice_index` is a vector and print information on the slice to stdout. Defaults to `FALSE`.
-#'
 #' @return slice data. If `slice_index` is a scalar, a numerical 2D matrix (a 2D image from the stack). Otherwise, a numerical 3D array that contains the selected 2D images.
 #'
 #' @importFrom grDevices gray.colors
 #' @importFrom graphics image
 #' @export
-vol.slice <- function(volume, slice_index=NULL, frame=1L, axis=1L, rotation=0L, flip=NULL, show=FALSE) {
+vol.slice <- function(volume, slice_index=NULL, frame=1L, axis=1L, rotation=0L, flip=NULL) {
     if(axis < 1 | axis > 3) {
         stop(sprintf("Axis must be integer with value 1, 2 or 3 but is %d.\n", axis));
     }
@@ -72,18 +70,6 @@ vol.slice <- function(volume, slice_index=NULL, frame=1L, axis=1L, rotation=0L, 
         }
     }
 
-    if(show) {
-        if(length(slice_index) > 1) {
-            shown_slice_index = slice_index[1];    # shown_slice_index is the index of the slice in the volume (not in the vector of requested slices)
-            shown_slice = slice[1,,];              # select the first slice from the matrix of selected slices
-        } else {
-            shown_slice_index = slice_index;
-            shown_slice = slice;
-        }
-
-        message(sprintf("Slice %d/%d at axis %d, with dimensions '%s'.\n", shown_slice_index, dim(vol3d)[axis], axis, paste(dim(shown_slice), collapse="x")));
-        graphics::image(shown_slice, col=grDevices::gray.colors(n=255, 0.0, 1.0), useRaster = TRUE);
-    }
     return(slice);
 }
 
@@ -95,7 +81,7 @@ vol.slice <- function(volume, slice_index=NULL, frame=1L, axis=1L, rotation=0L, 
 #'
 #' @return 2D matrix, the flipped matrix.
 #'
-#' @export
+#' @keywords internal
 flip2D <- function(slice, how='horizontally') {
     if(is.null(how)) {
         return(slice);
@@ -132,7 +118,7 @@ flip2D <- function(slice, how='horizontally') {
 #'
 #' @return 2D matrix, the rotated matrix
 #'
-#' @export
+#' @keywords internal
 rotate2D <- function(slice, degrees=90) {
     if(length(dim(slice)) != 2L) {
         stop("Slice must be a 2D matrix.");
@@ -708,7 +694,7 @@ vol.intensity.to.color <- function(volume) {
 
         num_dims = length(dim(volume));
         if(num_dims == 3L) {
-            return(array(grDevices::rgb(volume, volume, volume), dim(volume))); # try magick::image_read(vol.slice(volume))
+            return(array(grDevices::rgb(volume, volume, volume), dim(volume))); # try magick::image_read(vol.slice(return_value)) or vol.lightbox(return_value)
         } else {
             stop("Volume must have 3 dimenions.");
         }

@@ -17,3 +17,4 @@ flip2D(slice, how = "horizontally")
 \description{
 Flip a 2D matrix.
 }
+\keyword{internal}

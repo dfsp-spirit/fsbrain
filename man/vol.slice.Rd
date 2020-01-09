@@ -10,8 +10,7 @@ vol.slice(
   frame = 1L,
   axis = 1L,
   rotation = 0L,
-  flip = NULL,
-  show = FALSE
+  flip = NULL
 )
 }
 \arguments{
@@ -26,12 +25,10 @@ vol.slice(
 \item{rotation}{integer, rotation in degrees. Defaults to 0 (no ratation). Must be a multiple of 90 if given.}
 
 \item{flip}{NULL or one of the character strings 'vertically' or 'horizontally'. Note that flipping *horizontally* means that the image will be mirrored along the central *vertical* axis. If `NULL` is passed, nothing is flipped. Flipping occurs after rotation.}
-
-\item{show}{logical, whether to display the slice. Will display the first slice only if `slice_index` is a vector and print information on the slice to stdout. Defaults to `FALSE`.}
 }
 \value{
 slice data. If `slice_index` is a scalar, a numerical 2D matrix (a 2D image from the stack). Otherwise, a numerical 3D array that contains the selected 2D images.
 }
 \description{
-Extracts one or more 2D slices from a 3D image (or a frame of a 4D image). Optionally, visualizes the first of the selected slices.
+Extracts one or more 2D slices from a 3D image (or a frame of a 4D image). Optionally, visualizes the first of the selected slices. To display the result, you can use \code{\link[fsbrain]{vol.lightbox}}.
 }
