@@ -483,6 +483,8 @@ vol.overlay.colors.from.activation <- function(volume, colormap_fn=squash::blueo
 
 #' @title Draw a lightbox view from volume slices.
 #'
+#' @description A lightbox is a single image that holds a set of subimages, arranged in a grid. The images can have a small border or spacing between them. Consecutive subimages will be appear the same row of the grid.
+#'
 #' @param volume 3D array, can be numeric (gray-scale intensity values) or color strings. If numeric, the intensity values must be in range `[0, 1]`.
 #'
 #' @param slices slice index definition. If a vector of integers, interpreted as slice indices. If a single negative interger `-n`, interpreted as every `nth` slice, starting at slice 1. The character string 'all' or the value `NULL` will be interpreted as *all slices*.
@@ -542,8 +544,8 @@ vol.lightbox <- function(volume, slices=-5, axis=1L, per_row=5L, per_col=NULL, b
     }
 
     # Arrange the stack of images
-    merged_img = magick::image_append(images);
-    #merged_img = magick.grid(images, per_row=per_row, per_col=per_col);
+    #merged_img = magick::image_append(images);
+    merged_img = magick.grid(images, per_row=per_row, per_col=per_col, background_color = background_color);
 
     return(merged_img);
 }
@@ -551,7 +553,7 @@ vol.lightbox <- function(volume, slices=-5, axis=1L, per_row=5L, per_col=NULL, b
 
 #' @title Arrange a multi-frame ImageMagick image into a grid.
 #'
-#' @description Arrange all subimages of the given ImageMagick image into a single 2D image, that contains the subimages arranged in a grid-like structure.
+#' @description Arrange all subimages of the given ImageMagick image into a single 2D image, that contains the subimages arranged in a grid-like structure. Consecutive subimages will be appear the same row.
 #'
 #' @param magickimage an ImageMagick image
 #'
@@ -559,8 +561,10 @@ vol.lightbox <- function(volume, slices=-5, axis=1L, per_row=5L, per_col=NULL, b
 #'
 #' @param per_col positive integer, the number of subimages per column in the output image. If `NULL`, automatically computed from the number of slices and the `per_row` parameter.
 #'
+#' @param background_color string, a valid ImageMagick color string such as "white" or "#000080". The color to use when extending images (e.g., when creating the border). Defaults to black.
+#'
 #' @keywords internal
-magick.grid <- function(magickimage, per_row=5L, per_col=NULL) {
+magick.grid <- function(magickimage, per_row=5L, per_col=NULL, background_color = "#000000") {
     images = magickimage;
     num_subimages = length(images);
     if(is.null(per_row) & is.null(per_col)) {
@@ -582,6 +586,46 @@ magick.grid <- function(magickimage, per_row=5L, per_col=NULL) {
             per_col = ceiling(num_subimages / as.double(per_row));
         }
     }
+
+    num_rows = per_col;
+    num_columns = per_row;
+
+    #message(sprintf("Distributing %d images over %d rows and %d colums.\n", num_subimages, num_rows, num_columns));
+
+    img_start_indices_each_row = seq.int(from = 1L, to = num_subimages, by=per_row);
+    image_data = NULL;
+    for(row_idx in seq_len(length(img_start_indices_each_row))) {
+        row_start_index = img_start_indices_each_row[[row_idx]];
+        row_end_index = row_start_index + (per_row -1);
+        num_this_row = per_row;
+        if(row_end_index > num_subimages) {  # Can only happen in last row.
+            out_of_bounds_row_end_index = row_end_index;
+            row_end_index = row_start_index + (num_subimages %% per_row) -1;
+            num_this_row = (row_end_index - row_start_index) + 1;
+            #message(sprintf("At row %d of %d, handling the %d subimages %d to %d of %d.\n", row_idx, num_rows, num_this_row, row_start_index, row_end_index, num_subimages));
+
+            if(!is.null(background_color)) {
+                # Fill the rest of the background with the background color. Otherwise, we will get a white background for the remainder of the last row.
+                num_missing = out_of_bounds_row_end_index - row_end_index;
+                background_tile = magick::image_blank(magick::image_info(images[1])$width, magick::image_info(images[1])$height, background_color);
+                for(tile_idx in 1:num_missing) {
+                    images = c(images, background_tile);
+                }
+                #message(sprintf("-At row %d of %d: row had %d images, missed %d background tiles to a full row of %d images, added them.\n", row_idx, num_rows, num_this_row, num_missing, per_row));
+                #message(sprintf("-After adding the  %d missing background tiles, changes row_end_index from %d to %d.\n", num_missing, row_end_index, out_of_bounds_row_end_index));
+                row_end_index = out_of_bounds_row_end_index; # It's not out of bounds anymore since we added the background tiles.
+
+            }
+        }
+
+        if(is.null(image_data)) {
+            image_data = magick::image_append(images[row_start_index:row_end_index], stack=FALSE);
+        } else {
+            image_row = magick::image_append(images[row_start_index:row_end_index], stack=FALSE);
+            image_data = magick::image_append(c(image_data, image_row), stack = TRUE);
+        }
+    }
+    return(image_data);
 
 }
 

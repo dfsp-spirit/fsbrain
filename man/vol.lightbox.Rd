@@ -30,6 +30,8 @@ vol.lightbox(
 \item{background_color}{string, a valid ImageMagick color string such as "white" or "#000080". The color to use when extending images (e.g., when creating the border). Defaults to black.}
 }
 \description{
+A lightbox is a single image that holds a set of subimages, arranged in a grid. The images can have a small border or spacing between them. Consecutive subimages will be appear the same row of the grid.
+
 If overlay_colors are given, the volume will be used as the background, and it will only be visible where overlay_colors has transparency.
 }
 \concept{volume visualization}
