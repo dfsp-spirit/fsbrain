@@ -4,7 +4,7 @@
 \alias{rotate3D}
 \title{Rotate a 3D array in 90 degree steps.}
 \usage{
-rotate3D(volume, axis = 1L, degrees = 90)
+rotate3D(volume, axis = 1L, degrees = 90L)
 }
 \arguments{
 \item{volume}{a 3D image volume}
@@ -20,7 +20,7 @@ a 3D image volume, rotated around the axis. The dimensions may or may not be dif
 Rotate a 3D array in 90 degree steps along an axis. This leads to an array with different dimensions.
 }
 \examples{
-\donttest {
+\donttest{
    # Load data
    fsbrain::download_optional_data();
    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");

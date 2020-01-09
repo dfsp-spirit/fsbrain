@@ -4,13 +4,15 @@
 \alias{flip2D}
 \title{Flip a 2D matrix.}
 \usage{
-flip2D(slice)
+flip2D(slice, how = "horizontally")
 }
 \arguments{
 \item{slice}{a 2D matrix}
+
+\item{how}{character string, one of 'vertically' or 'horizontally'. Note that flipping *horizontally* means that the image will be mirrored along the central *vertical* axis. If `NULL` is passed, the passed value is returned unaltered.}
 }
 \value{
-2D matrix, the flipped matrix
+2D matrix, the flipped matrix.
 }
 \description{
 Flip a 2D matrix.

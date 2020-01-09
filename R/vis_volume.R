@@ -14,9 +14,9 @@
 #'
 #' @param axis positive integer, the axis to use when indexing the slices. Defaults to 1.
 #'
-#' @param rotation integer, rotation in degrees. Defaults to 0 (no ratation). Must be a multiple of 90 if given. Currently only supported if slice_index is scalar.
+#' @param rotation integer, rotation in degrees. Defaults to 0 (no ratation). Must be a multiple of 90 if given.
 #'
-#' @param flip logical, whether to flip the slice. Currently only supported if slice_index is scalar.
+#' @param flip NULL or one of the character strings 'vertically' or 'horizontally'. Note that flipping *horizontally* means that the image will be mirrored along the central *vertical* axis. If `NULL` is passed, nothing is flipped. Flipping occurs after rotation.
 #'
 #' @param show logical, whether to display the slice. Will display the first slice only if `slice_index` is a vector and print information on the slice to stdout. Defaults to `FALSE`.
 #'
@@ -25,17 +25,17 @@
 #' @importFrom grDevices gray.colors
 #' @importFrom graphics image
 #' @export
-vol.slice <- function(volume, slice_index=NULL, frame=1L, axis=1L, rotation=0L, flip=FALSE, show=FALSE) {
+vol.slice <- function(volume, slice_index=NULL, frame=1L, axis=1L, rotation=0L, flip=NULL, show=FALSE) {
     if(axis < 1 | axis > 3) {
         stop(sprintf("Axis must be integer with value 1, 2 or 3 but is %d.\n", axis));
     }
-    volume = drop(volume); # drop empty dimensions
+
     if(length(dim(volume))==4) {
         vol3d = volume[,,,frame];
     } else if(length(dim(volume))==3) {
         vol3d = volume;
     } else {
-        stop("Data passed as parameter 'volume' must have 3 or 4 (non-empty) dimensions.");
+        stop("Data passed as parameter 'volume' must have 3 or 4 dimensions.");
     }
 
     if(is.null(slice_index)) {
@@ -60,15 +60,15 @@ vol.slice <- function(volume, slice_index=NULL, frame=1L, axis=1L, rotation=0L, 
         if(length(slice_index) == 1) {
             slice = rotate2D(slice, rotation);
         } else {
-            warning("Rotation request ignored for multi-slice index.");
+            slice = rotate3D(slice, axis=axis, degrees=rotation);
         }
     }
 
-    if(flip) {
+    if(!is.null(flip)) {
         if(length(slice_index) == 1) {
-            slice = flip2D(slice);
+            slice = flip2D(slice, how = flip);
         } else {
-            warning("Flip request ignored for multi-slice index.");
+            slice = flip3D(slice, axis = axis, how = flip);
         }
     }
 
@@ -91,14 +91,37 @@ vol.slice <- function(volume, slice_index=NULL, frame=1L, axis=1L, rotation=0L, 
 #'
 #' @param slice a 2D matrix
 #'
-#' @return 2D matrix, the flipped matrix
+#' @param how character string, one of 'vertically' or 'horizontally'. Note that flipping *horizontally* means that the image will be mirrored along the central *vertical* axis. If `NULL` is passed, the passed value is returned unaltered.
+#'
+#' @return 2D matrix, the flipped matrix.
 #'
 #' @export
-flip2D <- function(slice) {
+flip2D <- function(slice, how='horizontally') {
+    if(is.null(how)) {
+        return(slice);
+    }
+
+    if(how == 'vertically') {
+        axis = 2L;
+    } else if(how == 'horizontally') {
+        axis = 1L;
+    } else {
+        stop("How must be one of 'vertically' or 'horizontally' (or NULL for noop).");
+    }
+
+    axis = as.integer(axis);
+    if(axis < 1L | axis > 2L) {
+        stop(sprintf("Axis must be integer with value 1 or 2 but is %d.\n", axis));
+    }
+
     if(length(dim(slice)) != 2L) {
         stop("Slice must be a 2D matrix.");
     }
-    return(as.matrix(rev(as.data.frame(rotate2D(slice, degrees=180L)))));
+    if(axis == 1L) {
+        return(slice[nrow(slice):1,]);
+    } else {
+        return(slice[, ncol(slice):1]);
+    }
 }
 
 #' @title Rotate a 2D matrix in 90 degree steps.
@@ -157,7 +180,7 @@ rotate90 <- function(mtx, times=1L, clockwise=TRUE) {
 #' @return a 3D image volume, rotated around the axis. The dimensions may or may not be different from the input image, depending on the rotation angle.
 #'
 #' @examples
-#' \donttest {
+#' \donttest{
 #'    # Load data
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -171,7 +194,7 @@ rotate90 <- function(mtx, times=1L, clockwise=TRUE) {
 #' }
 #'
 #' @export
-rotate3D <- function(volume, axis=1L, degrees=90) {
+rotate3D <- function(volume, axis=1L, degrees=90L) {
     if(length(dim(volume)) != 3) {
         stop(sprintf("Volume must have exactly 3 dimensions but has %d.\n", length(dim(volume))));
     }
@@ -183,6 +206,8 @@ rotate3D <- function(volume, axis=1L, degrees=90) {
     dim2 = dim(volume)[2];
     dim3 = dim(volume)[3];
     num_voxels = dim1 * dim2 * dim3;
+
+    degrees = as.integer(degrees);
 
     if(abs(degrees) %in% c(90L, 270L)) {
         if(axis == 1L) {
@@ -212,6 +237,50 @@ rotate3D <- function(volume, axis=1L, degrees=90) {
         }
     }
     return(rotbrain);
+}
+
+#' @title Flip a 3D array along an axis.
+#'
+#' @description Flip the slice of an 3D array horizontally or vertically along an axis. This leads to an output array with identical dimensions.
+#'
+#' @param volume a 3D image volume
+#'
+#' @param axis positive integer in range 1L..3L or an axis name, the axis to use.
+#'
+#' @param how character string, one of 'horizontally' or 'vertically'. How to flip the 2D slices. Note that flipping *horizontally* means that the image will be mirrored along the central *vertical* axis.
+#'
+#' @return a 3D image volume, flipped around the axis. The dimensions are identical to the dimensions of the input image.
+#'
+#' @export
+flip3D <- function(volume, axis=1L, how='horizontally') {
+    if(length(dim(volume)) != 3) {
+        stop(sprintf("Volume must have exactly 3 dimensions but has %d.\n", length(dim(volume))));
+    }
+    axis = as.integer(axis);
+    if(axis < 1L | axis > 3L) {
+        stop(sprintf("Axis must be integer with value 1, 2 or 3 but is %d.\n", axis));
+    }
+    dim1 = dim(volume)[1];
+    dim2 = dim(volume)[2];
+    dim3 = dim(volume)[3];
+    num_voxels = dim1 * dim2 * dim3;
+
+    flipped_brain = array(rep(0L, num_voxels), dim(volume));
+
+    if(axis == 1L) {
+        for(ax1_idx in seq_len(dim1)) {
+            flipped_brain[ax1_idx,,] = flip2D(volume[ax1_idx,,], how = how);
+        }
+    } else if (axis == 2L) {
+        for(ax2_idx in seq_len(dim2)) {
+            flipped_brain[,ax2_idx,] = flip2D(volume[,ax2_idx,], how = how);
+        }
+    } else {
+        for(ax3_idx in seq_len(dim3)) {
+            flipped_brain[,,ax3_idx] = flip2D(volume[,,ax3_idx], how = how);
+        }
+    }
+    return(flipped_brain);
 }
 
 
@@ -350,7 +419,7 @@ vol.planes <- function(plane=NULL) {
 #'
 #' @description Create an image from each slice along the axis, then stack those into an ImageMagick image stack.
 #'
-#' @param volume a 3D image volume. Can be numeric, or something that can be read directly by \code{\link[magick]{image_read}} in 2D matrices (slices along the axis), e.g., a 3D array of color strings.
+#' @param volume a 3D image volume. Can be numeric, or something that can be read directly by \code{\link[magick]{image_read}} in 2D matrices (slices along the axis), e.g., a 3D array of color strings. If a 2D matrix is passed, the resulting stack will contain a single image.
 #'
 #' @param axis positive integer in range 1L..3L or an axis name, the axis to use.
 #'
@@ -367,16 +436,24 @@ vol.imagestack <- function(volume, axis=1L, intensity_scale=255) {
     if(axis < 1L | axis > 3L) {
         stop(sprintf("Axis must be integer with value 1, 2 or 3 but is %d.\n", axis));
     }
-    if(length(dim(volume)) != 3) {
-        stop(sprintf("Volume must have exactly 3 dimensions but has %d.\n", length(dim(volume))));
+
+    if(length(dim(volume)) == 2) {
+        if(is.null(intensity_scale) | !is.numeric(volume)) {
+            return(magick::image_read(volume));
+        } else {
+            return(magick::image_read(grDevices::as.raster(volume / intensity_scale)));
+        }
+    } else if(length(dim(volume)) == 3) {
+        if(is.null(intensity_scale) | !is.numeric(volume)) {
+            image_list = apply(volume, axis, function(x){magick::image_read(x)});
+        } else {
+            image_list = apply(volume, axis, function(x){magick::image_read(grDevices::as.raster(x / intensity_scale))});
+        }
+        image_stack = Reduce(c, image_list);
+        return(image_stack);
+    } else{
+        stop("The image must have exactly 2 or 3 dimensions.");
     }
-    if(is.null(intensity_scale) | !is.numeric(volume)) {
-        image_list = apply(volume, axis, function(x){magick::image_read(x)});
-    } else {
-        image_list = apply(volume, axis, function(x){magick::image_read(grDevices::as.raster(x / intensity_scale))});
-    }
-    image_stack = Reduce(c, image_list);
-    return(image_stack);
 }
 
 
@@ -422,8 +499,11 @@ vol.overlay.colors.from.activation <- function(volume, colormap_fn=squash::blueo
 #' @description If overlay_colors are given, the volume will be used as the background, and it will only be visible where overlay_colors has transparency.
 #' @export
 vol.lightbox <- function(volume, slices=-5, axis=1L, per_row=5L, per_col=NULL, border_geometry="5x5", background_color = "#000000") {
-    if(length(dim(volume)) != 3) {
-        stop("Volume must have exactly 3 dimensions.");
+
+    if(length(dim(volume)) == 2) {
+        just_a_slice = volume;
+        message("Inflating single 2D slice to volume, new axis added at position 1.");
+        volume = array(just_a_slice, dim = c(1, dim(just_a_slice)[1], dim(just_a_slice)[2]));
     }
 
     if(is.character(axis)) {
@@ -436,6 +516,10 @@ vol.lightbox <- function(volume, slices=-5, axis=1L, per_row=5L, per_col=NULL, b
 
     if(is.numeric(volume)) {
         volume = vol.intensity.to.color(volume);
+    }
+
+    if(length(dim(volume)) != 3) {
+        stop("Volume must have exactly 3 dimensions.");
     }
 
     # Compute the slice indices from the slice definition
@@ -608,11 +692,11 @@ vol.merge <- function(volume, overlay_colors, bbox_threshold=0L, forced_overlay_
 
 #' @title Convert intensity image to colors.
 #'
-#' @description Convert a gray-scale image defined by intensity values in range [0, 1] to an image with identical dimensions that contains an R color string (like `#222222`) at each position. The color strings are computed from the intensities, by taking the intensity value as the value for all three RGB channels. I.e., the output is still gray-scale, but defined in RGB space.
+#' @description Convert a gray-scale image defined by intensity values in range [0, 1] to an image with identical dimensions that contains an R color string (like `#222222`) at each position. The color strings are computed from the intensities, by taking the intensity value as the value for all three RGB channels. I.e., the output is still gray-scale, but defined in RGB space. To make it clear, this function does **not** apply a colormap.
 #'
 #' @param volume numeric array, typically a 3D image with intensities in range [0, 1]
 #'
-#' @return array of RGB color strings
+#' @return array of RGB color strings.
 #'
 #' @export
 vol.intensity.to.color <- function(volume) {
@@ -621,8 +705,13 @@ vol.intensity.to.color <- function(volume) {
         if(rng[1] < 0.0 | rng[2] > 1.0) {
             warning(sprintf("Intensity values of volume are in range range [%.2f, %.2f], please scale the intensity values to range [0, 1] before passing them to this function.\n", rng[1], rng[2]));
         }
-        vol_col = array(grDevices::rgb(volume, volume, volume), dim(volume)); # try magick::image_read(vol.slice(volume))
-        return(vol_col);
+
+        num_dims = length(dim(volume));
+        if(num_dims == 3L) {
+            return(array(grDevices::rgb(volume, volume, volume), dim(volume))); # try magick::image_read(vol.slice(volume))
+        } else {
+            stop("Volume must have 3 dimenions.");
+        }
     } else {
         stop("Parameter volume must be numeric.");
     }

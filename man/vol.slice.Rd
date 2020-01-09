@@ -10,7 +10,7 @@ vol.slice(
   frame = 1L,
   axis = 1L,
   rotation = 0L,
-  flip = FALSE,
+  flip = NULL,
   show = FALSE
 )
 }
@@ -23,9 +23,9 @@ vol.slice(
 
 \item{axis}{positive integer, the axis to use when indexing the slices. Defaults to 1.}
 
-\item{rotation}{integer, rotation in degrees. Defaults to 0 (no ratation). Must be a multiple of 90 if given. Currently only supported if slice_index is scalar.}
+\item{rotation}{integer, rotation in degrees. Defaults to 0 (no ratation). Must be a multiple of 90 if given.}
 
-\item{flip}{logical, whether to flip the slice. Currently only supported if slice_index is scalar.}
+\item{flip}{NULL or one of the character strings 'vertically' or 'horizontally'. Note that flipping *horizontally* means that the image will be mirrored along the central *vertical* axis. If `NULL` is passed, nothing is flipped. Flipping occurs after rotation.}
 
 \item{show}{logical, whether to display the slice. Will display the first slice only if `slice_index` is a vector and print information on the slice to stdout. Defaults to `FALSE`.}
 }
