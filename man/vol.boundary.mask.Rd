@@ -19,3 +19,4 @@ integer 2D matrix with dimensions of a slice of the volume. Positions set to 1 a
 \description{
 Compute, over all images in a stack along an axis, the foreground and background pixels as a binary mask. A pixel is a `foreground` pixel iff its value is greater than the `threshold` parameter in at least one of the slices. A pixel is a `background` pixel iff its value is below or euqal to the `threshold` in all slices.
 }
+\keyword{internal}

@@ -32,3 +32,12 @@ slice data. If `slice_index` is a scalar, a numerical 2D matrix (a 2D image from
 \description{
 Extracts one or more 2D slices from a 3D image (or a frame of a 4D image). Optionally, visualizes the first of the selected slices. To display the result, you can use \code{\link[fsbrain]{vol.lightbox}}.
 }
+\seealso{
+Other volume utility: 
+\code{\link{vol.boundary.box}()},
+\code{\link{vol.imagestack}()},
+\code{\link{vol.merge}()},
+\code{\link{vol.overlay.colors.from.activation}()},
+\code{\link{vol.planes}()}
+}
+\concept{volume utility}

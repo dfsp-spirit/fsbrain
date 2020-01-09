@@ -20,6 +20,8 @@
 #'
 #' @return slice data. If `slice_index` is a scalar, a numerical 2D matrix (a 2D image from the stack). Otherwise, a numerical 3D array that contains the selected 2D images.
 #'
+#' @family volume utility
+#'
 #' @importFrom grDevices gray.colors
 #' @importFrom graphics image
 #' @export
@@ -179,6 +181,8 @@ rotate90 <- function(mtx, times=1L, clockwise=TRUE) {
 #'    vol.lightbox(rotate3D(brain, axis=3, degrees = 90), axis=3);
 #' }
 #'
+#' @family volume math
+#'
 #' @export
 rotate3D <- function(volume, axis=1L, degrees=90L) {
     if(length(dim(volume)) != 3) {
@@ -237,6 +241,8 @@ rotate3D <- function(volume, axis=1L, degrees=90L) {
 #'
 #' @return a 3D image volume, flipped around the axis. The dimensions are identical to the dimensions of the input image.
 #'
+#' @family volume math
+#'
 #' @export
 flip3D <- function(volume, axis=1L, how='horizontally') {
     if(length(dim(volume)) != 3) {
@@ -282,8 +288,7 @@ flip3D <- function(volume, axis=1L, how='horizontally') {
 #'
 #' @return integer 2D matrix with dimensions of a slice of the volume. Positions set to 1 are `foreground` pixels and positions set to 0 are `background` pixels (see `Details` section).
 #'
-#'
-#' @export
+#' @keywords internal
 vol.boundary.mask <- function(volume, plane=1L, threshold=0L) {
     axes = vol.plane.axes(plane);
     if(length(dim(volume)) != 3) {
@@ -316,6 +321,8 @@ vol.boundary.mask <- function(volume, plane=1L, threshold=0L) {
 #' @param threshold numerical, the threshold intensity used to separate background and foreground. All voxels with intensity values greater than this value will be considered `foreground` voxels.
 #'
 #' @return named list with 2 entries: `from` is an integer vector of length 3, defining the minimal (x,y,z) foreground indices. `to` is an integer vector of length 3, defining the maximal (x,y,z) foreground indices.
+#'
+#' @family volume utility
 #'
 #' @export
 vol.boundary.box <- function(volume, threshold=0L) {
@@ -386,6 +393,9 @@ vol.plane.axes <- function(plane) {
 #' @param plane NULL, a plane index, or a plane name.
 #'
 #' @return if `plane` is NULL, all available planes and their indices as a named list. If `plane` is an integer (a plane index), its name. If `plane` is an characters string (a plane name), its index.
+#'
+#' @family volume utility
+#'
 #' @export
 vol.planes <- function(plane=NULL) {
     planes = list("coronal"=1, "sagittal"=2, "axial"=3);
@@ -412,6 +422,8 @@ vol.planes <- function(plane=NULL) {
 #' @param intensity_scale integer, value by which to scale the intensities in the volume to the range `[0, 1]`. Only used for numeric volumes. Set to NULL for data that can be read directly by \code{\link[magick]{image_read}}, and to 1 for intensity data that requires no scaling. Defaults to 255, which is suitable for 8 bit image data.
 #'
 #' @return a vectorized ImageMagick image, containing one subimage per slice. This can be interpreted as an animation or whatever.
+#'
+#' @family volume utility
 #'
 #' @export
 vol.imagestack <- function(volume, axis=1L, intensity_scale=255) {
@@ -457,6 +469,9 @@ vol.imagestack <- function(volume, axis=1L, intensity_scale=255) {
 #'
 #' @importFrom squash makecmap blueorange cmap
 #' @importFrom grDevices adjustcolor
+#'
+#' @family volume utility
+#'
 #' @export
 vol.overlay.colors.from.activation <- function(volume, colormap_fn=squash::blueorange, no_act_source_value=0) {
     col = squash::cmap(volume, map = squash::makecmap(volume, colFn = colormap_fn));
@@ -483,6 +498,9 @@ vol.overlay.colors.from.activation <- function(volume, colormap_fn=squash::blueo
 #' @param background_color string, a valid ImageMagick color string such as "white" or "#000080". The color to use when extending images (e.g., when creating the border). Defaults to black.
 #'
 #' @description If overlay_colors are given, the volume will be used as the background, and it will only be visible where overlay_colors has transparency.
+#'
+#' @family volume visualization
+#'
 #' @export
 vol.lightbox <- function(volume, slices=-5, axis=1L, per_row=5L, per_col=NULL, border_geometry="5x5", background_color = "#000000") {
 
@@ -623,6 +641,8 @@ get.slice.indices <- function(voldim, axis, slices) {
 #' @param forced_overlay_color NULL or an rgb color string, like '#FF0000' for red. If NULL, the activation colors will be used as foreground colors. Otherwise, the given color will be for all foreground vertices.
 #'
 #' @return 3D array of color strings, the merged colors
+#'
+#' @family volume utility
 #'
 #' @importFrom grDevices rgb
 #' @export

@@ -23,3 +23,12 @@ a 3D matrix of color strings, with the same dimensions as the input volume
 \description{
 Applies the colormap function to the data, then sets the alpha value (transparency) to full in all areas without any activation. Feel free to clip data or whatever before passing it, so that all your no-activation data has the same value.
 }
+\seealso{
+Other volume utility: 
+\code{\link{vol.boundary.box}()},
+\code{\link{vol.imagestack}()},
+\code{\link{vol.merge}()},
+\code{\link{vol.planes}()},
+\code{\link{vol.slice}()}
+}
+\concept{volume utility}

@@ -26,3 +26,12 @@ vol.merge(
 \description{
 Merge background volume and overlay to new colors.
 }
+\seealso{
+Other volume utility: 
+\code{\link{vol.boundary.box}()},
+\code{\link{vol.imagestack}()},
+\code{\link{vol.overlay.colors.from.activation}()},
+\code{\link{vol.planes}()},
+\code{\link{vol.slice}()}
+}
+\concept{volume utility}

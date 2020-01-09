@@ -32,3 +32,4 @@ vol.lightbox(
 \description{
 If overlay_colors are given, the volume will be used as the background, and it will only be visible where overlay_colors has transparency.
 }
+\concept{volume visualization}
