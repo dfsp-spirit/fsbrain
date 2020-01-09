@@ -8,7 +8,7 @@
 #'
 #' @param volume a 3D or 4D image volume. Note that empty dimensions will be dropped before any processing, and the remaining volume must have 3 or 4 dimensions.
 #'
-#' @param slice_index positive integer or vector of positive integers, the index into the slices (for the axis). If NULL, the slice in the middle of the volume is used.
+#' @param slice_index positive integer or vector of positive integers, the index into the slices (for the axis). If NULL, the slice in the middle of the volume is used. One can pass the magic character string 'all' to use all slices along the axis.
 #'
 #' @param frame positive integer, optional. The frame (time point) to use, only relevant for 4D volumes. The last dimension is assumed to be the time dimension in that case.
 #'
@@ -41,6 +41,16 @@ vol.slice <- function(volume, slice_index=NULL, frame=1L, axis=1L, rotation=0L, 
     if(is.null(slice_index)) {
         # Select a middle slice, the first one is often (almost) empty.
         slice_index = as.integer(round(dim(vol3d)[axis] / 2));
+    }
+
+    if(is.character(slice_index)) {
+        if(slice_index == 'all') {
+            slice_index = seq_len(dim(vol3d)[axis]);
+        }
+    }
+
+    if(!is.numeric(slice_index)) {
+        stop("Could not determine a valid slice index.");
     }
 
     # Limit the index to the range 1..axis dim
@@ -499,17 +509,24 @@ vol.overlay.colors.from.activation <- function(volume, colormap_fn=squash::blueo
 #'
 #' @param background_color string, a valid ImageMagick color string such as "white" or "#000080". The color to use when extending images (e.g., when creating the border). Defaults to black.
 #'
+#' @param arrange_single_image logical, whether to apply the given arrangement (from parameters `per_row` and `per_column`) even if a single slice (a 2D image) is passed as `volume`. Defaults to FALSE, which prevents that background tiles are added to fill the row up to `per_row` images. This also prevents the border from getting added to a single image, so all you see is the raw image. Set to `TRUE` if you want to arrange even a single image in a row with a border.
+#'
 #' @description If overlay_colors are given, the volume will be used as the background, and it will only be visible where overlay_colors has transparency.
 #'
 #' @family volume visualization
 #'
 #' @export
-vol.lightbox <- function(volume, slices=-5, axis=1L, per_row=5L, per_col=NULL, border_geometry="5x5", background_color = "#000000") {
+vol.lightbox <- function(volume, slices=-5, axis=1L, per_row=5L, per_col=NULL, border_geometry="5x5", background_color = "#000000", arrange_single_image=FALSE) {
 
+    skip_border = FALSE;
     if(length(dim(volume)) == 2) {
         just_a_slice = volume;
         message("Inflating single 2D slice to volume, new axis added at position 1.");
         volume = array(just_a_slice, dim = c(1, dim(just_a_slice)[1], dim(just_a_slice)[2]));
+        if(!arrange_single_image) {
+            per_row=1L;
+            skip_border = TRUE;
+        }
     }
 
     if(is.character(axis)) {
@@ -538,9 +555,11 @@ vol.lightbox <- function(volume, slices=-5, axis=1L, per_row=5L, per_col=NULL, b
     images = vol.imagestack(img_slices, axis=axis);
 
     # Add tiny border
-    if(!((is.null(border_geometry) | is.null(background_color)))) {
-        #message("Applying border to individual images.");
-        images = magick::image_border(images, background_color, border_geometry);
+    if(!skip_border) {
+        if(!((is.null(border_geometry) | is.null(background_color)))) {
+            #message("Applying border to individual images.");
+            images = magick::image_border(images, background_color, border_geometry);
+        }
     }
 
     # Arrange the stack of images

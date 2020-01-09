@@ -16,7 +16,7 @@ vol.slice(
 \arguments{
 \item{volume}{a 3D or 4D image volume. Note that empty dimensions will be dropped before any processing, and the remaining volume must have 3 or 4 dimensions.}
 
-\item{slice_index}{positive integer or vector of positive integers, the index into the slices (for the axis). If NULL, the slice in the middle of the volume is used.}
+\item{slice_index}{positive integer or vector of positive integers, the index into the slices (for the axis). If NULL, the slice in the middle of the volume is used. One can pass the magic character string 'all' to use all slices along the axis.}
 
 \item{frame}{positive integer, optional. The frame (time point) to use, only relevant for 4D volumes. The last dimension is assumed to be the time dimension in that case.}
 
