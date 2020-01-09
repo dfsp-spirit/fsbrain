@@ -4,8 +4,12 @@
 \alias{vol.merge}
 \title{Merge background volume and overlay to new colors.}
 \usage{
-vol.merge(volume, overlay_colors, bbox_threshold = 0L,
-  forced_overlay_color = NULL)
+vol.merge(
+  volume,
+  overlay_colors,
+  bbox_threshold = 0L,
+  forced_overlay_color = NULL
+)
 }
 \arguments{
 \item{volume}{3D array, can be numeric (gray-scale intensity values) or color strings. If numeric, the intensity values must be in range `[0, 1]`.}

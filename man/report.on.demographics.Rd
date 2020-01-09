@@ -4,8 +4,11 @@
 \alias{report.on.demographics}
 \title{Print a demographics report}
 \usage{
-report.on.demographics(demographics_df, group_column_name = NULL,
-  paired = FALSE)
+report.on.demographics(
+  demographics_df,
+  group_column_name = NULL,
+  paired = FALSE
+)
 }
 \arguments{
 \item{demographics_df}{a demographics data.frame, as returned by [read.md.demographics]}

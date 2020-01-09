@@ -144,6 +144,77 @@ rotate90 <- function(mtx, times=1L, clockwise=TRUE) {
 }
 
 
+#' @title Rotate a 3D array in 90 degree steps.
+#'
+#' @description Rotate a 3D array in 90 degree steps along an axis. This leads to an array with different dimensions.
+#'
+#' @param volume a 3D image volume
+#'
+#' @param axis positive integer in range 1L..3L or an axis name, the axis to use.
+#'
+#' @param degrees integer, must be a (positive or negative) multiple of 90
+#'
+#' @return a 3D image volume, rotated around the axis. The dimensions may or may not be different from the input image, depending on the rotation angle.
+#'
+#' @examples
+#' \donttest {
+#'    # Load data
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+#'    brain = subject.volume(subjects_dir, 'subject1', 'brain') / 255;
+#'    # Show a lightbox along the third axis. Note that the orientation in the
+#'    #  visualization is not very intuitive: the brain lies on the side.
+#'    vol.lightbox(brain, axis=3);
+#'    # Rotate the whole brain volume by 90 degrees clockwise along
+#'    #  the third axis to fix the orientation:
+#'    vol.lightbox(rotate3D(brain, axis=3, degrees = 90), axis=3);
+#' }
+#'
+#' @export
+rotate3D <- function(volume, axis=1L, degrees=90) {
+    if(length(dim(volume)) != 3) {
+        stop(sprintf("Volume must have exactly 3 dimensions but has %d.\n", length(dim(volume))));
+    }
+    axis = as.integer(axis);
+    if(axis < 1L | axis > 3L) {
+        stop(sprintf("Axis must be integer with value 1, 2 or 3 but is %d.\n", axis));
+    }
+    dim1 = dim(volume)[1];
+    dim2 = dim(volume)[2];
+    dim3 = dim(volume)[3];
+    num_voxels = dim1 * dim2 * dim3;
+
+    if(abs(degrees) %in% c(90L, 270L)) {
+        if(axis == 1L) {
+            new_dim = c(dim1, dim3, dim2);
+        } else if (axis == 2L) {
+            new_dim = c(dim3, dim2, dim1);
+        } else {
+            new_dim = c(dim2, dim1, dim3);
+        }
+    } else {
+        new_dim = dim(volume);
+    }
+
+    rotbrain = array(rep(0L, num_voxels), new_dim);
+
+    if(axis == 1L) {
+        for(ax1_idx in seq_len(dim1)) {
+            rotbrain[ax1_idx,,] = rotate2D(volume[ax1_idx,,], degrees = degrees);
+        }
+    } else if (axis == 2L) {
+        for(ax2_idx in seq_len(dim2)) {
+            rotbrain[,ax2_idx,] = rotate2D(volume[,ax2_idx,], degrees = degrees);
+        }
+    } else {
+        for(ax3_idx in seq_len(dim3)) {
+            rotbrain[,,ax3_idx] = rotate2D(volume[,,ax3_idx], degrees = degrees);
+        }
+    }
+    return(rotbrain);
+}
+
+
 #' @title Compute foreground pixels over the whole 3D imagestack.
 #'
 #' @description Compute, over all images in a stack along an axis, the foreground and background pixels as a binary mask. A pixel is a `foreground` pixel iff its value is greater than the `threshold` parameter in at least one of the slices. A pixel is a `background` pixel iff its value is below or euqal to the `threshold` in all slices.
@@ -355,9 +426,16 @@ vol.lightbox <- function(volume, slices=-5, axis=1L, per_row=5L, per_col=NULL, b
         stop("Volume must have exactly 3 dimensions.");
     }
 
+    if(is.character(axis)) {
+        axis = vol.planes(axis);
+    }
     axis = as.integer(axis);
     if(axis < 1L | axis > 3L) {
         stop(sprintf("Axis must be integer with value 1, 2 or 3 but is %d.\n", axis));
+    }
+
+    if(is.numeric(volume)) {
+        volume = vol.intensity.to.color(volume);
     }
 
     # Compute the slice indices from the slice definition
@@ -371,12 +449,13 @@ vol.lightbox <- function(volume, slices=-5, axis=1L, per_row=5L, per_col=NULL, b
 
     # Add tiny border
     if(!((is.null(border_geometry) | is.null(background_color)))) {
-        message("Applying border to individual images.");
+        #message("Applying border to individual images.");
         images = magick::image_border(images, background_color, border_geometry);
     }
 
     # Arrange the stack of images
-    merged_img = magick.grid(images, per_row=per_row, per_col=per_col);
+    merged_img = magick::image_append(images);
+    #merged_img = magick.grid(images, per_row=per_row, per_col=per_col);
 
     return(merged_img);
 }
@@ -431,6 +510,10 @@ magick.grid <- function(magickimage, per_row=5L, per_col=NULL) {
 #'
 #' @keywords internal
 get.slice.indices <- function(voldim, axis, slices) {
+    if(is.character(axis)) {
+        axis = vol.planes(axis);
+    }
+    axis = as.integer(axis);
     num_slices_in_volume = voldim[axis];    # along the requested axis
     if(is.numeric(slices)) {
         if(length(slices) == 1 & slices < 0L) {
@@ -506,13 +589,8 @@ vol.merge <- function(volume, overlay_colors, bbox_threshold=0L, forced_overlay_
     }
 
     # Copy background colors into NA voxels of the activation.
-    #no_act_indices = which(is.na(overlay_colors), arr.ind=F);
-    #num_voxels_total = dim(overlay_colors)[1] * dim(overlay_colors)[2] * dim(overlay_colors)[3];
-    #message(sprintf("Out of %d voxels, %d are background and %d are foreground.\n", num_voxels_total, no_act_indices, (num_voxels_total - no_act_indices)));
-    #overlay_colors[no_act_indices] = volume[no_act_indices];
-
     overlay_idc = which(!is.na(overlay_colors), arr.ind = TRUE);
-    message(sprintf("Setting %d activated vertices to colors.\n", nrow(overlay_idc)));
+    #message(sprintf("Setting %d activated vertices to colors.\n", nrow(overlay_idc)));
 
     if(is.null(forced_overlay_color)) {
         merged[overlay_idc] = overlay_colors[overlay_idc];
