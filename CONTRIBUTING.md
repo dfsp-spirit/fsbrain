@@ -7,6 +7,6 @@ If you want to contribute something, the general workflow is:
 - Log into the Github website and fork the fsbrain repository to your account.
 - Checkout your forked repository to your computer. You will be on the master branch.
 - Create a new branch and name it after your feature, e.g., `add_cool_new_feature` or `fix_issue_17`.
-- Make changes to the fsbrain code and commmit them into your branch. 
+- Make changes to the fsbrain code and commit them into your branch. 
 - Make sure the unit tests are all green. Adding new tests for your fix or the new features is great.
 - Create a pull request, requesting to merge your branch into the master of my fsbrain repo.
