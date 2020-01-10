@@ -7,9 +7,9 @@
 get.rglstyle.shiny()
 }
 \value{
-named list, style parameters that can be passed to [rgl::shade3d()] via [base::do.call()].
+named list, style parameters that can be passed to to \code{\link[rgl]{shade3d}} via \code{\link[base]{do.call}}.
 }
 \description{
-Get a shiny visualization style.
+A shiny or glossy rendering style. Looks a bit more modern, but the resulting highlights may make the interpretation of the plotted data a bit harder in some areas. Hint: Run \code{\link[rgl]{material3d}} without arguments to see valid style keywords to create new styles.
 }
 \keyword{internal}

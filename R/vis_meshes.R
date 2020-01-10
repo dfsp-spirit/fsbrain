@@ -284,10 +284,17 @@ coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=TRUE, makecma
 #'
 #' @param cmesh, a coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
 #'
-#' @param style, a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
+#' @param style, a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style. Pass the magic word 'from_mesh' to try to retrieve a style (as a name or a style list) from the field `style` of the mesh, or default to "default" if the mesh has no such field.
 #'
 #' @keywords internal
 vis.coloredmesh <- function(cmesh, style="default") {
+    if(style == 'from_mesh') {
+        if(!is.null(cmesh$style)) {
+            style = cmesh$style;
+        } else {
+            style = 'default';
+        }
+    }
     if(is.list(style)) {
         style_params = style;
     } else if (is.character(style)) {
@@ -314,14 +321,14 @@ get.rglstyle <- function(style) {
     } else if (style == "semitransparent") {
         return(get.rglstyle.semitransparent());
     } else {
-        stop(sprintf("No such rendering style: '%s'.\n", style));
+        stop(sprintf("No such rendering style: '%s'. Try something like 'default', 'shiny', or 'semitransparent'.\n", style));
     }
 }
 
 
 #' @title Get the default visualization style parameters as a named list.
 #'
-#' @description Run \code{\link[rgl]{material3d}} without arguments to see valid style keywords to create new styles.
+#' @description The default rendering style, which is is rather plain. Does not look super fancy, but allows for clear data visualization without distractions. Hint: Run \code{\link[rgl]{material3d}} without arguments to see valid style keywords to create new styles.
 #'
 #' @return named list, style parameters that can be passed to \code{\link[rgl]{shade3d}} via \code{\link[base]{do.call}}.
 #'
@@ -333,19 +340,19 @@ get.rglstyle.default <- function() {
 
 #' @title Get the semi-transparent visualization style parameters as a named list.
 #'
-#' @description This style has a very negative impact on rendering performance. Run \code{\link[rgl]{material3d}} without arguments to see valid style keywords to create new styles.
+#' @description Semitransparent rendering style. This style has a very negative impact on rendering performance. Hint: Run \code{\link[rgl]{material3d}} without arguments to see valid style keywords to create new styles.
 #'
 #' @return named list, style parameters that can be passed to \code{\link[rgl]{shade3d}} via \code{\link[base]{do.call}}.
 #'
 #' @keywords internal
 get.rglstyle.semitransparent <- function() {
-    return(list("shininess"=50, specular="black", alpha=0.5));
+    return(list("shininess"=50, specular="black", alpha=0.5, front="filled", back="lines"));
 }
 
 
 #' @title Get a shiny visualization style.
 #'
-#' @description Run \code{\link[rgl]{material3d}} without arguments to see valid style keywords to create new styles.
+#' @description A shiny or glossy rendering style. Looks a bit more modern, but the resulting highlights may make the interpretation of the plotted data a bit harder in some areas. Hint: Run \code{\link[rgl]{material3d}} without arguments to see valid style keywords to create new styles.
 #'
 #' @return named list, style parameters that can be passed to to \code{\link[rgl]{shade3d}} via \code{\link[base]{do.call}}.
 #'

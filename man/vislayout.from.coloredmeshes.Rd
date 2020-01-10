@@ -9,6 +9,7 @@ vislayout.from.coloredmeshes(
   view_angles = get.view.angle.names(angle_set = "t4"),
   rgloptions = list(),
   rglactions = list(),
+  style = "default",
   output_img = "fsbrain_arranged.png",
   silent = FALSE,
   grid_like = TRUE
@@ -22,6 +23,8 @@ vislayout.from.coloredmeshes(
 \item{rgloptions}{option list passed to \code{\link[rgl]{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))}.}
 
 \item{rglactions}{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.}
+
+\item{style}{character string, a rendering style, e.g., 'default', 'shiny' or 'semitransparent'. Alternatively, a named list of style parameters (see \code{\link[rgl]{material3d}}), e.g., \code{list("shininess"=50, specular="black", alpha=0.5)}. Use the magic word 'from_mesh' to use the 'style' field of each coloredmesh instead of a single, global style. In that case, you will have to make sure your meshes have such a field, if not, the style 'default' is used as a fallback for those which don't.}
 
 \item{output_img}{string, path to the output file. Defaults to "fsbrain_arranged.png"}
 

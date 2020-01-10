@@ -7,11 +7,11 @@
 vol.intensity.to.color(volume)
 }
 \arguments{
-\item{volume}{numeric array, typically a 3D image with intensities in range [0, 1]}
+\item{volume}{numeric array, typically a 3D image with intensities in range [0, 1]. This function now also supports numeric matrices (2D images, slices) and numeric vectors (1D).}
 }
 \value{
-array of RGB color strings.
+array (or matrix, or vector) of RGB color strings. All of them will represent gray values.
 }
 \description{
-Convert a gray-scale image defined by intensity values in range [0, 1] to an image with identical dimensions that contains an R color string (like `#222222`) at each position. The color strings are computed from the intensities, by taking the intensity value as the value for all three RGB channels. I.e., the output is still gray-scale, but defined in RGB space. To make it clear, this function does **not** apply a colormap.
+Convert a gray-scale image defined by intensity values in range [0, 1] to an image with identical dimensions that contains an R color string (like `#222222`) at each position. The color strings are computed from the intensities, by taking the intensity value as the value for all three RGB channels. I.e., the output is still gray-scale, but defined in RGB space. To make it clear, this function does **not** apply a colormap. It only changes the representation of the data, not the resulting colors.
 }
