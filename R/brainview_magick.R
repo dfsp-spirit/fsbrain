@@ -93,6 +93,8 @@ arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=
 #'
 #' @param rglactions named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
 #'
+#' @param style character string, a rendering style, e.g., 'default', 'shiny' or 'semitransparent'.
+#'
 #' @param output_img string, path to the output file. Defaults to "fsbrain_arranged.png"
 #'
 #' @param silent logical, whether to suppress all messages
@@ -117,7 +119,7 @@ arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=
 #'
 #' @family visualization functions
 #' @export
-vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.angle.names(angle_set = "t4"), rgloptions=list(), rglactions=list(), output_img="fsbrain_arranged.png", silent=FALSE, grid_like=TRUE) {
+vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.angle.names(angle_set = "t4"), rgloptions=list(), rglactions=list(), style="default", output_img="fsbrain_arranged.png", silent=FALSE, grid_like=TRUE) {
 
     if (requireNamespace("magick", quietly = TRUE)) {
         view_images = tempfile(view_angles, fileext = ".png");   # generate one temporary file name for each image
@@ -134,7 +136,7 @@ vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.ang
             }
             final_rglactions = modifyList(rglactions, internal_rglactions);
 
-            brainviews(c(view), coloredmeshes, rgloptions = rgloptions, rglactions = final_rglactions);
+            brainviews(c(view), coloredmeshes, rgloptions = rgloptions, rglactions = final_rglactions, style = style);
         }
 
         # Now merge them into one

@@ -301,7 +301,9 @@ vis.coloredmesh <- function(cmesh, style="default") {
 
 #' @title Get the default visualization style parameters as a named list.
 #'
-#' @param style, string. A style name. Available styles are one of: "default", "shiny".
+#' @description Run \code{\link[rgl]{material3d}} without arguments to see valid style keywords to create new styles.
+#'
+#' @param style, string. A style name. Available styles are one of: "default", "shiny", "semitransparent".
 #'
 #' @keywords internal
 get.rglstyle <- function(style) {
@@ -309,25 +311,43 @@ get.rglstyle <- function(style) {
         return(get.rglstyle.default());
     } else if (style == "shiny") {
         return(get.rglstyle.shiny());
+    } else if (style == "semitransparent") {
+        return(get.rglstyle.semitransparent());
     } else {
-        stop(sprintf("No such style: '%s'.\n", style));
+        stop(sprintf("No such rendering style: '%s'.\n", style));
     }
 }
 
 
 #' @title Get the default visualization style parameters as a named list.
 #'
-#' @return named list, style parameters that can be passed to [rgl::shade3d()] via [base::do.call()].
+#' @description Run \code{\link[rgl]{material3d}} without arguments to see valid style keywords to create new styles.
+#'
+#' @return named list, style parameters that can be passed to \code{\link[rgl]{shade3d}} via \code{\link[base]{do.call}}.
 #'
 #' @keywords internal
 get.rglstyle.default <- function() {
-    return(list("shininess"=50, specular="black"));
+    return(list("shininess"=50, specular="black", alpha=1.0));
+}
+
+
+#' @title Get the semi-transparent visualization style parameters as a named list.
+#'
+#' @description This style has a very negative impact on rendering performance. Run \code{\link[rgl]{material3d}} without arguments to see valid style keywords to create new styles.
+#'
+#' @return named list, style parameters that can be passed to \code{\link[rgl]{shade3d}} via \code{\link[base]{do.call}}.
+#'
+#' @keywords internal
+get.rglstyle.semitransparent <- function() {
+    return(list("shininess"=50, specular="black", alpha=0.5));
 }
 
 
 #' @title Get a shiny visualization style.
 #'
-#' @return named list, style parameters that can be passed to [rgl::shade3d()] via [base::do.call()].
+#' @description Run \code{\link[rgl]{material3d}} without arguments to see valid style keywords to create new styles.
+#'
+#' @return named list, style parameters that can be passed to to \code{\link[rgl]{shade3d}} via \code{\link[base]{do.call}}.
 #'
 #' @keywords internal
 get.rglstyle.shiny <- function() {

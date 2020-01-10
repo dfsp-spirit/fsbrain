@@ -222,6 +222,8 @@ vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi="
 #'
 #' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
 #'
+#' @param style character string, a rendering style, e.g., 'default', 'shiny' or 'semitransparent'.
+#'
 #' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See \code{\link[fsbrain]{coloredmesh.plot.colorbar.separate}} for an alternative.
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
@@ -229,20 +231,20 @@ vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi="
 #' @seealso \code{\link[fsbrain]{get.view.angle.names}}
 #'
 #' @keywords internal
-brainviews <- function(views, coloredmeshes, rgloptions = list(), rglactions = list(), draw_colorbar = FALSE) {
+brainviews <- function(views, coloredmeshes, rgloptions = list(), rglactions = list(), style="default", draw_colorbar = FALSE) {
     if(length(views)) {
         for(view in views) {
             if(view == "t4") {
-                invisible(brainview.t4(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar));
+                invisible(brainview.t4(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, style = style));
             } else if(view == "t9") {
-                invisible(brainview.t9(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar));
+                invisible(brainview.t9(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, style = style));
             } else if(view == "si") {
-                invisible(brainview.si(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar));
+                invisible(brainview.si(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, style = style));
             } else if(view == "sr") {
-                invisible(brainview.sr(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar));
+                invisible(brainview.sr(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, style = style));
             } else if(startsWith(view, "sd_")) {
                 angle = substr(view, 4, nchar(view));
-                invisible(brainview.sd(coloredmeshes, angle, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar));
+                invisible(brainview.sd(coloredmeshes, angle, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, style = style));
             } else {
                 stop(sprintf("Invalid view '%s'. Valid ones include 'si', 'sr', 'sd_<angle>', 't4' and 't9'.\n", view));
             }
