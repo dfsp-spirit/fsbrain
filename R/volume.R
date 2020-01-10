@@ -19,6 +19,15 @@
 #'
 #' @return numerical array, the voxel data. If `with_header`, the full volume datastructure (see above).
 #'
+#' @examples
+#' \donttest{
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+#'    brain = subject.volume(subjects_dir, 'subject1', 'brain', with_header = TRUE);
+#'    # Use the vox2ras matrix from the header to compute RAS coordinates at volume center:
+#'    brain$header$vox2ras_matrix %*% c(0,0,0,1);
+#' }
+#'
 #' @export
 subject.volume <- function(subjects_dir, subject_id, volume, format='AUTO', drop_empty_dims=TRUE, with_header=FALSE) {
     if(!(format %in% c('AUTO', 'mgh', 'mgz'))) {
