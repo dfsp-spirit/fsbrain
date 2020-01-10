@@ -112,8 +112,12 @@ arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=
 #'    coloredmeshes = vis.subject.morph.native(subjects_dir, "subject1", "thickness",
 #'     cortex_only=TRUE, rglactions=list("clip_data"=c(0.05, 0.95)),
 #'     views=NULL);
-#'    # The meshes contain the surface, data, and color information and can be visualized:
-#'    vislayout.from.coloredmeshes(coloredmeshes);
+#'    # The meshes contain the surface, data, and color information and can be
+#'    #  visualized. You could adapt the rendering style while doing so:
+#'    vislayout.from.coloredmeshes(coloredmeshes, style='shiny');
+#'    # You could change the rendering style on a per-mesh basis.
+#'    coloredmeshes[[1]]$style = list("shininess"=50, alpha=0.5);
+#'    vislayout.from.coloredmeshes(coloredmeshes, style='from_mesh');
 #' }
 #'
 #'
