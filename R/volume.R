@@ -24,7 +24,7 @@
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    brain = subject.volume(subjects_dir, 'subject1', 'brain', with_header = TRUE);
-#'    # Use the vox2ras matrix from the header to compute RAS coordinates at volume center:
+#'    # Use the vox2ras matrix from the header to compute RAS coordinates at CRS voxel (0, 0, 0):
 #'    brain$header$vox2ras_matrix %*% c(0,0,0,1);
 #' }
 #'
@@ -68,5 +68,41 @@ readable.volume <- function(filepath, precedence=c('.mgh', '.mgz'), error_if_non
         stop(sprintf("At location '%s' exists no file with any of the %d extensions '%s'.\n", filepath, length(precedence), paste(precedence, collapse=' ')));
     } else {
         return(NULL);
+    }
+}
+
+
+#' @title Compute R voxel index for FreeSurfer CRS voxel index.
+#'
+#' @description Performs a vox2vos transform from FreeSurfer to R indices.
+#'
+#' @param fs_crs integer vector of length 3, Freesurfer indices for column, row, and slice (CRS).
+#'
+#' @param add_affine logical, whether to add 1 to the output vector as the 4th value
+#'
+#' @return the R indices into the volume data for the given FreeSurfer CRS indices
+#'
+# To visualize a position while an interactive plot is open:
+#    brain = subject.volume(subjects_dir, 'subject1', 'brain', with_header = TRUE);
+#    vis.subject.morph.native(subjects_dir, 'subject1', 'thickness', views="si");
+#    lh = subject.surface(subjects_dir, 'subject1', 'white', hemi='lh');
+#    rh = subject.surface(subjects_dir, 'subject1', 'white', hemi='rh');
+#    fs_crs = c(0,0,0);
+#    coords = (brain$header$vox2ras_matrix %*% vol.vox.from.crs(fs_crs))[1:3];
+#    rgl.spheres(coords, r = 5, color = "#ff0000")
+#
+#    # get voxel data in CRS: mri_info --voxel 127 100 100 ~/data/tim_only/tim/mri/brain.mgz
+#    # (the result is: 106.0)
+#    # when vol.vox.from.crs is implemented, that should be identical to:
+#    # our_crs = vol.vox.from.crs(c(127,100,100), add_affine = FALSE);
+#    # brain$data[our_crs[1], our_crs[2], our_crs[3]];
+#' @export
+vol.vox.from.crs <- function(fs_crs, add_affine=TRUE) {
+    message("vol.vox.from.crs: not implemented yet, returning input values only");
+    our_crs = fs_crs; # TODO: implement this, by adapting the 3 indices.
+    if(add_affine) {
+        return(c(our_crs, 1));
+    } else {
+        return(our_crs);
     }
 }

@@ -140,7 +140,7 @@ annot.outline <- function(annotdata, surface_mesh, background="white", silent=FA
 
 #' @title Draw a 3D line from vertex to vertex
 #'
-#' @description To get a nice path along the surface, pass the vertex indices along a geodesic path.
+#' @description To get a nice path along the surface, pass the vertex indices along a geodesic path. Note: You can first open an interactive brain view (`view='si'`) with a vis* function like \code{\link[fsbrain]{vis.subject.morph.native}}, then run this function to draw into the active plot.
 #'
 #' @param surface_vertices float matrix of size (n, 3), the surface vertex coordinates, as returned by \code{\link[fsbrain]{subject.surface}}, member "vertices"
 #'

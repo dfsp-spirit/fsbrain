@@ -12,7 +12,7 @@ vis.path.along.verts(surface_vertices, path_vertex_indices)
 \item{path_vertex_indices}{vector of vertex indices, the path}
 }
 \description{
-To get a nice path along the surface, pass the vertex indices along a geodesic path.
+To get a nice path along the surface, pass the vertex indices along a geodesic path. Note: You can first open an interactive brain view (`view='si'`) with a vis* function like \code{\link[fsbrain]{vis.subject.morph.native}}, then run this function to draw into the active plot.
 }
 \seealso{
 Other surface mesh functions: 
