@@ -35,4 +35,3 @@ the list of visualized coloredmeshes
 \description{
 Visualize a list of colored meshes in a single scene.
 }
-\keyword{internal}

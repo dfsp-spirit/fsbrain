@@ -82,27 +82,92 @@ readable.volume <- function(filepath, precedence=c('.mgh', '.mgz'), error_if_non
 #'
 #' @return the R indices into the volume data for the given FreeSurfer CRS indices
 #'
-# To visualize a position while an interactive plot is open:
+#    # ---- To visualize a position while an interactive plot is open ----
 #    brain = subject.volume(subjects_dir, 'subject1', 'brain', with_header = TRUE);
-#    vis.subject.morph.native(subjects_dir, 'subject1', 'thickness', views="si");
+#    vis.subject.morph.native(subjects_dir, 'subject1', 'thickness', views=NULL);
+#    cm = vis.subject.morph.native(subjects_dir, 'subject1', 'thickness', views=NULL);
+#    vis.coloredmeshes(cm, style = 'semitransparent'); # bad performance, but does the job
 #    lh = subject.surface(subjects_dir, 'subject1', 'white', hemi='lh');
 #    rh = subject.surface(subjects_dir, 'subject1', 'white', hemi='rh');
-#    fs_crs = c(0,0,0);
-#    coords = (brain$header$vox2ras_matrix %*% vol.vox.from.crs(fs_crs))[1:3];
-#    rgl.spheres(coords, r = 5, color = "#ff0000")
+#    fs_crs = c(128, 128, 128);  # voxel at origin of surface RAS -- this is NOT expected to be in the center of the brain surface.
+#    #ras_coords = (brain$header$vox2ras_matrix %*% vol.vox.from.crs(fs_crs, add_affine=TRUE))[1:3];
+#    surface_ras_coords = (vox2ras_tkr() %*% vol.vox.from.crs(fs_crs, add_affine=TRUE))[1:3];
+#    rgl::rgl.spheres(surface_ras_coords, r = 5, color = "#ff0000");
 #
-#    # get voxel data in CRS: mri_info --voxel 127 100 100 ~/data/tim_only/tim/mri/brain.mgz
+#    # ----- Test that the volume orientation (along the axes) is correct -----
+#    # get voxel data in CRS: mri_info --voxel 127 100 100 ~/data/tim_only/tim/mri/brain.mgz   # these indices are 0-based.
 #    # (the result is: 106.0)
-#    # when vol.vox.from.crs is implemented, that should be identical to:
+#    # That should be identical to:
 #    # our_crs = vol.vox.from.crs(c(127,100,100), add_affine = FALSE);
 #    # brain$data[our_crs[1], our_crs[2], our_crs[3]];
 #' @export
-vol.vox.from.crs <- function(fs_crs, add_affine=TRUE) {
-    message("vol.vox.from.crs: not implemented yet, returning input values only");
-    our_crs = fs_crs; # TODO: implement this, by adapting the 3 indices.
+vol.vox.from.crs <- function(fs_crs, add_affine=FALSE) {
+
+    if(! is.numeric(fs_crs)) {
+        stop("Parameter 'fs_crs' must be numeric.");
+    }
+
+    # Transform from FreeSurfer CRS to the R indices. This is all we need to do, as the orientation of the volume
+    # is already correct: this has been taken care of by freesurferformats::read.fs.mgh().
+    our_crs = fs_crs + 1;
+
     if(add_affine) {
-        return(c(our_crs, 1));
+        if(is.vector(our_crs)) {
+            if(length(our_crs) != 3) {
+                stop("Parameter 'fs_crs' must have length 3 if it is a vector.");
+            }
+            return(c(our_crs, 1));
+        } else if(is.matrix(our_crs)) {
+            if(ncol(our_crs) != 3) {
+                stop("Parameter 'fs_crs' must have 3 columns if it is a matrix");
+            }
+            return(cbind(our_crs, 1));
+        } else {
+            stop("Parameter 'fs_crs' must be a vector or matrix.");
+        }
+
     } else {
         return(our_crs);
     }
 }
+
+
+#' @title The FreeSurfer vox2ras_tkr matrix.
+#'
+#' @description Applying this matrix to a FreeSurfer CRS index will give you the RAS coordinates of the voxel in surface coordinates, i.e., in the coordinates used in surface file like `lh.white`. The central voxel is 127,127,127 when using zero-based indices (or 128,128,128 when using one-based indices), meaning its surface RAS coordinates are 0.0, 0.0, 0.0. The returned matrix is the inverse of the `ras2vox_tkr` matrix.
+#'
+#' @return numeric 4x4 matrix, the FreeSurfer vox2ras_tkr matrix.
+#'
+#' @examples
+#'    # Compute surface RAS coordinate of voxel with CRS (0L, 0L, 0L):
+#'    vox2ras_tkr() %*% c(0, 0, 0, 1);
+#'    # Show that voxel with CRS (128,128,128) is at the origin (0.0, 0.0, 0.0) of the surface RAS coordinate system:
+#'    (vox2ras_tkr() %*% c(128, 128, 128, 1))[1:3];
+#'
+#' @family surface and volume coordinates
+#'
+#' @export
+vox2ras_tkr <- function() {
+    return(matrix(c(-1,0,0,0, 0,0,-1,0, 0,1,0,0, 128,-128,128,1), nrow = 4));
+}
+
+
+#' @title The FreeSurfer ras2vox_tkr matrix.
+#'
+#' @description Applying this matrix to a FreeSurfer surface RAS coordinate (from a surface file like `lh.white`) will give you the voxel index (CRS) in a conformed FreeSurfer volume.  The returned matrix is the inverse of the `vox2ras_tkr` matrix.
+#'
+#' @return numeric 4x4 matrix, the FreeSurfer ras2vox_tkr matrix.
+#'
+#' @examples
+#'    # Compute the FreeSurfer CRS voxel index of surface RAS coordinate (0.0, 0.0, 0.0):
+#'    ras2vox_tkr() %*% c(0, 0, 0, 1);
+#'    # Show that the voxel at surface RAS corrds (0.0, 0.0, 0.0) is the one with CRS (128, 128, 128):
+#'    ras2vox_tkr() %*% c(0.0, 0.0, 0.0, 1);
+#'
+#' @family surface and volume coordinates
+#'
+#' @export
+ras2vox_tkr <- function() {
+    return(matrix(c(-1,-0,-0,-0, -0,-0,+1,-0, -0,-1,-0,-0, 128,128,128,1), nrow = 4));
+}
+

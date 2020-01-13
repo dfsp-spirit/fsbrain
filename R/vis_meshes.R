@@ -19,8 +19,9 @@
 #'
 #' @return the list of visualized coloredmeshes
 #'
-#' @keywords internal
+# @keywords internal
 #' @importFrom rgl open3d bg3d wire3d
+#' @export
 vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", rgloptions=list(), rglactions=list(), draw_colorbar=FALSE) {
 
     if(!is.list(coloredmeshes)) {
