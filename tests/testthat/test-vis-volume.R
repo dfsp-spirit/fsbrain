@@ -151,8 +151,26 @@ test_that("A brain volume can be visualized as a lightbox", {
     for(imgplane in c(1L, 2L, 3L)) {
         magick::image_write(vol.lightbox(brain, axis=imgplane), path=sprintf("lightbox_axis%d.gif", imgplane));
     }
-
 })
 
 
+test_that("Intensity integer to RGB color string conversion works in 1, 2, and 3 dimensions.", {
+    # Test 1D
+    out1d = vol.intensity.to.color(c(0.0, 0.5, 1.0));
+    expect_true(is.vector(out1d));
+    expect_equal(out1d, c("#000000", "#808080","#FFFFFF"));
+
+    # Test 2D
+    out2d = vol.intensity.to.color(matrix(c(0.0, 0.2, 0.5, 1.0), nrow=2));
+    expect_true(is.matrix(out2d));
+    expect_equal(nrow(out2d), 2);
+    expect_equal(ncol(out2d), 2);
+    expect_equal(out2d[2,2], "#FFFFFF");
+
+    # Test 3D
+    out3d = vol.intensity.to.color(array(rep(0.0, 9), c(3,3,3)));
+    expect_true(is.array(out3d));
+    expect_equal(out3d[2,2,2], "#000000");
+    expect_equal(dim(out3d), c(3,3,3));
+})
 

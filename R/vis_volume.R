@@ -759,13 +759,17 @@ vol.merge <- function(volume, overlay_colors, bbox_threshold=0L, forced_overlay_
 }
 
 
-#' @title Convert intensity image to colors.
+#' @title Convert integer intensity image to RGB color string form.
 #'
 #' @description Convert a gray-scale image defined by intensity values in range [0, 1] to an image with identical dimensions that contains an R color string (like `#222222`) at each position. The color strings are computed from the intensities, by taking the intensity value as the value for all three RGB channels. I.e., the output is still gray-scale, but defined in RGB space. To make it clear, this function does **not** apply a colormap. It only changes the representation of the data, not the resulting colors.
 #'
 #' @param volume numeric array, typically a 3D image with intensities in range [0, 1]. This function now also supports numeric matrices (2D images, slices) and numeric vectors (1D).
 #'
 #' @return array (or matrix, or vector) of RGB color strings. All of them will represent gray values.
+#'
+#' @examples
+#'    vol.intensity.to.color(c(0.0, 0.5, 1.0));
+#'    # output: "#000000" "#808080" "#FFFFFF"
 #'
 #' @importFrom grDevices rgb
 #' @export
@@ -781,7 +785,7 @@ vol.intensity.to.color <- function(volume) {
             return(array(grDevices::rgb(volume, volume, volume), dim(volume))); # try magick::image_read(vol.slice(return_value)) or vol.lightbox(return_value)
         } else if (num_dims == 2L) {
             return(matrix(grDevices::rgb(as.vector(volume), as.vector(volume), as.vector(volume)), nrow=nrow(volume)));
-        } else if (num_dims == 1L) {
+        } else if (is.vector(volume)) {
             return(grDevices::rgb(volume, volume, volume));
         } else {
             stop("Parameter 'volume' must have 1, 2, or 3 dimensions.");
