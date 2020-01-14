@@ -15,9 +15,9 @@ The same can be done for the [axial](https://github.com/dfsp-spirit/fsbrain_gall
 
 You can also render the volume slices into an animation. The result looks like this:
 
-![Visvolumeanim](https://github.com/dfsp-spirit/fsbrain_gallery/raw/master/volume/animations/MRI_T1w_ax1.gif?raw=true "Animation in sagittal view, rendered with fsbrain")
+![Visvolumeanim](https://github.com/dfsp-spirit/fsbrain_gallery/raw/master/volume/animations/MRI_T1w_ax3.gif?raw=true "Animation in sagittal view, rendered with fsbrain")
 
-The same can be done for the [axial](https://github.com/dfsp-spirit/fsbrain_gallery/raw/master/volume/animations/MRI_T1w_ax2.gif) and [coronal](https://github.com/dfsp-spirit/fsbrain_gallery/raw/master/volume/animations/MRI_T1w_ax3.gif) planes.
+The same can be done for the [axial](https://github.com/dfsp-spirit/fsbrain_gallery/raw/master/volume/animations/MRI_T1w_ax2.gif) and [coronal](https://github.com/dfsp-spirit/fsbrain_gallery/raw/master/volume/animations/MRI_T1w_ax1.gif) planes.
 
 
 Please [cite the fsbrain package](https://github.com/dfsp-spirit/fsbrain#citation) when [using](https://github.com/dfsp-spirit/fsbrain#license) these animations/videos.
