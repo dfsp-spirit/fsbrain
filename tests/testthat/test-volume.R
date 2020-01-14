@@ -56,8 +56,16 @@ test_that("Brain volume CRS voxels are rendered at the correct surface space RAS
          rgl::rgl.spheres(surface_ras, r = 5, color = "#00ff00");
      }
 
+     # Compute the bounding box of the brain from the volume data, plot blue spheres at border.
+     bbox = vol.boundary.box(brain$data);
+     bbox_R_aff = cbind(bbox$edge_coords, 1);
+     for(row_idx in seq_len(nrow(bbox_R_aff))) {
+         surface_ras = (vox2ras_tkr() %*% bbox_R_aff[row_idx,])[1:3];
+         rgl::rgl.spheres(surface_ras, r = 5, color = "#000000");
+     }
+
      # That's it, now look at the plot.
-     # It shows that the brain surface lies within the volume boundaries.
+     # It shows that the brain surface lies within the volume boundaries, and the bounding box from the volume fits.
 })
 
 

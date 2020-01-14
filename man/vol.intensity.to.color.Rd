@@ -2,7 +2,7 @@
 % Please edit documentation in R/vis_volume.R
 \name{vol.intensity.to.color}
 \alias{vol.intensity.to.color}
-\title{Convert intensity image to colors.}
+\title{Convert integer intensity image to RGB color string form.}
 \usage{
 vol.intensity.to.color(volume)
 }
@@ -14,4 +14,9 @@ array (or matrix, or vector) of RGB color strings. All of them will represent gr
 }
 \description{
 Convert a gray-scale image defined by intensity values in range [0, 1] to an image with identical dimensions that contains an R color string (like `#222222`) at each position. The color strings are computed from the intensities, by taking the intensity value as the value for all three RGB channels. I.e., the output is still gray-scale, but defined in RGB space. To make it clear, this function does **not** apply a colormap. It only changes the representation of the data, not the resulting colors.
+}
+\examples{
+   vol.intensity.to.color(c(0.0, 0.5, 1.0));
+   # output: "#000000" "#808080" "#FFFFFF"
+
 }

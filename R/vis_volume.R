@@ -347,9 +347,39 @@ vol.boundary.box <- function(volume, threshold=0L) {
         min_index_per_axis[axis] = Position(function(x) x >= 1L, colmax, right=FALSE);
         max_index_per_axis[axis] = Position(function(x) x >= 1L, colmax, right=TRUE);
     }
-    return(list("from"=min_index_per_axis, "to"=max_index_per_axis));
+    coords = boxcoords.from.bbox(min_index_per_axis, max_index_per_axis);
+    return(list("from"=min_index_per_axis, "to"=max_index_per_axis, "edge_coords"=coords));
 }
 
+
+#' @title Compute the coordinates of the 8 corners of a 3D box.
+#'
+#' @description Given the extreme values (min and max) along the 3 axes, compute the coordinates of the 8 corners of a 3D box.
+#'
+#' @param axes_min numerical vector of length 3, the min values of the 3 axes
+#'
+#' @param axes_max numerical vector of length 3, the max values of the 3 axes
+#'
+#' @return numerical matrix with 3 columns and 8 rows, the edge coordinates
+#'
+#' @keywords internal
+boxcoords.from.bbox <- function(axes_min, axes_max) {
+    xlen = axes_max[1] - axes_min[1];
+    ylen = axes_max[2] - axes_min[2];
+    zlen = axes_max[3] - axes_min[3];
+
+    coords = matrix(rep(0.0, 8*3), ncol=3);
+    coords[1,] = axes_min;
+    coords[2,] = c(axes_min[1] + xlen, axes_min[2], axes_min[3]);
+    coords[3,] = c(axes_min[1], axes_min[2] + ylen, axes_min[3]);
+    coords[4,] = c(axes_min[1] + xlen, axes_min[2] + ylen, axes_min[3]);
+
+    coords[5,] = c(axes_min[1], axes_min[2], axes_max[3]);
+    coords[6,] = c(axes_min[1] + xlen, axes_min[2], axes_max[3]);
+    coords[7,] = c(axes_min[1], axes_min[2] + ylen, axes_max[3]);
+    coords[8,] = axes_max;
+    return(coords);
+}
 
 
 #' @title Get indices of the axes defining the given plane.
