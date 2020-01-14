@@ -723,6 +723,32 @@ get.slice.indices <- function(voldim, axis, slices) {
 }
 
 
+#' @title Extract subset from a volume by value.
+#'
+#' @description Extract subset from a volume by value, set all other voxel values to `NA`. Typically used to extract a brain structure (like corpus callosum) from a volume segmentation (like the `mri/aseg.mgz` file of a subject). You should consider passing the volume and the include values as integers.
+#'
+#' @param volume numeric 3D array
+#'
+#' @param include_values numerical vector, the intensity values which qualify a voxel to be part of the result (without being set to NA)
+#'
+#' @return numerical array with same dimensions as the input volume. All values which are not part of `include_values` replaced with `NA`.
+#'
+#' @export
+vol.mask.from.segmentation <- function(volume, include_values) {
+    if(length(dim(volume)) < 3) {
+        stop("Volume must have 3 or more dimensions.");
+    }
+
+    mask = array(rep(NA, prod(dim(volume))), dim(volume));
+
+    for(inc_val in include_values) {
+        act_indices = which(volume == inc_val, arr.ind = TRUE);
+        mask[act_indices] = volume[act_indices];
+    }
+    return(mask);
+}
+
+
 #' @title Merge background volume and overlay to new colors.
 #'
 #' @param volume 3D array, can be numeric (gray-scale intensity values) or color strings. If numeric, the intensity values must be in range `[0, 1]`.

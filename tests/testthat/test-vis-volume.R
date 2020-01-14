@@ -13,10 +13,18 @@ test_that("A brain volume can be turned into an animation", {
     bbox = vol.boundary.box(brain);
     foreground = brain[bbox$from[1]:bbox$to[1], bbox$from[2]:bbox$to[2], bbox$from[3]:bbox$to[3]];
 
-    for(imgplane in c(1L, 2L, 3L)) {
-        brain_stack = vol.imagestack(foreground, imgplane);
-        magick::image_write(magick::image_animate(brain_stack, fps = 20), sprintf("MRI_axis%d.gif", imgplane));
-    }
+    imgplane = 1;
+    brain_stack = vol.imagestack(foreground, imgplane);
+    magick::image_write(magick::image_animate(brain_stack, fps = 20), sprintf("MRI_axis%d.gif", imgplane));
+
+    imgplane = 2;
+    brain_stack = vol.imagestack(rotate3D(foreground, axis=imgplane), imgplane);
+    magick::image_write(magick::image_animate(brain_stack, fps = 20), sprintf("MRI_axis%d.gif", imgplane));
+
+    imgplane = 3;
+    brain_stack = vol.imagestack(rotate3D(foreground, axis=imgplane), imgplane);
+    magick::image_write(magick::image_animate(brain_stack, fps = 20), sprintf("MRI_axis%d.gif", imgplane));
+
 })
 
 
