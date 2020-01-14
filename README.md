@@ -145,6 +145,9 @@ Here is a second figure, showing the same data (the [mean curvature](https://en.
 
 Want to see brains spin? [Check this out.](./web/fsbrain_movies.md) (WARNING: loads 8 MB webpage with animated gif).
 
+### Volume visualization
+
+First versions of some volume visualization functions are available in the current dev version. You can find [a preview of the results here](./web/fsbrain_volume.md).
 
 ## Contributing
 
