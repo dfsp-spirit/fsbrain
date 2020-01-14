@@ -2,7 +2,7 @@
 # You can run them by copying & pasting the code into an R session. Treat them as examples.
 
 test_that("We can visualize morphometry data in multiview.", {
-    skip("This test has to be run manually and interactively.");
+    skip("This test has to be run manually and interactively. It requires an X11 display.");
 
     fsbrain::download_optional_data();
 

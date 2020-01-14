@@ -82,42 +82,15 @@ readable.volume <- function(filepath, precedence=c('.mgh', '.mgz'), error_if_non
 #'
 #' @return the R indices into the volume data for the given FreeSurfer CRS indices
 #'
-#    # ---- To visualize a position while an interactive plot is open ----
-#    brain = subject.volume(subjects_dir, 'subject1', 'brain', with_header = TRUE);
-#    vis.subject.morph.native(subjects_dir, 'subject1', 'thickness', views=NULL);
-#    cm = vis.subject.morph.native(subjects_dir, 'subject1', 'thickness', views=NULL);
-#    vis.coloredmeshes(cm, style = 'default');   # try with style = 'semitransparent' if required, but be warned: it will have bad performance.
-#    lh = subject.surface(subjects_dir, 'subject1', 'white', hemi='lh');
-#    rh = subject.surface(subjects_dir, 'subject1', 'white', hemi='rh');
-#    fs_crs = c(128, 128, 128);  # voxel at origin of surface RAS -- this is NOT expected to be in the center of the brain surface (the brain surface is not centered at 0,0,0).
-#    #ras_coords = (brain$header$vox2ras_matrix %*% vol.vox.from.crs(fs_crs, add_affine=TRUE))[1:3];
-#    surface_ras_coords = (vox2ras_tkr() %*% vol.vox.from.crs(fs_crs, add_affine=TRUE))[1:3];
-#    rgl::rgl.spheres(surface_ras_coords, r = 5, color = "#ff0000");
-#
-#    # Plot spheres around the surface space:
-#    fs_boundary_crs = matrix(c(0, 0, 0, 0, 0, 255, 0, 255, 255, 0, 255, 0, 255, 255, 255, 255, 0, 0, 255, 255, 0, 255, 0, 255), ncol=3, byrow=TRUE);
-#    boundary_crs_aff = vol.vox.from.crs(fs_boundary_crs, add_affine=TRUE); # in R indices, with affine
-#    for(row_idx in seq_len(nrow(boundary_crs_aff))) {
-#        surface_ras = (vox2ras_tkr() %*% boundary_crs_aff[row_idx,])[1:3];
-#        rgl::rgl.spheres(surface_ras, r = 5, color = "#00ff00");
-#    }
-#    # The visualization above shows that the brain surface lies within the volume boundaries.
-#    #
-#    # We could compute the bounding box of the brain within the volume and also plot that to show that the surface and volume coords are correct.
-#    bbox = vol.boundary.box(brain$data);
-#    fs_bbox_crs = rbind(bbox$from, bbox$to);
-#    bbox_crs_aff = vol.vox.from.crs(fs_bbox_crs, add_affine=TRUE); # in R indices, with affine
-#    for(row_idx in seq_len(nrow(bbox_crs_aff))) {
-#        surface_ras = (vox2ras_tkr() %*% bbox_crs_aff[row_idx,])[1:3];
-#        rgl::rgl.spheres(surface_ras, r = 5, color = "#0000ff");
-#    }
-#
-#    # ----- Test that the volume orientation (along the axes) is correct -----
-#    # get voxel data in CRS: mri_info --voxel 127 100 100 ~/data/tim_only/tim/mri/brain.mgz   # these indices are 0-based.
+#' @examples
+#    # Get voxel intensity data on the command line, based
+#    #  on the FreeSUrfer (zero-based) CRS voxel indices:
+#    #  `mri_info --voxel 127 100 100 ~/data/tim_only/tim/mri/brain.mgz`
 #    # (the result is: 106.0)
+#    #
 #    # That should be identical to:
 #    # our_crs = vol.vox.from.crs(c(127,100,100), add_affine = FALSE);
-#    # brain$data[our_crs[1], our_crs[2], our_crs[3]];
+#    # brain$data[our_crs[1], our_crs[2], our_crs[3]];   # gives 106
 #' @export
 vol.vox.from.crs <- function(fs_crs, add_affine=FALSE) {
 
