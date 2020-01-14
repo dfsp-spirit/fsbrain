@@ -148,9 +148,15 @@ test_that("A brain volume can be visualized as a lightbox", {
     brain = brain[bbox$from[1]:bbox$to[1], bbox$from[2]:bbox$to[2], bbox$from[3]:bbox$to[3]];
 
     # Now test that the merged image can be visualized as a lightbox:
-    for(imgplane in c(1L, 2L, 3L)) {
-        magick::image_write(vol.lightbox(brain, axis=imgplane), path=sprintf("lightbox_axis%d.gif", imgplane));
-    }
+    imgplane = 1;
+    magick::image_write(vol.lightbox(brain, axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
+
+    imgplane = 2;
+    magick::image_write(vol.lightbox(rotate3D(brain, axis=imgplane), axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
+
+    imgplane = 3;
+    magick::image_write(vol.lightbox(rotate3D(brain, axis=imgplane), axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
+
 })
 
 

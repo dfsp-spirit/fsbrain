@@ -61,7 +61,7 @@ test_that("Brain volume CRS voxels are rendered at the correct surface space RAS
      bbox_R_aff = cbind(bbox$edge_coords, 1);
      for(row_idx in seq_len(nrow(bbox_R_aff))) {
          surface_ras = (vox2ras_tkr() %*% bbox_R_aff[row_idx,])[1:3];
-         rgl::rgl.spheres(surface_ras, r = 5, color = "#000000");
+         rgl::rgl.spheres(surface_ras, r = 5, color = "#0000ff");
      }
 
      # That's it, now look at the plot.
