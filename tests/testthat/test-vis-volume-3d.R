@@ -15,61 +15,8 @@ test_that("A brain volume and an overlay can be merged", {
 
     volvis.voxels(ventricle_mask);
 
-    # ---Draw a cube---
-    #cube_vertices = matrix(c(0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1), ncol=3);
-    #cube = rgl::cube3d(vertices=cube_vertices);
-    #rgl::shade3d(rgl::translate3d(cube, 5, 5, 5));
+    # Some more segmentation ROIs to play with:
+    wm_mask = vol.mask.from.segmentation(aseg, c(2, 41));
+    cortex_mask = vol.mask.from.segmentation(aseg, c(3, 42));
 
-    # ---Use triangles to quickly draw many cubes---
-    tris_cube = matrix(c(-0.5, -0.5, -0.5, # the 2 front tris start
-                         -0.5, -0.5, 0.5,
-                         0.5, -0.5, -0.5,
-                         # tris 2
-                         0.5,-0.5,-0.5,
-                         -0.5, -0.5,0.5,
-                         0.5,-0.5,0.5,
-                         # tris 3: the back starts (shifted by +1.0 on y axis compared to front)
-                         -0.5, 0.5, -0.5,
-                         -0.5, 0.5, 0.5,
-                         0.5, 0.5, -0.5,
-                         # tris 4
-                         0.5,0.5,-0.5,
-                         -0.5, 0.5,0.5,
-                         0.5,0.5,0.5,
-                         # tris 5: the left side starts
-                         -0.5,0.5,-0.5,
-                         -0.5,0.5,0.5,
-                         -0.5,-0.5,-0.5,
-                         # tris 6
-                         -0.5,-0.5,-0.5,
-                         -0.5,0.5,0.5,
-                         -0.5,-0.5,0.5,
-                         # tris 7: the right side starts (shifted by +1.0 on x axis compared to left side)
-                         0.5,0.5,-0.5,
-                         0.5,0.5,0.5,
-                         0.5,-0.5,-0.5,
-                         # tris 8
-                         0.5,-0.5,-0.5,
-                         0.5,0.5,0.5,
-                         0.5,-0.5,0.5,
-                         # tris 9: the bottom starts
-                         -0.5,-0.5,-0.5,
-                         -0.5,0.5,-0.5,
-                         0.5,-0.5,-0.5,
-                         # tris 10
-                         0.5,-0.5,-0.5,
-                         -0.5,0.5,-0.5,
-                         0.5,0.5,-0.5,
-                         # tris 11: the top starts (shifted by +1.0 on z axis compared to the bottom)
-                         -0.5,-0.5,0.5,
-                         -0.5,0.5,0.5,
-                         0.5,-0.5,0.5,
-                         # tris 10
-                         0.5,-0.5,0.5,
-                         -0.5,0.5,0.5,
-                         0.5,0.5,0.5
-                         ), ncol=3, byrow = TRUE);          # create a cube with coords in range (0,0,0) to (1,1,1).
-
-
-    #rgl::triangles3d(tris_coords);
 })

@@ -7,13 +7,19 @@
 #'
 #' @param max_render integer, the maximal number of voxels to render. If there are more voxels in the volume which are not `NA`, a warning will be issued and the rest will not be rendered. Set to `prod(dim(volume))` to allow to render all, but be aware that this may take ages.
 #'
-#' @param render_every integer, how many to skip before rendering the next one. Set to 1 to render an object at every voxel.
+#' @param render_every integer, how many to skip before rendering the next one. Use higher values to see a less dense representation of your data that still allows one to see the general shape, but at lower computational burden. Set to 1 to render an object at every voxel.
+#'
+#' @param ... material properties, passed to \code{\link[rgl]{triangles3d}}. Example: \code{color = "#0000ff", lit=FALSE}.
 #'
 #' @export
-volvis.voxels <- function(volume, max_render=25000, render_every=8) {
+volvis.voxels <- function(volume, max_render=500000, render_every=8, ...) {
     voxel_crs = which(!is.na(volume), arr.ind = TRUE);
 
     rendered_voxels = seq(1, nrow(voxel_crs), render_every);
+
+    if(render_every == 8) {
+        message(sprintf("About to render %d voxels (one in %d voxels only). Set parameter 'render_every' to 1 to render all %d voxels.\n", length(rendered_voxels), render_every, nrow(voxel_crs)));
+    }
 
     if(length(rendered_voxels) > max_render) {
         warning(sprintf("About to render %d voxels, but max_render is set to %d. Will stop early, the rest will not appear in the output. Try increasing one of the parameters 'max_render' or 'render_every'.\n", length(rendered_voxels), max_render));
@@ -28,10 +34,33 @@ volvis.voxels <- function(volume, max_render=25000, render_every=8) {
             row_idx = rendered_voxels[idx];
             surface_ras[idx,] = (vox2surface_ras_matrix %*% voxel_crs[row_idx,])[1:3];
         }
-        rgl::rgl.spheres(surface_ras, r = 0.5, color = "#0000ff", lit=FALSE);   # boxes would be nice, but there seems to be no rgl function for them.
+        #rgl::rgl.spheres(surface_ras, r = 0.5, ...);
+        rglvoxels(surface_ras, r = 1.0, ...);
     } else {
         warning("No voxels to be visualized.");
     }
+}
+
+
+#' @title Draw 3D boxes at locations using rgl.
+#'
+#' @description Draw 3D boxes at all given coordinates using rgl, analogous to \code{\link[rgl]{rgl.spheres}}. Constructs the coordinates for triangles making up the boxes, then uses \code{\link[rgl]{triangles3d}} to render them.
+#'
+#' @param centers numerical matrix with 3 columns. Each column represents the x, y, z coordinates of a center at which to create a cube.
+#'
+#' @param r numerical vector or scalar, the edge length. The vector must have length 1 (same edge length for all cubes), or the length must be identical to the number of rows in parameter `centers`.
+#'
+#' @param ... material properties, passed to \code{\link[rgl]{triangles3d}}. Example: \code{color = "#0000ff", lit=FALSE}.
+#'
+#'
+#' @examples
+#'    # Plot a 3D cloud of 20000 red voxels:
+#'    centers = matrix(rnorm(20000*3)*100, ncol=3);
+#'    rglvoxels(centers, color="red");
+#'
+#' @export
+rglvoxels <- function(centers, r=1.0, ...) {
+    rgl::triangles3d(cubes3D.tris(centers, edge_length = r), ...);
 }
 
 

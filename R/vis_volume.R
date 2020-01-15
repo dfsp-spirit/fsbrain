@@ -854,7 +854,7 @@ vol.intensity.to.color <- function(volume) {
 
 #' @title Return triangles for a 3D cube or cuboid.
 #'
-#' @description Each row of the returned matrix encodes a point (the x, y, and z coordinates), and 3 consecutive rows encode a triangle. Obvisouly, a point will occur several times (as part of several triangles). The result can be passed to \code{\link[rgl]{triangles3d}} to render a 3D box.
+#' @description Each row of the returned matrix encodes a point (the x, y, and z coordinates), and 3 consecutive rows encode a triangle. Obvisouly, a point will occur several times (as part of several triangles). The result can be passed to \code{\link[rgl]{triangles3d}} to render a 3D box. The defaults for the parameters will create a cube with edge length 1 centered at (0, 0, 0).
 #'
 #' @param xmin numeric, minimal x coordinate
 #'
@@ -952,4 +952,42 @@ cube3D.tris <- function(xmin=-0.5, xmax=0.5, ymin=-0.5, ymax=0.5, zmin=-0.5, zma
     ), ncol=3, byrow = TRUE);
     return(tris_cube);
 }
+
+
+#' @title Vectorized version of cube3D.tris
+#'
+#' @param centers numerical matrix with 3 columns. Each column represents the x, y, z coordinates of a center at which to create a cube.
+#'
+#' @param edge_length numerical vector or scalar, the edge length. Must have length 1 (same edge length for all cubes), or the length must be identical to the number of rows in parameter `centers`.
+#'
+#' @return matrix of triangle coordinates, see \code{\link[fsbrain]{cube3D.tris}}.
+#'
+#' @examples
+#'    # Plot a 3D cloud of 20000 voxels:
+#'    centers = matrix(rnorm(20000*3)*100, ncol=3);
+#'    rgl::triangles3d(cubes3D.tris(centers));
+#'
+#' @export
+cubes3D.tris <- function(centers, edge_length=1) {
+    if(is.vector(centers)) {
+        centers = matrix(centers, ncol = 3);
+    }
+
+    num_tris = nrow(centers);
+
+    if(length(edge_length) == 1) {
+        edge_length = rep(edge_length, num_tris);
+    }
+
+    points_per_rect = 36L;    # Each 3D rectangle consists of 12 triangles, each of which has 3 points.
+
+    tris = matrix(rep(NA, num_tris*points_per_rect*3), ncol=3);
+    for(row_idx in seq_len(nrow(centers))) {
+        start_idx = (row_idx - 1) * points_per_rect + 1;
+        end_idx = start_idx + points_per_rect - 1;
+        tris[start_idx:end_idx,] = cube3D.tris(center=centers[row_idx,], edge_length = edge_length[row_idx]);
+    }
+    return(tris);
+}
+
 
