@@ -1,15 +1,27 @@
 # Volume visualization in 3D, based on RGL.
 # These functions work by isosurfaces or rendering voxels as boxes.
 
-#' @title Voxel-based visualization of volume mask.
+#' @title Voxel-based visualization of volume mask at surface RAS positions.
+#'
+#' @description Plots a 3D box at every *foreground* voxel in the given volume. All voxels which do not have their intensity value set to `NA` are considered *foreground* voxels. The locations at which to plot the voxels is computed from the voxel CRS indices using the FreeSurfer \code{\link[fsbrain]{vox2ras_tkr}} matrix. This means that the position of the rendered data fits to the surface coordinates (in files like `surf/lh.white`), and that you can call this function while an active surface rendering window is open (e.g., from calling \code{\link[fsbrain]{vis.subject.morph.native}}), to superimpose the surface and volume data.
 #'
 #' @param volume numeric 3d array, voxels which should not be plotted must have value `NA`. Take care not to plot too many.
 #'
-#' @param max_render integer, the maximal number of voxels to render. If there are more voxels in the volume which are not `NA`, a warning will be issued and the rest will not be rendered. Set to `prod(dim(volume))` to allow to render all, but be aware that this may take ages.
+#' @param max_render integer, the maximal number of voxels to render. If there are more foreground voxels in the volume, a warning will be issued and the rest will not be rendered. Set to `prod(dim(volume))` to allow to render all, but be aware that this may become slow.
 #'
-#' @param render_every integer, how many to skip before rendering the next one. Use higher values to see a less dense representation of your data that still allows one to see the general shape, but at lower computational burden. Set to 1 to render an object at every voxel.
+#' @param render_every integer, how many to skip before rendering the next one (to improve performance). Use higher values to see a less dense representation of your data that usually still allows you to see the general shape, but at lower computational burden. Set to 1 to render every (foreground) voxel.
 #'
 #' @param ... material properties, passed to \code{\link[rgl]{triangles3d}}. Example: \code{color = "#0000ff", lit=FALSE}.
+#'
+#' @examples
+#' \donttest{
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+#'    brain = subject.volume(subjects_dir, 'subject1', 'brain');
+#'    # Plot all voxels of the brain:
+#'    brain[which(brain==0, arr.ind = TRUE)] = NA;  # mark background
+#'    volvis.voxels(brain);
+#' }
 #'
 #' @export
 volvis.voxels <- function(volume, max_render=500000, render_every=8, ...) {
