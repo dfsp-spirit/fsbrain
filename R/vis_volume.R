@@ -852,3 +852,102 @@ vol.intensity.to.color <- function(volume) {
 }
 
 
+#' @title Return triangles for a 3D cube.
+#'
+#' @description Each row of the returned matrix encodes a point (the x, y, and z coordinates), and 3 consecutive rows encode a triangle. Obvisouly, a point will occur several times (as part of several triangles). The result can be passed to \code{\link[rgl]{triangles3d}} to render a 3D box.
+#'
+#' @param xmin numeric, minimal x coordinate
+#'
+#' @param xmax numeric, maximal x coordinate
+#'
+#' @param ymin numeric, minimal y coordinate
+#'
+#' @param ymax numeric, maximal y coordinate
+#'
+#' @param zmin numeric, minimal z coordinate
+#'
+#' @param zmax numeric, maximal z coordinate
+#'
+#' @param center numeric vector of length 3 or NULL, coordinates where to center a cube with the edge length defined in parameter `edge_length`. If this is not `NULL`, the parameters `xmin`, `xmax`, ... will be ignored, and their values will be computed for a cube based on the `center` and `edge_length`. Note that you can only create cubes using `center` and `edge_length`.
+#'
+#' @param edge_length numeric, the edge length of the cube. Only used if parameter `center` is used, ignored otherwise.
+#'
+#' @return numerical matrix with 36 rows and 3 columns, the 3D coordinates. Each row encodes a point (the x, y, and z coordinates), and 3 consecutive rows encode a triangle.
+#'
+#' @examples
+#'    # Create a cube with edge length 2, centered at (3,4,5):
+#'    cube_coords = cube3D.tris(center=c(3,4,5), edge_length=2.0);
+#'    # Create the same cube using the min/max method:
+#'    cube_coords = cube3D.tris(xmin=2, xmax=4, ymin=3, ymax=5, zmin=4, zmax=6);
+#'    # To render the cube:
+#'    #rgl::triangles3d(cube_coords, col="red");
+#'
+#' @export
+cube3D.tris <- function(xmin=-0.5, xmax=0.5, ymin=-0.5, ymax=0.5, zmin=-0.5, zmax=0.5, center=NULL, edge_length=1.0) {
+
+    if(!is.null(center)) {
+        if(is.numeric(center) & length(center) == 3) {
+            hel = edge_length / 2.0;   # half edge length
+            xmin = center[1] - hel;
+            xmax = center[1] + hel;
+            ymin = center[2] - hel;
+            ymax = center[2] + hel;
+            zmin = center[3] - hel;
+            zmax = center[3] + hel;
+
+        } else {
+            stop("If given, 'center' must be a numeric vector of length 3: the x, y, and z coordinates of the cube center.");
+        }
+    }
+
+    tris_cube = matrix(c(xmin, ymin, zmin, # the 2 front tris start
+                         xmin, ymin, zmax,
+                         xmax, ymin, zmin,
+                         # tris 2
+                         xmax, ymin, zmin,
+                         xmin, ymin, zmax,
+                         xmax, ymin, zmax,
+                         # tris 3: the back starts (shifted by +1.0 on y axis compared to front)
+                         xmin, ymax, zmin,
+                         xmin, ymax, zmax,
+                         xmax, ymax, zmin,
+                         # tris 4
+                         xmax, ymax, zmin,
+                         xmin, ymax, zmax,
+                         xmax, ymax, zmax,
+                         # tris 5: the left side starts
+                         xmin, ymax, zmin,
+                         xmin, ymax, zmax,
+                         xmin, ymin, zmin,
+                         # tris 6
+                         xmin, ymin, zmin,
+                         xmin, ymax, zmax,
+                         xmin, ymin, zmax,
+                         # tris 7: the right side starts (shifted by +1.0 on x axis compared to left side)
+                         xmax, ymax, zmin,
+                         xmax, ymax, zmax,
+                         xmax, ymin, zmin,
+                         # tris 8
+                         xmax, ymin, zmin,
+                         xmax, ymax, zmax,
+                         xmax, ymin, zmax,
+                         # tris 9: the bottom starts
+                         xmin, ymin, zmin,
+                         xmin, ymax, zmin,
+                         xmax, ymin, zmin,
+                         # tris 10
+                         xmax, ymin, zmin,
+                         xmin, ymax, zmin,
+                         xmax, ymax, zmin,
+                         # tris 11: the top starts (shifted by +1.0 on z axis compared to the bottom)
+                         xmin, ymin, zmax,
+                         xmin, ymax, zmax,
+                         xmax, ymin, zmax,
+                         # tris 12
+                         xmax, ymin, zmax,
+                         xmin, ymax, zmax,
+                         xmax, ymax, zmax
+    ), ncol=3, byrow = TRUE);
+    return(tris_cube);
+}
+
