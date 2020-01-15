@@ -9,7 +9,7 @@
 #'
 #' @param max_render integer, the maximal number of voxels to render. If there are more foreground voxels in the volume, a warning will be issued and the rest will not be rendered. Set to `prod(dim(volume))` to allow to render all, but be aware that this may become slow.
 #'
-#' @param render_every integer, how many to skip before rendering the next one (to improve performance). Use higher values to see a less dense representation of your data that usually still allows you to see the general shape, but at lower computational burden. Set to 1 to render every (foreground) voxel.
+#' @param render_every integer, how many to skip before rendering the next one (to improve performance and/or see deeper structures). Use higher values to see a less dense representation of your data that usually still allows you to see the general shape, but at lower computational burden. Set to 1 to render every (foreground) voxel.
 #'
 #' @param ... material properties, passed to \code{\link[rgl]{triangles3d}}. Example: \code{color = "#0000ff", lit=FALSE}.
 #'

@@ -31,7 +31,8 @@ test_that("A brain volume segmentation can be rendered with correct colors from 
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
 
     subject_id = "subject1";
-    aseg = subject.volume(subjects_dir, subject_id, 'aseg');    # Not shipped with the package atm.
+    #aseg = subject.volume(subjects_dir, subject_id, 'aseg');    # Not shipped with the package atm.
+    aseg = subject.volume(subjects_dir, subject_id, 'aparc+aseg');    # Not shipped with the package atm.
 
     aseg_codes = unique(as.vector(aseg));
 
