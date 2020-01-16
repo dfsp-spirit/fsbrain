@@ -817,23 +817,47 @@ vol.merge <- function(volume, overlay_colors, bbox_threshold=0L, forced_overlay_
 
 #' @title Convert integer intensity image to RGB color string form.
 #'
-#' @description Convert a gray-scale image defined by intensity values in range [0, 1] to an image with identical dimensions that contains an R color string (like `#222222`) at each position. The color strings are computed from the intensities, by taking the intensity value as the value for all three RGB channels. I.e., the output is still gray-scale, but defined in RGB space. To make it clear, this function does **not** apply a colormap. It only changes the representation of the data, not the resulting colors.
+#' @description Convert a gray-scale image defined by intensity values in range `[0, 1]` to an image with identical dimensions that contains an R color string (like `#222222`) at each position. The color strings are computed from the intensities, by taking the intensity value as the value for all three RGB channels. I.e., the output is still gray-scale, but defined in RGB space. To make it clear, this function does **not** apply a colormap. It only changes the representation of the data, not the resulting colors.
 #'
-#' @param volume numeric array, typically a 3D image with intensities in range [0, 1]. This function now also supports numeric matrices (2D images, slices) and numeric vectors (1D).
+#' @param volume numeric array, typically a 3D image with intensities in range `[0, 1]`. This function now also supports numeric matrices (2D images, slices) and numeric vectors (1D).
+#'
+#' @param scale numeric or character string, a scaling to apply to the values. Defaults to NULL, which means *no scaling* and requires the values in `volume` to be in rage `[0, 1]`. You can pass a number like 255 or the string 'normalize' to scale based on the data. You can pass the string 'normalize_if_needed' to scale only if the data is *outside* the range `[0, 1]`, so that data in range `[0.3, 0.5]` would **not** be rescaled to `[0, 1]`.
 #'
 #' @return array (or matrix, or vector) of RGB color strings. All of them will represent gray values.
 #'
 #' @examples
 #'    vol.intensity.to.color(c(0.0, 0.5, 1.0));
 #'    # output: "#000000" "#808080" "#FFFFFF"
+#'    vol.intensity.to.color(c(20, 186, 240), scale="normalize");
+#'    vol.intensity.to.color(c(20, 186, 240), scale=255);
+#'    vol.intensity.to.color(c(0.0, 0.5, 0.8), scale="normalize");
+#'    vol.intensity.to.color(c(0.0, 0.5, 0.8), scale="normalize_if_needed");
 #'
 #' @importFrom grDevices rgb
 #' @export
-vol.intensity.to.color <- function(volume) {
+vol.intensity.to.color <- function(volume, scale=NULL) {
     if(is.numeric(volume)) {
+
+        if(!is.null(scale)) {
+            rng = range(volume);
+            if(scale == 'normalize') {
+                volume = normalize(volume);
+            } else if(scale == 'normalize_if_needed') {
+                if(rng[1] < 0.0 | rng[2] > 1.0) {
+                    volume = normalize(volume);
+                }
+            } else {
+                if(is.numeric(scale) & length(scale) == 1) {
+                    volume = volume / scale;
+                } else {
+                    stop("Parameter 'scale' must be exactly the character string 'normalize', 'normalize_if_needed', or a numeric scalar.");
+                }
+            }
+        }
+
         rng = range(volume);
         if(rng[1] < 0.0 | rng[2] > 1.0) {
-            warning(sprintf("Intensity values of volume are in range range [%.2f, %.2f], please scale the intensity values to range [0, 1] before passing them to this function.\n", rng[1], rng[2]));
+            warning(sprintf("Intensity values of volume are in range range [%.2f, %.2f], please scale the intensity values to range [0, 1] before passing them to this function or use 'scale' parameter.\n", rng[1], rng[2]));
         }
 
         num_dims = length(dim(volume));
@@ -849,6 +873,20 @@ vol.intensity.to.color <- function(volume) {
     } else {
         stop("Parameter 'volume' must be numeric.");
     }
+}
+
+
+#' @title Normalize data.
+#'
+#' @description Scales data to the range `[0, 1]` based on min and max values.
+#'
+#' @param x the data
+#'
+#' @return the scaled data
+#'
+#' @keywords internal
+normalize <- function(x) {
+    return((x- min(x)) /(max(x)-min(x)));
 }
 
 

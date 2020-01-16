@@ -7,7 +7,7 @@
 get.rglstyle(style)
 }
 \arguments{
-\item{style, }{string. A style name. Available styles are one of: "default", "shiny", "semitransparent".}
+\item{style}{string. A style name. Available styles are one of: "default", "shiny", "semitransparent".}
 }
 \description{
 Run \code{\link[rgl]{material3d}} without arguments to see valid style keywords to create new styles.

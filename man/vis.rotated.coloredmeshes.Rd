@@ -15,19 +15,19 @@ vis.rotated.coloredmeshes(
 )
 }
 \arguments{
-\item{coloredmeshes, }{list of coloredmeshes. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.}
+\item{coloredmeshes}{list of coloredmeshes. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.}
 
-\item{rotation_angle, }{angle in radians. Passed to [rgl:rotated3d()].}
+\item{rotation_angle}{angle in radians. Passed to [rgl:rotated3d()].}
 
-\item{x, }{x value passed to [rgl:rotated3d()].}
+\item{x}{x value passed to [rgl:rotated3d()].}
 
-\item{y, }{y value passed to [rgl:rotated3d()].}
+\item{y}{y value passed to [rgl:rotated3d()].}
 
-\item{z, }{z value passed to [rgl:rotated3d()].}
+\item{z}{z value passed to [rgl:rotated3d()].}
 
-\item{style, }{a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.}
+\item{style}{a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.}
 
-\item{draw_colorbar, }{logical. Whether to draw a colorbar.}
+\item{draw_colorbar}{logical. Whether to draw a colorbar.}
 }
 \description{
 Rotate and visualize coloredmeshes, applying a style.

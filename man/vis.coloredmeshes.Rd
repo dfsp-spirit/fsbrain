@@ -15,7 +15,7 @@ vis.coloredmeshes(
 )
 }
 \arguments{
-\item{coloredmeshes, }{list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.}
+\item{coloredmeshes}{list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.}
 
 \item{background}{string, background color passed to rgl::bg3d()}
 
@@ -25,9 +25,9 @@ vis.coloredmeshes(
 
 \item{rgloptions}{option list passed to [rgl::par3d()]. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))};}
 
-\item{rglactions, }{named list. A list in which the names are from a set of pre-defined actions. Defaults to the empty list.}
+\item{rglactions}{named list. A list in which the names are from a set of pre-defined actions. Defaults to the empty list.}
 
-\item{draw_colorbar, }{logical. Whether to draw a colorbar. WARNING: Will only show up if there is enough space in the plot area and does not resize properly. Defaults to FALSE. See [fsbrain::coloredmesh.plot.colorbar.separate()] for an alternative.}
+\item{draw_colorbar}{logical. Whether to draw a colorbar. WARNING: Will only show up if there is enough space in the plot area and does not resize properly. Defaults to FALSE. See [fsbrain::coloredmesh.plot.colorbar.separate()] for an alternative.}
 }
 \value{
 the list of visualized coloredmeshes

@@ -18,23 +18,23 @@ vis.data.on.subject(
 )
 }
 \arguments{
-\item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, containing the subdir of vis_subject_id, the subject that you want to use for visualization.}
+\item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, containing the subdir of vis_subject_id, the subject that you want to use for visualization.}
 
-\item{vis_subject_id, }{string. The subject identifier from which to obtain the surface for data visualization. Example: 'fsaverage'.}
+\item{vis_subject_id}{string. The subject identifier from which to obtain the surface for data visualization. Example: 'fsaverage'.}
 
-\item{morph_data_lh, }{numeric vector or character string or NULL, the data to visualize on the left hemisphere surface. If a string, it is treated as a filename and data is loaded from it first. When it is a numerical vector, this is assumed to be the data already. The data must have the same length as the surface of the vis_subject_id has vertices. If NULL, this surface will not be rendered. Only one of morph_data_lh or morph_data_rh is allowed to be NULL.}
+\item{morph_data_lh}{numeric vector or character string or NULL, the data to visualize on the left hemisphere surface. If a string, it is treated as a filename and data is loaded from it first. When it is a numerical vector, this is assumed to be the data already. The data must have the same length as the surface of the vis_subject_id has vertices. If NULL, this surface will not be rendered. Only one of morph_data_lh or morph_data_rh is allowed to be NULL.}
 
-\item{morph_data_rh, }{numeric vector or character string or NULL, the data to visualize on the right hemisphere surface. If a string, it is treated as a filename and data is loaded from it first. When it is a numerical vector, this is assumed to be the data already.  The data must have the same length as the surface of the vis_subject_id has vertices. If NULL, this surface will not be rendered. Only one of morph_data_lh or morph_data_rh is allowed to be NULL.}
+\item{morph_data_rh}{numeric vector or character string or NULL, the data to visualize on the right hemisphere surface. If a string, it is treated as a filename and data is loaded from it first. When it is a numerical vector, this is assumed to be the data already.  The data must have the same length as the surface of the vis_subject_id has vertices. If NULL, this surface will not be rendered. Only one of morph_data_lh or morph_data_rh is allowed to be NULL.}
 
-\item{surface, }{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
+\item{surface}{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 
-\item{colormap, }{a colormap. See the squash package for some colormaps. Defaults to \code{\link[squash]{jet}}.}
+\item{colormap}{a colormap. See the squash package for some colormaps. Defaults to \code{\link[squash]{jet}}.}
 
-\item{views, }{list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.}
+\item{views}{list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.}
 
 \item{rgloptions}{option list passed to \code{\link[rgl]{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))}}
 
-\item{rglactions, }{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.}
+\item{rglactions}{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.}
 
 \item{draw_colorbar}{logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See \code{\link[fsbrain]{coloredmesh.plot.colorbar.separate}} for an alternative.}
 }

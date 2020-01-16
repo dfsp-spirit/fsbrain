@@ -20,7 +20,7 @@ vis.labeldata.on.subject(
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, containing the subdir of vis_subject_id, the subject that you want to use for visualization.}
 
-\item{vis_subject_id, }{string The subject identifier from which to obtain the surface for data visualization. Example: 'fsaverage'.}
+\item{vis_subject_id}{string The subject identifier from which to obtain the surface for data visualization. Example: 'fsaverage'.}
 
 \item{lh_labeldata}{integer vector of vertex indices for the left hemisphere}
 
@@ -28,7 +28,7 @@ vis.labeldata.on.subject(
 
 \item{surface}{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 
-\item{colormap}{a colormap. See the squash package for some colormaps. Defaults to \code{\link[squash]{jet}}.}
+\item{colormap}{a colormap function. See the squash package for some colormaps. Defaults to \code{\link[squash]{jet}}.}
 
 \item{views}{list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.}
 

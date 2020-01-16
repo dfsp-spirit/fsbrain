@@ -3,13 +3,13 @@
 
 #' @title Voxel-based visualization of volume mask at surface RAS positions.
 #'
-#' @description Plots a 3D box at every *foreground* voxel in the given volume. All voxels which do not have their intensity value set to `NA` are considered *foreground* voxels. The locations at which to plot the voxels is computed from the voxel CRS indices using the FreeSurfer \code{\link[fsbrain]{vox2ras_tkr}} matrix. This means that the position of the rendered data fits to the surface coordinates (in files like `surf/lh.white`), and that you can call this function while an active surface rendering window is open (e.g., from calling \code{\link[fsbrain]{vis.subject.morph.native}}), to superimpose the surface and volume data.
+#' @description Plots a 3D box at every *foreground* voxel in the given volume. All voxels which do not have their intensity value set to `NA` are considered *foreground* voxels. The locations at which to plot the voxels is computed from the voxel CRS indices using the FreeSurfer \code{\link[fsbrain]{vox2ras_tkr}} matrix. This means that the position of the rendered data fits to the surface coordinates (in files like `surf/lh.white`), and that you can call this function while an active surface rendering window is open (e.g., from calling \code{\link[fsbrain]{vis.subject.morph.native}}), to superimpose the surface and volume data. **On coloring the voxels** (using *rgl materials*): Note that you can call this function several times for the active plot, and color the voxels differently by passing different material properties in each call. Alternatively, check the `voxelcol` parameter.
 #'
 #' @param volume numeric 3d array, voxels which should not be plotted must have value `NA`. Take care not to plot too many.
 #'
-#' @param max_render integer, the maximal number of voxels to render. If there are more foreground voxels in the volume, a warning will be issued and the rest will not be rendered. Set to `prod(dim(volume))` to allow to render all, but be aware that this may become slow.
-#'
 #' @param render_every integer, how many to skip before rendering the next one (to improve performance and/or see deeper structures). Use higher values to see a less dense representation of your data that usually still allows you to see the general shape, but at lower computational burden. Set to 1 to render every (foreground) voxel.
+#'
+#' @param voxelcol character string or a *voxel coloring*. A *voxel coloring* can be specified in three ways: 1) the string 'from_intensities' will compute colors based on the intensity values of the foreground voxels in the volume, applying normalization of the intensity values if needed. 2) an array of RGB color strings: will be used to retrieve the colors for all foreground vertices, at their CRS indices. 3) A vector with length identical to the number of foreground voxels in the volume: will be applied directly.  Obvisouly, you should not pass a color material parameter (see `...`) when using this.
 #'
 #' @param ... material properties, passed to \code{\link[rgl]{triangles3d}}. Example: \code{color = "#0000ff", lit=FALSE}.
 #'
@@ -24,22 +24,58 @@
 #' }
 #'
 #' @export
-volvis.voxels <- function(volume, max_render=500000, render_every=8, ...) {
-    voxel_crs = which(!is.na(volume), arr.ind = TRUE);
+volvis.voxels <- function(volume, render_every=8, voxelcol=NULL, ...) {
+    num_volume_voxels = prod(dim(volume));
 
-    rendered_voxels = seq(1, nrow(voxel_crs), render_every);
+    voxel_crs = which(!is.na(volume), arr.ind = TRUE);   # foreground voxels, as CRS indices.
+    num_foreground_voxels = nrow(voxel_crs);
+
+
+    rendered_voxels = seq(1, num_foreground_voxels, render_every);  # Each number represents a voxel, encoded as the row index in 'voxel_crs'.
+    num_rendered_voxels = length(rendered_voxels);
+
+    # Create voxel colors as a vector of color strings that has length equal to 'num_foreground_voxels':
+    if(!is.null(voxelcol)) {
+        if(length(voxelcol) == 1) {
+            if(voxelcol == 'from_intensity') {
+                voxelcol = vol.intensity.to.color(volume[voxel_crs], scale='normalize_if_needed');
+            } else {
+                stop("If parameter 'voxelcol' has length 1, the only allowed value is the character string 'from_intensity'.");
+            }
+        } else {
+            if(is.array(voxelcol) & is.character(voxelcol) & all.equal(dim(volume), dim(voxelcol))) {
+                voxelcol = voxelcol[voxel_crs];
+            } else if(is.vector(voxelcol) & is.character(voxelcol) & length(voxelcol) == num_foreground_voxels) {
+                # do nothing, it was already passed in exactly as required: one color per foreground voxel.
+            }
+            else {
+                stop(sprintf("If not NULL, parameter 'voxelcol' must be the character string 'from_intensity' or an array representing rgb colors with dimensions identical to those of 'volume', or a color vector with length identical to the number of foreground voxels (%d).\n", num_foreground_voxels));
+            }
+        }
+
+        if(length(voxelcol) != num_foreground_voxels) {
+            stop(sprintf("Bug: Voxel color mismatch. Computed %d voxel colors for %d foreground voxels.\n", length(voxelcol), num_foreground_voxels));
+        }
+
+        # Filter the colors by the voxels which will actually be rendered:
+        if(render_every != 1) {
+            voxelcol = voxelcol[rendered_voxels];
+        }
+
+        if(length(voxelcol) != num_rendered_voxels) {
+            stop(sprintf("Bug: Voxel color mismatch. Computed %d voxel colors for %d rendered voxels.\n", length(voxelcol), num_rendered_voxels));
+        }
+    }
+
+
 
     if(render_every == 8) {
         message(sprintf("About to render %d voxels (one in %d voxels only). Set parameter 'render_every' to 1 to render all %d voxels.\n", length(rendered_voxels), render_every, nrow(voxel_crs)));
     }
 
-    if(length(rendered_voxels) > max_render) {
-        warning(sprintf("About to render %d voxels, but max_render is set to %d. Will stop early, the rest will not appear in the output. Try increasing one of the parameters 'max_render' or 'render_every'.\n", length(rendered_voxels), max_render));
-        rendered_voxels = rendered_voxels[1:max_render];
-    }
 
-    if(nrow(voxel_crs) > 0) {
-        voxel_crs = cbind(voxel_crs, 1);
+    if(num_foreground_voxels > 0) {
+        voxel_crs = cbind(voxel_crs, 1); # turn coords into homogeneous repr.
         surface_ras = matrix(rep(0, length(rendered_voxels)*3), ncol=3);
         vox2surface_ras_matrix = vox2ras_tkr();
         for(idx in seq(length(rendered_voxels))) {
@@ -47,9 +83,9 @@ volvis.voxels <- function(volume, max_render=500000, render_every=8, ...) {
             surface_ras[idx,] = (vox2surface_ras_matrix %*% voxel_crs[row_idx,])[1:3];
         }
         #rgl::rgl.spheres(surface_ras, r = 0.5, ...);
-        rglvoxels(surface_ras, r = 1.0, ...);
+        rglvoxels(surface_ras, r = 1.0, voxelcol=voxelcol, ...);
     } else {
-        warning("No voxels to be visualized.");
+        warning("No foreground voxels in volume, nothing to visualize.");
     }
 }
 
@@ -62,6 +98,8 @@ volvis.voxels <- function(volume, max_render=500000, render_every=8, ...) {
 #'
 #' @param r numerical vector or scalar, the edge length. The vector must have length 1 (same edge length for all cubes), or the length must be identical to the number of rows in parameter `centers`.
 #'
+#' @param voxelcol vector of rgb color strings for the individual voxels. Its length must be identical to \code{nrow(centers)} if given.
+#'
 #' @param ... material properties, passed to \code{\link[rgl]{triangles3d}}. Example: \code{color = "#0000ff", lit=FALSE}.
 #'
 #'
@@ -71,8 +109,19 @@ volvis.voxels <- function(volume, max_render=500000, render_every=8, ...) {
 #'    rglvoxels(centers, color="red");
 #'
 #' @export
-rglvoxels <- function(centers, r=1.0, ...) {
-    rgl::triangles3d(cubes3D.tris(centers, edge_length = r), ...);
+rglvoxels <- function(centers, r=1.0, voxelcol=NULL, ...) {
+    if(is.null(voxelcol)) {
+        rgl::triangles3d(cubes3D.tris(centers, edge_length = r), ...);
+    } else {
+        if(length(voxelcol) != nrow(centers)) {
+            stop(sprintf("Mismatch between voxel centers (%d rows) and voxel colors (length %d), sizes must match.\n", nrow(centers), length(voxelcol)));
+        }
+        for(rgbcol in unique(voxelcol)) {
+            voxel_indices_this_color = which(voxelcol==rgbcol);
+            cat(sprintf("Rendering %d voxels with color '%s'.\n", length(voxel_indices_this_color), rgbcol));
+            rgl::triangles3d(cubes3D.tris(centers[voxel_indices_this_color,], edge_length = r), color = rgbcol, ...);
+        }
+    }
 }
 
 

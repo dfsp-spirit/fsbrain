@@ -132,7 +132,8 @@ vol.vox.from.crs <- function(fs_crs, add_affine=FALSE) {
 #' @examples
 #'    # Compute surface RAS coordinate of voxel with CRS (0L, 0L, 0L):
 #'    vox2ras_tkr() %*% c(0, 0, 0, 1);
-#'    # Show that voxel with CRS (128,128,128) is at the origin (0.0, 0.0, 0.0) of the surface RAS coordinate system:
+#'    # Show that voxel with CRS (128,128,128) is at the
+#'    #  origin (0.0, 0.0, 0.0) of the surface RAS coordinate system:
 #'    (vox2ras_tkr() %*% c(128, 128, 128, 1))[1:3];
 #'
 #' @family surface and volume coordinates
