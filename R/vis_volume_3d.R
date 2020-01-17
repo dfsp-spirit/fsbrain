@@ -90,6 +90,18 @@ volvis.voxels <- function(volume, render_every=8, voxelcol=NULL, ...) {
 }
 
 
+#' @export
+apply.vox2ras_tkr <- function(m) {
+    surface_ras = matrix(rep(0, nrow(m)*3), ncol=3);
+    m_cp = cbind(m, 1); # turn coords into homogeneous repr.
+    vox2surface_ras_matrix = vox2ras_tkr();
+    for(idx in seq(nrow(m))) {
+        surface_ras[idx,] = (vox2surface_ras_matrix %*% m_cp[idx,])[1:3];
+    }
+    return(surface_ras);
+}
+
+
 #' @title Draw 3D boxes at locations using rgl.
 #'
 #' @description Draw 3D boxes at all given coordinates using rgl, analogous to \code{\link[rgl]{rgl.spheres}}. Constructs the coordinates for triangles making up the boxes, then uses \code{\link[rgl]{triangles3d}} to render them.

@@ -56,3 +56,43 @@ test_that("A brain volume segmentation can be rendered with correct colors from 
 })
 
 
+test_that("Brain structures can be rendered as contours using misc3d", {
+
+    skip("This test has to be run manually and interactively. It requires the misc3d package.");
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+    skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
+
+    subject_id = "subject1";
+    aseg = subject.volume(subjects_dir, subject_id, 'aseg');    # Not shipped with the package atm.
+    ventricle_aseg_codes = c(4, 14, 15, 43);    # see FreeSurferColorLUT.txt
+    ventricle_mask = vol.mask.from.segmentation(aseg, ventricle_aseg_codes);
+
+    # Remove the NAs, contour3d does not seem to like them.
+    ventricle_mask_mod = ventricle_mask;
+    ventricle_mask_mod[which(is.na(ventricle_mask), arr.ind=T)] = 0;
+
+    custom_colors = terrain.colors(length(ventricle_aseg_codes));
+    misc3d::contour3d(ventricle_mask_mod, level=ventricle_aseg_codes, color=custom_colors, alpha = seq(0.2, 0.5, length.out = length(ventricle_aseg_codes)));
+
+    # ---- Draw the surface of the left hemi, and the ventricle contours into the same plot ----
+    vis.subject.morph.native(subjects_dir, 'subject1', 'thickness', 'lh', views = 'si', style='semitransparent');
+    vent_tris = misc3d::contour3d(ventricle_mask_mod, level=10, color="red", draw=FALSE);
+    # Fix the rendering coords to surface RAS
+    vent_tris$v1 = apply.vox2ras_tkr(vent_tris$v1);
+    vent_tris$v2 = apply.vox2ras_tkr(vent_tris$v2);
+    vent_tris$v3 = apply.vox2ras_tkr(vent_tris$v3);
+    drawScene.rgl(vent_tris, add = TRUE);
+
+    # Add transparent overlay of whole brain for worse performance ><
+    have_might_computer = TRUE;
+    if(have_might_computer) {
+        brain_tris = misc3d::contour3d(aseg, level=10, color="gray", alpha=0.1, draw = FALSE);
+        brain_tris$v1 = apply.vox2ras_tkr(brain_tris$v1);
+        brain_tris$v2 = apply.vox2ras_tkr(brain_tris$v2);
+        brain_tris$v3 = apply.vox2ras_tkr(brain_tris$v3);
+        drawScene.rgl(brain_tris, add = TRUE);
+    }
+
+})
+

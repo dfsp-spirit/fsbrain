@@ -2,9 +2,14 @@
 % Please edit documentation in R/volume.R
 \name{readable.volume}
 \alias{readable.volume}
-\title{Find files with the given base name that exist.}
+\title{Find files with the given base name and extensions that exist.}
 \usage{
-readable.volume(filepath, precedence = c(".mgh", ".mgz"), error_if_none = TRUE)
+readable.volume(
+  filepath,
+  precedence = c(".mgh", ".mgz"),
+  error_if_none = TRUE,
+  return_all = FALSE
+)
 }
 \arguments{
 \item{filepath}{character string, path to a file without extension}
@@ -12,11 +17,13 @@ readable.volume(filepath, precedence = c(".mgh", ".mgz"), error_if_none = TRUE)
 \item{precedence}{vector of character strings, the file extensions to check.}
 
 \item{error_if_none}{logical, whether to raise an error if none of the files exist}
+
+\item{return_all}{logical, whether to return all readable files instead of just the first one}
 }
 \value{
 character string, the path to the first existing file (or NULL if none of them exists).
 }
 \description{
-Find files with the given base name that exist.
+Note that in the current implementation, the case of the filepath and the extension must match.
 }
 \keyword{internal}
