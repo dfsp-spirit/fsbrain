@@ -111,7 +111,7 @@ check.for.coloredmeshes.colormap <- function(coloredmeshes) {
 #'
 #' @param hemi string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.
 #'
-#' @param surface string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
+#' @param surface character string or `fs.surface` instance. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
 #'
 #' @param colormap a colormap function. See the squash package for some colormaps. Defaults to \code{\link[squash]{jet}}.
 #'
@@ -136,7 +136,11 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
         morph_data = clip.data(morph_data, lower=clip[1], upper=clip[2]);
     }
 
-    surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
+    if(is.fs.surface(surface)) {
+        surface_data = surface;
+    } else {
+        surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
+    }
     mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
     col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
     return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap));
@@ -211,7 +215,12 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
         morph_data = clip.data(morph_data, lower=clip[1], upper=clip[2]);
     }
 
-    surface_data = subject.surface(template_subjects_dir, template_subject, surface, hemi);
+    if(is.fs.surface(surface)) {
+        surface_data = surface;
+    } else {
+        surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
+    }
+
     mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
     col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
     return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap));
@@ -245,7 +254,11 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
 
-    surface_data = subject.surface(subjects_dir, vis_subject_id, surface, hemi);
+    if(is.fs.surface(surface)) {
+        surface_data = surface;
+    } else {
+        surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
+    }
 
     num_verts = nrow(surface_data$vertices);
     if(length(morph_data) != num_verts) {
@@ -294,7 +307,11 @@ coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surfac
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
 
-    surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
+    if(is.fs.surface(surface)) {
+        surface_data = surface;
+    } else {
+        surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
+    }
 
     if(is.character(atlas)) {
         annot = subject.annot(subjects_dir, subject_id, hemi, atlas);
@@ -337,7 +354,11 @@ coloredmesh.from.label <- function(subjects_dir, subject_id, label, hemi, surfac
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
 
-    surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
+    if(is.fs.surface(surface)) {
+        surface_data = surface;
+    } else {
+        surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
+    }
 
     if(is.character(label)) {
         label_data = subject.label(subjects_dir, subject_id, label, hemi);
@@ -378,7 +399,11 @@ coloredmesh.from.mask <- function(subjects_dir, subject_id, mask, hemi, surface=
     }
 
     if(is.null(surface_data)) {
-        surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
+        if(is.fs.surface(surface)) {
+            surface_data = surface;
+        } else {
+            surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
+        }
     }
 
     morph_like_data = as.integer(mask);
