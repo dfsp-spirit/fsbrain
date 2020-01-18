@@ -3,7 +3,7 @@
 
 #' @title Visualize a list of colored meshes in a single scene.
 #'
-#' @param coloredmeshes, list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
+#' @param coloredmeshes list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
 #'
 #' @param background string, background color passed to rgl::bg3d()
 #'
@@ -13,14 +13,15 @@
 #'
 #' @param rgloptions option list passed to [rgl::par3d()]. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))};
 #'
-#' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. Defaults to the empty list.
+#' @param rglactions named list. A list in which the names are from a set of pre-defined actions. Defaults to the empty list.
 #'
-#' @param draw_colorbar, logical. Whether to draw a colorbar. WARNING: Will only show up if there is enough space in the plot area and does not resize properly. Defaults to FALSE. See [fsbrain::coloredmesh.plot.colorbar.separate()] for an alternative.
+#' @param draw_colorbar logical. Whether to draw a colorbar. WARNING: Will only show up if there is enough space in the plot area and does not resize properly. Defaults to FALSE. See [fsbrain::coloredmesh.plot.colorbar.separate()] for an alternative.
 #'
 #' @return the list of visualized coloredmeshes
 #'
-#' @keywords internal
+# @keywords internal
 #' @importFrom rgl open3d bg3d wire3d
+#' @export
 vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", rgloptions=list(), rglactions=list(), draw_colorbar=FALSE) {
 
     if(!is.list(coloredmeshes)) {
@@ -50,13 +51,13 @@ vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRU
 
 #' @title Visualize a list of colored meshes in a single scene and rotate them, movie-style.
 #'
-#' @param coloredmeshes, list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
+#' @param coloredmeshes list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
 #'
 #' @param background string, background color passed to rgl::bg3d()
 #'
 #' @param skip_all_na logical, whether to skip (i.e., not render) meshes in the list that have the property 'morph_data_was_all_na' set to TRUE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.
 #'
-#' @param style, a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
+#' @param style a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
 #'
 #' @param x rotation x axis value, passed to [rgl::spin3d()]. Defaults to 0.
 #'
@@ -70,7 +71,7 @@ vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRU
 #'
 #' @param rgloptions option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));
 #'
-#' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. Defaults to the empty list.
+#' @param rglactions named list. A list in which the names are from a set of pre-defined actions. Defaults to the empty list.
 #'
 #' @return the list of visualized coloredmeshes
 #'
@@ -115,19 +116,19 @@ vis.coloredmeshes.rotating <- function(coloredmeshes, background="white", skip_a
 
 #' @title Rotate and visualize coloredmeshes, applying a style.
 #'
-#' @param coloredmeshes, list of coloredmeshes. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
+#' @param coloredmeshes list of coloredmeshes. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
 #'
-#' @param rotation_angle, angle in radians. Passed to [rgl:rotated3d()].
+#' @param rotation_angle angle in radians. Passed to [rgl:rotated3d()].
 #'
-#' @param x, x value passed to [rgl:rotated3d()].
+#' @param x x value passed to [rgl:rotated3d()].
 #'
-#' @param y, y value passed to [rgl:rotated3d()].
+#' @param y y value passed to [rgl:rotated3d()].
 #'
-#' @param z, z value passed to [rgl:rotated3d()].
+#' @param z z value passed to [rgl:rotated3d()].
 #'
-#' @param style, a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
+#' @param style a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
 #'
-#' @param draw_colorbar, logical. Whether to draw a colorbar.
+#' @param draw_colorbar logical. Whether to draw a colorbar.
 #'
 #' @keywords internal
 vis.rotated.coloredmeshes <- function(coloredmeshes, rotation_angle, x, y, z, style="default", draw_colorbar=FALSE) {
@@ -282,12 +283,19 @@ coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=TRUE, makecma
 
 #' @title Draw a coloredmesh using a style.
 #'
-#' @param cmesh, a coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
+#' @param cmesh a coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
 #'
-#' @param style, a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
+#' @param style a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style. Pass the magic word 'from_mesh' to try to retrieve a style (as a name or a style list) from the field `style` of the mesh, or default to "default" if the mesh has no such field.
 #'
 #' @keywords internal
 vis.coloredmesh <- function(cmesh, style="default") {
+    if(style == 'from_mesh') {
+        if(!is.null(cmesh$style)) {
+            style = cmesh$style;
+        } else {
+            style = 'default';
+        }
+    }
     if(is.list(style)) {
         style_params = style;
     } else if (is.character(style)) {
@@ -301,7 +309,9 @@ vis.coloredmesh <- function(cmesh, style="default") {
 
 #' @title Get the default visualization style parameters as a named list.
 #'
-#' @param style, string. A style name. Available styles are one of: "default", "shiny".
+#' @description Run \code{\link[rgl]{material3d}} without arguments to see valid style keywords to create new styles.
+#'
+#' @param style string. A style name. Available styles are one of: "default", "shiny", "semitransparent".
 #'
 #' @keywords internal
 get.rglstyle <- function(style) {
@@ -309,25 +319,43 @@ get.rglstyle <- function(style) {
         return(get.rglstyle.default());
     } else if (style == "shiny") {
         return(get.rglstyle.shiny());
+    } else if (style == "semitransparent") {
+        return(get.rglstyle.semitransparent());
     } else {
-        stop(sprintf("No such style: '%s'.\n", style));
+        stop(sprintf("No such rendering style: '%s'. Try something like 'default', 'shiny', or 'semitransparent'.\n", style));
     }
 }
 
 
 #' @title Get the default visualization style parameters as a named list.
 #'
-#' @return named list, style parameters that can be passed to [rgl::shade3d()] via [base::do.call()].
+#' @description The default rendering style, which is is rather plain. Does not look super fancy, but allows for clear data visualization without distractions. Hint: Run \code{\link[rgl]{material3d}} without arguments to see valid style keywords to create new styles.
+#'
+#' @return named list, style parameters that can be passed to \code{\link[rgl]{shade3d}} via \code{\link[base]{do.call}}.
 #'
 #' @keywords internal
 get.rglstyle.default <- function() {
-    return(list("shininess"=50, specular="black"));
+    return(list("shininess"=50, specular="black", alpha=1.0));
+}
+
+
+#' @title Get the semi-transparent visualization style parameters as a named list.
+#'
+#' @description Semitransparent rendering style. This style has a very negative impact on rendering performance. Hint: Run \code{\link[rgl]{material3d}} without arguments to see valid style keywords to create new styles.
+#'
+#' @return named list, style parameters that can be passed to \code{\link[rgl]{shade3d}} via \code{\link[base]{do.call}}.
+#'
+#' @keywords internal
+get.rglstyle.semitransparent <- function() {
+    return(list("shininess"=50, specular="black", alpha=0.5, front="filled", back="lines"));
 }
 
 
 #' @title Get a shiny visualization style.
 #'
-#' @return named list, style parameters that can be passed to [rgl::shade3d()] via [base::do.call()].
+#' @description A shiny or glossy rendering style. Looks a bit more modern, but the resulting highlights may make the interpretation of the plotted data a bit harder in some areas. Hint: Run \code{\link[rgl]{material3d}} without arguments to see valid style keywords to create new styles.
+#'
+#' @return named list, style parameters that can be passed to to \code{\link[rgl]{shade3d}} via \code{\link[base]{do.call}}.
 #'
 #' @keywords internal
 get.rglstyle.shiny <- function() {

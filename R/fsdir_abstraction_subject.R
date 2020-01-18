@@ -18,7 +18,7 @@
 #'
 #' @param cortex_only logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the subject. Defaults to FALSE.
 #'
-#' @return vector with native space morph data
+#' @return vector with native space morph data, as returned by \code{\link[freesurferformats]{read.fs.morph}}.
 #'
 #' @family morphometry data functions
 #'
@@ -52,7 +52,7 @@ subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, format
             lh_morph_data = apply.label.to.morphdata(lh_morph_data, subjects_dir, subject_id, "lh", 'cortex');
         }
 
-        rh_curvfile = lh_curvfile = subject.filepath.morph.native(subjects_dir, subject_id, measure, "rh", error_if_nonexistent=TRUE);
+        rh_curvfile = subject.filepath.morph.native(subjects_dir, subject_id, measure, "rh", error_if_nonexistent=TRUE);
         rh_morph_data = freesurferformats::read.fs.morph(rh_curvfile);
         if(cortex_only) {
             rh_morph_data = apply.label.to.morphdata(rh_morph_data, subjects_dir, subject_id, "rh", 'cortex');
@@ -302,11 +302,11 @@ subject.filepath.morph.native <- function(subjects_dir, subject_id, measure, hem
 
 #' @title Construct filepath of any freesurfer file.
 #'
-#' @param subjects_dir string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
+#' @param subjects_dir character string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
 #'
-#' @param subject_id string. The subject identifier
+#' @param subject_id character string. The subject identifier.
 #'
-#' @param relative_path_parts vector of strings. THe path to the file, e.g., c("surf", "lh.area").
+#' @param relative_path_parts vector of strings. The path to the file, e.g., c("surf", "lh.area").
 #'
 #' @param hemi string, one of 'lh', 'rh', or NULL. Defaults to NULL. If a hemisphere name is given, it is added as a prefix to the last entry in relative_path_parts, separated by a dot.
 #'

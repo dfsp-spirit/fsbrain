@@ -16,7 +16,7 @@
 #'
 #' @param border_geometry string, a geometry string passed to \code{\link[magick]{image_border}} to define the borders to add to each image tile. The default value adds 5 pixels, both horizontally and vertically.
 #'
-#' @param background_color string, a valid ImageMagick color string such as "white" or "#000080". The color to use when extending images (e.g., when creating the border)
+#' @param background_color string, a valid ImageMagick color string such as "white" or "#000080". The color to use when extending images (e.g., when creating the border).
 #'
 #' @export
 arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=NULL, silent=FALSE, grid_like=TRUE, border_geometry="5x5", background_color = "white") {
@@ -93,6 +93,8 @@ arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=
 #'
 #' @param rglactions named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
 #'
+#' @param style character string, a rendering style, e.g., 'default', 'shiny' or 'semitransparent'. Alternatively, a named list of style parameters (see \code{\link[rgl]{material3d}}), e.g., \code{list("shininess"=50, specular="black", alpha=0.5)}. Use the magic word 'from_mesh' to use the 'style' field of each coloredmesh instead of a single, global style. In that case, you will have to make sure your meshes have such a field, if not, the style 'default' is used as a fallback for those which don't.
+#'
 #' @param output_img string, path to the output file. Defaults to "fsbrain_arranged.png"
 #'
 #' @param silent logical, whether to suppress all messages
@@ -110,14 +112,18 @@ arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=
 #'    coloredmeshes = vis.subject.morph.native(subjects_dir, "subject1", "thickness",
 #'     cortex_only=TRUE, rglactions=list("clip_data"=c(0.05, 0.95)),
 #'     views=NULL);
-#'    # The meshes contain the surface, data, and color information and can be visualized:
-#'    vislayout.from.coloredmeshes(coloredmeshes);
+#'    # The meshes contain the surface, data, and color information and can be
+#'    #  visualized. You could adapt the rendering style while doing so:
+#'    vislayout.from.coloredmeshes(coloredmeshes, style='shiny');
+#'    # You could change the rendering style on a per-mesh basis.
+#'    coloredmeshes[[1]]$style = list("shininess"=50, alpha=0.5);
+#'    vislayout.from.coloredmeshes(coloredmeshes, style='from_mesh');
 #' }
 #'
 #'
 #' @family visualization functions
 #' @export
-vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.angle.names(angle_set = "t4"), rgloptions=list(), rglactions=list(), output_img="fsbrain_arranged.png", silent=FALSE, grid_like=TRUE) {
+vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.angle.names(angle_set = "t4"), rgloptions=list(), rglactions=list(), style="default", output_img="fsbrain_arranged.png", silent=FALSE, grid_like=TRUE) {
 
     if (requireNamespace("magick", quietly = TRUE)) {
         view_images = tempfile(view_angles, fileext = ".png");   # generate one temporary file name for each image
@@ -134,7 +140,7 @@ vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.ang
             }
             final_rglactions = modifyList(rglactions, internal_rglactions);
 
-            brainviews(c(view), coloredmeshes, rgloptions = rgloptions, rglactions = final_rglactions);
+            brainviews(c(view), coloredmeshes, rgloptions = rgloptions, rglactions = final_rglactions, style = style);
         }
 
         # Now merge them into one

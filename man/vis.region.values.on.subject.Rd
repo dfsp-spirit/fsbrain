@@ -20,25 +20,25 @@ vis.region.values.on.subject(
 )
 }
 \arguments{
-\item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, containing the subdir of vis_subject_id, the subject that you want to use for visualization.}
+\item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, containing the subdir of vis_subject_id, the subject that you want to use for visualization.}
 
-\item{subject_id, }{string. The subject identifier from which to obtain the surface for data visualization. Example: 'fsaverage'.}
+\item{subject_id}{string. The subject identifier from which to obtain the surface for data visualization. Example: 'fsaverage'.}
 
-\item{atlas, }{string. The brain atlas to use. E.g., 'aparc' or 'aparc.a2009s'.}
+\item{atlas}{string. The brain atlas to use. E.g., 'aparc' or 'aparc.a2009s'.}
 
-\item{lh_region_value_list, }{named list. A list for the left hemisphere in which the names are atlas regions, and the values are the value to write to all vertices of that region.}
+\item{lh_region_value_list}{named list. A list for the left hemisphere in which the names are atlas regions, and the values are the value to write to all vertices of that region.}
 
-\item{rh_region_value_list, }{named list. A list for the right hemisphere in which the names are atlas regions, and the values are the value to write to all vertices of that region.}
+\item{rh_region_value_list}{named list. A list for the right hemisphere in which the names are atlas regions, and the values are the value to write to all vertices of that region.}
 
-\item{surface, }{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
+\item{surface}{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 
-\item{colormap, }{a colormap function. See the squash package for some colormaps. Defaults to \code{\link[grDevices]{heat.colors}}.}
+\item{colormap}{a colormap function. See the squash package for some colormaps. Defaults to \code{\link[grDevices]{heat.colors}}.}
 
-\item{views, }{list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.}
+\item{views}{list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.}
 
 \item{rgloptions}{option list passed to \code{\link[rgl]{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))}}
 
-\item{rglactions, }{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.}
+\item{rglactions}{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.}
 
 \item{value_for_unlisted_regions}{numerical scalar or NaN, the value to assign to regions which do not occur in the region_value_lists. Defaults to NaN.}
 

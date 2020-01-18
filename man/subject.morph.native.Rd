@@ -27,7 +27,7 @@ subject.morph.native(
 \item{cortex_only}{logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the subject. Defaults to FALSE.}
 }
 \value{
-vector with native space morph data
+vector with native space morph data, as returned by \code{\link[freesurferformats]{read.fs.morph}}.
 }
 \description{
 Load native space morphometry data (like 'surf/lh.area') for a subject from disk. Uses knowledge about the FreeSurfer directory structure to load the correct file.
