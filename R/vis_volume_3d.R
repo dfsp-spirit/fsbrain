@@ -90,15 +90,47 @@ volvis.voxels <- function(volume, render_every=8, voxelcol=NULL, ...) {
 }
 
 
+#' Apply matmult transformation to input.
+#'
+#' @description Apply affine transformation, like a vox2ras_tkr transformation, to input. This is just matrix multiplication for different input objects.
+#'
+#' @param m numerical vector/matrix or Triangles3D instance
+#'
+#' @param matrix_fun a 4x4 affine matrix or a function returning auch a matrix
+#'
+#' @return the input after application of the affine matrix (matrix multiplication)
+#'
 #' @export
-apply.vox2ras_tkr <- function(m) {
-    surface_ras = matrix(rep(0, nrow(m)*3), ncol=3);
-    m_cp = cbind(m, 1); # turn coords into homogeneous repr.
-    vox2surface_ras_matrix = vox2ras_tkr();
-    for(idx in seq(nrow(m))) {
-        surface_ras[idx,] = (vox2surface_ras_matrix %*% m_cp[idx,])[1:3];
+apply.transform <- function(m, matrix_fun=fsbrain::vox2ras_tkr) {
+    if(is.function(matrix_fun)) {
+        affine_matrix = matrix_fun();
+    } else if (is.matrix(matrix_fun)) {
+        affine_matrix = matrix_fun;
+    } else {
+        stop("Parameter 'matrix_fun' must be a function or a matrix.");
     }
-    return(surface_ras);
+
+    if(is.vector(m)) {
+        if(length(m) == 3) {
+            m = c(m, 1L);
+        }
+        return((affine_matrix %*% m)[1:3]);
+    }
+    else if(is.matrix(m)) {
+        surface_ras = matrix(rep(0, nrow(m)*3), ncol=3);
+        m_cp = cbind(m, 1); # turn coords into homogeneous repr.
+        for(idx in seq(nrow(m))) {
+            surface_ras[idx,] = (affine_matrix %*% m_cp[idx,])[1:3];
+        }
+        return(surface_ras);
+    } else if(class(m) == 'Triangles3D') {
+        m$v1 = apply.transform(m$v1);   # v1 is a matrix
+        m$v2 = apply.transform(m$v2);
+        m$v3 = apply.transform(m$v3);
+        return(m);
+    } else {
+        stop("Input type of parameter 'm' not supported. Must be numerical vector/matrix or Triangles3D.");
+    }
 }
 
 

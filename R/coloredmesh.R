@@ -107,7 +107,7 @@ check.for.coloredmeshes.colormap <- function(coloredmeshes) {
 #'
 #' @param subject_id string. The subject identifier.
 #'
-#' @param measure string. The morphometry data to use. E.g., 'area' or 'thickness.'
+#' @param measure string. The morphometry data to use. E.g., 'area' or 'thickness'. Pass NULL to render the surface in white, without any data.
 #'
 #' @param hemi string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.
 #'
@@ -130,7 +130,11 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
 
-    morph_data = subject.morph.native(subjects_dir, subject_id, measure, hemi, cortex_only=cortex_only);
+    if(is.null(measure)) {
+        morph_data = NULL;
+    } else {
+        morph_data = subject.morph.native(subjects_dir, subject_id, measure, hemi, cortex_only=cortex_only);
+    }
 
     if(! is.null(clip)) {
         morph_data = clip.data(morph_data, lower=clip[1], upper=clip[2]);
@@ -138,8 +142,13 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
 
     surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
     mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
-    col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
-    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap));
+    if(is.null(morph_data)) {
+        col = 'white';
+        return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=TRUE, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap));
+    } else {
+        col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
+        return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap));
+    }
 }
 
 
@@ -172,7 +181,7 @@ coloredmesh.custom <- function(surface_data, vertex_colors, hemi, colormap_used=
 #'
 #' @param subject_id string. The subject identifier.
 #'
-#' @param measure string. The morphometry data to use. E.g., 'area' or 'thickness.'
+#' @param measure string. The morphometry data to use. E.g., 'area' or 'thickness'. Pass NULL to render just the surface in white, without any data.
 #'
 #' @param hemi string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.
 #'
@@ -205,7 +214,11 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
         template_subjects_dir = subjects_dir;
     }
 
-    morph_data = subject.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm = fwhm, cortex_only = cortex_only);
+    if(is.null(measure)) {
+        morph_data = NULL;
+    } else {
+        morph_data = subject.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm = fwhm, cortex_only = cortex_only);
+    }
 
     if(! is.null(clip)) {
         morph_data = clip.data(morph_data, lower=clip[1], upper=clip[2]);
@@ -213,8 +226,14 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
 
     surface_data = subject.surface(template_subjects_dir, template_subject, surface, hemi);
     mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
-    col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
-    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap));
+
+    if(is.null(morph_data)) {
+        col = 'white';
+        return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=TRUE, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap));
+    } else {
+        col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
+        return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap));
+    }
 }
 
 

@@ -9,7 +9,7 @@
 #'
 #' @param subject_id string. The subject identifier.
 #'
-#' @param measure string. The morphometry data to use. E.g., 'area' or 'thickness.'
+#' @param measure string. The morphometry data to use. E.g., 'area' or 'thickness'. Pass NULL to render just the surface in white, without any data.
 #'
 #' @param hemi string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the label data files to be loaded.
 #'
@@ -140,7 +140,7 @@ vis.subject.label <- function(subjects_dir, subject_id, label, hemi, surface="wh
 #'
 #' @param subject_id string. The subject identifier.
 #'
-#' @param measure string. The morphometry data to use. E.g., 'area' or 'thickness.'
+#' @param measure string. The morphometry data to use. E.g., 'area' or 'thickness'. Pass NULL to render just the surface in white, without any data.
 #'
 #' @param hemi string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the label data files to be loaded.
 #'
