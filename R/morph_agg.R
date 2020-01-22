@@ -44,7 +44,7 @@ group.morph.agg.native <- function(subjects_dir, subjects_list, measure, hemi, a
 
   agg_all_subjects = data.frame();
   for (subject_id in subjects_list) {
-      morph_data = subject.morph.native(subjects_dir, subject_id, measure, hemi, format=format);
+      morph_data = subject.morph.native(subjects_dir, subject_id, measure, hemi, format=format, cortex_only=cortex_only);
 
       # Merge extra arguments to pass to the aggregation function.
       agg_fun_default_params = list(morph_data);
@@ -122,7 +122,7 @@ group.morph.agg.standard <- function(subjects_dir, subjects_list, measure, hemi,
   }
   agg_all_subjects = data.frame();
   for (subject_id in subjects_list) {
-    morph_data = subject.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm=fwhm, template_subject=template_subject, format=format);
+    morph_data = subject.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm=fwhm, template_subject=template_subject, format=format, cortex_only=cortex_only);
 
     # Merge extra arguments to pass to the aggregation function.
     agg_fun_default_params = list(morph_data);
