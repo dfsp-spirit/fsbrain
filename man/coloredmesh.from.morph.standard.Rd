@@ -23,7 +23,7 @@ coloredmesh.from.morph.standard(
 
 \item{subject_id}{string. The subject identifier.}
 
-\item{measure}{string. The morphometry data to use. E.g., 'area' or 'thickness.'}
+\item{measure}{string. The morphometry data to use. E.g., 'area' or 'thickness'. Pass NULL to render just the surface in white, without any data.}
 
 \item{hemi}{string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.}
 
