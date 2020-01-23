@@ -1,4 +1,4 @@
-# fsbrain animations
+# fsbrain surface-based animations
 
 These are animations created using the [fsbrain R package](https://github.com/dfsp-spirit/fsbrain/), with a lot of internal help from [rgl](https://CRAN.R-project.org/package=rgl) and the [ImageMagick library](https://imagemagick.org).
 
