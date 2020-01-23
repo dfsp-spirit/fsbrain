@@ -10,6 +10,12 @@ A lightbox showing every 5th frame of a T1W volume, sagittal plane. A bounding b
 
 The same can be done for the [axial](https://github.com/dfsp-spirit/fsbrain_gallery/raw/master/volume/lightbox_axis2.png) and [coronal](https://github.com/dfsp-spirit/fsbrain_gallery/raw/master/volume/lightbox_axis3.png) planes.
 
+You can also add activation data, p-values, or whatever, as an overlay.
+
+## Voxel-based 3D renderings
+
+Coming soon.
+
 
 ## Animations
 
