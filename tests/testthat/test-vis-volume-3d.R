@@ -21,6 +21,7 @@ test_that("A brain volume or parts of it can be rendered in voxel mode", {
 
     # Use voxel colors when rendering: based on a colormap.
     volvis.voxels(ventricle_mask, voxelcol = vol.overlay.colors.from.activation(ventricle_mask), render_every = 6);
+    rgl::rgl.bringtotop();
 
     # Use voxel colors when rendering: gray-scale, computed from the intensity values of the volume itself:
     volvis.voxels(ventricle_mask, voxelcol = 'from_intensity', render_every = 6);

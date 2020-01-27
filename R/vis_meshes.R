@@ -11,7 +11,7 @@
 #'
 #' @param style, a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
 #'
-#' @param rgloptions option list passed to [rgl::par3d()]. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))};
+#' @param rgloptions option list passed to \code{\link[rgl]{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))};
 #'
 #' @param rglactions named list. A list in which the names are from a set of pre-defined actions. Defaults to the empty list.
 #'
@@ -59,17 +59,17 @@ vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRU
 #'
 #' @param style a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
 #'
-#' @param x rotation x axis value, passed to [rgl::spin3d()]. Defaults to 0.
+#' @param x rotation x axis value, passed to \code{\link[rgl]{spin3d}}. Defaults to 0.
 #'
-#' @param y rotation y axis value, passed to [rgl::spin3d()]. Defaults to 1.
+#' @param y rotation y axis value, passed to \code{\link[rgl]{spin3d}}. Defaults to 1.
 #'
-#' @param z rotation z axis value, passed to [rgl::spin3d()]. Defaults to 0.
+#' @param z rotation z axis value, passed to \code{\link[rgl]{spin3d}}. Defaults to 0.
 #'
-#' @param rpm rotation rpm value, passed to [rgl::spin3d()]. Defaults to 15.
+#' @param rpm rotation rpm value, passed to \code{\link[rgl]{spin3d}}. Defaults to 15.
 #'
-#' @param duration rotation duration value, passed to [rgl::spin3d()]. Defaults to 20.
+#' @param duration rotation duration value, passed to \code{\link[rgl]{spin3d}}. Defaults to 20.
 #'
-#' @param rgloptions option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));
+#' @param rgloptions option list passed to \code{\link[rgl]{par3d}}. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));
 #'
 #' @param rglactions named list. A list in which the names are from a set of pre-defined actions. Defaults to the empty list.
 #'
@@ -149,7 +149,7 @@ vis.rotated.coloredmeshes <- function(coloredmeshes, rotation_angle, x, y, z, st
 
 #' @title Draw coloredbar into background of current plot.
 #'
-#' @description Requires a rgl 3d visualisation to be open that already contains a rendered object. Uses [rgl::bgplot3d()] to add a colorbar in the background of the plot. Experimental.
+#' @description Requires a rgl 3d visualisation to be open that already contains a rendered object. Uses \code{\link[rgl]{bgplot3d}} to add a colorbar in the background of the plot. Experimental.
 #'
 #' @param coloredmeshes list of coloredmeshes. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
 #'
