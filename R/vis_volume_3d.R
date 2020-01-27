@@ -40,7 +40,12 @@ volvis.voxels <- function(volume, render_every=1, voxelcol=NULL, ...) {
             if(voxelcol == 'from_intensity') {
                 voxelcol = vol.intensity.to.color(volume[voxel_crs], scale='normalize_if_needed');
             } else {
-                stop("If parameter 'voxelcol' has length 1, the only allowed value is the character string 'from_intensity'.");
+                if(is.character(voxelcol)) {
+                    voxelcol = rep(voxelcol, num_foreground_voxels);
+
+                } else {
+                    stop("If parameter 'voxelcol' has length 1, the only allowed value is the character string 'from_intensity'.");
+                }
             }
         } else {
             if(is.array(voxelcol) & is.character(voxelcol) & all.equal(dim(volume), dim(voxelcol))) {
@@ -156,7 +161,6 @@ rglvoxels <- function(centers, r=1.0, voxelcol=NULL, ...) {
         class(coloredvox) = c("fs.coloredvoxels", class(coloredvox));
         rgl::triangles3d(coloredvox$voxeltris, color = coloredvox$color, ...);
         coloredvoxels = append(coloredvoxels, list(coloredvox));
-        message("No color, adding 1 fs.coloredvoxels instance.");
     } else {
         if(length(voxelcol) != nrow(centers)) {
             stop(sprintf("Mismatch between voxel centers (%d rows) and voxel colors (length %d), sizes must match.\n", nrow(centers), length(voxelcol)));
@@ -167,7 +171,6 @@ rglvoxels <- function(centers, r=1.0, voxelcol=NULL, ...) {
             coloredvox = list("voxeltris"=cubes3D.tris(centers[voxel_indices_this_color,], edge_length = r), "color"=rgbcol);
             class(coloredvox) = c("fs.coloredvoxels", class(coloredvox));
             coloredvoxels = append(coloredvoxels, list(coloredvox));
-            message("Voxel color given, adding 1 fs.coloredvoxels instance.");
             rgl::triangles3d(coloredvox$voxeltris, color = coloredvox$color, ...);
         }
     }

@@ -13,18 +13,25 @@ test_that("A brain volume or parts of it can be rendered in voxel mode", {
     ventricle_aseg_codes = c(4, 14, 15, 43);    # see FreeSurferColorLUT.txt
     ventricle_mask = vol.mask.from.segmentation(aseg, ventricle_aseg_codes);
 
-    volvis.voxels(ventricle_mask);
+    volvis.voxels(ventricle_mask, render_every = 10);
 
     # Some more segmentation ROIs to play with:
     wm_mask = vol.mask.from.segmentation(aseg, c(2, 41));
     cortex_mask = vol.mask.from.segmentation(aseg, c(3, 42));
 
-    # Use voxel colors when rendering: based on a colormap.
-    volvis.voxels(ventricle_mask, voxelcol = vol.overlay.colors.from.activation(ventricle_mask), render_every = 6);
-    rgl::rgl.bringtotop();
-
     # Use voxel colors when rendering: gray-scale, computed from the intensity values of the volume itself:
     volvis.voxels(ventricle_mask, voxelcol = 'from_intensity', render_every = 6);
+
+    # Use voxel colors when rendering: based on a colormap.
+    coloredvoxels = volvis.voxels(ventricle_mask, voxelcol = vol.overlay.colors.from.activation(ventricle_mask), render_every = 1);
+
+    render_animation = TRUE;
+    if(render_animation) {
+        rgloptions=list("windowRect"=c(80,80,1200,1200));     # the first 2 entries give the position on screen, the rest defines resolution as width, height in px
+        rglactions = list("movie"="vox_ventricles_rot");
+        vislayout.from.coloredmeshes(coloredvoxels, view_angles="sr", rgloptions = rgloptions, rglactions = rglactions);
+    }
+
 })
 
 
@@ -45,15 +52,24 @@ test_that("A brain volume segmentation can be rendered with correct colors from 
     ct = freesurferformats::read.fs.colortable("~/software/freesurfer/FreeSurferColorLUT.txt");   # adapt to your machine
 
     open3d();
+    all_regions_coloredvoxels = list();
     for(aseg_code in aseg_codes) {
         if(aseg_code == 0) { # skip background ('unknown').
             next;
         }
         ct_entry = subset(ct, ct$struct_index == aseg_code);
         ct_color_rgb = grDevices::rgb(ct_entry$r / 255., ct_entry$g / 255., ct_entry$b / 255.);
-        volvis.voxels(vol.mask.from.segmentation(aseg, aseg_code), render_every=10, color=ct_color_rgb);
+        cv = volvis.voxels(vol.mask.from.segmentation(aseg, aseg_code), render_every=1, voxelcol=ct_color_rgb);
+        all_regions_coloredvoxels = c(all_regions_coloredvoxels, cv);
     }
     # Check it out, it looks pretty cool.
+
+    render_animation = TRUE;
+    if(render_animation) {
+        rgloptions=list("windowRect"=c(80,80,1200,1200));     # the first 2 entries give the position on screen, the rest defines resolution as width, height in px
+        rglactions = list("movie"="vox_aseg_rot");
+        vislayout.from.coloredmeshes(all_regions_coloredvoxels, view_angles="sr", rgloptions = rgloptions, rglactions = rglactions);
+    }
 })
 
 
@@ -108,32 +124,5 @@ test_that("The pial surface drawn as a transparent wrapping over the white surfa
     cm_pial[[1]]$style = 'semitransparent';
     cm_pial[[2]]$style = 'semitransparent';
     vis.coloredmeshes(c(cm_white, cm_pial), skip_all_na = FALSE, style = 'from_mesh');
-})
-
-
-test_that("A GIF animation can be recorded in voxel view", {
-    skip("This test has to be run manually and interactively. It requires an X11 display, aseg file and the 'magick' package.");
-
-    fsbrain::download_optional_data();
-
-    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
-    subject_id = 'subject1';
-    measure = 'thickness';
-    surface = 'white';
-
-    rgloptions=list("windowRect"=c(80,80,1200,1200));     # the first 2 entries give the position on screen, the rest defines resolution as width, height in px
-    rglactions = list("movie"="voxbrain_rot");
-
-    subject_id = "subject1";
-    aseg = subject.volume(subjects_dir, subject_id, 'aseg');    # Not shipped with the package atm.
-    ventricle_aseg_codes = c(4, 14, 15, 43);    # see FreeSurferColorLUT.txt
-    ventricle_mask = vol.mask.from.segmentation(aseg, ventricle_aseg_codes);
-
-    # Use voxel colors when rendering: based on a colormap.
-    coloredvoxels = volvis.voxels(ventricle_mask, voxelcol = vol.overlay.colors.from.activation(ventricle_mask), render_every = 1);
-
-    #vis.subject.annot(subjects_dir, subject_id, 'aparc', 'both', views=c('sr'), rgloptions = rgloptions, rglactions = rglactionsmovie);
-    vislayout.from.coloredmeshes(coloredvoxels, view_angles="sr", rgloptions = rgloptions, rglactions = rglactions);
-
 })
 
