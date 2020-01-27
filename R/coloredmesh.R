@@ -142,13 +142,11 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
 
     surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
     mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
-    if(is.null(morph_data)) {
-        col = 'white';
-        return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=TRUE, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap));
-    } else {
-        col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
-        return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap));
-    }
+    col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
+
+    cm = list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap);
+    class(cm) = c("fs.coloredmesh", class(cm));
+    return(cm);
 }
 
 
@@ -171,7 +169,9 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
 #' @export
 coloredmesh.custom <- function(surface_data, vertex_colors, hemi, colormap_used=NULL, morph_data=NULL) {
     mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
-    return(list("mesh"=mesh, "col"=vertex_colors, "morph_data_was_all_na"=is.null(morph_data), "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap_used));
+    cm = list("mesh"=mesh, "col"=vertex_colors, "morph_data_was_all_na"=is.null(morph_data), "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap_used);
+    class(cm) = c("fs.coloredmesh", class(cm));
+    return(cm);
 }
 
 
@@ -229,11 +229,12 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
 
     if(is.null(morph_data)) {
         col = 'white';
-        return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=TRUE, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap));
     } else {
         col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
-        return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap));
     }
+    cm = list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap);
+    class(cm) = c("fs.coloredmesh", class(cm));
+    return(cm);
 }
 
 
@@ -281,7 +282,9 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
     }
 
     col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
-    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=morph_data_was_all_na, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap));
+    cm = list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=morph_data_was_all_na, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap);
+    class(cm) = c("fs.coloredmesh", class(cm));
+    return(cm);
 }
 
 
@@ -326,7 +329,10 @@ coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surfac
     } else {
         col = annot$hex_colors_rgb;
     }
-    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=NULL, "cmap_fun"=colormap));
+
+    cm = list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=NULL, "cmap_fun"=colormap);
+    class(cm) = c("fs.coloredmesh", class(cm));
+    return(cm);
 }
 
 
@@ -406,6 +412,8 @@ coloredmesh.from.mask <- function(subjects_dir, subject_id, mask, hemi, surface=
 
     mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
     col = squash::cmap(morph_like_data, map = squash::makecmap(morph_like_data, colFn = colormap));
-    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_like_data, "cmap_fun"=colormap));
+    cm = list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_like_data, "cmap_fun"=colormap);
+    class(cm) = c("fs.coloredmesh", class(cm));
+    return(cm);
 }
 

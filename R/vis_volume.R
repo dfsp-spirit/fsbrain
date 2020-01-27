@@ -992,6 +992,7 @@ cube3D.tris <- function(xmin=-0.5, xmax=0.5, ymin=-0.5, ymax=0.5, zmin=-0.5, zma
 }
 
 
+
 #' @title Vectorized version of cube3D.tris
 #'
 #' @param centers numerical matrix with 3 columns. Each column represents the x, y, z coordinates of a center at which to create a cube.

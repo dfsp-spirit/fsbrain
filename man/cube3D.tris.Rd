@@ -4,16 +4,8 @@
 \alias{cube3D.tris}
 \title{Return triangles for a 3D cube or cuboid.}
 \usage{
-cube3D.tris(
-  xmin = -0.5,
-  xmax = 0.5,
-  ymin = -0.5,
-  ymax = 0.5,
-  zmin = -0.5,
-  zmax = 0.5,
-  center = NULL,
-  edge_length = 1
-)
+cube3D.tris(xmin = -0.5, xmax = 0.5, ymin = -0.5, ymax = 0.5,
+  zmin = -0.5, zmax = 0.5, center = NULL, edge_length = 1)
 }
 \arguments{
 \item{xmin}{numeric, minimal x coordinate}

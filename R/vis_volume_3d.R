@@ -24,7 +24,7 @@
 #' }
 #'
 #' @export
-volvis.voxels <- function(volume, render_every=8, voxelcol=NULL, ...) {
+volvis.voxels <- function(volume, render_every=1, voxelcol=NULL, ...) {
     num_volume_voxels = prod(dim(volume));
 
     voxel_crs = which(!is.na(volume), arr.ind = TRUE);   # foreground voxels, as CRS indices.
