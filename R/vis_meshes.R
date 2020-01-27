@@ -34,10 +34,7 @@ vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRU
 
     rgl::bg3d(background);
     for(cmesh in coloredmeshes) {
-        if(skip_all_na && cmesh$morph_data_was_all_na) {
-            next;
-        }
-        vis.coloredmesh(cmesh, style = style);
+        vis.cmesh.or.cvox(cmesh, skip_all_na=TRUE, style=style);
     }
 
     if(draw_colorbar) {
@@ -48,6 +45,21 @@ vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRU
     invisible(coloredmeshes);
 }
 
+
+#' @keywords internal
+vis.cmesh.or.cvox <- function(cmesh, skip_all_na=TRUE, style="default") {
+    if(is.fs.coloredmesh(cmesh)) {
+        if(skip_all_na && cmesh$morph_data_was_all_na) {
+            next;
+        }
+        vis.coloredmesh(cmesh, style = style);
+    } else if (is.fs.coloredvoxels(cmesh)) {
+        rgl::triangles3d(cmesh$voxeltris, color = cmesh$color);
+    } else {
+        stop(sprintf("Received object with classes '%s', cannot render this. Pass an fs.coloredmesh or fs.coloredvoxels instance.\n", paste(class(cmesh), collapse=" ")));
+    }
+
+}
 
 #' @title Visualize a list of colored meshes in a single scene and rotate them, movie-style.
 #'
@@ -88,10 +100,7 @@ vis.coloredmeshes.rotating <- function(coloredmeshes, background="white", skip_a
     Sys.sleep(1);
     rgl::bg3d(background);
     for(cmesh in coloredmeshes) {
-        if(skip_all_na && cmesh$morph_data_was_all_na) {
-            next;
-        }
-        vis.coloredmesh(cmesh, style = style);
+        vis.cmesh.or.cvox(cmesh, skip_all_na=TRUE, style=style);
     }
     rgl::rgl.viewpoint(-90, 0);
 

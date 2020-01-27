@@ -67,13 +67,6 @@ volvis.voxels <- function(volume, render_every=1, voxelcol=NULL, ...) {
         }
     }
 
-
-
-    if(render_every == 8) {
-        message(sprintf("About to render %d voxels (one in %d voxels only). Set parameter 'render_every' to 1 to render all %d voxels.\n", length(rendered_voxels), render_every, nrow(voxel_crs)));
-    }
-
-
     if(num_foreground_voxels > 0) {
         voxel_crs = cbind(voxel_crs, 1); # turn coords into homogeneous repr.
         surface_ras = matrix(rep(0, length(rendered_voxels)*3), ncol=3);
@@ -83,9 +76,10 @@ volvis.voxels <- function(volume, render_every=1, voxelcol=NULL, ...) {
             surface_ras[idx,] = (vox2surface_ras_matrix %*% voxel_crs[row_idx,])[1:3];
         }
         #rgl::rgl.spheres(surface_ras, r = 0.5, ...);
-        rglvoxels(surface_ras, r = 1.0, voxelcol=voxelcol, ...);
+        return(invisible(rglvoxels(surface_ras, r = 1.0, voxelcol=voxelcol, ...)));
     } else {
         warning("No foreground voxels in volume, nothing to visualize.");
+        return(invisible(NULL));
     }
 }
 
@@ -140,11 +134,13 @@ apply.transform <- function(m, matrix_fun=fsbrain::vox2ras_tkr) {
 #'
 #' @param centers numerical matrix with 3 columns. Each column represents the x, y, z coordinates of a center at which to create a cube.
 #'
-#' @param r numerical vector or scalar, the edge length. The vector must have length 1 (same edge length for all cubes), or the length must be identical to the number of rows in parameter `centers`.
+#' @param r numerical vector or scalar, the cube edge length. This is the length of the axis-parallel edges of the cube. The vector must have length 1 (same edge length for all cubes), or the length must be identical to the number of rows in parameter `centers`.
 #'
 #' @param voxelcol vector of rgb color strings for the individual voxels. Its length must be identical to \code{nrow(centers)} if given.
 #'
 #' @param ... material properties, passed to \code{\link[rgl]{triangles3d}}. Example: \code{color = "#0000ff", lit=FALSE}.
+#'
+#' @return list of `fs.coloredvoxels` instances, invisible. The function is called for the side effect of visualizing the data, and usually you can ignore the return value.
 #'
 #'
 #' @examples
@@ -154,16 +150,58 @@ apply.transform <- function(m, matrix_fun=fsbrain::vox2ras_tkr) {
 #'
 #' @export
 rglvoxels <- function(centers, r=1.0, voxelcol=NULL, ...) {
+    coloredvoxels = list();
     if(is.null(voxelcol)) {
-        rgl::triangles3d(cubes3D.tris(centers, edge_length = r), ...);
+        coloredvox = list("voxeltris"=cubes3D.tris(centers, edge_length = r), "color"="#000000");
+        class(coloredvox) = c("fs.coloredvoxels", class(coloredvox));
+        rgl::triangles3d(coloredvox$voxeltris, color = coloredvox$color, ...);
+        coloredvoxels = append(coloredvoxels, list(coloredvox));
+        message("No color, adding 1 fs.coloredvoxels instance.");
     } else {
         if(length(voxelcol) != nrow(centers)) {
             stop(sprintf("Mismatch between voxel centers (%d rows) and voxel colors (length %d), sizes must match.\n", nrow(centers), length(voxelcol)));
         }
         for(rgbcol in unique(voxelcol)) {
             voxel_indices_this_color = which(voxelcol==rgbcol);
-            cat(sprintf("Rendering %d voxels with color '%s'.\n", length(voxel_indices_this_color), rgbcol));
-            rgl::triangles3d(cubes3D.tris(centers[voxel_indices_this_color,], edge_length = r), color = rgbcol, ...);
+            #message(sprintf("Rendering %d voxels with color '%s'.\n", length(voxel_indices_this_color), rgbcol));
+            coloredvox = list("voxeltris"=cubes3D.tris(centers[voxel_indices_this_color,], edge_length = r), "color"=rgbcol);
+            class(coloredvox) = c("fs.coloredvoxels", class(coloredvox));
+            coloredvoxels = append(coloredvoxels, list(coloredvox));
+            message("Voxel color given, adding 1 fs.coloredvoxels instance.");
+            rgl::triangles3d(coloredvox$voxeltris, color = coloredvox$color, ...);
+        }
+    }
+    return(invisible(coloredvoxels));
+}
+
+
+#' @title Check whether object is an fs.coloredvoxels instance (S3)
+#'
+#' @param x any `R` object
+#'
+#' @return TRUE if its argument is a fs.coloredvoxels instance (that is, has "fs.coloredvoxels" amongst its classes) and FALSE otherwise.
+#'
+#' @export
+is.fs.coloredvoxels <- function(x) inherits(x, "fs.coloredvoxels")
+
+
+
+#' @title Print description of fs.coloredvoxels (S3).
+#'
+#' @param x brain voxel tris with class `fs.coloredvoxels`.
+#'
+#' @param ... further arguments passed to or from other methods
+#'
+#' @export
+print.fs.coloredvoxels <- function(x, ...) {
+    cat(sprintf("Brain coloredvoxels with %d triangles.\n", nrow(x$voxeltris)/3L));
+    if(is.null(x$color)) {
+        cat(sprintf("No color information.\n"));
+    } else {
+        if(length(x$color == 1L)) {
+            cat(sprintf("Voxel color is '%s'.\n", x$color));
+        } else {
+            cat(sprintf("Voxel color with %d entries.\n", length(x$color)));
         }
     }
 }
