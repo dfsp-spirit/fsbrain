@@ -127,13 +127,13 @@ vis.coloredmeshes.rotating <- function(coloredmeshes, background="white", skip_a
 #'
 #' @param coloredmeshes list of coloredmeshes. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
 #'
-#' @param rotation_angle angle in radians. Passed to [rgl:rotated3d()].
+#' @param rotation_angle angle in radians. Passed to \code{\link[rgl]{rotate3d}}.
 #'
-#' @param x x value passed to [rgl:rotated3d()].
+#' @param x x value passed to \code{\link[rgl]{rotate3d}}.
 #'
-#' @param y y value passed to [rgl:rotated3d()].
+#' @param y y value passed to \code{\link[rgl]{rotate3d}}.
 #'
-#' @param z z value passed to [rgl:rotated3d()].
+#' @param z z value passed to \code{\link[rgl]{rotate3d}}.
 #'
 #' @param style a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
 #'

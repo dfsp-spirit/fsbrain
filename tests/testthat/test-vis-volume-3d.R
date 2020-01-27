@@ -110,3 +110,30 @@ test_that("The pial surface drawn as a transparent wrapping over the white surfa
     vis.coloredmeshes(c(cm_white, cm_pial), skip_all_na = FALSE, style = 'from_mesh');
 })
 
+
+test_that("A GIF animation can be recorded in voxel view", {
+    skip("This test has to be run manually and interactively. It requires an X11 display, aseg file and the 'magick' package.");
+
+    fsbrain::download_optional_data();
+
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+    subject_id = 'subject1';
+    measure = 'thickness';
+    surface = 'white';
+
+    rgloptions=list("windowRect"=c(80,80,1200,1200));     # the first 2 entries give the position on screen, the rest defines resolution as width, height in px
+    rglactions = list("movie"="voxbrain_rot");
+
+    subject_id = "subject1";
+    aseg = subject.volume(subjects_dir, subject_id, 'aseg');    # Not shipped with the package atm.
+    ventricle_aseg_codes = c(4, 14, 15, 43);    # see FreeSurferColorLUT.txt
+    ventricle_mask = vol.mask.from.segmentation(aseg, ventricle_aseg_codes);
+
+    # Use voxel colors when rendering: based on a colormap.
+    coloredvoxels = volvis.voxels(ventricle_mask, voxelcol = vol.overlay.colors.from.activation(ventricle_mask), render_every = 1);
+
+    #vis.subject.annot(subjects_dir, subject_id, 'aparc', 'both', views=c('sr'), rgloptions = rgloptions, rglactions = rglactionsmovie);
+    vislayout.from.coloredmeshes(coloredvoxels, view_angles="sr", rgloptions = rgloptions, rglactions = rglactions);
+
+})
+
