@@ -417,3 +417,25 @@ coloredmesh.from.mask <- function(subjects_dir, subject_id, mask, hemi, surface=
     return(cm);
 }
 
+
+#' @title Print description of a brain coloredmesh (S3).
+#'
+#' @param x brain surface with class `fs.coloredmesh`.
+#'
+#' @param ... further arguments passed to or from other methods
+#'
+#' @export
+print.fs.coloredmesh <- function(x, ...) {
+    cat(sprintf("Brain coloredmesh with %d vertices and %d faces.\n", ncol(x$mesh$vb), ncol(x$mesh$it)));
+    cat(sprintf("Hemi is '%s', will be rendered: %s.\n", x$hemi, !x$morph_data_was_all_na));
+}
+
+
+#' @title Check whether object is an fs.coloredmesh (S3)
+#'
+#' @param x any `R` object
+#'
+#' @return TRUE if its argument is a coloredmesh (that is, has "fs.coloredmesh" amongst its classes) and FALSE otherwise.
+#'
+#' @export
+is.fs.coloredmesh <- function(x) inherits(x, "fs.coloredmesh")
