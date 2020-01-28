@@ -14,7 +14,12 @@ You can also add activation data, p-values, or whatever, as an overlay.
 
 ## Voxel-based 3D renderings
 
-Coming soon.
+It is now possible to view volumes (the whole brain, segmentations, voxel-based activation values, or brain structures) in 3D in a voxel view. Here are two examples:
+
+* [whole brain, aparc+aseg segmentation (24 MB animated GIF)](https://github.com/dfsp-spirit/fsbrain_gallery/blob/master/volume/animations/fsbrain_vox_aparc.gif)
+* [brain ventricles, extracted from aseg segmentation (10 MB animated GIF)](https://github.com/dfsp-spirit/fsbrain_gallery/blob/master/volume/animations/fsbrain_vox_ventricles.gif)
+
+We are working on adding support to render them together with a semi-transparent surface mesh.
 
 
 ## Animations
