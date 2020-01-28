@@ -97,14 +97,14 @@ test_that("Brain structures can be rendered as contours using misc3d", {
     # vent_tris = misc3d::contour3d(ventricle_mask_mod, level=3, color="red", draw=FALSE);
     # # Fix the rendering coords to surface RAS
     # vent_tris = apply.transform(vent_tris, vox2ras_tkr());
-    # drawScene.rgl(vent_tris, add = TRUE);
+    # misc3d::drawScene.rgl(vent_tris, add = TRUE);
     #
     # # Add transparent overlay of whole brain for worse performance ><
     # have_mighty_computer = TRUE;
     # if(have_mighty_computer) {
-    #     brain_tris = misc3d::contour3d(aseg, level=10, color="gray", alpha=0.1, back='culled', draw = FALSE);
+    #     brain_tris = misc3d::contour3d(aseg, level=1, color="gray", alpha=0.1, back='culled', draw = FALSE);
     #     brain_tris = apply.transform(brain_tris, vox2ras_tkr());
-    #     drawScene.rgl(brain_tris, add = TRUE);
+    #     misc3d::drawScene.rgl(brain_tris, add = TRUE);
     # }
 
 })

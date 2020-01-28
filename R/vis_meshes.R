@@ -49,10 +49,9 @@ vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRU
 #' @keywords internal
 vis.cmesh.or.cvox <- function(cmesh, skip_all_na=TRUE, style="default") {
     if(is.fs.coloredmesh(cmesh)) {
-        if(skip_all_na && cmesh$morph_data_was_all_na) {
-            next;
+        if(!(skip_all_na && cmesh$morph_data_was_all_na)) {
+            vis.coloredmesh(cmesh, style = style);
         }
-        vis.coloredmesh(cmesh, style = style);
     } else if (is.fs.coloredvoxels(cmesh)) {
         rgl::triangles3d(cmesh$voxeltris, color = cmesh$color);
     } else {

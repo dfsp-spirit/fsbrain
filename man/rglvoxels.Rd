@@ -24,6 +24,6 @@ Draw 3D boxes at all given coordinates using rgl, analogous to \code{\link[rgl]{
 \examples{
    # Plot a 3D cloud of 20000 red voxels:
    centers = matrix(rnorm(20000*3)*100, ncol=3);
-   rglvoxels(centers, color="red");
+   rglvoxels(centers, voxelcol="red");
 
 }

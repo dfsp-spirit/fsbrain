@@ -151,7 +151,7 @@ apply.transform <- function(m, matrix_fun=fsbrain::vox2ras_tkr) {
 #' @examples
 #'    # Plot a 3D cloud of 20000 red voxels:
 #'    centers = matrix(rnorm(20000*3)*100, ncol=3);
-#'    rglvoxels(centers, color="red");
+#'    rglvoxels(centers, voxelcol="red");
 #'
 #' @export
 rglvoxels <- function(centers, r=1.0, voxelcol=NULL, ...) {
@@ -162,6 +162,9 @@ rglvoxels <- function(centers, r=1.0, voxelcol=NULL, ...) {
         rgl::triangles3d(coloredvox$voxeltris, color = coloredvox$color, ...);
         coloredvoxels = append(coloredvoxels, list(coloredvox));
     } else {
+        if(is.character(voxelcol) & length(voxelcol) == 1) {
+            voxelcol = rep(voxelcol, nrow(centers));
+        }
         if(length(voxelcol) != nrow(centers)) {
             stop(sprintf("Mismatch between voxel centers (%d rows) and voxel colors (length %d), sizes must match.\n", nrow(centers), length(voxelcol)));
         }

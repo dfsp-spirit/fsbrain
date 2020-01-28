@@ -25,7 +25,7 @@ brainview.si <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     if(!is.list(coloredmeshes)) {
         stop("Parameter 'coloredmeshes' must be a list.");
     }
-    invisible(vis.coloredmeshes(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar));
+    return(invisible(vis.coloredmeshes(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, style = style)));
 }
 
 
@@ -64,7 +64,7 @@ brainview.sr <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     if(!is.list(coloredmeshes)) {
         stop("Parameter 'coloredmeshes' must be a list.");
     }
-    invisible(vis.coloredmeshes.rotating(coloredmeshes, x=x, y=y, z=z, rpm=rpm, duration=duration, rgloptions = rgloptions, rglactions = rglactions));
+    return(invisible(vis.coloredmeshes.rotating(coloredmeshes, x=x, y=y, z=z, rpm=rpm, duration=duration, rgloptions = rgloptions, rglactions = rglactions, style = style)));
 }
 
 
@@ -150,7 +150,7 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 
 
     perform.rglactions(rglactions);
-    invisible(coloredmeshes);
+    return(invisible(coloredmeshes));
 }
 
 
