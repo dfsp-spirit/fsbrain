@@ -170,3 +170,26 @@ test_that("We can build a mask from an atlas region and edit it", {
 })
 
 
+test_that("We can compute the medial mask for a subject", {
+    fsbrain::download_optional_data();
+
+    # Define the data to use:
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+    subject_id = 'subject1';
+
+    num_verts_subject1_lh = 149244;
+    num_verts_subject1_rh = 153333;
+
+    num_cortex_verts_subject1_lh = length(subject.label(subjects_dir, subject_id, "cortex", "lh"));
+    num_cortex_verts_subject1_rh = length(subject.label(subjects_dir, subject_id, "cortex", "rh"));
+
+    mask = subject.mask(subjects_dir, subject_id);
+    expect_equal(length(mask$lh), num_verts_subject1_lh);
+    expect_equal(length(mask$rh), num_verts_subject1_rh);
+
+    expect_equal(sum(mask$lh), num_cortex_verts_subject1_lh); # number of cortex vertices
+    expect_equal(sum(mask$rh), num_cortex_verts_subject1_rh); # number of cortex vertices
+})
+
+
+
