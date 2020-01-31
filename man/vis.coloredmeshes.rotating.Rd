@@ -4,19 +4,9 @@
 \alias{vis.coloredmeshes.rotating}
 \title{Visualize a list of colored meshes in a single scene and rotate them, movie-style.}
 \usage{
-vis.coloredmeshes.rotating(
-  coloredmeshes,
-  background = "white",
-  skip_all_na = TRUE,
-  style = "default",
-  x = 0,
-  y = 0,
-  z = 1,
-  rpm = 6,
-  duration = 10,
-  rgloptions = list(),
-  rglactions = list()
-)
+vis.coloredmeshes.rotating(coloredmeshes, background = "white",
+  skip_all_na = TRUE, style = "default", x = 0, y = 0, z = 1,
+  rpm = 6, duration = 10, rgloptions = list(), rglactions = list())
 }
 \arguments{
 \item{coloredmeshes}{list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.}
