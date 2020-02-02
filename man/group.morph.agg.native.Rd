@@ -4,17 +4,9 @@
 \alias{group.morph.agg.native}
 \title{Aggregate native space morphometry data over one hemisphere for a group of subjects.}
 \usage{
-group.morph.agg.native(
-  subjects_dir,
-  subjects_list,
-  measure,
-  hemi,
-  agg_fun = mean,
-  cast = TRUE,
-  format = "curv",
-  cortex_only = FALSE,
-  agg_fun_extra_params = NULL
-)
+group.morph.agg.native(subjects_dir, subjects_list, measure, hemi,
+  agg_fun = mean, cast = TRUE, format = "curv",
+  cortex_only = FALSE, agg_fun_extra_params = NULL)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -31,7 +23,7 @@ group.morph.agg.native(
 
 \item{format, }{string. One of 'mgh', 'mgz', 'curv'. Defaults to 'curv'.}
 
-\item{cortex_only}{logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the subjects. Also not that the aggregation function will need to be able to cope with NA values if you set this to TRUE. You can use 'agg_fun_extra_params' if needed to achieve that, depending on the function. Foe example, if you use the [mean()] function, you could set \code{agg_fun_extra_params=list("na.rm"=TRUE)} to get the mean of the vertices which are not masked. Defaults to FALSE.}
+\item{cortex_only}{logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the subjects. Also not that the aggregation function will need to be able to cope with NA values if you set this to TRUE. You can use 'agg_fun_extra_params' if needed to achieve that, depending on the function. For example, if you use the \code{\link[base]{mean}} function, you could set \code{agg_fun_extra_params=list("na.rm"=TRUE)} to get the mean of the vertices which are not masked. Defaults to FALSE.}
 
 \item{agg_fun_extra_params}{named list, extra parameters to pass to the aggregation function 'agg_fun' besides the loaded morphometry data. This is useful if you have masked the data and need to ignore NA values in the agg_fun.}
 }
@@ -52,9 +44,8 @@ Compute the mean (or other aggregates) over all vertices of a subject from nativ
 
 }
 \seealso{
-Other global aggregation functions: 
-\code{\link{group.morph.agg.standard}()},
-\code{\link{group.multimorph.agg.native}()},
-\code{\link{group.multimorph.agg.standard}()}
+Other global aggregation functions: \code{\link{group.morph.agg.standard}},
+  \code{\link{group.multimorph.agg.native}},
+  \code{\link{group.multimorph.agg.standard}}
 }
 \concept{global aggregation functions}

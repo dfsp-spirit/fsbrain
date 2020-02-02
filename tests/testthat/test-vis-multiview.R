@@ -266,7 +266,7 @@ test_that("We can combine an output view with a separate colormap.", {
     # convert fsbrain_img_cbar_min.png fsbrain_img_cbar_min.gif
 
     ## Split the animated gif into frames:
-    # convert fsbrain_mov_main.gif -coalesce frames-%03d.gif
+    # convert fsbrain_mov_main.gif -coalesce frames-%03d.png
     ## We may want to crop a bit from the frames as well.
     ## In this example, we remove the 40 px at the bottom.
     # for FRAME in frames*; do convert $FRAME -gravity South -chop 1x40 $FRAME; done
@@ -283,8 +283,8 @@ test_that("We can combine an output view with a separate colormap.", {
 
 ### Some ideas for creating an MP4 movie from the frames of the GIF animation (on the OS command line): ###
 #
-# 1) split the GIF into frames: convert anim_with_cbar.gif -coalesce frames-%03d.png -y
-# 2) encode to MP4 using ffmpeg with libx264 codec: ffmpeg -framerate 20 -i frames-%03d.png -c:v libx264 -crf 18 -pix_fmt yuv420p brain_once.mp4
+# 1) split the GIF into frames: convert anim_with_cbar.gif -coalesce frames-%03d.png
+# 2) encode to MP4 using ffmpeg with libx264 codec: ffmpeg -framerate 20 -i frames-%03d.png -c:v libx264 -crf 18 -pix_fmt yuv420p brain_once.mp4 -y
 # It may be better to make the video loop 3 times, so the user has more time to view it:
 # 3a) for i in {1..3}; do printf "file '%s'\n" brain_once.mp4 >> vidlist.txt; done
 # 3b) ffmpeg -f concat -i vidlist.txt -c copy brain_looped.mp4 -y

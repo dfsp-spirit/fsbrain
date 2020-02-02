@@ -4,7 +4,7 @@
 \alias{volvis.voxels}
 \title{Voxel-based visualization of volume mask at surface RAS positions.}
 \usage{
-volvis.voxels(volume, render_every = 8, voxelcol = NULL, ...)
+volvis.voxels(volume, render_every = 1, voxelcol = NULL, ...)
 }
 \arguments{
 \item{volume}{numeric 3d array, voxels which should not be plotted must have value `NA`. Take care not to plot too many.}

@@ -4,15 +4,8 @@
 \alias{group.agg.atlas.native}
 \title{Aggregate native space morphometry data over brain atlas regions and subjects for a group of subjects.}
 \usage{
-group.agg.atlas.native(
-  subjects_dir,
-  subjects_list,
-  measure,
-  hemi,
-  atlas,
-  agg_fun = mean,
-  cache_file = NULL
-)
+group.agg.atlas.native(subjects_dir, subjects_list, measure, hemi, atlas,
+  agg_fun = mean, cache_file = NULL)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -50,24 +43,22 @@ Aggregate native space morphometry data over brain atlas regions, e.g., compute 
 
 }
 \seealso{
-Other aggregation functions: 
-\code{\link{group.agg.atlas.standard}()},
-\code{\link{subject.atlas.agg}()}
+Other aggregation functions: \code{\link{group.agg.atlas.standard}},
+  \code{\link{subject.atlas.agg}}
 
-Other atlas functions: 
-\code{\link{get.atlas.region.names}()},
-\code{\link{group.agg.atlas.standard}()},
-\code{\link{group.annot}()},
-\code{\link{group.label.from.annot}()},
-\code{\link{label.from.annotdata}()},
-\code{\link{label.to.annot}()},
-\code{\link{regions.to.ignore}()},
-\code{\link{spread.values.over.annot}()},
-\code{\link{spread.values.over.hemi}()},
-\code{\link{spread.values.over.subject}()},
-\code{\link{subject.annot}()},
-\code{\link{subject.atlas.agg}()},
-\code{\link{subject.label.from.annot}()}
+Other atlas functions: \code{\link{get.atlas.region.names}},
+  \code{\link{group.agg.atlas.standard}},
+  \code{\link{group.annot}},
+  \code{\link{group.label.from.annot}},
+  \code{\link{label.from.annotdata}},
+  \code{\link{label.to.annot}},
+  \code{\link{regions.to.ignore}},
+  \code{\link{spread.values.over.annot}},
+  \code{\link{spread.values.over.hemi}},
+  \code{\link{spread.values.over.subject}},
+  \code{\link{subject.annot}},
+  \code{\link{subject.atlas.agg}},
+  \code{\link{subject.label.from.annot}}
 }
 \concept{aggregation functions}
 \concept{atlas functions}

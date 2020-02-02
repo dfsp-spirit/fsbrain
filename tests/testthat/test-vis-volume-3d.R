@@ -13,17 +13,25 @@ test_that("A brain volume or parts of it can be rendered in voxel mode", {
     ventricle_aseg_codes = c(4, 14, 15, 43);    # see FreeSurferColorLUT.txt
     ventricle_mask = vol.mask.from.segmentation(aseg, ventricle_aseg_codes);
 
-    volvis.voxels(ventricle_mask);
+    volvis.voxels(ventricle_mask, render_every = 10);
 
     # Some more segmentation ROIs to play with:
     wm_mask = vol.mask.from.segmentation(aseg, c(2, 41));
     cortex_mask = vol.mask.from.segmentation(aseg, c(3, 42));
 
-    # Use voxel colors when rendering: based on a colormap.
-    volvis.voxels(ventricle_mask, voxelcol = vol.overlay.colors.from.activation(ventricle_mask), render_every = 6);
-
     # Use voxel colors when rendering: gray-scale, computed from the intensity values of the volume itself:
     volvis.voxels(ventricle_mask, voxelcol = 'from_intensity', render_every = 6);
+
+    # Use voxel colors when rendering: based on a colormap.
+    coloredvoxels = volvis.voxels(ventricle_mask, voxelcol = vol.overlay.colors.from.activation(ventricle_mask), render_every = 1);
+
+    render_animation = TRUE;
+    if(render_animation) {
+        rgloptions=list("windowRect"=c(80,80,1200,1200));     # the first 2 entries give the position on screen, the rest defines resolution as width, height in px
+        rglactions = list("movie"="vox_ventricles_rot");
+        vislayout.from.coloredmeshes(coloredvoxels, view_angles="sr", rgloptions = rgloptions, rglactions = rglactions);
+    }
+
 })
 
 
@@ -44,15 +52,24 @@ test_that("A brain volume segmentation can be rendered with correct colors from 
     ct = freesurferformats::read.fs.colortable("~/software/freesurfer/FreeSurferColorLUT.txt");   # adapt to your machine
 
     open3d();
+    all_regions_coloredvoxels = list();
     for(aseg_code in aseg_codes) {
         if(aseg_code == 0) { # skip background ('unknown').
             next;
         }
         ct_entry = subset(ct, ct$struct_index == aseg_code);
         ct_color_rgb = grDevices::rgb(ct_entry$r / 255., ct_entry$g / 255., ct_entry$b / 255.);
-        volvis.voxels(vol.mask.from.segmentation(aseg, aseg_code), render_every=10, color=ct_color_rgb);
+        cv = volvis.voxels(vol.mask.from.segmentation(aseg, aseg_code), render_every=1, voxelcol=ct_color_rgb);
+        all_regions_coloredvoxels = c(all_regions_coloredvoxels, cv);
     }
     # Check it out, it looks pretty cool.
+
+    render_animation = TRUE;
+    if(render_animation) {
+        rgloptions=list("windowRect"=c(80,80,1200,1200));     # the first 2 entries give the position on screen, the rest defines resolution as width, height in px
+        rglactions = list("movie"="vox_aseg_rot");
+        vislayout.from.coloredmeshes(all_regions_coloredvoxels, view_angles="sr", rgloptions = rgloptions, rglactions = rglactions);
+    }
 })
 
 
@@ -72,27 +89,40 @@ test_that("Brain structures can be rendered as contours using misc3d", {
     ventricle_mask_mod = ventricle_mask;
     ventricle_mask_mod[which(is.na(ventricle_mask), arr.ind=T)] = 0;
 
-    custom_colors = terrain.colors(length(ventricle_aseg_codes));
-    misc3d::contour3d(ventricle_mask_mod, level=ventricle_aseg_codes, color=custom_colors, alpha = seq(0.2, 0.5, length.out = length(ventricle_aseg_codes)));
+    # custom_colors = terrain.colors(length(ventricle_aseg_codes));
+    # misc3d::contour3d(ventricle_mask_mod, level=ventricle_aseg_codes, color=custom_colors, alpha = seq(0.2, 0.5, length.out = length(ventricle_aseg_codes)));
+    #
+    # # ---- Draw the surface of the left hemi, and the ventricle contours into the same plot ----
+    # vis.subject.morph.native(subjects_dir, 'subject1', 'thickness', 'lh', views = 'si', style='semitransparent');
+    # vent_tris = misc3d::contour3d(ventricle_mask_mod, level=3, color="red", draw=FALSE);
+    # # Fix the rendering coords to surface RAS
+    # vent_tris = apply.transform(vent_tris, vox2ras_tkr());
+    # misc3d::drawScene.rgl(vent_tris, add = TRUE);
+    #
+    # # Add transparent overlay of whole brain for worse performance ><
+    # have_mighty_computer = TRUE;
+    # if(have_mighty_computer) {
+    #     brain_tris = misc3d::contour3d(aseg, level=1, color="gray", alpha=0.1, back='culled', draw = FALSE);
+    #     brain_tris = apply.transform(brain_tris, vox2ras_tkr());
+    #     misc3d::drawScene.rgl(brain_tris, add = TRUE);
+    # }
 
-    # ---- Draw the surface of the left hemi, and the ventricle contours into the same plot ----
-    vis.subject.morph.native(subjects_dir, 'subject1', 'thickness', 'lh', views = 'si', style='semitransparent');
-    vent_tris = misc3d::contour3d(ventricle_mask_mod, level=10, color="red", draw=FALSE);
-    # Fix the rendering coords to surface RAS
-    vent_tris$v1 = apply.vox2ras_tkr(vent_tris$v1);
-    vent_tris$v2 = apply.vox2ras_tkr(vent_tris$v2);
-    vent_tris$v3 = apply.vox2ras_tkr(vent_tris$v3);
-    drawScene.rgl(vent_tris, add = TRUE);
+})
 
-    # Add transparent overlay of whole brain for worse performance ><
-    have_might_computer = TRUE;
-    if(have_might_computer) {
-        brain_tris = misc3d::contour3d(aseg, level=10, color="gray", alpha=0.1, draw = FALSE);
-        brain_tris$v1 = apply.vox2ras_tkr(brain_tris$v1);
-        brain_tris$v2 = apply.vox2ras_tkr(brain_tris$v2);
-        brain_tris$v3 = apply.vox2ras_tkr(brain_tris$v3);
-        drawScene.rgl(brain_tris, add = TRUE);
-    }
 
+test_that("The pial surface drawn as a transparent wrapping over the white surface", {
+
+    skip("This test has to be run manually and interactively. It requires an X11 display.");
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+    skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
+
+    subject_id = "subject1";
+
+    cm_white = vis.subject.morph.native(subjects_dir, 'subject1', NULL, hemi = 'both', surface = 'white', views = NULL);
+    cm_pial = vis.subject.morph.native(subjects_dir, 'subject1', NULL, hemi = 'both', surface = 'pial', views = NULL);
+    cm_pial[[1]]$style = 'semitransparent';
+    cm_pial[[2]]$style = 'semitransparent';
+    vis.coloredmeshes(c(cm_white, cm_pial), skip_all_na = FALSE, style = 'from_mesh');
 })
 

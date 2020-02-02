@@ -4,19 +4,9 @@
 \alias{vis.coloredmeshes.rotating}
 \title{Visualize a list of colored meshes in a single scene and rotate them, movie-style.}
 \usage{
-vis.coloredmeshes.rotating(
-  coloredmeshes,
-  background = "white",
-  skip_all_na = TRUE,
-  style = "default",
-  x = 0,
-  y = 0,
-  z = 1,
-  rpm = 6,
-  duration = 10,
-  rgloptions = list(),
-  rglactions = list()
-)
+vis.coloredmeshes.rotating(coloredmeshes, background = "white",
+  skip_all_na = TRUE, style = "default", x = 0, y = 0, z = 1,
+  rpm = 6, duration = 10, rgloptions = list(), rglactions = list())
 }
 \arguments{
 \item{coloredmeshes}{list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.}
@@ -27,17 +17,17 @@ vis.coloredmeshes.rotating(
 
 \item{style}{a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.}
 
-\item{x}{rotation x axis value, passed to [rgl::spin3d()]. Defaults to 0.}
+\item{x}{rotation x axis value, passed to \code{\link[rgl]{spin3d}}. Defaults to 0.}
 
-\item{y}{rotation y axis value, passed to [rgl::spin3d()]. Defaults to 1.}
+\item{y}{rotation y axis value, passed to \code{\link[rgl]{spin3d}}. Defaults to 1.}
 
-\item{z}{rotation z axis value, passed to [rgl::spin3d()]. Defaults to 0.}
+\item{z}{rotation z axis value, passed to \code{\link[rgl]{spin3d}}. Defaults to 0.}
 
-\item{rpm}{rotation rpm value, passed to [rgl::spin3d()]. Defaults to 15.}
+\item{rpm}{rotation rpm value, passed to \code{\link[rgl]{spin3d}}. Defaults to 15.}
 
-\item{duration}{rotation duration value, passed to [rgl::spin3d()]. Defaults to 20.}
+\item{duration}{rotation duration value, passed to \code{\link[rgl]{spin3d}}. Defaults to 20.}
 
-\item{rgloptions}{option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));}
+\item{rgloptions}{option list passed to \code{\link[rgl]{par3d}}. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));}
 
 \item{rglactions}{named list. A list in which the names are from a set of pre-defined actions. Defaults to the empty list.}
 }

@@ -4,13 +4,8 @@
 \alias{coloredmesh.custom}
 \title{Create a coloredmesh from a mesh and custom vertex colors.}
 \usage{
-coloredmesh.custom(
-  surface_data,
-  vertex_colors,
-  hemi,
-  colormap_used = NULL,
-  morph_data = NULL
-)
+coloredmesh.custom(surface_data, vertex_colors, hemi,
+  colormap_used = NULL, morph_data = NULL)
 }
 \arguments{
 \item{surface_data}{a surface mesh}

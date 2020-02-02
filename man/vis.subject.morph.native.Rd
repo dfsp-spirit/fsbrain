@@ -4,27 +4,17 @@
 \alias{vis.subject.morph.native}
 \title{Visualize native space morphometry data for a subject.}
 \usage{
-vis.subject.morph.native(
-  subjects_dir,
-  subject_id,
-  measure,
-  hemi = "both",
-  surface = "white",
-  colormap = squash::jet,
-  views = c("t4"),
-  rgloptions = list(),
-  rglactions = list(),
-  draw_colorbar = FALSE,
-  cortex_only = FALSE,
-  style = "default"
-)
+vis.subject.morph.native(subjects_dir, subject_id, measure,
+  hemi = "both", surface = "white", colormap = squash::jet,
+  views = c("t4"), rgloptions = list(), rglactions = list(),
+  draw_colorbar = FALSE, cortex_only = FALSE, style = "default")
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
 
 \item{subject_id}{string. The subject identifier.}
 
-\item{measure}{string. The morphometry data to use. E.g., 'area' or 'thickness.'}
+\item{measure}{string. The morphometry data to use. E.g., 'area' or 'thickness'. Pass NULL to render just the surface in white, without any data.}
 
 \item{hemi}{string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the label data files to be loaded.}
 
@@ -59,21 +49,19 @@ Creates a surface mesh, applies a colormap transform the morphometry data values
 
 }
 \seealso{
-Other visualization functions: 
-\code{\link{vis.data.on.fsaverage}()},
-\code{\link{vis.data.on.subject}()},
-\code{\link{vis.labeldata.on.subject}()},
-\code{\link{vis.mask.on.subject}()},
-\code{\link{vis.region.values.on.subject}()},
-\code{\link{vis.subject.annot}()},
-\code{\link{vis.subject.label}()},
-\code{\link{vis.subject.morph.standard}()},
-\code{\link{vislayout.from.coloredmeshes}()}
+Other visualization functions: \code{\link{vis.data.on.fsaverage}},
+  \code{\link{vis.data.on.subject}},
+  \code{\link{vis.labeldata.on.subject}},
+  \code{\link{vis.mask.on.subject}},
+  \code{\link{vis.region.values.on.subject}},
+  \code{\link{vis.subject.annot}},
+  \code{\link{vis.subject.label}},
+  \code{\link{vis.subject.morph.standard}},
+  \code{\link{vislayout.from.coloredmeshes}}
 
-Other morphometry visualization functions: 
-\code{\link{vis.data.on.fsaverage}()},
-\code{\link{vis.data.on.subject}()},
-\code{\link{vis.subject.morph.standard}()}
+Other morphometry visualization functions: \code{\link{vis.data.on.fsaverage}},
+  \code{\link{vis.data.on.subject}},
+  \code{\link{vis.subject.morph.standard}}
 }
 \concept{morphometry visualization functions}
 \concept{visualization functions}

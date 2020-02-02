@@ -4,15 +4,9 @@
 \alias{vis.coloredmeshes}
 \title{Visualize a list of colored meshes in a single scene.}
 \usage{
-vis.coloredmeshes(
-  coloredmeshes,
-  background = "white",
-  skip_all_na = TRUE,
-  style = "default",
-  rgloptions = list(),
-  rglactions = list(),
-  draw_colorbar = FALSE
-)
+vis.coloredmeshes(coloredmeshes, background = "white",
+  skip_all_na = TRUE, style = "default", rgloptions = list(),
+  rglactions = list(), draw_colorbar = FALSE)
 }
 \arguments{
 \item{coloredmeshes}{list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.}
@@ -23,7 +17,7 @@ vis.coloredmeshes(
 
 \item{style, }{a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.}
 
-\item{rgloptions}{option list passed to [rgl::par3d()]. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))};}
+\item{rgloptions}{option list passed to \code{\link[rgl]{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))};}
 
 \item{rglactions}{named list. A list in which the names are from a set of pre-defined actions. Defaults to the empty list.}
 

@@ -107,7 +107,7 @@ check.for.coloredmeshes.colormap <- function(coloredmeshes) {
 #'
 #' @param subject_id string. The subject identifier.
 #'
-#' @param measure string. The morphometry data to use. E.g., 'area' or 'thickness.'
+#' @param measure string. The morphometry data to use. E.g., 'area' or 'thickness'. Pass NULL to render the surface in white, without any data.
 #'
 #' @param hemi string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.
 #'
@@ -130,7 +130,11 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
 
-    morph_data = subject.morph.native(subjects_dir, subject_id, measure, hemi, cortex_only=cortex_only);
+    if(is.null(measure)) {
+        morph_data = NULL;
+    } else {
+        morph_data = subject.morph.native(subjects_dir, subject_id, measure, hemi, cortex_only=cortex_only);
+    }
 
     if(! is.null(clip)) {
         morph_data = clip.data(morph_data, lower=clip[1], upper=clip[2]);
@@ -143,7 +147,10 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
     }
     mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
     col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
-    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap));
+
+    cm = list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap);
+    class(cm) = c("fs.coloredmesh", class(cm));
+    return(cm);
 }
 
 
@@ -166,7 +173,9 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
 #' @export
 coloredmesh.custom <- function(surface_data, vertex_colors, hemi, colormap_used=NULL, morph_data=NULL) {
     mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
-    return(list("mesh"=mesh, "col"=vertex_colors, "morph_data_was_all_na"=is.null(morph_data), "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap_used));
+    cm = list("mesh"=mesh, "col"=vertex_colors, "morph_data_was_all_na"=is.null(morph_data), "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap_used);
+    class(cm) = c("fs.coloredmesh", class(cm));
+    return(cm);
 }
 
 
@@ -176,7 +185,7 @@ coloredmesh.custom <- function(surface_data, vertex_colors, hemi, colormap_used=
 #'
 #' @param subject_id string. The subject identifier.
 #'
-#' @param measure string. The morphometry data to use. E.g., 'area' or 'thickness.'
+#' @param measure string. The morphometry data to use. E.g., 'area' or 'thickness'. Pass NULL to render just the surface in white, without any data.
 #'
 #' @param hemi string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.
 #'
@@ -209,7 +218,11 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
         template_subjects_dir = subjects_dir;
     }
 
-    morph_data = subject.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm = fwhm, cortex_only = cortex_only);
+    if(is.null(measure)) {
+        morph_data = NULL;
+    } else {
+        morph_data = subject.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm = fwhm, cortex_only = cortex_only);
+    }
 
     if(! is.null(clip)) {
         morph_data = clip.data(morph_data, lower=clip[1], upper=clip[2]);
@@ -222,8 +235,15 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
     }
 
     mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
-    col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
-    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap));
+
+    if(is.null(morph_data)) {
+        col = 'white';
+    } else {
+        col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
+    }
+    cm = list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap);
+    class(cm) = c("fs.coloredmesh", class(cm));
+    return(cm);
 }
 
 
@@ -275,7 +295,9 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
     }
 
     col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
-    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=morph_data_was_all_na, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap));
+    cm = list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=morph_data_was_all_na, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap);
+    class(cm) = c("fs.coloredmesh", class(cm));
+    return(cm);
 }
 
 
@@ -324,7 +346,10 @@ coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surfac
     } else {
         col = annot$hex_colors_rgb;
     }
-    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=NULL, "cmap_fun"=colormap));
+
+    cm = list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=NULL, "cmap_fun"=colormap);
+    class(cm) = c("fs.coloredmesh", class(cm));
+    return(cm);
 }
 
 
@@ -412,6 +437,30 @@ coloredmesh.from.mask <- function(subjects_dir, subject_id, mask, hemi, surface=
 
     mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
     col = squash::cmap(morph_like_data, map = squash::makecmap(morph_like_data, colFn = colormap));
-    return(list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_like_data, "cmap_fun"=colormap));
+    cm = list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_like_data, "cmap_fun"=colormap);
+    class(cm) = c("fs.coloredmesh", class(cm));
+    return(cm);
 }
 
+
+#' @title Print description of a brain coloredmesh (S3).
+#'
+#' @param x brain surface with class `fs.coloredmesh`.
+#'
+#' @param ... further arguments passed to or from other methods
+#'
+#' @export
+print.fs.coloredmesh <- function(x, ...) {
+    cat(sprintf("Brain coloredmesh with %d vertices and %d faces.\n", ncol(x$mesh$vb), ncol(x$mesh$it)));
+    cat(sprintf("Hemi is '%s', will be rendered: %s.\n", x$hemi, !x$morph_data_was_all_na));
+}
+
+
+#' @title Check whether object is an fs.coloredmesh (S3)
+#'
+#' @param x any `R` object
+#'
+#' @return TRUE if its argument is a coloredmesh (that is, has "fs.coloredmesh" amongst its classes) and FALSE otherwise.
+#'
+#' @export
+is.fs.coloredmesh <- function(x) inherits(x, "fs.coloredmesh")

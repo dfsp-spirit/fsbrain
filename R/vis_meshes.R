@@ -11,7 +11,7 @@
 #'
 #' @param style, a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
 #'
-#' @param rgloptions option list passed to [rgl::par3d()]. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))};
+#' @param rgloptions option list passed to \code{\link[rgl]{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))};
 #'
 #' @param rglactions named list. A list in which the names are from a set of pre-defined actions. Defaults to the empty list.
 #'
@@ -34,10 +34,7 @@ vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRU
 
     rgl::bg3d(background);
     for(cmesh in coloredmeshes) {
-        if(skip_all_na && cmesh$morph_data_was_all_na) {
-            next;
-        }
-        vis.coloredmesh(cmesh, style = style);
+        vis.cmesh.or.cvox(cmesh, skip_all_na=TRUE, style=style);
     }
 
     if(draw_colorbar) {
@@ -49,6 +46,20 @@ vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRU
 }
 
 
+#' @keywords internal
+vis.cmesh.or.cvox <- function(cmesh, skip_all_na=TRUE, style="default") {
+    if(is.fs.coloredmesh(cmesh)) {
+        if(!(skip_all_na && cmesh$morph_data_was_all_na)) {
+            vis.coloredmesh(cmesh, style = style);
+        }
+    } else if (is.fs.coloredvoxels(cmesh)) {
+        rgl::triangles3d(cmesh$voxeltris, color = cmesh$color);
+    } else {
+        stop(sprintf("Received object with classes '%s', cannot render this. Pass an fs.coloredmesh or fs.coloredvoxels instance.\n", paste(class(cmesh), collapse=" ")));
+    }
+
+}
+
 #' @title Visualize a list of colored meshes in a single scene and rotate them, movie-style.
 #'
 #' @param coloredmeshes list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
@@ -59,17 +70,17 @@ vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRU
 #'
 #' @param style a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
 #'
-#' @param x rotation x axis value, passed to [rgl::spin3d()]. Defaults to 0.
+#' @param x rotation x axis value, passed to \code{\link[rgl]{spin3d}}. Defaults to 0.
 #'
-#' @param y rotation y axis value, passed to [rgl::spin3d()]. Defaults to 1.
+#' @param y rotation y axis value, passed to \code{\link[rgl]{spin3d}}. Defaults to 1.
 #'
-#' @param z rotation z axis value, passed to [rgl::spin3d()]. Defaults to 0.
+#' @param z rotation z axis value, passed to \code{\link[rgl]{spin3d}}. Defaults to 0.
 #'
-#' @param rpm rotation rpm value, passed to [rgl::spin3d()]. Defaults to 15.
+#' @param rpm rotation rpm value, passed to \code{\link[rgl]{spin3d}}. Defaults to 15.
 #'
-#' @param duration rotation duration value, passed to [rgl::spin3d()]. Defaults to 20.
+#' @param duration rotation duration value, passed to \code{\link[rgl]{spin3d}}. Defaults to 20.
 #'
-#' @param rgloptions option list passed to [rgl::par3d()]. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));
+#' @param rgloptions option list passed to \code{\link[rgl]{par3d}}. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));
 #'
 #' @param rglactions named list. A list in which the names are from a set of pre-defined actions. Defaults to the empty list.
 #'
@@ -88,10 +99,7 @@ vis.coloredmeshes.rotating <- function(coloredmeshes, background="white", skip_a
     Sys.sleep(1);
     rgl::bg3d(background);
     for(cmesh in coloredmeshes) {
-        if(skip_all_na && cmesh$morph_data_was_all_na) {
-            next;
-        }
-        vis.coloredmesh(cmesh, style = style);
+        vis.cmesh.or.cvox(cmesh, skip_all_na=TRUE, style=style);
     }
     rgl::rgl.viewpoint(-90, 0);
 
@@ -118,13 +126,13 @@ vis.coloredmeshes.rotating <- function(coloredmeshes, background="white", skip_a
 #'
 #' @param coloredmeshes list of coloredmeshes. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
 #'
-#' @param rotation_angle angle in radians. Passed to [rgl:rotated3d()].
+#' @param rotation_angle angle in radians. Passed to \code{\link[rgl]{rotate3d}}.
 #'
-#' @param x x value passed to [rgl:rotated3d()].
+#' @param x x value passed to \code{\link[rgl]{rotate3d}}.
 #'
-#' @param y y value passed to [rgl:rotated3d()].
+#' @param y y value passed to \code{\link[rgl]{rotate3d}}.
 #'
-#' @param z z value passed to [rgl:rotated3d()].
+#' @param z z value passed to \code{\link[rgl]{rotate3d}}.
 #'
 #' @param style a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
 #'
@@ -149,7 +157,7 @@ vis.rotated.coloredmeshes <- function(coloredmeshes, rotation_angle, x, y, z, st
 
 #' @title Draw coloredbar into background of current plot.
 #'
-#' @description Requires a rgl 3d visualisation to be open that already contains a rendered object. Uses [rgl::bgplot3d()] to add a colorbar in the background of the plot. Experimental.
+#' @description Requires a rgl 3d visualisation to be open that already contains a rendered object. Uses \code{\link[rgl]{bgplot3d}} to add a colorbar in the background of the plot. Experimental.
 #'
 #' @param coloredmeshes list of coloredmeshes. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
 #'

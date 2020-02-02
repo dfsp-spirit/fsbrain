@@ -4,13 +4,8 @@
 \alias{annot.outline}
 \title{Compute outline vertex colors from annotation.}
 \usage{
-annot.outline(
-  annotdata,
-  surface_mesh,
-  background = "white",
-  silent = FALSE,
-  expand_inwards = 0L
-)
+annot.outline(annotdata, surface_mesh, background = "white",
+  silent = FALSE, expand_inwards = 0L)
 }
 \arguments{
 \item{annotdata}{an annotation, as returned by functions like \code{\link[fsbrain]{subject.annot}}.}

@@ -18,7 +18,7 @@
 #'
 #' @param cast, logical. Whether the format of the returned data frame should be cast, i.e., whether a separate 'hemi' column should be introduced. If this is set to FALSE, the following will be returned: a dataframe with 2 columns and n rows, where n is the number of subjects. The 2 columns are 'subject_id' and '<hemi>.<measure>' (e.g., "lh.thickness"), the latter contains the aggregated data. See the description of the return value for the default case (cast=TRUE). Defaults to TRUE.
 #'
-#' @param cortex_only logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the subjects. Also not that the aggregation function will need to be able to cope with NA values if you set this to TRUE. You can use 'agg_fun_extra_params' if needed to achieve that, depending on the function. Foe example, if you use the [mean()] function, you could set \code{agg_fun_extra_params=list("na.rm"=TRUE)} to get the mean of the vertices which are not masked. Defaults to FALSE.
+#' @param cortex_only logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the subjects. Also not that the aggregation function will need to be able to cope with NA values if you set this to TRUE. You can use 'agg_fun_extra_params' if needed to achieve that, depending on the function. For example, if you use the \code{\link[base]{mean}} function, you could set \code{agg_fun_extra_params=list("na.rm"=TRUE)} to get the mean of the vertices which are not masked. Defaults to FALSE.
 #'
 #' @param agg_fun_extra_params named list, extra parameters to pass to the aggregation function 'agg_fun' besides the loaded morphometry data. This is useful if you have masked the data and need to ignore NA values in the agg_fun.
 #'
@@ -44,7 +44,7 @@ group.morph.agg.native <- function(subjects_dir, subjects_list, measure, hemi, a
 
   agg_all_subjects = data.frame();
   for (subject_id in subjects_list) {
-      morph_data = subject.morph.native(subjects_dir, subject_id, measure, hemi, format=format);
+      morph_data = subject.morph.native(subjects_dir, subject_id, measure, hemi, format=format, cortex_only=cortex_only);
 
       # Merge extra arguments to pass to the aggregation function.
       agg_fun_default_params = list(morph_data);
@@ -122,7 +122,7 @@ group.morph.agg.standard <- function(subjects_dir, subjects_list, measure, hemi,
   }
   agg_all_subjects = data.frame();
   for (subject_id in subjects_list) {
-    morph_data = subject.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm=fwhm, template_subject=template_subject, format=format);
+    morph_data = subject.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm=fwhm, template_subject=template_subject, format=format, cortex_only=cortex_only);
 
     # Merge extra arguments to pass to the aggregation function.
     agg_fun_default_params = list(morph_data);
