@@ -2,7 +2,7 @@
 % Please edit documentation in R/fsdir_abstraction_subject.R
 \name{subject.mask}
 \alias{subject.mask}
-\title{Compute a mask for a vertex mask.}
+\title{Compute a mask for a subject.}
 \usage{
 subject.mask(subjects_dir, subject_id, hemi = "both",
   from_label = "cortex", surf_num_verts = "white",
@@ -19,13 +19,13 @@ subject.mask(subjects_dir, subject_id, hemi = "both",
 
 \item{surf_num_verts}{string or integer. If an integer, interpreted as the number of vertices in the respective surface (lh or rh). If a character string, interpreted as a surface name, (e.g.,`white` or `pial`), and the respective surface will be loaded to determine the number of vertices in it. If parameter `hemi` is set to `both` and you supply the vertex count as an integer, this can be a vector of length 2 if the surfaces have different vertex counts (the first entry for `lh`, the second for `rh`).}
 
-\item{invert_mask}{logical, whether to invert the mask. E.g., when the mask is loaded from the cortex labels, if this is set to FALSE, the cortex would be masked (set to 0 in the final mask). If you want everything but the cortex to be masked (set to 0), you should set this to `TRUE`. Defaults to `TRUE`.}
+\item{invert_mask}{logical, whether to invert the mask. E.g., when the mask is loaded from the cortex labels, if this is set to FALSE, the cortex would be masked (set to 0 in the final mask). If you want **everything but the cortex** to be masked (set to 0), you should set this to `TRUE`. Defaults to `TRUE`.}
 }
 \value{
-the mask, an integer vector with the length of the vertices in the surface, containing only the two values 1L and 0L. If parameter `hemi` is set to `both`, a named list with entries `lh` and `rh` is returned, and the values of are the respective masks.
+the mask, a logical vector with the length of the vertices in the surface. If parameter `hemi` is set to `both`, a named list with entries `lh` and `rh` is returned, and the values of are the respective masks.
 }
 \description{
-Compute a binary vertex mask for a vertex mask for a subject. By defaults, the medial wall is masked.
+Compute a binary vertex mask for the surface vertices of a subject. By defaults, the medial wall is masked.
 }
 \examples{
 \donttest{
@@ -33,8 +33,13 @@ Compute a binary vertex mask for a vertex mask for a subject. By defaults, the m
    #  be set to 0, cortex vertices will be set to 1.
    fsbrain::download_optional_data();
    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
-   medial_wall_mask = subject.mask(subjects_dir, "subject1");
-   # Show that the number of total vertices, and the number of cortex vertices:
+   mask = subject.mask(subjects_dir, "subject1");
+   # Print some information on the mask:
+   cat(sprintf("lh: \%d verts, \%d in cortex, \%d medial wall.\\n", length(mask$lh),
+    sum(mask$lh), (length(mask$lh)- sum(mask$lh))))
+   # Output: lh: 149244 verts, 140891 in cortex, 8353 medial wall.
+   # Now visualize the mask to illustrate that it is correct:
+   vis.mask.on.subject(subjects_dir, "subject1", mask$lh, mask$rh);
 }
 
 }
