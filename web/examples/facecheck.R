@@ -15,15 +15,15 @@
 #
 # Written by Tim Schaefer
 
-
-library("fsbrain");
-library("misc3d");
-library("magick");
+quietly = TRUE;
+library("fsbrain", quietly = quietly);
+library("misc3d", quietly = quietly);
+library("magick", quietly = quietly);
 
 args = commandArgs(trailingOnly=TRUE);
 
 
-generate_facecheck_image <- function(subjects_dir, subject_id, output_img=NULL, silent=FALSE) {
+generate_facecheck_image <- function(subjects_dir, subject_id, output_img=NULL, silent=TRUE, delete_tmp_images=TRUE) {
     volumes_rel = c("mri/orig.mgz", "mri/orig_nu.mgz", "mri/T1.mgz", "mri/rawavg.mgz", "mri/orig/001.mgz");
     volumes = paste(file.path(subjects_dir, subject_id), .Platform$file.sep, volumes_rel, sep="");
 
@@ -40,7 +40,7 @@ generate_facecheck_image <- function(subjects_dir, subject_id, output_img=NULL, 
         if(file.exists(vol_file)) {
             vol_data = freesurferformats::read.fs.mgh(vol_file);
             surface_tris = fsbrain::volvis.contour(vol_data, level=80, show=FALSE);
-            fsbrain::vislayout.from.coloredmeshes(surface_tris, view_angles = "sd_caudal", output_img = img_name);
+            fsbrain::vislayout.from.coloredmeshes(surface_tris, view_angles = "sd_caudal", output_img = img_name, silent = silent);
             output_single_images = c(output_single_images, img_name);
         }
         sub_img_idx = sub_img_idx + 1L;
@@ -51,11 +51,18 @@ generate_facecheck_image <- function(subjects_dir, subject_id, output_img=NULL, 
     }
 
     if(length(output_single_images) >= 1) {
-        cat(sprintf("Combined views of %d volumes into image '%s'.\n", length(output_single_images), output_img));
+        if(!silent) {
+            cat(sprintf("Combined views of %d volumes into image '%s'.\n", length(output_single_images), output_img));
+        }
         fsbrain::arrange.brainview.images(output_single_images, output_img, silent=silent, grid_like = FALSE);
+        if(delete_tmp_images) {
+            del_result = file.remove(output_single_images);
+        }
     } else {
-        cat(sprintf("No volumes found, nothing to visualize."));
+        warning(sprintf("No volume files found, nothing to visualize.\n"));
     }
+
+
 }
 
 
