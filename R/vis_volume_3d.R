@@ -89,6 +89,45 @@ volvis.voxels <- function(volume, render_every=1, voxelcol=NULL, ...) {
 }
 
 
+#' @title Visualize contour of a volume.
+#'
+#' @description Compute a smoothed surface from the voxel intensities in the given volume and render it. Requires the `misc3d` package to be installed, which is an optional dependency.
+#'
+#' @param volume a 3D brain volume
+#'
+#' @param level numeric, intensity threshold for the data. Voxels with intensity value smaller than `level` will be ignored when creating the contour surface.
+#'
+#' @param ... Arguments passed to \code{\link[misc3d]{drawScene.rgl}}. Example: \code{add = TRUE, color="red"}.
+#'
+#' @return the rendered triangles (a `Triangles3D` instance) with coordinates in surface RAS space if any, `NULL` otherwise.
+#'
+#' @examples
+#' \donttest{
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+#'    brain = subject.volume(subjects_dir, 'subject1', 'brain');
+#'    # Plot all voxels of the brain:
+#'    volvis.contour(brain);
+#' }
+#'
+#' @export
+volvis.contour <- function(volume, level=40, ...) {
+    if (requireNamespace("misc3d", quietly = TRUE)) {
+        surface_tris = misc3d::contour3d(volume, level=level, draw=FALSE);
+
+
+        # Fix the rendering coords to surface RAS
+        surface_tris = apply.transform(surface_tris, vox2ras_tkr());
+
+        vis.coloredmeshes(list(surface_tris));
+        return(invisible(surface_tris));
+    } else {
+        warning("The 'misc3d' package must be installed to use this functionality.");
+        return(invisible(NULL));
+    }
+}
+
+
 #' Apply matmult transformation to input.
 #'
 #' @description Apply affine transformation, like a vox2ras_tkr transformation, to input. This is just matrix multiplication for different input objects.
