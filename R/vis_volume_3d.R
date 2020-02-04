@@ -114,7 +114,7 @@ volvis.voxels <- function(volume, render_every=1, voxelcol=NULL, ...) {
 volvis.contour <- function(volume, level=40, show=TRUE) {
     if (requireNamespace("misc3d", quietly = TRUE)) {
 
-        if(length(dim(volume) == 4L)) {
+        if(length(dim(volume)) == 4L) {
             volume = volume[,,,1]; # select 1st frame
         }
 

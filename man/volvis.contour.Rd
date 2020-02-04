@@ -4,14 +4,14 @@
 \alias{volvis.contour}
 \title{Visualize contour of a volume.}
 \usage{
-volvis.contour(volume, level = 40, ...)
+volvis.contour(volume, level = 40, show = TRUE)
 }
 \arguments{
 \item{volume}{a 3D brain volume}
 
 \item{level}{numeric, intensity threshold for the data. Voxels with intensity value smaller than `level` will be ignored when creating the contour surface.}
 
-\item{...}{Arguments passed to \code{\link[misc3d]{drawScene.rgl}}. Example: \code{add = TRUE, color="red"}.}
+\item{show}{logical, whether to display the triangles. Defaults to `TRUE`.}
 }
 \value{
 the rendered triangles (a `Triangles3D` instance) with coordinates in surface RAS space if any, `NULL` otherwise.
