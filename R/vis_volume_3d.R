@@ -97,7 +97,7 @@ volvis.voxels <- function(volume, render_every=1, voxelcol=NULL, ...) {
 #'
 #' @param level numeric, intensity threshold for the data. Voxels with intensity value smaller than `level` will be ignored when creating the contour surface.
 #'
-#' @param ... Arguments passed to \code{\link[misc3d]{drawScene.rgl}}. Example: \code{add = TRUE, color="red"}.
+#' @param show logical, whether to display the triangles. Defaults to `TRUE`.
 #'
 #' @return the rendered triangles (a `Triangles3D` instance) with coordinates in surface RAS space if any, `NULL` otherwise.
 #'
@@ -111,15 +111,22 @@ volvis.voxels <- function(volume, render_every=1, voxelcol=NULL, ...) {
 #' }
 #'
 #' @export
-volvis.contour <- function(volume, level=40, ...) {
+volvis.contour <- function(volume, level=40, show=TRUE) {
     if (requireNamespace("misc3d", quietly = TRUE)) {
+
+        if(length(dim(volume) == 4L)) {
+            volume = volume[,,,1]; # select 1st frame
+        }
+
         surface_tris = misc3d::contour3d(volume, level=level, draw=FALSE);
 
 
         # Fix the rendering coords to surface RAS
         surface_tris = apply.transform(surface_tris, vox2ras_tkr());
 
-        vis.coloredmeshes(list(surface_tris));
+        if(show) {
+            vis.coloredmeshes(list(surface_tris));
+        }
         return(invisible(surface_tris));
     } else {
         warning("The 'misc3d' package must be installed to use this functionality.");
