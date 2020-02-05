@@ -66,9 +66,10 @@ generate_facecheck_image <- function(subjects_dir, subject_id, output_img=NULL, 
 }
 
 
-if (length(args) != 2) {
-    stop("USAGE: ./facecheck.R <subjects_dir> <subject_id>");
-} else {
+if (length(args) == 2) {
     generate_facecheck_image(args[1], args[2]);
+} else if (length(args) == 3) {
+    generate_facecheck_image(args[1], args[2], args[3]);
+} else {
+    stop("USAGE: ./facecheck.R <subjects_dir> <subject_id> [<output_img>]");
 }
-
