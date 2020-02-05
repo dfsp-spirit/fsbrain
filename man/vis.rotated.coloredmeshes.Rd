@@ -4,19 +4,10 @@
 \alias{vis.rotated.coloredmeshes}
 \title{Rotate and visualize coloredmeshes, applying a style.}
 \usage{
-vis.rotated.coloredmeshes(
-  coloredmeshes,
-  rotation_angle,
-  x,
-  y,
-  z,
-  style = "default",
-  draw_colorbar = FALSE
-)
+vis.rotated.coloredmeshes(renderables, rotation_angle, x, y, z,
+  style = "default", draw_colorbar = FALSE)
 }
 \arguments{
-\item{coloredmeshes}{list of coloredmeshes. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.}
-
 \item{rotation_angle}{angle in radians. Passed to \code{\link[rgl]{rotate3d}}.}
 
 \item{x}{x value passed to \code{\link[rgl]{rotate3d}}.}
@@ -28,6 +19,8 @@ vis.rotated.coloredmeshes(
 \item{style}{a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.}
 
 \item{draw_colorbar}{logical. Whether to draw a colorbar.}
+
+\item{coloredmeshes}{list of renderables. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.}
 }
 \description{
 Rotate and visualize coloredmeshes, applying a style.

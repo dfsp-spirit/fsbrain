@@ -4,12 +4,8 @@
 \alias{magick.grid}
 \title{Arrange a multi-frame ImageMagick image into a grid.}
 \usage{
-magick.grid(
-  magickimage,
-  per_row = 5L,
-  per_col = NULL,
-  background_color = "#000000"
-)
+magick.grid(magickimage, per_row = 5L, per_col = NULL,
+  background_color = "#000000")
 }
 \arguments{
 \item{magickimage}{an ImageMagick image}

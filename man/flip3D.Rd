@@ -20,7 +20,6 @@ a 3D image volume, flipped around the axis. The dimensions are identical to the 
 Flip the slice of an 3D array horizontally or vertically along an axis. This leads to an output array with identical dimensions.
 }
 \seealso{
-Other volume math: 
-\code{\link{rotate3D}()}
+Other volume math: \code{\link{rotate3D}}
 }
 \concept{volume math}
