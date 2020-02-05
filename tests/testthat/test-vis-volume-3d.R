@@ -49,7 +49,7 @@ test_that("A brain volume segmentation can be rendered with correct colors from 
 
     aseg_codes = unique(as.vector(aseg));
 
-    ct = freesurferformats::read.fs.colortable("~/software/freesurfer/FreeSurferColorLUT.txt");   # adapt to your machine
+    ct = freesurferformats::read.fs.colortable("~/software/freesurfer/FreeSurferColorLUT.txt");   # adapt path to your machine
 
     open3d();
     all_regions_coloredvoxels = list();

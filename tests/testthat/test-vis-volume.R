@@ -188,3 +188,34 @@ test_that("Intensity integer to RGB color string conversion works in 1, 2, and 3
     expect_equal(dim(out3d), c(3,3,3));
 })
 
+
+test_that("A brain volume can be visualized as a lightbox colored from the aseg", {
+
+    skip("This test has to be run manually and interactively. It also requires the 'magick' package (ImageMagick for R).");
+
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+    skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
+
+    subject_id = "subject1";
+    brain = subject.volume(subjects_dir, subject_id, 'brain') / 255;
+    aseg = subject.volume(subjects_dir, subject_id, 'aseg');    # Not shipped with the package atm.
+
+    colortable = freesurferformats::read.fs.colortable("~/software/freesurfer/FreeSurferColorLUT.txt");   # adapt path to your machine
+
+    # Compute and apply bbox to exclude empty outer parts
+    bbox = vol.boundary.box(brain);
+    brain = brain[bbox$from[1]:bbox$to[1], bbox$from[2]:bbox$to[2], bbox$from[3]:bbox$to[3]];
+
+    # Now test that the merged image can be visualized as a lightbox:
+    imgplane = 1;
+    magick::image_write(vol.lightbox(brain, axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
+
+    imgplane = 2;
+    magick::image_write(vol.lightbox(rotate3D(brain, axis=imgplane), axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
+
+    imgplane = 3;
+    magick::image_write(vol.lightbox(rotate3D(brain, axis=imgplane), axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
+
+})
+
