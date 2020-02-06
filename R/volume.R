@@ -179,3 +179,25 @@ ras2vox_tkr <- function() {
     return(matrix(c(-1,-0,-0,-0, -0,-0,+1,-0, -0,-1,-0,-0, 128,128,128,1), nrow = 4));
 }
 
+
+#' @title Reorient volume data to new orientation.
+#'
+#' @param volume a 3D volume image
+#'
+#' @param current_orientation orientation string, as returned in \code{header$internal$slice_orientation_string} by \code{\link[fsbrain]{subject.volume}}. Examples: 'PIL' or 'LIA'.
+#'
+#' @param target_orientation orientation string, see above.
+#'
+#' @return the rotated volume data
+#'
+#' @export
+vol.reorient(volume, current_orientation, target_orientation) {
+    if(is.null(current_orientation) | current_orientation == "???") {
+        warning("Cannot reorient volume with unknown current orientation, returning as-is.");
+        return(volume);
+    }
+    # see the function that computes slice orietentation in fsf for instructions. axes are L/R, P/A, I/S.
+    # see https://www.slicer.org/wiki/Coordinate_systems for more info
+
+    warning("NOT implemented yet");
+}
