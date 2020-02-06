@@ -4,9 +4,14 @@
 \alias{subject.mask}
 \title{Compute a mask for a subject.}
 \usage{
-subject.mask(subjects_dir, subject_id, hemi = "both",
-  from_label = "cortex", surf_num_verts = "white",
-  invert_mask = TRUE)
+subject.mask(
+  subjects_dir,
+  subject_id,
+  hemi = "both",
+  from_label = "cortex",
+  surf_num_verts = "white",
+  invert_mask = TRUE
+)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -35,8 +40,8 @@ Compute a binary vertex mask for the surface vertices of a subject. By defaults,
    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
    mask = subject.mask(subjects_dir, "subject1");
    # Print some information on the mask:
-   cat(sprintf("lh: \%d verts, \%d in cortex, \%d medial wall.\\n", length(mask$lh),
-    sum(mask$lh), (length(mask$lh)- sum(mask$lh))))
+   #cat(sprintf("lh: %d verts, %d in cortex, %d medial wall.\n", length(mask$lh),
+   # sum(mask$lh), (length(mask$lh)- sum(mask$lh))))
    # Output: lh: 149244 verts, 140891 in cortex, 8353 medial wall.
    # Now visualize the mask to illustrate that it is correct:
    vis.mask.on.subject(subjects_dir, "subject1", mask$lh, mask$rh);
@@ -44,9 +49,10 @@ Compute a binary vertex mask for the surface vertices of a subject. By defaults,
 
 }
 \seealso{
-Other label functions: \code{\link{apply.label.to.morphdata}},
-  \code{\link{apply.labeldata.to.morphdata}},
-  \code{\link{vis.labeldata.on.subject}},
-  \code{\link{vis.subject.label}}
+Other label functions: 
+\code{\link{apply.label.to.morphdata}()},
+\code{\link{apply.labeldata.to.morphdata}()},
+\code{\link{vis.labeldata.on.subject}()},
+\code{\link{vis.subject.label}()}
 }
 \concept{label functions}
