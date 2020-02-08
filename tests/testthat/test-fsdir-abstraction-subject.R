@@ -190,16 +190,13 @@ test_that("We can compute the medial mask for a subject", {
     expect_equal(sum(mask$lh), num_cortex_verts_subject1_lh); # number of cortex vertices
     expect_equal(sum(mask$rh), num_cortex_verts_subject1_rh); # number of cortex vertices
 
-    # Now test that we can write the mask to an MGZ file and re-read it.
-    lh_mask_file = tempfile(fileext = ".mgz");
-    lh_mask_data = as.integer(mask$lh);
-    expect_equal(range(lh_mask_data), c(0L, 1L));
-    wi = freesurferformats::write.fs.morph(lh_mask_file, lh_mask_data);
-
-    lh_mask_reread = freesurferformats::read.fs.morph(lh_mask_file);
-    expect_equal(length(lh_mask_reread), num_verts_subject1_lh);
-    expect_equal(range(lh_mask_reread), c(0L, 1L));
-    expect_equal(sum(lh_mask_reread), num_cortex_verts_subject1_lh); # number of cortex vertices
+    # ## has been fixed there already, but will only be in the next release 0.1.8.
+    # lh_mask_file = tempfile(fileext = ".mgz");
+    # freesurferformats::write.fs.morph(lh_mask_file, as.integer(mask$lh));
+    #
+    # lh_mask_reread = freesurferformats::read.fs.morph(lh_mask_file);
+    # expect_equal(length(lh_mask_reread), num_verts_subject1_lh);
+    # expect_equal(sum(lh_mask_reread), num_cortex_verts_subject1_lh); # number of cortex vertices
 })
 
 

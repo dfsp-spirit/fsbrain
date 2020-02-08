@@ -26,6 +26,16 @@ vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRU
 
     if(!is.list(coloredmeshes)) {
         stop("Parameter coloredmeshes must be a list.");
+    } else {
+        # The check above does not help a lot, since all classes are also derived from 'list', so that will be true in most cases.
+        if(length(coloredmeshes) < 1) {
+            warning("Nothing to visualize.");
+            return(invisible(NULL));
+        } else {
+            if(! fsbrain.renderable(coloredmeshes[[1]])) {
+                stop("Pass a list of 'fs.coloredmesh', 'fs.coloredvoxels', or 'Triangles3D' instances.");
+            }
+        }
     }
 
     rgl::open3d();
@@ -34,7 +44,7 @@ vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRU
 
     rgl::bg3d(background);
     for(cmesh in coloredmeshes) {
-        vis.cmesh.or.cvox(cmesh, skip_all_na=TRUE, style=style);
+        vis.renderable(cmesh, skip_all_na=TRUE, style=style);
     }
 
     if(draw_colorbar) {
@@ -46,19 +56,46 @@ vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRU
 }
 
 
+#' @title Check whether object can be rendered by fsbrain
 #' @keywords internal
-vis.cmesh.or.cvox <- function(cmesh, skip_all_na=TRUE, style="default") {
+fsbrain.renderable <- function(x) {
+    return(is.fs.coloredvoxels(x) | is.fs.coloredmesh(x) | is.Triangles3D(x));
+}
+
+
+#' @title Check whether object is a Triangles3D instance
+#'
+#' @param x any `R` object
+#'
+#' @return TRUE if its argument is a Triangles3D instance (that is, has "Triangles3D" amongst its classes) and FALSE otherwise.
+#'
+#' @keywords internal
+is.Triangles3D <- function(x) inherits(x, "Triangles3D")
+
+
+#' @keywords internal
+#' @importFrom utils modifyList
+vis.renderable <- function(cmesh, skip_all_na=TRUE, style="default") {
     if(is.fs.coloredmesh(cmesh)) {
         if(!(skip_all_na && cmesh$morph_data_was_all_na)) {
             vis.coloredmesh(cmesh, style = style);
         }
     } else if (is.fs.coloredvoxels(cmesh)) {
-        rgl::triangles3d(cmesh$voxeltris, color = cmesh$color);
+        style_params = get.rglstyle.parameters(cmesh, style);
+        do.call(rgl::triangles3d, c(list(cmesh$voxeltris), style_params));
+    } else if(is.Triangles3D(cmesh)) {
+        if (requireNamespace("misc3d", quietly = TRUE)) {
+            style_params = get.rglstyle.parameters(cmesh, style);
+            style_params = modifyList(style_params, list("add"=TRUE)); # Add image to existing scene, otherwise only the last one will be visible.
+            do.call(misc3d::drawScene.rgl, c(list(cmesh), style_params));
+        } else {
+            warning("The 'misc3d' package must be installed to render 'Triangles3D' instances. Skipping visualization.");
+        }
     } else {
-        stop(sprintf("Received object with classes '%s', cannot render this. Pass an fs.coloredmesh or fs.coloredvoxels instance.\n", paste(class(cmesh), collapse=" ")));
+        stop(sprintf("Received object with classes '%s', cannot render this. Pass an 'fs.coloredmesh', 'fs.coloredvoxels', or 'Triangles3D' instance.\n", paste(class(cmesh), collapse=" ")));
     }
-
 }
+
 
 #' @title Visualize a list of colored meshes in a single scene and rotate them, movie-style.
 #'
@@ -99,7 +136,7 @@ vis.coloredmeshes.rotating <- function(coloredmeshes, background="white", skip_a
     Sys.sleep(1);
     rgl::bg3d(background);
     for(cmesh in coloredmeshes) {
-        vis.cmesh.or.cvox(cmesh, skip_all_na=TRUE, style=style);
+        vis.renderable(cmesh, skip_all_na=TRUE, style=style);
     }
     rgl::rgl.viewpoint(-90, 0);
 
@@ -124,7 +161,7 @@ vis.coloredmeshes.rotating <- function(coloredmeshes, background="white", skip_a
 
 #' @title Rotate and visualize coloredmeshes, applying a style.
 #'
-#' @param coloredmeshes list of coloredmeshes. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
+#' @param coloredmeshes list of renderables. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
 #'
 #' @param rotation_angle angle in radians. Passed to \code{\link[rgl]{rotate3d}}.
 #'
@@ -139,18 +176,34 @@ vis.coloredmeshes.rotating <- function(coloredmeshes, background="white", skip_a
 #' @param draw_colorbar logical. Whether to draw a colorbar.
 #'
 #' @keywords internal
-vis.rotated.coloredmeshes <- function(coloredmeshes, rotation_angle, x, y, z, style="default", draw_colorbar=FALSE) {
-    for (mesh_idx in seq_len(length(coloredmeshes))) {     # usually this will only run once for the single mesh of a hemisphere.
-        orig_cmesh = coloredmeshes[[mesh_idx]];
-        orig_mesh = orig_cmesh$mesh;
-        rotated_mesh = rgl::rotate3d(orig_mesh, rotation_angle, x, y, z);
-        rotated_cmesh = orig_cmesh;         # copy coloredmesh
-        rotated_cmesh$mesh = rotated_mesh;  # replace inner mesh with rotated version
-        vis.coloredmesh(rotated_cmesh, style=style);
+vis.rotated.coloredmeshes <- function(renderables, rotation_angle, x, y, z, style="default", draw_colorbar=FALSE) {
+    for (mesh_idx in seq_len(length(renderables))) {     # usually this will only run once for the single mesh of a hemisphere.
+        orig_renderable = renderables[[mesh_idx]];
+        if(is.fs.coloredmesh(orig_renderable)) {
+            orig_renderable = renderables[[mesh_idx]];
+            orig_mesh = orig_renderable$mesh;
+            rotated_mesh = rgl::rotate3d(orig_mesh, rotation_angle, x, y, z);
+            rotated_renderable = orig_renderable;         # copy coloredmesh
+            rotated_renderable$mesh = rotated_mesh;  # replace inner mesh with rotated version
+        } else if(is.fs.coloredvoxels(orig_renderable)) {
+            colvox = orig_renderable;
+            colvox$voxeltris = rgl::rotate3d(colvox$voxeltris, rotation_angle, x, y, z);
+            rotated_renderable = colvox;
+        } else if(is.Triangles3D(orig_renderable)) {
+            tris3d = orig_renderable;
+            tris3d$v1 = rgl::rotate3d(tris3d$v1, rotation_angle, x, y, z);
+            tris3d$v2 = rgl::rotate3d(tris3d$v2, rotation_angle, x, y, z);
+            tris3d$v3 = rgl::rotate3d(tris3d$v3, rotation_angle, x, y, z);
+            rotated_renderable = tris3d;
+        } else {
+            warning(sprintf("Rotation not supported for object of type '%s'. Leaving oritentation as-is.\n", paste(class(orig_renderable), collapse =" ")));
+            rotated_renderable = orig_renderable;
+        }
+        vis.renderable(rotated_renderable, style=style);
     }
 
     if(draw_colorbar) {
-        draw.colorbar(coloredmeshes);
+        draw.colorbar(renderables);
     }
 }
 
@@ -297,9 +350,26 @@ coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=TRUE, makecma
 #'
 #' @keywords internal
 vis.coloredmesh <- function(cmesh, style="default") {
+    if(! is.fs.coloredmesh(cmesh)) {
+        stop("Parameter cmesh must be an 'fs.coloredmesh' instance.");
+    }
+    style_params = get.rglstyle.parameters(cmesh, style);
+    do.call(rgl::shade3d, c(list(cmesh$mesh, col=cmesh$col), style_params));
+}
+
+
+#' @title Produce the named list of style parameters from style definition.
+#'
+#' @param renderable A renderable (or any list) which includes a 'style' key. If it does not include such a key, the 'default' style will be used.
+#'
+#' @param style A style definition. Can be a character string like 'shiny' or 'from_mesh', or already a named lsit of material properties (which will be returned as-is).
+#'
+#' @description A style definition can be a character string like "shiny", already a parameter list, or a command like 'from_mesh' that tells us to get the style from the renderable. This function creates the final parameters from the definition and the renderable.
+#'
+get.rglstyle.parameters <- function(renderable, style) {
     if(style == 'from_mesh') {
-        if(!is.null(cmesh$style)) {
-            style = cmesh$style;
+        if(!is.null(renderable$style)) {
+            style = renderable$style;
         } else {
             style = 'default';
         }
@@ -311,7 +381,7 @@ vis.coloredmesh <- function(cmesh, style="default") {
     } else {
         stop("Parameter 'style' must be a named list of style parameters or a string specifying an available style by name (e.g., 'default' or 'shiny').");
     }
-    do.call(rgl::shade3d, c(list(cmesh$mesh, col=cmesh$col), style_params));
+    return(style_params);
 }
 
 
@@ -343,7 +413,7 @@ get.rglstyle <- function(style) {
 #'
 #' @keywords internal
 get.rglstyle.default <- function() {
-    return(list("shininess"=50, specular="black", alpha=1.0));
+    return(list("shininess"=50, specular="black"));
 }
 
 
@@ -384,7 +454,10 @@ sort.coloredmeshes.by.hemi <- function(coloredmeshes) {
     for (mesh_idx in seq_len(length(coloredmeshes))) {
         cmesh = coloredmeshes[[mesh_idx]];
         if(! ('hemi' %in% names(cmesh))) {
-            warning(sprintf("Ignoring coloredmesh # %d which has no hemi value at all.\n", mesh_idx));
+            #warning(sprintf("Ignoring coloredmesh # %d which has no hemi value at all.\n", mesh_idx));
+            mesh_name = sprintf("mesh%d", mesh_idx);
+            lh_meshes[[mesh_name]] = cmesh;
+            rh_meshes[[mesh_name]] = cmesh;
         } else {
             if(cmesh$hemi == 'lh') {
                 mesh_name = sprintf("mesh%d", mesh_idx);

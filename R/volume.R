@@ -17,6 +17,8 @@
 #'
 #' @param with_header logical. Whether to return the header as well. If TRUE, return a named list with entries "data" and "header". The latter is another named list which contains the header data. These header entries exist: "dtype": int, one of: 0=MRI_UCHAR; 1=MRI_INT; 3=MRI_FLOAT; 4=MRI_SHORT. "voldim": integer vector. The volume (=data) dimensions. E.g., c(256, 256, 256, 1). These header entries may exist: "vox2ras_matrix" (exists if "ras_good_flag" is 1), "mr_params" (exists if "has_mr_params" is 1). Passed to \code{\link[freesurferformats]{read.fs.mgh}}.
 #'
+#' @param mri_subdir character string or NULL, the subdir to use within the `mri` directory. Defaults to `NULL`, which means to read directly from the `mri` dir. You could use this to read volumes from the `mri/orig/` directory by setting it to `orig`.
+#'
 #' @return numerical array, the voxel data. If `with_header`, the full volume datastructure (see above).
 #'
 #' @examples
@@ -29,12 +31,16 @@
 #' }
 #'
 #' @export
-subject.volume <- function(subjects_dir, subject_id, volume, format='AUTO', drop_empty_dims=TRUE, with_header=FALSE) {
+subject.volume <- function(subjects_dir, subject_id, volume, format='AUTO', drop_empty_dims=TRUE, with_header=FALSE, mri_subdir=NULL) {
     if(!(format %in% c('AUTO', 'mgh', 'mgz'))) {
         stop(sprintf("The volume format must be one of ('AUTO', 'mgh', 'mgz') but is '%s'.\n", format));
     }
 
-    volume_filepath_noext = file.path(subjects_dir, subject_id, 'mri', volume);
+    if(is.null(mri_subdir)) {
+        volume_filepath_noext = file.path(subjects_dir, subject_id, 'mri', volume);
+    } else {
+        volume_filepath_noext = file.path(subjects_dir, subject_id, 'mri', mri_subdir, volume);
+    }
 
     if(format=="AUTO") {
         volume_file = readable.volume(volume_filepath_noext);
@@ -173,3 +179,25 @@ ras2vox_tkr <- function() {
     return(matrix(c(-1,-0,-0,-0, -0,-0,+1,-0, -0,-1,-0,-0, 128,128,128,1), nrow = 4));
 }
 
+
+#' @title Reorient volume data to new orientation.
+#'
+#' @param volume a 3D volume image
+#'
+#' @param current_orientation orientation string, as returned in \code{header$internal$slice_orientation_string} by \code{\link[fsbrain]{subject.volume}}. Examples: 'PIL' or 'LIA'.
+#'
+#' @param target_orientation orientation string, see above.
+#'
+#' @return the rotated volume data
+#'
+#' @export
+vol.reorient(volume, current_orientation, target_orientation) {
+    if(is.null(current_orientation) | current_orientation == "???") {
+        warning("Cannot reorient volume with unknown current orientation, returning as-is.");
+        return(volume);
+    }
+    # see the function that computes slice orietentation in fsf for instructions. axes are L/R, P/A, I/S.
+    # see https://www.slicer.org/wiki/Coordinate_systems for more info
+
+    warning("NOT implemented yet");
+}

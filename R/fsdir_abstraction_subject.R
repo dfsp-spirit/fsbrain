@@ -100,8 +100,8 @@ subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, format
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    mask = subject.mask(subjects_dir, "subject1");
 #'    # Print some information on the mask:
-#'    cat(sprintf("lh: %d verts, %d in cortex, %d medial wall.\n", length(mask$lh),
-#'     sum(mask$lh), (length(mask$lh)- sum(mask$lh))))
+#'    #cat(sprintf("lh: %d verts, %d in cortex, %d medial wall.\n", length(mask$lh),
+#'    # sum(mask$lh), (length(mask$lh)- sum(mask$lh))))
 #'    # Output: lh: 149244 verts, 140891 in cortex, 8353 medial wall.
 #'    # Now visualize the mask to illustrate that it is correct:
 #'    vis.mask.on.subject(subjects_dir, "subject1", mask$lh, mask$rh);

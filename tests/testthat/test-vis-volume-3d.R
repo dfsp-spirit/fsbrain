@@ -49,7 +49,7 @@ test_that("A brain volume segmentation can be rendered with correct colors from 
 
     aseg_codes = unique(as.vector(aseg));
 
-    ct = freesurferformats::read.fs.colortable("~/software/freesurfer/FreeSurferColorLUT.txt");   # adapt to your machine
+    ct = freesurferformats::read.fs.colortable("~/software/freesurfer/FreeSurferColorLUT.txt");   # adapt path to your machine
 
     open3d();
     all_regions_coloredvoxels = list();
@@ -126,3 +126,33 @@ test_that("The pial surface drawn as a transparent wrapping over the white surfa
     vis.coloredmeshes(c(cm_white, cm_pial), skip_all_na = FALSE, style = 'from_mesh');
 })
 
+
+test_that("Voxels can be rotated and rendered in a brainview", {
+
+    skip("This test has to be run manually and interactively. It requires an X11 display.");
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+    skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
+
+    subject_id = "subject1";
+
+    vol = subject.volume(subjects_dir, subject_id, "brain");
+    vol[vol < 90] = NA;
+    volvox = volvis.voxels(vol);
+    brainviews("t9", volvox);
+})
+
+
+test_that("A misc3d contour (Triangles3D instance) can be rotated and rendered in a brainview", {
+
+    skip("This test has to be run manually and interactively. It requires an X11 display.");
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+    skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
+
+    subject_id = "subject1";
+
+    vol = subject.volume(subjects_dir, subject_id, "brain");
+    surface_tris = fsbrain::volvis.countour(vol);
+    brainviews("t9", surface_tris);
+})

@@ -4,8 +4,14 @@
 \alias{test.numerical.meandiff}
 \title{Perform tests for group differences on paired or unpaired data for two groups.}
 \usage{
-test.numerical.meandiff(colname, group1_name, group2_name,
-  group1_data_column, group2_data_column, paired)
+test.numerical.meandiff(
+  colname,
+  group1_name,
+  group2_name,
+  group1_data_column,
+  group2_data_column,
+  paired
+)
 }
 \arguments{
 \item{colname}{string, the name of the data (used to label the data in the output)}
