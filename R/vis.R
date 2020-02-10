@@ -677,14 +677,4 @@ vis.region.values.on.subject <- function(subjects_dir, subject_id, atlas, lh_reg
 }
 
 
-#' @title Plot an fs.surface
-#'
-#' @param x instance of `fs.surface`
-#'
-#' @param y ignored
-#'
-#' @export
-plot.fs.surface <- function(x, y, ...) {
-
-}
 

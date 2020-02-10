@@ -7,9 +7,9 @@
 apply.transform(m, matrix_fun = fsbrain::vox2ras_tkr)
 }
 \arguments{
-\item{m}{numerical vector/matrix or Triangles3D instance}
+\item{m}{numerical vector/matrix or Triangles3D instance, the coorindates or object to rotate}
 
-\item{matrix_fun}{a 4x4 affine matrix or a function returning auch a matrix}
+\item{matrix_fun}{a 4x4 affine matrix or a function returning such a matrix. If `NULL`, the input is returned as-is.}
 }
 \value{
 the input after application of the affine matrix (matrix multiplication)

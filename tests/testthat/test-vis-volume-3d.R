@@ -153,6 +153,6 @@ test_that("A misc3d contour (Triangles3D instance) can be rotated and rendered i
     subject_id = "subject1";
 
     vol = subject.volume(subjects_dir, subject_id, "brain");
-    surface_tris = fsbrain::volvis.countour(vol);
+    surface_tris = fsbrain::volvis.contour(vol);
     brainviews("t9", surface_tris);
 })

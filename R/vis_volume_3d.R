@@ -99,6 +99,8 @@ volvis.voxels <- function(volume, render_every=1, voxelcol=NULL, ...) {
 #'
 #' @param show logical, whether to display the triangles. Defaults to `TRUE`.
 #'
+#' @param transform the transformation vox2ras matrix to apply for computing XYZ coordinates from the CRS voxel indices in the volume. Defaults to the standard tkregister vox2ras matrix, which should be fine for all *conformed* volumes. Leave this alone unless you know what you are doing.
+#'
 #' @return the rendered triangles (a `Triangles3D` instance) with coordinates in surface RAS space if any, `NULL` otherwise.
 #'
 #' @examples
@@ -111,8 +113,12 @@ volvis.voxels <- function(volume, render_every=1, voxelcol=NULL, ...) {
 #' }
 #'
 #' @export
-volvis.contour <- function(volume, level=40, show=TRUE) {
+volvis.contour <- function(volume, level=40, show=TRUE, transform=fsbrain::vox2ras_tkr()) {
     if (requireNamespace("misc3d", quietly = TRUE)) {
+
+        if(freesurferformats::is.fs.volume(volume)) {
+            volume = volume$data;
+        }
 
         if(length(dim(volume)) == 4L) {
             volume = volume[,,,1]; # select 1st frame
@@ -122,7 +128,9 @@ volvis.contour <- function(volume, level=40, show=TRUE) {
 
 
         # Fix the rendering coords to surface RAS
-        surface_tris = apply.transform(surface_tris, vox2ras_tkr());
+        if(! is.null(transform)) {
+            surface_tris = apply.transform(surface_tris, transform);
+        }
 
         if(show) {
             vis.coloredmeshes(list(surface_tris));
@@ -139,14 +147,17 @@ volvis.contour <- function(volume, level=40, show=TRUE) {
 #'
 #' @description Apply affine transformation, like a vox2ras_tkr transformation, to input. This is just matrix multiplication for different input objects.
 #'
-#' @param m numerical vector/matrix or Triangles3D instance
+#' @param m numerical vector/matrix or Triangles3D instance, the coorindates or object to rotate
 #'
-#' @param matrix_fun a 4x4 affine matrix or a function returning auch a matrix
+#' @param matrix_fun a 4x4 affine matrix or a function returning such a matrix. If `NULL`, the input is returned as-is.
 #'
 #' @return the input after application of the affine matrix (matrix multiplication)
 #'
 #' @export
 apply.transform <- function(m, matrix_fun=fsbrain::vox2ras_tkr) {
+    if(is.null(matrix_fun)) {
+        return(m);
+    }
     if(is.function(matrix_fun)) {
         affine_matrix = matrix_fun();
     } else if (is.matrix(matrix_fun)) {
@@ -159,19 +170,24 @@ apply.transform <- function(m, matrix_fun=fsbrain::vox2ras_tkr) {
         if(length(m) == 3) {
             m = c(m, 1L);
         }
-        return((affine_matrix %*% m)[1:3]);
+        return((m %*% affine_matrix)[1:3]);
     }
     else if(is.matrix(m)) {
         surface_ras = matrix(rep(0, nrow(m)*3), ncol=3);
-        m_cp = cbind(m, 1); # turn coords into homogeneous repr.
+        if(ncol(m) == 3L) {
+            m_cp = cbind(m, 1); # turn coords into homogeneous repr.
+        } else {
+            m_cp = m;
+        }
+
         for(idx in seq(nrow(m))) {
-            surface_ras[idx,] = (affine_matrix %*% m_cp[idx,])[1:3];
+            surface_ras[idx,] = (m_cp[idx,] %*% affine_matrix)[1:3];
         }
         return(surface_ras);
     } else if(class(m) == 'Triangles3D') {
-        m$v1 = apply.transform(m$v1);   # v1 is a matrix
-        m$v2 = apply.transform(m$v2);
-        m$v3 = apply.transform(m$v3);
+        m$v1 = apply.transform(m$v1, matrix_fun=matrix_fun);   # v1 is an n x 3 matrix of the x,y,z coords of vertex v1 of the face
+        m$v2 = apply.transform(m$v2, matrix_fun=matrix_fun);
+        m$v3 = apply.transform(m$v3, matrix_fun=matrix_fun);
         return(m);
     } else {
         stop("Input type of parameter 'm' not supported. Must be numerical vector/matrix or Triangles3D.");

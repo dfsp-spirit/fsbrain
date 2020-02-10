@@ -10,7 +10,7 @@ vox2ras_tkr()
 numeric 4x4 matrix, the FreeSurfer vox2ras_tkr matrix.
 }
 \description{
-Applying this matrix to a FreeSurfer CRS index will give you the RAS coordinates of the voxel in surface coordinates, i.e., in the coordinates used in surface file like `lh.white`. The central voxel is 127,127,127 when using zero-based indices (or 128,128,128 when using one-based indices), meaning its surface RAS coordinates are 0.0, 0.0, 0.0. The returned matrix is the inverse of the `ras2vox_tkr` matrix.
+Applying this matrix to a FreeSurfer CRS index of a conformed volume will give you the RAS coordinates of the voxel in surface coordinates, i.e., in the coordinates used in surface file like `lh.white`. The central voxel is 127,127,127 when using zero-based indices (or 128,128,128 when using one-based indices), meaning its surface RAS coordinates are 0.0, 0.0, 0.0. The returned matrix is the inverse of the `ras2vox_tkr` matrix.
 }
 \examples{
    # Compute surface RAS coordinate of voxel with CRS (0L, 0L, 0L):

@@ -140,7 +140,7 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
         morph_data = clip.data(morph_data, lower=clip[1], upper=clip[2]);
     }
 
-    if(is.fs.surface(surface)) {
+    if(freesurferformats::is.fs.surface(surface)) {
         surface_data = surface;
     } else {
         surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
@@ -228,7 +228,7 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
         morph_data = clip.data(morph_data, lower=clip[1], upper=clip[2]);
     }
 
-    if(is.fs.surface(surface)) {
+    if(freesurferformats::is.fs.surface(surface)) {
         surface_data = surface;
     } else {
         surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
@@ -274,10 +274,10 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
 
-    if(is.fs.surface(surface)) {
+    if(freesurferformats::is.fs.surface(surface)) {
         surface_data = surface;
     } else {
-        surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
+        surface_data = subject.surface(subjects_dir, vis_subject_id, surface, hemi);
     }
 
     num_verts = nrow(surface_data$vertices);
@@ -329,7 +329,7 @@ coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surfac
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
 
-    if(is.fs.surface(surface)) {
+    if(freesurferformats::is.fs.surface(surface)) {
         surface_data = surface;
     } else {
         surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
@@ -379,7 +379,7 @@ coloredmesh.from.label <- function(subjects_dir, subject_id, label, hemi, surfac
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
 
-    if(is.fs.surface(surface)) {
+    if(freesurferformats::is.fs.surface(surface)) {
         surface_data = surface;
     } else {
         surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
@@ -424,7 +424,7 @@ coloredmesh.from.mask <- function(subjects_dir, subject_id, mask, hemi, surface=
     }
 
     if(is.null(surface_data)) {
-        if(is.fs.surface(surface)) {
+        if(freesurferformats::is.fs.surface(surface)) {
             surface_data = surface;
         } else {
             surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
