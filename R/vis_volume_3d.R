@@ -170,7 +170,7 @@ apply.transform <- function(m, matrix_fun=fsbrain::vox2ras_tkr) {
         if(length(m) == 3) {
             m = c(m, 1L);
         }
-        return((m %*% affine_matrix)[1:3]);
+        return((affine_matrix %*% m)[1:3]);
     }
     else if(is.matrix(m)) {
         surface_ras = matrix(rep(0, nrow(m)*3), ncol=3);
@@ -181,7 +181,7 @@ apply.transform <- function(m, matrix_fun=fsbrain::vox2ras_tkr) {
         }
 
         for(idx in seq(nrow(m))) {
-            surface_ras[idx,] = (m_cp[idx,] %*% affine_matrix)[1:3];
+            surface_ras[idx,] = (affine_matrix %*% m_cp[idx,])[1:3];
         }
         return(surface_ras);
     } else if(class(m) == 'Triangles3D') {
