@@ -16,7 +16,7 @@ You can find the [fsbrain package on CRAN](https://cran.r-project.org/package=fs
 install.packages("fsbrain");
 ```
 
-In case something goes wrong, don't worry. Just install the missing [system dependencies](system-dependencies) and retry.
+In case something goes wrong, don't worry. Just install the missing [system dependencies](#system-dependencies) and retry.
 
 
 ### Risky: install the dev version of fsbrain with the latest features
