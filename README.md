@@ -16,6 +16,9 @@ You can find the [fsbrain package on CRAN](https://cran.r-project.org/package=fs
 install.packages("fsbrain");
 ```
 
+In case something goes wrong, don't worry. Just install the missing [system dependencies](system-dependencies) and retry.
+
+
 ### Risky: install the dev version of fsbrain with the latest features
 
 This version is not guaranteed to be in a usable state, try at your own risk and run the tests before using it.
@@ -29,7 +32,7 @@ devtools::install_github("dfsp-spirit/fsbrain", build_vignettes=TRUE);
 
 ### System dependencies
 
-A *system dependency* is a **non-R** software that is needed by a package. System dependencies cannot be installed automatically using the R package system, so you need to install them manually or using the package manager of your operating system. 
+A *system dependency* is a **non-R** software that is needed for the installation of a package. System dependencies cannot be installed automatically using the R package system, so you need to install them manually or using the package manager of your operating system. 
 
 The *fsbrain* package itself does not have any system dependencies, however, it uses *rgl* for rendering. You can check the *SystemRequirements* section on the [rgl page at CRAN](https://CRAN.R-project.org/package=rgl) for the full list of rgl dependencies or read on.
 
