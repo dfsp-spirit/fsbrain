@@ -38,9 +38,11 @@ generate_facecheck_image <- function(subjects_dir, subject_id, output_img=NULL, 
         }
 
         if(file.exists(vol_file)) {
-            vol_data = freesurferformats::read.fs.mgh(vol_file);
-            surface_tris = fsbrain::volvis.contour(vol_data, level=80, show=FALSE);
-            fsbrain::vislayout.from.coloredmeshes(surface_tris, view_angles = "sd_caudal", output_img = img_name, silent = silent);
+            mgh = freesurferformats::read.fs.mgh(vol_file, with_header = TRUE);
+            surface_tris = fsbrain::volvis.contour(mgh, level=90, show=FALSE);
+            surface_tris = fsbrain::apply.transform(surface_tris, freesurferformats::mghheader.vox2ras(mgh)); # re-orient to standard rendering orientation
+            rglactions = list("text"=list("x"=-160, y=-130, "texts"=basename(vol_file))); # Draw volume label onto the 3D image.
+            fsbrain::vislayout.from.coloredmeshes(surface_tris, view_angles = "sd_caudal", output_img = img_name, silent = silent, rglactions = rglactions);
             output_single_images = c(output_single_images, img_name);
         }
         sub_img_idx = sub_img_idx + 1L;

@@ -99,8 +99,6 @@ volvis.voxels <- function(volume, render_every=1, voxelcol=NULL, ...) {
 #'
 #' @param show logical, whether to display the triangles. Defaults to `TRUE`.
 #'
-#' @param transform the transformation vox2ras matrix to apply for computing XYZ coordinates from the CRS voxel indices in the volume. Defaults to the standard tkregister vox2ras matrix, which should be fine for all *conformed* volumes. Leave this alone unless you know what you are doing.
-#'
 #' @return the rendered triangles (a `Triangles3D` instance) with coordinates in surface RAS space if any, `NULL` otherwise.
 #'
 #' @examples
@@ -113,7 +111,7 @@ volvis.voxels <- function(volume, render_every=1, voxelcol=NULL, ...) {
 #' }
 #'
 #' @export
-volvis.contour <- function(volume, level=40, show=TRUE, transform=fsbrain::vox2ras_tkr()) {
+volvis.contour <- function(volume, level=80, show=TRUE) {
     if (requireNamespace("misc3d", quietly = TRUE)) {
 
         if(freesurferformats::is.fs.volume(volume)) {
@@ -125,12 +123,6 @@ volvis.contour <- function(volume, level=40, show=TRUE, transform=fsbrain::vox2r
         }
 
         surface_tris = misc3d::contour3d(volume, level=level, draw=FALSE);
-
-
-        # Fix the rendering coords to surface RAS
-        if(! is.null(transform)) {
-            surface_tris = apply.transform(surface_tris, transform);
-        }
 
         if(show) {
             vis.coloredmeshes(list(surface_tris));
@@ -145,16 +137,17 @@ volvis.contour <- function(volume, level=40, show=TRUE, transform=fsbrain::vox2r
 
 #' Apply matmult transformation to input.
 #'
-#' @description Apply affine transformation, like a vox2ras_tkr transformation, to input. This is just matrix multiplication for different input objects.
+#' @description Apply affine transformation, like a *vox2ras_tkr* transformation, to input. This is just matrix multiplication for different input objects.
 #'
-#' @param m numerical vector/matrix or Triangles3D instance, the coorindates or object to rotate
+#' @param object numerical vector/matrix or Triangles3D instance, the coorindates or object to transform.
 #'
-#' @param matrix_fun a 4x4 affine matrix or a function returning such a matrix. If `NULL`, the input is returned as-is.
+#' @param matrix_fun a 4x4 affine matrix or a function returning such a matrix. If `NULL`, the input is returned as-is. In many cases you way want to use a matrix computed from the header of a volume file, e.g., the `vox2ras` matrix of the respective volume. See the `mghheader.*` functions in the *freesurferformats* package to obtain these matrices.
 #'
 #' @return the input after application of the affine matrix (matrix multiplication)
 #'
 #' @export
-apply.transform <- function(m, matrix_fun=fsbrain::vox2ras_tkr) {
+apply.transform <- function(object, matrix_fun) {
+    m = object;
     if(is.null(matrix_fun)) {
         return(m);
     }

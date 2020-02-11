@@ -166,6 +166,9 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 #' @importFrom rgl rgl.snapshot
 perform.rglactions <- function(rglactions, at_index=NULL) {
     if(is.list(rglactions)) {
+        if("text" %in% names(rglactions)) {
+            do.call(rgl::text3d, rglactions$text);
+        }
         if("snapshot_png" %in% names(rglactions)) {
             if(length(rglactions$snapshot_png) == 1 || is.null(at_index)) {
                 output_image = path.expand(rglactions$snapshot_png);

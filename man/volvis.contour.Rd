@@ -4,12 +4,7 @@
 \alias{volvis.contour}
 \title{Visualize contour of a volume.}
 \usage{
-volvis.contour(
-  volume,
-  level = 40,
-  show = TRUE,
-  transform = fsbrain::vox2ras_tkr()
-)
+volvis.contour(volume, level = 40, show = TRUE, transform = "default")
 }
 \arguments{
 \item{volume}{a 3D brain volume}
@@ -18,7 +13,7 @@ volvis.contour(
 
 \item{show}{logical, whether to display the triangles. Defaults to `TRUE`.}
 
-\item{transform}{the transformation vox2ras matrix to apply for computing XYZ coordinates from the CRS voxel indices in the volume. Defaults to the standard tkregister vox2ras matrix, which should be fine for all *conformed* volumes. Leave this alone unless you know what you are doing.}
+\item{transform}{the transformation matrix to apply for computing XYZ coordinates from the CRS voxel indices in the volume, `NULL`, or the character string 'default'. The latter will use the vox2ras matrix from the volume header if 'volume' is an `fs.volume` instance with valid header, and the standard tkregister vox2ras matrix otherwise. Leave this alone unless you know what you are doing.}
 }
 \value{
 the rendered triangles (a `Triangles3D` instance) with coordinates in surface RAS space if any, `NULL` otherwise.

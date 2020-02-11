@@ -4,16 +4,16 @@
 \alias{apply.transform}
 \title{Apply matmult transformation to input.}
 \usage{
-apply.transform(m, matrix_fun = fsbrain::vox2ras_tkr)
+apply.transform(object, matrix_fun)
 }
 \arguments{
-\item{m}{numerical vector/matrix or Triangles3D instance, the coorindates or object to rotate}
+\item{object}{numerical vector/matrix or Triangles3D instance, the coorindates or object to transform.}
 
-\item{matrix_fun}{a 4x4 affine matrix or a function returning such a matrix. If `NULL`, the input is returned as-is.}
+\item{matrix_fun}{a 4x4 affine matrix or a function returning such a matrix. If `NULL`, the input is returned as-is. In many cases you way want to use a matrix computed from the header of a volume file, e.g., the `vox2ras` matrix of the respective volume. See the `mghheader.*` functions in the *freesurferformats* package to obtain these matrices.}
 }
 \value{
 the input after application of the affine matrix (matrix multiplication)
 }
 \description{
-Apply affine transformation, like a vox2ras_tkr transformation, to input. This is just matrix multiplication for different input objects.
+Apply affine transformation, like a *vox2ras_tkr* transformation, to input. This is just matrix multiplication for different input objects.
 }
