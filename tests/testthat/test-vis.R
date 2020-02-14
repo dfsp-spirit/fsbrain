@@ -71,13 +71,13 @@ test_that("We can visualize one value per atlas region on a subject.", {
     subject_id = 'subject1';
 
     atlas = "aparc";           # an atlas, e.g., 'aparc', 'aparc.a2009s', 'aparc.DKTatlas'
-    region_names_aparc = get.atlas.region.names('aparc', template_subjects_dir = subjects_dir, template_subject = subject_id);
+    atlas_region_names = get.atlas.region.names(atlas, template_subjects_dir = subjects_dir, template_subject = subject_id);
 
     # Get some data to display. Here we use random data as an example. You would put something like the mean of some morphometry measure, p value, effect size, or whatever.
-    lh_region_value_list = as.list(rnorm(length(region_names_aparc), mean=5, sd=1.5)); # assign random normal values to regions
-    names(lh_region_value_list) = region_names_aparc;    # Assign the names to the values.
-    rh_region_value_list = as.list(rnorm(length(region_names_aparc), mean=5.5, sd=1.8));
-    names(rh_region_value_list) = region_names_aparc;
+    lh_region_value_list = as.list(rnorm(length(atlas_region_names), mean=5, sd=1.5)); # assign random normal values to regions
+    names(lh_region_value_list) = atlas_region_names;    # Assign the names to the values.
+    rh_region_value_list = as.list(rnorm(length(atlas_region_names), mean=5.5, sd=1.8));
+    names(rh_region_value_list) = atlas_region_names;
 
     morph_data = spread.values.over.subject(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, value_for_unlisted_regions=NaN);
     vis.data.on.subject(subjects_dir, subject_id, morph_data$lh, morph_data$rh);
@@ -85,6 +85,64 @@ test_that("We can visualize one value per atlas region on a subject.", {
     # Test that we can pass NULL data, which should not render that hemisphere.
     morph_data2 = spread.values.over.subject(subjects_dir, subject_id, atlas, NULL, rh_region_value_list, value_for_unlisted_regions=NaN);
     vis.data.on.subject(subjects_dir, subject_id, morph_data2$lh, morph_data2$rh);
+})
+
+
+test_that("We can visualize one value per Desikan atlas region on fsaverage.", {
+    skip("This test has to be run manually and interactively. It requires fsaverage subject from a FreeSurfer installation.");
+
+    subjects_dir = file.path("~/software/freesurfer/subjects"); # Directory that has 'fsaverage' data, adapt this to your machine.
+    subject_id = 'fsaverage';                                   # You could visualize on any other subject, of course.
+
+    atlas = "aparc";    # An atlas file name, e.g., 'aparc' for Desikan-Killiany, 'aparc.a2009s' for Destrieux, 'aparc.DKTatlas' for DKT40 (see https://surfer.nmr.mgh.harvard.edu/fswiki/CorticalParcellation)
+
+    # We show two different examples for the hemispheres here.
+    # Example 1: for the left hemisphere, we load all the region names from the atlas and assign random values to all regions:
+    atlas_region_names = get.atlas.region.names(atlas, template_subjects_dir = subjects_dir, template_subject = subject_id);
+    lh_region_value_list = as.list(rnorm(length(atlas_region_names), mean=5, sd=1.5)); # assign random normal values to regions. You would put your p values, effect sizes or whatever here.
+    names(lh_region_value_list) = atlas_region_names;    # Assign the names to the values.
+
+    # Example 2: For the right hemisphere, we assume you have data for some regions only and want to manually assign the data values to these regions only:
+    rh_region_value_list = list("precuneus"=0.37, "pericalcarine"=0.21, "temporalpole"=0.77);    # Put your data here.
+    # Note: To find all valid region names of the atlas, see the variable 'atlas_region_names' from example 1 above.
+
+    # Now compute morphometry data (assign the given value from the region_value_lists to each vertex of the region):
+    morph_data = spread.values.over.subject(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, value_for_unlisted_regions=NaN);
+
+    # We can visualize the data directly in fsbrain:
+    vis.data.on.subject(subjects_dir, subject_id, morph_data$lh, morph_data$rh, colormap=grDevices::heat.colors);
+
+    # Of course, you can also save a file with your data for visualization in other software, if you prefer:
+    freesurferformats::write.fs.morph("~/lh.regiondata.mgz", morph_data$lh);
+    freesurferformats::write.fs.morph("~/rh.regiondata.mgz", morph_data$rh);
+})
+
+
+test_that("We can visualize a subset of the regions of the Desikan atlas on fsaverage.", {
+    skip("This test has to be run manually and interactively. It requires the 'fsaverage' subject from a FreeSurfer installation.");
+
+    subjects_dir = file.path("~/software/freesurfer/subjects"); # Directory that has 'fsaverage' data, adapt this to your machine.
+    subject_id = 'fsaverage';                                   # You could visualize on any other subject, of course.
+
+    atlas = "aparc";    # An atlas file name, e.g., 'aparc' for Desikan-Killiany, 'aparc.a2009s' for Destrieux, 'aparc.DKTatlas' for DKT40 (see https://surfer.nmr.mgh.harvard.edu/fswiki/CorticalParcellation)
+
+    # Get all valid region names of the atlas:
+    atlas_region_names = get.atlas.region.names(atlas, template_subjects_dir = subjects_dir, template_subject = subject_id);
+    print(atlas_region_names);
+
+    # Select some regions we want to show. We assign the same value to each region, so all get the same color.
+    lh_region_value_list = c("precuneus"=1, "pericalcarine"=1, "temporalpole"=1, "bankssts"=1, "superiorparietal"=1);
+    rh_region_value_list = c("parahippocampal"=1, "parsopercularis"=1, "lingual"=1, "inferiortemporal"=1);
+
+    # Assign the values to all region vertices:
+    morph_data = spread.values.over.subject(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, value_for_unlisted_regions=NaN);
+
+    # We can visualize the data directly in fsbrain:
+    vis.data.on.subject(subjects_dir, subject_id, morph_data$lh, morph_data$rh, colormap=grDevices::grey.colors);
+
+    # Of course, you can also save a file with your data for visualization in other software, if you prefer:
+    freesurferformats::write.fs.morph("~/lh.regiondata.mgz", morph_data$lh);
+    freesurferformats::write.fs.morph("~/rh.regiondata.mgz", morph_data$rh);
 })
 
 
