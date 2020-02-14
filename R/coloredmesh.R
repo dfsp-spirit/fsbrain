@@ -314,7 +314,7 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
 #'
 #' @param surface string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
 #'
-#' @param colormap a colormap. See the squash package for some colormaps. Defaults to \code{\link[squash]{jet}}. Not relevant for annotations, ignored.
+#' @param colormap a colormap function. See the squash package for some colormaps. Defaults to \code{\link[squash]{jet}}. Not relevant for annotations, ignored.
 #'
 #' @param outline logical, whether to draw an outline only instead of filling the regions. Defaults to FALSE. Only makes sense if you did not pass an outline already. The current implementation for outline computation is rather slow, so setting this to TRUE will considerably increase computation time.
 #'
