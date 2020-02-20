@@ -198,24 +198,23 @@ test_that("A brain volume can be visualized as a lightbox colored from the aseg"
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
 
     subject_id = "subject1";
-    brain = subject.volume(subjects_dir, subject_id, 'brain') / 255;
-    aseg = subject.volume(subjects_dir, subject_id, 'aseg');    # Not shipped with the package atm.
+    brain = subject.volume(subjects_dir, subject_id, 'brain');
+    aseg = subject.volume(subjects_dir, subject_id, 'aparc+aseg');    # Not shipped with the package atm.
 
     colortable = freesurferformats::read.fs.colortable("~/software/freesurfer/FreeSurferColorLUT.txt");   # adapt path to your machine
+    overlay_colors = vol.overlay.colors.from.colortable(aseg, colortable);
+    colored_brain = vol.merge(brain/255, overlay_colors); # will also apply bounding box by default
 
-    # Compute and apply bbox to exclude empty outer parts
-    bbox = vol.boundary.box(brain);
-    brain = brain[bbox$from[1]:bbox$to[1], bbox$from[2]:bbox$to[2], bbox$from[3]:bbox$to[3]];
 
     # Now test that the merged image can be visualized as a lightbox:
     imgplane = 1;
-    magick::image_write(vol.lightbox(brain, axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
+    magick::image_write(vol.lightbox(colored_brain, axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
 
     imgplane = 2;
-    magick::image_write(vol.lightbox(rotate3D(brain, axis=imgplane), axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
+    magick::image_write(vol.lightbox(rotate3D(colored_brain, axis=imgplane), axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
 
     imgplane = 3;
-    magick::image_write(vol.lightbox(rotate3D(brain, axis=imgplane), axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
+    magick::image_write(vol.lightbox(rotate3D(colored_brain, axis=imgplane), axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
 
 })
 

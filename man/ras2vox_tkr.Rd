@@ -2,7 +2,7 @@
 % Please edit documentation in R/volume.R
 \name{ras2vox_tkr}
 \alias{ras2vox_tkr}
-\title{The FreeSurfer ras2vox_tkr matrix.}
+\title{The FreeSurfer default ras2vox_tkr matrix.}
 \usage{
 ras2vox_tkr()
 }

@@ -1030,3 +1030,45 @@ cubes3D.tris <- function(centers, edge_length=1) {
 }
 
 
+#' @title Compute voxel colors based on colortable.
+#'
+#' @description Use the intensity values of the voxels in volume and lookup the respective colors in a colortable.
+#'
+#' @param volume numeric 3D array, the values should be integers present in the `struct_index` column of the colortable
+#'
+#' @param colortable a colortable, as returned by \code{\link[freesurferformats]{read.fs.colortable}}.
+#'
+#' @param ignored_struct_indices integer vector, `struct_index` entries in the colortable that should be ignored
+#'
+#' @param ignored_struct_names vector of character strings, `struct_name` entries in the colortable that should be ignored. Can be combined with `ignored_struct_indices`.
+#'
+#' @return character string 3D array, the colors. Voxels in the volume which were not matched by the colortable are set to `NA` in it.
+#'
+#' @export
+vol.overlay.colors.from.colortable <- function(volume, colortable, ignored_struct_indices=c(), ignored_struct_names=c('unknown', 'Unknown')) {
+    if(length(dim(volume)) != 3) {
+        stop("Volume must have exactly 3 dimensions.");
+    }
+
+    overlay_colors = array(rep(NA, length(volume)), dim(volume));
+
+    for(row_idx in seq_len(nrow(colortable))) {
+        ct_structure = colortable[row_idx, ];
+        if(ct_structure$struct_index %in% ignored_struct_indices | ct_structure$struct_name %in% ignored_struct_names) {
+            cat(sprintf("Skipping colortable entry with struct_index %d, named '%s'.\n", ct_structure$struct_index, ct_structure$struct_name));
+            next;
+        }
+        struct_voxels = which(volume==ct_structure$struct_index, arr.ind = TRUE);
+        voxel_color = grDevices::rgb(ct_structure$r/255., ct_structure$g/255., ct_structure$b/255.);
+        if(nrow(struct_voxels) > 0) {
+            cat(sprintf("Assigning %d voxels to color %s from colortable entry with struct_index %d, named '%s'.\n", nrow(struct_voxels), voxel_color, ct_structure$struct_index, ct_structure$struct_name));
+            overlay_colors[struct_voxels] = voxel_color;
+        } else {
+            cat(sprintf("No voxels matching colortable entry with struct_index %d, named '%s'.\n", ct_structure$struct_index, ct_structure$struct_name));
+        }
+
+    }
+    return(overlay_colors);
+}
+
+
