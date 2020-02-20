@@ -1034,7 +1034,7 @@ cubes3D.tris <- function(centers, edge_length=1) {
 #'
 #' @description Use the intensity values of the voxels in volume and lookup the respective colors in a colortable.
 #'
-#' @param volume numeric 3D array, the values should be integers present in the `struct_index` column of the colortable
+#' @param volume numeric 3D array, the values should be integers present in the `struct_index` column of the colortable.
 #'
 #' @param colortable a colortable, as returned by \code{\link[freesurferformats]{read.fs.colortable}}.
 #'
@@ -1055,18 +1055,15 @@ vol.overlay.colors.from.colortable <- function(volume, colortable, ignored_struc
     for(row_idx in seq_len(nrow(colortable))) {
         ct_structure = colortable[row_idx, ];
         if(ct_structure$struct_index %in% ignored_struct_indices | ct_structure$struct_name %in% ignored_struct_names) {
-            cat(sprintf("Skipping colortable entry with struct_index %d, named '%s'.\n", ct_structure$struct_index, ct_structure$struct_name));
+            #cat(sprintf("Skipping colortable entry with struct_index %d, named '%s'.\n", ct_structure$struct_index, ct_structure$struct_name));
             next;
         }
         struct_voxels = which(volume==ct_structure$struct_index, arr.ind = TRUE);
         voxel_color = grDevices::rgb(ct_structure$r/255., ct_structure$g/255., ct_structure$b/255.);
         if(nrow(struct_voxels) > 0) {
-            cat(sprintf("Assigning %d voxels to color %s from colortable entry with struct_index %d, named '%s'.\n", nrow(struct_voxels), voxel_color, ct_structure$struct_index, ct_structure$struct_name));
+            #cat(sprintf("Assigning %d voxels to color %s from colortable entry with struct_index %d, named '%s'.\n", nrow(struct_voxels), voxel_color, ct_structure$struct_index, ct_structure$struct_name));
             overlay_colors[struct_voxels] = voxel_color;
-        } else {
-            cat(sprintf("No voxels matching colortable entry with struct_index %d, named '%s'.\n", ct_structure$struct_index, ct_structure$struct_name));
         }
-
     }
     return(overlay_colors);
 }
