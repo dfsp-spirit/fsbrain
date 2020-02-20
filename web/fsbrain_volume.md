@@ -10,7 +10,7 @@ A lightbox showing every 5th frame of a T1W volume, sagittal plane. A bounding b
 
 The same can be done for the [axial](https://github.com/dfsp-spirit/fsbrain_gallery/raw/master/volume/lightbox_axis2.png) and [coronal](https://github.com/dfsp-spirit/fsbrain_gallery/raw/master/volume/lightbox_axis3.png) planes.
 
-You can also add activation data, p-values, or whatever, as an overlay from a second volume file. Of course there is no need to plot all slices or every *n*th slice, you can select arbitrary combinations of slice indices to plot.
+You can also add activation data, p-values, [colors from a segmenation like aseg]((https://github.com/dfsp-spirit/fsbrain_gallery/raw/master/volume/lightbox_aseg.png)) or [aparc+aseg]((https://github.com/dfsp-spirit/fsbrain_gallery/raw/master/volume/lightbox_aparc_plus_aseg.png)), or whatever, as an overlay from a second volume file. Of course there is no need to plot all slices or every *n*th slice, you can select arbitrary combinations of slice indices to plot.
 
 
 ## Voxel-based 3D renderings
