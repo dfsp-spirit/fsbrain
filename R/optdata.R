@@ -26,7 +26,9 @@ download_optional_data <- function() {
                            c(base_path_subject1, 'surf', 'lh.area'),
                            c(base_path_subject1, 'surf', 'rh.area'),
                            c(base_path_subject1, 'surf', 'lh.area.fwhm10.fsaverage.mgh'),
-                           c(base_path_subject1, 'surf', 'rh.area.fwhm10.fsaverage.mgh')
+                           c(base_path_subject1, 'surf', 'rh.area.fwhm10.fsaverage.mgh'),
+                           c(base_path_subject1, 'mri', 'aseg.mgz'),
+                           c(base_path_subject1, 'mri', 'aparc+aseg.mgz')
                            );
     base_path_subject2 = c('subjects_dir', 'subject2');
     local_filenames_subject2 = list(c(base_path_subject2, 'label', 'lh.aparc.a2009s.annot'),
@@ -45,7 +47,9 @@ download_optional_data <- function() {
                                     c(base_path_subject2, 'surf', 'lh.area'),
                                     c(base_path_subject2, 'surf', 'rh.area'),
                                     c(base_path_subject2, 'surf', 'lh.area.fwhm10.fsaverage.mgh'),
-                                    c(base_path_subject2, 'surf', 'rh.area.fwhm10.fsaverage.mgh')
+                                    c(base_path_subject2, 'surf', 'rh.area.fwhm10.fsaverage.mgh'),
+                                    c(base_path_subject2, 'mri', 'aseg.mgz'),
+                                    c(base_path_subject2, 'mri', 'aparc+aseg.mgz')
                                     );
     local_filenames = c(local_filenames_subject1, local_filenames_subject2);
 
@@ -66,7 +70,9 @@ download_optional_data <- function() {
                 '33ac2ccf1cd388e458e2d03fcc5cc3e6',
                 '1e55e15bb468652b5b024daf37c4ec12',
                 '492516bb4e1e31224dba96b2da0d07c4',
-                '4b7d88484182326576218abdce8ac378'
+                '4b7d88484182326576218abdce8ac378',
+                '148a5b715d5f0686fe8ed2143e7e1987',
+                '600c8969bd6eaba8ef9cfe181d6ce17a'
                 );
 
     md5sums_subject2 = md5sums_subject1; # In our example data, subject2 is actually just a copy of subject1, so the md5 hashes are identical.
@@ -90,7 +96,9 @@ download_optional_data <- function() {
                  'surf/lh.area',
                  'surf/rh.area',
                  'surf/lh.area.fwhm10.fsaverage.mgh',
-                 'surf/rh.area.fwhm10.fsaverage.mgh'
+                 'surf/rh.area.fwhm10.fsaverage.mgh',
+                 'mri/aseg.mgz',
+                 'mri/aparc+aseg.mgz'
                  );
     ext_urls_subject1 = paste(ext_url_subject_part_subject1, ext_url_parts_each_subject, sep='');
     ext_urls_subject2 = paste(ext_url_subject_part_subject2, ext_url_parts_each_subject, sep='');
