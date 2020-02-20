@@ -18,12 +18,11 @@ integer matrix of size (n, 2) where n is the number of edges. The indices (sourc
 Enumerate all edges of the given faces.
 }
 \seealso{
-Other surface mesh functions: 
-\code{\link{label.border}()},
-\code{\link{mesh.vertex.included.faces}()},
-\code{\link{mesh.vertex.neighbors}()},
-\code{\link{subject.surface}()},
-\code{\link{vis.path.along.verts}()}
+Other surface mesh functions: \code{\link{label.border}},
+  \code{\link{mesh.vertex.included.faces}},
+  \code{\link{mesh.vertex.neighbors}},
+  \code{\link{subject.surface}},
+  \code{\link{vis.path.along.verts}}
 }
 \concept{surface mesh functions}
 \keyword{internal}

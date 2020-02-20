@@ -20,7 +20,6 @@ Applying this matrix to a FreeSurfer surface RAS coordinate (from a surface file
 
 }
 \seealso{
-Other surface and volume coordinates: 
-\code{\link{vox2ras_tkr}()}
+Other surface and volume coordinates: \code{\link{vox2ras_tkr}}
 }
 \concept{surface and volume coordinates}

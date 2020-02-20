@@ -139,7 +139,7 @@ vol.vox.from.crs <- function(fs_crs, add_affine=FALSE) {
 }
 
 
-#' @title The FreeSurfer vox2ras_tkr matrix.
+#' @title The FreeSurfer default vox2ras_tkr matrix.
 #'
 #' @description Applying this matrix to a FreeSurfer CRS index of a conformed volume will give you the RAS coordinates of the voxel in surface coordinates, i.e., in the coordinates used in surface file like `lh.white`. The central voxel is 127,127,127 when using zero-based indices (or 128,128,128 when using one-based indices), meaning its surface RAS coordinates are 0.0, 0.0, 0.0. The returned matrix is the inverse of the `ras2vox_tkr` matrix.
 #'
@@ -160,7 +160,7 @@ vox2ras_tkr <- function() {
 }
 
 
-#' @title The FreeSurfer ras2vox_tkr matrix.
+#' @title The FreeSurfer default ras2vox_tkr matrix.
 #'
 #' @description Applying this matrix to a FreeSurfer surface RAS coordinate (from a surface file like `lh.white`) will give you the voxel index (CRS) in a conformed FreeSurfer volume.  The returned matrix is the inverse of the `vox2ras_tkr` matrix.
 #'

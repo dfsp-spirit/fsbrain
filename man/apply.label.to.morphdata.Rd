@@ -4,14 +4,8 @@
 \alias{apply.label.to.morphdata}
 \title{Load a label from file and apply it to morphometry data.}
 \usage{
-apply.label.to.morphdata(
-  morphdata,
-  subjects_dir,
-  subject_id,
-  hemi,
-  label,
-  masked_data_value = NA
-)
+apply.label.to.morphdata(morphdata, subjects_dir, subject_id, hemi, label,
+  masked_data_value = NA)
 }
 \arguments{
 \item{morphdata}{numerical vector, the morphometry data for one hemisphere}
@@ -33,18 +27,16 @@ numerical vector, the masked data.
 This function will set all values in morphdata which are *not* part of the label loaded from the file to NA (or whatever is specified by 'masked_data_value'). This is typically used to ignore values which are not part of the cortex (or any other label) during your analysis.
 }
 \seealso{
-Other label functions: 
-\code{\link{apply.labeldata.to.morphdata}()},
-\code{\link{subject.mask}()},
-\code{\link{vis.labeldata.on.subject}()},
-\code{\link{vis.subject.label}()}
+Other label functions: \code{\link{apply.labeldata.to.morphdata}},
+  \code{\link{subject.mask}},
+  \code{\link{vis.labeldata.on.subject}},
+  \code{\link{vis.subject.label}}
 
-Other morphometry data functions: 
-\code{\link{apply.labeldata.to.morphdata}()},
-\code{\link{group.morph.native}()},
-\code{\link{group.morph.standard}()},
-\code{\link{subject.morph.native}()},
-\code{\link{subject.morph.standard}()}
+Other morphometry data functions: \code{\link{apply.labeldata.to.morphdata}},
+  \code{\link{group.morph.native}},
+  \code{\link{group.morph.standard}},
+  \code{\link{subject.morph.native}},
+  \code{\link{subject.morph.standard}}
 }
 \concept{label functions}
 \concept{morphometry data functions}

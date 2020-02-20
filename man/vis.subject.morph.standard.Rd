@@ -4,22 +4,11 @@
 \alias{vis.subject.morph.standard}
 \title{Visualize native space morphometry data for a subject.}
 \usage{
-vis.subject.morph.standard(
-  subjects_dir,
-  subject_id,
-  measure,
-  hemi = "both",
-  fwhm = "10",
-  surface = "white",
-  template_subject = "fsaverage",
-  template_subjects_dir = NULL,
-  colormap = squash::jet,
-  views = c("t4"),
-  rgloptions = list(),
-  rglactions = list(),
-  draw_colorbar = FALSE,
-  cortex_only = FALSE
-)
+vis.subject.morph.standard(subjects_dir, subject_id, measure,
+  hemi = "both", fwhm = "10", surface = "white",
+  template_subject = "fsaverage", template_subjects_dir = NULL,
+  colormap = squash::jet, views = c("t4"), rgloptions = list(),
+  rglactions = list(), draw_colorbar = FALSE, cortex_only = FALSE)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -72,21 +61,19 @@ Creates a surface mesh, applies a colormap transform the morphometry data values
 
 }
 \seealso{
-Other visualization functions: 
-\code{\link{vis.data.on.fsaverage}()},
-\code{\link{vis.data.on.subject}()},
-\code{\link{vis.labeldata.on.subject}()},
-\code{\link{vis.mask.on.subject}()},
-\code{\link{vis.region.values.on.subject}()},
-\code{\link{vis.subject.annot}()},
-\code{\link{vis.subject.label}()},
-\code{\link{vis.subject.morph.native}()},
-\code{\link{vislayout.from.coloredmeshes}()}
+Other visualization functions: \code{\link{vis.data.on.fsaverage}},
+  \code{\link{vis.data.on.subject}},
+  \code{\link{vis.labeldata.on.subject}},
+  \code{\link{vis.mask.on.subject}},
+  \code{\link{vis.region.values.on.subject}},
+  \code{\link{vis.subject.annot}},
+  \code{\link{vis.subject.label}},
+  \code{\link{vis.subject.morph.native}},
+  \code{\link{vislayout.from.coloredmeshes}}
 
-Other morphometry visualization functions: 
-\code{\link{vis.data.on.fsaverage}()},
-\code{\link{vis.data.on.subject}()},
-\code{\link{vis.subject.morph.native}()}
+Other morphometry visualization functions: \code{\link{vis.data.on.fsaverage}},
+  \code{\link{vis.data.on.subject}},
+  \code{\link{vis.subject.morph.native}}
 }
 \concept{morphometry visualization functions}
 \concept{visualization functions}

@@ -4,15 +4,8 @@
 \alias{coloredmesh.from.annot}
 \title{Create a coloredmesh from an annotation of an atlas.}
 \usage{
-coloredmesh.from.annot(
-  subjects_dir,
-  subject_id,
-  atlas,
-  hemi,
-  surface = "white",
-  colormap = squash::jet,
-  outline = FALSE
-)
+coloredmesh.from.annot(subjects_dir, subject_id, atlas, hemi,
+  surface = "white", colormap = squash::jet, outline = FALSE)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -25,7 +18,7 @@ coloredmesh.from.annot(
 
 \item{surface}{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 
-\item{colormap}{a colormap. See the squash package for some colormaps. Defaults to \code{\link[squash]{jet}}. Not relevant for annotations, ignored.}
+\item{colormap}{a colormap function. See the squash package for some colormaps. Defaults to \code{\link[squash]{jet}}. Not relevant for annotations, ignored.}
 
 \item{outline}{logical, whether to draw an outline only instead of filling the regions. Defaults to FALSE. Only makes sense if you did not pass an outline already. The current implementation for outline computation is rather slow, so setting this to TRUE will considerably increase computation time.}
 }

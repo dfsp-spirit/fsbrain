@@ -4,19 +4,10 @@
 \alias{group.multimorph.agg.standard}
 \title{Aggregate standard space (fsaverage) morphometry data for multiple measures over hemispheres for a group of subjects.}
 \usage{
-group.multimorph.agg.standard(
-  subjects_dir,
-  subjects_list,
-  measures,
-  hemis,
-  fwhm,
-  agg_fun = mean,
-  template_subject = "fsaverage",
-  format = "mgh",
-  cast = TRUE,
-  cortex_only = FALSE,
-  agg_fun_extra_params = NULL
-)
+group.multimorph.agg.standard(subjects_dir, subjects_list, measures, hemis,
+  fwhm, agg_fun = mean, template_subject = "fsaverage",
+  format = "mgh", cast = TRUE, cortex_only = FALSE,
+  agg_fun_extra_params = NULL)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -48,9 +39,8 @@ dataframe with aggregated values over all measures and hemis for all subjects, w
 Compute the mean (or other aggregates) over all vertices of a subject from standard space morphometry data (like 'surf/lh.area.fwhm10.fsaverage.mgh'). You can specify several measures and hemispheres. Uses knowledge about the FreeSurfer directory structure to load the correct files.
 }
 \seealso{
-Other global aggregation functions: 
-\code{\link{group.morph.agg.native}()},
-\code{\link{group.morph.agg.standard}()},
-\code{\link{group.multimorph.agg.native}()}
+Other global aggregation functions: \code{\link{group.morph.agg.native}},
+  \code{\link{group.morph.agg.standard}},
+  \code{\link{group.multimorph.agg.native}}
 }
 \concept{global aggregation functions}
