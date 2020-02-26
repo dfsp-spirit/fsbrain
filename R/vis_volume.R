@@ -2,19 +2,19 @@
 # The 3D imaging functions are designed to work on gray-scale (single channel) images.
 
 
-#' @title Extract and visualize a slice of a 3D image stack.
+#' @title Extract a slice of a 3D image stack.
 #'
-#' @description Extracts one or more 2D slices from a 3D image (or a frame of a 4D image). Optionally, visualizes the first of the selected slices. To display the result, you can use \code{\link[fsbrain]{vol.lightbox}}.
+#' @description Extracts one or more 2D slices from a 3D image (or a frame of a 4D image). To display the result, you can use \code{\link[fsbrain]{vol.lightbox}}.
 #'
 #' @param volume a 3D or 4D image volume. Note that empty dimensions will be dropped before any processing, and the remaining volume must have 3 or 4 dimensions.
 #'
-#' @param slice_index positive integer or vector of positive integers, the index into the slices (for the axis). If NULL, the slice in the middle of the volume is used. One can pass the magic character string 'all' to use all slices along the axis.
+#' @param slice_index positive integer or vector of positive integers, the index into the slices (for the axis). A *slice* in the sense of this function is any 2D image plane extracted from the 3D volume (no matter the axis). If NULL, the slice in the middle of the volume is used. One can pass the magic character string 'all' to use all slice indices along the axis.
 #'
-#' @param frame positive integer, optional. The frame (time point) to use, only relevant for 4D volumes. The last dimension is assumed to be the time dimension in that case.
+#' @param frame positive integer, optional. The frame (time point) to use, only relevant for 4D volumes. The last (i.e. 4th) dimension is assumed to be the time dimension in that case.
 #'
 #' @param axis positive integer, the axis to use when indexing the slices. Defaults to 1.
 #'
-#' @param rotation integer, rotation in degrees. Defaults to 0 (no ratation). Must be a multiple of 90 if given.
+#' @param rotation integer, rotation in degrees. Defaults to 0 (no ratation). Must be a multiple of 90L if given.
 #'
 #' @param flip NULL or one of the character strings 'vertically' or 'horizontally'. Note that flipping *horizontally* means that the image will be mirrored along the central *vertical* axis. If `NULL` is passed, nothing is flipped. Flipping occurs after rotation.
 #'
@@ -22,8 +22,6 @@
 #'
 #' @family volume utility
 #'
-#' @importFrom grDevices gray.colors
-#' @importFrom graphics image
 #' @export
 vol.slice <- function(volume, slice_index=NULL, frame=1L, axis=1L, rotation=0L, flip=NULL) {
     if(axis < 1 | axis > 3) {
@@ -85,6 +83,7 @@ vol.slice <- function(volume, slice_index=NULL, frame=1L, axis=1L, rotation=0L, 
     return(slice);
 }
 
+
 #' @title Flip a 2D matrix.
 #'
 #' @param slice a 2D matrix
@@ -122,6 +121,7 @@ flip2D <- function(slice, how='horizontally') {
     }
 }
 
+
 #' @title Rotate a 2D matrix in 90 degree steps.
 #'
 #' @param slice a 2D matrix
@@ -152,6 +152,13 @@ rotate2D <- function(slice, degrees=90) {
 
 
 #' @title Rotate 2D matrix clockwise in 90 degree steps.
+#'
+#' @param mtx a 2D matrix
+#'
+#' @param times integer, how often to rotate in 90 degree steps. Example: pass `3L` to rotate `270` degrees.
+#'
+#' @param clockwise logical, whether to rotate clockwise.
+#'
 #' @keywords internal
 rotate90 <- function(mtx, times=1L, clockwise=TRUE) {
     for(i in seq_len(times)) {
@@ -173,7 +180,7 @@ rotate90 <- function(mtx, times=1L, clockwise=TRUE) {
 #'
 #' @param axis positive integer in range 1L..3L or an axis name, the axis to use.
 #'
-#' @param degrees integer, must be a (positive or negative) multiple of 90
+#' @param degrees integer, must be a (positive or negative) multiple of 90L.
 #'
 #' @return a 3D image volume, rotated around the axis. The dimensions may or may not be different from the input image, depending on the rotation angle.
 #'
@@ -238,6 +245,7 @@ rotate3D <- function(volume, axis=1L, degrees=90L) {
     }
     return(rotbrain);
 }
+
 
 #' @title Flip a 3D array along an axis.
 #'
@@ -384,7 +392,7 @@ boxcoords.from.bbox <- function(axes_min, axes_max) {
 
 #' @title Get indices of the axes defining the given plane.
 #'
-#' @description This function assumes that the volume is in the standard FreeSurfer orientation, as returned by reading a volume with functions like \code{\link[fsbrain]{subject.volume}}.
+#' @description When using plane names, this function assumes that the volume is in the standard FreeSurfer orientation, as returned by reading a conformed volume with functions like \code{\link[fsbrain]{subject.volume}}.
 #'
 #' @param plane integer or string. If a string, one of "axial", "coronal", or "sagittal". If this is an integer vector of length 2 already, it is returned as given. If it is a single integer, it is interpreted as an axis index, and the plane orthogonal to the axis is returned. A warning on using the plane names: these only make sense if the volume is in the expected orientation, no checking whatsoever on this is performed.
 #'
@@ -413,6 +421,8 @@ vol.plane.axes <- function(plane) {
             stop("If plane is an integer vector, it must have length 1 or 2.");
         }
     }
+
+    # The plane must be a character string when we hit this.
     if(!(plane %in% c("axial", "coronal", "sagittal"))) {
         stop(sprintf("Parameter 'plane' must be on of c('axial', 'coronal', 'sagittal') but is '%s'.\n", plane));
     }
@@ -428,7 +438,7 @@ vol.plane.axes <- function(plane) {
 
 #' @title Translate names and indices of planes.
 #'
-#' @description Translate names and indices of 3D image planes. The names only make sense if the volume is in the default FreeSurfer orientation.
+#' @description Translate names and indices of 3D image planes. The names only make sense if the data in the volume is in the default FreeSurfer conformed orientation.
 #'
 #' @param plane NULL, a plane index, or a plane name.
 #'
