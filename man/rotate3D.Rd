@@ -11,7 +11,7 @@ rotate3D(volume, axis = 1L, degrees = 90L)
 
 \item{axis}{positive integer in range 1L..3L or an axis name, the axis to use.}
 
-\item{degrees}{integer, must be a (positive or negative) multiple of 90}
+\item{degrees}{integer, must be a (positive or negative) multiple of 90L.}
 }
 \value{
 a 3D image volume, rotated around the axis. The dimensions may or may not be different from the input image, depending on the rotation angle.
@@ -35,6 +35,7 @@ Rotate a 3D array in 90 degree steps along an axis. This leads to an array with 
 
 }
 \seealso{
-Other volume math: \code{\link{flip3D}}
+Other volume math: 
+\code{\link{flip3D}()}
 }
 \concept{volume math}

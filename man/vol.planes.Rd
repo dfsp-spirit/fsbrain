@@ -13,12 +13,14 @@ vol.planes(plane = NULL)
 if `plane` is NULL, all available planes and their indices as a named list. If `plane` is an integer (a plane index), its name. If `plane` is an characters string (a plane name), its index.
 }
 \description{
-Translate names and indices of 3D image planes. The names only make sense if the volume is in the default FreeSurfer orientation.
+Translate names and indices of 3D image planes. The names only make sense if the data in the volume is in the default FreeSurfer conformed orientation.
 }
 \seealso{
-Other volume utility: \code{\link{vol.boundary.box}},
-  \code{\link{vol.imagestack}}, \code{\link{vol.merge}},
-  \code{\link{vol.overlay.colors.from.activation}},
-  \code{\link{vol.slice}}
+Other volume utility: 
+\code{\link{vol.boundary.box}()},
+\code{\link{vol.imagestack}()},
+\code{\link{vol.merge}()},
+\code{\link{vol.overlay.colors.from.activation}()},
+\code{\link{vol.slice}()}
 }
 \concept{volume utility}

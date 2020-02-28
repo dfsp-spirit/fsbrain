@@ -2,21 +2,27 @@
 % Please edit documentation in R/vis_volume.R
 \name{vol.slice}
 \alias{vol.slice}
-\title{Extract and visualize a slice of a 3D image stack.}
+\title{Extract a slice of a 3D image stack.}
 \usage{
-vol.slice(volume, slice_index = NULL, frame = 1L, axis = 1L,
-  rotation = 0L, flip = NULL)
+vol.slice(
+  volume,
+  slice_index = NULL,
+  frame = 1L,
+  axis = 1L,
+  rotation = 0L,
+  flip = NULL
+)
 }
 \arguments{
 \item{volume}{a 3D or 4D image volume. Note that empty dimensions will be dropped before any processing, and the remaining volume must have 3 or 4 dimensions.}
 
-\item{slice_index}{positive integer or vector of positive integers, the index into the slices (for the axis). If NULL, the slice in the middle of the volume is used. One can pass the magic character string 'all' to use all slices along the axis.}
+\item{slice_index}{positive integer or vector of positive integers, the index into the slices (for the axis). A *slice* in the sense of this function is any 2D image plane extracted from the 3D volume (no matter the axis). If NULL, the slice in the middle of the volume is used. One can pass the magic character string 'all' to use all slice indices along the axis.}
 
-\item{frame}{positive integer, optional. The frame (time point) to use, only relevant for 4D volumes. The last dimension is assumed to be the time dimension in that case.}
+\item{frame}{positive integer, optional. The frame (time point) to use, only relevant for 4D volumes. The last (i.e. 4th) dimension is assumed to be the time dimension in that case.}
 
 \item{axis}{positive integer, the axis to use when indexing the slices. Defaults to 1.}
 
-\item{rotation}{integer, rotation in degrees. Defaults to 0 (no ratation). Must be a multiple of 90 if given.}
+\item{rotation}{integer, rotation in degrees. Defaults to 0 (no ratation). Must be a multiple of 90L if given.}
 
 \item{flip}{NULL or one of the character strings 'vertically' or 'horizontally'. Note that flipping *horizontally* means that the image will be mirrored along the central *vertical* axis. If `NULL` is passed, nothing is flipped. Flipping occurs after rotation.}
 }
@@ -24,12 +30,14 @@ vol.slice(volume, slice_index = NULL, frame = 1L, axis = 1L,
 slice data. If `slice_index` is a scalar, a numerical 2D matrix (a 2D image from the stack). Otherwise, a numerical 3D array that contains the selected 2D images.
 }
 \description{
-Extracts one or more 2D slices from a 3D image (or a frame of a 4D image). Optionally, visualizes the first of the selected slices. To display the result, you can use \code{\link[fsbrain]{vol.lightbox}}.
+Extracts one or more 2D slices from a 3D image (or a frame of a 4D image). To display the result, you can use \code{\link[fsbrain]{vol.lightbox}}.
 }
 \seealso{
-Other volume utility: \code{\link{vol.boundary.box}},
-  \code{\link{vol.imagestack}}, \code{\link{vol.merge}},
-  \code{\link{vol.overlay.colors.from.activation}},
-  \code{\link{vol.planes}}
+Other volume utility: 
+\code{\link{vol.boundary.box}()},
+\code{\link{vol.imagestack}()},
+\code{\link{vol.merge}()},
+\code{\link{vol.overlay.colors.from.activation}()},
+\code{\link{vol.planes}()}
 }
 \concept{volume utility}

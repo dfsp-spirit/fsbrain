@@ -23,6 +23,7 @@ Load a list of subjects from a subjects file, i.e., a simple text file containin
 
 }
 \seealso{
-Other metdata functions: \code{\link{read.md.demographics}}
+Other metdata functions: 
+\code{\link{read.md.demographics}()}
 }
 \concept{metdata functions}

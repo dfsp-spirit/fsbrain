@@ -20,9 +20,11 @@ a vectorized ImageMagick image, containing one subimage per slice. This can be i
 Create an image from each slice along the axis, then stack those into an ImageMagick image stack.
 }
 \seealso{
-Other volume utility: \code{\link{vol.boundary.box}},
-  \code{\link{vol.merge}},
-  \code{\link{vol.overlay.colors.from.activation}},
-  \code{\link{vol.planes}}, \code{\link{vol.slice}}
+Other volume utility: 
+\code{\link{vol.boundary.box}()},
+\code{\link{vol.merge}()},
+\code{\link{vol.overlay.colors.from.activation}()},
+\code{\link{vol.planes}()},
+\code{\link{vol.slice}()}
 }
 \concept{volume utility}
