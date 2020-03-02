@@ -277,5 +277,22 @@ test.surface <- function() {
   return(list("vertices"=matrix(c(0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 3.0, 3.0, 3.0, 4.0, 4.0, 4.0, 5.0, 5.0, 5.0, 6.0, 6.0, 6.0), ncol=3, byrow = TRUE), "faces"=matrix(c(1,2,3,1,2,4,2,5,4,2,6,5,2,3,6), ncol=3, byrow = TRUE)));
 }
 
+#' @title Return diverging color list
+#'
+#' @param num_colors_per_side integer, the number of colors you want on each side of the central value.
+#'
+#' @export
+colorlist.brain.clusters <- function(num_colors_per_side=100L) {
+  blue = rgb(0.,0.,1.);
+  cyan = rgb(0., 1., 1.);
+  ramp_bc = colorRampPalette(c(cyan, blue))
+
+  red = rgb(1., 0., 0.);
+  yellow = rgb(1., 1., 0.);
+  ramp_ry = colorRampPalette(c(red, yellow))
+
+  central_value = rgb(0.8, 0.8, 0.8); # gray
+  return(c(ramp_bc(num_colors_per_side), central_value, ramp_ry(num_colors_per_side)));
+}
 
 
