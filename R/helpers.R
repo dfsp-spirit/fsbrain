@@ -271,18 +271,20 @@ face.edges <- function(surface_mesh, face_indices='all') {
 }
 
 
-
-#' @keywords internal
-test.surface <- function() {
-  return(list("vertices"=matrix(c(0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 3.0, 3.0, 3.0, 4.0, 4.0, 4.0, 5.0, 5.0, 5.0, 6.0, 6.0, 6.0), ncol=3, byrow = TRUE), "faces"=matrix(c(1,2,3,1,2,4,2,5,4,2,6,5,2,3,6), ncol=3, byrow = TRUE)));
-}
-
 #' @title Return diverging color list
 #'
 #' @param num_colors_per_side integer, the number of colors you want on each side of the central value.
 #'
 #' @export
-colorlist.brain.clusters <- function(num_colors_per_side=100L) {
+colorlist.brain.clusters <- function(num_colors) {
+  if(num_colors %% 2 == 1L) {
+    num_colors_per_side = num_colors %/% 2L;
+    num_central = 1L;
+  } else {
+    num_colors_per_side = (num_colors %/% 2L) - 1L;
+    num_central = 2L;
+  }
+
   blue = rgb(0.,0.,1.);
   cyan = rgb(0., 1., 1.);
   ramp_bc = colorRampPalette(c(cyan, blue))
@@ -292,7 +294,7 @@ colorlist.brain.clusters <- function(num_colors_per_side=100L) {
   ramp_ry = colorRampPalette(c(red, yellow))
 
   central_value = rgb(0.8, 0.8, 0.8); # gray
-  return(c(ramp_bc(num_colors_per_side), central_value, ramp_ry(num_colors_per_side)));
+  return(c(ramp_bc(num_colors_per_side), rep(central_value, num_central), ramp_ry(num_colors_per_side)));
 }
 
 

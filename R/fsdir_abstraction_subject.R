@@ -634,7 +634,7 @@ subject.annot <- function(subjects_dir, subject_id, hemi, atlas) {
 
 #' @title Load a surface for a subject.
 #'
-#' @description Load a brain surface for a subject.
+#' @description Load a brain surface mesh for a subject.
 #'
 #' @param subjects_dir string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
 #'
@@ -644,7 +644,7 @@ subject.annot <- function(subjects_dir, subject_id, hemi, atlas) {
 #'
 #' @param hemi string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the surface file to be loaded. For 'both', see the information on the return value.
 #'
-#' @return the `fs.surface` instace, as returned by \code{\link[freesurferformats]{read.fs.surface}}. If parameter `hemi` is set to `both`, a named list with entries `lh` and `rh` is returned, and the values of are the respective surfaces.
+#' @return the `fs.surface` instance, as returned by \code{\link[freesurferformats]{read.fs.surface}}. If parameter `hemi` is set to `both`, a named list with entries `lh` and `rh` is returned, and the values of are the respective surfaces. The mesh data structure used in `fs.surface` is a *face index set*.
 #'
 #' @examples
 #' \donttest{

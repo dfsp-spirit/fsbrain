@@ -146,3 +146,23 @@ test_that("We can visualize a subset of the regions of the Desikan atlas on fsav
 })
 
 
+test_that("We can visualize clusters on fsaverage.", {
+    skip("This test has to be run manually and interactively. It requires the 'fsaverage' subject from a FreeSurfer installation and a clusters file.");
+
+    subjects_dir = file.path("~/software/freesurfer/subjects"); # Directory that has 'fsaverage' data, adapt this to your machine.
+    subject_id = 'fsaverage';
+
+    surface_activation_data_file = file.path("~/clusters.mgz"); # Activation data for fsaverage
+    activation_lh = freesurferformats::read.fs.mgh(surface_activation_data_file);
+    activation_lh[activation_lh==0]=NA;
+    activation_rh = -activation_lh; # Add some negative data for other hemi. Gotta fake it to save disk space, sry.
+
+    activation = c(activation_lh, activation_rh);
+    col = squash::cmap(activation, map=squash::makecmap(activation, colormap=colorlist.brain.clusters, symm = TRUE));
+
+    # We can visualize the data directly in fsbrain:
+    #vis.data.on.subject(subjects_dir, subject_id, activation_lh, activation_rh, colormap=colorlist.brain.clusters);
+    vis.colors.on.subject(subjects_dir, subject_id, col[1:163842], col[163843:length(activation)], views = "si");
+})
+
+

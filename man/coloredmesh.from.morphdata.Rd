@@ -11,7 +11,8 @@ coloredmesh.from.morphdata(
   hemi,
   surface = "white",
   colormap = squash::jet,
-  all_nan_backup_value = 0
+  all_nan_backup_value = 0,
+  symmetric_colors = FALSE
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ coloredmesh.from.morphdata(
 \item{colormap}{a colormap function. See the squash package for some colormaps. Defaults to \code{\link[squash]{jet}}.}
 
 \item{all_nan_backup_value}{numeric. If all morph_data values are NA/NaN, no color map can be created. In that case, the values are replaced by this value, and this is indicated in the entry morph_data_was_all_na in the return value. Defaults to 0.0.}
+
+\item{symmetric_colors}{logical, whether the colormap should be created symmetrical}
 }
 \value{
 coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.

@@ -14,7 +14,8 @@ vis.data.on.subject(
   views = c("t4"),
   rgloptions = list(),
   rglactions = list(),
-  draw_colorbar = FALSE
+  draw_colorbar = FALSE,
+  symmetric_colors = FALSE
 )
 }
 \arguments{

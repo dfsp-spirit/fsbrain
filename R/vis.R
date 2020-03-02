@@ -336,7 +336,7 @@ get.view.angle.names <- function(add_sd_prefix=TRUE, angle_set="all") {
 #'
 #' @importFrom squash jet
 #' @export
-vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface="white", colormap=squash::jet, views=c('t4'), rgloptions=list(), rglactions = list(), draw_colorbar = FALSE) {
+vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface="white", colormap=squash::jet, views=c('t4'), rgloptions=list(), rglactions = list(), draw_colorbar = FALSE, symmetric_colors=FALSE) {
 
     if(is.null(morph_data_lh) && is.null(morph_data_rh)) {
         stop(sprintf("Only one of morph_data_lh or morph_data_rh can be NULL.\n"));
@@ -350,7 +350,7 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, mor
             morph_data_lh = freesurferformats::read.fs.morph(morph_data_lh);
         }
 
-        cmesh_lh = coloredmesh.from.morphdata(subjects_dir, vis_subject_id, morph_data_lh, 'lh', surface=surface, colormap=colormap);
+        cmesh_lh = coloredmesh.from.morphdata(subjects_dir, vis_subject_id, morph_data_lh, 'lh', surface=surface, colormap=colormap, symmetric_colors=symmetric_colors);
         coloredmeshes$lh = cmesh_lh;
     }
 
@@ -360,7 +360,7 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, mor
             morph_data_rh = freesurferformats::read.fs.morph(morph_data_rh);
         }
 
-        cmesh_rh = coloredmesh.from.morphdata(subjects_dir, vis_subject_id, morph_data_rh, 'rh', surface=surface, colormap=colormap);
+        cmesh_rh = coloredmesh.from.morphdata(subjects_dir, vis_subject_id, morph_data_rh, 'rh', surface=surface, colormap=colormap, symmetric_colors=symmetric_colors);
         coloredmeshes$rh = cmesh_rh;
     }
 
@@ -518,6 +518,29 @@ vis.labeldata.on.subject <- function(subjects_dir, vis_subject_id, lh_labeldata,
     }
 
     return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar)));
+}
+
+
+#' @export
+vis.colors.on.subject <- function(subjects_dir, subject_id, lh_colors, rh_colors, surface="white", views=c('t4'), rgloptions=list(), rglactions = list()) {
+
+    if(is.null(lh_colors) && is.null(rh_colors)) {
+        stop(sprintf("Only one of lh_colors or rh_colors can be NULL.\n"));
+    }
+
+    coloredmeshes = list();
+
+    if(! is.null(lh_colors)) {
+        surface_mesh_lh = subject.surface(subjects_dir, subject_id, surface, 'lh');
+        coloredmeshes$lh = coloredmesh.custom(surface_mesh_lh, lh_colors, 'lh');
+    }
+
+    if(! is.null(rh_colors)) {
+        surface_mesh_rh = subject.surface(subjects_dir, subject_id, surface, 'rh');
+        coloredmeshes$rh = coloredmesh.custom(surface_mesh_rh, rh_colors, 'rh');
+    }
+
+    return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions)));
 }
 
 

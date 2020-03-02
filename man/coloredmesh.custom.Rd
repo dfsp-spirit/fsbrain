@@ -17,7 +17,7 @@ coloredmesh.custom(
 
 \item{vertex_colors}{vector of n colors, where *n* is the number of vertices in the mesh}
 
-\item{hemi}{character string, one of 'lh' or 'rh'}
+\item{hemi}{character string, one of 'lh' or 'rh'. Will be set as metadata.}
 
 \item{colormap_used}{colormap function used, optional. Will be set as metadata. Defaults to NULL.}
 

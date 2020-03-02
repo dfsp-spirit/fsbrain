@@ -6,9 +6,11 @@
 #'
 #' @description Running this function on a set of coloredmeshes ensures that one color represents the same data value over all the meshes. This makes sense if you plot the left and right hemisphere of a subject into a plot. This function only works if the meshes comes with a key named 'morph_data' that contains the raw data values. If there is no such data, the given meshes are returned without changes.
 #'
-#' @param coloredmeshes list of coloredmeshes
+#' @param coloredmeshes list of input coloredmeshes
 #'
 #' @param colormap a colormap function, defaults to NULL, which instructs the function to use the colormap found in the "cmap_fun" property of the first mesh in the list that has a valid entry.
+#'
+#' @return the coloredmeshes with merged colormap
 #'
 #' @importFrom squash cmap makecmap jet
 #' @keywords internal
@@ -16,7 +18,6 @@ unify.coloredmeshes.colormaps <- function(coloredmeshes, colormap=NULL) {
     if(length(coloredmeshes) <= 1) {
         return(coloredmeshes);
     }
-
 
     comb_res = combine.coloredmeshes.data(coloredmeshes);
     full_data = comb_res$full_data;
@@ -162,7 +163,7 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
 #'
 #' @param vertex_colors vector of n colors, where *n* is the number of vertices in the mesh
 #'
-#' @param hemi character string, one of 'lh' or 'rh'
+#' @param hemi character string, one of 'lh' or 'rh'. Will be set as metadata.
 #'
 #' @param colormap_used colormap function used, optional. Will be set as metadata. Defaults to NULL.
 #'
@@ -172,8 +173,11 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
 #'
 #' @export
 coloredmesh.custom <- function(surface_data, vertex_colors, hemi, colormap_used=NULL, morph_data=NULL) {
+    if(length(vertex_colors) != nrow(surface_data$vertices)) {
+        warning(sprintf("Received %d custom vertex colors but mesh for hemi '%s' has %d vertices.\n", length(vertex_colors), hemi, nrow(surface_data$vertices)));
+    }
     mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
-    cm = list("mesh"=mesh, "col"=vertex_colors, "morph_data_was_all_na"=is.null(morph_data), "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap_used);
+    cm = list("mesh"=mesh, "col"=vertex_colors, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap_used);
     class(cm) = c("fs.coloredmesh", class(cm));
     return(cm);
 }
@@ -263,12 +267,14 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
 #'
 #' @param all_nan_backup_value numeric. If all morph_data values are NA/NaN, no color map can be created. In that case, the values are replaced by this value, and this is indicated in the entry morph_data_was_all_na in the return value. Defaults to 0.0.
 #'
+#' @param symmetric_colors logical, whether the colormap should be created symmetrical
+#'
 #' @return coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
 #' @keywords internal
 #' @importFrom squash cmap makecmap jet
 #' @importFrom rgl tmesh3d rgl.open wire3d
-coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data, hemi, surface="white", colormap=squash::jet, all_nan_backup_value = 0.0) {
+coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data, hemi, surface="white", colormap=squash::jet, all_nan_backup_value = 0.0, symmetric_colors=FALSE) {
 
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
@@ -294,7 +300,7 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
         morph_data_was_all_na = TRUE;
     }
 
-    col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
+    col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap, symm=symmetric_colors));
     cm = list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=morph_data_was_all_na, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap);
     class(cm) = c("fs.coloredmesh", class(cm));
     return(cm);
