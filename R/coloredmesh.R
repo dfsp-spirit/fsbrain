@@ -433,7 +433,15 @@ coloredmesh.from.mask <- function(subjects_dir, subject_id, mask, hemi, surface=
 
     morph_like_data = as.integer(mask);
 
+    if(min(mask) < 0L | max(mask) > 1L) {
+        warning(sprintf("The data range of the supplied mask is outside of the expected range [0L, 1L]. Is this really a mask?\n", length(mask), nrow(surface_data$vertices)));
+    }
+
     morph_like_data[mask == 1L] = NA;     # set positive values to NA so they get rendered as background.
+
+    if(length(mask) != nrow(surface_data$vertices)) {
+        warning(sprintf("The length of the supplied mask (%d) does not match the number of vertices in the surface (%d).\n", length(mask), nrow(surface_data$vertices)));
+    }
 
     mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
     col = squash::cmap(morph_like_data, map = squash::makecmap(morph_like_data, colFn = colormap));
