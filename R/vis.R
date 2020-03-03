@@ -336,7 +336,7 @@ get.view.angle.names <- function(add_sd_prefix=TRUE, angle_set="all") {
 #'
 #' @importFrom squash jet
 #' @export
-vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface="white", colormap=squash::jet, views=c('t4'), rgloptions=list(), rglactions = list(), draw_colorbar = FALSE, symmetric_colors=FALSE) {
+vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface="white", colormap=squash::jet, views=c('t4'), rgloptions=list(), rglactions = list(), draw_colorbar = FALSE) {
 
     if(is.null(morph_data_lh) && is.null(morph_data_rh)) {
         stop(sprintf("Only one of morph_data_lh or morph_data_rh can be NULL.\n"));
@@ -350,7 +350,7 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, mor
             morph_data_lh = freesurferformats::read.fs.morph(morph_data_lh);
         }
 
-        cmesh_lh = coloredmesh.from.morphdata(subjects_dir, vis_subject_id, morph_data_lh, 'lh', surface=surface, colormap=colormap, symmetric_colors=symmetric_colors);
+        cmesh_lh = coloredmesh.from.morphdata(subjects_dir, vis_subject_id, morph_data_lh, 'lh', surface=surface, colormap=colormap);
         coloredmeshes$lh = cmesh_lh;
     }
 
@@ -360,7 +360,7 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, mor
             morph_data_rh = freesurferformats::read.fs.morph(morph_data_rh);
         }
 
-        cmesh_rh = coloredmesh.from.morphdata(subjects_dir, vis_subject_id, morph_data_rh, 'rh', surface=surface, colormap=colormap, symmetric_colors=symmetric_colors);
+        cmesh_rh = coloredmesh.from.morphdata(subjects_dir, vis_subject_id, morph_data_rh, 'rh', surface=surface, colormap=colormap);
         coloredmeshes$rh = cmesh_rh;
     }
 
@@ -521,6 +521,29 @@ vis.labeldata.on.subject <- function(subjects_dir, vis_subject_id, lh_labeldata,
 }
 
 
+#' @title Visualize custom vertex colors on the surface of a subject.
+#'
+#' @description Visualizes pre-defined vertex colors. You can use this if you have computed the colors from your data yourself.
+#'
+#' @param subjects_dir string. The FreeSurfer `SUBJECTS_DIR`, containing the subdir of `subject_id`, the subject that you want to use for visualization.
+#'
+#' @param subject_id string The subject identifier from which to obtain the surface for data visualization. Example: 'fsaverage'.
+#'
+#' @param lh_colors vector of colors, typically RGB color strings like '#ff0000'. The length should match the number of lh surface vertices.
+#'
+#' @param rh_colors vector of colors, typically RGB color strings like '#ff0000'. The length should match the number of rh surface vertices.
+#'
+#' @param surface string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
+#'
+#' @param views list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.
+#'
+#' @param rgloptions option list passed to \code{\link[rgl]{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))}
+#'
+#' @param rglactions named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
+#'
+#' @return list of coloredmeshes. The coloredmeshes used for the visualization.
+#'
+#' @family visualization functions
 #' @export
 vis.colors.on.subject <- function(subjects_dir, subject_id, lh_colors, rh_colors, surface="white", views=c('t4'), rgloptions=list(), rglactions = list()) {
 

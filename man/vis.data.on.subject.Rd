@@ -14,8 +14,7 @@ vis.data.on.subject(
   views = c("t4"),
   rgloptions = list(),
   rglactions = list(),
-  draw_colorbar = FALSE,
-  symmetric_colors = FALSE
+  draw_colorbar = FALSE
 )
 }
 \arguments{
@@ -57,6 +56,7 @@ Creates a surface mesh, applies a colormap transform the morphometry data values
 }
 \seealso{
 Other visualization functions: 
+\code{\link{vis.colors.on.subject}()},
 \code{\link{vis.data.on.fsaverage}()},
 \code{\link{vis.labeldata.on.subject}()},
 \code{\link{vis.mask.on.subject}()},

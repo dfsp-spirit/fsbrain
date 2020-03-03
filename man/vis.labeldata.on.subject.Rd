@@ -72,6 +72,7 @@ Other label functions:
 \code{\link{vis.subject.label}()}
 
 Other visualization functions: 
+\code{\link{vis.colors.on.subject}()},
 \code{\link{vis.data.on.fsaverage}()},
 \code{\link{vis.data.on.subject}()},
 \code{\link{vis.mask.on.subject}()},

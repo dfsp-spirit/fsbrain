@@ -59,6 +59,7 @@ Visualize a label for a subject. A label is jsut a logical vector with one entry
 }
 \seealso{
 Other visualization functions: 
+\code{\link{vis.colors.on.subject}()},
 \code{\link{vis.data.on.fsaverage}()},
 \code{\link{vis.data.on.subject}()},
 \code{\link{vis.labeldata.on.subject}()},

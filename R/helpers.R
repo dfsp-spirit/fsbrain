@@ -273,8 +273,11 @@ face.edges <- function(surface_mesh, face_indices='all') {
 
 #' @title Return diverging color list
 #'
-#' @param num_colors_per_side integer, the number of colors you want on each side of the central value.
+#' @param num_colors integer, the number of colors you want
 #'
+#' @return vector of colors
+#'
+#' @importFrom grDevices colorRampPalette rgb
 #' @export
 colorlist.brain.clusters <- function(num_colors) {
   if(num_colors %% 2 == 1L) {
@@ -285,15 +288,15 @@ colorlist.brain.clusters <- function(num_colors) {
     num_central = 2L;
   }
 
-  blue = rgb(0.,0.,1.);
-  cyan = rgb(0., 1., 1.);
-  ramp_bc = colorRampPalette(c(cyan, blue))
+  blue = grDevices::rgb(0.,0.,1.);
+  cyan = grDevices::rgb(0., 1., 1.);
+  ramp_bc = grDevices::colorRampPalette(c(cyan, blue))
 
-  red = rgb(1., 0., 0.);
-  yellow = rgb(1., 1., 0.);
-  ramp_ry = colorRampPalette(c(red, yellow))
+  red = grDevices::rgb(1., 0., 0.);
+  yellow = grDevices::rgb(1., 1., 0.);
+  ramp_ry = grDevices::colorRampPalette(c(red, yellow))
 
-  central_value = rgb(0.8, 0.8, 0.8); # gray
+  central_value = grDevices::rgb(0.8, 0.8, 0.8); # gray
   return(c(ramp_bc(num_colors_per_side), rep(central_value, num_central), ramp_ry(num_colors_per_side)));
 }
 

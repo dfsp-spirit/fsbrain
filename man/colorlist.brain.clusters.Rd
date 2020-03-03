@@ -4,10 +4,13 @@
 \alias{colorlist.brain.clusters}
 \title{Return diverging color list}
 \usage{
-colorlist.brain.clusters(num_colors_per_side = 100L)
+colorlist.brain.clusters(num_colors)
 }
 \arguments{
-\item{num_colors_per_side}{integer, the number of colors you want on each side of the central value.}
+\item{num_colors}{integer, the number of colors you want}
+}
+\value{
+vector of colors
 }
 \description{
 Return diverging color list

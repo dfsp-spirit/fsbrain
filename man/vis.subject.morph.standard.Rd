@@ -73,6 +73,7 @@ Creates a surface mesh, applies a colormap transform the morphometry data values
 }
 \seealso{
 Other visualization functions: 
+\code{\link{vis.colors.on.subject}()},
 \code{\link{vis.data.on.fsaverage}()},
 \code{\link{vis.data.on.subject}()},
 \code{\link{vis.labeldata.on.subject}()},
