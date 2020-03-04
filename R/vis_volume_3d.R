@@ -97,28 +97,45 @@ volvis.voxels <- function(volume, render_every=1, voxelcol=NULL, ...) {
 #'
 #' @param thickness integer, the width of the border in voxels, i.e., how many of the voxels in each upright column to keep at the top and at the bottom.
 #'
+#' @param axes integer vector, the axes to use. Valid values in the vector are 1L, 2L and 3L. You will have to use all 3 axes if you do not want any holes in the object. (Obvisouly, having noise around the object can still lead to holes.)
+#'
 #' @return numeric 3d array, a filtered version of the input. It contains at least as many `NA` voxels as the input. If the function had any effect, it contains a lot more `NA` values. The other values and the volume dimensions are left unchanged.
 #' @export
-volume.hull <- function(volume, thickness=1L) {
+vol.hull <- function(volume, thickness=1L, axes=c(2L)) {
     vd = dim(volume);
     if(length(vd) != 3L) {
         stop("Volume must have exactly 3 dimensions.");
     }
 
+    if(length(axes) > 3L) {
+        stop("Length of vector in parameter 'axes' must not exceed 3.");
+    }
+    axes = as.integer(axes);
+
     hull = array(rep(NA, prod(vd)), vd);
 
-    hull = hull.retain.along.axis(volume, hull, dim_check = 2L, upwards = TRUE, thickness = thickness);
-    hull = hull.retain.along.axis(volume, hull, dim_check = 2L, upwards = FALSE, thickness = thickness);
+    for(axis in axes) {
+        hull = hull.retain.along.axis(volume, hull, dim_check = axis, upwards = TRUE, thickness = thickness);
+        hull = hull.retain.along.axis(volume, hull, dim_check = axis, upwards = FALSE, thickness = thickness);
+    }
 
     return(hull);
 }
 
 
-#' @title Visualize contour of a volume.
+#' @title Copy the first *n* foreground voxel values.
+#'
+#' @description Copy the first *n* foreground voxel values along the axis and direction from the volume to the hull, thus adding foreground voxels to the hull.
 #'
 #' @param volume numeric 3d array, the full source volume.
 #'
 #' @param hull numeric 3d array, the input hull volume.
+#'
+#' @param dim_check integer, the array dimension to use. Must be 1L, 2L or 3L.
+#'
+#' @param upwards logical, whether to use upwards direction (increasing indices) in the array dimension
+#'
+#' @param thickness integer, the width of the border in voxels, i.e., how many of the foreground voxels to keep
 #'
 #' @return numeric 3d array, the updated hull volume.
 #'
@@ -126,19 +143,13 @@ volume.hull <- function(volume, thickness=1L) {
 hull.retain.along.axis <- function(volume, hull, dim_check=2L, upwards=TRUE, thickness=1L) {
     vd = dim(volume);
     row_length = vd[dim_check];
+    start_idx = ifelse(upwards, 1L, row_length);
+    end_idx = ifelse(upwards, row_length, 1L);
 
     if(dim_check == 2L) {
-
         for(v_c in seq_len(vd[1])) {
             for(v_s in seq_len(vd[3])) {
                 num_retained_this_row = 0L;
-                if(upwards) {
-                    start_idx = 1L;
-                    end_idx = row_length;
-                } else {
-                    start_idx = row_length;
-                    end_idx = 1L;
-                }
                 for(v_r in seq.int(start_idx, end_idx)) {
                     if(num_retained_this_row >= thickness) {
                         break;
@@ -152,8 +163,40 @@ hull.retain.along.axis <- function(volume, hull, dim_check=2L, upwards=TRUE, thi
             }
         }
 
+    } else if(dim_check == 1L) {
+        for(v_c in seq_len(vd[2])) {
+            for(v_s in seq_len(vd[3])) {
+                num_retained_this_row = 0L;
+                for(v_r in seq.int(start_idx, end_idx)) {
+                    if(num_retained_this_row >= thickness) {
+                        break;
+                    }
+                    voxel_value = volume[v_r, v_c, v_s];
+                    if(!is.na(voxel_value)) {
+                        hull[v_r, v_c, v_s] = voxel_value;
+                        num_retained_this_row = num_retained_this_row + 1L;
+                    }
+                }
+            }
+        }
+    } else if(dim_check == 3L) {
+        for(v_c in seq_len(vd[1])) {
+            for(v_s in seq_len(vd[2])) {
+                num_retained_this_row = 0L;
+                for(v_r in seq.int(start_idx, end_idx)) {
+                    if(num_retained_this_row >= thickness) {
+                        break;
+                    }
+                    voxel_value = volume[v_c, v_s, v_r];
+                    if(!is.na(voxel_value)) {
+                        hull[v_c, v_s, v_r] = voxel_value;
+                        num_retained_this_row = num_retained_this_row + 1L;
+                    }
+                }
+            }
+        }
     } else {
-        stop("Only dim2 supported atm")
+        stop("Invalid 'dim_check' parameter.");
     }
     return(hull);
 }
