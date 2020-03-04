@@ -4,12 +4,15 @@
 \alias{vol.overlay.colors.from.colortable}
 \title{Compute voxel colors based on colortable.}
 \usage{
-vol.overlay.colors.from.colortable(volume, colortable,
-  ignored_struct_indices = c(), ignored_struct_names = c("unknown",
-  "Unknown"))
+vol.overlay.colors.from.colortable(
+  volume,
+  colortable,
+  ignored_struct_indices = c(),
+  ignored_struct_names = c("unknown", "Unknown")
+)
 }
 \arguments{
-\item{volume}{numeric 3D array, the values should be integers present in the `struct_index` column of the colortable}
+\item{volume}{numeric 3D array, the values should be integers present in the `struct_index` column of the colortable.}
 
 \item{colortable}{a colortable, as returned by \code{\link[freesurferformats]{read.fs.colortable}}.}
 

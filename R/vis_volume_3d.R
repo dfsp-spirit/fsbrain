@@ -89,6 +89,76 @@ volvis.voxels <- function(volume, render_every=1, voxelcol=NULL, ...) {
 }
 
 
+#' @title Retain only the outer hull voxels of the foreground.
+#'
+#' @description Filters the *foreground* voxel in the volume by keeping only an outer border of voxels, and setting the inner core voxels to `NA`. This is a utility function for voxel-based visualization. The goal is to remove the inner voxels, which will not be visible anyways, and thus to dramatically reduce the number of triangles that will need to be computed for the mesh.
+#'
+#' @param volume numeric 3d array, must contain foreground voxel and background voxels. The latter must have value `NA`. This function assumes that a solid foreground object surrounded by background exists in the volume.
+#'
+#' @param thickness integer, the width of the border in voxels, i.e., how many of the voxels in each upright column to keep at the top and at the bottom.
+#'
+#' @return numeric 3d array, a filtered version of the input. It contains at least as many `NA` voxels as the input. If the function had any effect, it contains a lot more `NA` values. The other values and the volume dimensions are left unchanged.
+#' @export
+volume.hull <- function(volume, thickness=1L) {
+    vd = dim(volume);
+    if(length(vd) != 3L) {
+        stop("Volume must have exactly 3 dimensions.");
+    }
+
+    hull = array(rep(NA, prod(vd)), vd);
+
+    hull = hull.retain.along.axis(volume, hull, dim_check = 2L, upwards = TRUE, thickness = thickness);
+    hull = hull.retain.along.axis(volume, hull, dim_check = 2L, upwards = FALSE, thickness = thickness);
+
+    return(hull);
+}
+
+
+#' @title Visualize contour of a volume.
+#'
+#' @param volume numeric 3d array, the full source volume.
+#'
+#' @param hull numeric 3d array, the input hull volume.
+#'
+#' @return numeric 3d array, the updated hull volume.
+#'
+#' @keywords internal
+hull.retain.along.axis <- function(volume, hull, dim_check=2L, upwards=TRUE, thickness=1L) {
+    vd = dim(volume);
+    row_length = vd[dim_check];
+
+    if(dim_check == 2L) {
+
+        for(v_c in seq_len(vd[1])) {
+            for(v_s in seq_len(vd[3])) {
+                num_retained_this_row = 0L;
+                if(upwards) {
+                    start_idx = 1L;
+                    end_idx = row_length;
+                } else {
+                    start_idx = row_length;
+                    end_idx = 1L;
+                }
+                for(v_r in seq.int(start_idx, end_idx)) {
+                    if(num_retained_this_row >= thickness) {
+                        break;
+                    }
+                    voxel_value = volume[v_c, v_r, v_s];
+                    if(!is.na(voxel_value)) {
+                        hull[v_c, v_r, v_s] = voxel_value;
+                        num_retained_this_row = num_retained_this_row + 1L;
+                    }
+                }
+            }
+        }
+
+    } else {
+        stop("Only dim2 supported atm")
+    }
+    return(hull);
+}
+
+
 #' @title Visualize contour of a volume.
 #'
 #' @description Compute a smoothed surface from the voxel intensities in the given volume and render it. Requires the `misc3d` package to be installed, which is an optional dependency.

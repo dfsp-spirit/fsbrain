@@ -13,6 +13,6 @@ vol.plane.axes(plane)
 integer vector of length 2, the axes indices.
 }
 \description{
-This function assumes that the volume is in the standard FreeSurfer orientation, as returned by reading a volume with functions like \code{\link[fsbrain]{subject.volume}}.
+When using plane names, this function assumes that the volume is in the standard FreeSurfer orientation, as returned by reading a conformed volume with functions like \code{\link[fsbrain]{subject.volume}}.
 }
 \keyword{internal}

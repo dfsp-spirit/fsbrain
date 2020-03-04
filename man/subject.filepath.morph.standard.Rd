@@ -4,9 +4,17 @@
 \alias{subject.filepath.morph.standard}
 \title{Construct filepath of standard space morphometry data file.}
 \usage{
-subject.filepath.morph.standard(subjects_dir, subject_id, measure, hemi,
-  fwhm = "10", template_subject = "fsaverage", format = "mgh",
-  warn_if_nonexistent = FALSE, error_if_nonexistent = FALSE)
+subject.filepath.morph.standard(
+  subjects_dir,
+  subject_id,
+  measure,
+  hemi,
+  fwhm = "10",
+  template_subject = "fsaverage",
+  format = "mgh",
+  warn_if_nonexistent = FALSE,
+  error_if_nonexistent = FALSE
+)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}

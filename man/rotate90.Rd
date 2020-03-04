@@ -6,6 +6,13 @@
 \usage{
 rotate90(mtx, times = 1L, clockwise = TRUE)
 }
+\arguments{
+\item{mtx}{a 2D matrix}
+
+\item{times}{integer, how often to rotate in 90 degree steps. Example: pass `3L` to rotate `270` degrees.}
+
+\item{clockwise}{logical, whether to rotate clockwise.}
+}
 \description{
 Rotate 2D matrix clockwise in 90 degree steps.
 }

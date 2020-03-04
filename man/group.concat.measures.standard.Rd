@@ -4,8 +4,14 @@
 \alias{group.concat.measures.standard}
 \title{Concatenate standard space data for a group of subjects.}
 \usage{
-group.concat.measures.standard(subjects_dir, subjects_list, measures, hemi,
-  fwhm_per_measure, cortex_only = FALSE)
+group.concat.measures.standard(
+  subjects_dir,
+  subjects_list,
+  measures,
+  hemi,
+  fwhm_per_measure,
+  cortex_only = FALSE
+)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -37,6 +43,7 @@ A measure is something like 'thickness' or 'area'. This function concatenates th
 
 }
 \seealso{
-Other concatination functions: \code{\link{group.concat.measures.native}}
+Other concatination functions: 
+\code{\link{group.concat.measures.native}()}
 }
 \concept{concatination functions}
