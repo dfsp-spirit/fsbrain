@@ -16,3 +16,31 @@ test_that("A mean curvature color layer can be loaded", {
     vis.color.on.subject(subjects_dir, 'subject1', bgcol_lh, bgcol_rh);
 })
 
+
+test_that("Color layers can be merged", {
+    collayers = list();
+    collayers$background = rep('#000000', 100L);
+    collayers$foreground = rep('#ff0000', 100L);
+    collayers$foreground[30:50] = NA;           # set NA as color, this will be treated as fully transparent
+    collayers$foreground[70:90] = '#ffffff00';  # set fully transparent color
+    collayers$foreground[10:20] = '#ffffff77';  # set partly transparent color, requires alpha blending
+
+    merged_layer = collayers.merge(collayers);
+
+    expect_equal(length(merged_layer), 100L);
+    expect_equal(merged_layer[30:50], rep('#000000', 20L));
+    expect_equal(merged_layer[70:90], rep('#000000', 20L));
+})
+
+
+test_that("Alphablending works", {
+
+    front_color = c('#ff000044', '#00ff0088');
+    back_color = c('#ff0000', '#00ff00');
+
+    blended = alphablend(front_color, back_color);
+
+    expect_equal(merged_layer[30:50], rep('#000000', 20L));
+    expect_equal(merged_layer[70:90], rep('#000000', 20L));
+})
+
