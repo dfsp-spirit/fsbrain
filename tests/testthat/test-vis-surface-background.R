@@ -28,19 +28,21 @@ test_that("Color layers can be merged", {
     merged_layer = collayers.merge(collayers);
 
     expect_equal(length(merged_layer), 100L);
-    expect_equal(merged_layer[30:50], rep('#000000', 20L));
-    expect_equal(merged_layer[70:90], rep('#000000', 20L));
+    expect_equal(merged_layer[30:50], rep('#000000', 21L));
+    expect_equal(merged_layer[70:90], rep('#000000', 21L));
 })
 
 
 test_that("Alphablending works", {
 
-    front_color = c('#ff000044', '#00ff0088');
-    back_color = c('#ff0000', '#00ff00');
+    front_color = c('#ff000044', '#00ff0088', NA, '#555555');
+    back_color = c('#000000', '#000000', '#0000ff', NA);
 
     blended = alphablend(front_color, back_color);
 
-    expect_equal(merged_layer[30:50], rep('#000000', 20L));
-    expect_equal(merged_layer[70:90], rep('#000000', 20L));
+    expect_equal(blended[1], '#440000FF');  # partially transparent red on opaque white background becomes reddish
+    expect_equal(blended[2], '#008800FF');  # partially transparent green on opaque white background becomes greenish
+    expect_equal(blended[3], '#0000FFFF');  # no color/full transparency on blue background becomes blue
+    expect_equal(blended[4], '#555555FF');  # gray on fully transparent background becomes gray
 })
 

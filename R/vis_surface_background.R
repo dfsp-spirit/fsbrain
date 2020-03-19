@@ -12,7 +12,7 @@
 #'
 #' @param hemi character string, one of 'lh', 'rh', or 'both'. The latter will merge the data for both hemis into a single vector.
 #'
-#' @param surface string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
+#' @param cortex_only logical, whether to restrict pattern computation to the cortex.
 #'
 #' @param bin_colors vector of two character strings, the two colors to use.
 #'
@@ -64,7 +64,7 @@ collayers.merge <- function(collayers, opaque_background="#ffffff") {
         # Add a new opaque layer at the end
         new_layer_index = length(collayers) + 1L;
         collayers[[new_layer_index]] = rep(opaque_background, length(collayers[[1]]));  # We use the length of the first layer here, but we could use any.
-        names(layers)[[new_layer_index]] = 'opaque_background';
+        names(collayers)[[new_layer_index]] = 'opaque_background';
     }
 
     merged = collayers[1];
@@ -96,6 +96,10 @@ alphablend <- function(front_color, back_color) {
         stop("The parameters 'front_color' and 'back_color' must be vectors with identical length.");
     }
 
+    # Treat NA values as fully transparent color.
+    front_color[which(is.na(front_color))] = '#00000000';
+    back_color[which(is.na(back_color))] = '#00000000';
+
     front_color_rgba_matrix = grDevices::col2rgb(front_color, alpha = TRUE)/255.;
     back_color_rgba_matrix = grDevices::col2rgb(back_color, alpha = TRUE)/255.;
 
@@ -108,7 +112,8 @@ alphablend <- function(front_color, back_color) {
     out_alpha = src_alpha + dst_alpha * (1.0 - src_alpha);
 
     # TODO: Handle possible division by zero
-    out_rgb = (src_rgb * src_alpha + dst_rgb * dst_alpha * (1.0 - src_alpha)) / out_alpha;
-
-    return(grDevices::rgb(t(rbind(out_rgb, out_alpha)), alpha = TRUE));
+    # out_rgb = (src_rgb * src_alpha + dst_rgb * dst_alpha * (1.0 - src_alpha)) / out_alpha;
+    # return(grDevices::rgb(t(rbind(out_rgb, out_alpha)), alpha = TRUE));
+    out_rgb = (t(src_rgb) * src_alpha + t(dst_rgb) * dst_alpha * (1.0 - src_alpha)) / out_alpha;
+    return(grDevices::rgb(cbind(out_rgb, out_alpha), alpha = TRUE));
 }

@@ -13,6 +13,29 @@ background.mean.curvature(
   bin_thresholds = c(-0.1, 0.1)
 )
 }
+\arguments{
+\item{subjects_dir}{character string, the FreeSurfer SUBJECTS_DIR.}
+
+\item{subject_id}{character string, the subject identifier.}
+
+\item{hemi}{character string, one of 'lh', 'rh', or 'both'. The latter will merge the data for both hemis into a single vector.}
+
+\item{bin_colors}{vector of two character strings, the two colors to use.}
+
+\item{bin_thresholds}{vector of 2 double values, the curvature threshold values used to separate gyri from sulci.}
+
+\item{surface}{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
+}
+\value{
+vector of color strings, one color per surface vertex. The coloring separates gyri from sulci.
+}
 \description{
 Compute mean curv surface color layer.
 }
+\seealso{
+You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
+
+Other surface color layer: 
+\code{\link{collayers.merge}()}
+}
+\concept{surface color layer}
