@@ -20,11 +20,11 @@ background.mean.curvature(
 
 \item{hemi}{character string, one of 'lh', 'rh', or 'both'. The latter will merge the data for both hemis into a single vector.}
 
+\item{cortex_only}{logical, whether to restrict pattern computation to the cortex.}
+
 \item{bin_colors}{vector of two character strings, the two colors to use.}
 
 \item{bin_thresholds}{vector of 2 double values, the curvature threshold values used to separate gyri from sulci.}
-
-\item{surface}{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 }
 \value{
 vector of color strings, one color per surface vertex. The coloring separates gyri from sulci.
