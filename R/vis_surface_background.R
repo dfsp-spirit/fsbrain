@@ -67,9 +67,9 @@ collayers.merge <- function(collayers, opaque_background="#ffffff") {
         names(collayers)[[new_layer_index]] = 'opaque_background';
     }
 
-    merged = collayers[1];
+    merged = collayers[[1]];
     for (layer_idx in seq.int(2L, length(collayers))) {
-        clayer = collayers[layer_idx];
+        clayer = collayers[[layer_idx]];
         merged = alphablend(merged, clayer);
     }
     return(merged);
