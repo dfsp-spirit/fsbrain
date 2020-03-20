@@ -300,4 +300,24 @@ colorlist.brain.clusters <- function(num_colors) {
   return(c(ramp_bc(num_colors_per_side), rep(central_value, num_central), ramp_ry(num_colors_per_side)));
 }
 
+#' @title Read colors from CSV file.
+#'
+#' @param filepath character string, path to a CSV file containing colors
+#'
+#' @return vector of hex color strings
+#'
+#' @export
+#' @importFrom utils read.table
+read.colorcsv <- function(filepath) {
+    color_df = read.table(filepath, header = TRUE, stringsAsFactors = FALSE);
+    if("rgb_hexcolorstring" %in% names(color_df)) {
+        return(color_df$rgb_hexcolorstring);
+    } else if("rgbint_red" %in% names(color_df) & "rgbint_green" %in% names(color_df) & "rgbint_blue" %in% names(color_df)) {
+        return(grDevices::rgb(color_df$rgbint_red/255., color_df$rgbint_green/255., color_df$rgbint_blue/255.));
+    } else if("rgbfloat_red" %in% names(color_df) & "rgbfloat_green" %in% names(color_df) & "rgbfloat_blue" %in% names(color_df)) {
+        return(grDevices::rgb(color_df$rgbfloat_red, color_df$rgbfloat_green, color_df$rgbfloat_blue));
+    } else {
+        stop(sprintf("No valid color definition found in colorcsv file '%s'.", filepath));
+    }
+}
 

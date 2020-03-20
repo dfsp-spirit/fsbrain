@@ -1044,7 +1044,7 @@ cubes3D.tris <- function(centers, edge_length=1) {
 #'
 #' @description Use the intensity values of the voxels in volume and lookup the respective colors in a colortable.
 #'
-#' @param volume numeric 3D array, the values should be integers present in the `struct_index` column of the colortable.
+#' @param volume numeric 3D array, the values should be integers present in the `struct_index` column of the colortable. All other values will be assigned `NA` as a color.
 #'
 #' @param colortable a colortable, as returned by \code{\link[freesurferformats]{read.fs.colortable}}.
 #'

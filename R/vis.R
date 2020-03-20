@@ -368,6 +368,63 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, mor
 }
 
 
+#' @title Visualize pre-defined vertex colors on a subject.
+#'
+#' @param subjects_dir string. The FreeSurfer SUBJECTS_DIR, containing the subdir of vis_subject_id, the subject that you want to use for visualization.
+#'
+#' @param vis_subject_id string. The subject identifier from which to obtain the surface for data visualization. Example: 'fsaverage'.
+#'
+#' @param color_lh vector of colors to visualize on the left hemisphere surface.
+#'
+#' @param color_rh vector of colors to visualize on the right hemisphere surface.
+#'
+#' @param surface string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
+#'
+#' @param views list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.
+#'
+#' @param rgloptions option list passed to \code{\link[rgl]{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))}
+#'
+#' @param rglactions named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
+#'
+#' @return list of coloredmeshes. The coloredmeshes used for the visualization.
+#'
+#' @examples
+#' \donttest{
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+#'    color_lh = '#ff0000';
+#'    num_verts_subject1_rh = 153333;
+#'    color_rh = rep('#333333', num_verts_subject1_rh);
+#'    color_rh[1:30000] = '#00ff00';
+#'    vis.color.on.subject(subjects_dir, 'subject1', color_lh, color_rh);
+#' }
+#'
+#' @family visualization functions
+#' @family surface visualization functions
+#'
+#' @export
+vis.color.on.subject <- function(subjects_dir, vis_subject_id, color_lh, color_rh, surface="white", views=c('t4'), rgloptions=list(), rglactions = list()) {
+
+    if(is.null(color_lh) && is.null(color_rh)) {
+        stop(sprintf("Only one of color_lh or color_rh can be NULL.\n"));
+    }
+
+    coloredmeshes = list();
+
+    if(! is.null(color_lh)) {
+        cmesh_lh = coloredmesh.from.color(subjects_dir, vis_subject_id, color_lh, 'lh', surface=surface);
+        coloredmeshes$lh = cmesh_lh;
+    }
+
+    if(! is.null(color_rh)) {
+        cmesh_rh = coloredmesh.from.color(subjects_dir, vis_subject_id, color_rh, 'rh', surface=surface);
+        coloredmeshes$rh = cmesh_rh;
+    }
+
+    return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions)));
+}
+
+
 #' @title Visualize a vertex mask on the surface of a subject.
 #'
 #' @description A mask is a logical vector that contains one value per vertex. You can create it manually, or use functions like [fsbrain::mask.from.labeldata.for.hemi] to create and modify it. Check the example for this function.

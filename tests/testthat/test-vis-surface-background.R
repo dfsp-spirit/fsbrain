@@ -1,0 +1,48 @@
+# Tests for surface color layers.
+
+test_that("A mean curvature color layer can be loaded", {
+    skip("This test has to be run manually and interactively. It requires an X11 display and mean curv data.");
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+
+    bgcol_lh = background.mean.curvature(subjects_dir, "subject1", "lh");
+    bgcol_rh = background.mean.curvature(subjects_dir, "subject1", "rh");
+
+    num_verts_subject1_lh = 149244;
+    num_verts_subject1_rh = 153333;
+    expect_equal(length(bgcol_lh), num_verts_subject1_lh);
+    expect_equal(length(bgcol_rh), num_verts_subject1_rh);
+
+    vis.color.on.subject(subjects_dir, 'subject1', bgcol_lh, bgcol_rh, surface="inflated");
+})
+
+
+test_that("Color layers can be merged", {
+    collayers = list();
+    collayers$background = rep('#000000', 100L);
+    collayers$foreground = rep('#ff0000', 100L);
+    collayers$foreground[30:50] = NA;           # set NA as color, this will be treated as fully transparent
+    collayers$foreground[70:90] = '#ffffff00';  # set fully transparent color
+    collayers$foreground[10:20] = '#ffffff77';  # set partly transparent color, requires alpha blending
+
+    merged_layer = collayers.merge(collayers);
+
+    expect_equal(length(merged_layer), 100L);
+    expect_equal(merged_layer[30:50], rep('#000000FF', 21L));
+    expect_equal(merged_layer[70:90], rep('#000000FF', 21L));
+})
+
+
+test_that("Alphablending works", {
+
+    front_color = c('#ff000044', '#00ff0088', NA, '#555555');
+    back_color = c('#000000', '#000000', '#0000ff', NA);
+
+    blended = alphablend(front_color, back_color);
+
+    expect_equal(blended[1], '#440000FF');  # partially transparent red on opaque white background becomes reddish
+    expect_equal(blended[2], '#008800FF');  # partially transparent green on opaque white background becomes greenish
+    expect_equal(blended[3], '#0000FFFF');  # no color/full transparency on blue background becomes blue
+    expect_equal(blended[4], '#555555FF');  # gray on fully transparent background becomes gray
+})
+

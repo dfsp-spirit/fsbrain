@@ -12,7 +12,7 @@ vol.overlay.colors.from.colortable(
 )
 }
 \arguments{
-\item{volume}{numeric 3D array, the values should be integers present in the `struct_index` column of the colortable.}
+\item{volume}{numeric 3D array, the values should be integers present in the `struct_index` column of the colortable. All other values will be assigned `NA` as a color.}
 
 \item{colortable}{a colortable, as returned by \code{\link[freesurferformats]{read.fs.colortable}}.}
 

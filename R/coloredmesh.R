@@ -155,6 +155,42 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
 }
 
 
+#' @title Create a coloredmesh from a mesh and pre-defined colors.
+#'
+#' @param subjects_dir string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
+#'
+#' @param subject_id string. The subject identifier.
+#'
+#' @param color_data vector of hex color strings
+#'
+#' @param hemi string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.
+#'
+#' @param surface character string or `fs.surface` instance. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
+#'
+#' @return coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
+#'
+#' @keywords internal
+#' @importFrom rgl tmesh3d rgl.open wire3d
+coloredmesh.from.color <- function(subjects_dir, subject_id, color_data, hemi, surface="white") {
+
+    if(!(hemi %in% c("lh", "rh"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
+    }
+
+    if(freesurferformats::is.fs.surface(surface)) {
+        surface_data = surface;
+    } else {
+        surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
+    }
+    mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
+
+    cm = list("mesh"=mesh, "col"=color_data, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=NULL, "cmap_fun"=NULL);
+    class(cm) = c("fs.coloredmesh", class(cm));
+    return(cm);
+}
+
+
+
 #' @title Create a coloredmesh from a mesh and custom vertex colors.
 #'
 #' @description Allows you to manually assign arbitrary colors to all mesh vertices.
