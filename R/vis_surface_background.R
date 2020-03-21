@@ -111,9 +111,11 @@ alphablend <- function(front_color, back_color) {
 
     out_alpha = src_alpha + dst_alpha * (1.0 - src_alpha);
 
-    # TODO: Handle possible division by zero
-    # out_rgb = (src_rgb * src_alpha + dst_rgb * dst_alpha * (1.0 - src_alpha)) / out_alpha;
-    # return(grDevices::rgb(t(rbind(out_rgb, out_alpha)), alpha = TRUE));
     out_rgb = (t(src_rgb) * src_alpha + t(dst_rgb) * dst_alpha * (1.0 - src_alpha)) / out_alpha;
+
+    # Handle possible division by zero NaNs from last division. Happens when both foreground and background
+    # color are fully transparent. The output alpha will be 0, and we set the rgb values to all zeroes as well.
+    out_rgb[is.nan(out_rgb)] = 0.;
+
     return(grDevices::rgb(cbind(out_rgb, out_alpha), alpha = TRUE));
 }
