@@ -73,6 +73,16 @@ fsbrain.renderable <- function(x) {
 is.Triangles3D <- function(x) inherits(x, "Triangles3D")
 
 
+#' @title Visualize a renderable object
+#'
+#' @description Renders instances of `coloredmesh`, `coloredvoxels` and `Triangles3D`.
+#'
+#' @param cmesh an instance of one of the supported classes
+#'
+#' @param skip_all_na logical, whether to skip rendering hidden instances
+#'
+#' @param style a rendering style, can be a style name or a list defining an rgl material style
+#'
 #' @keywords internal
 #' @importFrom utils modifyList
 vis.renderable <- function(cmesh, skip_all_na=TRUE, style="default") {
@@ -214,7 +224,7 @@ vis.rotated.coloredmeshes <- function(renderables, rotation_angle, x, y, z, styl
 #'
 #' @param coloredmeshes list of coloredmeshes. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
 #'
-#' @param horizontal logical, whether the colorbar should be drawn in horizontal oritentation. Defaults to TRUE.
+#' @param horizontal logical, whether the colorbar should be drawn in horizontal orientation. Defaults to TRUE.
 #'
 #' @param num_steps integer, number of steps to use for the colorbar. Defaults to 100.
 #'

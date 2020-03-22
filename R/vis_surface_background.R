@@ -80,9 +80,9 @@ collayers.merge <- function(collayers, opaque_background="#ffffff") {
 #'
 #' @description Implements the *over* alpha blending operation.
 #'
-#' @param front_color rgba color strings, the upper color layer
+#' @param front_color rgba color strings, the upper color layer or foreground
 #'
-#' @param back_color rgba color strings, the lower color layer
+#' @param back_color rgba color strings, the lower color layer or background
 #'
 #' @return rgba color strings, the alpha-blended colors
 #'
