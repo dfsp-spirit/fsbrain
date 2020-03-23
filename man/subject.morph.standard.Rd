@@ -6,7 +6,7 @@
 \usage{
 subject.morph.standard(subjects_dir, subject_id, measure, hemi,
   fwhm = "10", template_subject = "fsaverage", format = "mgh",
-  cortex_only = FALSE)
+  cortex_only = FALSE, split_by_hemi = FALSE)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -24,6 +24,8 @@ subject.morph.standard(subjects_dir, subject_id, measure, hemi,
 \item{format}{string. One of 'mgh', 'mgz', 'curv'. Defaults to 'mgh'.}
 
 \item{cortex_only}{logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the template subject. Defaults to FALSE.}
+
+\item{split_by_hemi}{logical, whether the returned data should be encapsulated in a named list, where the names are from 'lh' and 'rh', and the values are the respective data.}
 }
 \value{
 vector with standard space morph data

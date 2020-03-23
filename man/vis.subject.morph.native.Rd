@@ -7,7 +7,8 @@
 vis.subject.morph.native(subjects_dir, subject_id, measure,
   hemi = "both", surface = "white", colormap = squash::jet,
   views = c("t4"), rgloptions = list(), rglactions = list(),
-  draw_colorbar = FALSE, cortex_only = FALSE, style = "default")
+  draw_colorbar = FALSE, cortex_only = FALSE, style = "default",
+  makecmap_options = list(colFn = squash::jet))
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -20,7 +21,7 @@ vis.subject.morph.native(subjects_dir, subject_id, measure,
 
 \item{surface}{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 
-\item{colormap}{a colormap function. See the squash package for some colormaps. Defaults to \code{\link[squash]{jet}}.}
+\item{colormap}{a colormap function. **DEPRECATED**: use parameter 'makecmap_options' instead.}
 
 \item{views}{list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.}
 
@@ -33,6 +34,8 @@ vis.subject.morph.native(subjects_dir, subject_id, measure,
 \item{cortex_only}{logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the subject. Defaults to FALSE.}
 
 \item{style}{character string, a rendering style, e.g., 'default', 'shiny' or 'semitransparent'.}
+
+\item{makecmap_options}{named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.

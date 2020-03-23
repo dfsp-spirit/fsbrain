@@ -22,7 +22,7 @@ background.mean.curvature(subjects_dir, subject_id, hemi = "both",
 \item{bin_thresholds}{vector of 2 double values, the curvature threshold values used to separate gyri from sulci.}
 }
 \value{
-vector of color strings, one color per surface vertex. The coloring separates gyri from sulci.
+vector of color strings, one color per surface vertex. The coloring separates gyri from sulci. If the `hemi` parameter is 'both', a named list with entries 'lh' and 'rh' is returned instead.
 }
 \description{
 Compute mean curv surface color layer.
@@ -30,6 +30,7 @@ Compute mean curv surface color layer.
 \seealso{
 You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
 
-Other surface color layer: \code{\link{collayers.merge}}
+Other surface color layer: \code{\link{collayer.from.morphlike.data}},
+  \code{\link{collayers.merge}}
 }
 \concept{surface color layer}

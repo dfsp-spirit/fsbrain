@@ -18,18 +18,59 @@
 #'
 #' @param bin_thresholds vector of 2 double values, the curvature threshold values used to separate gyri from sulci.
 #'
-#' @return vector of color strings, one color per surface vertex. The coloring separates gyri from sulci.
+#' @return vector of color strings, one color per surface vertex. The coloring separates gyri from sulci. If the `hemi` parameter is 'both', a named list with entries 'lh' and 'rh' is returned instead.
 #'
 #' @seealso You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
 #'
 #' @family surface color layer
 #' @export
 background.mean.curvature <- function(subjects_dir, subject_id, hemi="both", cortex_only=FALSE, bin_colors=c('#898989', '#5e5e5e'), bin_thresholds=c(-0.1, 0.1)) {
-    mc = subject.morph.native(subjects_dir, subject_id, 'curv', hemi=hemi, cortex_only=cortex_only);
+    if(hemi == 'both') {
+        mc_split = subject.morph.native(subjects_dir, subject_id, 'curv', hemi=hemi, cortex_only=cortex_only, split_by_hemi=TRUE);
+        mc = c(mc_split$lh, mc_split$rh);
+        last_lh_index = length(mc_split$lh);
+    } else {
+        mc = subject.morph.native(subjects_dir, subject_id, 'curv', hemi=hemi, cortex_only=cortex_only);
+    }
     color_layer = rep(bin_colors[1], length(mc));
     gyri_vertices = which(mc > bin_thresholds[1] & mc < bin_thresholds[2]);
     color_layer[gyri_vertices] = bin_colors[2];
-    return(color_layer);
+    if(hemi == 'both') {
+        return(list("lh"=color_layer[1:last_lh_index], "rh"=color_layer[last_lh_index+1L:length(mc)]));
+    } else {
+        return(color_layer);
+    }
+}
+
+
+#' @title Compute surface color layer from morph-like data.
+#'
+#' @param lh_morph_data numerical vector, can be NULL
+#'
+#' @param rh_morph_data numerical vector, can be NULL
+#'
+#' @param makecmap_options named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.
+#'
+#' @return vector of color strings, one color per surface vertex. The coloring represents the morph data. If the `hemi` parameter is 'both', a named list with entries 'lh' and 'rh' is returned instead.
+#'
+#' @seealso You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
+#'
+#' @family surface color layer
+#' @importFrom utils modifyList
+#' @export
+collayer.from.morphlike.data <- function(lh_morph_data, rh_morph_data, makecmap_options=list('colFn'=squash::jet)) {
+    color_layers = list();
+    if(is.null(lh_morph_data) | is.null(rh_morph_data)) {
+        morph_data = ifelse(is.null(lh_morph_data), rh_morph_data, lh_morph_data);
+        color_layer = squash::cmap(morph_data, map = do.call(squash::makecmap, utils::modifyList(list(morph_data), makecmap_options)));
+        return(color_layer);
+    } else {
+        merged_morph_data = c(lh_morph_data, rh_morph_data);
+        common_cmap = do.call(squash::makecmap, utils::modifyList(list(merged_morph_data), makecmap_options));
+        lh_layer = squash::cmap(lh_morph_data, map = common_cmap);
+        rh_layer = squash::cmap(rh_morph_data, map = common_cmap);
+        return(list("lh"=lh_layer, "rh"=rh_layer));
+    }
 }
 
 

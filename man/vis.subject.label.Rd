@@ -11,8 +11,7 @@ vis.subject.label(subjects_dir, subject_id, label, hemi,
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
 
-\item{subject_id}{string. The subject identifier.
-T}
+\item{subject_id}{string. The subject identifier.}
 
 \item{label}{string. Name of the label file, without the hemi part (if any), but including the '.label' suffix. E.g., 'cortex.label' for '?h.cortex.label'.}
 

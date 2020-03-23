@@ -15,7 +15,7 @@
 #'
 #' @param surface string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
 #'
-#' @param colormap a colormap function. See the squash package for some colormaps. Defaults to \code{\link[squash]{jet}}.
+#' @param colormap a colormap function. **DEPRECATED**: use parameter 'makecmap_options' instead.
 #'
 #' @param views list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.
 #'
@@ -28,6 +28,8 @@
 #' @param cortex_only logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the subject. Defaults to FALSE.
 #'
 #' @param style character string, a rendering style, e.g., 'default', 'shiny' or 'semitransparent'.
+#'
+#' @param makecmap_options named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
@@ -43,7 +45,7 @@
 #'
 #' @importFrom squash jet
 #' @export
-vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi="both", surface="white", makecmap_options=list('colFn'=squash::jet), colormap=squash::jet, views=c("t4"), rgloptions = list(), rglactions = list(), draw_colorbar = FALSE, cortex_only=FALSE, style = 'default') {
+vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi="both", surface="white", colormap=squash::jet, views=c("t4"), rgloptions = list(), rglactions = list(), draw_colorbar = FALSE, cortex_only=FALSE, style = 'default', makecmap_options=list('colFn'=squash::jet)) {
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
@@ -58,11 +60,14 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi="bo
 
 
     if(hemi == "both") {
-        lh_cmesh = coloredmesh.from.morph.native(subjects_dir, subject_id, measure, 'lh', surface=surface, colormap=colormap, clip=clip, cortex_only=cortex_only);
-        rh_cmesh = coloredmesh.from.morph.native(subjects_dir, subject_id, measure, 'rh', surface=surface, colormap=colormap, clip=clip, cortex_only=cortex_only);
+        # This is a bit more complex, since we need a single color mapping over the data for both hemispheres.
+        measure_data = subject.morph.native(subjects_dir, subject_id, measure, 'both', cortex_only=cortex_only, split_by_hemi=TRUE);
+        lh_cmesh = coloredmesh.from.morph.native(subjects_dir, subject_id, measure_data$lh, 'lh', surface=surface, makecmap_options=makecmap_options, colormap=colormap, clip=clip, cortex_only=cortex_only);
+        rh_cmesh = coloredmesh.from.morph.native(subjects_dir, subject_id, measure_data$rh, 'rh', surface=surface, makecmap_options=makecmap_options, colormap=colormap, clip=clip, cortex_only=cortex_only);
+        both_hemi_colors = collayer.from.morphlike.data(measure_data$lh, measure_data$rh, makecmap_options=makecmap_options);
         coloredmeshes = list(lh_cmesh, rh_cmesh);
     } else {
-        cmesh = coloredmesh.from.morph.native(subjects_dir, subject_id, measure, hemi, surface=surface, colormap=colormap, clip=clip, cortex_only=cortex_only);
+        cmesh = coloredmesh.from.morph.native(subjects_dir, subject_id, measure, hemi, surface=surface, makecmap_options=makecmap_options, colormap=colormap, clip=clip, cortex_only=cortex_only);
         coloredmeshes = list(cmesh);
     }
 
