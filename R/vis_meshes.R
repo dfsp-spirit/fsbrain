@@ -52,11 +52,18 @@ vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRU
     }
 
     perform.rglactions(rglactions);
-    invisible(coloredmeshes);
+    return(invisible(coloredmeshes));
 }
 
 
 #' @title Check whether object can be rendered by fsbrain
+#'
+#' @param x any `R` object
+#'
+#' @return TRUE if *x* is an instance of a class that can be rendered by fsbrain visualization functions, and FALSE otherwise. Currently, the following types are renderable: `fs.coloredvoxels`, `fs.coloredmesh`, `Triangles3D`.
+#'
+#' @seealso \code{\link[fsbrain]{is.Triangles3D}}
+#'
 #' @keywords internal
 fsbrain.renderable <- function(x) {
     return(is.fs.coloredvoxels(x) | is.fs.coloredmesh(x) | is.Triangles3D(x));
@@ -73,6 +80,11 @@ fsbrain.renderable <- function(x) {
 is.Triangles3D <- function(x) inherits(x, "Triangles3D")
 
 
+#' @title Visualize a renderable object.
+#'
+#'
+#' @seealso \code{\link[fsbrain]{fsbrain.renderable}}
+#'
 #' @keywords internal
 #' @importFrom utils modifyList
 vis.renderable <- function(cmesh, skip_all_na=TRUE, style="default") {
@@ -196,7 +208,7 @@ vis.rotated.coloredmeshes <- function(renderables, rotation_angle, x, y, z, styl
             tris3d$v3 = rgl::rotate3d(tris3d$v3, rotation_angle, x, y, z);
             rotated_renderable = tris3d;
         } else {
-            warning(sprintf("Rotation not supported for object of type '%s'. Leaving oritentation as-is.\n", paste(class(orig_renderable), collapse =" ")));
+            warning(sprintf("Rotation not supported for object of type '%s'. Leaving oritentation as-is.\n", paste(class(orig_renderable), collapse = " ")));
             rotated_renderable = orig_renderable;
         }
         vis.renderable(rotated_renderable, style=style);
@@ -260,7 +272,7 @@ draw.colorbar <- function(coloredmeshes, horizontal=TRUE, num_steps=100) {
 #'
 #' @param png_options Options to pass to \code{\link[grDevices]{png}}, see the docs of that function for details. Allow you to save the plot as a png bitmap image. Example: \code{png_options = list("filename"="outfile.png", "width"=800)}. Defaults to NULL, which will not save anything.
 #'
-#' @param silent logical, whether to suppress messages. Defaults to FALSE.
+#' @param silent logical, whether to suppress messages. Defaults to `FALSE`.
 #'
 #' @return named list with the following entries: "full_data": the combined data from all coloredmeshes (can be NULL if they have no data). "colormap": the colormap function from the coloredmeshes (can be NULL if they have none).
 #'
@@ -349,6 +361,7 @@ coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=TRUE, makecma
 #' @param style a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style. Pass the magic word 'from_mesh' to try to retrieve a style (as a name or a style list) from the field `style` of the mesh, or default to "default" if the mesh has no such field.
 #'
 #' @keywords internal
+#' @importFrom rgl shade3d
 vis.coloredmesh <- function(cmesh, style="default") {
     if(! is.fs.coloredmesh(cmesh)) {
         stop("Parameter cmesh must be an 'fs.coloredmesh' instance.");
@@ -360,12 +373,15 @@ vis.coloredmesh <- function(cmesh, style="default") {
 
 #' @title Produce the named list of style parameters from style definition.
 #'
+#' @description A style definition can be a character string like "shiny", already a parameter list, or a command like 'from_mesh' that tells us to get the style from the renderable. This function creates the final parameters from the definition and the renderable.
+#'
 #' @param renderable A renderable (or any list) which includes a 'style' key. If it does not include such a key, the 'default' style will be used.
 #'
 #' @param style A style definition. Can be a character string like 'shiny' or 'from_mesh', or already a named lsit of material properties (which will be returned as-is).
 #'
-#' @description A style definition can be a character string like "shiny", already a parameter list, or a command like 'from_mesh' that tells us to get the style from the renderable. This function creates the final parameters from the definition and the renderable.
+#' @return a style, resolved to a parameter list compatible with \code{\link[rgl]{material3d}}.
 #'
+#' @keywords internal
 get.rglstyle.parameters <- function(renderable, style) {
     if(style == 'from_mesh') {
         if(!is.null(renderable$style)) {
@@ -390,6 +406,10 @@ get.rglstyle.parameters <- function(renderable, style) {
 #' @description Run \code{\link[rgl]{material3d}} without arguments to see valid style keywords to create new styles.
 #'
 #' @param style string. A style name. Available styles are one of: "default", "shiny", "semitransparent".
+#'
+#' @return a style, resolved to a parameter list compatible with \code{\link[rgl]{material3d}}.
+#'
+#' @seealso \code{\link[rgl]{shade3d}} can use the returned style
 #'
 #' @keywords internal
 get.rglstyle <- function(style) {
