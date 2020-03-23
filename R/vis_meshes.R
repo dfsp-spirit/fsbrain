@@ -19,8 +19,7 @@
 #'
 #' @return the list of visualized coloredmeshes
 #'
-# @keywords internal
-#' @importFrom rgl open3d bg3d wire3d
+#' @importFrom rgl open3d bg3d wire3d par3d
 #' @export
 vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", rgloptions=list(), rglactions=list(), draw_colorbar=FALSE) {
 
@@ -87,6 +86,7 @@ is.Triangles3D <- function(x) inherits(x, "Triangles3D")
 #'
 #' @keywords internal
 #' @importFrom utils modifyList
+#' @importFrom rgl triangles3d
 vis.renderable <- function(cmesh, skip_all_na=TRUE, style="default") {
     if(is.fs.coloredmesh(cmesh)) {
         if(!(skip_all_na && cmesh$morph_data_was_all_na)) {
@@ -136,7 +136,7 @@ vis.renderable <- function(cmesh, skip_all_na=TRUE, style="default") {
 #' @return the list of visualized coloredmeshes
 #'
 #' @keywords internal
-#' @importFrom rgl open3d bg3d wire3d
+#' @importFrom rgl open3d bg3d wire3d play3d spin3d
 vis.coloredmeshes.rotating <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", x=0, y=0, z=1, rpm=6, duration=10, rgloptions=list(), rglactions = list()) {
 
     if(!is.list(coloredmeshes)) {
@@ -359,6 +359,8 @@ coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=TRUE, makecma
 #' @param cmesh a coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
 #'
 #' @param style a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style. Pass the magic word 'from_mesh' to try to retrieve a style (as a name or a style list) from the field `style` of the mesh, or default to "default" if the mesh has no such field.
+#'
+#' @seealso \code{\link[fsbrain]{vis.renderable}}
 #'
 #' @keywords internal
 #' @importFrom rgl shade3d
