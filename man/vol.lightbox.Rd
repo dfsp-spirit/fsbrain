@@ -4,16 +4,9 @@
 \alias{vol.lightbox}
 \title{Draw a lightbox view from volume slices.}
 \usage{
-vol.lightbox(
-  volume,
-  slices = -5,
-  axis = 1L,
-  per_row = 5L,
-  per_col = NULL,
-  border_geometry = "5x5",
-  background_color = "#000000",
-  arrange_single_image = FALSE
-)
+vol.lightbox(volume, slices = -5, axis = 1L, per_row = 5L,
+  per_col = NULL, border_geometry = "5x5",
+  background_color = "#000000", arrange_single_image = FALSE)
 }
 \arguments{
 \item{volume}{3D array, can be numeric (gray-scale intensity values) or color strings. If numeric, the intensity values must be in range `[0, 1]`.}

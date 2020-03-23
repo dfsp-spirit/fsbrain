@@ -72,7 +72,7 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi="bo
 
 #' @title Visualize a label for a subject.
 #'
-#' @description Visualize a label for a subject. A label is jsut a logical vector with one entry for each vertex in the mesh.
+#' @description Visualize a label for a subject. A label is just a logical vector with one entry for each vertex in the mesh.
 #'
 #' @param subjects_dir string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
 #'

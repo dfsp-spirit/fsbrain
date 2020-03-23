@@ -4,20 +4,11 @@
 \alias{vis.region.values.on.subject}
 \title{Visualize arbitrary data, one value per atlas region, on the surface of any subject (including template subjects).}
 \usage{
-vis.region.values.on.subject(
-  subjects_dir,
-  subject_id,
-  atlas,
-  lh_region_value_list,
-  rh_region_value_list,
-  surface = "white",
-  colormap = grDevices::heat.colors,
-  views = c("t4"),
-  rgloptions = list(),
-  rglactions = list(),
-  value_for_unlisted_regions = NA,
-  draw_colorbar = FALSE
-)
+vis.region.values.on.subject(subjects_dir, subject_id, atlas,
+  lh_region_value_list, rh_region_value_list, surface = "white",
+  colormap = grDevices::heat.colors, views = c("t4"),
+  rgloptions = list(), rglactions = list(),
+  value_for_unlisted_regions = NA, draw_colorbar = FALSE)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, containing the subdir of vis_subject_id, the subject that you want to use for visualization.}
@@ -70,20 +61,18 @@ This function can be used for rendering a single value (color) for all vertices 
 
 }
 \seealso{
-Other visualization functions: 
-\code{\link{vis.color.on.subject}()},
-\code{\link{vis.data.on.fsaverage}()},
-\code{\link{vis.data.on.subject}()},
-\code{\link{vis.labeldata.on.subject}()},
-\code{\link{vis.mask.on.subject}()},
-\code{\link{vis.subject.annot}()},
-\code{\link{vis.subject.label}()},
-\code{\link{vis.subject.morph.native}()},
-\code{\link{vis.subject.morph.standard}()},
-\code{\link{vislayout.from.coloredmeshes}()}
+Other visualization functions: \code{\link{vis.color.on.subject}},
+  \code{\link{vis.data.on.fsaverage}},
+  \code{\link{vis.data.on.subject}},
+  \code{\link{vis.labeldata.on.subject}},
+  \code{\link{vis.mask.on.subject}},
+  \code{\link{vis.subject.annot}},
+  \code{\link{vis.subject.label}},
+  \code{\link{vis.subject.morph.native}},
+  \code{\link{vis.subject.morph.standard}},
+  \code{\link{vislayout.from.coloredmeshes}}
 
-Other region-based visualization functions: 
-\code{\link{vis.subject.annot}()}
+Other region-based visualization functions: \code{\link{vis.subject.annot}}
 }
 \concept{region-based visualization functions}
 \concept{visualization functions}

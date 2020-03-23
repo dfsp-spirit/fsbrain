@@ -4,16 +4,9 @@
 \alias{vis.color.on.subject}
 \title{Visualize pre-defined vertex colors on a subject.}
 \usage{
-vis.color.on.subject(
-  subjects_dir,
-  vis_subject_id,
-  color_lh,
-  color_rh,
-  surface = "white",
-  views = c("t4"),
-  rgloptions = list(),
-  rglactions = list()
-)
+vis.color.on.subject(subjects_dir, vis_subject_id, color_lh, color_rh,
+  surface = "white", views = c("t4"), rgloptions = list(),
+  rglactions = list())
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, containing the subdir of vis_subject_id, the subject that you want to use for visualization.}
@@ -51,17 +44,16 @@ Visualize pre-defined vertex colors on a subject.
 
 }
 \seealso{
-Other visualization functions: 
-\code{\link{vis.data.on.fsaverage}()},
-\code{\link{vis.data.on.subject}()},
-\code{\link{vis.labeldata.on.subject}()},
-\code{\link{vis.mask.on.subject}()},
-\code{\link{vis.region.values.on.subject}()},
-\code{\link{vis.subject.annot}()},
-\code{\link{vis.subject.label}()},
-\code{\link{vis.subject.morph.native}()},
-\code{\link{vis.subject.morph.standard}()},
-\code{\link{vislayout.from.coloredmeshes}()}
+Other visualization functions: \code{\link{vis.data.on.fsaverage}},
+  \code{\link{vis.data.on.subject}},
+  \code{\link{vis.labeldata.on.subject}},
+  \code{\link{vis.mask.on.subject}},
+  \code{\link{vis.region.values.on.subject}},
+  \code{\link{vis.subject.annot}},
+  \code{\link{vis.subject.label}},
+  \code{\link{vis.subject.morph.native}},
+  \code{\link{vis.subject.morph.standard}},
+  \code{\link{vislayout.from.coloredmeshes}}
 }
 \concept{surface visualization functions}
 \concept{visualization functions}

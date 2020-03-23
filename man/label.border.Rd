@@ -4,13 +4,8 @@
 \alias{label.border}
 \title{Compute border of a label.}
 \usage{
-label.border(
-  surface_mesh,
-  label,
-  inner_only = TRUE,
-  expand_inwards = 0L,
-  derive = FALSE
-)
+label.border(surface_mesh, label, inner_only = TRUE,
+  expand_inwards = 0L, derive = FALSE)
 }
 \arguments{
 \item{surface_mesh}{surface mesh, as loaded by \code{\link[fsbrain]{subject.surface}}}
@@ -30,11 +25,10 @@ the border as a list with the following entries: `vertices`: integer vector, the
 Compute border of a label.
 }
 \seealso{
-Other surface mesh functions: 
-\code{\link{face.edges}()},
-\code{\link{mesh.vertex.included.faces}()},
-\code{\link{mesh.vertex.neighbors}()},
-\code{\link{subject.surface}()},
-\code{\link{vis.path.along.verts}()}
+Other surface mesh functions: \code{\link{face.edges}},
+  \code{\link{mesh.vertex.included.faces}},
+  \code{\link{mesh.vertex.neighbors}},
+  \code{\link{subject.surface}},
+  \code{\link{vis.path.along.verts}}
 }
 \concept{surface mesh functions}

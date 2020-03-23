@@ -4,15 +4,8 @@
 \alias{coloredmesh.from.annot}
 \title{Create a coloredmesh from an annotation of an atlas.}
 \usage{
-coloredmesh.from.annot(
-  subjects_dir,
-  subject_id,
-  atlas,
-  hemi,
-  surface = "white",
-  colormap = squash::jet,
-  outline = FALSE
-)
+coloredmesh.from.annot(subjects_dir, subject_id, atlas, hemi,
+  surface = "white", colormap = squash::jet, outline = FALSE)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}

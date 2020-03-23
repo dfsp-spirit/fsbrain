@@ -4,14 +4,9 @@
 \alias{background.mean.curvature}
 \title{Compute mean curv surface color layer.}
 \usage{
-background.mean.curvature(
-  subjects_dir,
-  subject_id,
-  hemi = "both",
-  cortex_only = FALSE,
-  bin_colors = c("#898989", "#5e5e5e"),
-  bin_thresholds = c(-0.1, 0.1)
-)
+background.mean.curvature(subjects_dir, subject_id, hemi = "both",
+  cortex_only = FALSE, bin_colors = c("#898989", "#5e5e5e"),
+  bin_thresholds = c(-0.1, 0.1))
 }
 \arguments{
 \item{subjects_dir}{character string, the FreeSurfer SUBJECTS_DIR.}
@@ -35,7 +30,6 @@ Compute mean curv surface color layer.
 \seealso{
 You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
 
-Other surface color layer: 
-\code{\link{collayers.merge}()}
+Other surface color layer: \code{\link{collayers.merge}}
 }
 \concept{surface color layer}

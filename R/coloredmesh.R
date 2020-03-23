@@ -107,7 +107,7 @@ check.for.coloredmeshes.colormap <- function(coloredmeshes) {
 #'
 #' @param subject_id string. The subject identifier.
 #'
-#' @param measure string. The morphometry data to use. E.g., 'area' or 'thickness'. Pass NULL to render the surface in white, without any data.
+#' @param measure string. The morphometry data to use. E.g., 'area' or 'thickness'. Pass NULL to render the surface in white, without any data. One can also pass the pre-loaded morphometry data as a numerical vector, the length of which must match the number of surface vertices.
 #'
 #' @param hemi string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.
 #'
@@ -133,7 +133,11 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
     if(is.null(measure)) {
         morph_data = NULL;
     } else {
-        morph_data = subject.morph.native(subjects_dir, subject_id, measure, hemi, cortex_only=cortex_only);
+        if(is.numeric(measure)) {
+            morph_data = measure;
+        } else {
+            morph_data = subject.morph.native(subjects_dir, subject_id, measure, hemi, cortex_only=cortex_only);
+        }
     }
 
     if(! is.null(clip)) {
@@ -141,11 +145,16 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
     }
 
     if(freesurferformats::is.fs.surface(surface)) {
-        surface_data = surface;
+        surface_mesh = surface;
     } else {
-        surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
+        surface_mesh = subject.surface(subjects_dir, subject_id, surface, hemi);
     }
-    mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
+
+    if(nrow(surface_mesh$vertices) != length(morph_data)) {
+        warning(sprintf("Data mismatch: surface has %d vertices, but %d color values passed in argument 'color_data'.\n", nrow(surface_mesh$vertices), length(morph_data)));
+    }
+
+    mesh = rgl::tmesh3d(c(t(surface_mesh$vertices)), c(t(surface_mesh$faces)), homogeneous=FALSE);
     col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
 
     cm = list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap);
@@ -177,11 +186,19 @@ coloredmesh.from.color <- function(subjects_dir, subject_id, color_data, hemi, s
     }
 
     if(freesurferformats::is.fs.surface(surface)) {
-        surface_data = surface;
+        surface_mesh = surface;
     } else {
-        surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
+        surface_mesh = subject.surface(subjects_dir, subject_id, surface, hemi);
     }
-    mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
+    mesh = rgl::tmesh3d(c(t(surface_mesh$vertices)), c(t(surface_mesh$faces)), homogeneous=FALSE);
+
+    if(nrow(surface_mesh$vertices) != length(color_data)) {
+        if(length(color_data) == 1L) {
+            color_data = rep(color_data, nrow(surface_mesh$vertices));
+        } else {
+            warning(sprintf("Data mismatch: surface has %d vertices, but %d color values passed in argument 'color_data'.\n", nrow(surface_mesh$vertices), length(color_data)));
+        }
+    }
 
     cm = list("mesh"=mesh, "col"=color_data, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=NULL, "cmap_fun"=NULL);
     class(cm) = c("fs.coloredmesh", class(cm));
@@ -257,7 +274,11 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
     if(is.null(measure)) {
         morph_data = NULL;
     } else {
-        morph_data = subject.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm = fwhm, cortex_only = cortex_only);
+        if(is.numeric(measure)) {
+            morph_data = measure;
+        } else {
+            morph_data = subject.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm = fwhm, cortex_only = cortex_only);
+        }
     }
 
     if(! is.null(clip)) {
@@ -265,12 +286,16 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
     }
 
     if(freesurferformats::is.fs.surface(surface)) {
-        surface_data = surface;
+        surface_mesh = surface;
     } else {
-        surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
+        surface_mesh = subject.surface(subjects_dir, subject_id, surface, hemi);
     }
 
-    mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
+    if(nrow(surface_mesh$vertices) != length(morph_data)) {
+        warning(sprintf("Data mismatch: surface has %d vertices, but %d morphometry values passed in argument 'measure'.\n", nrow(surface_mesh$vertices), length(morph_data)));
+    }
+
+    mesh = rgl::tmesh3d(c(t(surface_mesh$vertices)), c(t(surface_mesh$faces)), homogeneous=FALSE);
 
     if(is.null(morph_data)) {
         col = 'white';
@@ -366,9 +391,9 @@ coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surfac
     }
 
     if(freesurferformats::is.fs.surface(surface)) {
-        surface_data = surface;
+        surface_mesh = surface;
     } else {
-        surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
+        surface_mesh = subject.surface(subjects_dir, subject_id, surface, hemi);
     }
 
     if(is.character(atlas)) {
@@ -376,11 +401,15 @@ coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surfac
     } else {
         annot = atlas;
     }
-    mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
+    mesh = rgl::tmesh3d(c(t(surface_mesh$vertices)), c(t(surface_mesh$faces)), homogeneous=FALSE);
     if(outline) {
-        col = annot.outline(annot, surface_data);
+        col = annot.outline(annot, surface_mesh);
     } else {
         col = annot$hex_colors_rgb;
+    }
+
+    if(nrow(surface_mesh$vertices) != length(col)) {
+        warning(sprintf("Data mismatch: surface has %d vertices, but %d color values received from annotation.\n", nrow(surface_mesh$vertices), length(col)));
     }
 
     cm = list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=NULL, "cmap_fun"=colormap);
