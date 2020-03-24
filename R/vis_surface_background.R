@@ -25,6 +25,11 @@
 #' @family surface color layer
 #' @export
 background.mean.curvature <- function(subjects_dir, subject_id, hemi="both", cortex_only=FALSE, bin_colors=c('#898989', '#5e5e5e'), bin_thresholds=c(-0.1, 0.1)) {
+
+    if(!(hemi %in% c("lh", "rh", "both"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
+    }
+
     if(hemi == 'both') {
         mc_split = subject.morph.native(subjects_dir, subject_id, 'curv', hemi=hemi, cortex_only=cortex_only, split_by_hemi=TRUE);
         mc = c(mc_split$lh, mc_split$rh);
@@ -57,6 +62,7 @@ background.mean.curvature <- function(subjects_dir, subject_id, hemi="both", cor
 #'
 #' @family surface color layer
 #' @importFrom utils modifyList
+#' @importFrom squash cmap makecmap jet
 #' @export
 collayer.from.morphlike.data <- function(lh_morph_data=NULL, rh_morph_data=NULL, makecmap_options=list('colFn'=squash::jet)) {
     if(is.null(lh_morph_data) | is.null(rh_morph_data)) {
@@ -82,6 +88,81 @@ collayer.from.morphlike.data <- function(lh_morph_data=NULL, rh_morph_data=NULL,
         lh_layer = squash::cmap(lh_morph_data, map = common_cmap);
         rh_layer = squash::cmap(rh_morph_data, map = common_cmap);
         return(list("lh"=lh_layer, "rh"=rh_layer));
+    }
+}
+
+
+#' @title Compute surface color layer from annotation or atlas data.
+#'
+#' @param lh_annotdata loaded annotation data for left hemi, as returned by \code{\link[fsbrain]{subject.annot}}
+#'
+#' @param rh_annotdata loaded annotation data for right hemi
+#'
+#' @return named hemi list, each entry is a vector of color strings, one color per surface vertex. The coloring represents the atlas data.
+#'
+#' @seealso You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
+#'
+#' @family surface color layer
+#' @export
+collayer.from.annotdata <- function(lh_annotdata=NULL, rh_annotdata=NULL) {
+    if(is.null(lh_annotdata) | is.null(rh_annotdata)) {
+
+        if(is.null(lh_annotdata) & is.null(rh_annotdata)) {
+            warning("Both 'lh_annotdata' and 'rh_annotdata' are NULL, return a single white color value for each hemi.");
+            return(list("lh"="#FFFFFF", "rh"="#FFFFFF"));
+        }
+
+        if(is.null(lh_annotdata)) {
+            hemi = "rh";
+            annot_data = rh_annotdata;
+        } else {
+            hemi = "lh";
+            annot_data = lh_annotdata;
+        }
+
+        color_layer = annot_data$hex_colors_rgb;
+        return(hemilist.wrap(color_layer, hemi));
+    } else {
+        lh_layer = lh_annotdata$hex_colors_rgb;
+        rh_layer = rh_annotdata$hex_colors_rgb;
+        return(list("lh"=lh_layer, "rh"=rh_layer));
+    }
+}
+
+
+#' @title Compute surface color layer from annotation or atlas data.
+#'
+#' @param subjects_dir character string, the FreeSurfer SUBJECTS_DIR.
+#'
+#' @param subject_id character string, the subject identifier.
+#'
+#' @param hemi character string, one of 'lh', 'rh', or 'both'.
+#'
+#' @param atlas character string, the atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.
+#'
+#' @return named hemi list, each entry is a vector of color strings, one color per surface vertex. The coloring represents the atlas data.
+#'
+#' @seealso You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
+#'
+#' @family surface color layer
+#' @export
+collayer.from.annot <- function(subjects_dir, subject_id, hemi, atlas) {
+
+    if(!(hemi %in% c("lh", "rh", "both"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
+    }
+
+    if(hemi == "both") {
+        lh_annotdata = subject.annot(subjects_dir, subject_id, 'lh', atlas);
+        rh_annotdata = subject.annot(subjects_dir, subject_id, 'rh', atlas);
+        return(collayer.from.annotdata(lh_annotdata, rh_annotdata));
+    } else {
+        hemi_annotdata = subject.annot(subjects_dir, subject_id, hemi, atlas);
+        if(hemi == "lh") {
+            return(collayer.from.annotdata(hemi_annotdata, NULL));
+        } else {
+            return(collayer.from.annotdata(NULL, hemi_annotdata));
+        }
     }
 }
 

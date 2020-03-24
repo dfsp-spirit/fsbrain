@@ -24,6 +24,8 @@ Compute surface color layer from morph-like data.
 You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
 
 Other surface color layer: \code{\link{background.mean.curvature}},
+  \code{\link{collayer.from.annotdata}},
+  \code{\link{collayer.from.annot}},
   \code{\link{collayers.merge}}
 }
 \concept{surface color layer}

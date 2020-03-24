@@ -19,6 +19,8 @@ Merge several color layers into one based on their transparency and alpha blendi
 }
 \seealso{
 Other surface color layer: \code{\link{background.mean.curvature}},
+  \code{\link{collayer.from.annotdata}},
+  \code{\link{collayer.from.annot}},
   \code{\link{collayer.from.morphlike.data}}
 }
 \concept{surface color layer}

@@ -46,3 +46,26 @@ test_that("Alphablending works", {
     expect_equal(blended[4], '#555555FF');  # gray on fully transparent background becomes gray
 })
 
+
+test_that("An annotation-based or atlas color layer can be created", {
+
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+
+    num_verts_subject1_lh = 149244L;
+    num_verts_subject1_rh = 153333L;
+
+    skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
+
+    annot_layer = collayer.from.annot(subjects_dir, 'subject1', 'both', 'aparc');
+
+    expect_true(is.list(annot_layer));
+    expect_equal(names(annot_layer), c("lh", "rh"));
+    expect_equal(length(annot_layer$lh), num_verts_subject1_lh);
+    expect_equal(length(annot_layer$rh), num_verts_subject1_rh);
+    expect_equal(length(unique(annot_layer$lh)), 35L); # number of aparc atlas regions for subject
+    expect_equal(length(unique(annot_layer$rh)), 35L);
+
+    # vis.color.on.subject(subjects_dir, 'subject1', annot_layer$lh, annot_layer$rh);
+})
+
