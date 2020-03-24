@@ -51,25 +51,15 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi="bo
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
     }
 
+    measure_data = subject.morph.native(subjects_dir, subject_id, measure, hemi, cortex_only=cortex_only, split_by_hemi=TRUE);
 
     if(rglactions.has.key(rglactions, 'clip_data')) {
-        clip = rglactions$clip_data;
-    } else {
-        clip = NULL;
+        clip_range = rglactions$clip_data;
+        measure_data = clip.data(measure_data, lower=clip_range[1], upper=clip_range[2]);
     }
 
-
-    if(hemi == "both") {
-        # This is a bit more complex, since we need a single color mapping over the data for both hemispheres.
-        measure_data = subject.morph.native(subjects_dir, subject_id, measure, 'both', cortex_only=cortex_only, split_by_hemi=TRUE);
-        lh_cmesh = coloredmesh.from.morph.native(subjects_dir, subject_id, measure_data$lh, 'lh', surface=surface, makecmap_options=makecmap_options, colormap=colormap, clip=clip, cortex_only=cortex_only);
-        rh_cmesh = coloredmesh.from.morph.native(subjects_dir, subject_id, measure_data$rh, 'rh', surface=surface, makecmap_options=makecmap_options, colormap=colormap, clip=clip, cortex_only=cortex_only);
-        both_hemi_colors = collayer.from.morphlike.data(measure_data$lh, measure_data$rh, makecmap_options=makecmap_options);
-        coloredmeshes = list(lh_cmesh, rh_cmesh);
-    } else {
-        cmesh = coloredmesh.from.morph.native(subjects_dir, subject_id, measure, hemi, surface=surface, makecmap_options=makecmap_options, colormap=colormap, clip=clip, cortex_only=cortex_only);
-        coloredmeshes = list(cmesh);
-    }
+    both_hemi_colors = collayer.from.morphlike.data(measure_data$lh, measure_data$rh, makecmap_options=makecmap_options);
+    coloredmeshes = coloredmeshes.from.color(subjects_dir, subject_id, both_hemi_colors, hemi, surface=surface);
 
     return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, style = style)));
 }
@@ -201,17 +191,17 @@ vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi="
     }
 
     if(rglactions.has.key(rglactions, 'clip_data')) {
-        clip = rglactions$clip_data;
+        do_clip = rglactions$clip_data;
     } else {
-        clip = NULL;
+        do_clip = NULL;
     }
 
     if(hemi == "both") {
-        lh_cmesh = coloredmesh.from.morph.standard(subjects_dir, subject_id, measure, 'lh', fwhm, surface=surface, template_subject=template_subject, template_subjects_dir=template_subjects_dir, colormap=colormap, clip=clip, cortex_only=cortex_only);
-        rh_cmesh = coloredmesh.from.morph.standard(subjects_dir, subject_id, measure, 'rh', fwhm, surface=surface, template_subject=template_subject, template_subjects_dir=template_subjects_dir, colormap=colormap, clip=clip, cortex_only=cortex_only);
+        lh_cmesh = coloredmesh.from.morph.standard(subjects_dir, subject_id, measure, 'lh', fwhm, surface=surface, template_subject=template_subject, template_subjects_dir=template_subjects_dir, colormap=colormap, clip=do_clip, cortex_only=cortex_only);
+        rh_cmesh = coloredmesh.from.morph.standard(subjects_dir, subject_id, measure, 'rh', fwhm, surface=surface, template_subject=template_subject, template_subjects_dir=template_subjects_dir, colormap=colormap, clip=do_clip, cortex_only=cortex_only);
         coloredmeshes = list(lh_cmesh, rh_cmesh);
     } else {
-        cmesh = coloredmesh.from.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm, surface=surface, template_subject=template_subject, template_subjects_dir=template_subjects_dir, colormap=colormap, clip=clip, cortex_only=cortex_only);
+        cmesh = coloredmesh.from.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm, surface=surface, template_subject=template_subject, template_subjects_dir=template_subjects_dir, colormap=colormap, clip=do_clip, cortex_only=cortex_only);
         coloredmeshes = list(cmesh);
     }
 
@@ -242,6 +232,7 @@ brainviews <- function(views, coloredmeshes, rgloptions = list(), rglactions = l
 
     # Wrap a single instance into a list if needed
     if(fsbrain.renderable(coloredmeshes)) {
+        print("Wrapping single renderable instance into list.");
         coloredmeshes = list(coloredmeshes);
     }
 

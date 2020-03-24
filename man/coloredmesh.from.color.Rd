@@ -14,7 +14,7 @@ coloredmesh.from.color(subjects_dir, subject_id, color_data, hemi,
 
 \item{color_data}{vector of hex color strings}
 
-\item{hemi}{string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.}
+\item{hemi}{string, one of 'lh' or 'rh'. The hemisphere name.}
 
 \item{surface}{character string or `fs.surface` instance. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 }
@@ -23,5 +23,8 @@ coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} me
 }
 \description{
 Create a coloredmesh from a mesh and pre-defined colors.
+}
+\note{
+Do not call this, use \code{\link[fsbrain]{coloredmeshes.from.color}} instead.
 }
 \keyword{internal}

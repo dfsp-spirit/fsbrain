@@ -4,8 +4,8 @@
 \alias{collayer.from.morphlike.data}
 \title{Compute surface color layer from morph-like data.}
 \usage{
-collayer.from.morphlike.data(lh_morph_data, rh_morph_data,
-  makecmap_options = list(colFn = squash::jet))
+collayer.from.morphlike.data(lh_morph_data = NULL,
+  rh_morph_data = NULL, makecmap_options = list(colFn = squash::jet))
 }
 \arguments{
 \item{lh_morph_data}{numerical vector, can be NULL}
@@ -15,7 +15,7 @@ collayer.from.morphlike.data(lh_morph_data, rh_morph_data,
 \item{makecmap_options}{named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.}
 }
 \value{
-vector of color strings, one color per surface vertex. The coloring represents the morph data. If the `hemi` parameter is 'both', a named list with entries 'lh' and 'rh' is returned instead.
+named hemi list, each entry is a vector of color strings, one color per surface vertex. The coloring represents the morph data.
 }
 \description{
 Compute surface color layer from morph-like data.

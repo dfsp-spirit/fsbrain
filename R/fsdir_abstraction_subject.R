@@ -75,9 +75,7 @@ subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, format
         }
 
         if(split_by_hemi) {
-            ret_list = list();
-            ret_list[[hemi]] = morph_data;
-            return(ret_list);
+            return(hemilist.wrap(morph_data, hemi));
         } else {
             return(morph_data);
         }

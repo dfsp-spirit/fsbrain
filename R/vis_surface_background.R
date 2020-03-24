@@ -51,19 +51,31 @@ background.mean.curvature <- function(subjects_dir, subject_id, hemi="both", cor
 #'
 #' @param makecmap_options named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.
 #'
-#' @return vector of color strings, one color per surface vertex. The coloring represents the morph data. If the `hemi` parameter is 'both', a named list with entries 'lh' and 'rh' is returned instead.
+#' @return named hemi list, each entry is a vector of color strings, one color per surface vertex. The coloring represents the morph data.
 #'
 #' @seealso You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
 #'
 #' @family surface color layer
 #' @importFrom utils modifyList
 #' @export
-collayer.from.morphlike.data <- function(lh_morph_data, rh_morph_data, makecmap_options=list('colFn'=squash::jet)) {
-    color_layers = list();
+collayer.from.morphlike.data <- function(lh_morph_data=NULL, rh_morph_data=NULL, makecmap_options=list('colFn'=squash::jet)) {
     if(is.null(lh_morph_data) | is.null(rh_morph_data)) {
-        morph_data = ifelse(is.null(lh_morph_data), rh_morph_data, lh_morph_data);
+
+        if(is.null(lh_morph_data) & is.null(rh_morph_data)) {
+            warning("Both 'lh_morph_data' and 'rh_morph_data' are NULL, return a single white color value for each hemi.");
+            return(list("lh"="#FFFFFF", "rh"="#FFFFFF"));
+        }
+
+        if(is.null(lh_morph_data)) {
+            hemi = "rh";
+            morph_data = rh_morph_data;
+        } else {
+            hemi = "lh";
+            morph_data = lh_morph_data;
+        }
+
         color_layer = squash::cmap(morph_data, map = do.call(squash::makecmap, utils::modifyList(list(morph_data), makecmap_options)));
-        return(color_layer);
+        return(hemilist.wrap(color_layer, hemi));
     } else {
         merged_morph_data = c(lh_morph_data, rh_morph_data);
         common_cmap = do.call(squash::makecmap, utils::modifyList(list(merged_morph_data), makecmap_options));

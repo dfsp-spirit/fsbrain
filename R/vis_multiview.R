@@ -100,13 +100,42 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     layout_dim_y = 2;
     num_views = layout_dim_x * layout_dim_y;
 
-    coloredmeshes = unify.coloredmeshes.colormaps(coloredmeshes);
+    print("brainview.t4: names(coloredmeshes):")
+    print(names(coloredmeshes));
 
-    hemi_sorted_cmeshes = sort.coloredmeshes.by.hemi(coloredmeshes);
+    if("lh" %in% names(coloredmeshes) | "rh" %in% names(coloredmeshes)) {
+        print("Using new style");
+        if("lh" %in% names(coloredmeshes)) {
+            lh_meshes = list(coloredmeshes$lh);
+        } else {
+            lh_meshes = NULL;
+        }
 
-    lh_meshes = hemi_sorted_cmeshes$lh;
-    rh_meshes = hemi_sorted_cmeshes$rh;
+        print("lh_meshes:");
+        print(lh_meshes);
+        print("coloredmeshes$lh:")
+        print(coloredmeshes$lh)
 
+
+        if("rh" %in% names(coloredmeshes)) {
+            rh_meshes = list(coloredmeshes$rh);
+        } else {
+            rh_meshes = NULL;
+        }
+
+        print("rh_meshes:");
+        print(rh_meshes);
+        print("coloredmeshes$rh:")
+        print(coloredmeshes$rh)
+
+    } else {
+        # This is the old style of passing the list: unsorted with unmerged colormaps. We need to fiddle with the data.
+        print("Using old style");
+        coloredmeshes = unify.coloredmeshes.colormaps(coloredmeshes);
+        hemi_sorted_cmeshes = sort.coloredmeshes.by.hemi(coloredmeshes);
+        lh_meshes = hemi_sorted_cmeshes$lh;
+        rh_meshes = hemi_sorted_cmeshes$rh;
+    }
 
     rgl::open3d();
     do.call(rgl::par3d, rgloptions);

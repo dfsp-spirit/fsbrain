@@ -189,10 +189,13 @@ vis.coloredmeshes.rotating <- function(coloredmeshes, background="white", skip_a
 #'
 #' @keywords internal
 vis.rotated.coloredmeshes <- function(renderables, rotation_angle, x, y, z, style="default", draw_colorbar=FALSE) {
+    if(is.null(renderables)) {
+        return;
+    }
     for (mesh_idx in seq_len(length(renderables))) {     # usually this will only run once for the single mesh of a hemisphere.
         orig_renderable = renderables[[mesh_idx]];
+        do_vis = TRUE;
         if(is.fs.coloredmesh(orig_renderable)) {
-            orig_renderable = renderables[[mesh_idx]];
             orig_mesh = orig_renderable$mesh;
             rotated_mesh = rgl::rotate3d(orig_mesh, rotation_angle, x, y, z);
             rotated_renderable = orig_renderable;         # copy coloredmesh
@@ -208,10 +211,13 @@ vis.rotated.coloredmeshes <- function(renderables, rotation_angle, x, y, z, styl
             tris3d$v3 = rgl::rotate3d(tris3d$v3, rotation_angle, x, y, z);
             rotated_renderable = tris3d;
         } else {
-            warning(sprintf("Rotation not supported for object of type '%s'. Leaving oritentation as-is.\n", paste(class(orig_renderable), collapse = " ")));
-            rotated_renderable = orig_renderable;
+            warning(sprintf("Rotation not supported for object of type '%s'. Not rendering object.\n", paste(class(orig_renderable), collapse = " ")));
+            do_vis = FALSE;
         }
-        vis.renderable(rotated_renderable, style=style);
+
+        if(do_vis) {
+            vis.renderable(rotated_renderable, style=style);
+        }
     }
 
     if(draw_colorbar) {
@@ -475,14 +481,13 @@ sort.coloredmeshes.by.hemi <- function(coloredmeshes) {
     rh_meshes = list();
     for (mesh_idx in seq_len(length(coloredmeshes))) {
         cmesh = coloredmeshes[[mesh_idx]];
+        mesh_name = sprintf("mesh%d", mesh_idx);
         if(! ('hemi' %in% names(cmesh))) {
-            #warning(sprintf("Ignoring coloredmesh # %d which has no hemi value at all.\n", mesh_idx));
-            mesh_name = sprintf("mesh%d", mesh_idx);
+            warning(sprintf("Assigning coloredmesh # %d which has no hemi value at all to both hemispheres.\n", mesh_idx));
             lh_meshes[[mesh_name]] = cmesh;
             rh_meshes[[mesh_name]] = cmesh;
         } else {
             if(cmesh$hemi == 'lh') {
-                mesh_name = sprintf("mesh%d", mesh_idx);
                 lh_meshes[[mesh_name]] = cmesh;
             } else if(cmesh$hemi == 'rh') {
                 rh_meshes[[mesh_name]] = cmesh;

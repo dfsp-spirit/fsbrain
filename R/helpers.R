@@ -20,7 +20,7 @@ fup <- function(word) {
 #'
 #' @description Set all data values outside the given quantile range to the border values. This is usefull to properly visualize morphometry data that includes outliers. These outliers negatively affect the colormap, as all the non-outlier values become hard to distinguish. This function can be used to filter the data before plotting it.
 #'
-#' @param data, numeric vector. The input data.
+#' @param data, numeric vector. The input data. Can also be a hemi list.
 #'
 #' @param lower, numeric. The probability for the lower quantile, defaults to `0.05`.
 #'
@@ -35,9 +35,14 @@ fup <- function(word) {
 #' @importFrom stats quantile
 #' @export
 clip.data <- function(data, lower=0.05, upper=0.95){
-    quantiles = stats::quantile(data, c(lower, upper), na.rm = TRUE, names = FALSE);
-    data[ data < quantiles[1] ] = quantiles[1];
-    data[ data > quantiles[2] ] = quantiles[2];
+
+    if(is.list(data)) { # treat as a hemi list
+      return(lapply(data, clip.data, lower, upper));
+    } else {
+      quantiles = stats::quantile(data, c(lower, upper), na.rm = TRUE, names = FALSE);
+      data[ data < quantiles[1] ] = quantiles[1];
+      data[ data > quantiles[2] ] = quantiles[2];
+    }
     return(data);
 }
 
@@ -287,5 +292,84 @@ read.colorcsv <- function(filepath) {
     } else {
         stop(sprintf("No valid color definition found in colorcsv file '%s'.", filepath));
     }
+}
+
+
+#' @title Wrap data into a named hemi list.
+#'
+#' @param data something to wrap, typically some data for a hemisphere, e.g., a vector of morphometry data values
+#'
+#' @param hemi character string, one of 'lh' or 'rh'. The name to use for the data in the returned list.
+#'
+#' @return named list, with the 'data' in the name given by parameter 'hemi'
+#'
+# @keywords internal
+#' @export
+hemilist.wrap <- function(data, hemi) {
+  if(!(hemi %in% c("lh", "rh"))) {
+    stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
+  }
+  ret_list = list();
+  ret_list[[hemi]] = data;
+  return(ret_list);
+}
+
+
+#' @title Unwrap hemi data from a named hemi list.
+#'
+#' @param hemi_list named list, can have entries 'lh' and/or 'rh'
+#'
+#' @param hemi character string, the hemi data name to retrieve from the list. Can be NULL if the list only has a single entry.
+#'
+#' @return the data
+#'
+# @keywords internal
+#' @export
+hemilist.unwrap <- function(hemi_list, hemi=NULL) {
+  if(! is.list(hemi_list)) {
+    stop("Parameter 'hemi_list' must be a named list.");
+  }
+  if(length(hemi_list) < 1L) {
+    stop("Parameter 'hemi_list' must not be empty.");
+  }
+  if(is.null(hemi)) {
+    if(length(hemi_list) != 1L) {
+      stop("Parameter 'hemi' can only be NULL if 'hemi_list' has exactly length 1.");
+    }
+    if("lh" %in% names(hemi_list)) {
+      return(hemi_list$lh);
+    } else if("rh" %in% names(hemi_list)) {
+      return(hemi_list$rh);
+    } else {
+      stop("The entry in the 'hemi_list' must be named 'lh' or 'rh'.");
+    }
+  } else {
+    if(!(hemi %in% c("lh", "rh"))) {
+      stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh', or NULL but is '%s'.\n", hemi));
+    }
+    return(hemi_list[[hemi]]);
+  }
+}
+
+
+#' @title Get combined data of hemi list
+#'
+#' @param hemi_list named list, can have entries 'lh' and/or 'rh'
+#'
+#' @return the data combined with \code{\link[base]{c}}, or NULL if both entries are NULL.
+#'
+#' @export
+hemilist.get.combined.data <- function(hemi_list) {
+  lh_data = hemilist.unwrap(hemi_list, 'lh');
+  rh_data = hemilist.unwrap(hemi_list, 'rh');
+  if(is.null(lh_data) | is.null(rh_data)) {
+    if(is.null(lh_data) & is.null(rh_data)) {
+      return(NULL);
+    } else {
+      return(hemilist.unwrap(hemi_list));
+    }
+  } else {
+    return(c(lh_data, rh_data));
+  }
 }
 

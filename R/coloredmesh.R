@@ -173,11 +173,13 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
 #'
 #' @param color_data vector of hex color strings
 #'
-#' @param hemi string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.
+#' @param hemi string, one of 'lh' or 'rh'. The hemisphere name.
 #'
 #' @param surface character string or `fs.surface` instance. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
 #'
 #' @return coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
+#'
+#' @note Do not call this, use \code{\link[fsbrain]{coloredmeshes.from.color}} instead.
 #'
 #' @keywords internal
 #' @importFrom rgl tmesh3d rgl.open wire3d
@@ -205,6 +207,43 @@ coloredmesh.from.color <- function(subjects_dir, subject_id, color_data, hemi, s
     cm = list("mesh"=mesh, "col"=color_data, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=NULL, "cmap_fun"=NULL);
     class(cm) = c("fs.coloredmesh", class(cm));
     return(cm);
+}
+
+
+#' @title Create coloredmeshes for both hemis using pre-defined colors.
+#'
+#' @param subjects_dir string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
+#'
+#' @param subject_id string. The subject identifier.
+#'
+#' @param color_data named list with names 'lh' and 'rh', each entry must be a vector of hex color strings
+#'
+#' @param hemi string, one of 'lh', 'rh', or 'both'. The hemisphere name.
+#'
+#' @param surface character string or `fs.surface` instance. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
+#'
+#' @return named list of coloredmeshes. Each entry is a named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
+#'
+#' @export
+coloredmeshes.from.color <- function(subjects_dir, subject_id, color_data, hemi, surface="white") {
+    if(!(hemi %in% c("lh", "rh", "both"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh', or 'both' but is '%s'.\n", hemi));
+    }
+
+    if(hemi=="both") {
+        if(! is.list(color_data)) {
+            stop("The parameter 'color_data' must be a named list with entries 'lh' and 'rh' if 'hemi' is 'both'.");
+        }
+        lh_cm = coloredmesh.from.color(subjects_dir, subject_id, color_data$lh, 'lh', surface=surface);
+        rh_cm = coloredmesh.from.color(subjects_dir, subject_id, color_data$rh, 'rh', surface=surface);
+        return(list("lh"=lh_cm, "rh"=rh_cm));
+    } else {
+        if(is.list(color_data)) {
+            color_data = hemilist.unwrap(color_data);
+        }
+        cm = coloredmesh.from.color(subjects_dir, subject_id, color_data, hemi, surface=surface);
+        return(hemilist.wrap(cm, hemi));
+    }
 }
 
 
@@ -519,7 +558,8 @@ coloredmesh.from.mask <- function(subjects_dir, subject_id, mask, hemi, surface=
 #' @export
 print.fs.coloredmesh <- function(x, ...) {
     cat(sprintf("Brain coloredmesh with %d vertices and %d faces.\n", ncol(x$mesh$vb), ncol(x$mesh$it)));
-    cat(sprintf("Hemi is '%s', will be rendered: %s.\n", x$hemi, !x$morph_data_was_all_na));
+    cat(sprintf(" * Hemi is '%s', will be rendered: %s.\n", x$hemi, !x$morph_data_was_all_na));
+    cat(sprintf(" * Contains %d color values, %d unique colors.\n", length(x$col), length(unique(x$col))));
 }
 
 
