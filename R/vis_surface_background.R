@@ -222,6 +222,8 @@ collayers.merge <- function(collayers, opaque_background="#ffffff") {
 #'
 #' @references see the *Alpha blending* section on https://en.wikipedia.org/wiki/Alpha_compositing
 #'
+#' @family color functions
+#'
 #' @importFrom grDevices rgb col2rgb
 #' @export
 alphablend <- function(front_color, back_color) {
@@ -251,3 +253,46 @@ alphablend <- function(front_color, back_color) {
     out_rgb = (t(src_rgb) * src_alpha + t(dst_rgb) * dst_alpha * (1.0 - src_alpha)) / out_alpha;
     return(grDevices::rgb(cbind(out_rgb, out_alpha), alpha = TRUE));
 }
+
+
+#' @title Perform simple desaturation or grayscale conversion of RGBA colors.
+#'
+#' @param color rgba color strings
+#'
+#' @param gamma_correct logical, whether to apply non-linear gamma correction. First performs gamma expansion, then applies the gray-scale channel weigths, then gamma compression.
+#'
+#' @return rgba color strings, the grayscale colors. The information from one of the three rgb channels would be enough. The alpha value is not touched.
+#'
+#' @references see https://en.wikipedia.org/wiki/Grayscale#Converting_color_to_grayscale
+#'
+#' @note Assumes sRGB color space.
+#'
+#' @family color functions
+#'
+#' @importFrom grDevices rgb col2rgb
+#' @export
+desaturate <- function(color, gamma_correct=FALSE) {
+    color_rgba_matrix = grDevices::col2rgb(color, alpha = TRUE)/255.;
+
+    src_alpha = color_rgba_matrix[4,];
+    src_rgb = color_rgba_matrix[1:3,];
+
+    if(gamma_correct) {
+        # perform gamma expansion
+        src_rgb = ifelse(src_rgb <= 0.04045, src_rgb / 12.92, ((src_rgb + 0.055)/1.055)**2.4);
+    }
+
+    channel_weights = c(0.2126, 0.7152, 0.0722);
+
+    out_rgb_per_channel = t(src_rgb) %*% c(channel_weights);   # divide by number of channels
+
+    if(gamma_correct) {
+        # perform gamma compression
+        out_rgb_per_channel = ifelse(out_rgb_per_channel <= 0.0031308, 12.92 * out_rgb_per_channel, 1.055 * out_rgb_per_channel**(1/2.4) - 0.055);
+    }
+
+    out_rgb = cbind(out_rgb_per_channel, out_rgb_per_channel, out_rgb_per_channel);
+
+    return(grDevices::rgb(cbind(out_rgb, src_alpha), alpha = TRUE));
+}
+

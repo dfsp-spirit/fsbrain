@@ -67,5 +67,6 @@ test_that("An annotation-based or atlas color layer can be created", {
     expect_equal(length(unique(annot_layer$rh)), 35L);
 
     # vis.color.on.subject(subjects_dir, 'subject1', annot_layer$lh, annot_layer$rh);
+    # vis.color.on.subject(subjects_dir, 'subject1', desaturate(annot_layer$lh), desaturate(annot_layer$rh));
 })
 

@@ -20,3 +20,7 @@ Implements the *over* alpha blending operation.
 \references{
 see the *Alpha blending* section on https://en.wikipedia.org/wiki/Alpha_compositing
 }
+\seealso{
+Other color functions: \code{\link{desaturate}}
+}
+\concept{color functions}
