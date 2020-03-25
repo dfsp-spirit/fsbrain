@@ -48,6 +48,38 @@ background.mean.curvature <- function(subjects_dir, subject_id, hemi="both", cor
 }
 
 
+#' @title Compute atlas or annotation surface color layer.
+#'
+#' @param subjects_dir character string, the FreeSurfer SUBJECTS_DIR.
+#'
+#' @param subject_id character string, the subject identifier.
+#'
+#' @param hemi character string, one of 'lh', 'rh', or 'both'. The latter will merge the data for both hemis into a single vector.
+#'
+#' @param atlas character string, the atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.
+#'
+#' @param grayscale logical, whether to convert the atlas colors to grayscale
+#'
+#' @return vector of color strings, one color per surface vertex. The coloring reflects the atlas regions. If the `hemi` parameter is 'both', a named list with entries 'lh' and 'rh' is returned instead.
+#'
+#' @seealso You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
+#'
+#' @family surface color layer
+#' @export
+background.atlas <- function(subjects_dir, subject_id, hemi="both", atlas="aparc", grayscale=TRUE) {
+    if(!(hemi %in% c("lh", "rh", "both"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
+    }
+
+    annot_layer = collayer.from.annot(subjects_dir, subject_id, hemi, atlas);
+
+    if(grayscale) {
+        annot_layer = lapply(annot_layer, desaturate);
+    }
+    return(annot_layer);
+}
+
+
 #' @title Compute surface color layer from morph-like data.
 #'
 #' @param lh_morph_data numerical vector, can be NULL
