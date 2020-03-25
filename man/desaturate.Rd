@@ -4,18 +4,21 @@
 \alias{desaturate}
 \title{Perform simple desaturation or grayscale conversion of RGBA colors.}
 \usage{
-desaturate(color, gamma_correct = TRUE)
+desaturate(color, gamma_correct = FALSE)
 }
 \arguments{
 \item{color}{rgba color strings}
 
-\item{gamma_correct}{logical, whether to apply non-linear gamma correction}
+\item{gamma_correct}{logical, whether to apply non-linear gamma correction. First performs gamma expansion, then applies the gray-scale channel weigths, then gamma compression.}
 }
 \value{
 rgba color strings, the grayscale colors. The information from one of the three rgb channels would be enough. The alpha value is not touched.
 }
 \description{
 Perform simple desaturation or grayscale conversion of RGBA colors.
+}
+\note{
+Assumes sRGB color space.
 }
 \references{
 see https://en.wikipedia.org/wiki/Grayscale#Converting_color_to_grayscale

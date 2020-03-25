@@ -18,7 +18,8 @@ a vector, matrix or array of color strings
 Merge several color layers into one based on their transparency and alpha blending. In the final result, the lower layers are visible through the transparent or `NA` parts (if any) of the upper layers.
 }
 \seealso{
-Other surface color layer: \code{\link{background.mean.curvature}},
+Other surface color layer: \code{\link{background.atlas}},
+  \code{\link{background.mean.curvature}},
   \code{\link{collayer.from.annotdata}},
   \code{\link{collayer.from.annot}},
   \code{\link{collayer.from.morphlike.data}}
