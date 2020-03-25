@@ -33,7 +33,7 @@ vis.subject.label(subjects_dir, subject_id, label, hemi,
 list of coloredmeshes. The coloredmeshes used for the visualization.
 }
 \description{
-Visualize a label for a subject. A label is just a logical vector with one entry for each vertex in the mesh.
+Visualize a label for a subject. A label is just a logical vector with one entry for each vertex in the mesh. Each vertex may additionally be associated with a scalar value, but this function ignored that.
 }
 \examples{
 \donttest{
@@ -43,7 +43,7 @@ Visualize a label for a subject. A label is just a logical vector with one entry
    surface = 'white';
    hemi = 'both';
    label = 'cortex.label';
-   vis.subject.label(subjects_dir, subject_id, label, hemi);
+   vis.subject.label(subjects_dir, subject_id, label, hemi, views="si");
 }
 
 }

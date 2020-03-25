@@ -68,6 +68,33 @@ brainview.sr <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 }
 
 
+#' @keywords internal
+get.sorted.cmeshes <- function(coloredmeshes) {
+    if("lh" %in% names(coloredmeshes) | "rh" %in% names(coloredmeshes)) {
+        # Use the new style of coloredmeshes: a list with entries 'lh' and 'rh', each of which contains a single cmesh
+        if("lh" %in% names(coloredmeshes)) {
+            lh_meshes = list(coloredmeshes$lh);
+        } else {
+            lh_meshes = NULL;
+        }
+
+        if("rh" %in% names(coloredmeshes)) {
+            rh_meshes = list(coloredmeshes$rh);
+        } else {
+            rh_meshes = NULL;
+        }
+    } else {
+        # This is the old style of passing the list: unsorted with unmerged colormaps. We need to fiddle with the data.
+        # Some functions still use this, but they will all be reworked in the future. Once done, this part can be removed.
+        coloredmeshes = unify.coloredmeshes.colormaps(coloredmeshes);
+        hemi_sorted_cmeshes = sort.coloredmeshes.by.hemi(coloredmeshes);
+        lh_meshes = hemi_sorted_cmeshes$lh;
+        rh_meshes = hemi_sorted_cmeshes$rh;
+    }
+    return(list("lh"=lh_meshes, "rh"=rh_meshes));
+}
+
+
 #' @title Visualize a list of colored meshes from four angles.
 #'
 #' @param coloredmeshes, list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
@@ -101,27 +128,9 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     num_views = layout_dim_x * layout_dim_y;
 
 
-    if("lh" %in% names(coloredmeshes) | "rh" %in% names(coloredmeshes)) {
-        # Use the new style of coloredmeshes: a list with entries 'lh' and 'rh', each of which contains a single cmesh
-        if("lh" %in% names(coloredmeshes)) {
-            lh_meshes = list(coloredmeshes$lh);
-        } else {
-            lh_meshes = NULL;
-        }
-
-        if("rh" %in% names(coloredmeshes)) {
-            rh_meshes = list(coloredmeshes$rh);
-        } else {
-            rh_meshes = NULL;
-        }
-    } else {
-        # This is the old style of passing the list: unsorted with unmerged colormaps. We need to fiddle with the data.
-        # Some functions still use this, but they will all be reworked in the future. Once done, this part can be removed.
-        coloredmeshes = unify.coloredmeshes.colormaps(coloredmeshes);
-        hemi_sorted_cmeshes = sort.coloredmeshes.by.hemi(coloredmeshes);
-        lh_meshes = hemi_sorted_cmeshes$lh;
-        rh_meshes = hemi_sorted_cmeshes$rh;
-    }
+    sorted_meshes = get.sorted.cmeshes(coloredmeshes);
+    lh_meshes = sorted_meshes$lh;
+    rh_meshes = sorted_meshes$rh;
 
     rgl::open3d();
     do.call(rgl::par3d, rgloptions);
@@ -250,12 +259,9 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     layout_dim_y = 3;
     num_views = layout_dim_x * layout_dim_y;
 
-    coloredmeshes = unify.coloredmeshes.colormaps(coloredmeshes);
-
-    hemi_sorted_cmeshes = sort.coloredmeshes.by.hemi(coloredmeshes);
-    lh_meshes = hemi_sorted_cmeshes$lh;
-    rh_meshes = hemi_sorted_cmeshes$rh;
-
+    sorted_meshes = get.sorted.cmeshes(coloredmeshes);
+    lh_meshes = sorted_meshes$lh;
+    rh_meshes = sorted_meshes$rh;
 
     rgl::open3d();
     do.call(rgl::par3d, rgloptions);
@@ -385,11 +391,9 @@ brainview.sd <- function(coloredmeshes, view_angle, background="white", skip_all
         stop("Parameter 'coloredmeshes' must be a list.");
     }
 
-    coloredmeshes = unify.coloredmeshes.colormaps(coloredmeshes);
-
-    hemi_sorted_cmeshes = sort.coloredmeshes.by.hemi(coloredmeshes);
-    lh_meshes = hemi_sorted_cmeshes$lh;
-    rh_meshes = hemi_sorted_cmeshes$rh;
+    sorted_meshes = get.sorted.cmeshes(coloredmeshes);
+    lh_meshes = sorted_meshes$lh;
+    rh_meshes = sorted_meshes$rh;
 
 
     rgl::open3d();

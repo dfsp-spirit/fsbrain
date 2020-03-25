@@ -47,7 +47,7 @@ Creates a surface mesh, applies a colormap transform the morphometry data values
 \donttest{
    fsbrain::download_optional_data();
    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
-   vis.subject.morph.native(subjects_dir, 'subject1', 'thickness', 'lh');
+   vis.subject.morph.native(subjects_dir, 'subject1', 'thickness', 'lh', views=c("t9"));
 }
 
 }

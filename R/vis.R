@@ -37,7 +37,7 @@
 #' \donttest{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
-#'    vis.subject.morph.native(subjects_dir, 'subject1', 'thickness', 'lh');
+#'    vis.subject.morph.native(subjects_dir, 'subject1', 'thickness', 'lh', views=c("t9"));
 #' }
 #'
 #' @family visualization functions
@@ -67,7 +67,7 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi="bo
 
 #' @title Visualize a label for a subject.
 #'
-#' @description Visualize a label for a subject. A label is just a logical vector with one entry for each vertex in the mesh.
+#' @description Visualize a label for a subject. A label is just a logical vector with one entry for each vertex in the mesh. Each vertex may additionally be associated with a scalar value, but this function ignored that.
 #'
 #' @param subjects_dir string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
 #'
@@ -99,7 +99,7 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi="bo
 #'    surface = 'white';
 #'    hemi = 'both';
 #'    label = 'cortex.label';
-#'    vis.subject.label(subjects_dir, subject_id, label, hemi);
+#'    vis.subject.label(subjects_dir, subject_id, label, hemi, views="si");
 #' }
 #'
 #' @family visualization functions
