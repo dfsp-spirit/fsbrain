@@ -125,7 +125,7 @@ mesh.vertex.included.faces <- function(surface_mesh, source_vertices) {
 #' @return vector of colors, one color for each mesh vertex
 #'
 #' @export
-annot.outline <- function(annotdata, surface_mesh, background="white", silent=FALSE, expand_inwards=0L) {
+annot.outline <- function(annotdata, surface_mesh, background="white", silent=TRUE, expand_inwards=0L) {
     if(length(annotdata$vertices) != nrow(surface_mesh$vertices)) {
         stop(sprintf("Annotation is for %d vertices but mesh contains %d, vertex counts must match.\n", length(annotdata$vertices), nrow(surface_mesh$vertices)));
     }

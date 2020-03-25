@@ -70,3 +70,29 @@ test_that("An annotation-based or atlas color layer can be created", {
     # vis.color.on.subject(subjects_dir, 'subject1', desaturate(annot_layer$lh), desaturate(annot_layer$rh));
 })
 
+
+
+test_that("An outline layer based on an annotation can be created", {
+
+    skip("This test has to be run manually and interactively. It requires an X11 display and inflated surface data.");
+
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+
+    num_verts_subject1_lh = 149244L;
+    num_verts_subject1_rh = 153333L;
+
+    skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
+
+    outline_layer = background.atlas(subjects_dir, 'tim', outline = TRUE, grayscale = FALSE);
+
+    expect_true(is.list(outline_layer));
+    expect_equal(names(outline_layer), c("lh", "rh"));
+    expect_equal(length(outline_layer$lh), num_verts_subject1_lh);
+    expect_equal(length(outline_layer$rh), num_verts_subject1_rh);
+    expect_equal(length(unique(outline_layer$lh)), 35L); # number of aparc atlas regions for subject
+    expect_equal(length(unique(outline_layer$rh)), 35L);
+
+    vis.color.on.subject(subjects_dir, 'subject1', outline_layer$lh, outline_layer$rh, surface = "inflated");
+})
+
