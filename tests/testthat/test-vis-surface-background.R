@@ -1,19 +1,19 @@
 # Tests for surface color layers.
 
 test_that("A mean curvature color layer can be loaded", {
-    skip("This test has to be run manually and interactively. It requires an X11 display and mean curv data.");
+    skip("This test has to be run manually and interactively. It requires an X11 display and mean curvature morph data.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+    subject_id = "subject1";
 
-    bgcol_lh = background.mean.curvature(subjects_dir, "subject1", "lh");
-    bgcol_rh = background.mean.curvature(subjects_dir, "subject1", "rh");
+    bgcol = collayer.bg.meancurv(subjects_dir, subject_id);
 
     num_verts_subject1_lh = 149244;
     num_verts_subject1_rh = 153333;
-    expect_equal(length(bgcol_lh), num_verts_subject1_lh);
-    expect_equal(length(bgcol_rh), num_verts_subject1_rh);
+    expect_equal(length(bgcol$lh), num_verts_subject1_lh);
+    expect_equal(length(bgcol$rh), num_verts_subject1_rh);
 
-    vis.color.on.subject(subjects_dir, 'subject1', bgcol_lh, bgcol_rh, surface="inflated");
+    vis.color.on.subject(subjects_dir, subject_id, bgcol$lh, bgcol$rh, surface="inflated");
 })
 
 

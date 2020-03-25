@@ -4,7 +4,9 @@
 # gives the viewer a rough orientation with respect to gyri and sulci.
 
 
-#' @title Compute mean curv surface color layer.
+#' @title Compute binarized mean curvature surface color layer.
+#'
+#' @description Compute a binarized mean curvature surface color layer, this is intended as a background color layer. You can merge it with your data layer using \code{\link[fsbrain]{collayers.merge}}.
 #'
 #' @param subjects_dir character string, the FreeSurfer SUBJECTS_DIR.
 #'
@@ -16,35 +18,99 @@
 #'
 #' @param bin_colors vector of two character strings, the two colors to use.
 #'
-#' @param bin_thresholds vector of 2 double values, the curvature threshold values used to separate gyri from sulci.
+#' @param bin_thresholds vector of 1 or 2 double values, the curvature threshold values used to separate gyri from sulci.
 #'
-#' @return vector of color strings, one color per surface vertex. The coloring separates gyri from sulci. If the `hemi` parameter is 'both', a named list with entries 'lh' and 'rh' is returned instead.
+#' @return vector of color strings, one color per surface vertex. The coloring separates gyri from sulci based on mean curvature. If the `hemi` parameter is 'both', a named list with entries 'lh' and 'rh' is returned instead.
 #'
 #' @seealso You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
 #'
 #' @family surface color layer
 #' @export
-background.mean.curvature <- function(subjects_dir, subject_id, hemi="both", cortex_only=FALSE, bin_colors=c('#898989', '#5e5e5e'), bin_thresholds=c(-0.1, 0.1)) {
+collayer.bg.meancurv <- function(subjects_dir, subject_id, hemi="both", cortex_only=FALSE, bin_colors=c('#898989', '#5e5e5e'), bin_thresholds=c(0.0)) {
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
     }
 
-    if(hemi == 'both') {
-        mc_split = subject.morph.native(subjects_dir, subject_id, 'curv', hemi=hemi, cortex_only=cortex_only, split_by_hemi=TRUE);
-        mc = c(mc_split$lh, mc_split$rh);
-        last_lh_index = length(mc_split$lh);
-    } else {
-        mc = subject.morph.native(subjects_dir, subject_id, 'curv', hemi=hemi, cortex_only=cortex_only);
+    color_layer = list();
+    if(hemi %in% c("lh", "both")) {
+        mc = subject.morph.native(subjects_dir, subject_id, 'curv', hemi='lh', cortex_only=cortex_only);
+        cl = rep(bin_colors[1], length(mc));
+        if(length(bin_thresholds) == 1L) {
+            gyri_vertices = which(mc > bin_thresholds[1]);
+        } else {
+            gyri_vertices = which(mc > bin_thresholds[1] & mc < bin_thresholds[2]);
+        }
+        cl[gyri_vertices] = bin_colors[2];
+        color_layer$lh = cl;
     }
-    color_layer = rep(bin_colors[1], length(mc));
-    gyri_vertices = which(mc > bin_thresholds[1] & mc < bin_thresholds[2]);
-    color_layer[gyri_vertices] = bin_colors[2];
-    if(hemi == 'both') {
-        return(list("lh"=color_layer[1:last_lh_index], "rh"=color_layer[last_lh_index+1L:length(mc)]));
-    } else {
-        return(color_layer);
+    if(hemi %in% c("rh", "both")) {
+        mc = subject.morph.native(subjects_dir, subject_id, 'curv', hemi='rh', cortex_only=cortex_only);
+        cl = rep(bin_colors[1], length(mc));
+        if(length(bin_thresholds) == 1L) {
+            gyri_vertices = which(mc > bin_thresholds[1]);
+        } else {
+            gyri_vertices = which(mc > bin_thresholds[1] & mc < bin_thresholds[2]);
+        }
+        cl[gyri_vertices] = bin_colors[2];
+        color_layer$rh = cl;
     }
+    return(color_layer);
+}
+
+
+#' @title Compute binarized sulcal depth surface color layer.
+#'
+#' @description Compute a binarized sulcal depth surface color layer, this is intended as a background color layer. You can merge it with your data layer using \code{\link[fsbrain]{collayers.merge}}.
+#'
+#' @param subjects_dir character string, the FreeSurfer SUBJECTS_DIR.
+#'
+#' @param subject_id character string, the subject identifier.
+#'
+#' @param hemi character string, one of 'lh', 'rh', or 'both'. The latter will merge the data for both hemis into a single vector.
+#'
+#' @param cortex_only logical, whether to restrict pattern computation to the cortex.
+#'
+#' @param bin_colors vector of two character strings, the two colors to use.
+#'
+#' @param bin_thresholds vector of 1 or 2 double values, the curvature threshold values used to separate gyri from sulci.
+#'
+#' @return vector of color strings, one color per surface vertex. The coloring separates gyri from sulci based on sulcal depth. If the `hemi` parameter is 'both', a named list with entries 'lh' and 'rh' is returned instead.
+#'
+#' @seealso You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
+#'
+#' @family surface color layer
+#' @export
+collayer.bg.sulc <- function(subjects_dir, subject_id, hemi="both", cortex_only=FALSE, bin_colors=c('#898989', '#5e5e5e'), bin_thresholds=c(0.0)) {
+
+    if(!(hemi %in% c("lh", "rh", "both"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
+    }
+
+    color_layer = list();
+    if(hemi %in% c("lh", "both")) {
+        mc = subject.morph.native(subjects_dir, subject_id, 'sulc', hemi='lh', cortex_only=cortex_only);
+        cl = rep(bin_colors[1], length(mc));
+        if(length(bin_thresholds) == 1L) {
+            gyri_vertices = which(mc > bin_thresholds[1]);
+        } else {
+            gyri_vertices = which(mc > bin_thresholds[1] & mc < bin_thresholds[2]);
+        }
+        cl[gyri_vertices] = bin_colors[2];
+        color_layer$lh = cl;
+    }
+    if(hemi %in% c("rh", "both")) {
+        mc = subject.morph.native(subjects_dir, subject_id, 'sulc', hemi='rh', cortex_only=cortex_only);
+        cl = rep(bin_colors[1], length(mc));
+        if(length(bin_thresholds) == 1L) {
+            gyri_vertices = which(mc > bin_thresholds[1]);
+        } else {
+            gyri_vertices = which(mc > bin_thresholds[1] & mc < bin_thresholds[2]);
+        }
+        cl[gyri_vertices] = bin_colors[2];
+        color_layer$rh = cl;
+    }
+    return(color_layer);
 }
 
 
@@ -72,7 +138,7 @@ background.mean.curvature <- function(subjects_dir, subject_id, hemi="both", cor
 #'
 #' @family surface color layer
 #' @export
-background.atlas <- function(subjects_dir, subject_id, hemi="both", atlas="aparc", grayscale=!outline, outline=FALSE, outline_surface = "white") {
+collayer.bg.atlas <- function(subjects_dir, subject_id, hemi="both", atlas="aparc", grayscale=!outline, outline=FALSE, outline_surface = "white") {
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
     }
