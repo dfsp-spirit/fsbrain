@@ -14,7 +14,7 @@ coloredmeshes.from.color(subjects_dir, subject_id, color_data, hemi,
 
 \item{color_data}{named list with names 'lh' and 'rh', each entry must be a vector of hex color strings}
 
-\item{hemi}{string, one of 'lh', 'rh', or 'both'. The hemisphere name.}
+\item{hemi}{string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.}
 
 \item{surface}{character string or `fs.surface` instance. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 }

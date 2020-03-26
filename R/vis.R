@@ -93,18 +93,20 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi="bo
 #'
 #' @importFrom squash rainbow2
 #' @export
-vis.subject.label <- function(subjects_dir, subject_id, label, hemi, surface="white", colormap=squash::rainbow2, views=c("t4"), rgloptions = list(), rglactions = list(), draw_colorbar = FALSE) {
+vis.subject.label <- function(subjects_dir, subject_id, label, hemi, surface="white", colormap=NULL, views=c("t4"), rgloptions = list(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=squash::rainbow2)) {
+
+    makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
     }
 
     if(hemi == "both") {
-        lh_cmesh = coloredmesh.from.label(subjects_dir, subject_id, label, 'lh', surface=surface, colormap=colormap);
-        rh_cmesh = coloredmesh.from.label(subjects_dir, subject_id, label, 'rh', surface=surface, colormap=colormap);
+        lh_cmesh = coloredmesh.from.label(subjects_dir, subject_id, label, 'lh', surface=surface, makecmap_options=makecmap_options);
+        rh_cmesh = coloredmesh.from.label(subjects_dir, subject_id, label, 'rh', surface=surface, makecmap_options=makecmap_options);
         coloredmeshes = list(lh_cmesh, rh_cmesh);
     } else {
-        cmesh = coloredmesh.from.label(subjects_dir, subject_id, label, hemi, surface=surface, colormap=colormap);
+        cmesh = coloredmesh.from.label(subjects_dir, subject_id, label, hemi, surface=surface, makecmap_options=makecmap_options);
         coloredmeshes = list(cmesh);
     }
 
@@ -117,33 +119,13 @@ vis.subject.label <- function(subjects_dir, subject_id, label, hemi, surface="wh
 #'
 #' @description Creates a surface mesh, applies a colormap transform the morphometry data values into colors, and renders the resulting colored mesh in an interactive window. If hemi is 'both', the data is rendered for the whole brain.
 #'
-#' @param subjects_dir string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
-#'
-#' @param subject_id string. The subject identifier.
-#'
-#' @param measure string. The morphometry data to use. E.g., 'area' or 'thickness'. Pass NULL to render just the surface in white, without any data.
-#'
-#' @param hemi string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the label data files to be loaded.
+#' @inheritParams vis.subject.morph.native
 #'
 #' @param fwhm string, smoothing setting. The smoothing part of the filename, typically something like '0', '5', '10', ...,  or '25'.
-#'
-#' @param surface string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
 #'
 #' @param template_subject The template subject used. This will be used as part of the filename, and its surfaces are loaded for data visualization. Defaults to 'fsaverage'.
 #'
 #' @param template_subjects_dir The template subjects dir. If NULL, the value of the parameter 'subjects_dir' is used. Defaults to NULL. If you have FreeSurfer installed and configured, and are using the standard fsaverage subject, try passing the result of calling 'file.path(Sys.getenv('FREESURFER_HOME'), 'subjects')'.
-#'
-#' @param colormap a colormap function. See the squash package for some colormaps. Defaults to \code{\link[squash]{jet}}.
-#'
-#' @param views list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.
-#'
-#' @param rgloptions option list passed to \code{\link[rgl]{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))}
-#'
-#' @param rglactions named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
-#'
-#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See \code{\link[fsbrain]{coloredmesh.plot.colorbar.separate}} for an alternative.
-#'
-#' @param cortex_only logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the subject. Defaults to FALSE.
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'

@@ -126,11 +126,13 @@ check.for.coloredmeshes.colormap <- function(coloredmeshes) {
 #' @keywords internal
 #' @importFrom squash cmap makecmap jet
 #' @importFrom rgl tmesh3d rgl.open wire3d
-coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hemi, surface="white", colormap=squash::jet, clip=NULL, cortex_only=FALSE, makecmap_options=list('colFn'=squash::jet)) {
+coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hemi, surface="white", colormap=NULL, clip=NULL, cortex_only=FALSE, makecmap_options=list('colFn'=squash::jet)) {
 
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
+
+    makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
 
     if(is.null(measure)) {
         morph_data = NULL;
@@ -157,9 +159,9 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
     }
 
     mesh = rgl::tmesh3d(c(t(surface_mesh$vertices)), c(t(surface_mesh$faces)), homogeneous=FALSE);
-    col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
+    col = squash::cmap(morph_data, map = do.call(squash::makecmap, utils::modifyList(list(morph_data), makecmap_options)));
 
-    cm = list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap);
+    cm = list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=makecmap_options$colFn);
     class(cm) = c("fs.coloredmesh", class(cm));
     return(cm);
 }
@@ -167,15 +169,9 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
 
 #' @title Create a coloredmesh from a mesh and pre-defined colors.
 #'
-#' @param subjects_dir string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
-#'
-#' @param subject_id string. The subject identifier.
+#' @inheritParams coloredmesh.from.morph.native
 #'
 #' @param color_data vector of hex color strings
-#'
-#' @param hemi string, one of 'lh' or 'rh'. The hemisphere name.
-#'
-#' @param surface character string or `fs.surface` instance. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
 #'
 #' @return coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
@@ -212,15 +208,9 @@ coloredmesh.from.color <- function(subjects_dir, subject_id, color_data, hemi, s
 
 #' @title Create coloredmeshes for both hemis using pre-defined colors.
 #'
-#' @param subjects_dir string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
-#'
-#' @param subject_id string. The subject identifier.
+#' @inheritParams coloredmesh.from.morph.native
 #'
 #' @param color_data named list with names 'lh' and 'rh', each entry must be a vector of hex color strings
-#'
-#' @param hemi string, one of 'lh', 'rh', or 'both'. The hemisphere name.
-#'
-#' @param surface character string or `fs.surface` instance. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
 #'
 #' @return named list of coloredmeshes. Each entry is a named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
@@ -247,66 +237,28 @@ coloredmeshes.from.color <- function(subjects_dir, subject_id, color_data, hemi,
 }
 
 
-
-#' @title Create a coloredmesh from a mesh and custom vertex colors.
-#'
-#' @description Allows you to manually assign arbitrary colors to all mesh vertices.
-#'
-#' @param surface_data a surface mesh
-#'
-#' @param vertex_colors vector of n colors, where *n* is the number of vertices in the mesh
-#'
-#' @param hemi character string, one of 'lh' or 'rh'
-#'
-#' @param colormap_used colormap function used, optional. Will be set as metadata. Defaults to NULL.
-#'
-#' @param morph_data the morphometry data used to create the colors, optional. Will be set as metadata. Defaults to NULL.
-#'
-#' @return a coloredmesh
-#'
-#' @export
-coloredmesh.custom <- function(surface_data, vertex_colors, hemi, colormap_used=NULL, morph_data=NULL) {
-    mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
-    cm = list("mesh"=mesh, "col"=vertex_colors, "morph_data_was_all_na"=is.null(morph_data), "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap_used);
-    class(cm) = c("fs.coloredmesh", class(cm));
-    return(cm);
-}
-
-
 #' @title Create a coloredmesh from standard space morphometry data.
 #'
-#' @param subjects_dir string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
-#'
-#' @param subject_id string. The subject identifier.
-#'
-#' @param measure string. The morphometry data to use. E.g., 'area' or 'thickness'. Pass NULL to render just the surface in white, without any data.
-#'
-#' @param hemi string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.
+#' @inheritParams coloredmesh.from.morph.native
 #'
 #' @param fwhm string, smoothing setting. The smoothing part of the filename, typically something like '0', '5', '10', ...,  or '25'.
-#'
-#' @param surface string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
 #'
 #' @param template_subject The template subject used. This will be used as part of the filename, and its surfaces are loaded for data visualization. Defaults to 'fsaverage'.
 #
 #' @param template_subjects_dir The template subjects dir. If NULL, the value of the parameter 'subjects_dir' is used. Defaults to NULL. If you have FreeSurfer installed and configured, and are using the standard fsaverage subject, try passing the result of calling 'file.path(Sys.getenv('FREESURFER_HOME'), 'subjects')'.
-#'
-#' @param colormap a colormap function. See the squash package for some colormaps. Defaults to \code{\link[squash]{jet}}.
-#'
-#' @param clip numeric vector of length 2 or NULL. If given, the 2 values are interpreted as lower and upper percentiles, and the morph data is clipped at the given lower and upper percentile (see [fsbrain::clip.data]). Defaults to NULL (no data clipping).
-#'
-#' @param cortex_only logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the template subject. Defaults to FALSE.
 #'
 #' @return coloredmesh. A named list with entries: "mesh" the [rgl::tmesh3d()] mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
 #' @keywords internal
 #' @importFrom squash cmap makecmap jet
 #' @importFrom rgl tmesh3d rgl.open wire3d
-coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm, surface="white", template_subject='fsaverage', template_subjects_dir=NULL, colormap=squash::jet, clip = NULL, cortex_only=FALSE) {
+coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm, surface="white", template_subject='fsaverage', template_subjects_dir=NULL, colormap=NULL, clip = NULL, cortex_only=FALSE, makecmap_options=list('colFn'=squash::jet)) {
 
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
+
+    makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
 
     if(is.null(template_subjects_dir)) {
         template_subjects_dir = subjects_dir;
@@ -341,9 +293,9 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
     if(is.null(morph_data)) {
         col = 'white';
     } else {
-        col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
+        col = squash::cmap(morph_data, map = do.call(squash::makecmap, utils::modifyList(list(morph_data), makecmap_options)));
     }
-    cm = list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap);
+    cm = list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=makecmap_options$colFn);
     class(cm) = c("fs.coloredmesh", class(cm));
     return(cm);
 }
@@ -351,17 +303,11 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
 
 #' @title Create a coloredmesh from arbitrary data.
 #'
-#' @param subjects_dir string. The FreeSurfer SUBJECTS_DIR, containing the subdir of vis_subject_id, the subject that you want to use for visualization.
+#' @inheritParams coloredmesh.from.morph.native
 #'
 #' @param vis_subject_id string. The subject identifier from which to obtain the surface for data visualization. Example: 'fsaverage'.
 #'
 #' @param morph_data string. The morphometry data to use. E.g., 'area' or 'thickness.'
-#'
-#' @param hemi string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.
-#'
-#' @param surface string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
-#'
-#' @param colormap a colormap function. See the squash package for some colormaps. Defaults to \code{\link[squash]{jet}}.
 #'
 #' @param all_nan_backup_value numeric. If all morph_data values are NA/NaN, no color map can be created. In that case, the values are replaced by this value, and this is indicated in the entry morph_data_was_all_na in the return value. Defaults to 0.0.
 #'
@@ -370,11 +316,14 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
 #' @keywords internal
 #' @importFrom squash cmap makecmap jet
 #' @importFrom rgl tmesh3d rgl.open wire3d
-coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data, hemi, surface="white", colormap=squash::jet, all_nan_backup_value = 0.0) {
+#' @importFrom utils modifyList
+coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data, hemi, surface="white", colormap=NULL, all_nan_backup_value = 0.0, makecmap_options=list('colFn'=squash::jet)) {
 
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
+
+    makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
 
     if(freesurferformats::is.fs.surface(surface)) {
         surface_data = surface;
@@ -396,8 +345,8 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
         morph_data_was_all_na = TRUE;
     }
 
-    col = squash::cmap(morph_data, map = squash::makecmap(morph_data, colFn = colormap));
-    cm = list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=morph_data_was_all_na, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=colormap);
+    col = squash::cmap(morph_data, map = do.call(squash::makecmap, utils::modifyList(list(morph_data), makecmap_options)));
+    cm = list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=morph_data_was_all_na, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=makecmap_options$colFn);
     class(cm) = c("fs.coloredmesh", class(cm));
     return(cm);
 }
@@ -406,17 +355,9 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
 
 #' @title Create a coloredmesh from an annotation of an atlas.
 #'
-#' @param subjects_dir string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
-#'
-#' @param subject_id string. The subject identifier.
+#' @inheritParams coloredmesh.from.morph.native
 #'
 #' @param atlas string or a loaded annotation. If a string, interpreted as the atlas name that should be loaded to get te annotation. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.
-#'
-#' @param hemi string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.
-#'
-#' @param surface string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
-#'
-#' @param colormap a colormap function. See the squash package for some colormaps. Defaults to \code{\link[squash]{jet}}. Not relevant for annotations, ignored.
 #'
 #' @param outline logical, whether to draw an outline only instead of filling the regions. Defaults to FALSE. Only makes sense if you did not pass an outline already. The current implementation for outline computation is rather slow, so setting this to TRUE will considerably increase computation time.
 #'
@@ -425,7 +366,7 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
 #' @keywords internal
 #' @importFrom squash cmap makecmap jet
 #' @importFrom rgl tmesh3d rgl.open wire3d
-coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surface="white", colormap=squash::jet, outline=FALSE) {
+coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surface="white", outline=FALSE) {
 
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
@@ -453,7 +394,7 @@ coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surfac
         warning(sprintf("Data mismatch: surface has %d vertices, but %d color values received from annotation.\n", nrow(surface_mesh$vertices), length(col)));
     }
 
-    cm = list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=NULL, "cmap_fun"=colormap);
+    cm = list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=NULL, "cmap_fun"=NULL);
     class(cm) = c("fs.coloredmesh", class(cm));
     return(cm);
 }
@@ -462,28 +403,22 @@ coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surfac
 
 #' @title Create a coloredmesh from a label.
 #'
-#' @param subjects_dir string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
-#'
-#' @param subject_id string. The subject identifier.
+#' @inheritParams coloredmesh.from.morph.native
 #'
 #' @param label string or vector of integers. If a string, the name of the label file, without the hemi part (if any), but including the '.label' suffix. E.g., 'cortex.label' for '?h.cortex.label'. Alternatively, the already loaded label data as a vector of integers.
-#'
-#' @param hemi string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.
-#'
-#' @param surface string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
-#'
-#' @param colormap a colormap. See the squash package for some colormaps. Defaults to \code{\link[squash]{rainbow2}}.
 #'
 #' @return coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
 #' @keywords internal
 #' @importFrom squash cmap makecmap rainbow2
 #' @importFrom rgl tmesh3d rgl.open wire3d
-coloredmesh.from.label <- function(subjects_dir, subject_id, label, hemi, surface="white", colormap=squash::rainbow2) {
+coloredmesh.from.label <- function(subjects_dir, subject_id, label, hemi, surface="white", colormap=NULL, makecmap_options=list('colFn'=squash::rainbow2)) {
 
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
+
+    makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
 
     if(freesurferformats::is.fs.surface(surface)) {
         surface_data = surface;
@@ -498,24 +433,16 @@ coloredmesh.from.label <- function(subjects_dir, subject_id, label, hemi, surfac
     }
 
     mask = mask.from.labeldata.for.hemi(list(label_data), nrow(surface_data$vertices));
-    return(coloredmesh.from.mask(subjects_dir, subject_id, mask, hemi, surface=surface, colormap=colormap, surface_data=surface_data));
+    return(coloredmesh.from.mask(subjects_dir, subject_id, mask, hemi, surface=surface, makecmap_options=makecmap_options, surface_data=surface_data));
 }
 
 
 
 #' @title Create a coloredmesh from a mask.
 #'
-#' @param subjects_dir string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
-#'
-#' @param subject_id string. The subject identifier.
+#' @inheritParams coloredmesh.from.morph.native
 #'
 #' @param mask logical vector, contains one logical value per vertex.
-#'
-#' @param hemi string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.
-#'
-#' @param surface string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
-#'
-#' @param colormap a colormap. See the squash package for some colormaps. Defaults to \code{\link[squash]{rainbow2}}.
 #'
 #' @param surface_data optional surface object, as returned by \code{\link[fsbrain]{subject.surface}}. If given, used instead of loading the surface data from disk (which users of this function may already have done). Defaults to NULL.
 #'
@@ -523,11 +450,13 @@ coloredmesh.from.label <- function(subjects_dir, subject_id, label, hemi, surfac
 #'
 #' @family mask functions
 #' @export
-coloredmesh.from.mask <- function(subjects_dir, subject_id, mask, hemi, surface="white", colormap=squash::rainbow2, surface_data=NULL) {
+coloredmesh.from.mask <- function(subjects_dir, subject_id, mask, hemi, surface="white", colormap=NULL, surface_data=NULL, makecmap_options=list('colFn'=squash::rainbow2)) {
 
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
+
+    makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
 
     if(is.null(surface_data)) {
         if(freesurferformats::is.fs.surface(surface)) {
@@ -542,8 +471,8 @@ coloredmesh.from.mask <- function(subjects_dir, subject_id, mask, hemi, surface=
     morph_like_data[mask == 1L] = NA;     # set positive values to NA so they get rendered as background.
 
     mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
-    col = squash::cmap(morph_like_data, map = squash::makecmap(morph_like_data, colFn = colormap));
-    cm = list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_like_data, "cmap_fun"=colormap);
+    col = squash::cmap(morph_like_data, map = do.call(squash::makecmap, utils::modifyList(list(morph_like_data), makecmap_options)));
+    cm = list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_like_data, "cmap_fun"=makecmap_options$colFn);
     class(cm) = c("fs.coloredmesh", class(cm));
     return(cm);
 }

@@ -5,8 +5,9 @@
 \title{Visualize a label for a subject.}
 \usage{
 vis.subject.label(subjects_dir, subject_id, label, hemi,
-  surface = "white", colormap = squash::rainbow2, views = c("t4"),
-  rgloptions = list(), rglactions = list(), draw_colorbar = FALSE)
+  surface = "white", colormap = NULL, views = c("t4"),
+  rgloptions = list(), rglactions = list(), draw_colorbar = FALSE,
+  makecmap_options = list(colFn = squash::rainbow2))
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -28,6 +29,8 @@ vis.subject.label(subjects_dir, subject_id, label, hemi,
 \item{rglactions}{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.}
 
 \item{draw_colorbar}{logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See [fsbrain::coloredmesh.plot.colorbar.separate()] for an alternative.}
+
+\item{makecmap_options}{named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'. Should include at least a colormap function as name 'colFn'.}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.

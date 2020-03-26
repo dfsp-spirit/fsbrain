@@ -5,7 +5,7 @@
 \title{Create a coloredmesh from native space morphometry data.}
 \usage{
 coloredmesh.from.morph.native(subjects_dir, subject_id, measure, hemi,
-  surface = "white", colormap = squash::jet, clip = NULL,
+  surface = "white", colormap = NULL, clip = NULL,
   cortex_only = FALSE, makecmap_options = list(colFn = squash::jet))
 }
 \arguments{

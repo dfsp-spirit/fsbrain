@@ -5,11 +5,11 @@
 \title{Create a coloredmesh from arbitrary data.}
 \usage{
 coloredmesh.from.morphdata(subjects_dir, vis_subject_id, morph_data, hemi,
-  surface = "white", colormap = squash::jet,
-  all_nan_backup_value = 0)
+  surface = "white", colormap = NULL, all_nan_backup_value = 0,
+  makecmap_options = list(colFn = squash::jet))
 }
 \arguments{
-\item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, containing the subdir of vis_subject_id, the subject that you want to use for visualization.}
+\item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
 
 \item{vis_subject_id}{string. The subject identifier from which to obtain the surface for data visualization. Example: 'fsaverage'.}
 
@@ -17,11 +17,13 @@ coloredmesh.from.morphdata(subjects_dir, vis_subject_id, morph_data, hemi,
 
 \item{hemi}{string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.}
 
-\item{surface}{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
+\item{surface}{character string or `fs.surface` instance. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 
 \item{colormap}{a colormap function. See the squash package for some colormaps. Defaults to \code{\link[squash]{jet}}.}
 
 \item{all_nan_backup_value}{numeric. If all morph_data values are NA/NaN, no color map can be created. In that case, the values are replaced by this value, and this is indicated in the entry morph_data_was_all_na in the return value. Defaults to 0.0.}
+
+\item{makecmap_options}{named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.}
 }
 \value{
 coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
