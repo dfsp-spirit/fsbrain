@@ -29,7 +29,7 @@
 #'
 #' @param style character string, a rendering style, e.g., 'default', 'shiny' or 'semitransparent'.
 #'
-#' @param makecmap_options named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.
+#' @param makecmap_options named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'. Should include at least a colormap function as name 'colFn'.
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
@@ -45,7 +45,9 @@
 #'
 #' @importFrom squash jet
 #' @export
-vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi="both", surface="white", colormap=squash::jet, views=c("t4"), rgloptions = list(), rglactions = list(), draw_colorbar = FALSE, cortex_only=FALSE, style = 'default', makecmap_options=list('colFn'=squash::jet)) {
+vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi="both", surface="white", colormap=NULL, views=c("t4"), rgloptions = list(), rglactions = list(), draw_colorbar = FALSE, cortex_only=FALSE, style = 'default', makecmap_options=list('colFn'=squash::jet)) {
+
+    makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));

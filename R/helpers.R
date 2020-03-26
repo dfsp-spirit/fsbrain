@@ -373,3 +373,42 @@ hemilist.get.combined.data <- function(hemi_list) {
   }
 }
 
+
+#' @title Create final `makecmap_options` list
+#'
+#' @description Create final makecmap_options to pass to \code{\link[squash]{makecmap}} from existing `makecmap_options` and a colormap function. Used in the vis functions, like \code{\link[fsbrain]{vis.subject.morph.native}}, see the note.
+#'
+#' @param makecmap_options list of `makecmap_options` or `NULL`
+#'
+#' @param colormap a colormap function or `NULL`
+#'
+#' @param default_colormap the colormap function to use in case none is found in the other parameters
+#'
+#' @return valid `makecmap_options`
+#'
+#' @note For backwards compatibility, there are currently two different methods (parameters) to specify a colormap in the vis functions. This function merges the information from both methods.
+#'
+#' @keywords internal
+#' @importFrom squash jet
+makecmakeopts.merge <- function(makecmap_options, colormap, default_colormap=squash::jet) {
+  if(is.null(makecmap_options)) {
+    makecmap_options = list();
+  }
+
+  if(is.null(makecmap_options$colFn)) {
+    if(is.null(colormap)) {
+      warning("No valid colormap function found in parameters 'makecmap_options' or 'colormap', using the default colormap.");
+      makecmap_options$colFn = default_colormap;
+    } else {
+      makecmap_options$colFn = colormap;
+    }
+  } else {
+    if(!is.null(colormap)) {
+      if(all.equal(makecmap_options$colFn, colormap) != TRUE) {
+        warning("Two different colormap functions found in parameters 'makecmap_options' and 'colormap', using the one from 'makecmap_options'.");
+      }
+    }
+  }
+  return(makecmap_options);
+}
+

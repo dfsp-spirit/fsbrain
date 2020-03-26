@@ -5,7 +5,7 @@
 \title{Visualize native space morphometry data for a subject.}
 \usage{
 vis.subject.morph.native(subjects_dir, subject_id, measure,
-  hemi = "both", surface = "white", colormap = squash::jet,
+  hemi = "both", surface = "white", colormap = NULL,
   views = c("t4"), rgloptions = list(), rglactions = list(),
   draw_colorbar = FALSE, cortex_only = FALSE, style = "default",
   makecmap_options = list(colFn = squash::jet))
@@ -35,7 +35,7 @@ vis.subject.morph.native(subjects_dir, subject_id, measure,
 
 \item{style}{character string, a rendering style, e.g., 'default', 'shiny' or 'semitransparent'.}
 
-\item{makecmap_options}{named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.}
+\item{makecmap_options}{named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'. Should include at least a colormap function as name 'colFn'.}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.
