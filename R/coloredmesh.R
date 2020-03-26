@@ -123,7 +123,7 @@ check.for.coloredmeshes.colormap <- function(coloredmeshes) {
 #'
 #' @return coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
-#' @keywords internal
+#' @export
 #' @importFrom squash cmap makecmap jet
 #' @importFrom rgl tmesh3d rgl.open wire3d
 coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hemi, surface="white", colormap=NULL, clip=NULL, cortex_only=FALSE, makecmap_options=list('colFn'=squash::jet)) {
@@ -161,9 +161,7 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
     mesh = rgl::tmesh3d(c(t(surface_mesh$vertices)), c(t(surface_mesh$faces)), homogeneous=FALSE);
     col = squash::cmap(morph_data, map = do.call(squash::makecmap, utils::modifyList(list(morph_data), makecmap_options)));
 
-    cm = list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=makecmap_options$colFn);
-    class(cm) = c("fs.coloredmesh", class(cm));
-    return(cm);
+    return(fs.coloredmesh(mesh, col, hemi, "morph_data"=morph_data, "cmap_fun"=makecmap_options$colFn));
 }
 
 
@@ -200,9 +198,7 @@ coloredmesh.from.color <- function(subjects_dir, subject_id, color_data, hemi, s
         }
     }
 
-    cm = list("mesh"=mesh, "col"=color_data, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=NULL, "cmap_fun"=NULL);
-    class(cm) = c("fs.coloredmesh", class(cm));
-    return(cm);
+    return(fs.coloredmesh(mesh, color_data, hemi));
 }
 
 
@@ -295,9 +291,7 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
     } else {
         col = squash::cmap(morph_data, map = do.call(squash::makecmap, utils::modifyList(list(morph_data), makecmap_options)));
     }
-    cm = list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=makecmap_options$colFn);
-    class(cm) = c("fs.coloredmesh", class(cm));
-    return(cm);
+    return(fs.coloredmesh(mesh, col, hemi, "morph_data"=morph_data, "cmap_fun"=makecmap_options$colFn));
 }
 
 
@@ -346,9 +340,7 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
     }
 
     col = squash::cmap(morph_data, map = do.call(squash::makecmap, utils::modifyList(list(morph_data), makecmap_options)));
-    cm = list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=morph_data_was_all_na, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=makecmap_options$colFn);
-    class(cm) = c("fs.coloredmesh", class(cm));
-    return(cm);
+    return(fs.coloredmesh(mesh, col, hemi, render=!morph_data_was_all_na, morph_data = morph_data, "cmap_fun"=makecmap_options$colFn));
 }
 
 
@@ -394,9 +386,7 @@ coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surfac
         warning(sprintf("Data mismatch: surface has %d vertices, but %d color values received from annotation.\n", nrow(surface_mesh$vertices), length(col)));
     }
 
-    cm = list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=NULL, "cmap_fun"=NULL);
-    class(cm) = c("fs.coloredmesh", class(cm));
-    return(cm);
+    return(fs.coloredmesh(mesh, col, hemi));
 }
 
 
@@ -472,9 +462,7 @@ coloredmesh.from.mask <- function(subjects_dir, subject_id, mask, hemi, surface=
 
     mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
     col = squash::cmap(morph_like_data, map = do.call(squash::makecmap, utils::modifyList(list(morph_like_data), makecmap_options)));
-    cm = list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=FALSE, "hemi"=hemi, "morph_data"=morph_like_data, "cmap_fun"=makecmap_options$colFn);
-    class(cm) = c("fs.coloredmesh", class(cm));
-    return(cm);
+    return(fs.coloredmesh(mesh, col, hemi, "morph_data"=morph_like_data, "cmap_fun"=makecmap_options$colFn, "data_range"=c(0L, 1L)));
 }
 
 
@@ -500,3 +488,53 @@ print.fs.coloredmesh <- function(x, ...) {
 #'
 #' @export
 is.fs.coloredmesh <- function(x) inherits(x, "fs.coloredmesh")
+
+
+
+#' @title fs.coloredmesh constructor
+#'
+#' @param mesh a `mesh3d` instance as returned by \code{\link[rgl]{tmesh3d}} or an `fs.surface` brain surface mesh as returned by functions like \code{\link[fsbrain]{subject.surface}}.
+#'
+#' @param col vector of vertex colors for the mesh, one color per vertex
+#'
+#' @param hemi character string, one of 'lh' or 'rh'
+#'
+#' @param render logical, whether to render this mesh during visualization
+#'
+#' @param morph_data optional, the data used to construct the 'col' values
+#'
+#' @param cmap_fun optional, the colormap function used to construct the 'col' values
+#'
+#' @param data_range optional, the range of the data used to construct the 'col' values. Having this is useful for plotting a colorbar during visualization.
+#'
+#' @return an `fs.coloredmesh` instance. The only fields one should use in client code are 'mesh', 'hemi' and 'col', all others are considered internal and may change without notice.
+#'
+#' @importFrom freesurferformats is.fs.surface
+#' @importFrom rgl tmesh3d
+#' @export
+fs.coloredmesh <- function(mesh, col, hemi, render=TRUE, morph_data=NULL, cmap_fun=NULL, data_range=NULL) {
+    if(freesurferformats::is.fs.surface(mesh)) {
+        mesh = rgl::tmesh3d(c(t(mesh$vertices)), c(t(mesh$faces)), homogeneous=FALSE);
+    }
+    if(!inherits(mesh, "mesh3d")) {
+        stop("Parameter 'mesh' must be a mesh3d or fs.surface instance.");
+    }
+    if(ncol(mesh$vb) != length(col)) {
+        warning(sprintf("The mesh3d instance from parameter 'mesh' has %d vertices, but %d colors passed in parameter 'col'.\n", ncol(mesh$vb), length(col)));
+    }
+    if(!is.null(hemi)) {
+        if(!(hemi %in% c("lh", "rh"))) {
+            stop("Parameter 'hemi' must be 'lh', 'rh', or NULL.");
+        }
+    }
+    if(is.null(data_range)) {
+        if(!is.null(morph_data)) {
+            data_range = range(morph_data, finite=TRUE);
+        }
+    }
+    cm = list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=!render, "render"=render, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=cmap_fun, "data_range"=data_range);
+    class(cm) = c("fs.coloredmesh", class(cm));
+    return(cm);
+}
+
+

@@ -33,4 +33,3 @@ coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} me
 \description{
 Create a coloredmesh from native space morphometry data.
 }
-\keyword{internal}
