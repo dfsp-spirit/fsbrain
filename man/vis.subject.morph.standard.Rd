@@ -7,8 +7,9 @@
 vis.subject.morph.standard(subjects_dir, subject_id, measure,
   hemi = "both", fwhm = "10", surface = "white",
   template_subject = "fsaverage", template_subjects_dir = NULL,
-  colormap = squash::jet, views = c("t4"), rgloptions = list(),
-  rglactions = list(), draw_colorbar = FALSE, cortex_only = FALSE)
+  colormap = NULL, views = c("t4"), rgloptions = list(),
+  rglactions = list(), draw_colorbar = FALSE, cortex_only = FALSE,
+  makecmap_options = list(colFn = squash::jet))
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -38,6 +39,8 @@ vis.subject.morph.standard(subjects_dir, subject_id, measure,
 \item{draw_colorbar}{logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See [fsbrain::coloredmesh.plot.colorbar.separate()] for an alternative.}
 
 \item{cortex_only}{logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the subject. Defaults to FALSE.}
+
+\item{makecmap_options}{named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'. Should include at least a colormap function as name 'colFn'.}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.

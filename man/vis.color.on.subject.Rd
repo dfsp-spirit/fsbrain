@@ -9,7 +9,7 @@ vis.color.on.subject(subjects_dir, vis_subject_id, color_lh, color_rh,
   rglactions = list())
 }
 \arguments{
-\item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, containing the subdir of vis_subject_id, the subject that you want to use for visualization.}
+\item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
 
 \item{vis_subject_id}{string. The subject identifier from which to obtain the surface for data visualization. Example: 'fsaverage'.}
 
@@ -21,7 +21,7 @@ vis.color.on.subject(subjects_dir, vis_subject_id, color_lh, color_rh,
 
 \item{views}{list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.}
 
-\item{rgloptions}{option list passed to \code{\link[rgl]{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))}}
+\item{rgloptions}{option list passed to \code{\link[rgl]{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))}.}
 
 \item{rglactions}{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.}
 }

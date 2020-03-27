@@ -8,9 +8,9 @@ fs.coloredmesh(mesh, col, hemi, render = TRUE, morph_data = NULL,
   cmap_fun = NULL, data_range = NULL)
 }
 \arguments{
-\item{mesh}{brain surface mesh, as returned by functions like \code{\link[fsbrain]{subject.surface}}.}
+\item{mesh}{a `mesh3d` instance as returned by \code{\link[rgl]{tmesh3d}} or an `fs.surface` brain surface mesh as returned by functions like \code{\link[fsbrain]{subject.surface}}.}
 
-\item{col}{vertex colors for the mesh}
+\item{col}{vector of vertex colors for the mesh, one color per vertex}
 
 \item{hemi}{character string, one of 'lh' or 'rh'}
 
