@@ -4,7 +4,47 @@
 # gives the viewer a rough orientation with respect to gyri and sulci.
 
 
-#' @title Compute mean curv surface color layer.
+#' @title Compute binarized mean curvature surface color layer.
+#'
+#' @description Compute a binarized mean curvature surface color layer, this is intended as a background color layer. You can merge it with your data layer using \code{\link[fsbrain]{collayers.merge}}.
+#'
+#' @inheritParams collayer.bg.meancurv
+#'
+#' @param bg character string, a background name. One of 'curv', 'sulc', or 'aparc'.  If this is already a colorlayer in a hemilist, it will be returned as-is.
+#'
+#' @return a color layer, i.e., vector of color strings in a hemilist
+#'
+#' @seealso You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
+#'
+#' @family surface color layer
+#' @export
+collayer.bg <- function(subjects_dir, subject_id, bg, hemi="both") {
+
+    if(!(hemi %in% c("lh", "rh", "both"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
+    }
+
+    if(is.hemilist(bg)) {
+        return(bg);
+    } else if(is.character(bg)) {
+        if(bg == "curv") {
+            return(collayer.bg.meancurv(subjects_dir, subject_id, hemi=hemi));
+        } else if(bg == "sulc") {
+            return(collayer.bg.sulc(subjects_dir, subject_id, hemi=hemi));
+        } else if(bg == "aparc") {
+            return(collayer.bg.atlas(subjects_dir, subject_id, hemi=hemi, atlas='aparc'));
+        } else {
+            stop("Parameter 'bg' has unsupported character string value.");
+        }
+    } else {
+        stop("Parameter 'bg' must be a collayer in a hemilist of one of the fixed character strings listed in the help.");
+    }
+}
+
+
+#' @title Compute binarized mean curvature surface color layer.
+#'
+#' @description Compute a binarized mean curvature surface color layer, this is intended as a background color layer. You can merge it with your data layer using \code{\link[fsbrain]{collayers.merge}}.
 #'
 #' @param subjects_dir character string, the FreeSurfer SUBJECTS_DIR.
 #'
@@ -16,20 +56,261 @@
 #'
 #' @param bin_colors vector of two character strings, the two colors to use.
 #'
-#' @param bin_thresholds vector of 2 double values, the curvature threshold values used to separate gyri from sulci.
+#' @param bin_thresholds vector of 1 or 2 double values, the curvature threshold values used to separate gyri from sulci.
 #'
-#' @return vector of color strings, one color per surface vertex. The coloring separates gyri from sulci.
+#' @return a color layer, i.e., vector of color strings in a hemilist
 #'
 #' @seealso You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
 #'
 #' @family surface color layer
 #' @export
-background.mean.curvature <- function(subjects_dir, subject_id, hemi="both", cortex_only=FALSE, bin_colors=c('#898989', '#5e5e5e'), bin_thresholds=c(-0.1, 0.1)) {
-    mc = subject.morph.native(subjects_dir, subject_id, 'curv', hemi=hemi, cortex_only=cortex_only);
-    color_layer = rep(bin_colors[1], length(mc));
-    gyri_vertices = which(mc > bin_thresholds[1] & mc < bin_thresholds[2]);
-    color_layer[gyri_vertices] = bin_colors[2];
+collayer.bg.meancurv <- function(subjects_dir, subject_id, hemi="both", cortex_only=FALSE, bin_colors=c('#898989', '#5e5e5e'), bin_thresholds=c(0.0)) {
+
+    if(!(hemi %in% c("lh", "rh", "both"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
+    }
+
+    color_layer = list();
+    if(hemi %in% c("lh", "both")) {
+        mc = subject.morph.native(subjects_dir, subject_id, 'curv', hemi='lh', cortex_only=cortex_only);
+        cl = rep(bin_colors[1], length(mc));
+        if(length(bin_thresholds) == 1L) {
+            gyri_vertices = which(mc > bin_thresholds[1]);
+        } else {
+            gyri_vertices = which(mc > bin_thresholds[1] & mc < bin_thresholds[2]);
+        }
+        cl[gyri_vertices] = bin_colors[2];
+        color_layer$lh = cl;
+    }
+    if(hemi %in% c("rh", "both")) {
+        mc = subject.morph.native(subjects_dir, subject_id, 'curv', hemi='rh', cortex_only=cortex_only);
+        cl = rep(bin_colors[1], length(mc));
+        if(length(bin_thresholds) == 1L) {
+            gyri_vertices = which(mc > bin_thresholds[1]);
+        } else {
+            gyri_vertices = which(mc > bin_thresholds[1] & mc < bin_thresholds[2]);
+        }
+        cl[gyri_vertices] = bin_colors[2];
+        color_layer$rh = cl;
+    }
     return(color_layer);
+}
+
+
+#' @title Compute binarized sulcal depth surface color layer.
+#'
+#' @description Compute a binarized sulcal depth surface color layer, this is intended as a background color layer. You can merge it with your data layer using \code{\link[fsbrain]{collayers.merge}}.
+#'
+#' @inheritParams collayer.bg.meancurv
+#'
+#' @return a color layer, i.e., vector of color strings in a hemilist
+#'
+#' @seealso You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
+#'
+#' @family surface color layer
+#' @export
+collayer.bg.sulc <- function(subjects_dir, subject_id, hemi="both", cortex_only=FALSE, bin_colors=c('#898989', '#5e5e5e'), bin_thresholds=c(0.0)) {
+
+    if(!(hemi %in% c("lh", "rh", "both"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
+    }
+
+    color_layer = list();
+    if(hemi %in% c("lh", "both")) {
+        mc = subject.morph.native(subjects_dir, subject_id, 'sulc', hemi='lh', cortex_only=cortex_only);
+        cl = rep(bin_colors[1], length(mc));
+        if(length(bin_thresholds) == 1L) {
+            gyri_vertices = which(mc > bin_thresholds[1]);
+        } else {
+            gyri_vertices = which(mc > bin_thresholds[1] & mc < bin_thresholds[2]);
+        }
+        cl[gyri_vertices] = bin_colors[2];
+        color_layer$lh = cl;
+    }
+    if(hemi %in% c("rh", "both")) {
+        mc = subject.morph.native(subjects_dir, subject_id, 'sulc', hemi='rh', cortex_only=cortex_only);
+        cl = rep(bin_colors[1], length(mc));
+        if(length(bin_thresholds) == 1L) {
+            gyri_vertices = which(mc > bin_thresholds[1]);
+        } else {
+            gyri_vertices = which(mc > bin_thresholds[1] & mc < bin_thresholds[2]);
+        }
+        cl[gyri_vertices] = bin_colors[2];
+        color_layer$rh = cl;
+    }
+    return(color_layer);
+}
+
+
+#' @title Compute atlas or annotation surface color layer.
+#'
+#' @inheritParams collayer.bg.meancurv
+#'
+#' @param atlas character string, the atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.
+#'
+#' @param grayscale logical, whether to convert the atlas colors to grayscale
+#'
+#' @param outline logical or integer, whether to draw the atlas regions as outlines only. If an integer, it is interpreted as the outline thickness. The value `TRUE` is equivalent to the integer value `1L` and leads to a thin border. The value `2L` will expand the border by 1. If this is active, the surface mesh of the subject must exist.
+#'
+#' @param outline_surface character string, the surface to load. Only relevant when 'outline' is used.
+#'
+#' @return a color layer, i.e., vector of color strings in a hemilist
+#'
+#' @seealso You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
+#'
+#' @note Using 'outline' mode is quite slow, and increasing the border thickness makes it even slower.
+#'
+#' @family surface color layer
+#' @export
+collayer.bg.atlas <- function(subjects_dir, subject_id, hemi="both", atlas="aparc", grayscale=!outline, outline=FALSE, outline_surface = "white") {
+    if(!(hemi %in% c("lh", "rh", "both"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
+    }
+
+    outline = as.integer(outline);
+    if(outline >= 1L) {
+        annot_layer = list();
+        if(hemi %in% c("lh", "both")) {
+            annot_layer$lh = annot.outline(subject.annot(subjects_dir, subject_id, 'lh', atlas), subject.surface(subjects_dir, subject_id, outline_surface, 'lh'), background = '#FFFFFFFF', expand_inwards = outline - 1L);
+        }
+        if(hemi %in% c("rh", "both")) {
+            annot_layer$rh = annot.outline(subject.annot(subjects_dir, subject_id, 'rh', atlas), subject.surface(subjects_dir, subject_id, outline_surface, 'rh'), background = '#FFFFFFFF', expand_inwards = outline - 1L);
+        }
+    } else {
+        annot_layer = collayer.from.annot(subjects_dir, subject_id, hemi, atlas);
+    }
+
+    if(grayscale) {
+        annot_layer = lapply(annot_layer, desaturate);
+    }
+    return(annot_layer);
+}
+
+
+#' @title Compute surface color layer from morph-like data.
+#'
+#' @param lh_morph_data numerical vector, can be NULL
+#'
+#' @param rh_morph_data numerical vector, can be NULL
+#'
+#' @param makecmap_options named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.
+#'
+#' @return named hemi list, each entry is a vector of color strings, one color per surface vertex. The coloring represents the morph data.
+#'
+#' @seealso You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
+#'
+#' @family surface color layer
+#' @importFrom utils modifyList
+#' @importFrom squash cmap makecmap jet
+#' @export
+collayer.from.morphlike.data <- function(lh_morph_data=NULL, rh_morph_data=NULL, makecmap_options=list('colFn'=squash::jet)) {
+    if(is.null(lh_morph_data) | is.null(rh_morph_data)) {
+
+        if(is.null(lh_morph_data) & is.null(rh_morph_data)) {
+            warning("Both 'lh_morph_data' and 'rh_morph_data' are NULL, return a single white color value for each hemi.");
+            return(list("lh"="#FFFFFF", "rh"="#FFFFFF"));
+        }
+
+        if(is.null(lh_morph_data)) {
+            hemi = "rh";
+            morph_data = rh_morph_data;
+        } else {
+            hemi = "lh";
+            morph_data = lh_morph_data;
+        }
+
+        color_layer = squash::cmap(morph_data, map = do.call(squash::makecmap, utils::modifyList(list(morph_data), makecmap_options)));
+        return(hemilist.wrap(color_layer, hemi));
+    } else {
+        merged_morph_data = c(lh_morph_data, rh_morph_data);
+        common_cmap = do.call(squash::makecmap, utils::modifyList(list(merged_morph_data), makecmap_options));
+        if(is.numeric(lh_morph_data)) {
+            lh_layer = squash::cmap(lh_morph_data, map = common_cmap);
+        } else {
+            lh_layer = NULL;
+        }
+        if(is.numeric(rh_morph_data)) {
+            rh_layer = squash::cmap(rh_morph_data, map = common_cmap);
+        } else {
+            rh_layer = NULL;
+        }
+        return(list("lh"=lh_layer, "rh"=rh_layer));
+    }
+}
+
+
+#' @title Compute surface color layer from annotation or atlas data.
+#'
+#' @param lh_annotdata loaded annotation data for left hemi, as returned by \code{\link[fsbrain]{subject.annot}}
+#'
+#' @param rh_annotdata loaded annotation data for right hemi
+#'
+#' @return named hemi list, each entry is a vector of color strings, one color per surface vertex. The coloring represents the atlas data.
+#'
+#' @seealso You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
+#'
+#' @family surface color layer
+#' @export
+collayer.from.annotdata <- function(lh_annotdata=NULL, rh_annotdata=NULL) {
+    if(is.null(lh_annotdata) | is.null(rh_annotdata)) {
+
+        if(is.null(lh_annotdata) & is.null(rh_annotdata)) {
+            warning("Both 'lh_annotdata' and 'rh_annotdata' are NULL, return a single white color value for each hemi.");
+            return(list("lh"="#FFFFFF", "rh"="#FFFFFF"));
+        }
+
+        if(is.null(lh_annotdata)) {
+            hemi = "rh";
+            annot_data = rh_annotdata;
+        } else {
+            hemi = "lh";
+            annot_data = lh_annotdata;
+        }
+
+        color_layer = annot_data$hex_colors_rgb;
+        return(hemilist.wrap(color_layer, hemi));
+    } else {
+        lh_layer = lh_annotdata$hex_colors_rgb;
+        rh_layer = rh_annotdata$hex_colors_rgb;
+        return(list("lh"=lh_layer, "rh"=rh_layer));
+    }
+}
+
+
+#' @title Compute surface color layer from annotation or atlas data.
+#'
+#' @param subjects_dir character string, the FreeSurfer SUBJECTS_DIR.
+#'
+#' @param subject_id character string, the subject identifier.
+#'
+#' @param hemi character string, one of 'lh', 'rh', or 'both'.
+#'
+#' @param atlas character string, the atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.
+#'
+#' @return named hemi list, each entry is a vector of color strings, one color per surface vertex. The coloring represents the atlas data.
+#'
+#' @seealso You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
+#'
+#' @family surface color layer
+#' @export
+collayer.from.annot <- function(subjects_dir, subject_id, hemi, atlas) {
+
+    if(!(hemi %in% c("lh", "rh", "both"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
+    }
+
+    if(hemi == "both") {
+        lh_annotdata = subject.annot(subjects_dir, subject_id, 'lh', atlas);
+        rh_annotdata = subject.annot(subjects_dir, subject_id, 'rh', atlas);
+        return(collayer.from.annotdata(lh_annotdata, rh_annotdata));
+    } else {
+        hemi_annotdata = subject.annot(subjects_dir, subject_id, hemi, atlas);
+        if(hemi == "lh") {
+            return(collayer.from.annotdata(hemi_annotdata, NULL));
+        } else {
+            return(collayer.from.annotdata(NULL, hemi_annotdata));
+        }
+    }
 }
 
 
@@ -41,13 +322,13 @@ background.mean.curvature <- function(subjects_dir, subject_id, hemi="both", cor
 #'
 #' @param opaque_background a single color string or `NULL`. If a color string, this color will be used as a final opaque background layer to ensure that the returned colors are all opaque. Pass `NULL` to skip this, which may result in a return value that contains non-opaque color values.
 #'
-#' @return a vector, matrix or array of color strings
+#' @return a color layer, i.e., vector of color strings in a hemilist
 #'
 #' @family surface color layer
 #'
 #' @importFrom grDevices col2rgb
 #' @export
-collayers.merge <- function(collayers, opaque_background="#ffffff") {
+collayers.merge <- function(collayers, opaque_background="#FFFFFF") {
     if(! is.list(collayers)) {
         stop("Parameter 'collayers' must be a named list.");
     }
@@ -88,6 +369,8 @@ collayers.merge <- function(collayers, opaque_background="#ffffff") {
 #'
 #' @references see the *Alpha blending* section on https://en.wikipedia.org/wiki/Alpha_compositing
 #'
+#' @family color functions
+#'
 #' @importFrom grDevices rgb col2rgb
 #' @export
 alphablend <- function(front_color, back_color) {
@@ -119,3 +402,46 @@ alphablend <- function(front_color, back_color) {
 
     return(grDevices::rgb(cbind(out_rgb, out_alpha), alpha = TRUE));
 }
+
+
+#' @title Perform simple desaturation or grayscale conversion of RGBA colors.
+#'
+#' @param color rgba color strings
+#'
+#' @param gamma_correct logical, whether to apply non-linear gamma correction. First performs gamma expansion, then applies the gray-scale channel weigths, then gamma compression.
+#'
+#' @return rgba color strings, the grayscale colors. The information from one of the three rgb channels would be enough. The alpha value is not touched.
+#'
+#' @references see https://en.wikipedia.org/wiki/Grayscale#Converting_color_to_grayscale
+#'
+#' @note Assumes sRGB color space.
+#'
+#' @family color functions
+#'
+#' @importFrom grDevices rgb col2rgb
+#' @export
+desaturate <- function(color, gamma_correct=FALSE) {
+    color_rgba_matrix = grDevices::col2rgb(color, alpha = TRUE)/255.;
+
+    src_alpha = color_rgba_matrix[4,];
+    src_rgb = color_rgba_matrix[1:3,];
+
+    if(gamma_correct) {
+        # perform gamma expansion
+        src_rgb = ifelse(src_rgb <= 0.04045, src_rgb / 12.92, ((src_rgb + 0.055)/1.055)**2.4);
+    }
+
+    channel_weights = c(0.2126, 0.7152, 0.0722);
+
+    out_rgb_per_channel = t(src_rgb) %*% c(channel_weights);   # divide by number of channels
+
+    if(gamma_correct) {
+        # perform gamma compression
+        out_rgb_per_channel = ifelse(out_rgb_per_channel <= 0.0031308, 12.92 * out_rgb_per_channel, 1.055 * out_rgb_per_channel**(1/2.4) - 0.055);
+    }
+
+    out_rgb = cbind(out_rgb_per_channel, out_rgb_per_channel, out_rgb_per_channel);
+
+    return(grDevices::rgb(cbind(out_rgb, src_alpha), alpha = TRUE));
+}
+

@@ -4,15 +4,9 @@
 \alias{coloredmesh.from.mask}
 \title{Create a coloredmesh from a mask.}
 \usage{
-coloredmesh.from.mask(
-  subjects_dir,
-  subject_id,
-  mask,
-  hemi,
-  surface = "white",
-  colormap = squash::rainbow2,
-  surface_data = NULL
-)
+coloredmesh.from.mask(subjects_dir, subject_id, mask, hemi,
+  surface = "white", colormap = NULL, surface_data = NULL,
+  makecmap_options = list(colFn = squash::rainbow2))
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -23,11 +17,13 @@ coloredmesh.from.mask(
 
 \item{hemi}{string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.}
 
-\item{surface}{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
+\item{surface}{character string or `fs.surface` instance. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 
-\item{colormap}{a colormap. See the squash package for some colormaps. Defaults to \code{\link[squash]{rainbow2}}.}
+\item{colormap}{a colormap function. See the squash package for some colormaps. Defaults to \code{\link[squash]{jet}}.}
 
 \item{surface_data}{optional surface object, as returned by \code{\link[fsbrain]{subject.surface}}. If given, used instead of loading the surface data from disk (which users of this function may already have done). Defaults to NULL.}
+
+\item{makecmap_options}{named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.}
 }
 \value{
 coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
@@ -36,8 +32,7 @@ coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} me
 Create a coloredmesh from a mask.
 }
 \seealso{
-Other mask functions: 
-\code{\link{mask.from.labeldata.for.hemi}()},
-\code{\link{vis.mask.on.subject}()}
+Other mask functions: \code{\link{mask.from.labeldata.for.hemi}},
+  \code{\link{vis.mask.on.subject}}
 }
 \concept{mask functions}

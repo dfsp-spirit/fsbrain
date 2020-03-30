@@ -4,23 +4,16 @@
 \alias{coloredmesh.from.morph.native}
 \title{Create a coloredmesh from native space morphometry data.}
 \usage{
-coloredmesh.from.morph.native(
-  subjects_dir,
-  subject_id,
-  measure,
-  hemi,
-  surface = "white",
-  colormap = squash::jet,
-  clip = NULL,
-  cortex_only = FALSE
-)
+coloredmesh.from.morph.native(subjects_dir, subject_id, measure, hemi,
+  surface = "white", colormap = NULL, clip = NULL,
+  cortex_only = FALSE, makecmap_options = list(colFn = squash::jet))
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
 
 \item{subject_id}{string. The subject identifier.}
 
-\item{measure}{string. The morphometry data to use. E.g., 'area' or 'thickness'. Pass NULL to render the surface in white, without any data.}
+\item{measure}{string. The morphometry data to use. E.g., 'area' or 'thickness'. Pass NULL to render the surface in white, without any data. One can also pass the pre-loaded morphometry data as a numerical vector, the length of which must match the number of surface vertices.}
 
 \item{hemi}{string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.}
 
@@ -31,6 +24,8 @@ coloredmesh.from.morph.native(
 \item{clip}{numeric vector of length 2 or NULL. If given, the 2 values are interpreted as lower and upper percentiles, and the morph data is clipped at the given lower and upper percentile (see [fsbrain::clip.data()]). Defaults to NULL (no data clipping).}
 
 \item{cortex_only}{logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the subject. Defaults to FALSE.}
+
+\item{makecmap_options}{named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.}
 }
 \value{
 coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
@@ -38,4 +33,3 @@ coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} me
 \description{
 Create a coloredmesh from native space morphometry data.
 }
-\keyword{internal}

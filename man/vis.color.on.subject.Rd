@@ -4,19 +4,12 @@
 \alias{vis.color.on.subject}
 \title{Visualize pre-defined vertex colors on a subject.}
 \usage{
-vis.color.on.subject(
-  subjects_dir,
-  vis_subject_id,
-  color_lh,
-  color_rh,
-  surface = "white",
-  views = c("t4"),
-  rgloptions = list(),
-  rglactions = list()
-)
+vis.color.on.subject(subjects_dir, vis_subject_id, color_lh, color_rh,
+  surface = "white", views = c("t4"), rgloptions = list(),
+  rglactions = list())
 }
 \arguments{
-\item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, containing the subdir of vis_subject_id, the subject that you want to use for visualization.}
+\item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
 
 \item{vis_subject_id}{string. The subject identifier from which to obtain the surface for data visualization. Example: 'fsaverage'.}
 
@@ -28,7 +21,7 @@ vis.color.on.subject(
 
 \item{views}{list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.}
 
-\item{rgloptions}{option list passed to \code{\link[rgl]{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))}}
+\item{rgloptions}{option list passed to \code{\link[rgl]{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))}.}
 
 \item{rglactions}{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.}
 }
@@ -51,17 +44,18 @@ Visualize pre-defined vertex colors on a subject.
 
 }
 \seealso{
-Other visualization functions: 
-\code{\link{vis.data.on.fsaverage}()},
-\code{\link{vis.data.on.subject}()},
-\code{\link{vis.labeldata.on.subject}()},
-\code{\link{vis.mask.on.subject}()},
-\code{\link{vis.region.values.on.subject}()},
-\code{\link{vis.subject.annot}()},
-\code{\link{vis.subject.label}()},
-\code{\link{vis.subject.morph.native}()},
-\code{\link{vis.subject.morph.standard}()},
-\code{\link{vislayout.from.coloredmeshes}()}
+Other visualization functions: \code{\link{vis.colors.on.subject}},
+  \code{\link{vis.data.on.fsaverage}},
+  \code{\link{vis.data.on.subject}},
+  \code{\link{vis.labeldata.on.subject}},
+  \code{\link{vis.mask.on.subject}},
+  \code{\link{vis.region.values.on.subject}},
+  \code{\link{vis.subject.annot}},
+  \code{\link{vis.subject.label}},
+  \code{\link{vis.subject.morph.native}},
+  \code{\link{vis.subject.morph.standard}},
+  \code{\link{vis.symmetric.data.on.subject}},
+  \code{\link{vislayout.from.coloredmeshes}}
 }
 \concept{surface visualization functions}
 \concept{visualization functions}

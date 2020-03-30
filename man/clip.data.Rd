@@ -7,7 +7,7 @@
 clip.data(data, lower = 0.05, upper = 0.95)
 }
 \arguments{
-\item{data, }{numeric vector. The input data.}
+\item{data, }{numeric vector. The input data. Can also be a hemi list.}
 
 \item{lower, }{numeric. The probability for the lower quantile, defaults to `0.05`.}
 

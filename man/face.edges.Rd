@@ -2,28 +2,26 @@
 % Please edit documentation in R/helpers.R
 \name{face.edges}
 \alias{face.edges}
-\title{Enumerate all edges of the given faces.}
+\title{Enumerate all edges of the given faces or mesh.}
 \usage{
-face.edges(surface_mesh, face_indices)
+face.edges(surface_mesh, face_indices = "all")
 }
 \arguments{
-\item{surface_mesh}{surface mesh, as loaded by \code{\link[fsbrain]{subject.surface}}}
+\item{surface_mesh}{surface mesh, as loaded by \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}.}
 
-\item{face_indices}{integer vector, the face indices}
+\item{face_indices}{integer vector, the face indices. Can also be the character string 'all' to use all faces.}
 }
 \value{
-integer matrix of size (n, 2) where n is the number of edges. The indices (source and target vertex) in each row are **not** sorted.
+integer matrix of size (n, 2) where n is the number of edges. The indices (source and target vertex) in each row are **not** sorted, and the edges are **not** unique. I.e., each undirected edge `u, v` (with the exception of edges on the mesh border) will occur twice in the result: once as `u, v` and once as `v, u`.
 }
 \description{
-Enumerate all edges of the given faces.
+Compute edges of a tri-mesh. Can compute all edges, or only a subset, given by the face indices in the mesh.
 }
 \seealso{
-Other surface mesh functions: 
-\code{\link{label.border}()},
-\code{\link{mesh.vertex.included.faces}()},
-\code{\link{mesh.vertex.neighbors}()},
-\code{\link{subject.surface}()},
-\code{\link{vis.path.along.verts}()}
+Other surface mesh functions: \code{\link{label.border}},
+  \code{\link{mesh.vertex.included.faces}},
+  \code{\link{mesh.vertex.neighbors}},
+  \code{\link{subject.surface}},
+  \code{\link{vis.path.along.verts}}
 }
 \concept{surface mesh functions}
-\keyword{internal}

@@ -18,6 +18,8 @@
 #'
 #' @param cortex_only logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the subject. Defaults to FALSE.
 #'
+#' @param split_by_hemi logical, whether the returned data should be encapsulated in a named list, where the names are from 'lh' and 'rh', and the values are the respective data.
+#'
 #' @return vector with native space morph data, as returned by \code{\link[freesurferformats]{read.fs.morph}}.
 #'
 #' @family morphometry data functions
@@ -39,7 +41,7 @@
 #' }
 #'
 #' @export
-subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, format='curv', cortex_only=FALSE) {
+subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, format='curv', cortex_only=FALSE, split_by_hemi=FALSE) {
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
@@ -58,7 +60,11 @@ subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, format
             rh_morph_data = apply.label.to.morphdata(rh_morph_data, subjects_dir, subject_id, "rh", 'cortex');
         }
 
-        merged_morph_data = c(lh_morph_data, rh_morph_data);
+        if(split_by_hemi) {
+            merged_morph_data = list("lh"=lh_morph_data, "rh"=rh_morph_data);
+        } else {
+            merged_morph_data = c(lh_morph_data, rh_morph_data);
+        }
         return(merged_morph_data);
 
     } else {
@@ -67,7 +73,12 @@ subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, format
         if(cortex_only) {
             morph_data = apply.label.to.morphdata(morph_data, subjects_dir, subject_id, hemi, 'cortex');
         }
-        return(morph_data);
+
+        if(split_by_hemi) {
+            return(hemilist.wrap(morph_data, hemi));
+        } else {
+            return(morph_data);
+        }
     }
 }
 
@@ -246,6 +257,8 @@ apply.labeldata.to.morphdata <- function(morphdata, labeldata, masked_data_value
 #'
 #' @param cortex_only logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the template subject. Defaults to FALSE.
 #'
+#' @param split_by_hemi logical, whether the returned data should be encapsulated in a named list, where the names are from 'lh' and 'rh', and the values are the respective data.
+#'
 #' @return vector with standard space morph data
 #'
 #' @examples
@@ -258,7 +271,7 @@ apply.labeldata.to.morphdata <- function(morphdata, labeldata, masked_data_value
 #' @family morphometry data functions
 #'
 #' @export
-subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm='10', template_subject='fsaverage', format='mgh', cortex_only=FALSE) {
+subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm='10', template_subject='fsaverage', format='mgh', cortex_only=FALSE, split_by_hemi=FALSE) {
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
     }
@@ -276,7 +289,11 @@ subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm
             rh_morph_data = apply.label.to.morphdata(rh_morph_data, subjects_dir, template_subject, "rh", 'cortex');
         }
 
-        merged_morph_data = c(lh_morph_data, rh_morph_data);
+        if(split_by_hemi) {
+            merged_morph_data = list("lh"=lh_morph_data, "rh"=rh_morph_data);
+        } else {
+            merged_morph_data = c(lh_morph_data, rh_morph_data);
+        }
         return(merged_morph_data);
 
     } else {
@@ -285,7 +302,14 @@ subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm
         if(cortex_only) {
             morph_data = apply.label.to.morphdata(morph_data, subjects_dir, template_subject, hemi, 'cortex');
         }
-        return(morph_data);
+
+        if(split_by_hemi) {
+            ret_list = list();
+            ret_list[[hemi]] = morph_data;
+            return(ret_list);
+        } else {
+            return(morph_data);
+        }
     }
 }
 
@@ -634,7 +658,7 @@ subject.annot <- function(subjects_dir, subject_id, hemi, atlas) {
 
 #' @title Load a surface for a subject.
 #'
-#' @description Load a brain surface for a subject.
+#' @description Load a brain surface mesh for a subject.
 #'
 #' @param subjects_dir string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
 #'
@@ -644,7 +668,7 @@ subject.annot <- function(subjects_dir, subject_id, hemi, atlas) {
 #'
 #' @param hemi string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the surface file to be loaded. For 'both', see the information on the return value.
 #'
-#' @return the `fs.surface` instace, as returned by \code{\link[freesurferformats]{read.fs.surface}}. If parameter `hemi` is set to `both`, a named list with entries `lh` and `rh` is returned, and the values of are the respective surfaces.
+#' @return the `fs.surface` instance, as returned by \code{\link[freesurferformats]{read.fs.surface}}. If parameter `hemi` is set to `both`, a named list with entries `lh` and `rh` is returned, and the values of are the respective surfaces. The mesh data structure used in `fs.surface` is a *face index set*.
 #'
 #' @examples
 #' \donttest{

@@ -14,4 +14,7 @@ vis.coloredmesh(cmesh, style = "default")
 \description{
 Draw a coloredmesh using a style.
 }
+\seealso{
+\code{\link[fsbrain]{vis.renderable}}
+}
 \keyword{internal}

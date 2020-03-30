@@ -7,7 +7,7 @@
 mesh.vertex.included.faces(surface_mesh, source_vertices)
 }
 \arguments{
-\item{surface_mesh}{surface mesh, as loaded by \code{\link[fsbrain]{subject.surface}}}
+\item{surface_mesh}{surface mesh, as loaded by \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}.}
 
 \item{source_vertices}{integer vector, the vertex indices.}
 }
@@ -18,12 +18,11 @@ integer vector, the face indices
 Return all faces which are made up completely of the listed vertices.
 }
 \seealso{
-Other surface mesh functions: 
-\code{\link{face.edges}()},
-\code{\link{label.border}()},
-\code{\link{mesh.vertex.neighbors}()},
-\code{\link{subject.surface}()},
-\code{\link{vis.path.along.verts}()}
+Other surface mesh functions: \code{\link{face.edges}},
+  \code{\link{label.border}},
+  \code{\link{mesh.vertex.neighbors}},
+  \code{\link{subject.surface}},
+  \code{\link{vis.path.along.verts}}
 }
 \concept{surface mesh functions}
 \keyword{internal}

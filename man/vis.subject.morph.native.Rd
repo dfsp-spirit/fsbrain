@@ -4,20 +4,11 @@
 \alias{vis.subject.morph.native}
 \title{Visualize native space morphometry data for a subject.}
 \usage{
-vis.subject.morph.native(
-  subjects_dir,
-  subject_id,
-  measure,
-  hemi = "both",
-  surface = "white",
-  colormap = squash::jet,
-  views = c("t4"),
-  rgloptions = list(),
-  rglactions = list(),
-  draw_colorbar = FALSE,
-  cortex_only = FALSE,
-  style = "default"
-)
+vis.subject.morph.native(subjects_dir, subject_id, measure,
+  hemi = "both", surface = "white", colormap = NULL,
+  views = c("t4"), rgloptions = list(), rglactions = list(),
+  draw_colorbar = FALSE, cortex_only = FALSE, style = "default",
+  makecmap_options = list(colFn = squash::jet), bg = NULL)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -30,7 +21,7 @@ vis.subject.morph.native(
 
 \item{surface}{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 
-\item{colormap}{a colormap function. See the squash package for some colormaps. Defaults to \code{\link[squash]{jet}}.}
+\item{colormap}{a colormap function. **DEPRECATED**: use parameter 'makecmap_options' instead.}
 
 \item{views}{list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.}
 
@@ -43,6 +34,10 @@ vis.subject.morph.native(
 \item{cortex_only}{logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the subject. Defaults to FALSE.}
 
 \item{style}{character string, a rendering style, e.g., 'default', 'shiny' or 'semitransparent'.}
+
+\item{makecmap_options}{named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'. Should include at least a colormap function as name 'colFn'.}
+
+\item{bg}{a background definition. Can be a surface color layer or a character string, in the latter case one of 'curv', 'sulc' or 'aparc'.}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.
@@ -54,27 +49,28 @@ Creates a surface mesh, applies a colormap transform the morphometry data values
 \donttest{
    fsbrain::download_optional_data();
    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
-   vis.subject.morph.native(subjects_dir, 'subject1', 'thickness', 'lh');
+   vis.subject.morph.native(subjects_dir, 'subject1', 'thickness', 'lh', views=c("t9"));
 }
 
 }
 \seealso{
-Other visualization functions: 
-\code{\link{vis.color.on.subject}()},
-\code{\link{vis.data.on.fsaverage}()},
-\code{\link{vis.data.on.subject}()},
-\code{\link{vis.labeldata.on.subject}()},
-\code{\link{vis.mask.on.subject}()},
-\code{\link{vis.region.values.on.subject}()},
-\code{\link{vis.subject.annot}()},
-\code{\link{vis.subject.label}()},
-\code{\link{vis.subject.morph.standard}()},
-\code{\link{vislayout.from.coloredmeshes}()}
+Other visualization functions: \code{\link{vis.color.on.subject}},
+  \code{\link{vis.colors.on.subject}},
+  \code{\link{vis.data.on.fsaverage}},
+  \code{\link{vis.data.on.subject}},
+  \code{\link{vis.labeldata.on.subject}},
+  \code{\link{vis.mask.on.subject}},
+  \code{\link{vis.region.values.on.subject}},
+  \code{\link{vis.subject.annot}},
+  \code{\link{vis.subject.label}},
+  \code{\link{vis.subject.morph.standard}},
+  \code{\link{vis.symmetric.data.on.subject}},
+  \code{\link{vislayout.from.coloredmeshes}}
 
-Other morphometry visualization functions: 
-\code{\link{vis.data.on.fsaverage}()},
-\code{\link{vis.data.on.subject}()},
-\code{\link{vis.subject.morph.standard}()}
+Other morphometry visualization functions: \code{\link{vis.data.on.fsaverage}},
+  \code{\link{vis.data.on.subject}},
+  \code{\link{vis.subject.morph.standard}},
+  \code{\link{vis.symmetric.data.on.subject}}
 }
 \concept{morphometry visualization functions}
 \concept{visualization functions}

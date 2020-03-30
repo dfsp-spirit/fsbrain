@@ -4,24 +4,15 @@
 \alias{vis.subject.label}
 \title{Visualize a label for a subject.}
 \usage{
-vis.subject.label(
-  subjects_dir,
-  subject_id,
-  label,
-  hemi,
-  surface = "white",
-  colormap = squash::rainbow2,
-  views = c("t4"),
-  rgloptions = list(),
-  rglactions = list(),
-  draw_colorbar = FALSE
-)
+vis.subject.label(subjects_dir, subject_id, label, hemi,
+  surface = "white", colormap = NULL, views = c("t4"),
+  rgloptions = list(), rglactions = list(), draw_colorbar = FALSE,
+  makecmap_options = list(colFn = squash::rainbow2))
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
 
-\item{subject_id}{string. The subject identifier.
-T}
+\item{subject_id}{string. The subject identifier.}
 
 \item{label}{string. Name of the label file, without the hemi part (if any), but including the '.label' suffix. E.g., 'cortex.label' for '?h.cortex.label'.}
 
@@ -29,21 +20,23 @@ T}
 
 \item{surface}{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 
-\item{colormap}{a colormap function. See the squash package for some colormaps. Defaults to \code{\link[squash]{rainbow2}}.}
+\item{colormap}{a colormap function. **DEPRECATED**: use parameter 'makecmap_options' instead.}
 
 \item{views}{list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.}
 
-\item{rgloptions}{option list passed to \code{\link[rgl]{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))}}
+\item{rgloptions}{option list passed to \code{\link[rgl]{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))}.}
 
 \item{rglactions}{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.}
 
-\item{draw_colorbar}{logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See \code{\link[fsbrain]{coloredmesh.plot.colorbar.separate}} for an alternative.}
+\item{draw_colorbar}{logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See [fsbrain::coloredmesh.plot.colorbar.separate()] for an alternative.}
+
+\item{makecmap_options}{named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'. Should include at least a colormap function as name 'colFn'.}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.
 }
 \description{
-Visualize a label for a subject. A label is jsut a logical vector with one entry for each vertex in the mesh.
+Visualize a label for a subject. A label is just a logical vector with one entry for each vertex in the mesh. Each vertex may additionally be associated with a scalar value, but this function ignored that.
 }
 \examples{
 \donttest{
@@ -53,28 +46,28 @@ Visualize a label for a subject. A label is jsut a logical vector with one entry
    surface = 'white';
    hemi = 'both';
    label = 'cortex.label';
-   vis.subject.label(subjects_dir, subject_id, label, hemi);
+   vis.subject.label(subjects_dir, subject_id, label, hemi, views="si");
 }
 
 }
 \seealso{
-Other visualization functions: 
-\code{\link{vis.color.on.subject}()},
-\code{\link{vis.data.on.fsaverage}()},
-\code{\link{vis.data.on.subject}()},
-\code{\link{vis.labeldata.on.subject}()},
-\code{\link{vis.mask.on.subject}()},
-\code{\link{vis.region.values.on.subject}()},
-\code{\link{vis.subject.annot}()},
-\code{\link{vis.subject.morph.native}()},
-\code{\link{vis.subject.morph.standard}()},
-\code{\link{vislayout.from.coloredmeshes}()}
+Other visualization functions: \code{\link{vis.color.on.subject}},
+  \code{\link{vis.colors.on.subject}},
+  \code{\link{vis.data.on.fsaverage}},
+  \code{\link{vis.data.on.subject}},
+  \code{\link{vis.labeldata.on.subject}},
+  \code{\link{vis.mask.on.subject}},
+  \code{\link{vis.region.values.on.subject}},
+  \code{\link{vis.subject.annot}},
+  \code{\link{vis.subject.morph.native}},
+  \code{\link{vis.subject.morph.standard}},
+  \code{\link{vis.symmetric.data.on.subject}},
+  \code{\link{vislayout.from.coloredmeshes}}
 
-Other label functions: 
-\code{\link{apply.label.to.morphdata}()},
-\code{\link{apply.labeldata.to.morphdata}()},
-\code{\link{subject.mask}()},
-\code{\link{vis.labeldata.on.subject}()}
+Other label functions: \code{\link{apply.label.to.morphdata}},
+  \code{\link{apply.labeldata.to.morphdata}},
+  \code{\link{subject.mask}},
+  \code{\link{vis.labeldata.on.subject}}
 }
 \concept{label functions}
 \concept{visualization functions}

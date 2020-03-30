@@ -4,25 +4,17 @@
 \alias{vis.region.values.on.subject}
 \title{Visualize arbitrary data, one value per atlas region, on the surface of any subject (including template subjects).}
 \usage{
-vis.region.values.on.subject(
-  subjects_dir,
-  subject_id,
-  atlas,
-  lh_region_value_list,
-  rh_region_value_list,
-  surface = "white",
-  colormap = grDevices::heat.colors,
-  views = c("t4"),
-  rgloptions = list(),
-  rglactions = list(),
-  value_for_unlisted_regions = NA,
-  draw_colorbar = FALSE
-)
+vis.region.values.on.subject(subjects_dir, subject_id, atlas,
+  lh_region_value_list, rh_region_value_list, surface = "white",
+  colormap = NULL, views = c("t4"), rgloptions = list(),
+  rglactions = list(), value_for_unlisted_regions = NA,
+  draw_colorbar = FALSE, makecmap_options = list(colFn =
+  grDevices::heat.colors))
 }
 \arguments{
-\item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, containing the subdir of vis_subject_id, the subject that you want to use for visualization.}
+\item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
 
-\item{subject_id}{string. The subject identifier from which to obtain the surface for data visualization. Example: 'fsaverage'.}
+\item{subject_id}{string. The subject identifier.}
 
 \item{atlas}{string. The brain atlas to use. E.g., 'aparc' or 'aparc.a2009s'.}
 
@@ -32,17 +24,19 @@ vis.region.values.on.subject(
 
 \item{surface}{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 
-\item{colormap}{a colormap function. See the squash package for some colormaps. Defaults to \code{\link[grDevices]{heat.colors}}.}
+\item{colormap}{a colormap function. **DEPRECATED**: use parameter 'makecmap_options' instead.}
 
 \item{views}{list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.}
 
-\item{rgloptions}{option list passed to \code{\link[rgl]{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))}}
+\item{rgloptions}{option list passed to \code{\link[rgl]{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))}.}
 
 \item{rglactions}{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.}
 
-\item{value_for_unlisted_regions}{numerical scalar or NaN, the value to assign to regions which do not occur in the region_value_lists. Defaults to NaN.}
+\item{value_for_unlisted_regions}{numerical scalar or `NaN`, the value to assign to regions which do not occur in the region_value_lists. Defaults to `NaN`.}
 
-\item{draw_colorbar}{logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See \code{\link[fsbrain]{coloredmesh.plot.colorbar.separate}} for an alternative.}
+\item{draw_colorbar}{logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See [fsbrain::coloredmesh.plot.colorbar.separate()] for an alternative.}
+
+\item{makecmap_options}{named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'. Should include at least a colormap function as name 'colFn'.}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.
@@ -70,20 +64,20 @@ This function can be used for rendering a single value (color) for all vertices 
 
 }
 \seealso{
-Other visualization functions: 
-\code{\link{vis.color.on.subject}()},
-\code{\link{vis.data.on.fsaverage}()},
-\code{\link{vis.data.on.subject}()},
-\code{\link{vis.labeldata.on.subject}()},
-\code{\link{vis.mask.on.subject}()},
-\code{\link{vis.subject.annot}()},
-\code{\link{vis.subject.label}()},
-\code{\link{vis.subject.morph.native}()},
-\code{\link{vis.subject.morph.standard}()},
-\code{\link{vislayout.from.coloredmeshes}()}
+Other visualization functions: \code{\link{vis.color.on.subject}},
+  \code{\link{vis.colors.on.subject}},
+  \code{\link{vis.data.on.fsaverage}},
+  \code{\link{vis.data.on.subject}},
+  \code{\link{vis.labeldata.on.subject}},
+  \code{\link{vis.mask.on.subject}},
+  \code{\link{vis.subject.annot}},
+  \code{\link{vis.subject.label}},
+  \code{\link{vis.subject.morph.native}},
+  \code{\link{vis.subject.morph.standard}},
+  \code{\link{vis.symmetric.data.on.subject}},
+  \code{\link{vislayout.from.coloredmeshes}}
 
-Other region-based visualization functions: 
-\code{\link{vis.subject.annot}()}
+Other region-based visualization functions: \code{\link{vis.subject.annot}}
 }
 \concept{region-based visualization functions}
 \concept{visualization functions}
