@@ -330,16 +330,16 @@ hemilist.wrap <- function(data, hemi, hemilist=NULL) {
 #'
 #' @export
 hemilist.derive.hemi <- function(hemilist) {
+  if(!is.hemilist(hemilist)) {
+    stop("Parameter 'hemilist' must be a hemilist.");
+  }
   if(is.null(hemilist$lh) | is.null(hemilist$rh)) {
     if(is.null(hemilist$lh)) {
       return('rh');
     } else {
       return('lh');
     }
-
   } else {
-    print("derived both, hemilist rh:")
-    print(hemilist$rh)
     return('both');
   }
 }

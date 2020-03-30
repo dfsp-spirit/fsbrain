@@ -217,7 +217,6 @@ coloredmeshes.from.color <- function(subjects_dir, subject_id, color_data, hemi,
     }
 
     if(hemi=="both") {
-        print("cmsh hemi is both")
         if(! is.hemilist(color_data)) {
             stop("The parameter 'color_data' must be a named list with entries 'lh' and 'rh' if 'hemi' is 'both'.");
         }
