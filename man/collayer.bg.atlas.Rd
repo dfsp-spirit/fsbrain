@@ -24,7 +24,7 @@ collayer.bg.atlas(subjects_dir, subject_id, hemi = "both",
 \item{outline_surface}{character string, the surface to load. Only relevant when 'outline' is used.}
 }
 \value{
-vector of color strings, one color per surface vertex. The coloring reflects the atlas regions. If the `hemi` parameter is 'both', a named list with entries 'lh' and 'rh' is returned instead.
+a color layer, i.e., vector of color strings in a hemilist
 }
 \description{
 Compute atlas or annotation surface color layer.
@@ -37,6 +37,7 @@ You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
 
 Other surface color layer: \code{\link{collayer.bg.meancurv}},
   \code{\link{collayer.bg.sulc}},
+  \code{\link{collayer.bg}},
   \code{\link{collayer.from.annotdata}},
   \code{\link{collayer.from.annot}},
   \code{\link{collayer.from.morphlike.data}},

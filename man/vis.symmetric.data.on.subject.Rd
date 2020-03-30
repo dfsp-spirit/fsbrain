@@ -8,7 +8,7 @@ vis.symmetric.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh,
   morph_data_rh, surface = "white", colormap = NULL, views = c("t4"),
   rgloptions = list(), rglactions = list(), draw_colorbar = FALSE,
   makecmap_options = list(colFn = squash::jet, symm = TRUE, col.na =
-  "#FFFFFFFF"), map_to_NA = c(0))
+  "#FFFFFFFF"), map_to_NA = c(0), bg = NULL)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -34,6 +34,8 @@ vis.symmetric.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh,
 \item{makecmap_options}{named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'. Should include at least a colormap function as name 'colFn'.}
 
 \item{map_to_NA}{the value or value range that should **not** be considered a cluster, and should thus be plotted as background color. If a single value, only excatly this value is used (typically 0). If two values, they are interpreted as a range, and a values between them are mapped to NA. If you prefer to map the data to NA yourself before using this function, pass `NULL`.}
+
+\item{bg}{a background definition. Can be a surface color layer or a character string, in the latter case one of 'curv', 'sulc' or 'aparc'.}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.

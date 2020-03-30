@@ -22,7 +22,7 @@ collayer.bg.sulc(subjects_dir, subject_id, hemi = "both",
 \item{bin_thresholds}{vector of 1 or 2 double values, the curvature threshold values used to separate gyri from sulci.}
 }
 \value{
-vector of color strings, one color per surface vertex. The coloring separates gyri from sulci based on sulcal depth. If the `hemi` parameter is 'both', a named list with entries 'lh' and 'rh' is returned instead.
+a color layer, i.e., vector of color strings in a hemilist
 }
 \description{
 Compute a binarized sulcal depth surface color layer, this is intended as a background color layer. You can merge it with your data layer using \code{\link[fsbrain]{collayers.merge}}.
@@ -32,6 +32,7 @@ You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
 
 Other surface color layer: \code{\link{collayer.bg.atlas}},
   \code{\link{collayer.bg.meancurv}},
+  \code{\link{collayer.bg}},
   \code{\link{collayer.from.annotdata}},
   \code{\link{collayer.from.annot}},
   \code{\link{collayer.from.morphlike.data}},

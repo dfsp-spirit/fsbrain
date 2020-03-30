@@ -8,7 +8,7 @@ vis.subject.morph.native(subjects_dir, subject_id, measure,
   hemi = "both", surface = "white", colormap = NULL,
   views = c("t4"), rgloptions = list(), rglactions = list(),
   draw_colorbar = FALSE, cortex_only = FALSE, style = "default",
-  makecmap_options = list(colFn = squash::jet))
+  makecmap_options = list(colFn = squash::jet), bg = NULL)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -36,6 +36,8 @@ vis.subject.morph.native(subjects_dir, subject_id, measure,
 \item{style}{character string, a rendering style, e.g., 'default', 'shiny' or 'semitransparent'.}
 
 \item{makecmap_options}{named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'. Should include at least a colormap function as name 'colFn'.}
+
+\item{bg}{a background definition. Can be a surface color layer or a character string, in the latter case one of 'curv', 'sulc' or 'aparc'.}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.

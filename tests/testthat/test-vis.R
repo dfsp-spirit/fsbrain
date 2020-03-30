@@ -156,6 +156,6 @@ test_that("We can visualize a cluster or activation data on fsaverage.", {
     demo_cluster_file = system.file("extdata", "clusters_fsaverage.mgz", package = "fsbrain", mustWork = TRUE);
     lh_clust = freesurferformats::read.fs.morph(demo_cluster_file);   # contains a single positive cluster (activation, group difference), the other values are 0
     rh_clust = - 2 * lh_clust;                                        # create negative data, take multiple so the data are not symmetric around zero (because that is not typically the case and needs to be handled properly by the plot function)
-    vis.symmetric.data.on.subject(subjects_dir, subject_id, cl, cr);
+    vis.symmetric.data.on.subject(subjects_dir, subject_id, lh_clust, rh_clust);
 })
 

@@ -8,6 +8,44 @@
 #'
 #' @description Compute a binarized mean curvature surface color layer, this is intended as a background color layer. You can merge it with your data layer using \code{\link[fsbrain]{collayers.merge}}.
 #'
+#' @inheritParams collayer.bg.meancurv
+#'
+#' @param bg character string, a background name. One of 'curv', 'sulc', or 'aparc'.  If this is already a colorlayer in a hemilist, it will be returned as-is.
+#'
+#' @return a color layer, i.e., vector of color strings in a hemilist
+#'
+#' @seealso You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
+#'
+#' @family surface color layer
+#' @export
+collayer.bg <- function(subjects_dir, subject_id, bg, hemi="both") {
+
+    if(!(hemi %in% c("lh", "rh", "both"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
+    }
+
+    if(is.hemilist(bg)) {
+        return(bg);
+    } else if(is.character(bg)) {
+        if(bg == "curv") {
+            return(collayer.bg.meancurv(subjects_dir, subject_id, hemi=hemi));
+        } else if(bg == "sulc") {
+            return(collayer.bg.sulc(subjects_dir, subject_id, hemi=hemi));
+        } else if(bg == "aparc") {
+            return(collayer.bg.atlas(subjects_dir, subject_id, hemi=hemi, atlas='aparc'));
+        } else {
+            stop("Parameter 'bg' has unsupported character string value.");
+        }
+    } else {
+        stop("Parameter 'bg' must be a collayer in a hemilist of one of the fixed character strings listed in the help.");
+    }
+}
+
+
+#' @title Compute binarized mean curvature surface color layer.
+#'
+#' @description Compute a binarized mean curvature surface color layer, this is intended as a background color layer. You can merge it with your data layer using \code{\link[fsbrain]{collayers.merge}}.
+#'
 #' @param subjects_dir character string, the FreeSurfer SUBJECTS_DIR.
 #'
 #' @param subject_id character string, the subject identifier.
@@ -20,7 +58,7 @@
 #'
 #' @param bin_thresholds vector of 1 or 2 double values, the curvature threshold values used to separate gyri from sulci.
 #'
-#' @return vector of color strings, one color per surface vertex. The coloring separates gyri from sulci based on mean curvature. If the `hemi` parameter is 'both', a named list with entries 'lh' and 'rh' is returned instead.
+#' @return a color layer, i.e., vector of color strings in a hemilist
 #'
 #' @seealso You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
 #'
@@ -63,19 +101,9 @@ collayer.bg.meancurv <- function(subjects_dir, subject_id, hemi="both", cortex_o
 #'
 #' @description Compute a binarized sulcal depth surface color layer, this is intended as a background color layer. You can merge it with your data layer using \code{\link[fsbrain]{collayers.merge}}.
 #'
-#' @param subjects_dir character string, the FreeSurfer SUBJECTS_DIR.
+#' @inheritParams collayer.bg.meancurv
 #'
-#' @param subject_id character string, the subject identifier.
-#'
-#' @param hemi character string, one of 'lh', 'rh', or 'both'. The latter will merge the data for both hemis into a single vector.
-#'
-#' @param cortex_only logical, whether to restrict pattern computation to the cortex.
-#'
-#' @param bin_colors vector of two character strings, the two colors to use.
-#'
-#' @param bin_thresholds vector of 1 or 2 double values, the curvature threshold values used to separate gyri from sulci.
-#'
-#' @return vector of color strings, one color per surface vertex. The coloring separates gyri from sulci based on sulcal depth. If the `hemi` parameter is 'both', a named list with entries 'lh' and 'rh' is returned instead.
+#' @return a color layer, i.e., vector of color strings in a hemilist
 #'
 #' @seealso You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
 #'
@@ -116,11 +144,7 @@ collayer.bg.sulc <- function(subjects_dir, subject_id, hemi="both", cortex_only=
 
 #' @title Compute atlas or annotation surface color layer.
 #'
-#' @param subjects_dir character string, the FreeSurfer SUBJECTS_DIR.
-#'
-#' @param subject_id character string, the subject identifier.
-#'
-#' @param hemi character string, one of 'lh', 'rh', or 'both'. The latter will merge the data for both hemis into a single vector.
+#' @inheritParams collayer.bg.meancurv
 #'
 #' @param atlas character string, the atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.
 #'
@@ -130,7 +154,7 @@ collayer.bg.sulc <- function(subjects_dir, subject_id, hemi="both", cortex_only=
 #'
 #' @param outline_surface character string, the surface to load. Only relevant when 'outline' is used.
 #'
-#' @return vector of color strings, one color per surface vertex. The coloring reflects the atlas regions. If the `hemi` parameter is 'both', a named list with entries 'lh' and 'rh' is returned instead.
+#' @return a color layer, i.e., vector of color strings in a hemilist
 #'
 #' @seealso You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
 #'
@@ -298,13 +322,13 @@ collayer.from.annot <- function(subjects_dir, subject_id, hemi, atlas) {
 #'
 #' @param opaque_background a single color string or `NULL`. If a color string, this color will be used as a final opaque background layer to ensure that the returned colors are all opaque. Pass `NULL` to skip this, which may result in a return value that contains non-opaque color values.
 #'
-#' @return a vector, matrix or array of color strings
+#' @return a color layer, i.e., vector of color strings in a hemilist
 #'
 #' @family surface color layer
 #'
 #' @importFrom grDevices col2rgb
 #' @export
-collayers.merge <- function(collayers, opaque_background="#ffffff") {
+collayers.merge <- function(collayers, opaque_background="#FFFFFF") {
     if(! is.list(collayers)) {
         stop("Parameter 'collayers' must be a named list.");
     }
