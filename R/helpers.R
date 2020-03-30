@@ -51,7 +51,7 @@ clip.data <- function(data, lower=0.05, upper=0.95){
 #'
 #' @description Given a set of query vertex indices and a mesh *m*, compute all vertices which are adjacent to the query vertices in the mesh. A vertex *u* is *adjacent* to another vertex *v* iff there exists an edge *e = (u, v)* in *m*. While you could call this function repeatedly with the old output as its new input to extend the neighborhood, you should maybe use a proper graph library for this.
 #'
-#' @param surface a surface as returned by functions like \code{\link[fsbrain]{subject.surface}}.
+#' @param surface a surface as returned by functions like \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}.
 #'
 #' @param source_vertices Vector of source vertex indices.
 #'
@@ -93,7 +93,7 @@ mesh.vertex.neighbors <- function(surface, source_vertices, k=1L, restrict_to_ve
 
 #' @title Return all faces which are made up completely of the listed vertices.
 #'
-#' @param surface_mesh surface mesh, as loaded by \code{\link[fsbrain]{subject.surface}}
+#' @param surface_mesh surface mesh, as loaded by \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}.
 #'
 #' @param source_vertices integer vector, the vertex indices.
 #'
@@ -114,7 +114,7 @@ mesh.vertex.included.faces <- function(surface_mesh, source_vertices) {
 #'
 #' @param annotdata an annotation, as returned by functions like \code{\link[fsbrain]{subject.annot}}.
 #'
-#' @param surface_mesh brain surface mesh, as returned by functions like \code{\link[fsbrain]{subject.surface}}.
+#' @param surface_mesh brain surface mesh, as returned by functions like \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}.
 #'
 #' @param background color, the background color to assign to the non-border parts of the regions. Defaults to 'white'.
 #'
@@ -147,9 +147,9 @@ annot.outline <- function(annotdata, surface_mesh, background="white", silent=TR
 #'
 #' @description To get a nice path along the surface, pass the vertex indices along a geodesic path. Note: You can first open an interactive brain view (`view='si'`) with a vis* function like \code{\link[fsbrain]{vis.subject.morph.native}}, then run this function to draw into the active plot.
 #'
-#' @param surface_vertices float matrix of size (n, 3), the surface vertex coordinates, as returned by \code{\link[fsbrain]{subject.surface}}, member "vertices"
+#' @param surface_vertices float matrix of size (n, 3), the surface vertex coordinates, as returned as part of \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}, in the member "vertices".
 #'
-#' @param path_vertex_indices vector of vertex indices, the path
+#' @param path_vertex_indices vector of vertex indices, the path. You will need to have it computed already. (This function does **not** compute geodesic paths. You can use it to visualize such a path though.)
 #'
 #' @family surface mesh functions
 #'
@@ -176,7 +176,9 @@ vis.path.along.verts <- function(surface_vertices, path_vertex_indices) {
 
 #' @title Compute border of a label.
 #'
-#' @param surface_mesh surface mesh, as loaded by \code{\link[fsbrain]{subject.surface}}
+#' @description Compute the border of a label (i.e., a subset of the vertices of a mesh). The border thickness can be specified. Useful to draw the outline of a region, e.g., a significant cluster on the surface or a part of a ROI from a brain parcellation.
+#'
+#' @param surface_mesh surface mesh, as loaded by \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}.
 #'
 #' @param label instance of class `fs.label` or an integer vector, the vertex indices. This function only makes sense if they form a patch on the surface, but that is not checked.
 #'
@@ -248,18 +250,25 @@ label.border <- function(surface_mesh, label, inner_only=TRUE, expand_inwards=0L
 }
 
 
-#' @title Enumerate all edges of the given faces.
+#' @title Enumerate all edges of the given faces or mesh.
 #'
-#' @param surface_mesh surface mesh, as loaded by \code{\link[fsbrain]{subject.surface}}
+#' @description Compute edges of a tri-mesh. Can compute all edges, or only a subset, given by the face indices in the mesh.
 #'
-#' @param face_indices integer vector, the face indices
+#' @param surface_mesh surface mesh, as loaded by \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}.
 #'
-#' @return integer matrix of size (n, 2) where n is the number of edges. The indices (source and target vertex) in each row are **not** sorted.
+#' @param face_indices integer vector, the face indices. Can also be the character string 'all' to use all faces.
+#'
+#' @return integer matrix of size (n, 2) where n is the number of edges. The indices (source and target vertex) in each row are **not** sorted, and the edges are **not** unique. I.e., each undirected edge `u, v` (with the exception of edges on the mesh border) will occur twice in the result: once as `u, v` and once as `v, u`.
 #'
 #' @family surface mesh functions
 #'
-#' @keywords internal
-face.edges <- function(surface_mesh, face_indices) {
+#' @export
+face.edges <- function(surface_mesh, face_indices='all') {
+    if(is.character(face_indices)) {
+      if(face_indices=='all') {
+        face_indices = seq.int(nrow(surface_mesh$faces));
+      }
+    }
     e1 = surface_mesh$faces[face_indices, 1:2];
     e2 = surface_mesh$faces[face_indices, 2:3];
     e3 = surface_mesh$faces[face_indices, c(3,1)];
@@ -267,11 +276,34 @@ face.edges <- function(surface_mesh, face_indices) {
 }
 
 
-#' @keywords internal
-test.surface <- function() {
-  return(list("vertices"=matrix(c(0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 3.0, 3.0, 3.0, 4.0, 4.0, 4.0, 5.0, 5.0, 5.0, 6.0, 6.0, 6.0), ncol=3, byrow = TRUE), "faces"=matrix(c(1,2,3,1,2,4,2,5,4,2,6,5,2,3,6), ncol=3, byrow = TRUE)));
-}
+#' @title Return diverging color list
+#'
+#' @param num_colors integer, the number of colors you want
+#'
+#' @return vector of colors
+#'
+#' @importFrom grDevices colorRampPalette rgb
+#' @export
+colorlist.brain.clusters <- function(num_colors) {
+  if(num_colors %% 2 == 1L) {
+    num_colors_per_side = num_colors %/% 2L;
+    num_central = 1L;
+  } else {
+    num_colors_per_side = (num_colors %/% 2L) - 1L;
+    num_central = 2L;
+  }
 
+  blue = grDevices::rgb(0.,0.,1.);
+  cyan = grDevices::rgb(0., 1., 1.);
+  ramp_bc = grDevices::colorRampPalette(c(cyan, blue))
+
+  red = grDevices::rgb(1., 0., 0.);
+  yellow = grDevices::rgb(1., 1., 0.);
+  ramp_ry = grDevices::colorRampPalette(c(red, yellow))
+
+  central_value = grDevices::rgb(0.8, 0.8, 0.8); # gray
+  return(c(ramp_bc(num_colors_per_side), rep(central_value, num_central), ramp_ry(num_colors_per_side)));
+}
 
 #' @title Read colors from CSV file.
 #'

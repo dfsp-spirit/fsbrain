@@ -16,10 +16,10 @@ subject.surface(subjects_dir, subject_id, surface, hemi)
 \item{hemi}{string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the surface file to be loaded. For 'both', see the information on the return value.}
 }
 \value{
-the `fs.surface` instace, as returned by \code{\link[freesurferformats]{read.fs.surface}}. If parameter `hemi` is set to `both`, a named list with entries `lh` and `rh` is returned, and the values of are the respective surfaces.
+the `fs.surface` instance, as returned by \code{\link[freesurferformats]{read.fs.surface}}. If parameter `hemi` is set to `both`, a named list with entries `lh` and `rh` is returned, and the values of are the respective surfaces. The mesh data structure used in `fs.surface` is a *face index set*.
 }
 \description{
-Load a brain surface for a subject.
+Load a brain surface mesh for a subject.
 }
 \examples{
 \donttest{

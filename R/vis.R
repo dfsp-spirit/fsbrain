@@ -538,6 +538,52 @@ vis.labeldata.on.subject <- function(subjects_dir, vis_subject_id, lh_labeldata,
 }
 
 
+#' @title Visualize custom vertex colors on the surface of a subject.
+#'
+#' @description Visualizes pre-defined vertex colors. You can use this if you have computed the colors from your data yourself.
+#'
+#' @param subjects_dir string. The FreeSurfer `SUBJECTS_DIR`, containing the subdir of `subject_id`, the subject that you want to use for visualization.
+#'
+#' @param subject_id string The subject identifier from which to obtain the surface for data visualization. Example: 'fsaverage'.
+#'
+#' @param lh_colors vector of colors, typically RGB color strings like '#ff0000'. The length should match the number of lh surface vertices.
+#'
+#' @param rh_colors vector of colors, typically RGB color strings like '#ff0000'. The length should match the number of rh surface vertices.
+#'
+#' @param surface string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
+#'
+#' @param views list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.
+#'
+#' @param rgloptions option list passed to \code{\link[rgl]{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))}
+#'
+#' @param rglactions named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
+#'
+#' @return list of coloredmeshes. The coloredmeshes used for the visualization.
+#'
+#' @family visualization functions
+#' @export
+vis.colors.on.subject <- function(subjects_dir, subject_id, lh_colors, rh_colors, surface="white", views=c('t4'), rgloptions=list(), rglactions = list()) {
+
+    if(is.null(lh_colors) && is.null(rh_colors)) {
+        stop(sprintf("Only one of lh_colors or rh_colors can be NULL.\n"));
+    }
+
+    coloredmeshes = list();
+
+    if(! is.null(lh_colors)) {
+        surface_mesh_lh = subject.surface(subjects_dir, subject_id, surface, 'lh');
+        coloredmeshes$lh = coloredmesh.custom(surface_mesh_lh, lh_colors, 'lh');
+    }
+
+    if(! is.null(rh_colors)) {
+        surface_mesh_rh = subject.surface(subjects_dir, subject_id, surface, 'rh');
+        coloredmeshes$rh = coloredmesh.custom(surface_mesh_rh, rh_colors, 'rh');
+    }
+
+    return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions)));
+}
+
+
 #' @title Visualize arbitrary data on the fsaverage template subject, if available.
 #'
 #' @description Creates a surface mesh, applies a colormap transform the morphometry data values into colors, and renders the resulting colored mesh in an interactive window. If hemi is 'both', the data is rendered for the whole brain. This function tries to automatically retrieve the subjects dir of the fsaverage template subject by checking the environment variables SUBJECTS_DIR and FREESURFER_HOME for the subject. The subject is required for its surfaces, which are not shipped with this package for licensing reasons.

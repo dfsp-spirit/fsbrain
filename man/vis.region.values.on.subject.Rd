@@ -65,6 +65,7 @@ This function can be used for rendering a single value (color) for all vertices 
 }
 \seealso{
 Other visualization functions: \code{\link{vis.color.on.subject}},
+  \code{\link{vis.colors.on.subject}},
   \code{\link{vis.data.on.fsaverage}},
   \code{\link{vis.data.on.subject}},
   \code{\link{vis.labeldata.on.subject}},

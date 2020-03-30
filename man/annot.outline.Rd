@@ -10,7 +10,7 @@ annot.outline(annotdata, surface_mesh, background = "white",
 \arguments{
 \item{annotdata}{an annotation, as returned by functions like \code{\link[fsbrain]{subject.annot}}.}
 
-\item{surface_mesh}{brain surface mesh, as returned by functions like \code{\link[fsbrain]{subject.surface}}.}
+\item{surface_mesh}{brain surface mesh, as returned by functions like \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}.}
 
 \item{background}{color, the background color to assign to the non-border parts of the regions. Defaults to 'white'.}
 

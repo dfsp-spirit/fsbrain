@@ -44,7 +44,8 @@ Visualize pre-defined vertex colors on a subject.
 
 }
 \seealso{
-Other visualization functions: \code{\link{vis.data.on.fsaverage}},
+Other visualization functions: \code{\link{vis.colors.on.subject}},
+  \code{\link{vis.data.on.fsaverage}},
   \code{\link{vis.data.on.subject}},
   \code{\link{vis.labeldata.on.subject}},
   \code{\link{vis.mask.on.subject}},

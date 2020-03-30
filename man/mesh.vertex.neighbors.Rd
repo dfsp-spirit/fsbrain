@@ -8,7 +8,7 @@ mesh.vertex.neighbors(surface, source_vertices, k = 1L,
   restrict_to_vertices = NULL)
 }
 \arguments{
-\item{surface}{a surface as returned by functions like \code{\link[fsbrain]{subject.surface}}.}
+\item{surface}{a surface as returned by functions like \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}.}
 
 \item{source_vertices}{Vector of source vertex indices.}
 

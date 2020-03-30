@@ -6,9 +6,11 @@
 #'
 #' @description Running this function on a set of coloredmeshes ensures that one color represents the same data value over all the meshes. This makes sense if you plot the left and right hemisphere of a subject into a plot. This function only works if the meshes comes with a key named 'morph_data' that contains the raw data values. If there is no such data, the given meshes are returned without changes.
 #'
-#' @param coloredmeshes list of coloredmeshes
+#' @param coloredmeshes list of input coloredmeshes
 #'
 #' @param colormap a colormap function, defaults to NULL, which instructs the function to use the colormap found in the "cmap_fun" property of the first mesh in the list that has a valid entry.
+#'
+#' @return the coloredmeshes with merged colormap
 #'
 #' @importFrom squash cmap makecmap jet
 #' @keywords internal
@@ -16,7 +18,6 @@ unify.coloredmeshes.colormaps <- function(coloredmeshes, colormap=NULL) {
     if(length(coloredmeshes) <= 1) {
         return(coloredmeshes);
     }
-
 
     comb_res = combine.coloredmeshes.data(coloredmeshes);
     full_data = comb_res$full_data;
@@ -210,7 +211,6 @@ coloredmesh.from.color <- function(subjects_dir, subject_id, color_data, hemi, s
 #'
 #' @return named list of coloredmeshes. Each entry is a named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
-#' @export
 coloredmeshes.from.color <- function(subjects_dir, subject_id, color_data, hemi, surface="white") {
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh', or 'both' but is '%s'.\n", hemi));
@@ -458,7 +458,15 @@ coloredmesh.from.mask <- function(subjects_dir, subject_id, mask, hemi, surface=
 
     morph_like_data = as.integer(mask);
 
+    if(min(mask) < 0L | max(mask) > 1L) {
+        warning(sprintf("The data range of the supplied mask is outside of the expected range [0L, 1L]. Is this really a mask?\n", length(mask), nrow(surface_data$vertices)));
+    }
+
     morph_like_data[mask == 1L] = NA;     # set positive values to NA so they get rendered as background.
+
+    if(length(mask) != nrow(surface_data$vertices)) {
+        warning(sprintf("The length of the supplied mask (%d) does not match the number of vertices in the surface (%d).\n", length(mask), nrow(surface_data$vertices)));
+    }
 
     mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
     col = squash::cmap(morph_like_data, map = do.call(squash::makecmap, utils::modifyList(list(morph_like_data), makecmap_options)));

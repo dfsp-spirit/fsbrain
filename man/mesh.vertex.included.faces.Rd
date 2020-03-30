@@ -7,7 +7,7 @@
 mesh.vertex.included.faces(surface_mesh, source_vertices)
 }
 \arguments{
-\item{surface_mesh}{surface mesh, as loaded by \code{\link[fsbrain]{subject.surface}}}
+\item{surface_mesh}{surface mesh, as loaded by \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}.}
 
 \item{source_vertices}{integer vector, the vertex indices.}
 }

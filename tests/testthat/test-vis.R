@@ -146,9 +146,8 @@ test_that("We can visualize a subset of the regions of the Desikan atlas on fsav
 })
 
 
-
-test_that("We can visualize a cluster or activation data on fsaverage.", {
-    skip("This test has to be run manually and interactively. It requires the 'fsaverage' subject from a FreeSurfer installation.");
+test_that("We can visualize clusters on fsaverage.", {
+    skip("This test has to be run manually and interactively. It requires the 'fsaverage' subject from a FreeSurfer installation and a clusters file.");
 
     subjects_dir = file.path("~/software/freesurfer/subjects"); # Directory that has 'fsaverage' data, adapt this to your machine.
     subject_id = 'fsaverage';
@@ -158,4 +157,3 @@ test_that("We can visualize a cluster or activation data on fsaverage.", {
     rh_clust = - 2 * lh_clust;                                        # create negative data, take multiple so the data are not symmetric around zero (because that is not typically the case and needs to be handled properly by the plot function)
     vis.symmetric.data.on.subject(subjects_dir, subject_id, lh_clust, rh_clust);
 })
-
