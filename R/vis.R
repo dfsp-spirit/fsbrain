@@ -68,8 +68,10 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi="bo
     }
 
     both_hemi_colors = collayer.from.morphlike.data(measure_data$lh, measure_data$rh, makecmap_options=makecmap_options);
-    background = collayer.bg(subjects_dir, subject_id, bg, hemi=hemi);
-    both_hemi_colors = collayers.merge(list("fg"=both_hemi_colors, "bg"=background));
+    if(!is.null(bg)) {
+        background = collayer.bg(subjects_dir, subject_id, bg, hemi=hemi);
+        both_hemi_colors = collayers.merge(list("fg"=both_hemi_colors, "bg"=background));
+    }
 
     coloredmeshes = coloredmeshes.from.color(subjects_dir, subject_id, both_hemi_colors, hemi, surface=surface);
 
@@ -339,7 +341,7 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, mor
 #'
 #' @importFrom squash jet
 #' @export
-vis.symmetric.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface="white", colormap=NULL, views=c('t4'), rgloptions=list(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=squash::jet, symm=TRUE, col.na='#FFFFFFFF'), map_to_NA=c(0), bg=NULL) {
+vis.symmetric.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface="white", colormap=NULL, views=c('t4'), rgloptions=list(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=squash::jet, symm=TRUE, col.na='#FFFFFF00'), map_to_NA=c(0), bg=NULL) {
     makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
     if(! is.null(map_to_NA)) {
         if(length(map_to_NA) == 1L) {

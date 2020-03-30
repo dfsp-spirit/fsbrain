@@ -340,18 +340,33 @@ collayers.merge <- function(collayers, opaque_background="#FFFFFF") {
     if(! is.null(opaque_background)) {
         bg_alpha = grDevices::col2rgb(opaque_background, alpha = TRUE)[4];
         if(bg_alpha != 255L) {
-            warning(sprintf("Color passed as parameter 'opaque_background' is not opaque: alpha channel has value %d (expected 255).", bg_alpha));
+            warning(sprintf("Color passed as parameter 'opaque_background' is not opaque: alpha channel has value %d (expected 255).\n", bg_alpha));
         }
         # Add a new opaque layer at the end
         new_layer_index = length(collayers) + 1L;
-        collayers[[new_layer_index]] = rep(opaque_background, length(collayers[[1]]));  # We use the length of the first layer here, but we could use any.
+
+        first_layer = collayers[[1]];  # We use the the first layer here, but we could use any: they must have same dimensions
+        if(is.hemilist(first_layer)) {
+            new_layer = list();
+            if(!is.null(first_layer$lh)) {
+                new_layer$lh = rep(opaque_background, length(first_layer$lh));
+            }
+            if(!is.null(first_layer$rh)) {
+                new_layer$rh = rep(opaque_background, length(first_layer$rh));
+            }
+        } else {
+            new_layer = rep(opaque_background, length(first_layer));
+        }
+
+        collayers[[new_layer_index]] = new_layer;
         names(collayers)[[new_layer_index]] = 'opaque_background';
     }
 
     merged = collayers[[1]];
     for (layer_idx in seq.int(2L, length(collayers))) {
+        layer_name = names(collayers)[[layer_idx]];
         clayer = collayers[[layer_idx]];
-        merged = alphablend(merged, clayer);
+        merged = alphablend(merged, clayer, silent=(layer_name == 'opaque_background'));
     }
     return(merged);
 }
@@ -365,6 +380,8 @@ collayers.merge <- function(collayers, opaque_background="#FFFFFF") {
 #'
 #' @param back_color rgba color strings, the lower color layer or background
 #'
+#' @param silent logical, whether to suppress messages
+#'
 #' @return rgba color strings, the alpha-blended colors
 #'
 #' @references see the *Alpha blending* section on https://en.wikipedia.org/wiki/Alpha_compositing
@@ -373,10 +390,25 @@ collayers.merge <- function(collayers, opaque_background="#FFFFFF") {
 #'
 #' @importFrom grDevices rgb col2rgb
 #' @export
-alphablend <- function(front_color, back_color) {
+alphablend <- function(front_color, back_color, silent=TRUE) {
+
+    if(is.hemilist(front_color)) {
+        if(is.hemilist(back_color)) {
+            ret_list = list();
+            if(!is.null(front_color$lh)) {
+                ret_list$lh = alphablend(front_color$lh, back_color$lh);
+            }
+            if(!is.null(front_color$rh)) {
+                ret_list$rh = alphablend(front_color$rh, back_color$rh);
+            }
+            return(ret_list);
+        } else {
+            stop("The parameters 'front_color' and 'back_color' must have the same type (currently 'front_color' is a hemilist, 'back_color' is not).");
+        }
+    }
 
     if(length(front_color) != length(back_color)) {
-        stop("The parameters 'front_color' and 'back_color' must be vectors with identical length.");
+        stop(sprintf("The parameters 'front_color' (length %d) and 'back_color' (length %d) must be vectors with identical length.\n", length(front_color), length(back_color)));
     }
 
     # Treat NA values as fully transparent color.
@@ -387,6 +419,13 @@ alphablend <- function(front_color, back_color) {
     back_color_rgba_matrix = grDevices::col2rgb(back_color, alpha = TRUE)/255.;
 
     src_alpha = front_color_rgba_matrix[4,];
+
+    if(!any(src_alpha < 1)) {
+        if(!silent) {
+            message("Background will not be visible, foreground is fully opaque. Set foreground colors to NA or use the alpha channel to see the background.");
+        }
+    }
+
     src_rgb = front_color_rgba_matrix[1:3,];
 
     dst_alpha = back_color_rgba_matrix[4,];
