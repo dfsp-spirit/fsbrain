@@ -4,12 +4,14 @@
 \alias{hemilist.wrap}
 \title{Wrap data into a named hemi list.}
 \usage{
-hemilist.wrap(data, hemi)
+hemilist.wrap(data, hemi, hemilist = NULL)
 }
 \arguments{
-\item{data}{something to wrap, typically some data for a hemisphere, e.g., a vector of morphometry data values}
+\item{data}{something to wrap, typically some data for a hemisphere, e.g., a vector of morphometry data values. If NULL, the name will not be created.}
 
 \item{hemi}{character string, one of 'lh' or 'rh'. The name to use for the data in the returned list.}
+
+\item{hemilist}{optional hemilist, an existing hemilist to add the entry to. If left at the default value `NULL`, a new list will be created.}
 }
 \value{
 named list, with the 'data' in the name given by parameter 'hemi'

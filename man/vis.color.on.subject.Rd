@@ -53,6 +53,7 @@ Other visualization functions: \code{\link{vis.data.on.fsaverage}},
   \code{\link{vis.subject.label}},
   \code{\link{vis.subject.morph.native}},
   \code{\link{vis.subject.morph.standard}},
+  \code{\link{vis.symmetric.data.on.subject}},
   \code{\link{vislayout.from.coloredmeshes}}
 }
 \concept{surface visualization functions}

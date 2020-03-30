@@ -53,7 +53,12 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi="bo
 
     makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
 
-    measure_data = subject.morph.native(subjects_dir, subject_id, measure, hemi, cortex_only=cortex_only, split_by_hemi=TRUE);
+    if(is.hemilist(measure)) {
+        measure_data = measure;
+        hemi = hemilist.derive.hemi(measure_data);  # need to rewrite the hemi, depending on the passed data
+    } else {
+        measure_data = subject.morph.native(subjects_dir, subject_id, measure, hemi, cortex_only=cortex_only, split_by_hemi=TRUE);
+    }
 
     if(rglactions.has.key(rglactions, 'clip_data')) {
         clip_range = rglactions$clip_data;
@@ -95,11 +100,11 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi="bo
 #' @export
 vis.subject.label <- function(subjects_dir, subject_id, label, hemi, surface="white", colormap=NULL, views=c("t4"), rgloptions = list(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=squash::rainbow2)) {
 
-    makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
-
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
     }
+
+    makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
 
     if(hemi == "both") {
         lh_cmesh = coloredmesh.from.label(subjects_dir, subject_id, label, 'lh', surface=surface, makecmap_options=makecmap_options);
@@ -298,29 +303,57 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, mor
 
     makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
 
-    coloredmeshes = list();
+    measure = hemilist.wrap(morph_data_lh, 'lh');
+    measure = hemilist.wrap(morph_data_rh, 'rh', measure);
 
-    if(! is.null(morph_data_lh)) {
+    return(vis.subject.morph.native(subjects_dir, vis_subject_id, measure, surface=surface, views=views, rgloptions=rgloptions, rglactions=rglactions, draw_colorbar=draw_colorbar, makecmap_options=makecmap_options));
+}
 
-        if(is.character(morph_data_lh)) {    # Treat it as a filename
-            morph_data_lh = freesurferformats::read.fs.morph(morph_data_lh);
+
+#' @title Visualize clusters or activation data on the surface of any subject.
+#'
+#' @description This function is intended to plot symmetric data around zero (like positive and negative activation data, signed p-values, etc.) on a subject's surface. It is a thin wrapper around \code{\link[fsbrain]{vis.data.on.subject}}.
+#'
+#' @inheritParams vis.data.on.subject
+#'
+#' @param map_to_NA the value or value range that should **not** be considered a cluster, and should thus be plotted as background color. If a single value, only excatly this value is used (typically 0). If two values, they are interpreted as a range, and a values between them are mapped to NA. If you prefer to map the data to NA yourself before using this function, pass `NULL`.
+#'
+#' @return list of coloredmeshes. The coloredmeshes used for the visualization.
+#'
+#' @examples
+#' \donttest{
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+#'    morph_data_lh = subject.morph.native(subjects_dir, 'subject1', 'thickness', 'lh');
+#'    morph_data_rh = NULL;
+#'    vis.symmetric.data.on.subject(subjects_dir, 'subject1', morph_data_lh, morph_data_rh);
+#' }
+#'
+#' @family visualization functions
+#' @family morphometry visualization functions
+#'
+#' @importFrom squash jet
+#' @export
+vis.symmetric.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface="white", colormap=NULL, views=c('t4'), rgloptions=list(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=squash::jet, symm=TRUE, col.na='#FFFFFFFF'), map_to_NA=c(0)) {
+    makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
+    if(! is.null(map_to_NA)) {
+        if(length(map_to_NA) == 1L) {
+            if(!is.null(morph_data_lh)) {
+                morph_data_lh[morph_data_lh == map_to_NA] = NA;
+            }
+            if(!is.null(morph_data_rh)) {
+                morph_data_rh[morph_data_rh == map_to_NA] = NA;
+            }
+        } else if(length(map_to_NA) == 2L) { # treat as a range
+            if(!is.null(morph_data_lh)) {
+                morph_data_lh[which(morph_data_lh > map_to_NA[1] & morph_data_lh < map_to_NA[2])] = NA;
+            }
+            if(!is.null(morph_data_rh)) {
+                morph_data_rh[which(morph_data_rh > map_to_NA[1] & morph_data_rh < map_to_NA[2])] = NA;
+            }
         }
-
-        cmesh_lh = coloredmesh.from.morphdata(subjects_dir, vis_subject_id, morph_data_lh, 'lh', surface=surface, makecmap_options=makecmap_options);
-        coloredmeshes$lh = cmesh_lh;
     }
-
-    if(! is.null(morph_data_rh)) {
-
-        if(is.character(morph_data_rh)) {    # Treat it as a filename
-            morph_data_rh = freesurferformats::read.fs.morph(morph_data_rh);
-        }
-
-        cmesh_rh = coloredmesh.from.morphdata(subjects_dir, vis_subject_id, morph_data_rh, 'rh', surface=surface, makecmap_options=makecmap_options);
-        coloredmeshes$rh = cmesh_rh;
-    }
-
-    return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar)));
+    return(vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface=surface, views=views, rgloptions=rgloptions, rglactions=rglactions, draw_colorbar=draw_colorbar, makecmap_options=makecmap_options));
 }
 
 

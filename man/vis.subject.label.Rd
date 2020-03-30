@@ -60,6 +60,7 @@ Other visualization functions: \code{\link{vis.color.on.subject}},
   \code{\link{vis.subject.annot}},
   \code{\link{vis.subject.morph.native}},
   \code{\link{vis.subject.morph.standard}},
+  \code{\link{vis.symmetric.data.on.subject}},
   \code{\link{vislayout.from.coloredmeshes}}
 
 Other label functions: \code{\link{apply.label.to.morphdata}},

@@ -36,7 +36,7 @@ fup <- function(word) {
 #' @export
 clip.data <- function(data, lower=0.05, upper=0.95){
 
-    if(is.list(data)) { # treat as a hemi list
+    if(is.hemilist(data)) { # treat as a hemi list
       return(lapply(data, clip.data, lower, upper));
     } else {
       quantiles = stats::quantile(data, c(lower, upper), na.rm = TRUE, names = FALSE);
@@ -297,22 +297,53 @@ read.colorcsv <- function(filepath) {
 
 #' @title Wrap data into a named hemi list.
 #'
-#' @param data something to wrap, typically some data for a hemisphere, e.g., a vector of morphometry data values
+#' @param data something to wrap, typically some data for a hemisphere, e.g., a vector of morphometry data values. If NULL, the name will not be created.
 #'
 #' @param hemi character string, one of 'lh' or 'rh'. The name to use for the data in the returned list.
 #'
+#' @param hemilist optional hemilist, an existing hemilist to add the entry to. If left at the default value `NULL`, a new list will be created.
+#'
 #' @return named list, with the 'data' in the name given by parameter 'hemi'
 #'
-# @keywords internal
 #' @export
-hemilist.wrap <- function(data, hemi) {
+hemilist.wrap <- function(data, hemi, hemilist=NULL) {
   if(!(hemi %in% c("lh", "rh"))) {
     stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
   }
-  ret_list = list();
-  ret_list[[hemi]] = data;
+  if(is.null(hemilist)) {
+    ret_list = list();
+  } else {
+    ret_list = hemilist;
+  }
+  if(!is.null(data)) {
+    ret_list[[hemi]] = data;
+  }
   return(ret_list);
 }
+
+
+#' @title Derive 'hemi' string from the data in a hemilist
+#'
+#' @param hemilist hemilist, an existing hemilist
+#'
+#' @return character string, one of 'lh', 'rh' or 'both'
+#'
+#' @export
+hemilist.derive.hemi <- function(hemilist) {
+  if(is.null(hemilist$lh) | is.null(hemilist$rh)) {
+    if(is.null(hemilist$lh)) {
+      return('rh');
+    } else {
+      return('lh');
+    }
+
+  } else {
+    print("derived both, hemilist rh:")
+    print(hemilist$rh)
+    return('both');
+  }
+}
+
 
 
 #' @title Unwrap hemi data from a named hemi list.
@@ -371,6 +402,20 @@ hemilist.get.combined.data <- function(hemi_list) {
   } else {
     return(c(lh_data, rh_data));
   }
+}
+
+
+#' @title Check whether x is a hemilist
+#'
+#' @description A hemilist is a named list with entries 'lh' and/or 'rh'.
+#'
+#' @param x any R object
+#'
+#' @return whether 'x' is a hemilist
+#'
+#' @export
+is.hemilist <- function(x) {
+  return(is.list(x) & ("lh" %in% names(x) | "rh" %in% names(x)));
 }
 
 

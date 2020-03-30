@@ -155,7 +155,7 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
     }
 
     if(nrow(surface_mesh$vertices) != length(morph_data)) {
-        warning(sprintf("Data mismatch: surface has %d vertices, but %d color values passed in argument 'color_data'.\n", nrow(surface_mesh$vertices), length(morph_data)));
+        warning(sprintf("Data mismatch: surface has %d vertices, but %d color values passed in argument 'measure'.\n", nrow(surface_mesh$vertices), length(morph_data)));
     }
 
     mesh = rgl::tmesh3d(c(t(surface_mesh$vertices)), c(t(surface_mesh$faces)), homogeneous=FALSE);
@@ -217,14 +217,15 @@ coloredmeshes.from.color <- function(subjects_dir, subject_id, color_data, hemi,
     }
 
     if(hemi=="both") {
-        if(! is.list(color_data)) {
+        print("cmsh hemi is both")
+        if(! is.hemilist(color_data)) {
             stop("The parameter 'color_data' must be a named list with entries 'lh' and 'rh' if 'hemi' is 'both'.");
         }
         lh_cm = coloredmesh.from.color(subjects_dir, subject_id, color_data$lh, 'lh', surface=surface);
         rh_cm = coloredmesh.from.color(subjects_dir, subject_id, color_data$rh, 'rh', surface=surface);
         return(list("lh"=lh_cm, "rh"=rh_cm));
     } else {
-        if(is.list(color_data)) {
+        if(is.hemilist(color_data)) {
             color_data = hemilist.unwrap(color_data);
         }
         cm = coloredmesh.from.color(subjects_dir, subject_id, color_data, hemi, surface=surface);
@@ -327,7 +328,7 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
 
     num_verts = nrow(surface_data$vertices);
     if(length(morph_data) != num_verts) {
-        stop(sprintf("Received %d data values, but the hemi '%s' '%s' surface of visualization subject '%s' in dir '%s' has %d vertices. Counts must match.\n", length(morph_data), hemi, surface, vis_subject_id, subjects_dir, num_verts));
+        warning(sprintf("Received %d data values, but the hemi '%s' '%s' surface of visualization subject '%s' in dir '%s' has %d vertices. Counts must match.\n", length(morph_data), hemi, surface, vis_subject_id, subjects_dir, num_verts));
     }
 
     mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);

@@ -200,8 +200,16 @@ collayer.from.morphlike.data <- function(lh_morph_data=NULL, rh_morph_data=NULL,
     } else {
         merged_morph_data = c(lh_morph_data, rh_morph_data);
         common_cmap = do.call(squash::makecmap, utils::modifyList(list(merged_morph_data), makecmap_options));
-        lh_layer = squash::cmap(lh_morph_data, map = common_cmap);
-        rh_layer = squash::cmap(rh_morph_data, map = common_cmap);
+        if(is.numeric(lh_morph_data)) {
+            lh_layer = squash::cmap(lh_morph_data, map = common_cmap);
+        } else {
+            lh_layer = NULL;
+        }
+        if(is.numeric(rh_morph_data)) {
+            rh_layer = squash::cmap(rh_morph_data, map = common_cmap);
+        } else {
+            rh_layer = NULL;
+        }
         return(list("lh"=lh_layer, "rh"=rh_layer));
     }
 }
