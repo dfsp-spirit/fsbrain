@@ -239,6 +239,68 @@ collayer.from.morphlike.data <- function(lh_morph_data=NULL, rh_morph_data=NULL,
 }
 
 
+#' @title Compute surface color layer from morph-like data.
+#'
+#' @param lh_data integer vector,  can be NULL
+#'
+#' @param rh_data numerical vector, can be NULL
+#'
+#' @param makecmap_options named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.
+#'
+#' @return named hemi list, each entry is a vector of color strings, one color per surface vertex. The coloring represents the label data.
+#'
+#' @seealso You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
+#'
+#' @family surface color layer
+#' @importFrom utils modifyList
+#' @importFrom squash cmap makecmap rainbow2
+#' @export
+collayer.from.mask.data <- function(lh_data=NULL, rh_data=NULL, makecmap_options=list('colFn'=squash::rainbow2)) {
+    if(is.null(lh_data) | is.null(rh_data)) {
+
+        if(is.null(lh_data) & is.null(rh_data)) {
+            warning("Both 'lh_data' and 'rh_data' are NULL, return a single white color value for each hemi.");
+            return(list("lh"="#FFFFFF", "rh"="#FFFFFF"));
+        }
+
+        if(is.null(lh_data)) {
+            hemi = "rh";
+            label_data = rh_data;
+        } else {
+            hemi = "lh";
+            label_data = lh_data;
+        }
+
+        if(is.logical(label_data)) {
+            label_data = as.integer(label_data);
+        }
+
+        color_layer = squash::cmap(label_data, map = do.call(squash::makecmap, utils::modifyList(list(label_data), makecmap_options)));
+        return(hemilist.wrap(color_layer, hemi));
+    } else {
+        if(is.logical(lh_data)) {
+            lh_data = as.integer(lh_data);
+        }
+        if(is.logical(rh_data)) {
+            rh_data = as.integer(rh_data);
+        }
+        merged_label_data = c(lh_data, rh_data);
+        common_cmap = do.call(squash::makecmap, utils::modifyList(list(merged_label_data), makecmap_options));
+        if(is.numeric(lh_data)) {
+            lh_layer = squash::cmap(lh_data, map = common_cmap);
+        } else {
+            lh_layer = NULL;
+        }
+        if(is.numeric(rh_data)) {
+            rh_layer = squash::cmap(rh_data, map = common_cmap);
+        } else {
+            rh_layer = NULL;
+        }
+        return(list("lh"=lh_layer, "rh"=rh_layer));
+    }
+}
+
+
 #' @title Compute surface color layer from annotation or atlas data.
 #'
 #' @param lh_annotdata loaded annotation data for left hemi, as returned by \code{\link[fsbrain]{subject.annot}}

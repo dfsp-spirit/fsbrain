@@ -65,7 +65,6 @@ Other label functions: \code{\link{apply.label.to.morphdata}},
   \code{\link{vis.subject.label}}
 
 Other visualization functions: \code{\link{vis.color.on.subject}},
-  \code{\link{vis.colors.on.subject}},
   \code{\link{vis.data.on.fsaverage}},
   \code{\link{vis.data.on.subject}},
   \code{\link{vis.mask.on.subject}},

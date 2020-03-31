@@ -400,7 +400,7 @@ subject.filepath.morph.native <- function(subjects_dir, subject_id, measure, hem
     curvfile = file.path(subjects_dir, subject_id, "surf", sprintf("%s.%s%s", hemi, measure, freesurferformats::fs.get.morph.file.ext.for.format(format)));
 
     if(!file.exists(curvfile)) {
-        msg = sprintf("Standard space morphometry file '%s' for subject '%s' measure '%s' hemi '%s' cannot be accessed.\n", curvfile, subject_id, measure, hemi);
+        msg = sprintf("Native space morphometry file '%s' for subject '%s' measure '%s' hemi '%s' cannot be accessed.\n", curvfile, subject_id, measure, hemi);
         if((warn_if_nonexistent)) {
             warning(msg);
         }

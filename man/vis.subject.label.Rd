@@ -2,12 +2,13 @@
 % Please edit documentation in R/vis.R
 \name{vis.subject.label}
 \alias{vis.subject.label}
-\title{Visualize a label for a subject.}
+\title{Visualize a binary label for a subject.}
 \usage{
 vis.subject.label(subjects_dir, subject_id, label, hemi,
   surface = "white", colormap = NULL, views = c("t4"),
   rgloptions = list(), rglactions = list(), draw_colorbar = FALSE,
-  makecmap_options = list(colFn = squash::rainbow2))
+  makecmap_options = list(colFn = squash::rainbow2, col.na =
+  "#FFFFFF00"), map_to_NA = 0L, bg = NULL)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -31,6 +32,10 @@ vis.subject.label(subjects_dir, subject_id, label, hemi,
 \item{draw_colorbar}{logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See [fsbrain::coloredmesh.plot.colorbar.separate()] for an alternative.}
 
 \item{makecmap_options}{named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'. Should include at least a colormap function as name 'colFn'.}
+
+\item{map_to_NA}{the value or value range that should **not** be considered part of the label, and should thus be plotted as background color. Only used if 'bg' is not `NULL`. If a single value, only excatly this value is used (typically 0). If two values, they are interpreted as a range, and a values between them are mapped to NA. If you prefer to map the data to NA yourself before using this function, pass `NULL`.}
+
+\item{bg}{a background definition. Can be a surface color layer or a character string, see \code{\link[fsbrain]{collayer.bg}} for valid strings.}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.
@@ -52,7 +57,6 @@ Visualize a label for a subject. A label is just a logical vector with one entry
 }
 \seealso{
 Other visualization functions: \code{\link{vis.color.on.subject}},
-  \code{\link{vis.colors.on.subject}},
   \code{\link{vis.data.on.fsaverage}},
   \code{\link{vis.data.on.subject}},
   \code{\link{vis.labeldata.on.subject}},

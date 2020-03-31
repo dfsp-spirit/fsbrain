@@ -40,6 +40,7 @@ Other surface color layer: \code{\link{collayer.bg.meancurv}},
   \code{\link{collayer.bg}},
   \code{\link{collayer.from.annotdata}},
   \code{\link{collayer.from.annot}},
+  \code{\link{collayer.from.mask.data}},
   \code{\link{collayer.from.morphlike.data}},
   \code{\link{collayers.merge}}
 }

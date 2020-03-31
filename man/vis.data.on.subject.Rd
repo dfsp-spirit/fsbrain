@@ -32,7 +32,7 @@ vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh,
 
 \item{makecmap_options}{named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'. Should include at least a colormap function as name 'colFn'.}
 
-\item{bg}{a background definition. Can be a surface color layer or a character string, in the latter case one of 'curv', 'sulc' or 'aparc'.}
+\item{bg}{a background definition. Can be a surface color layer or a character string, see \code{\link[fsbrain]{collayer.bg}} for valid strings.}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.
@@ -52,7 +52,6 @@ Creates a surface mesh, applies a colormap transform the morphometry data values
 }
 \seealso{
 Other visualization functions: \code{\link{vis.color.on.subject}},
-  \code{\link{vis.colors.on.subject}},
   \code{\link{vis.data.on.fsaverage}},
   \code{\link{vis.labeldata.on.subject}},
   \code{\link{vis.mask.on.subject}},

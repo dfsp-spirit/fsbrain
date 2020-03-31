@@ -9,7 +9,7 @@ draw.colorbar(coloredmeshes, horizontal = TRUE, num_steps = 100)
 \arguments{
 \item{coloredmeshes}{list of coloredmeshes. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.}
 
-\item{horizontal}{logical, whether the colorbar should be drawn in horizontal oritentation. Defaults to TRUE.}
+\item{horizontal}{logical, whether the colorbar should be drawn in horizontal orientation. Defaults to TRUE.}
 
 \item{num_steps}{integer, number of steps to use for the colorbar. Defaults to 100.}
 }

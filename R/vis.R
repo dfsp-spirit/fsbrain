@@ -31,7 +31,7 @@
 #'
 #' @param makecmap_options named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'. Should include at least a colormap function as name 'colFn'.
 #'
-#' @param bg a background definition. Can be a surface color layer or a character string, in the latter case one of 'curv', 'sulc' or 'aparc'.
+#' @param bg a background definition. Can be a surface color layer or a character string, see \code{\link[fsbrain]{collayer.bg}} for valid strings.
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
@@ -79,52 +79,6 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi="bo
 }
 
 
-#' @title Visualize a label for a subject.
-#'
-#' @description Visualize a label for a subject. A label is just a logical vector with one entry for each vertex in the mesh. Each vertex may additionally be associated with a scalar value, but this function ignored that.
-#'
-#' @inheritParams vis.subject.morph.native
-#'
-#' @param label string. Name of the label file, without the hemi part (if any), but including the '.label' suffix. E.g., 'cortex.label' for '?h.cortex.label'.
-#'
-#' @return list of coloredmeshes. The coloredmeshes used for the visualization.
-#'
-#' @examples
-#' \donttest{
-#'    fsbrain::download_optional_data();
-#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
-#'    subject_id = 'subject1';
-#'    surface = 'white';
-#'    hemi = 'both';
-#'    label = 'cortex.label';
-#'    vis.subject.label(subjects_dir, subject_id, label, hemi, views="si");
-#' }
-#'
-#' @family visualization functions
-#' @family label functions
-#'
-#' @importFrom squash rainbow2
-#' @export
-vis.subject.label <- function(subjects_dir, subject_id, label, hemi, surface="white", colormap=NULL, views=c("t4"), rgloptions = list(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=squash::rainbow2)) {
-
-    if(!(hemi %in% c("lh", "rh", "both"))) {
-        stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
-    }
-
-    makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
-
-    if(hemi == "both") {
-        lh_cmesh = coloredmesh.from.label(subjects_dir, subject_id, label, 'lh', surface=surface, makecmap_options=makecmap_options);
-        rh_cmesh = coloredmesh.from.label(subjects_dir, subject_id, label, 'rh', surface=surface, makecmap_options=makecmap_options);
-        coloredmeshes = list(lh_cmesh, rh_cmesh);
-    } else {
-        cmesh = coloredmesh.from.label(subjects_dir, subject_id, label, hemi, surface=surface, makecmap_options=makecmap_options);
-        coloredmeshes = list(cmesh);
-    }
-
-    return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar)));
-}
-
 
 
 #' @title Visualize native space morphometry data for a subject.
@@ -137,7 +91,7 @@ vis.subject.label <- function(subjects_dir, subject_id, label, hemi, surface="wh
 #'
 #' @param template_subject The template subject used. This will be used as part of the filename, and its surfaces are loaded for data visualization. Defaults to 'fsaverage'.
 #'
-#' @param template_subjects_dir The template subjects dir. If NULL, the value of the parameter 'subjects_dir' is used. Defaults to NULL. If you have FreeSurfer installed and configured, and are using the standard fsaverage subject, try passing the result of calling 'file.path(Sys.getenv('FREESURFER_HOME'), 'subjects')'.
+#' @param template_subjects_dir The template subjects dir. If NULL, the value of the parameter 'subjects_dir' is used. If you have FreeSurfer installed and configured, and are using the standard fsaverage subject, try passing the result of calling 'file.path(Sys.getenv('FREESURFER_HOME'), 'subjects')'.
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
@@ -160,7 +114,7 @@ vis.subject.label <- function(subjects_dir, subject_id, label, hemi, surface="wh
 #'
 #' @importFrom squash jet
 #' @export
-vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi="both", fwhm="10", surface="white", template_subject = 'fsaverage', template_subjects_dir = NULL, colormap=NULL, views=c("t4"), rgloptions = list(), rglactions = list(), draw_colorbar = FALSE, cortex_only = FALSE, makecmap_options=list('colFn'=squash::jet)) {
+vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi="both", fwhm="10", surface="white", template_subject = 'fsaverage', template_subjects_dir = NULL, colormap=NULL, views=c("t4"), rgloptions = list(), rglactions = list(), draw_colorbar = FALSE, cortex_only = FALSE, makecmap_options=list('colFn'=squash::jet), bg=NULL) {
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
@@ -172,106 +126,98 @@ vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi="
         template_subjects_dir = subjects_dir;
     }
 
-    if(rglactions.has.key(rglactions, 'clip_data')) {
-        do_clip = rglactions$clip_data;
+    if(is.hemilist(measure)) {
+        measure_data = measure;
+        hemi = hemilist.derive.hemi(measure_data);  # need to rewrite the hemi, depending on the passed data
     } else {
-        do_clip = NULL;
+        measure_data = subject.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm=fwhm, template_subject=template_subject, cortex_only=cortex_only, split_by_hemi=TRUE);
     }
 
-    if(hemi == "both") {
-        lh_cmesh = coloredmesh.from.morph.standard(subjects_dir, subject_id, measure, 'lh', fwhm, surface=surface, template_subject=template_subject, template_subjects_dir=template_subjects_dir, clip=do_clip, cortex_only=cortex_only, makecmap_options=makecmap_options);
-        rh_cmesh = coloredmesh.from.morph.standard(subjects_dir, subject_id, measure, 'rh', fwhm, surface=surface, template_subject=template_subject, template_subjects_dir=template_subjects_dir, clip=do_clip, cortex_only=cortex_only, makecmap_options=makecmap_options);
-        coloredmeshes = list(lh_cmesh, rh_cmesh);
-    } else {
-        cmesh = coloredmesh.from.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm, surface=surface, template_subject=template_subject, template_subjects_dir=template_subjects_dir, clip=do_clip, cortex_only=cortex_only, makecmap_options=makecmap_options);
-        coloredmeshes = list(cmesh);
+    if(rglactions.has.key(rglactions, 'clip_data')) {
+        clip_range = rglactions$clip_data;
+        measure_data = clip.data(measure_data, lower=clip_range[1], upper=clip_range[2]);
     }
+
+    both_hemi_colors = collayer.from.morphlike.data(measure_data$lh, measure_data$rh, makecmap_options=makecmap_options);
+    if(!is.null(bg)) {
+        background = collayer.bg(subjects_dir, subject_id, bg, hemi=hemi);
+        both_hemi_colors = collayers.merge(list("fg"=both_hemi_colors, "bg"=background));
+    }
+
+    coloredmeshes = coloredmeshes.from.color(template_subjects_dir, template_subject, both_hemi_colors, hemi, surface=surface);
 
     return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar)));
 }
 
 
-#' @title Show one or more views of the given meshes in rgl windows.
+#' @title Visualize a binary label for a subject.
 #'
-#' @param views list of strings. Valid entries include: 'si': single interactive view. 'sd_<angle>': single view from angle <angle>. The <angle> part must be one of the strings returned by \code{\link[fsbrain]{get.view.angle.names}}. Example: 'sd_caudal'. 'sr': single rotating view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.
+#' @description Visualize a label for a subject. A label is just a logical vector with one entry for each vertex in the mesh. Each vertex may additionally be associated with a scalar value, but this function ignored that.
 #'
-#' @param coloredmeshes list of coloredmesh or renderable. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
+#' @inheritParams vis.subject.morph.native
 #'
-#' @param rgloptions option list passed to \code{\link[rgl]{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))}
+#' @param label string. Name of the label file, without the hemi part (if any), but including the '.label' suffix. E.g., 'cortex.label' for '?h.cortex.label'.
 #'
-#' @param rglactions named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
-#'
-#' @param style character string, a rendering style, e.g., 'default', 'shiny' or 'semitransparent'.
-#'
-#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See \code{\link[fsbrain]{coloredmesh.plot.colorbar.separate}} for an alternative.
+#' @param map_to_NA the value or value range that should **not** be considered part of the label, and should thus be plotted as background color. Only used if 'bg' is not `NULL`. If a single value, only excatly this value is used (typically 0). If two values, they are interpreted as a range, and a values between them are mapped to NA. If you prefer to map the data to NA yourself before using this function, pass `NULL`.
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
-#' @seealso \code{\link[fsbrain]{get.view.angle.names}}
+#' @examples
+#' \donttest{
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+#'    subject_id = 'subject1';
+#'    surface = 'white';
+#'    hemi = 'both';
+#'    label = 'cortex.label';
+#'    vis.subject.label(subjects_dir, subject_id, label, hemi, views="si");
+#' }
 #'
+#' @family visualization functions
+#' @family label functions
+#'
+#' @importFrom squash rainbow2
 #' @export
-brainviews <- function(views, coloredmeshes, rgloptions = list(), rglactions = list(), style="default", draw_colorbar = FALSE) {
+vis.subject.label <- function(subjects_dir, subject_id, label, hemi, surface="white", colormap=NULL, views=c("t4"), rgloptions = list(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=squash::rainbow2, 'col.na'='#FFFFFF00'), map_to_NA=0L, bg=NULL) {
 
-    # Wrap a single instance into a list if needed
-    if(fsbrain.renderable(coloredmeshes)) {
-        print("Wrapping single renderable instance into list.");
-        coloredmeshes = list(coloredmeshes);
+    if(!(hemi %in% c("lh", "rh", "both"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
     }
 
-    if(length(views)) {
-        for(view in views) {
-            if(view == "t4") {
-                invisible(brainview.t4(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, style = style));
-            } else if(view == "t9") {
-                invisible(brainview.t9(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, style = style));
-            } else if(view == "si") {
-                invisible(brainview.si(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, style = style));
-            } else if(view == "sr") {
-                invisible(brainview.sr(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, style = style));
-            } else if(startsWith(view, "sd_")) {
-                angle = substr(view, 4, nchar(view));
-                invisible(brainview.sd(coloredmeshes, angle, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, style = style));
-            } else {
-                stop(sprintf("Invalid view '%s'. Valid ones include 'si', 'sr', 'sd_<angle>', 't4' and 't9'.\n", view));
-            }
+    makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
+
+    mask_data = list();
+    if(hemi %in% c("lh", "both")) {
+        lh_label_data = subject.label(subjects_dir, subject_id, label, 'lh');
+        lh_surface_data = subject.surface(subjects_dir, subject_id, surface, 'lh');
+        lh_mask = mask.from.labeldata.for.hemi(list(lh_label_data), nrow(lh_surface_data$vertices));
+        if(!is.null(bg)) {
+            lh_mask = perform.na.mapping(lh_mask, map_to_NA);
         }
+        mask_data$lh = lh_mask;
     }
-    return(invisible(coloredmeshes));
+    if(hemi %in% c("rh", "both")) {
+        rh_label_data = subject.label(subjects_dir, subject_id, label, 'rh');
+        rh_surface_data = subject.surface(subjects_dir, subject_id, surface, 'rh');
+        rh_mask = mask.from.labeldata.for.hemi(list(rh_label_data), nrow(rh_surface_data$vertices));
+        if(!is.null(bg)) {
+            rh_mask = perform.na.mapping(rh_mask, map_to_NA);
+        }
+        mask_data$rh = rh_mask;
+    }
+
+
+    both_hemi_colors = collayer.from.mask.data(mask_data$lh, mask_data$rh, makecmap_options=makecmap_options);
+    if(!is.null(bg)) {
+        background = collayer.bg(subjects_dir, subject_id, bg, hemi=hemi);
+        both_hemi_colors = collayers.merge(list("fg"=both_hemi_colors, "bg"=background));
+    }
+
+    coloredmeshes = coloredmeshes.from.color(subjects_dir, subject_id, both_hemi_colors, hemi, surface=surface);
+    return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar)));
 }
 
 
-#' @title Get list of valid view angle names.
-#'
-#' @description The returned strings are used as constants to identify a view of type `sd_<angle>`. They can be used to construct entries for the parameter `views` of functions like \code{\link[fsbrain]{vis.subject.morph.native}}, or directly as parameter 'view_angles' for functions like \code{\link[fsbrain]{vislayout.from.coloredmeshes}}.
-#'
-#' @param add_sd_prefix logical, whether the prefix 'sd_' should be added to the string. This will construct full view names. If set to false, only the substring after the prefix 'sd_' will be returned. This is used internally only and should not be needed in general.
-#'
-#' @param angle_set string, which view subset to return. Available subsets are: 'all' (or alias 't9'): for all 9 angles. 't4': for the t4 views. 'medial': the 2 medial views, one for each hemi. 'lateral': the 2 lateral views, one for each hemi. 'lh': medial and laterial for the left hemisphere. 'rh': medial and laterial for the right hemisphere.
-#'
-#' @return vector of character strings, all valid view angle strings.
-#' @export
-get.view.angle.names <- function(add_sd_prefix=TRUE, angle_set="all") {
-    if(angle_set == "all" || angle_set == "t9") {
-        angles = c('lateral_lh', 'dorsal', 'lateral_rh', 'medial_lh', 'ventral', 'medial_rh', 'rostral', 'caudal');
-    } else if(angle_set == "t4") {
-        angles = c('lateral_lh', 'lateral_rh', 'medial_lh', 'medial_rh');
-    } else if(angle_set == "medial") {
-        angles = c('medial_lh', 'medial_rh');
-    } else if(angle_set == "lateral") {
-        angles = c('lateral_lh', 'lateral_rh');
-    } else if(angle_set == "lh") {
-        angles = c('lateral_lh', 'medial_lh');
-    }  else if(angle_set == "rh") {
-        angles = c('lateral_rh', 'medial_rh');
-    } else {
-        stop(sprintf("Invalid 'angle_set' parameter: '%s'.\n", angle_set));
-    }
-
-    if(add_sd_prefix) {
-        angles = paste("sd_", angles, sep="");
-    }
-    return(angles);
-}
 
 
 #' @title Visualize arbitrary data on the surface of any subject.
@@ -323,7 +269,7 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, mor
 #'
 #' @inheritParams vis.data.on.subject
 #'
-#' @param map_to_NA the value or value range that should **not** be considered a cluster, and should thus be plotted as background color. If a single value, only excatly this value is used (typically 0). If two values, they are interpreted as a range, and a values between them are mapped to NA. If you prefer to map the data to NA yourself before using this function, pass `NULL`.
+#' @param map_to_NA the value or value range that should **not** be considered a cluster, and should thus be plotted as background color. If a single value, only exactly this value is used (typically 0). If two values, they are interpreted as a range, and a values between them are mapped to NA. If you prefer to map the data to NA yourself before using this function, pass `NULL`.
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
@@ -343,24 +289,42 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, mor
 #' @export
 vis.symmetric.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface="white", colormap=NULL, views=c('t4'), rgloptions=list(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=squash::jet, symm=TRUE, col.na='#FFFFFF00'), map_to_NA=c(0), bg=NULL) {
     makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
-    if(! is.null(map_to_NA)) {
-        if(length(map_to_NA) == 1L) {
-            if(!is.null(morph_data_lh)) {
-                morph_data_lh[morph_data_lh == map_to_NA] = NA;
-            }
-            if(!is.null(morph_data_rh)) {
-                morph_data_rh[morph_data_rh == map_to_NA] = NA;
-            }
-        } else if(length(map_to_NA) == 2L) { # treat as a range
-            if(!is.null(morph_data_lh)) {
-                morph_data_lh[which(morph_data_lh > map_to_NA[1] & morph_data_lh < map_to_NA[2])] = NA;
-            }
-            if(!is.null(morph_data_rh)) {
-                morph_data_rh[which(morph_data_rh > map_to_NA[1] & morph_data_rh < map_to_NA[2])] = NA;
-            }
-        }
-    }
+
+    morph_data_lh = perform.na.mapping(morph_data_lh, map_to_NA);
+    morph_data_lh = perform.na.mapping(morph_data_lh, map_to_NA);
+
     return(vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface=surface, views=views, rgloptions=rgloptions, rglactions=rglactions, draw_colorbar=draw_colorbar, makecmap_options=makecmap_options, bg=bg));
+}
+
+
+#' Perform NA mapping for transparency
+#'
+#' @description Usually this is done so that the NA values are plotted transparently, so your can see a background color through the respective colors.
+#'
+#' @param data numeric vector
+#'
+#' @param map_to_NA the value or value range that should **not** be mapped to `NA`. If a single value, only exactly this value is used. If two values, they are interpreted as a range, and a values between them are mapped to NA. If you pass `NULL`, the data are returned as-is.
+#'
+#' @return the mapped data
+#'
+#' @keywords internal
+perform.na.mapping <- function(data, map_to_NA) {
+
+    if(is.null(data)) {
+        return(NULL);
+    }
+
+    if(is.null(map_to_NA)) {
+        return(data);
+    }
+
+
+    if(length(map_to_NA) == 1L) {
+        data[data == map_to_NA] = NA;
+    } else if(length(map_to_NA) == 2L) { # treat as a range
+        data[which(data > map_to_NA[1] & data < map_to_NA[2])] = NA;
+    }
+    return(data);
 }
 
 
@@ -537,52 +501,6 @@ vis.labeldata.on.subject <- function(subjects_dir, vis_subject_id, lh_labeldata,
     }
 
     return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar)));
-}
-
-
-#' @title Visualize custom vertex colors on the surface of a subject.
-#'
-#' @description Visualizes pre-defined vertex colors. You can use this if you have computed the colors from your data yourself.
-#'
-#' @param subjects_dir string. The FreeSurfer `SUBJECTS_DIR`, containing the subdir of `subject_id`, the subject that you want to use for visualization.
-#'
-#' @param subject_id string The subject identifier from which to obtain the surface for data visualization. Example: 'fsaverage'.
-#'
-#' @param lh_colors vector of colors, typically RGB color strings like '#ff0000'. The length should match the number of lh surface vertices.
-#'
-#' @param rh_colors vector of colors, typically RGB color strings like '#ff0000'. The length should match the number of rh surface vertices.
-#'
-#' @param surface string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
-#'
-#' @param views list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.
-#'
-#' @param rgloptions option list passed to \code{\link[rgl]{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))}
-#'
-#' @param rglactions named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
-#'
-#' @return list of coloredmeshes. The coloredmeshes used for the visualization.
-#'
-#' @family visualization functions
-#' @export
-vis.colors.on.subject <- function(subjects_dir, subject_id, lh_colors, rh_colors, surface="white", views=c('t4'), rgloptions=list(), rglactions = list()) {
-
-    if(is.null(lh_colors) && is.null(rh_colors)) {
-        stop(sprintf("Only one of lh_colors or rh_colors can be NULL.\n"));
-    }
-
-    coloredmeshes = list();
-
-    if(! is.null(lh_colors)) {
-        surface_mesh_lh = subject.surface(subjects_dir, subject_id, surface, 'lh');
-        coloredmeshes$lh = coloredmesh.custom(surface_mesh_lh, lh_colors, 'lh');
-    }
-
-    if(! is.null(rh_colors)) {
-        surface_mesh_rh = subject.surface(subjects_dir, subject_id, surface, 'rh');
-        coloredmeshes$rh = coloredmesh.custom(surface_mesh_rh, rh_colors, 'rh');
-    }
-
-    return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions)));
 }
 
 

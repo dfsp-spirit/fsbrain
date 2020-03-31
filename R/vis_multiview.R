@@ -1,4 +1,86 @@
 
+#' @title Show one or more views of the given meshes in rgl windows.
+#'
+#' @param views list of strings. Valid entries include: 'si': single interactive view. 'sd_<angle>': single view from angle <angle>. The <angle> part must be one of the strings returned by \code{\link[fsbrain]{get.view.angle.names}}. Example: 'sd_caudal'. 'sr': single rotating view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.
+#'
+#' @param coloredmeshes list of coloredmesh or renderable. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
+#'
+#' @param rgloptions option list passed to \code{\link[rgl]{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))}
+#'
+#' @param rglactions named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
+#'
+#' @param style character string, a rendering style, e.g., 'default', 'shiny' or 'semitransparent'.
+#'
+#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See \code{\link[fsbrain]{coloredmesh.plot.colorbar.separate}} for an alternative.
+#'
+#' @return list of coloredmeshes. The coloredmeshes used for the visualization.
+#'
+#' @seealso \code{\link[fsbrain]{get.view.angle.names}}
+#'
+#' @export
+brainviews <- function(views, coloredmeshes, rgloptions = list(), rglactions = list(), style="default", draw_colorbar = FALSE) {
+
+    # Wrap a single instance into a list if needed
+    if(fsbrain.renderable(coloredmeshes)) {
+        print("Wrapping single renderable instance into list.");
+        coloredmeshes = list(coloredmeshes);
+    }
+
+    if(length(views)) {
+        for(view in views) {
+            if(view == "t4") {
+                invisible(brainview.t4(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, style = style));
+            } else if(view == "t9") {
+                invisible(brainview.t9(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, style = style));
+            } else if(view == "si") {
+                invisible(brainview.si(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, style = style));
+            } else if(view == "sr") {
+                invisible(brainview.sr(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, style = style));
+            } else if(startsWith(view, "sd_")) {
+                angle = substr(view, 4, nchar(view));
+                invisible(brainview.sd(coloredmeshes, angle, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, style = style));
+            } else {
+                stop(sprintf("Invalid view '%s'. Valid ones include 'si', 'sr', 'sd_<angle>', 't4' and 't9'.\n", view));
+            }
+        }
+    }
+    return(invisible(coloredmeshes));
+}
+
+
+#' @title Get list of valid view angle names.
+#'
+#' @description The returned strings are used as constants to identify a view of type `sd_<angle>`. They can be used to construct entries for the parameter `views` of functions like \code{\link[fsbrain]{vis.subject.morph.native}}, or directly as parameter 'view_angles' for functions like \code{\link[fsbrain]{vislayout.from.coloredmeshes}}.
+#'
+#' @param add_sd_prefix logical, whether the prefix 'sd_' should be added to the string. This will construct full view names. If set to false, only the substring after the prefix 'sd_' will be returned. This is used internally only and should not be needed in general.
+#'
+#' @param angle_set string, which view subset to return. Available subsets are: 'all' (or alias 't9'): for all 9 angles. 't4': for the t4 views. 'medial': the 2 medial views, one for each hemi. 'lateral': the 2 lateral views, one for each hemi. 'lh': medial and laterial for the left hemisphere. 'rh': medial and laterial for the right hemisphere.
+#'
+#' @return vector of character strings, all valid view angle strings.
+#' @export
+get.view.angle.names <- function(add_sd_prefix=TRUE, angle_set="all") {
+    if(angle_set == "all" || angle_set == "t9") {
+        angles = c('lateral_lh', 'dorsal', 'lateral_rh', 'medial_lh', 'ventral', 'medial_rh', 'rostral', 'caudal');
+    } else if(angle_set == "t4") {
+        angles = c('lateral_lh', 'lateral_rh', 'medial_lh', 'medial_rh');
+    } else if(angle_set == "medial") {
+        angles = c('medial_lh', 'medial_rh');
+    } else if(angle_set == "lateral") {
+        angles = c('lateral_lh', 'lateral_rh');
+    } else if(angle_set == "lh") {
+        angles = c('lateral_lh', 'medial_lh');
+    }  else if(angle_set == "rh") {
+        angles = c('lateral_rh', 'medial_rh');
+    } else {
+        stop(sprintf("Invalid 'angle_set' parameter: '%s'.\n", angle_set));
+    }
+
+    if(add_sd_prefix) {
+        angles = paste("sd_", angles, sep="");
+    }
+    return(angles);
+}
+
 
 #' @title Visualize a list of colored meshes from a single viewpoint, interactively.
 #'

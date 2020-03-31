@@ -4,12 +4,14 @@
 \alias{alphablend}
 \title{Perform alpha blending for pairs of RGBA colors.}
 \usage{
-alphablend(front_color, back_color)
+alphablend(front_color, back_color, silent = TRUE)
 }
 \arguments{
-\item{front_color}{rgba color strings, the upper color layer}
+\item{front_color}{rgba color strings, the upper color layer or foreground}
 
-\item{back_color}{rgba color strings, the lower color layer}
+\item{back_color}{rgba color strings, the lower color layer or background}
+
+\item{silent}{logical, whether to suppress messages}
 }
 \value{
 rgba color strings, the alpha-blended colors
