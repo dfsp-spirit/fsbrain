@@ -4,12 +4,14 @@
 \alias{hemilist.unwrap}
 \title{Unwrap hemi data from a named hemi list.}
 \usage{
-hemilist.unwrap(hemi_list, hemi = NULL)
+hemilist.unwrap(hemi_list, hemi = NULL, allow_null_list = FALSE)
 }
 \arguments{
 \item{hemi_list}{named list, can have entries 'lh' and/or 'rh'}
 
 \item{hemi}{character string, the hemi data name to retrieve from the list. Can be NULL if the list only has a single entry.}
+
+\item{allow_null_list}{logical, whether to silently return NULL instead of raising an error if 'hemi_list' is NULL}
 }
 \value{
 the data

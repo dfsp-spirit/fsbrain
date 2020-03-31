@@ -8,7 +8,7 @@ vis.data.on.fsaverage(subjects_dir = NULL,
   vis_subject_id = "fsaverage", morph_data_lh, morph_data_rh,
   surface = "white", colormap = NULL, views = c("t4"),
   rgloptions = list(), rglactions = list(), draw_colorbar = FALSE,
-  makecmap_options = list(colFn = squash::jet))
+  makecmap_options = list(colFn = squash::jet), bg = NULL)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -32,6 +32,8 @@ vis.data.on.fsaverage(subjects_dir = NULL,
 \item{draw_colorbar}{logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See [fsbrain::coloredmesh.plot.colorbar.separate()] for an alternative.}
 
 \item{makecmap_options}{named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'. Should include at least a colormap function as name 'colFn'.}
+
+\item{bg}{a background definition. Can be a surface color layer or a character string, see \code{\link[fsbrain]{collayer.bg}} for valid strings.}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.

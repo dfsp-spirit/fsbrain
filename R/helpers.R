@@ -384,11 +384,20 @@ hemilist.derive.hemi <- function(hemilist) {
 #'
 #' @param hemi character string, the hemi data name to retrieve from the list. Can be NULL if the list only has a single entry.
 #'
+#' @param allow_null_list logical, whether to silently return NULL instead of raising an error if 'hemi_list' is NULL
+#'
 #' @return the data
 #'
 # @keywords internal
 #' @export
-hemilist.unwrap <- function(hemi_list, hemi=NULL) {
+hemilist.unwrap <- function(hemi_list, hemi=NULL, allow_null_list=FALSE) {
+  if(is.null(hemi_list)) {
+    if(allow_null_list) {
+      return(NULL);
+    } else {
+      stop("Parameter 'hemi_list' must not be NULL unless 'allow_null_list' is TRUE.");
+    }
+  }
   if(! is.list(hemi_list)) {
     stop("Parameter 'hemi_list' must be a named list.");
   }

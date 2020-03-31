@@ -172,13 +172,15 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
 #'
 #' @param color_data vector of hex color strings
 #'
+#' @param src_data vector of source data from which the 'color_data' was created, optional. If available, it is encoded into the coloredmesh and can be used later to plot a colorbar.
+#'
 #' @return coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
 #' @note Do not call this, use \code{\link[fsbrain]{coloredmeshes.from.color}} instead.
 #'
 #' @keywords internal
 #' @importFrom rgl tmesh3d rgl.open wire3d
-coloredmesh.from.color <- function(subjects_dir, subject_id, color_data, hemi, surface="white") {
+coloredmesh.from.color <- function(subjects_dir, subject_id, color_data, hemi, surface="white", src_data=NULL) {
 
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
@@ -199,7 +201,7 @@ coloredmesh.from.color <- function(subjects_dir, subject_id, color_data, hemi, s
         }
     }
 
-    return(fs.coloredmesh(mesh, color_data, hemi));
+    return(fs.coloredmesh(mesh, color_data, hemi, morph_data = src_data));
 }
 
 
@@ -207,11 +209,13 @@ coloredmesh.from.color <- function(subjects_dir, subject_id, color_data, hemi, s
 #'
 #' @inheritParams coloredmesh.from.morph.native
 #'
-#' @param color_data named list with names 'lh' and 'rh', each entry must be a vector of hex color strings
+#' @param color_data a hemilist containing vectors of hex color strings
+#'
+#' @param src_data a hemilist containing the source data from which the 'color_data' was created, optional. If available, it is encoded into the coloredmesh and can be used later to plot a colorbar.
 #'
 #' @return named list of coloredmeshes. Each entry is a named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
-coloredmeshes.from.color <- function(subjects_dir, subject_id, color_data, hemi, surface="white") {
+coloredmeshes.from.color <- function(subjects_dir, subject_id, color_data, hemi, surface="white", src_data=NULL) {
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh', or 'both' but is '%s'.\n", hemi));
     }
@@ -220,14 +224,14 @@ coloredmeshes.from.color <- function(subjects_dir, subject_id, color_data, hemi,
         if(! is.hemilist(color_data)) {
             stop("The parameter 'color_data' must be a named list with entries 'lh' and 'rh' if 'hemi' is 'both'.");
         }
-        lh_cm = coloredmesh.from.color(subjects_dir, subject_id, color_data$lh, 'lh', surface=surface);
-        rh_cm = coloredmesh.from.color(subjects_dir, subject_id, color_data$rh, 'rh', surface=surface);
+        lh_cm = coloredmesh.from.color(subjects_dir, subject_id, color_data$lh, 'lh', surface=surface, src_data=hemilist.unwrap(src_data, 'lh', allow_null_list=TRUE));
+        rh_cm = coloredmesh.from.color(subjects_dir, subject_id, color_data$rh, 'rh', surface=surface, src_data=hemilist.unwrap(src_data, 'rh', allow_null_list=TRUE));
         return(list("lh"=lh_cm, "rh"=rh_cm));
     } else {
         if(is.hemilist(color_data)) {
             color_data = hemilist.unwrap(color_data);
         }
-        cm = coloredmesh.from.color(subjects_dir, subject_id, color_data, hemi, surface=surface);
+        cm = coloredmesh.from.color(subjects_dir, subject_id, color_data, hemi, surface=surface, src_data=hemilist.unwrap(src_data, hemi, allow_null_list=TRUE));
         return(hemilist.wrap(cm, hemi));
     }
 }

@@ -73,7 +73,7 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi="bo
         both_hemi_colors = collayers.merge(list("fg"=both_hemi_colors, "bg"=background));
     }
 
-    coloredmeshes = coloredmeshes.from.color(subjects_dir, subject_id, both_hemi_colors, hemi, surface=surface);
+    coloredmeshes = coloredmeshes.from.color(subjects_dir, subject_id, both_hemi_colors, hemi, surface=surface, src_data=measure_data);
 
     return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, style = style)));
 }
@@ -144,7 +144,7 @@ vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi="
         both_hemi_colors = collayers.merge(list("fg"=both_hemi_colors, "bg"=background));
     }
 
-    coloredmeshes = coloredmeshes.from.color(template_subjects_dir, template_subject, both_hemi_colors, hemi, surface=surface);
+    coloredmeshes = coloredmeshes.from.color(template_subjects_dir, template_subject, both_hemi_colors, hemi, surface=surface, src_data=measure_data);
 
     return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar)));
 }
@@ -519,7 +519,7 @@ vis.labeldata.on.subject <- function(subjects_dir, vis_subject_id, lh_labeldata,
 #'
 #' @importFrom squash jet
 #' @export
-vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage", morph_data_lh, morph_data_rh, surface="white", colormap=NULL, views=c('t4'), rgloptions = list(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=squash::jet)) {
+vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage", morph_data_lh, morph_data_rh, surface="white", colormap=NULL, views=c('t4'), rgloptions = list(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=squash::jet), bg=NULL) {
 
     if(is.null(subjects_dir)) {
         subjects_dir = find.subjectsdir.of(subject_id=vis_subject_id, mustWork = TRUE);
@@ -527,7 +527,7 @@ vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage",
 
     makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
 
-    return(invisible(vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface=surface, views=views, rgloptions=rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, makecmap_options=makecmap_options)));
+    return(invisible(vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface=surface, views=views, rgloptions=rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, makecmap_options=makecmap_options, bg=bg)));
 }
 
 
@@ -613,10 +613,10 @@ vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi='both', surf
 #'
 #' @importFrom grDevices heat.colors
 #' @export
-vis.region.values.on.subject <- function(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, surface="white", colormap=NULL, views=c('t4'), rgloptions=list(), rglactions = list(), value_for_unlisted_regions = NA, draw_colorbar = FALSE, makecmap_options=list('colFn'=grDevices::heat.colors)) {
+vis.region.values.on.subject <- function(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, surface="white", colormap=NULL, views=c('t4'), rgloptions=list(), rglactions = list(), value_for_unlisted_regions = NA, draw_colorbar = FALSE, makecmap_options=list('colFn'=grDevices::heat.colors), bg=NULL) {
     makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
     morph_like_data = spread.values.over.subject(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, value_for_unlisted_regions = value_for_unlisted_regions);
-    return(invisible(vis.data.on.subject(subjects_dir, subject_id, morph_like_data$lh, morph_like_data$rh, surface=surface, views=views, rgloptions=rgloptions, rglactions=rglactions, draw_colorbar = draw_colorbar, makecmap_options=makecmap_options)));
+    return(invisible(vis.data.on.subject(subjects_dir, subject_id, morph_like_data$lh, morph_like_data$rh, surface=surface, views=views, rgloptions=rgloptions, rglactions=rglactions, draw_colorbar = draw_colorbar, makecmap_options=makecmap_options, bg=bg)));
 }
 
 
