@@ -1,19 +1,19 @@
 # Tests for surface color layers.
 
 test_that("A mean curvature color layer can be loaded", {
-    skip("This test has to be run manually and interactively. It requires an X11 display and mean curv data.");
+    skip("This test has to be run manually and interactively. It requires an X11 display and mean curvature morph data.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+    subject_id = "subject1";
 
-    bgcol_lh = background.mean.curvature(subjects_dir, "subject1", "lh");
-    bgcol_rh = background.mean.curvature(subjects_dir, "subject1", "rh");
+    bgcol = collayer.bg.meancurv(subjects_dir, subject_id);
 
     num_verts_subject1_lh = 149244;
     num_verts_subject1_rh = 153333;
-    expect_equal(length(bgcol_lh), num_verts_subject1_lh);
-    expect_equal(length(bgcol_rh), num_verts_subject1_rh);
+    expect_equal(length(bgcol$lh), num_verts_subject1_lh);
+    expect_equal(length(bgcol$rh), num_verts_subject1_rh);
 
-    vis.color.on.subject(subjects_dir, 'subject1', bgcol_lh, bgcol_rh, surface="inflated");
+    vis.color.on.subject(subjects_dir, subject_id, bgcol$lh, bgcol$rh, surface="inflated");
 })
 
 
@@ -44,5 +44,55 @@ test_that("Alphablending works", {
     expect_equal(blended[2], '#008800FF');  # partially transparent green on opaque white background becomes greenish
     expect_equal(blended[3], '#0000FFFF');  # no color/full transparency on blue background becomes blue
     expect_equal(blended[4], '#555555FF');  # gray on fully transparent background becomes gray
+})
+
+
+test_that("An annotation-based or atlas color layer can be created", {
+
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+
+    num_verts_subject1_lh = 149244L;
+    num_verts_subject1_rh = 153333L;
+
+    skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
+
+    annot_layer = collayer.from.annot(subjects_dir, 'subject1', 'both', 'aparc');
+
+    expect_true(is.list(annot_layer));
+    expect_equal(names(annot_layer), c("lh", "rh"));
+    expect_equal(length(annot_layer$lh), num_verts_subject1_lh);
+    expect_equal(length(annot_layer$rh), num_verts_subject1_rh);
+    expect_equal(length(unique(annot_layer$lh)), 35L); # number of aparc atlas regions for subject
+    expect_equal(length(unique(annot_layer$rh)), 35L);
+
+    # vis.color.on.subject(subjects_dir, 'subject1', annot_layer$lh, annot_layer$rh);
+    # vis.color.on.subject(subjects_dir, 'subject1', desaturate(annot_layer$lh), desaturate(annot_layer$rh));
+})
+
+
+
+test_that("An outline layer based on an annotation can be created", {
+
+    skip("This test has to be run manually and interactively. It requires an X11 display and inflated surface data.");
+
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+
+    num_verts_subject1_lh = 149244L;
+    num_verts_subject1_rh = 153333L;
+
+    skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
+
+    outline_layer = background.atlas(subjects_dir, 'tim', outline = TRUE, grayscale = FALSE);
+
+    expect_true(is.list(outline_layer));
+    expect_equal(names(outline_layer), c("lh", "rh"));
+    expect_equal(length(outline_layer$lh), num_verts_subject1_lh);
+    expect_equal(length(outline_layer$rh), num_verts_subject1_rh);
+    expect_equal(length(unique(outline_layer$lh)), 35L); # number of aparc atlas regions for subject
+    expect_equal(length(unique(outline_layer$rh)), 35L);
+
+    vis.color.on.subject(subjects_dir, 'subject1', outline_layer$lh, outline_layer$rh, surface = "inflated");
 })
 

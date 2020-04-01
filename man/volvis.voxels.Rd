@@ -24,7 +24,7 @@ Plots a 3D box at every *foreground* voxel in the given volume. All voxels which
    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
    brain = subject.volume(subjects_dir, 'subject1', 'brain');
    # Plot all voxels of the brain:
-   brain[which(brain==0, arr.ind = TRUE)] = NA;  # mark background
+   brain[which(brain==0L, arr.ind = TRUE)] = NA;  # mark background
    brain = vol.hull(brain); # remove inner triangles
    volvis.voxels(brain);
 }

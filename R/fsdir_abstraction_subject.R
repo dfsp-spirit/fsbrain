@@ -18,6 +18,8 @@
 #'
 #' @param cortex_only logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the subject. Defaults to FALSE.
 #'
+#' @param split_by_hemi logical, whether the returned data should be encapsulated in a named list, where the names are from 'lh' and 'rh', and the values are the respective data.
+#'
 #' @return vector with native space morph data, as returned by \code{\link[freesurferformats]{read.fs.morph}}.
 #'
 #' @family morphometry data functions
@@ -39,7 +41,7 @@
 #' }
 #'
 #' @export
-subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, format='curv', cortex_only=FALSE) {
+subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, format='curv', cortex_only=FALSE, split_by_hemi=FALSE) {
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
@@ -58,7 +60,11 @@ subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, format
             rh_morph_data = apply.label.to.morphdata(rh_morph_data, subjects_dir, subject_id, "rh", 'cortex');
         }
 
-        merged_morph_data = c(lh_morph_data, rh_morph_data);
+        if(split_by_hemi) {
+            merged_morph_data = list("lh"=lh_morph_data, "rh"=rh_morph_data);
+        } else {
+            merged_morph_data = c(lh_morph_data, rh_morph_data);
+        }
         return(merged_morph_data);
 
     } else {
@@ -67,7 +73,12 @@ subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, format
         if(cortex_only) {
             morph_data = apply.label.to.morphdata(morph_data, subjects_dir, subject_id, hemi, 'cortex');
         }
-        return(morph_data);
+
+        if(split_by_hemi) {
+            return(hemilist.wrap(morph_data, hemi));
+        } else {
+            return(morph_data);
+        }
     }
 }
 
@@ -246,6 +257,8 @@ apply.labeldata.to.morphdata <- function(morphdata, labeldata, masked_data_value
 #'
 #' @param cortex_only logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the template subject. Defaults to FALSE.
 #'
+#' @param split_by_hemi logical, whether the returned data should be encapsulated in a named list, where the names are from 'lh' and 'rh', and the values are the respective data.
+#'
 #' @return vector with standard space morph data
 #'
 #' @examples
@@ -258,7 +271,7 @@ apply.labeldata.to.morphdata <- function(morphdata, labeldata, masked_data_value
 #' @family morphometry data functions
 #'
 #' @export
-subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm='10', template_subject='fsaverage', format='mgh', cortex_only=FALSE) {
+subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm='10', template_subject='fsaverage', format='mgh', cortex_only=FALSE, split_by_hemi=FALSE) {
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
     }
@@ -276,7 +289,11 @@ subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm
             rh_morph_data = apply.label.to.morphdata(rh_morph_data, subjects_dir, template_subject, "rh", 'cortex');
         }
 
-        merged_morph_data = c(lh_morph_data, rh_morph_data);
+        if(split_by_hemi) {
+            merged_morph_data = list("lh"=lh_morph_data, "rh"=rh_morph_data);
+        } else {
+            merged_morph_data = c(lh_morph_data, rh_morph_data);
+        }
         return(merged_morph_data);
 
     } else {
@@ -285,7 +302,14 @@ subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm
         if(cortex_only) {
             morph_data = apply.label.to.morphdata(morph_data, subjects_dir, template_subject, hemi, 'cortex');
         }
-        return(morph_data);
+
+        if(split_by_hemi) {
+            ret_list = list();
+            ret_list[[hemi]] = morph_data;
+            return(ret_list);
+        } else {
+            return(morph_data);
+        }
     }
 }
 
@@ -376,7 +400,7 @@ subject.filepath.morph.native <- function(subjects_dir, subject_id, measure, hem
     curvfile = file.path(subjects_dir, subject_id, "surf", sprintf("%s.%s%s", hemi, measure, freesurferformats::fs.get.morph.file.ext.for.format(format)));
 
     if(!file.exists(curvfile)) {
-        msg = sprintf("Standard space morphometry file '%s' for subject '%s' measure '%s' hemi '%s' cannot be accessed.\n", curvfile, subject_id, measure, hemi);
+        msg = sprintf("Native space morphometry file '%s' for subject '%s' measure '%s' hemi '%s' cannot be accessed.\n", curvfile, subject_id, measure, hemi);
         if((warn_if_nonexistent)) {
             warning(msg);
         }

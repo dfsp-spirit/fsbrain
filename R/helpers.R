@@ -20,7 +20,7 @@ fup <- function(word) {
 #'
 #' @description Set all data values outside the given quantile range to the border values. This is usefull to properly visualize morphometry data that includes outliers. These outliers negatively affect the colormap, as all the non-outlier values become hard to distinguish. This function can be used to filter the data before plotting it.
 #'
-#' @param data, numeric vector. The input data.
+#' @param data, numeric vector. The input data. Can also be a hemi list.
 #'
 #' @param lower, numeric. The probability for the lower quantile, defaults to `0.05`.
 #'
@@ -35,9 +35,14 @@ fup <- function(word) {
 #' @importFrom stats quantile
 #' @export
 clip.data <- function(data, lower=0.05, upper=0.95){
-    quantiles = stats::quantile(data, c(lower, upper), na.rm = TRUE, names = FALSE);
-    data[ data < quantiles[1] ] = quantiles[1];
-    data[ data > quantiles[2] ] = quantiles[2];
+
+    if(is.hemilist(data)) { # treat as a hemi list
+      return(lapply(data, clip.data, lower, upper));
+    } else {
+      quantiles = stats::quantile(data, c(lower, upper), na.rm = TRUE, names = FALSE);
+      data[ data < quantiles[1] ] = quantiles[1];
+      data[ data > quantiles[2] ] = quantiles[2];
+    }
     return(data);
 }
 
@@ -120,7 +125,7 @@ mesh.vertex.included.faces <- function(surface_mesh, source_vertices) {
 #' @return vector of colors, one color for each mesh vertex
 #'
 #' @export
-annot.outline <- function(annotdata, surface_mesh, background="white", silent=FALSE, expand_inwards=0L) {
+annot.outline <- function(annotdata, surface_mesh, background="white", silent=TRUE, expand_inwards=0L) {
     if(length(annotdata$vertices) != nrow(surface_mesh$vertices)) {
         stop(sprintf("Annotation is for %d vertices but mesh contains %d, vertex counts must match.\n", length(annotdata$vertices), nrow(surface_mesh$vertices)));
     }
@@ -319,5 +324,177 @@ read.colorcsv <- function(filepath) {
     } else {
         stop(sprintf("No valid color definition found in colorcsv file '%s'.", filepath));
     }
+}
+
+
+#' @title Wrap data into a named hemi list.
+#'
+#' @param data something to wrap, typically some data for a hemisphere, e.g., a vector of morphometry data values. If NULL, the name will not be created.
+#'
+#' @param hemi character string, one of 'lh' or 'rh'. The name to use for the data in the returned list.
+#'
+#' @param hemilist optional hemilist, an existing hemilist to add the entry to. If left at the default value `NULL`, a new list will be created.
+#'
+#' @return named list, with the 'data' in the name given by parameter 'hemi'
+#'
+#' @export
+hemilist.wrap <- function(data, hemi, hemilist=NULL) {
+  if(!(hemi %in% c("lh", "rh"))) {
+    stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
+  }
+  if(is.null(hemilist)) {
+    ret_list = list();
+  } else {
+    ret_list = hemilist;
+  }
+  if(!is.null(data)) {
+    ret_list[[hemi]] = data;
+  }
+  return(ret_list);
+}
+
+
+#' @title Derive 'hemi' string from the data in a hemilist
+#'
+#' @param hemilist hemilist, an existing hemilist
+#'
+#' @return character string, one of 'lh', 'rh' or 'both'
+#'
+#' @export
+hemilist.derive.hemi <- function(hemilist) {
+  if(!is.hemilist(hemilist)) {
+    stop("Parameter 'hemilist' must be a hemilist.");
+  }
+  if(is.null(hemilist$lh) | is.null(hemilist$rh)) {
+    if(is.null(hemilist$lh)) {
+      return('rh');
+    } else {
+      return('lh');
+    }
+  } else {
+    return('both');
+  }
+}
+
+
+
+#' @title Unwrap hemi data from a named hemi list.
+#'
+#' @param hemi_list named list, can have entries 'lh' and/or 'rh'
+#'
+#' @param hemi character string, the hemi data name to retrieve from the list. Can be NULL if the list only has a single entry.
+#'
+#' @param allow_null_list logical, whether to silently return NULL instead of raising an error if 'hemi_list' is NULL
+#'
+#' @return the data
+#'
+# @keywords internal
+#' @export
+hemilist.unwrap <- function(hemi_list, hemi=NULL, allow_null_list=FALSE) {
+  if(is.null(hemi_list)) {
+    if(allow_null_list) {
+      return(NULL);
+    } else {
+      stop("Parameter 'hemi_list' must not be NULL unless 'allow_null_list' is TRUE.");
+    }
+  }
+  if(! is.list(hemi_list)) {
+    stop("Parameter 'hemi_list' must be a named list.");
+  }
+  if(length(hemi_list) < 1L) {
+    stop("Parameter 'hemi_list' must not be empty.");
+  }
+  if(is.null(hemi)) {
+    if(length(hemi_list) != 1L) {
+      stop("Parameter 'hemi' can only be NULL if 'hemi_list' has exactly length 1.");
+    }
+    if("lh" %in% names(hemi_list)) {
+      return(hemi_list$lh);
+    } else if("rh" %in% names(hemi_list)) {
+      return(hemi_list$rh);
+    } else {
+      stop("The entry in the 'hemi_list' must be named 'lh' or 'rh'.");
+    }
+  } else {
+    if(!(hemi %in% c("lh", "rh"))) {
+      stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh', or NULL but is '%s'.\n", hemi));
+    }
+    return(hemi_list[[hemi]]);
+  }
+}
+
+
+#' @title Get combined data of hemi list
+#'
+#' @param hemi_list named list, can have entries 'lh' and/or 'rh'
+#'
+#' @return the data combined with \code{\link[base]{c}}, or NULL if both entries are NULL.
+#'
+#' @export
+hemilist.get.combined.data <- function(hemi_list) {
+  lh_data = hemilist.unwrap(hemi_list, 'lh');
+  rh_data = hemilist.unwrap(hemi_list, 'rh');
+  if(is.null(lh_data) | is.null(rh_data)) {
+    if(is.null(lh_data) & is.null(rh_data)) {
+      return(NULL);
+    } else {
+      return(hemilist.unwrap(hemi_list));
+    }
+  } else {
+    return(c(lh_data, rh_data));
+  }
+}
+
+
+#' @title Check whether x is a hemilist
+#'
+#' @description A hemilist is a named list with entries 'lh' and/or 'rh'.
+#'
+#' @param x any R object
+#'
+#' @return whether 'x' is a hemilist
+#'
+#' @export
+is.hemilist <- function(x) {
+  return(is.list(x) & ("lh" %in% names(x) | "rh" %in% names(x)));
+}
+
+
+#' @title Create final `makecmap_options` list
+#'
+#' @description Create final makecmap_options to pass to \code{\link[squash]{makecmap}} from existing `makecmap_options` and a colormap function. Used in the vis functions, like \code{\link[fsbrain]{vis.subject.morph.native}}, see the note.
+#'
+#' @param makecmap_options list of `makecmap_options` or `NULL`
+#'
+#' @param colormap a colormap function or `NULL`
+#'
+#' @param default_colormap the colormap function to use in case none is found in the other parameters
+#'
+#' @return valid `makecmap_options`
+#'
+#' @note For backwards compatibility, there are currently two different methods (parameters) to specify a colormap in the vis functions. This function merges the information from both methods.
+#'
+#' @keywords internal
+#' @importFrom squash jet
+makecmakeopts.merge <- function(makecmap_options, colormap, default_colormap=squash::jet) {
+  if(is.null(makecmap_options)) {
+    makecmap_options = list();
+  }
+
+  if(is.null(makecmap_options$colFn)) {
+    if(is.null(colormap)) {
+      warning("No valid colormap function found in parameters 'makecmap_options' or 'colormap', using the default colormap.");
+      makecmap_options$colFn = default_colormap;
+    } else {
+      makecmap_options$colFn = colormap;
+    }
+  } else {
+    if(!is.null(colormap)) {
+      if(all.equal(makecmap_options$colFn, colormap) != TRUE) {
+        warning("Two different colormap functions found in parameters 'makecmap_options' and 'colormap', using the one from 'makecmap_options'.");
+      }
+    }
+  }
+  return(makecmap_options);
 }
 

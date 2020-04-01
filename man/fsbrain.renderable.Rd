@@ -6,7 +6,16 @@
 \usage{
 fsbrain.renderable(x)
 }
+\arguments{
+\item{x}{any `R` object}
+}
+\value{
+TRUE if *x* is an instance of a class that can be rendered by fsbrain visualization functions, and FALSE otherwise. Currently, the following types are renderable: `fs.coloredvoxels`, `fs.coloredmesh`, `Triangles3D`.
+}
 \description{
 Check whether object can be rendered by fsbrain
+}
+\seealso{
+\code{\link[fsbrain]{is.Triangles3D}}
 }
 \keyword{internal}

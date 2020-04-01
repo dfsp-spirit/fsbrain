@@ -4,13 +4,8 @@
 \alias{coloredmesh.from.color}
 \title{Create a coloredmesh from a mesh and pre-defined colors.}
 \usage{
-coloredmesh.from.color(
-  subjects_dir,
-  subject_id,
-  color_data,
-  hemi,
-  surface = "white"
-)
+coloredmesh.from.color(subjects_dir, subject_id, color_data, hemi,
+  surface = "white", src_data = NULL)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -22,11 +17,16 @@ coloredmesh.from.color(
 \item{hemi}{string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.}
 
 \item{surface}{character string or `fs.surface` instance. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
+
+\item{src_data}{vector of source data from which the 'color_data' was created, optional. If available, it is encoded into the coloredmesh and can be used later to plot a colorbar.}
 }
 \value{
 coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
 }
 \description{
 Create a coloredmesh from a mesh and pre-defined colors.
+}
+\note{
+Do not call this, use \code{\link[fsbrain]{coloredmeshes.from.color}} instead.
 }
 \keyword{internal}
