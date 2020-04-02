@@ -4,8 +4,7 @@
 \alias{fs.coloredmesh}
 \title{fs.coloredmesh constructor}
 \usage{
-fs.coloredmesh(mesh, col, hemi, render = TRUE, morph_data = NULL,
-  cmap_fun = NULL, data_range = NULL)
+fs.coloredmesh(mesh, col, hemi, render = TRUE, metadata = NULL)
 }
 \arguments{
 \item{mesh}{a `mesh3d` instance as returned by \code{\link[rgl]{tmesh3d}} or an `fs.surface` brain surface mesh as returned by functions like \code{\link[fsbrain]{subject.surface}}.}
@@ -16,11 +15,7 @@ fs.coloredmesh(mesh, col, hemi, render = TRUE, morph_data = NULL,
 
 \item{render}{logical, whether to render this mesh during visualization}
 
-\item{morph_data}{optional, the data used to construct the 'col' values}
-
-\item{cmap_fun}{optional, the colormap function used to construct the 'col' values}
-
-\item{data_range}{optional, the range of the data used to construct the 'col' values. Having this is useful for plotting a colorbar during visualization.}
+\item{metadata}{optional, named list containing metadata}
 }
 \value{
 an `fs.coloredmesh` instance. The only fields one should use in client code are 'mesh', 'hemi' and 'col', all others are considered internal and may change without notice.

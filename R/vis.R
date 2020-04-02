@@ -73,7 +73,7 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi="bo
         both_hemi_colors = collayers.merge(list("fg"=both_hemi_colors, "bg"=background));
     }
 
-    coloredmeshes = coloredmeshes.from.color(subjects_dir, subject_id, both_hemi_colors, hemi, surface=surface, src_data=measure_data);
+    coloredmeshes = coloredmeshes.from.color(subjects_dir, subject_id, both_hemi_colors, hemi, surface=surface, metadata=list('src_data'=measure_data, 'makecmap_options'=makecmap_options));
 
     return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, style = style)));
 }
@@ -144,7 +144,7 @@ vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi="
         both_hemi_colors = collayers.merge(list("fg"=both_hemi_colors, "bg"=background));
     }
 
-    coloredmeshes = coloredmeshes.from.color(template_subjects_dir, template_subject, both_hemi_colors, hemi, surface=surface, src_data=measure_data);
+    coloredmeshes = coloredmeshes.from.color(template_subjects_dir, template_subject, both_hemi_colors, hemi, surface=surface, metadata=list("src_data"=measure_data, "makecmap_options"=makecmap_options));
 
     return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar)));
 }

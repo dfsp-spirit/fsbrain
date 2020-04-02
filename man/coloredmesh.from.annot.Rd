@@ -21,7 +21,7 @@ coloredmesh.from.annot(subjects_dir, subject_id, atlas, hemi,
 \item{outline}{logical, whether to draw an outline only instead of filling the regions. Defaults to FALSE. Only makes sense if you did not pass an outline already. The current implementation for outline computation is rather slow, so setting this to TRUE will considerably increase computation time.}
 }
 \value{
-coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
+coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "render", logical, whether to render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'.
 }
 \description{
 Create a coloredmesh from an annotation of an atlas.

@@ -88,7 +88,7 @@ get.view.angle.names <- function(add_sd_prefix=TRUE, angle_set="all") {
 #'
 #' @param background string, background color passed to \code{\link[rgl]{bg3d}}.
 #'
-#' @param skip_all_na logical, whether to skip (i.e., not render) meshes in the list that have the property 'morph_data_was_all_na' set to TRUE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.
+#' @param skip_all_na logical, whether to skip (i.e., not render) meshes in the list that have the property 'render' set to FALSE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.
 #'
 #' @param style, a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
 #'
@@ -117,7 +117,7 @@ brainview.si <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 #'
 #' @param background string, background color passed to \code{\link[rgl]{bg3d}}.
 #'
-#' @param skip_all_na logical, whether to skip (i.e., not render) meshes in the list that have the property 'morph_data_was_all_na' set to TRUE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.
+#' @param skip_all_na logical, whether to skip (i.e., not render) meshes in the list that have the property 'render' set to FALSE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.
 #'
 #' @param style, a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
 #'
@@ -168,7 +168,7 @@ get.sorted.cmeshes <- function(coloredmeshes) {
     } else {
         # This is the old style of passing the list: unsorted with unmerged colormaps. We need to fiddle with the data.
         # Some functions still use this, but they will all be reworked in the future. Once done, this part can be removed.
-        coloredmeshes = unify.coloredmeshes.colormaps(coloredmeshes);
+        warning("The old style of passing coloredmeshes should not be in use anymore.");
         hemi_sorted_cmeshes = sort.coloredmeshes.by.hemi(coloredmeshes);
         lh_meshes = hemi_sorted_cmeshes$lh;
         rh_meshes = hemi_sorted_cmeshes$rh;
@@ -183,7 +183,7 @@ get.sorted.cmeshes <- function(coloredmeshes) {
 #'
 #' @param background string, background color passed to \code{\link[rgl]{bg3d}}.
 #'
-#' @param skip_all_na logical, whether to skip (i.e., not render) meshes in the list that have the property 'morph_data_was_all_na' set to TRUE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.
+#' @param skip_all_na logical, whether to skip (i.e., not render) meshes in the list that have the property 'render' set to FALSE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.
 #'
 #' @param style, a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
 #'
@@ -312,7 +312,7 @@ rglactions.has.key <- function(rglactions, key) {
 #'
 #' @param background string, background color passed to \code{\link[rgl]{bg3d}}.
 #'
-#' @param skip_all_na logical, whether to skip (i.e., not render) meshes in the list that have the property 'morph_data_was_all_na' set to TRUE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.
+#' @param skip_all_na logical, whether to skip (i.e., not render) meshes in the list that have the property 'render' set to FALSE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.
 #'
 #' @param style, a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
 #'
@@ -454,7 +454,7 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 #'
 #' @param background string, background color passed to \code{\link[rgl]{bg3d}}.
 #'
-#' @param skip_all_na logical, whether to skip (i.e., not render) meshes in the list that have the property 'morph_data_was_all_na' set to TRUE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.
+#' @param skip_all_na logical, whether to skip (i.e., not render) meshes in the list that have the property 'render' set to FALSE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.
 #'
 #' @param style, a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
 #'

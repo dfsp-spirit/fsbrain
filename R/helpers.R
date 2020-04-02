@@ -305,6 +305,7 @@ colorlist.brain.clusters <- function(num_colors) {
   return(c(ramp_bc(num_colors_per_side), rep(central_value, num_central), ramp_ry(num_colors_per_side)));
 }
 
+
 #' @title Read colors from CSV file.
 #'
 #' @param filepath character string, path to a CSV file containing colors
@@ -388,7 +389,6 @@ hemilist.derive.hemi <- function(hemilist) {
 #'
 #' @return the data
 #'
-# @keywords internal
 #' @export
 hemilist.unwrap <- function(hemi_list, hemi=NULL, allow_null_list=FALSE) {
   if(is.null(hemi_list)) {
@@ -496,5 +496,66 @@ makecmakeopts.merge <- function(makecmap_options, colormap, default_colormap=squ
     }
   }
   return(makecmap_options);
+}
+
+
+#' @title Retrieve values from nested named lists
+#'
+#' @param named_list a named list
+#'
+#' @param listkeys vector of character strings, the nested names of the lists
+#'
+#' @return the value at the path through the lists, or NULL if no such path exists
+#'
+#' @examples
+#'    data = list("regions"=list("frontal"=list("thickness"=2.3, "area"=2345)));
+#'    getIn(data, c("regions", "frontal", "thickness"));       # 2.3
+#'    getIn(data, c("regions", "frontal", "nosuchentry"));     # NULL
+#'    getIn(data, c("regions", "nosuchregion", "thickness"));  # NULL
+#'
+#' @export
+getIn <- function(named_list, listkeys) {
+  num_keys = length(listkeys);
+  if(length(named_list) < 1L | num_keys  < 1L) {
+    return(NULL);
+  }
+  nlist = named_list;
+  current_key_index = 0L;
+  for(lkey in listkeys) {
+    current_key_index = current_key_index + 1L;
+    if(current_key_index < num_keys) {
+      if(!is.list(nlist)) {
+        return(NULL);
+      }
+      if(lkey %in% names(nlist)) {
+        nlist = nlist[[lkey]];
+      } else {
+        return(NULL);
+      }
+    } else {
+      if(lkey %in% names(nlist)) {
+        return(nlist[[lkey]]);
+      } else {
+        return(NULL);
+      }
+    }
+  }
+}
+
+#' @title Check for values in nested named lists
+#'
+#' @param named_list a named list
+#'
+#' @param listkeys vector of character strings, the nested names of the lists
+#'
+#' @return whether a non-NULL value exists at the path
+#'
+#' @examples
+#'    data = list("regions"=list("frontal"=list("thickness"=2.3, "area"=2345)));
+#'    hasIn(data, c("regions", "nosuchregion"));   # FALSE
+#'
+#' @export
+hasIn <- function(named_list, listkeys) {
+  return(! is.null(getIn(named_list, listkeys)));
 }
 

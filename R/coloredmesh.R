@@ -1,106 +1,25 @@
 # Functions for generating coloredmeshes from data and managing their colormaps.
 
 
-
-#' @title Recompute the colormaps in the meshes, using data from all meshes.
-#'
-#' @description Running this function on a set of coloredmeshes ensures that one color represents the same data value over all the meshes. This makes sense if you plot the left and right hemisphere of a subject into a plot. This function only works if the meshes comes with a key named 'morph_data' that contains the raw data values. If there is no such data, the given meshes are returned without changes.
-#'
-#' @param coloredmeshes list of input coloredmeshes
-#'
-#' @param colormap a colormap function, defaults to NULL, which instructs the function to use the colormap found in the "cmap_fun" property of the first mesh in the list that has a valid entry.
-#'
-#' @return the coloredmeshes with merged colormap
-#'
-#' @importFrom squash cmap makecmap jet
-#' @keywords internal
-unify.coloredmeshes.colormaps <- function(coloredmeshes, colormap=NULL) {
-    if(length(coloredmeshes) <= 1) {
-        return(coloredmeshes);
-    }
-
-    comb_res = combine.coloredmeshes.data(coloredmeshes);
-    full_data = comb_res$full_data;
-    found_morph_data = comb_res$found_morph_data_in_any;
-
-    if(is.null(colormap)) {
-        colormap = check.for.coloredmeshes.colormap(coloredmeshes);
-    }
-
-
-    # We have all the data (if any), compute a shared colormap for all the meshes to use.
-    # Note: some meshes come without morph data, e.g., those based on annotations. But for them, we do not need to rescale anyways so thats fine.
-    if(found_morph_data && length(full_data) > 0) {
-
-        if(is.null(colormap)) {
-            warning("Parameter 'colormap' is NULL and no cmap_fun found in the mesh(es). Falling back to default colormap squash::jet.");
-            colormap = squash::jet;
-        }
-
-        if(! comb_res$found_morph_data_in_all) {
-            warning("Found morph_data only in a subset of the meshes. This should not happen in general.");
-        }
-
-        coloredmeshes_new_cmap = coloredmeshes;
-        for(cmesh_idx in seq_len(length(coloredmeshes_new_cmap))) {
-            col_rescaled = squash::cmap(coloredmeshes_new_cmap[[cmesh_idx]]$morph_data, map = squash::makecmap(full_data, colFn = colormap));
-            coloredmeshes_new_cmap[[cmesh_idx]]$col = col_rescaled;
-        }
-        return(coloredmeshes_new_cmap);
-    } else {
-        return(coloredmeshes);
-    }
-}
-
-
-#' @title Combine the data from the coloredmeshes, if any.
-#'
-#' @param coloredmeshes list of coloredmeshes
-#'
-#' @return list with entries "full_data": a vector of the combined data, can be NULL if none of the meshes have a valid "morph_data" attribute. "found_morph_data_in_any": logical, whether valid data was found in any of the meshes. "found_morph_data_in_all": logical, whether valid data was found in all of the meshes (FALSE if list of meshes is empty).
-#'
-#' @keywords internal
-combine.coloredmeshes.data <- function(coloredmeshes) {
-    full_data = c();
-    found_morph_data_in_any = FALSE;
-    found_morph_data_in_all = TRUE;
-    if(length(coloredmeshes) < 1) {
-        found_morph_data_in_all = FALSE;
-    }
+coloredmeshes.combined.colors <- function(coloredmeshes) {
+    combined_colors = c();
     for(cmesh in coloredmeshes) {
-        if("morph_data" %in% names(cmesh) && !(is.null(cmesh$morph_data))) {
-            full_data = c(full_data, cmesh$morph_data);
-            found_morph_data_in_any = TRUE;
-        } else {
-            found_morph_data_in_all = FALSE;
+        if(hasIn(cmesh, c('col'))) {
+            combined_colors = c(combined_colors, cmesh$col);
         }
     }
-    full_data = sort(full_data);
-    return(list("full_data"=full_data, "found_morph_data_in_any"=found_morph_data_in_any, "found_morph_data_in_all"=found_morph_data_in_all));
+    return(combined_colors);
 }
 
-
-#' @title Return the colormap function from the meshes, if any.
-#'
-#' @param coloredmeshes list of coloredmeshes
-#'
-#' @return colormap, a colormap function or NULL if the meshes did not have any.
-#'
-#' @keywords internal
-check.for.coloredmeshes.colormap <- function(coloredmeshes) {
-    colormap = NULL;
+coloredmeshes.combined.data.range <- function(coloredmeshes) {
+    combined_data = c();
     for(cmesh in coloredmeshes) {
-        if("cmap_fun" %in% names(cmesh) && !(is.null(cmesh$cmap_fun))) {
-            if(is.null(colormap)) {
-                colormap = cmesh$cmap_fun;
-            }
+        if(hasIn(cmesh, c('metadata', 'src_data'))) {
+            combined_data = c(combined_data, cmesh$metadata$src_data);
         }
     }
-    return(colormap);
+    return(range(combined_data, finite=TRUE));
 }
-
-
-
 
 #' @title Create a coloredmesh from native space morphometry data.
 #'
@@ -122,7 +41,7 @@ check.for.coloredmeshes.colormap <- function(coloredmeshes) {
 #'
 #' @param makecmap_options named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.
 #'
-#' @return coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
+#' @return coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "render", logical, whether to render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
 #' @export
 #' @importFrom squash cmap makecmap jet
@@ -162,25 +81,23 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
     mesh = rgl::tmesh3d(c(t(surface_mesh$vertices)), c(t(surface_mesh$faces)), homogeneous=FALSE);
     col = squash::cmap(morph_data, map = do.call(squash::makecmap, utils::modifyList(list(morph_data), makecmap_options)));
 
-    return(fs.coloredmesh(mesh, col, hemi, "morph_data"=morph_data, "cmap_fun"=makecmap_options$colFn));
+    return(fs.coloredmesh(mesh, col, hemi, metadata=list("src_data"=morph_data, "data_range"=range(morph_data, finite=TRUE), "makecmap_options"=makecmap_options)));
 }
 
 
 #' @title Create a coloredmesh from a mesh and pre-defined colors.
 #'
-#' @inheritParams coloredmesh.from.morph.native
+#' @inheritParams coloredmeshes.from.color
 #'
 #' @param color_data vector of hex color strings
 #'
-#' @param src_data vector of source data from which the 'color_data' was created, optional. If available, it is encoded into the coloredmesh and can be used later to plot a colorbar.
-#'
-#' @return coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
+#' @return coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "render", logical, whether to render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
 #' @note Do not call this, use \code{\link[fsbrain]{coloredmeshes.from.color}} instead.
 #'
 #' @keywords internal
 #' @importFrom rgl tmesh3d rgl.open wire3d
-coloredmesh.from.color <- function(subjects_dir, subject_id, color_data, hemi, surface="white", src_data=NULL) {
+coloredmesh.from.color <- function(subjects_dir, subject_id, color_data, hemi, surface="white", metadata=NULL) {
 
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
@@ -201,7 +118,7 @@ coloredmesh.from.color <- function(subjects_dir, subject_id, color_data, hemi, s
         }
     }
 
-    return(fs.coloredmesh(mesh, color_data, hemi, morph_data = src_data));
+    return(fs.coloredmesh(mesh, color_data, hemi, metadata=metadata));
 }
 
 
@@ -211,11 +128,11 @@ coloredmesh.from.color <- function(subjects_dir, subject_id, color_data, hemi, s
 #'
 #' @param color_data a hemilist containing vectors of hex color strings
 #'
-#' @param src_data a hemilist containing the source data from which the 'color_data' was created, optional. If available, it is encoded into the coloredmesh and can be used later to plot a colorbar.
+#' @param metadata a named list, can contain whatever you want. Typical entries are: 'src_data' a hemilist containing the source data from which the 'color_data' was created, optional. If available, it is encoded into the coloredmesh and can be used later to plot a colorbar. 'makecmap_options': the options used to created the colormap from the data.
 #'
-#' @return named list of coloredmeshes. Each entry is a named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
+#' @return named list of coloredmeshes. Each entry is a named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "render", logical, whether to render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
-coloredmeshes.from.color <- function(subjects_dir, subject_id, color_data, hemi, surface="white", src_data=NULL) {
+coloredmeshes.from.color <- function(subjects_dir, subject_id, color_data, hemi, surface="white", metadata=NULL) {
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh', or 'both' but is '%s'.\n", hemi));
     }
@@ -224,14 +141,14 @@ coloredmeshes.from.color <- function(subjects_dir, subject_id, color_data, hemi,
         if(! is.hemilist(color_data)) {
             stop("The parameter 'color_data' must be a named list with entries 'lh' and 'rh' if 'hemi' is 'both'.");
         }
-        lh_cm = coloredmesh.from.color(subjects_dir, subject_id, color_data$lh, 'lh', surface=surface, src_data=hemilist.unwrap(src_data, 'lh', allow_null_list=TRUE));
-        rh_cm = coloredmesh.from.color(subjects_dir, subject_id, color_data$rh, 'rh', surface=surface, src_data=hemilist.unwrap(src_data, 'rh', allow_null_list=TRUE));
+        lh_cm = coloredmesh.from.color(subjects_dir, subject_id, color_data$lh, 'lh', surface=surface, metadata=metadata);
+        rh_cm = coloredmesh.from.color(subjects_dir, subject_id, color_data$rh, 'rh', surface=surface, metadata=metadata);
         return(list("lh"=lh_cm, "rh"=rh_cm));
     } else {
         if(is.hemilist(color_data)) {
             color_data = hemilist.unwrap(color_data);
         }
-        cm = coloredmesh.from.color(subjects_dir, subject_id, color_data, hemi, surface=surface, src_data=hemilist.unwrap(src_data, hemi, allow_null_list=TRUE));
+        cm = coloredmesh.from.color(subjects_dir, subject_id, color_data, hemi, surface=surface, metadata=metadata);
         return(hemilist.wrap(cm, hemi));
     }
 }
@@ -247,7 +164,7 @@ coloredmeshes.from.color <- function(subjects_dir, subject_id, color_data, hemi,
 #
 #' @param template_subjects_dir The template subjects dir. If NULL, the value of the parameter 'subjects_dir' is used. Defaults to NULL. If you have FreeSurfer installed and configured, and are using the standard fsaverage subject, try passing the result of calling 'file.path(Sys.getenv('FREESURFER_HOME'), 'subjects')'.
 #'
-#' @return coloredmesh. A named list with entries: "mesh" the [rgl::tmesh3d()] mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
+#' @return coloredmesh. A named list with entries: "mesh" the [rgl::tmesh3d()] mesh object. "col": the mesh colors. "render", logical, whether to render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
 #' @keywords internal
 #' @importFrom squash cmap makecmap jet
@@ -295,7 +212,7 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
     } else {
         col = squash::cmap(morph_data, map = do.call(squash::makecmap, utils::modifyList(list(morph_data), makecmap_options)));
     }
-    return(fs.coloredmesh(mesh, col, hemi, "morph_data"=morph_data, "cmap_fun"=makecmap_options$colFn));
+    return(fs.coloredmesh(mesh, col, hemi, metadata=list("src_data"=morph_data, "data_range"=range(morph_data, finite=TRUE), "makecmap_options"=makecmap_options)));
 }
 
 
@@ -307,9 +224,7 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
 #'
 #' @param morph_data string. The morphometry data to use. E.g., 'area' or 'thickness.'
 #'
-#' @param all_nan_backup_value numeric. If all morph_data values are NA/NaN, no color map can be created. In that case, the values are replaced by this value, and this is indicated in the entry morph_data_was_all_na in the return value. Defaults to 0.0.
-#'
-#' @return coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
+#' @return coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "render", logical, whether to render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
 #' @keywords internal
 #' @importFrom squash cmap makecmap jet
@@ -337,14 +252,13 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
     mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
 
     # If all values are NaN, the following call to squash::cmap fails with an error. We reset the data here to avoid that.
-    morph_data_was_all_na = FALSE;
-    if(all(is.na(morph_data))) {
-        morph_data = as.vector(rep(all_nan_backup_value, length(morph_data)));
-        morph_data_was_all_na = TRUE;
-    }
+    #render = TRUE;
+    #if(all(is.na(morph_data))) {
+    #    render = FALSE;
+    #}
 
     col = squash::cmap(morph_data, map = do.call(squash::makecmap, utils::modifyList(list(morph_data), makecmap_options)));
-    return(fs.coloredmesh(mesh, col, hemi, render=!morph_data_was_all_na, morph_data = morph_data, "cmap_fun"=makecmap_options$colFn));
+    return(fs.coloredmesh(mesh, col, hemi, metadata=list("morph_data"=morph_data, "data_range"=range(morph_data, finite=TRUE), "cmap_fun"=makecmap_options$colFn)));
 }
 
 
@@ -357,7 +271,7 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
 #'
 #' @param outline logical, whether to draw an outline only instead of filling the regions. Defaults to FALSE. Only makes sense if you did not pass an outline already. The current implementation for outline computation is rather slow, so setting this to TRUE will considerably increase computation time.
 #'
-#' @return coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
+#' @return coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "render", logical, whether to render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
 #' @keywords internal
 #' @importFrom squash cmap makecmap jet
@@ -401,7 +315,7 @@ coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surfac
 #'
 #' @param label string or vector of integers. If a string, the name of the label file, without the hemi part (if any), but including the '.label' suffix. E.g., 'cortex.label' for '?h.cortex.label'. Alternatively, the already loaded label data as a vector of integers.
 #'
-#' @return coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
+#' @return coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "render", logical, whether to render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
 #' @keywords internal
 #' @importFrom squash cmap makecmap rainbow2
@@ -440,7 +354,7 @@ coloredmesh.from.label <- function(subjects_dir, subject_id, label, hemi, surfac
 #'
 #' @param surface_data optional surface object, as returned by \code{\link[fsbrain]{subject.surface}}. If given, used instead of loading the surface data from disk (which users of this function may already have done). Defaults to NULL.
 #'
-#' @return coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "morph_data_was_all_na", logical. Whether the mesh values were all NA, and thus replaced by the all_nan_backup_value. "hemi": the hemisphere, one of 'lh' or 'rh'.
+#' @return coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "render", logical, whether to render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
 #' @family mask functions
 #' @export
@@ -474,7 +388,7 @@ coloredmesh.from.mask <- function(subjects_dir, subject_id, mask, hemi, surface=
 
     mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
     col = squash::cmap(morph_like_data, map = do.call(squash::makecmap, utils::modifyList(list(morph_like_data), makecmap_options)));
-    return(fs.coloredmesh(mesh, col, hemi, "morph_data"=morph_like_data, "cmap_fun"=makecmap_options$colFn, "data_range"=c(0L, 1L)));
+    return(fs.coloredmesh(mesh, col, hemi, metadata=list("src_data"=morph_like_data, "data_range"=range(morph_like_data, finite=TRUE), "makecmap_options"=makecmap_options)));
 }
 
 
@@ -487,7 +401,7 @@ coloredmesh.from.mask <- function(subjects_dir, subject_id, mask, hemi, surface=
 #' @export
 print.fs.coloredmesh <- function(x, ...) {
     cat(sprintf("Brain coloredmesh with %d vertices and %d faces.\n", ncol(x$mesh$vb), ncol(x$mesh$it)));
-    cat(sprintf(" * Hemi is '%s', will be rendered: %s.\n", x$hemi, !x$morph_data_was_all_na));
+    cat(sprintf(" * Hemi is '%s', will be rendered: %s.\n", x$hemi, !x$render));
     cat(sprintf(" * Contains %d color values, %d unique colors.\n", length(x$col), length(unique(x$col))));
 }
 
@@ -513,18 +427,14 @@ is.fs.coloredmesh <- function(x) inherits(x, "fs.coloredmesh")
 #'
 #' @param render logical, whether to render this mesh during visualization
 #'
-#' @param morph_data optional, the data used to construct the 'col' values
-#'
-#' @param cmap_fun optional, the colormap function used to construct the 'col' values
-#'
-#' @param data_range optional, the range of the data used to construct the 'col' values. Having this is useful for plotting a colorbar during visualization.
+#' @param metadata optional, named list containing metadata
 #'
 #' @return an `fs.coloredmesh` instance. The only fields one should use in client code are 'mesh', 'hemi' and 'col', all others are considered internal and may change without notice.
 #'
 #' @importFrom freesurferformats is.fs.surface
 #' @importFrom rgl tmesh3d
 #' @export
-fs.coloredmesh <- function(mesh, col, hemi, render=TRUE, morph_data=NULL, cmap_fun=NULL, data_range=NULL) {
+fs.coloredmesh <- function(mesh, col, hemi, render=TRUE, metadata=NULL) {
     if(freesurferformats::is.fs.surface(mesh)) {
         mesh = rgl::tmesh3d(c(t(mesh$vertices)), c(t(mesh$faces)), homogeneous=FALSE);
     }
@@ -539,12 +449,22 @@ fs.coloredmesh <- function(mesh, col, hemi, render=TRUE, morph_data=NULL, cmap_f
             stop("Parameter 'hemi' must be 'lh', 'rh', or NULL.");
         }
     }
-    if(is.null(data_range)) {
-        if(!is.null(morph_data)) {
-            data_range = range(morph_data, finite=TRUE);
+    if(! is.logical(render)) {
+        stop("Parameter 'render' must be of type logical.");
+    }
+
+    if(is.null(metadata)) {
+        metadata=list();
+    }
+
+    md_entries = names(metadata);
+    for (mde in md_entries) {
+        if(! mde %in% c("src_data", "data_range", "makecmap_options")) {
+            stop(sprintf("Untypical metadata entry '%s' found in colormesh metadata.\n", mde));
         }
     }
-    cm = list("mesh"=mesh, "col"=col, "morph_data_was_all_na"=!render, "render"=render, "hemi"=hemi, "morph_data"=morph_data, "cmap_fun"=cmap_fun, "data_range"=data_range);
+
+    cm = list("mesh"=mesh, "col"=col, "render"=render, "hemi"=hemi, "metadata"=metadata);
     class(cm) = c("fs.coloredmesh", class(cm));
     return(cm);
 }
