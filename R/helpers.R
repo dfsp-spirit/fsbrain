@@ -644,9 +644,11 @@ find.freesurferhome <- function(mustWork=FALSE) {
   if(! ret$found) {
     if(tolower(Sys.info()[["sysname"]]) == 'darwin') {
       search_paths = c("/Applications/freesurfer");
-
     } else if(tolower(Sys.info()[["sysname"]]) == 'linux') {
       search_paths = c("/usr/local/freesurfer", "/opt/freesurfer");
+    } else {
+      # Windows, needed for AppVeyor
+      search_paths = c();
     }
 
     user_home = Sys.getenv("HOME");
