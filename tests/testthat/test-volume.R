@@ -30,7 +30,7 @@ test_that("Brain volume CRS voxels are rendered at the correct surface space RAS
     # the brain volume of a subject.
     # In order for this to work, the volume has to be a FreeSurfer conformed volume.
 
-    skip("This test has to be run manually and interactively. It requires an X11 display.");
+    skip_if_not(box.can.run.all.tests(), "This test requires X11.");
 
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -66,6 +66,8 @@ test_that("Brain volume CRS voxels are rendered at the correct surface space RAS
 
      # That's it, now look at the plot.
      # It shows that the brain surface lies within the volume boundaries, and the bounding box from the volume fits.
+
+     expect_equal(1L, 1L);   # empty tests will be skipped
 })
 
 

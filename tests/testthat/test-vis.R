@@ -2,7 +2,7 @@
 # You can run them by copying & pasting the code into an R session. Treat it as examples.
 
 test_that("We can visualize morphometry data.", {
-    skip("This test has to be run manually and interactively.");
+    skip_if_not(box.can.run.all.tests(), "This test requires X11.");
 
     fsbrain::download_optional_data();
 
@@ -12,11 +12,13 @@ test_that("We can visualize morphometry data.", {
     surface = 'white';
 
     vis.subject.morph.native(subjects_dir, subject_id, measure, 'both');
+
+    expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
 })
 
 
 test_that("We can visualize annotation atlas data.", {
-    skip("This test has to be run manually and interactively.");
+    skip_if_not(box.can.run.all.tests(), "This test requires X11.");
 
     fsbrain::download_optional_data();
 
@@ -24,11 +26,13 @@ test_that("We can visualize annotation atlas data.", {
     subject_id = 'subject1';
 
     vis.subject.annot(subjects_dir, subject_id, 'aparc', 'both');
+
+    expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
 })
 
 
 test_that("We can visualize arbitrary data on a subjects surface.", {
-    skip("This test has to be run manually and interactively.");
+    skip_if_not(box.can.run.all.tests(), "This test requires X11.");
 
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -41,11 +45,13 @@ test_that("We can visualize arbitrary data on a subjects surface.", {
     morph_data_rh = rnorm(num_verts_subject1_rh, 2.0, 1.0);
 
     vis.data.on.subject(subjects_dir, subject_id, morph_data_lh, morph_data_rh);
+
+    expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
 })
 
 
 test_that("We can visualize arbitrary data on the fsaverage surfaces if available.", {
-    skip("This test has to be run manually and interactively.");
+    skip_if_not(box.can.run.all.tests(), "This test requires X11.");
 
     subjects_dir_query = find.subjectsdir.of(subject_id='fsaverage', mustWork = FALSE);
     if(subjects_dir_query$found) {
@@ -59,12 +65,14 @@ test_that("We can visualize arbitrary data on the fsaverage surfaces if availabl
     morph_data_lh = rnorm(num_verts_fsaverage, 2.0, 1.0);
     morph_data_rh = rnorm(num_verts_fsaverage, 2.0, 1.0);
 
-    vis.data.on.fsaverage(morph_data_lh, morph_data_rh);
+    vis.data.on.fsaverage(morph_data_lh=morph_data_lh, morph_data_rh=morph_data_rh);
+
+    expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
 })
 
 
 test_that("We can visualize one value per atlas region on a subject.", {
-    skip("This test has to be run manually and interactively.");
+    skip_if_not(box.can.run.all.tests(), "This test requires X11.");
 
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -85,13 +93,15 @@ test_that("We can visualize one value per atlas region on a subject.", {
     # Test that we can pass NULL data, which should not render that hemisphere.
     morph_data2 = spread.values.over.subject(subjects_dir, subject_id, atlas, NULL, rh_region_value_list, value_for_unlisted_regions=NaN);
     vis.data.on.subject(subjects_dir, subject_id, morph_data2$lh, morph_data2$rh);
+
+    expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
 })
 
 
 test_that("We can visualize one value per Desikan atlas region on fsaverage.", {
-    skip("This test has to be run manually and interactively. It requires fsaverage subject from a FreeSurfer installation.");
+    skip_if_not(box.can.run.all.tests(), "This test requires X11.");
 
-    subjects_dir = file.path("~/software/freesurfer/subjects"); # Directory that has 'fsaverage' data, adapt this to your machine.
+    subjects_dir = find.subjectsdir.of("fsaverage")$found_at;
     subject_id = 'fsaverage';                                   # You could visualize on any other subject, of course.
 
     atlas = "aparc";    # An atlas file name, e.g., 'aparc' for Desikan-Killiany, 'aparc.a2009s' for Destrieux, 'aparc.DKTatlas' for DKT40 (see https://surfer.nmr.mgh.harvard.edu/fswiki/CorticalParcellation)
@@ -110,25 +120,27 @@ test_that("We can visualize one value per Desikan atlas region on fsaverage.", {
     morph_data = spread.values.over.subject(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, value_for_unlisted_regions=NaN);
 
     # We can visualize the data directly in fsbrain:
-    vis.data.on.subject(subjects_dir, subject_id, morph_data$lh, morph_data$rh, colormap=grDevices::heat.colors);
+    vis.data.on.subject(subjects_dir, subject_id, morph_data$lh, morph_data$rh, makecmap_options=list('colFn'=grDevices::heat.colors));
 
     # Of course, you can also save a file with your data for visualization in other software, if you prefer:
-    freesurferformats::write.fs.morph("~/lh.regiondata.mgz", morph_data$lh);
-    freesurferformats::write.fs.morph("~/rh.regiondata.mgz", morph_data$rh);
+    # freesurferformats::write.fs.morph("~/lh.regiondata.mgz", morph_data$lh);
+    # freesurferformats::write.fs.morph("~/rh.regiondata.mgz", morph_data$rh);
+
+    expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
 })
 
 
 test_that("We can visualize a subset of the regions of the Desikan atlas on fsaverage.", {
-    skip("This test has to be run manually and interactively. It requires the 'fsaverage' subject from a FreeSurfer installation.");
+    skip_if_not(box.has.fsaverage(), "This test requires fsaverage.");
 
-    subjects_dir = file.path("~/software/freesurfer/subjects"); # Directory that has 'fsaverage' data, adapt this to your machine.
+    subjects_dir = find.subjectsdir.of("fsaverage")$found_at;
     subject_id = 'fsaverage';                                   # You could visualize on any other subject, of course.
 
     atlas = "aparc";    # An atlas file name, e.g., 'aparc' for Desikan-Killiany, 'aparc.a2009s' for Destrieux, 'aparc.DKTatlas' for DKT40 (see https://surfer.nmr.mgh.harvard.edu/fswiki/CorticalParcellation)
 
     # Get all valid region names of the atlas:
     atlas_region_names = get.atlas.region.names(atlas, template_subjects_dir = subjects_dir, template_subject = subject_id);
-    print(atlas_region_names);
+    #print(atlas_region_names);
 
     # Select some regions we want to show. We assign the same value to each region, so all get the same color.
     lh_region_value_list = c("precuneus"=1, "pericalcarine"=1, "temporalpole"=1, "bankssts"=1, "superiorparietal"=1);
@@ -138,18 +150,20 @@ test_that("We can visualize a subset of the regions of the Desikan atlas on fsav
     morph_data = spread.values.over.subject(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, value_for_unlisted_regions=NaN);
 
     # We can visualize the data directly in fsbrain:
-    vis.data.on.subject(subjects_dir, subject_id, morph_data$lh, morph_data$rh, colormap=grDevices::grey.colors);
+    vis.data.on.subject(subjects_dir, subject_id, morph_data$lh, morph_data$rh, makecmap_options=list('colFn'=grDevices::grey.colors));
 
     # Of course, you can also save a file with your data for visualization in other software, if you prefer:
-    freesurferformats::write.fs.morph("~/lh.regiondata.mgz", morph_data$lh);
-    freesurferformats::write.fs.morph("~/rh.regiondata.mgz", morph_data$rh);
+    # freesurferformats::write.fs.morph("~/lh.regiondata.mgz", morph_data$lh);
+    # freesurferformats::write.fs.morph("~/rh.regiondata.mgz", morph_data$rh);
+
+    expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
 })
 
 
 test_that("We can visualize clusters on fsaverage with a background.", {
-    skip("This test has to be run manually and interactively. It requires the 'fsaverage' subject from a FreeSurfer installation and a clusters file.");
+    skip_if_not(box.has.fsaverage(), "This test requires fsaverage.");
 
-    subjects_dir = file.path("~/software/freesurfer/subjects"); # Directory that has 'fsaverage' data, adapt this to your machine.
+    subjects_dir = find.subjectsdir.of("fsaverage")$found_at;
     subject_id = 'fsaverage';
 
     lh_demo_cluster_file = system.file("extdata", "lh.clusters_fsaverage.mgz", package = "fsbrain", mustWork = TRUE);
@@ -157,4 +171,6 @@ test_that("We can visualize clusters on fsaverage with a background.", {
     lh_clust = freesurferformats::read.fs.morph(lh_demo_cluster_file);   # contains a single positive cluster (activation, group difference), the other values are 0
     rh_clust = freesurferformats::read.fs.morph(rh_demo_cluster_file);   # contains two negative clusters
     vis.symmetric.data.on.subject(subjects_dir, subject_id, lh_clust, rh_clust, bg="curv");
+
+    expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
 })

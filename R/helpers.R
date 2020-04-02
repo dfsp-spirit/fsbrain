@@ -305,6 +305,7 @@ colorlist.brain.clusters <- function(num_colors) {
   return(c(ramp_bc(num_colors_per_side), rep(central_value, num_central), ramp_ry(num_colors_per_side)));
 }
 
+
 #' @title Read colors from CSV file.
 #'
 #' @param filepath character string, path to a CSV file containing colors
@@ -388,7 +389,6 @@ hemilist.derive.hemi <- function(hemilist) {
 #'
 #' @return the data
 #'
-# @keywords internal
 #' @export
 hemilist.unwrap <- function(hemi_list, hemi=NULL, allow_null_list=FALSE) {
   if(is.null(hemi_list)) {
@@ -498,3 +498,180 @@ makecmakeopts.merge <- function(makecmap_options, colormap, default_colormap=squ
   return(makecmap_options);
 }
 
+
+#' @title Retrieve values from nested named lists
+#'
+#' @param named_list a named list
+#'
+#' @param listkeys vector of character strings, the nested names of the lists
+#'
+#' @return the value at the path through the lists, or NULL if no such path exists
+#'
+#' @examples
+#'    data = list("regions"=list("frontal"=list("thickness"=2.3, "area"=2345)));
+#'    getIn(data, c("regions", "frontal", "thickness"));       # 2.3
+#'    getIn(data, c("regions", "frontal", "nosuchentry"));     # NULL
+#'    getIn(data, c("regions", "nosuchregion", "thickness"));  # NULL
+#'
+#' @export
+getIn <- function(named_list, listkeys) {
+  num_keys = length(listkeys);
+  if(length(named_list) < 1L | num_keys  < 1L) {
+    return(NULL);
+  }
+  nlist = named_list;
+  current_key_index = 0L;
+  for(lkey in listkeys) {
+    current_key_index = current_key_index + 1L;
+    if(current_key_index < num_keys) {
+      if(!is.list(nlist)) {
+        return(NULL);
+      }
+      if(lkey %in% names(nlist)) {
+        nlist = nlist[[lkey]];
+      } else {
+        return(NULL);
+      }
+    } else {
+      if(lkey %in% names(nlist)) {
+        return(nlist[[lkey]]);
+      } else {
+        return(NULL);
+      }
+    }
+  }
+}
+
+#' @title Check for values in nested named lists
+#'
+#' @param named_list a named list
+#'
+#' @param listkeys vector of character strings, the nested names of the lists
+#'
+#' @return whether a non-NULL value exists at the path
+#'
+#' @examples
+#'    data = list("regions"=list("frontal"=list("thickness"=2.3, "area"=2345)));
+#'    hasIn(data, c("regions", "nosuchregion"));   # FALSE
+#'
+#' @export
+hasIn <- function(named_list, listkeys) {
+  return(! is.null(getIn(named_list, listkeys)));
+}
+
+
+#' @title Find the subject directory containing the fsaverage subject (or others) on disk.
+#'
+#' @description Try to find directory containing the fsaverage subject (or any other subject) by checking in the following places and returning the first path where it is found: first, the directory given by the environment variable SUBJECTS_DIR, then in the subir 'subjects' of the directory given by the environment variable FREESURFER_HOME, and finally the base dir of the package cache. See the function [fsbrain::download_fsaverage()] if you want to download fsaverage to your package cache and ensure it always gets found, no matter whether the environment variables are set or not.
+#'
+#' @param subject_id string, the subject id of the subject. Defaults to 'fsaverage'.
+#'
+#' @param mustWork logical. Whether the function should with an error stop if the directory cannot be found. If this is TRUE, the return value will be only the 'found_at' entry of the list (i.e., only the path of the subjects dir).
+#'
+#' @return named list with the following entries: "found": logical, whether it was found. "found_at": Only set if found=TRUE, the path to the fsaverage directory (NOT including the fsaverage dir itself). "found_all_locations": list of all locations in which it was found. See 'mustWork' for important information.
+#'
+#' @export
+find.subjectsdir.of <- function(subject_id='fsaverage', mustWork=FALSE) {
+  ret = list();
+  ret$found = FALSE;
+  ret$found_all_locations = NULL;
+
+  guessed_path = get_optional_data_filepath(file.path("subjects_dir", subject_id), mustWork = FALSE);
+  if(nchar(guessed_path) > 0L & dir.exists(guessed_path)) {
+      ret$found = TRUE;
+      ret$found_at = get_optional_data_filepath(file.path("subjects_dir"));
+      ret$found_all_locations = c(ret$found_all_locations, ret$found_at);
+  }
+
+
+  fs_home=Sys.getenv("FREESURFER_HOME");
+  if(nchar(fs_home) > 0) {
+    guessed_path = file.path(fs_home, "subjects", subject_id);
+    if(dir.exists(guessed_path)) {
+      ret$found = TRUE;
+      ret$found_at = file.path(fs_home, "subjects");
+      ret$found_all_locations = c(ret$found_all_locations, ret$found_at);
+    }
+  }
+
+  subj_dir=Sys.getenv("SUBJECTS_DIR");
+  if(nchar(subj_dir) > 0) {
+    guessed_path = file.path(subj_dir, subject_id);
+    if(dir.exists(guessed_path)) {
+      ret$found = TRUE;
+      ret$found_at = subj_dir;
+      ret$found_all_locations = c(ret$found_all_locations, ret$found_at);
+    }
+  }
+
+  ret$found_all_locations = unique(ret$found_all_locations);
+
+  if(mustWork) {
+    if(ret$found) {
+      return(ret$found_at);
+    } else {
+      stop(sprintf("Could not find subjects dir containing subject '%s' and parameter 'mustWork' is TRUE. Checked for directories given by environment variables FREESURFER_HOME and SUBJECTS_DIR and in package cache. Please set the environment variables by installing and configuring FreeSurfer.\n Or, if you want to download fsaverage without installing FreeSurfer, have a look at the 'download_fsaverage' function in this package.\n", subject_id));
+    }
+  }
+
+  return(ret);
+}
+
+
+#' @title Find the FREESURFER_HOME directory on disk.
+#'
+#' @description Try to find directory containing the FreeSurfer installation, based on environment variables and *educated guessing*.
+#'
+#' @param mustWork logical. Whether the function should with an error stop if the directory cannot be found. If this is TRUE, the return value will be only the 'found_at' entry of the list (i.e., only the path of the FreeSurfer installation dir).
+#'
+#' @return named list with the following entries: "found": logical, whether it was found. "found_at": Only set if found=TRUE, the path to the FreeSurfer installation directory (including the directory itself). See 'mustWork' for important information.
+#'
+#' @export
+find.freesurferhome <- function(mustWork=FALSE) {
+  ret = list();
+  ret$found = FALSE;
+
+  fs_home=Sys.getenv("FREESURFER_HOME");
+  if(nchar(fs_home) > 0) {
+    guessed_path = file.path(fs_home);
+    if(dir.exists(guessed_path)) {
+      ret$found = TRUE;
+      ret$found_at = guessed_path;
+    }
+  }
+
+  # Check in some typical paths
+  if(! ret$found) {
+    if(tolower(Sys.info()[["sysname"]]) == 'darwin') {
+      search_paths = c("/Applications/freesurfer");
+    } else if(tolower(Sys.info()[["sysname"]]) == 'linux') {
+      search_paths = c("/usr/local/freesurfer", "/opt/freesurfer");
+    } else {
+      # Windows, needed for AppVeyor
+      search_paths = c();
+    }
+
+    user_home = Sys.getenv("HOME");
+    if(nchar(user_home) > 0) {
+      search_paths = c(search_paths, file.path(user_home, 'freesurfer'), file.path(user_home, 'software', 'freesurfer'), file.path(user_home, 'opt', 'freesurfer'));
+    }
+
+    for(sp in search_paths) {
+      if(dir.exists(sp)) {
+        ret$found = TRUE;
+        ret$found_at = sp;
+      }
+    }
+
+  }
+
+  if(mustWork) {
+    if(ret$found) {
+      return(ret$found_at);
+    } else {
+      stop(sprintf("Could not find FreeSurfer installation dir and parameter 'mustWork' is TRUE. Please set the environment variables by installing and configuring FreeSurfer.\n"));
+    }
+  }
+
+  return(ret);
+}

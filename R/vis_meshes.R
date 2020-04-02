@@ -7,7 +7,7 @@
 #'
 #' @param background string, background color passed to rgl::bg3d()
 #'
-#' @param skip_all_na logical, whether to skip (i.e., not render) meshes in the list that have the property 'morph_data_was_all_na' set to TRUE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.
+#' @param skip_all_na logical, whether to skip (i.e., not render) meshes in the list that have the property 'render' set to FALSE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.
 #'
 #' @param style, a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
 #'
@@ -96,7 +96,7 @@ is.Triangles3D <- function(x) inherits(x, "Triangles3D")
 #' @importFrom rgl triangles3d
 vis.renderable <- function(cmesh, skip_all_na=TRUE, style="default") {
     if(is.fs.coloredmesh(cmesh)) {
-        if(!(skip_all_na && cmesh$morph_data_was_all_na)) {
+        if(!(skip_all_na && !cmesh$render)) {
             vis.coloredmesh(cmesh, style = style);
         }
     } else if (is.fs.coloredvoxels(cmesh)) {
@@ -122,7 +122,7 @@ vis.renderable <- function(cmesh, skip_all_na=TRUE, style="default") {
 #'
 #' @param background string, background color passed to rgl::bg3d()
 #'
-#' @param skip_all_na logical, whether to skip (i.e., not render) meshes in the list that have the property 'morph_data_was_all_na' set to TRUE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.
+#' @param skip_all_na logical, whether to skip (i.e., not render) meshes in the list that have the property 'rendner' set to FALSE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.
 #'
 #' @param style a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
 #'
@@ -237,7 +237,7 @@ vis.rotated.coloredmeshes <- function(renderables, rotation_angle, x, y, z, styl
 #'
 #' @description Requires a rgl 3d visualisation to be open that already contains a rendered object. Uses \code{\link[rgl]{bgplot3d}} to add a colorbar in the background of the plot. Experimental.
 #'
-#' @param coloredmeshes list of coloredmeshes. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
+#' @param coloredmesh fs.coloredmesh as returned by the coloredmesh.from.* functions.
 #'
 #' @param horizontal logical, whether the colorbar should be drawn in horizontal orientation. Defaults to TRUE.
 #'
@@ -248,27 +248,23 @@ vis.rotated.coloredmeshes <- function(renderables, rotation_angle, x, y, z, styl
 #' @importFrom fields image.plot
 #' @keywords internal
 draw.colorbar <- function(coloredmeshes, horizontal=TRUE, num_steps=100) {
-    if(length(coloredmeshes) < 1) {
-        return();
+    if(! is.list(coloredmeshes)) {
+        stop("Parameter 'coloredmeshes' must be a list.");
     }
 
-    comb_res = combine.coloredmeshes.data(coloredmeshes);
-
-    if(comb_res$found_morph_data_in_any && length(comb_res$full_data) > 0) {
-        full_data = comb_res$full_data;
-
-        colormap = check.for.coloredmeshes.colormap(coloredmeshes);
-        if(! is.null(colormap)) {
-            col = squash::cmap(full_data, map = squash::makecmap(full_data, n = num_steps, colFn = colormap));
-
-            rgl::bgplot3d(fields::image.plot(legend.only = TRUE, zlim = range(full_data, finite=TRUE), col = col, horizontal = horizontal));
-
-        } else {
-            message("Requested to draw background colorbar, but meshes contain no colormap function. Skipping.");
-        }
-    } else {
-        message("Requested to draw background colorbar, but meshes contain no data. Skipping.");
+    combined_data_range = coloredmeshes[[1]]$metadata$data_range_combined;
+    if(is.null(combined_data_range)) {
+        warning("Requested to draw background colorbar, but meshes contain no combined data range information. Trying to compute it.");
+        combined_data_range = coloredmeshes.combined.data.range(coloredmeshes);
     }
+
+    combined_colors = coloredmeshes[[1]]$metadata$col_combined;
+    if(is.null(combined_colors)) {
+        message("Requested to draw background colorbar, but meshes contain no combined color information. Trying to compute it.");
+        combined_colors = coloredmeshes.combined.colors(coloredmeshes);
+    }
+
+    rgl::bgplot3d(fields::image.plot(legend.only = TRUE, zlim = combined_data_range, col = combined_colors, horizontal = horizontal));
 }
 
 #' @title Draw colorbar for coloredmeshes in separate 2D plot.
@@ -277,9 +273,7 @@ draw.colorbar <- function(coloredmeshes, horizontal=TRUE, num_steps=100) {
 #'
 #' @param coloredmeshes list of coloredmeshes. A coloredmesh is a named list as returned by the `coloredmesh.from` functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh. The `vis*` functions (like \code{\link[fsbrain]{vis.subject.morph.native}}) all return a list of coloredmeshes.
 #'
-#' @param show logical, Whether to open the resulting plot. Defaults to TRUE.
-#'
-#' @param makecmap_extra_options named list of extra optins to pass to \code{\link[squash]{makecmap}}. This can be used to overwrite the colormap function, explicitely set the color for NA data values, or whatever. The first mandatory data argument is passed in from the coloredmesh data already and "colFn" is also set based on the coloredmeshes, so there is no need to pass these. Your list will be merged with the internal options, so you could overwrite named arguments if needed.
+#' @param show logical, Whether to open the resulting plot. Defaults to `TRUE`.
 #'
 #' @param image.plot_extra_options named list of extra optins to pass to \code{\link[fields]{image.plot}}. This can be used to add a legend to the colorbar, rotate the colorbar, or whatever. The options "legend_only", "zlim", and "col" are computed and set for you  by this function, so there is no need to pass these. Your list will be merged with the internal options, so you could overwrite named arguments if needed.
 #'
@@ -311,7 +305,7 @@ draw.colorbar <- function(coloredmeshes, horizontal=TRUE, num_steps=100) {
 #' @importFrom grDevices png pdf dev.off
 #' @importFrom utils modifyList
 #' @export
-coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=TRUE, makecmap_extra_options = list("n"=128), image.plot_extra_options = list("horizontal"=TRUE), png_options=NULL, silent=FALSE) {
+coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=TRUE, image.plot_extra_options = list("horizontal"=TRUE), png_options=NULL, silent=FALSE) {
 
     ret_list = list("full_data"=NULL, "colormap"=NULL);
 
@@ -320,49 +314,34 @@ coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=TRUE, makecma
         return(invisible(ret_list));
     }
 
-    comb_res = combine.coloredmeshes.data(coloredmeshes);
 
-    if(comb_res$found_morph_data_in_any && length(comb_res$full_data) > 0) {
-        full_data = comb_res$full_data;
-        ret_list$full_data = full_data;
+    col_sorted = sort(coloredmeshes.combined.colors(coloredmeshes));
+    data_range = coloredmeshes.combined.data.range(coloredmeshes);
 
-        colormap = check.for.coloredmeshes.colormap(coloredmeshes);
-        ret_list$colormap = colormap;
+    ret_list$col = col_sorted;
 
-        if(! is.null(colormap)) {
-            makecmap_options_internal = list(full_data, colFn = colormap);
-            makecmap_options = modifyList(makecmap_options_internal, makecmap_extra_options);
-            col = squash::cmap(full_data, map = do.call(squash::makecmap, makecmap_options));
-            ret_list$col = col;
-
-            zlim = base::range( c(seq(min(full_data), max(full_data)), finite=TRUE));
-            ret_list$zlim = zlim;
-            image.plot_options_internal = list(legend.only=TRUE, zlim=zlim, col = col, add=TRUE, graphics.reset=TRUE);
-            image.plot_options = modifyList(image.plot_options_internal, image.plot_extra_options);
-            if(show) {
-                plot.new();
-                do.call(fields::image.plot, image.plot_options);
-            }
-
-            if(! is.null(png_options)) {
-                do.call(png, png_options);
-                plot.new();
-                do.call(fields::image.plot, image.plot_options);
-                dev.off();
-                if(! is.null(png_options$filename)) {
-                    if(! silent) {
-                        message(sprintf("Colorbar image written to file '%s'.\n", png_options$filename));
-                    }
-                }
-            }
-
-
-        } else {
-            message("Requested to draw separate colorbar, but meshes contain no colormap function. Skipping.");
-        }
-    } else {
-        message("Requested to draw separate colorbar, but meshes contain no data. Skipping.");
+    zlim = data_range
+    ret_list$zlim = zlim;
+    image.plot_options_internal = list(legend.only=TRUE, zlim=zlim, col = col_sorted, add=TRUE, graphics.reset=TRUE);
+    image.plot_options = modifyList(image.plot_options_internal, image.plot_extra_options);
+    if(show) {
+        plot.new();
+        do.call(fields::image.plot, image.plot_options);
     }
+
+    if(! is.null(png_options)) {
+        do.call(png, png_options);
+        plot.new();
+        do.call(fields::image.plot, image.plot_options);
+        dev.off();
+        if(! is.null(png_options$filename)) {
+            if(! silent) {
+                message(sprintf("Colorbar image written to file '%s'.\n", png_options$filename));
+            }
+        }
+    }
+
+
     return(invisible(ret_list));
 }
 
@@ -478,7 +457,7 @@ get.rglstyle.shiny <- function() {
 
 #' @title Sort coloredmeshes into 2 lists by their 'hemi' property.
 #'
-#' @param coloredmeshes list of coloredmeshes
+#' @param coloredmeshes list of coloredmeshes or other renderables
 #'
 #' @return named list with two entries: "lh": list of coloredmeshes that have property hemi set to 'lh'. "rh": list of coloredmeshes that have property hemi set to 'rh'. The rest is ignored.
 #'
@@ -490,13 +469,18 @@ sort.coloredmeshes.by.hemi <- function(coloredmeshes) {
         cmesh = coloredmeshes[[mesh_idx]];
         mesh_name = sprintf("mesh%d", mesh_idx);
         if(! ('hemi' %in% names(cmesh))) {
-            warning(sprintf("Assigning coloredmesh # %d which has no hemi value at all to both hemispheres.\n", mesh_idx));
+            if(is.fs.coloredmesh(cmesh)) {
+                warning(sprintf("Assigning coloredmesh # %d which has no hemi value at all to both hemispheres.\n", mesh_idx));
+            }
             lh_meshes[[mesh_name]] = cmesh;
             rh_meshes[[mesh_name]] = cmesh;
         } else {
             if(cmesh$hemi == 'lh') {
                 lh_meshes[[mesh_name]] = cmesh;
             } else if(cmesh$hemi == 'rh') {
+                rh_meshes[[mesh_name]] = cmesh;
+            } else if(cmesh$hemi == 'both') {
+                lh_meshes[[mesh_name]] = cmesh;
                 rh_meshes[[mesh_name]] = cmesh;
             } else {
                 warning(sprintf("Ignoring mesh # %d with invalid hemi value '%s'.\n", mesh_idx, cmesh$hemi));

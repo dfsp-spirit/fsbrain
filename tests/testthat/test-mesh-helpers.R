@@ -23,10 +23,11 @@ test_that("Label border can be computed", {
 
 
 test_that("Label border can be computed, thickened and visualized", {
-    skip("This test has to be run manually and interactively.");
+    skip_if_not(box.can.run.all.tests(), "This test requires X11 and all test data.");
 
     fsbrain::download_optional_data();
-    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+
+    subjects_dir = testdatapath.subjectsdir.full.subject1();
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
 
     subject_id = 'subject1';
@@ -51,14 +52,16 @@ test_that("Label border can be computed, thickened and visualized", {
     label_vertices_by_region = list("region1"=l1$vertices, "region2"=l2_border$vertices, "region3"=l3_border_thick$vertices);
     annot = label.to.annot(label_vertices_by_region, nrow(mesh$vertices));
     vis.subject.annot(subjects_dir, subject_id, annot, hemi, surface = "inflated");
+
+    expect_equal(1L, 1L);   # empty tests will be skipped
 })
 
 
 test_that("The borders of all annotation regions can be computed", {
-    skip("This test has to be run manually and interactively. It takes some time.");
+    skip_if_not(box.can.run.all.tests(), "This test requires X11 and takes a while.");
 
     fsbrain::download_optional_data();
-    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+    subjects_dir = testdatapath.subjectsdir.full.subject1();
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
 
     subject_id = 'subject1';
@@ -81,8 +84,9 @@ test_that("The borders of all annotation regions can be computed", {
         vertex_colors[vertex_colors=="white"] = vertex_colors_thickness[wi];
     }
 
-    cm = coloredmesh.custom(mesh, vertex_colors, hemi);
-    vislayout.from.coloredmeshes(list("lh"=cm), view_angles = c('sd_lateral_lh'));
+    vis.color.on.subject(subjects_dir, subject_id, vertex_colors_thickness, NULL);
+
+    expect_equal(1L, 1L);   # empty tests will be skipped
 })
 
 

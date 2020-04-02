@@ -13,7 +13,7 @@ brainview.si(coloredmeshes, background = "white", skip_all_na = TRUE,
 
 \item{background}{string, background color passed to \code{\link[rgl]{bg3d}}.}
 
-\item{skip_all_na}{logical, whether to skip (i.e., not render) meshes in the list that have the property 'morph_data_was_all_na' set to TRUE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.}
+\item{skip_all_na}{logical, whether to skip (i.e., not render) meshes in the list that have the property 'render' set to FALSE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.}
 
 \item{style, }{a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.}
 

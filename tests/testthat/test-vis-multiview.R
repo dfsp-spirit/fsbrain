@@ -2,7 +2,7 @@
 # You can run them by copying & pasting the code into an R session. Treat them as examples.
 
 test_that("We can visualize morphometry data in multiview.", {
-    skip("This test has to be run manually and interactively. It requires an X11 display.");
+    skip_if_not(box.can.run.all.tests(), "This test requires the full test data and X11.");
 
     fsbrain::download_optional_data();
 
@@ -49,11 +49,13 @@ test_that("We can visualize morphometry data in multiview.", {
         }
     }
 
+    expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
+
 })
 
 
 test_that("We can visualize p values or other arbitrary data, one value per atlas region.", {
-    skip("This test has to be run manually and interactively.");
+    skip_if_not(box.can.run.all.tests(), "This test requires the full test data and X11.");
     fsbrain::download_optional_data();
 
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -71,7 +73,7 @@ test_that("We can visualize p values or other arbitrary data, one value per atla
 
 
     if(dir.exists(file.path(subjects_dir, subject))) {
-        rgloptions=list("windowRect"=c(80,80,1200,1200), mar=c(0,0,0,0));
+        rgloptions=list("windowRect"=c(80,80,1200,1200));
         rglactions = list("snapshot_png"="~/fsbrain_pvalues_fsavg.png");
         vis.region.values.on.subject(subjects_dir, subject, atlas, lh_region_value_list, rh_region_value_list, rgloptions=rgloptions, rglactions=rglactions);
     } else {
@@ -81,11 +83,11 @@ test_that("We can visualize p values or other arbitrary data, one value per atla
 
 
 test_that("We can visualize data on fsaverage if available", {
-    skip("This test has to be run manually and interactively.");
-    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+    skip_if_not(box.can.run.all.tests(), "This test requires the full test data and X11.");
+    subjects_dir = testdatapath.subjectsdir.full.subject1();
 
     #fsaverage_dir = file.path(Sys.getenv('FREESURFER_HOME'), 'subjects');
-    fsaverage_dir = subjects_dir;
+    fsaverage_dir = find.subjectsdir.of("fsaverage")$found_at;
 
     rgloptions=list("windowRect"=c(50,50,1200,1200));     # the first 2 entries give the position on screen, the rest defines resolution as width, height in px
     rglactions = list("snapshot_png"="~/fsbrain_t4_fsavg.png");
@@ -100,7 +102,7 @@ test_that("We can visualize data on fsaverage if available", {
 
 
 test_that("We can record a gif movie of a rotating brain.", {
-    skip("This test has to be run manually and interactively.");
+    skip_if_not(run.extralong.tests(), "This test takes ages.");
 
     fsbrain::download_optional_data();
 
@@ -138,7 +140,7 @@ test_that("We can record a gif movie of a rotating brain.", {
 
 
 test_that("A label can be visualized.", {
-    skip("This test has to be run manually and interactively.");
+    skip_if_not(box.has.x11display(), "This test requires X11.");
 
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -148,10 +150,13 @@ test_that("A label can be visualized.", {
     label = 'cortex.label';
 
     vis.subject.label(subjects_dir, subject_id, label, hemi);
+
+    expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
 })
 
 test_that("A region from an atlas can be converted to a label and visualized.", {
-    skip("This test has to be run manually and interactively.");
+    skip_if_not(box.can.run.all.tests(), "This test requires the full test data and X11.");
+    subjects_dir = testdatapath.subjectsdir.full.subject1();
 
     fsbrain::download_optional_data();
 
@@ -180,17 +185,20 @@ test_that("A region from an atlas can be converted to a label and visualized.", 
     rh_mask2 = mask.from.labeldata.for.hemi(rh_label2, length(rh_annot$vertices), existing_mask = rh_mask);
     # Visualize the mask:
     vis.mask.on.subject(subjects_dir, subject_id, lh_mask2, rh_mask2);
+
+    expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
 })
 
 
 test_that("We can visualize label data or arbitrary sets of vertices.", {
-    skip("This test has to be run manually and interactively.");
+    skip_if_not(box.can.run.all.tests(), "This test requires the full test data and X11.");
+    subjects_dir = testdatapath.subjectsdir.full.subject1();
+
     fsbrain::download_optional_data();
     subject_id = 'subject1';
-    surface = 'white';  # If possible, use the 'inflated' surface instead: it is much easier to find the vertices on it. We do not
+    surface = 'inflated';  # If possible, use the 'inflated' surface instead: it is much easier to find the vertices on it. We do not
     #  use it here because the inflated surface is not shipped with the example data for this package to reduce download size.
 
-    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 
     # For the left hemi, we just specify 3 vertices. They are very small in the high-resolution mesh and may be hard to spot.
     lh_labeldata = c(1000, 1001, 1002);
@@ -203,15 +211,17 @@ test_that("We can visualize label data or arbitrary sets of vertices.", {
 
     # Hint: Check the area around the visual cortex when searching for the vertices in interactive mode.
     vis.labeldata.on.subject(subjects_dir, subject_id, lh_labeldata, rh_labeldata_neighborhood$vertices, views=c('si'), surface=surface);
+
+    expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
 })
 
 
 test_that("We can combine an output view with a separate colormap.", {
-    skip("This test has to be run manually and interactively.");
+    skip_if_not(run.extralong.tests(), "This test requires the full test data and X11, and takes ages.");
+    subjects_dir = testdatapath.subjectsdir.full.subject1();
 
     fsbrain::download_optional_data();
 
-    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     subject_id = 'subject1';
     measure = 'jacobian_white';
     measure_legend_text = "Jacobian white";
@@ -241,6 +251,8 @@ test_that("We can combine an output view with a separate colormap.", {
     coloredmesh.plot.colorbar.separate(coloredmeshes, image.plot_extra_options = list("legend.lab"=measure_legend_text, horizontal=TRUE, legend.cex=1.5, legend.line=-3));
 
     combine.colorbar.with.brainview.animation(output_main_movie, output_cbar_image, "~/anim_with_cbar.gif");
+
+    expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
 
 
     ## The following are some ideas on how to combine the colorbar and another image using imagemagick.
@@ -293,7 +305,7 @@ test_that("We can combine an output view with a separate colormap.", {
 
 
 test_that("We can construct a tight layout image by merging several sd views.", {
-    skip("This test has to be run manually and interactively.");
+    skip_if_not(box.can.run.all.tests(), "This test requires X11 and imagemagick.");
 
     fsbrain::download_optional_data();
 
