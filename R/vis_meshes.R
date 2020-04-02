@@ -457,7 +457,7 @@ get.rglstyle.shiny <- function() {
 
 #' @title Sort coloredmeshes into 2 lists by their 'hemi' property.
 #'
-#' @param coloredmeshes list of coloredmeshes
+#' @param coloredmeshes list of coloredmeshes or other renderables
 #'
 #' @return named list with two entries: "lh": list of coloredmeshes that have property hemi set to 'lh'. "rh": list of coloredmeshes that have property hemi set to 'rh'. The rest is ignored.
 #'
@@ -469,13 +469,18 @@ sort.coloredmeshes.by.hemi <- function(coloredmeshes) {
         cmesh = coloredmeshes[[mesh_idx]];
         mesh_name = sprintf("mesh%d", mesh_idx);
         if(! ('hemi' %in% names(cmesh))) {
-            warning(sprintf("Assigning coloredmesh # %d which has no hemi value at all to both hemispheres.\n", mesh_idx));
+            if(is.fs.coloredmesh(cmesh)) {
+                warning(sprintf("Assigning coloredmesh # %d which has no hemi value at all to both hemispheres.\n", mesh_idx));
+            }
             lh_meshes[[mesh_name]] = cmesh;
             rh_meshes[[mesh_name]] = cmesh;
         } else {
             if(cmesh$hemi == 'lh') {
                 lh_meshes[[mesh_name]] = cmesh;
             } else if(cmesh$hemi == 'rh') {
+                rh_meshes[[mesh_name]] = cmesh;
+            } else if(cmesh$hemi == 'both') {
+                lh_meshes[[mesh_name]] = cmesh;
                 rh_meshes[[mesh_name]] = cmesh;
             } else {
                 warning(sprintf("Ignoring mesh # %d with invalid hemi value '%s'.\n", mesh_idx, cmesh$hemi));
