@@ -1,6 +1,6 @@
 test_that("A brain volume can be turned into an animation", {
 
-    skip("This test has to be run manually and interactively. It also requires the 'magick' package (ImageMagick for R).");
+    skip("This test has to be run manually and interactively. It also requires the 'magick' package (ImageMagick for R) and writes stuff to disk.");
 
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -114,7 +114,7 @@ test_that("Axes are derived from a plane definition as expected", {
 
 test_that("A brain volume and an overlay can be merged", {
 
-    skip("This test has to be run manually and interactively. It also requires the 'magick' package (ImageMagick for R).");
+    skip_if_not(box.can.run.all.tests(), "This test requires X11 and the 'magick' package (ImageMagick for R).");
 
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -137,6 +137,8 @@ test_that("A brain volume and an overlay can be merged", {
     # Now test that the merged image can be visualized as a lightbox:
     lb = vol.lightbox(merged);       # This is large, so it is better to write it to disk and open in an external viewer.
     magick::image_write(lb, path="brain_lightbox.png");
+
+    expect_equal(1L, 1L);   # empty tests will be skipped
 })
 
 

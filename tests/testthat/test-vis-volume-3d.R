@@ -2,7 +2,7 @@
 
 test_that("A brain volume or parts of it can be rendered in voxel mode", {
 
-    skip("This test has to be run manually and interactively. It requires an aseg.mgz file for the demo subject.");
+    skip_if_not(box.can.run.all.tests(), "This test requires X11 and all test data.");
 
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -25,19 +25,21 @@ test_that("A brain volume or parts of it can be rendered in voxel mode", {
     # Use voxel colors when rendering: based on a colormap.
     coloredvoxels = volvis.voxels(ventricle_mask, voxelcol = vol.overlay.colors.from.activation(ventricle_mask), render_every = 1);
 
-    render_animation = TRUE;
+    render_animation = FALSE;
     if(render_animation) {
         rgloptions=list("windowRect"=c(80,80,1200,1200));     # the first 2 entries give the position on screen, the rest defines resolution as width, height in px
         rglactions = list("movie"="vox_ventricles_rot");
         vislayout.from.coloredmeshes(coloredvoxels, view_angles="sr", rgloptions = rgloptions, rglactions = rglactions);
     }
 
+    expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
+
 })
 
 
 test_that("A brain volume segmentation can be rendered with correct colors from the aseg", {
 
-    skip("This test has to be run manually and interactively. It requires an aseg.mgz file for the demo subject and the FreeSurferColorLUT.");
+    skip_if_not(box.can.run.all.tests(), "This test requires X11, an aseg.mgz file for the demo subject and the FreeSurferColorLUT.");
 
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -49,7 +51,8 @@ test_that("A brain volume segmentation can be rendered with correct colors from 
 
     aseg_codes = unique(as.vector(aseg));
 
-    ct = freesurferformats::read.fs.colortable("~/software/freesurfer/FreeSurferColorLUT.txt");   # adapt path to your machine
+    fs_home = find.freesurferhome()$found_at;
+    ct = freesurferformats::read.fs.colortable(file.path(fs_home, 'FreeSurferColorLUT.txt'));
 
     open3d();
     all_regions_coloredvoxels = list();
@@ -64,12 +67,14 @@ test_that("A brain volume segmentation can be rendered with correct colors from 
     }
     # Check it out, it looks pretty cool.
 
-    render_animation = TRUE;
+    render_animation = FALSE;
     if(render_animation) {
         rgloptions=list("windowRect"=c(80,80,1200,1200));     # the first 2 entries give the position on screen, the rest defines resolution as width, height in px
         rglactions = list("movie"="vox_aseg_rot");
         vislayout.from.coloredmeshes(all_regions_coloredvoxels, view_angles="sr", rgloptions = rgloptions, rglactions = rglactions);
     }
+
+    expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
 })
 
 
@@ -112,24 +117,27 @@ test_that("Brain structures can be rendered as contours using misc3d", {
 
 test_that("The pial surface drawn as a transparent wrapping over the white surface", {
 
-    skip("This test has to be run manually and interactively. It requires an X11 display.");
+    skip_if_not(box.can.run.all.tests(), "This test requires X11 and extra data.");
+
     fsbrain::download_optional_data();
-    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+    subjects_dir = testdatapath.subjectsdir.full.subject1();
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
 
     subject_id = "subject1";
 
-    cm_white = vis.subject.morph.native(subjects_dir, 'subject1', NULL, hemi = 'both', surface = 'white', views = NULL);
-    cm_pial = vis.subject.morph.native(subjects_dir, 'subject1', NULL, hemi = 'both', surface = 'pial', views = NULL);
+    cm_white = vis.subject.morph.native(subjects_dir, 'subject1', 'thickness', hemi = 'both', surface = 'white', views = NULL);
+    cm_pial = vis.subject.morph.native(subjects_dir, 'subject1', 'thickness', hemi = 'both', surface = 'pial', views = NULL);
     cm_pial[[1]]$style = 'semitransparent';
     cm_pial[[2]]$style = 'semitransparent';
     vis.coloredmeshes(c(cm_white, cm_pial), skip_all_na = FALSE, style = 'from_mesh');
+
+    expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
 })
 
 
 test_that("Voxels can be rotated and rendered in a brainview", {
 
-    skip("This test has to be run manually and interactively. It requires an X11 display.");
+    skip_if_not(box.can.run.all.tests(), "This test requires X11.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
@@ -140,12 +148,14 @@ test_that("Voxels can be rotated and rendered in a brainview", {
     vol[vol < 90] = NA;
     volvox = volvis.voxels(vol);
     brainviews("t9", volvox);
+
+    expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
 })
 
 
 test_that("A misc3d contour (Triangles3D instance) can be rotated and rendered in a brainview", {
 
-    skip("This test has to be run manually and interactively. It requires an X11 display.");
+    skip_if_not(box.can.run.all.tests(), "This test requires X11.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
@@ -155,4 +165,6 @@ test_that("A misc3d contour (Triangles3D instance) can be rotated and rendered i
     vol = subject.volume(subjects_dir, subject_id, "brain");
     surface_tris = fsbrain::volvis.contour(vol);
     brainviews("t9", surface_tris);
+
+    expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
 })
