@@ -1,9 +1,9 @@
 # Tests for surface color layers.
 
 test_that("A mean curvature color layer can be loaded", {
-    skip("This test has to be run manually and interactively. It requires an X11 display and mean curvature morph data.");
-    fsbrain::download_optional_data();
-    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+    skip_if_not(box.can.run.all.tests(), "This test requires the full test data and X11.");
+    subjects_dir = testdatapath.subjectsdir.full.subject1();
+
     subject_id = "subject1";
 
     bgcol = collayer.bg.meancurv(subjects_dir, subject_id);
@@ -49,6 +49,7 @@ test_that("Alphablending works", {
 
 test_that("An annotation-based or atlas color layer can be created", {
 
+
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 
@@ -66,25 +67,23 @@ test_that("An annotation-based or atlas color layer can be created", {
     expect_equal(length(unique(annot_layer$lh)), 35L); # number of aparc atlas regions for subject
     expect_equal(length(unique(annot_layer$rh)), 35L);
 
-    # vis.color.on.subject(subjects_dir, 'subject1', annot_layer$lh, annot_layer$rh);
-    # vis.color.on.subject(subjects_dir, 'subject1', desaturate(annot_layer$lh), desaturate(annot_layer$rh));
+    #vis.color.on.subject(subjects_dir, 'subject1', annot_layer$lh, annot_layer$rh);
+    #vis.color.on.subject(subjects_dir, 'subject1', desaturate(annot_layer$lh), desaturate(annot_layer$rh));
 })
 
 
 
 test_that("An outline layer based on an annotation can be created", {
 
-    skip("This test has to be run manually and interactively. It requires an X11 display and inflated surface data.");
+    skip_if_not(box.can.run.all.tests(), "This test requires the full test data and X11.");
+    subjects_dir = testdatapath.subjectsdir.full.subject1();
 
     fsbrain::download_optional_data();
-    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 
     num_verts_subject1_lh = 149244L;
     num_verts_subject1_rh = 153333L;
 
-    skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
-
-    outline_layer = background.atlas(subjects_dir, 'tim', outline = TRUE, grayscale = FALSE);
+    outline_layer = collayer.bg.atlas(subjects_dir, 'subject1', outline = TRUE, grayscale = FALSE);
 
     expect_true(is.list(outline_layer));
     expect_equal(names(outline_layer), c("lh", "rh"));
