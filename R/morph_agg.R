@@ -6,6 +6,8 @@
 #'
 #' @inheritParams group.multimorph.agg.standard
 #'
+#' @param hemi, string, one of 'lh', 'rh' or 'both'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.
+#'
 #' @param measure, string. Name of the vertex-wise measure of morphometry data file. E.g., "area" or "thickness". Used to construct the name of the morphometry file to be loaded.
 #'
 #' @return dataframe with aggregated values for all subjects, with 3 columns and n rows, where n is the number of subjects. The 3 columns are 'subject_id', 'hemi', and '<measure>' (e.g., "thickness"), the latter contains the aggregated data.
@@ -25,7 +27,7 @@
 #' @importFrom utils modifyList
 group.morph.agg.native <- function(subjects_dir, subjects_list, measure, hemi, agg_fun = mean, cast=TRUE, format='curv', cortex_only=FALSE, agg_fun_extra_params=NULL) {
   if(!(hemi %in% c("lh", "rh", "both"))) {
-    stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both but is '%s'.\n", hemi));
+    stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
   }
 
   agg_all_subjects = data.frame();
@@ -77,6 +79,8 @@ group.morph.agg.native <- function(subjects_dir, subjects_list, measure, hemi, a
 #'
 #' @inheritParams group.multimorph.agg.standard
 #'
+#' @param hemi, string, one of 'lh', 'rh' or 'both'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.
+#'
 #' @param measure, string. Name of the vertex-wise measure of morphometry data file. E.g., "area" or "thickness". Used to construct the name of the morphometry file to be loaded.
 #'
 #' @return dataframe with aggregated values for all subjects, with 2 columns and n rows, where n is the number of subjects. The 2 columns are 'subject_id' and '<hemi>.<measure>' (e.g., "lh.thickness"), the latter contains the aggregated data.
@@ -86,7 +90,7 @@ group.morph.agg.native <- function(subjects_dir, subjects_list, measure, hemi, a
 #' @export
 group.morph.agg.standard <- function(subjects_dir, subjects_list, measure, hemi, fwhm, agg_fun = mean, template_subject='fsaverage', format='mgh', cast=TRUE, cortex_only=FALSE, agg_fun_extra_params=NULL) {
   if(!(hemi %in% c("lh", "rh", "both"))) {
-    stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both but is '%s'.\n", hemi));
+    stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
   }
   agg_all_subjects = data.frame();
   for (subject_id in subjects_list) {
