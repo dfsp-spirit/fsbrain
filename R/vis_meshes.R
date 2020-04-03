@@ -15,7 +15,7 @@
 #'
 #' @param rglactions named list. A list in which the names are from a set of pre-defined actions. Defaults to the empty list.
 #'
-#' @param draw_colorbar logical. Whether to draw a colorbar. WARNING: Will only show up if there is enough space in the plot area and does not resize properly. Defaults to FALSE. See [fsbrain::coloredmesh.plot.colorbar.separate()] for an alternative.
+#' @param draw_colorbar logical. Whether to draw a colorbar. WARNING: Will only show up if there is enough space in the plot area and does not resize properly. Defaults to FALSE. See \code{\link[fsbrain]{coloredmesh.plot.colorbar.separate}} for an alternative.
 #'
 #' @return the list of visualized coloredmeshes
 #'
@@ -235,11 +235,11 @@ vis.rotated.coloredmeshes <- function(renderables, rotation_angle, x, y, z, styl
 
 #' @title Draw coloredbar into background of current plot.
 #'
-#' @description Requires a rgl 3d visualisation to be open that already contains a rendered object. Uses \code{\link[rgl]{bgplot3d}} to add a colorbar in the background of the plot. Experimental.
+#' @description Requires a rgl 3d visualisation to be open that already contains a rendered object. Uses \code{\link[rgl]{bgplot3d}} to add a colorbar in the background of the plot using \code{\link[fields]{image.plot}}. Experimental.
 #'
 #' @param coloredmesh fs.coloredmesh as returned by the coloredmesh.from.* functions.
 #'
-#' @param horizontal logical, whether the colorbar should be drawn in horizontal orientation. Defaults to TRUE.
+#' @param horizontal logical, whether the colorbar should be drawn in horizontal orientation. Defaults to `TRUE`.
 #'
 #' @importFrom rgl bgplot3d
 #' @importFrom squash cmap makecmap
@@ -256,7 +256,7 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE) {
     if(is.null(combined_data_range) | is.null(combined_colors)) {
         warning("Requested to draw colorbar, but meshes do not contain the required metadata. Skipping.");
     } else {
-        rgl::bgplot3d(fields::image.plot(legend.only = TRUE, zlim = combined_data_range, col = sort(combined_colors), horizontal = horizontal));
+        rgl::bgplot3d(fields::image.plot(add=TRUE, legend.only = TRUE, zlim = combined_data_range, col = sort(combined_colors), horizontal = horizontal));
     }
 }
 

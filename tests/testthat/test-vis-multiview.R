@@ -18,7 +18,7 @@ test_that("We can visualize morphometry data in multiview.", {
     coloredmeshes = vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('si', 't4', 't9'), rgloptions=rgloptions, rglactions=rglactions);
     coloredmeshes = vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('si'));
 
-    vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('t4'), rgloptions = rgloptions, rglactions = list("snapshot_png"="~/brain_t4.png"));
+    vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('t4'), draw_colorbar =TRUE, rgloptions = rgloptions, rglactions = list("snapshot_png"="~/brain_t4.png"));
     vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('t9'), rgloptions = rgloptions, rglactions = list("snapshot_png"="~/brain_t9.png"));
 
     vis.subject.annot(subjects_dir, subject_id, 'aparc', 'both', views=c('t4'), rgloptions = rgloptions, rglactions = list("snapshot_png"="~/annot_t4.png"));
