@@ -4,12 +4,10 @@
 \alias{draw.colorbar}
 \title{Draw coloredbar into background of current plot.}
 \usage{
-draw.colorbar(coloredmeshes, horizontal = TRUE, num_steps = 100)
+draw.colorbar(coloredmeshes, horizontal = FALSE)
 }
 \arguments{
 \item{horizontal}{logical, whether the colorbar should be drawn in horizontal orientation. Defaults to TRUE.}
-
-\item{num_steps}{integer, number of steps to use for the colorbar. Defaults to 100.}
 
 \item{coloredmesh}{fs.coloredmesh as returned by the coloredmesh.from.* functions.}
 }

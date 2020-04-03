@@ -7,7 +7,7 @@
 \method{sort}{coloredmeshes.by.hemi}(coloredmeshes)
 }
 \arguments{
-\item{coloredmeshes}{list of coloredmeshes}
+\item{coloredmeshes}{list of coloredmeshes or other renderables}
 }
 \value{
 named list with two entries: "lh": list of coloredmeshes that have property hemi set to 'lh'. "rh": list of coloredmeshes that have property hemi set to 'rh'. The rest is ignored.

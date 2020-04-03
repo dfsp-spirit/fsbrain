@@ -80,7 +80,8 @@ test_that("A brain volume segmentation can be rendered with correct colors from 
 
 test_that("Brain structures can be rendered as contours using misc3d", {
 
-    skip("This test has to be run manually and interactively. It requires the misc3d package.");
+    skip_if_not(box.can.run.all.tests(), "This test requires X11, the misc3d package, and an aseg.mgz file for the demo subject.");
+
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
@@ -113,6 +114,8 @@ test_that("Brain structures can be rendered as contours using misc3d", {
         brain_tris = apply.transform(brain_tris, vox2ras_tkr());
         misc3d::drawScene.rgl(brain_tris, add = TRUE);
     }
+
+    expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
 
 })
 
