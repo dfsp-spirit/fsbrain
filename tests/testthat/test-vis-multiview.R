@@ -1,6 +1,9 @@
 # These tests are to be run manually and interactively, they are therefore skipped by default.
 # You can run them by copying & pasting the code into an R session. Treat them as examples.
 
+# A note on the plot size for all of the vis functions:
+# You may want to set a globale default for windowrect, e.g.: `library('rgl'); r3dDefaults$windowRect <- c(50,50, 800, 800);`
+
 test_that("We can visualize morphometry data in multiview.", {
     skip_if_not(box.can.run.all.tests(), "This test requires the full test data and X11.");
 

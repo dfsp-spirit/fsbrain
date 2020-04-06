@@ -291,7 +291,7 @@ vis.symmetric.data.on.subject <- function(subjects_dir, vis_subject_id, morph_da
     makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
 
     morph_data_lh = perform.na.mapping(morph_data_lh, map_to_NA);
-    morph_data_lh = perform.na.mapping(morph_data_lh, map_to_NA);
+    morph_data_rh = perform.na.mapping(morph_data_rh, map_to_NA);
 
     return(vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface=surface, views=views, rgloptions=rgloptions, rglactions=rglactions, draw_colorbar=draw_colorbar, makecmap_options=makecmap_options, bg=bg));
 }
