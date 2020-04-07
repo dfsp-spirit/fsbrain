@@ -32,7 +32,7 @@ devtools::install_github("dfsp-spirit/fsbrain", build_vignettes=TRUE);
 
 ### System dependencies
 
-A *system dependency* is a **non-R** software that is needed for the installation of a package. System dependencies cannot be installed automatically using the R package system, so you need to install them manually or using the package manager of your operating system. 
+A *system dependency* is a **non-R** software that is needed for the installation of a package. System dependencies cannot be installed automatically using the R package system, so you need to install them manually or using the package manager of your operating system.
 
 The *fsbrain* package itself does not have any system dependencies, however, it uses *rgl* for rendering. You can check the *SystemRequirements* section on the [rgl page at CRAN](https://CRAN.R-project.org/package=rgl) for the full list of rgl dependencies or read on.
 
@@ -78,7 +78,7 @@ library(fsbrain)
 devtools::check()
 ```
 
-Continuous integration results: 
+Continuous integration results:
 
 [![Build Status](https://travis-ci.org/dfsp-spirit/fsbrain.svg?branch=master)](https://travis-ci.org/dfsp-spirit/fsbrain) Travis CI under Linux
 
@@ -132,7 +132,7 @@ Note that this DOI always points to the latest version, so be sure to still incl
 
 ## Visualization examples
 
-The *fsbrain* package support visualizations of different data, and all data can be displayed in one or more views. The figure below shows some examples:
+The *fsbrain* package support visualizations of different data, and all data can be displayed in one or more views. The figure below shows some examples for surface-based data:
 
 ![Visoverview](./web/fsbrain_vis_overview.jpg?raw=true "Some visualization options from fsbrain")
 
@@ -140,11 +140,16 @@ The *fsbrain* package support visualizations of different data, and all data can
 * **Subfigure B** illustrates arbitrary data (p-values in this case) visualized on the regions of the Desikan atlas, using the surface of the fsaverage (standard space template) subject from FreeSurfer. The view shows the data in tiles from 4 different angles.
 * **Subfigure C** displays the regions of the Desikan atlas on the white surface of a subject. The colors were loaded from the respective annotation file. The view shows the data in tiles from 4 different angles.
 
-*What* is displayed (morphometry data, atlas regions, arbitray other data), on *which surface* it is displayed, and *how* it is displayed (a single interactive view, 4 tiles, 9 tiles) is independent and can be selected as needed in fsbrain.
+*What* is displayed (morphometry data, atlas regions, arbitrary other data), on *which surface* it is displayed, and *how* it is displayed (a single interactive view, 4 tiles, 9 tiles) is independent and can be selected as needed in fsbrain.
 
 Here is a second figure, showing the same data (the [mean curvature](https://en.wikipedia.org/wiki/Mean_curvature) at each vertex) displayed on 3 different surfaces of a subject: **A** white surface, **B** pial surface, **C** inflated surface.
-
 ![Vissurfaces](./web/fsbrain_curvature_surfaces.jpg?raw=true "Curvature visualization on different surfaces, rendered with fsbrain")
+
+
+The next figure illustrates some options to visualize your results with different backgrounds. **A** Clusters on the white fsaverage surface with sulc background. **B** Region-wise p-values with curv background, inflated fsaverage surface. **C** A background color layer displaying outlines of aparc atlas regions in the respective colors, inflated fsaverage surface.
+
+![Visres](./web/fsbrain_vis_bg.jpg?raw=true "Visualization of results and background layers, rendered with fsbrain")
+
 
 ### Animations and videos
 
