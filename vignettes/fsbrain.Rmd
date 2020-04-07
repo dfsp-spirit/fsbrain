@@ -359,7 +359,7 @@ vis.data.on.subject(subjects_dir, 'subject1', morph_data_lh, morph_data_rh, view
 ```
 
 
-![**Figure 2**: Cortical thickness data visualized on a brain mesh.](fsbrain_ct.jpg)
+![**Figure 2**: Cortical thickness data visualized on a brain mesh in interactive view.](fsbrain_ct.jpg)
 
 
 ### Visualizing labels
