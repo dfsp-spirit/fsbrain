@@ -76,7 +76,7 @@ test_that("We can visualize p values or other arbitrary data, one value per atla
 
 
     if(dir.exists(file.path(subjects_dir, subject))) {
-        rgloptions=list("windowRect"=c(80,80,1200,1200));
+        rgloptions=list("windowRect"=c(80,80,1000,1000));
         rglactions = list("snapshot_png"="~/fsbrain_pvalues_fsavg.png");
         vis.region.values.on.subject(subjects_dir, subject, atlas, lh_region_value_list, rh_region_value_list, rgloptions=rgloptions, rglactions=rglactions);
     } else {
