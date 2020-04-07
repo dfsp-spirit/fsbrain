@@ -15,13 +15,13 @@ write.region.values.fsaverage(hemi, atlas, region_value_list, output_file,
 
 \item{region_value_list, }{named list. A list in which the names are atlas regions, and the values are the value to write to all vertices of that region.}
 
-\item{output_file, }{string or NULL. Path of the output file, including file name and extension. The format is determined from the (absence of a) file extension. If NULL, no file will be written.}
+\item{output_file, }{string or `NULL`. Path of the output file, including file name and extension. The format is determined from the (absence of a) file extension. If NULL, no file will be written.}
 
 \item{template_subject}{string, template subject name. Defaults to 'fsaverage'.}
 
-\item{template_subjects_dir}{string, the path to the subjects directory containing the template subject directory. If this is NULL, the function will try to find it using the environment, see the function [find.subjectsdir.of()] for details. Defaults to NULL.}
+\item{template_subjects_dir}{string, the path to the subjects directory containing the template subject directory. If this is `NULL`, the function will try to find it using the environment, see the function \code{\link[fsbrain]{find.subjectsdir.of}} for details. Defaults to NULL.}
 
-\item{show_freeview_tip}{logical, whether to print the freeview command on howto use the overlay to the console. (Only happens if the output_file is not NULL.)}
+\item{show_freeview_tip}{logical, whether to print the freeview command on howto use the overlay to the console. (Only happens if the output_file is not `NULL`.)}
 
 \item{value_for_unlisted_regions, }{numeric scalar. The value to assign to vertices which are part of atlas regions that are not listed in region_value_list. Defaults to NaN.}
 }

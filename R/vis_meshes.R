@@ -15,7 +15,7 @@
 #'
 #' @param rglactions named list. A list in which the names are from a set of pre-defined actions. Defaults to the empty list.
 #'
-#' @param draw_colorbar logical. Whether to draw a colorbar. WARNING: Will only show up if there is enough space in the plot area and does not resize properly. Defaults to FALSE. See [fsbrain::coloredmesh.plot.colorbar.separate()] for an alternative.
+#' @param draw_colorbar logical. Whether to draw a colorbar. WARNING: Will only show up if there is enough space in the plot area and does not resize properly. Defaults to FALSE. See \code{\link[fsbrain]{coloredmesh.plot.colorbar.separate}} for an alternative.
 #'
 #' @return the list of visualized coloredmeshes
 #'
@@ -235,36 +235,29 @@ vis.rotated.coloredmeshes <- function(renderables, rotation_angle, x, y, z, styl
 
 #' @title Draw coloredbar into background of current plot.
 #'
-#' @description Requires a rgl 3d visualisation to be open that already contains a rendered object. Uses \code{\link[rgl]{bgplot3d}} to add a colorbar in the background of the plot. Experimental.
+#' @description Requires a rgl 3d visualisation to be open that already contains a rendered object. Uses \code{\link[rgl]{bgplot3d}} to add a colorbar in the background of the plot using \code{\link[fields]{image.plot}}. Experimental.
 #'
 #' @param coloredmesh fs.coloredmesh as returned by the coloredmesh.from.* functions.
 #'
-#' @param horizontal logical, whether the colorbar should be drawn in horizontal orientation. Defaults to TRUE.
-#'
-#' @param num_steps integer, number of steps to use for the colorbar. Defaults to 100.
+#' @param horizontal logical, whether the colorbar should be drawn in horizontal orientation. Defaults to `TRUE`.
 #'
 #' @importFrom rgl bgplot3d
 #' @importFrom squash cmap makecmap
 #' @importFrom fields image.plot
 #' @keywords internal
-draw.colorbar <- function(coloredmeshes, horizontal=TRUE, num_steps=100) {
+draw.colorbar <- function(coloredmeshes, horizontal=FALSE) {
     if(! is.list(coloredmeshes)) {
         stop("Parameter 'coloredmeshes' must be a list.");
     }
 
-    combined_data_range = coloredmeshes[[1]]$metadata$data_range_combined;
-    if(is.null(combined_data_range)) {
-        warning("Requested to draw background colorbar, but meshes contain no combined data range information. Trying to compute it.");
-        combined_data_range = coloredmeshes.combined.data.range(coloredmeshes);
-    }
+    combined_data_range = coloredmeshes.combined.data.range(coloredmeshes);
+    combined_colors = coloredmeshes.combined.colors(coloredmeshes);
 
-    combined_colors = coloredmeshes[[1]]$metadata$col_combined;
-    if(is.null(combined_colors)) {
-        message("Requested to draw background colorbar, but meshes contain no combined color information. Trying to compute it.");
-        combined_colors = coloredmeshes.combined.colors(coloredmeshes);
+    if(is.null(combined_data_range) | is.null(combined_colors)) {
+        warning("Requested to draw colorbar, but meshes do not contain the required metadata. Skipping.");
+    } else {
+        rgl::bgplot3d(fields::image.plot(add=TRUE, legend.only = TRUE, zlim = combined_data_range, col = sort(combined_colors), horizontal = horizontal));
     }
-
-    rgl::bgplot3d(fields::image.plot(legend.only = TRUE, zlim = combined_data_range, col = combined_colors, horizontal = horizontal));
 }
 
 #' @title Draw colorbar for coloredmeshes in separate 2D plot.
@@ -315,14 +308,21 @@ coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=TRUE, image.p
     }
 
 
-    col_sorted = sort(coloredmeshes.combined.colors(coloredmeshes));
+    col = coloredmeshes.combined.colors(coloredmeshes);
     data_range = coloredmeshes.combined.data.range(coloredmeshes);
 
-    ret_list$col = col_sorted;
+    if(is.null(col) | is.null(data_range)) {
+        warning("Requested to draw a colorbar based on meshes, but they do not contain the required metadata, skipping. Make sure the meshes contain colors and a data range.");
+        return(ret_list);
+    }
 
-    zlim = data_range
-    ret_list$zlim = zlim;
-    image.plot_options_internal = list(legend.only=TRUE, zlim=zlim, col = col_sorted, add=TRUE, graphics.reset=TRUE);
+    col_sorted = sort(col);
+
+    ret_list$col = col;
+    ret_list$col_sorted = col_sorted;
+
+    ret_list$data_range = data_range;
+    image.plot_options_internal = list(legend.only=TRUE, zlim=data_range, col = col_sorted, add=TRUE, graphics.reset=TRUE);
     image.plot_options = modifyList(image.plot_options_internal, image.plot_extra_options);
     if(show) {
         plot.new();

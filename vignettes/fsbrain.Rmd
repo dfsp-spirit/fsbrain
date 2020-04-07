@@ -359,7 +359,7 @@ vis.data.on.subject(subjects_dir, 'subject1', morph_data_lh, morph_data_rh, view
 ```
 
 
-![**Figure 2**: Cortical thickness data visualized on a brain mesh.](fsbrain_ct.jpg)
+![**Figure 2**: Cortical thickness data visualized on a brain mesh in interactive view.](fsbrain_ct.jpg)
 
 
 ### Visualizing labels
@@ -374,13 +374,13 @@ vis.subject.label(subjects_dir, subject_id, label, hemi);
 ```
 
 
-#### Visualizing your clusters or arbitrary vertices
+#### Visualizing arbitrary vertices
 
 Labels are just sets of vertices, and you can use the `vis.labeldata.on.subject` function to visualize arbitrary sets of vertices. This is very helpful when debugging code or analyzing your results. E.g., you may have performed some analyis and found some significant clusters. You can visualize the cluster (see example for lh below), or maybe you just want to see the position of the vertex with the highest effect size in the cluster.
 
 If you are visualizing single vertices, they become very different to find on the mesh. You can use the helper function `mesh.vertex.neighbors` to compute the direct neighbors of the vertex (or several vertices) as illustrated below for the right hemisphere. If you then visualize the whole neighborhood, it should be possible to spot it. 
 
-*Hint*: It becomes even easier to spot your vertices of interest if you use the infalted surface, as the vertex may be hidden in a sulcus when using the white or inflated surfaces.
+*Hint*: It becomes even easier to spot your vertices of interest if you use the inflated surface, as the vertex may be hidden in a sulcus when using the white or pial surfaces.
 
 
 ```{r, eval = FALSE}
@@ -460,6 +460,29 @@ See the help for the `vis.region.values.on.subject` function for more options, i
 ![**Figure 3**: Various fsbrain visualizations. *A* Native space morphometry data. *B* Results of a region-based analysis. *C* An atlas.](fsbrain_vis_views.jpg)
 
 
+### Full control: visualizing vertex colors and *color layers*
+
+You can visualize pre-defined vertex colors using the *vis.color.on.subject* function. All you need is one vector of colors (one color per vertex) for each hemisphere. You can create the vectors yourself, or use the intermediate level API of fsbrain to create such a *color layer* from various types of data. Here is an example that loads a colorlayer from mean curvature morphometry data, manipulates the color values (desaturates them, i.e., turns them into grayscale), and visualizes the result:
+
+
+```{r, eval = FALSE}
+# load mean curv data
+meancurv = subject.morph.native(subjects_dir, subject_id, "curv", "both", split_by_hemi = TRUE);
+
+# curvature data is noisy, clip it for better visualization (optional).
+meancurv = lapply(meancurv, clip.data);
+
+# desaturate colors for left hemisphere
+cl$lh = desaturate(cl$lh);
+
+# visualize it
+vis.color.on.subject(subjects_dir, subject_id, cl$lh, cl$rh);
+```
+
+
+Technically, a color layer is just a nemd list with entries 'lh' and/or 'rh', each of which is a vector of colors.
+
+
 ## General visualization options
 
 ### Different views
@@ -468,8 +491,8 @@ You can visualize the data in different views. So far, we have used only the *si
 
 * **si** or *single interactive* view: renders a single instance of the mesh and allows the user to interactively explore the scene (rotate/zoom with the mouse). This view is good for live inspection of data during analysis.
 * **sr** or *single rotating* view: renders a single instance of the mesh rotates the camera around the mesh. Can be combined with *rglactions* (see section 'Creating movies' below) to create animated GIF images. This view is good for live inspection of data, and the resulting movies can be used in presentations.
-* **t4** or *tiled, 4 angles* view: renders the meshes from four different angles. This kind of view is often used in publications.
-* **t8** or *tiled, 8 angles* view: renders the meshes from eight different angles. This kind of view is often used in publications.
+* **t4** or *tiled, 2x2, 4 angles* view: renders the meshes from four different angles. This kind of view is often used in publications.
+* **t9** or *tiled, 3x3, 8 angles* view: renders the meshes from eight different angles. This kind of view is often used in publications.
 
 To change the view, set the view parameter in any visualization function. You can specify more than one view if needed:
 
@@ -505,9 +528,43 @@ rgloptions = list("windowRect"=c(50, 50, 1000, 1000));
 vis.subject.morph.native(subjects_dir, 'subject', 'thickness', hemi='both', views=c('si'), rgloptions=rgloptions)
 ```
 
-See the documentation of rgl::par3d for all available options.
+See the documentation of **rgl::par3d** for all available options.
 
 Note that for some OpenGL implementations, it may lead to artifacts or other problems if the window is not fully visible while actions like taking a screenshot or creating a movie are performed. In such a case you may have to adapt the position of the window on the screen (the first 2 parameters of the *windowRect* setting) to make it fully visible if parts of it are off-screen. This also means you should **not** perform other actions on the machine while a movie is being recorded, as taking away the focus from the rgl window or opening other windows on top of it may lead to artifacts.
+
+
+### Using backgrounds when visualizing data
+
+
+By default, when you plot vertex-wise data that contains `NA` values, the respective parts of the surface are rendered in white (cf. Figure 3B), or whatever color your colormap function assigns to `NA` values. One can set a different background using the *bg* option of the vis functions. Typical backgrounds are binarized gray-scale visualizations of mean curvature or sulcal depth, as they show the pattern of gyri and sulci and thus make it easier to see where the clusters are, especially with the inflated surface. Here is an example that plots clusters against a background of mean curvature:
+
+```{r, eval = FALSE}
+subjects_dir = find.subjectsdir.of("fsaverage")$found_at;
+subject_id = 'fsaverage';
+
+lh_demo_cluster_file = system.file("extdata", "lh.clusters_fsaverage.mgz", package = "fsbrain", mustWork = TRUE);
+rh_demo_cluster_file = system.file("extdata", "rh.clusters_fsaverage.mgz", package = "fsbrain", mustWork = TRUE);
+lh_clust = freesurferformats::read.fs.morph(lh_demo_cluster_file);   # contains a single positive cluster
+rh_clust = freesurferformats::read.fs.morph(rh_demo_cluster_file);   # contains two negative clusters
+vis.symmetric.data.on.subject(subjects_dir, subject_id, lh_clust, rh_clust, bg="sulc");
+```
+
+This example requires the *fsaverage* subject. Note that the *vis.symmetric.data.on.subject* function by default maps zero values to `NA` (and uses a diverging colormap with symmetric borders and a transparent color for NA data values), so you do not have to do anything more in this case. The output is displayed in Figure 5A.
+
+![**Figure 5**: Different backgrounds and color layers. *A* Clusters on white fsaverage surface with sulc background. *B* Region-wise p-values with curv background, inflated surface. *C* Color layer displaying outlines of aparc atlas regions in the respective colors.](fsbrain_vis_bg.jpg)
+
+The following backgrounds are available:
+
+
+* 'curv': binarized mean curvature, gray-scale. Based on the *lh.curv* and/or *rh.curv* files for the subject.
+* 'sulc': binarized sulcal depths, gray-scale. Based on the *lh.sulc* and/or *rh.sulc* files for the subject.
+* 'aparc': desatured aparc atlas. Based on the *lh.aparc.annot* and/or *rh.aparc.annot* files for the subject.
+
+
+Technically, the backgrounds are *color layers*, and you are free to create your own and pass it as the value for the *bg* parameter instead of using one of the pre-defined character strings listed above. Alpha blending is used to merge the different layers into the final colors.
+
+
+Keep in mind that the background will be visible only through the (semi-)transparent parts of your foreground data. Morphometry or atlas data typically contains a fully opaque color value for each vertex, and thus, the background will not be visible. You can manually add transparency to (parts of) your color data by using *color layers* as explained above.
 
 
 ### Saving screenshots and creating GIF movies (and other rglactions)
@@ -518,7 +575,7 @@ The following rglactions are available:
 
 * Take a screenshot in PNG format. Key: "**snapshot_png**". Value: string, the path of the output file, including the file extension. Path expansion is performed. Example: `rglactions = list("snapshot_png"="~/fsbrain.png")`. 
 * Record a movie. Only handled in rotating views like `sr`. Key: "**movie**". Value: string, the base filename of the movie. The movie will be saved in your home directory, with file extension gif. Example: `rglactions = list("movie"="fsbrain_rotating_brain")`
-* Clip the data to remove outliers before visualization. Data smaller than the lower percentile and larger than the upper percentile will be set to the respective percentile value. Required to visualize data with outliers or extreme values, like mean of Gaussian curvature. Key: "**clip_data**". Value: vector of length 2 with the lower and upper percentile. Example: `rglactions = list("clip_data"=c(0.05, 0.95))`
+* Clip the data to remove outliers before visualization. Data smaller than the lower percentile and larger than the upper percentile will be set to the respective percentile value. Required to visualize data with outliers or extreme values, like mean or Gaussian curvature. Key: "**clip_data**". Value: vector of length 2 with the lower and upper percentile. Example: `rglactions = list("clip_data"=c(0.05, 0.95))`
 
 The actions can be combined, e.g., to clip the data and take a screenshot: `rglactions = list("clip_data"=c(0.05, 0.95), "snapshot_png"="~/fsbrain.png")`.
 
@@ -548,10 +605,10 @@ You can tweak the output GIF in whatever external software you like if needed. E
 ```
 convert -loop 0 fsbrain_subject1_thickness_white.gif fsbrain_subject1_thickness_white_loop_inf.gif
 ```
-
+  
 ### Drawing colorbars
 
-Adding 2D colorbars to a 3D plot has some technical limitations, and fsbrain currently gives you 2 options to get a colorbar for your plot.
+Adding 2D colorbars to a 3D plot has some technical limitations, and fsbrain currently gives you two options to get a colorbar for your plot.
 
 #### Plotting a colorbar in the background of a 3D plot
 
@@ -576,7 +633,7 @@ This option plots a colorbar for the data of your meshes into a separate 2D plot
 
 ```{r, eval = FALSE}
 subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
-coloredmeshes = vis.subject.morph.native(subjects_dir, 'subject1', 'thickness', 'lh', views=c('t4'), colormap=squash::jet);
+coloredmeshes = vis.subject.morph.native(subjects_dir, 'subject1', 'thickness', 'lh', views=c('t4'), makecmap_options=list('colFn'=squash::jet));
 coloredmesh.plot.colorbar.separate(coloredmeshes, horizontal=TRUE);
 ```
 

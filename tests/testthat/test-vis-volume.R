@@ -1,6 +1,6 @@
 test_that("A brain volume can be turned into an animation", {
 
-    skip("This test has to be run manually and interactively. It also requires the 'magick' package (ImageMagick for R) and writes stuff to disk.");
+    skip_if_not(run.extralong.tests(), "This test requires the full test data and X11, and takes ages.");
 
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -25,6 +25,7 @@ test_that("A brain volume can be turned into an animation", {
     brain_stack = vol.imagestack(rotate3D(foreground, axis=imgplane), imgplane);
     magick::image_write(magick::image_animate(brain_stack, fps = 20), sprintf("MRI_axis%d.gif", imgplane));
 
+    expect_equal(1L, 1L);  # empty tests will be skipped
 })
 
 
@@ -144,7 +145,6 @@ test_that("A brain volume and an overlay can be merged", {
 
 test_that("A brain volume can be visualized as a lightbox", {
 
-    skip("This test has to be run manually and interactively. It also requires the 'magick' package (ImageMagick for R).");
 
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -159,14 +159,21 @@ test_that("A brain volume can be visualized as a lightbox", {
 
     # Now test that the merged image can be visualized as a lightbox:
     imgplane = 1;
-    magick::image_write(vol.lightbox(brain, axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
 
-    imgplane = 2;
-    magick::image_write(vol.lightbox(rotate3D(brain, axis=imgplane), axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
+    vol.lightbox(brain, axis=imgplane);
 
-    imgplane = 3;
-    magick::image_write(vol.lightbox(rotate3D(brain, axis=imgplane), axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
+    do_write_images_to_disk = FALSE;
+    if(do_write_images_to_disk) {
+        magick::image_write(vol.lightbox(brain, axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
 
+        imgplane = 2;
+        magick::image_write(vol.lightbox(rotate3D(brain, axis=imgplane), axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
+
+        imgplane = 3;
+        magick::image_write(vol.lightbox(rotate3D(brain, axis=imgplane), axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
+    }
+
+    expect_equal(1L, 1L);   # prevent skipping
 })
 
 
@@ -193,10 +200,10 @@ test_that("Intensity integer to RGB color string conversion works in 1, 2, and 3
 
 test_that("A brain volume can be visualized as a lightbox colored from the aseg", {
 
-    skip("This test has to be run manually and interactively. It also requires the 'magick' package (ImageMagick for R).");
+    skip_if_not(box.can.run.all.tests(), "This test requires X11, the 'magick' package (ImageMagick for R), and extra data.");
 
     fsbrain::download_optional_data();
-    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+    subjects_dir = testdatapath.subjectsdir.full.subject1();
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
 
     subject_id = "subject1";
@@ -210,13 +217,20 @@ test_that("A brain volume can be visualized as a lightbox colored from the aseg"
 
     # Now test that the merged image can be visualized as a lightbox:
     imgplane = 1;
-    magick::image_write(vol.lightbox(colored_brain, axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
+    vol.lightbox(colored_brain, axis=imgplane);
 
-    imgplane = 2;
-    magick::image_write(vol.lightbox(rotate3D(colored_brain, axis=imgplane), axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
+    do_write_images_to_disk = FALSE;
+    if(do_write_images_to_disk) {
+        magick::image_write(vol.lightbox(colored_brain, axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
 
-    imgplane = 3;
-    magick::image_write(vol.lightbox(rotate3D(colored_brain, axis=imgplane), axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
+        imgplane = 2;
+        magick::image_write(vol.lightbox(rotate3D(colored_brain, axis=imgplane), axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
+
+        imgplane = 3;
+        magick::image_write(vol.lightbox(rotate3D(colored_brain, axis=imgplane), axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
+    }
+
+    expect_equal(1L, 1L);   # prevent skipping
 
 })
 

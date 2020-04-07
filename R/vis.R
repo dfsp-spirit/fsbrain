@@ -23,7 +23,7 @@
 #'
 #' @param rglactions named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
 #'
-#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See [fsbrain::coloredmesh.plot.colorbar.separate()] for an alternative.
+#' @param draw_colorbar logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See  \code{\link[fsbrain]{coloredmesh.plot.colorbar.separate}} for an alternative.
 #'
 #' @param cortex_only logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the subject. Defaults to FALSE.
 #'
@@ -291,7 +291,7 @@ vis.symmetric.data.on.subject <- function(subjects_dir, vis_subject_id, morph_da
     makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
 
     morph_data_lh = perform.na.mapping(morph_data_lh, map_to_NA);
-    morph_data_lh = perform.na.mapping(morph_data_lh, map_to_NA);
+    morph_data_rh = perform.na.mapping(morph_data_rh, map_to_NA);
 
     return(vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface=surface, views=views, rgloptions=rgloptions, rglactions=rglactions, draw_colorbar=draw_colorbar, makecmap_options=makecmap_options, bg=bg));
 }
@@ -560,13 +560,13 @@ vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi='both', surf
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
     }
 
-    if(hemi == "both") {
-        lh_cmesh = coloredmesh.from.annot(subjects_dir, subject_id, atlas, 'lh', surface=surface, outline=outline);
-        rh_cmesh = coloredmesh.from.annot(subjects_dir, subject_id, atlas, 'rh', surface=surface, outline=outline);
-        coloredmeshes = list(lh_cmesh, rh_cmesh);
-    } else {
-        cmesh = coloredmesh.from.annot(subjects_dir, subject_id, atlas, hemi, surface=surface, outline=outline);
-        coloredmeshes = list(cmesh);
+    coloredmeshes = list();
+
+    if(hemi %in% c("both", "lh")) {
+        coloredmeshes$lh = coloredmesh.from.annot(subjects_dir, subject_id, atlas, 'lh', surface=surface, outline=outline);
+    }
+    if(hemi %in% c("both", "rh")) {
+        coloredmeshes$rh = coloredmesh.from.annot(subjects_dir, subject_id, atlas, 'rh', surface=surface, outline=outline);
     }
 
     return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions)));

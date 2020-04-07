@@ -1,6 +1,9 @@
 # These tests are to be run manually and interactively, they are therefore skipped by default.
 # You can run them by copying & pasting the code into an R session. Treat them as examples.
 
+# A note on the plot size for all of the vis functions:
+# You may want to set a globale default for windowrect, e.g.: `library('rgl'); r3dDefaults$windowRect <- c(50,50, 800, 800);`
+
 test_that("We can visualize morphometry data in multiview.", {
     skip_if_not(box.can.run.all.tests(), "This test requires the full test data and X11.");
 
@@ -18,7 +21,7 @@ test_that("We can visualize morphometry data in multiview.", {
     coloredmeshes = vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('si', 't4', 't9'), rgloptions=rgloptions, rglactions=rglactions);
     coloredmeshes = vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('si'));
 
-    vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('t4'), rgloptions = rgloptions, rglactions = list("snapshot_png"="~/brain_t4.png"));
+    vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('t4'), draw_colorbar =TRUE, rgloptions = rgloptions, rglactions = list("snapshot_png"="~/brain_t4.png"));
     vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('t9'), rgloptions = rgloptions, rglactions = list("snapshot_png"="~/brain_t9.png"));
 
     vis.subject.annot(subjects_dir, subject_id, 'aparc', 'both', views=c('t4'), rgloptions = rgloptions, rglactions = list("snapshot_png"="~/annot_t4.png"));
@@ -73,7 +76,7 @@ test_that("We can visualize p values or other arbitrary data, one value per atla
 
 
     if(dir.exists(file.path(subjects_dir, subject))) {
-        rgloptions=list("windowRect"=c(80,80,1200,1200));
+        rgloptions=list("windowRect"=c(80,80,1000,1000));
         rglactions = list("snapshot_png"="~/fsbrain_pvalues_fsavg.png");
         vis.region.values.on.subject(subjects_dir, subject, atlas, lh_region_value_list, rh_region_value_list, rgloptions=rgloptions, rglactions=rglactions);
     } else {
