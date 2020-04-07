@@ -1,0 +1,46 @@
+---
+title: "fsbrain: Visualizing Brain Volume Data From Structural Neuroimaging in GNU R"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Brain volume visualization with fsbrain}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+In this document, we demonstrate some high-level functions for loading and visualizing brain volume data. While this package has been developed with  [FreeSurfer](https://surfer.nmr.mgh.harvard.edu) in mind, many of the visualization functions work with 3D matrices and do not make any assumptions on where the data comes from.
+
+Please note that the volume visualization functions presented here are a very recent addition to *fsbrain*, and that they are still in a very early development stage. I am very grateful for any bug reports or comments, please see the [project website](https://github.com/dfsp-spirit/fsbrain).
+
+
+### Example data used in this document
+
+We will use example data that comes with fsbrain throughout this manual. Feel free to replace the *subjects_dir*, *subjects_list* and *subject_id* with data from your study. 
+
+```{r, eval = FALSE}
+library("fsbrain");
+fsbrain::download_optional_data();
+subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+subject_id = 'subject1';       # for function which use one subject only
+```
+
+# Loading volume data
+
+If all you want is the raw voxel data, you could load a FreeSurfer volume in MGH or MGZ format like this:
+
+
+```{r, eval = FALSE}
+brain_data = subject.volume(subjects_dir, subject_id, "brain");
+```
+
+
+In many cases, you will need the header information as well, e.g., to be able to compute RAS coordinates for the voxels. If that's the case, load the volume with header:
+
+```{r, eval = FALSE}
+brain = subject.volume(subjects_dir, subject_id, "brain", with_header = TRUE);
+brain_data = brain$data;
+```
+
+
+# Volume visualization
+
+

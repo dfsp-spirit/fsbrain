@@ -1,5 +1,5 @@
 ---
-title: "fsbrain: Utility Functions for the Analysis of Structural Neuroimaging Data in GNU R"
+title: "fsbrain: Managing and Visualizing Structural Neuroimaging Data in GNU R"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Analysis of structural neuroimaging data with fsbrain}
@@ -9,11 +9,13 @@ vignette: >
 
 In this document, we demonstrate some high-level functions for loading and analysing structural neuroimaging data preprocessed with [FreeSurfer](https://surfer.nmr.mgh.harvard.edu). FreeSurfer stores its output in a directory structure with fixed subfolder names. This package implements several high-level functions that allow the user to access surface-based brain structure data for large groups of subjects with very little code. It also supports the computation of simple statistics for individual brain structures or brain atlas regions for brain morphometry measures. Statistical analysis can then be performed using standard methods implemented in other packages. The results can be visualized on brain meshes (typically on a template subject like *fsaverage*) in various ways.
 
+I am very grateful for any bug reports or comments, please see the [project website](https://github.com/dfsp-spirit/fsbrain).
+
 Note: While this packages provides an abstract access layer to neuroimaging data, it does *not* implement file readers. It uses the [freesurferformats package](https://github.com/dfsp-spirit/freesurferformats) in the background to parse the file formats.
 
 ### Example data used in this document
 
-We will use example data that comes with fsbrain throughout this manual. Feel free to replace the *subjects_dir* and *subjects_list* with data from your study. 
+We will use example data that comes with fsbrain throughout this manual. Feel free to replace the *subjects_dir*, *subjects_list* and *subject_id* with data from your study. 
 
 ```{r, eval = FALSE}
 library("fsbrain");
@@ -23,11 +25,11 @@ subjects_list = c("subject1", "subject2");
 subject_id = 'subject1';       # for function which use one subject only
 ```
 
-Here, we manually defined the list of subjects. Typically, you would read the subjects and associated demographics or clinical data from a CSV file with standard R function like `read.table`, and you would have way more subjects of course.
+Here, we manually defined the list of subjects. Typically, you would read the subjects and associated demographics or clinical data from a CSV file with a standard R function like `read.table`, and you would have way more subjects of course.
 
 # Accessing group data
 
-This section explains how to load raw data for groups of subjects from files.
+This section explains how to load raw surface data for groups of subjects from files.
 
 ## Morphometry data for groups
 

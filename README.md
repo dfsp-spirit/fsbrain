@@ -146,7 +146,7 @@ Here is a second figure, showing the same data (the [mean curvature](https://en.
 ![Vissurfaces](./web/fsbrain_curvature_surfaces.jpg?raw=true "Curvature visualization on different surfaces, rendered with fsbrain")
 
 
-The next figure illustrates some options to visualize your results with different backgrounds. **A** Clusters on the white fsaverage surface with sulc background. **B** Region-wise p-values with curv background, inflated fsaverage surface. **C** A background color layer displaying outlines of aparc atlas regions in the respective colors, inflated fsaverage surface.
+The next figure illustrates some options to visualize your results with different backgrounds. **A** Clusters on the white fsaverage surface with sulc background. **B** Region-wise p-values with curv background, inflated fsaverage surface. **C** A background color layer displaying outlines of aparc atlas regions in the respective colors, inflated demo subject surface.
 
 ![Visres](./web/fsbrain_vis_bg.jpg?raw=true "Visualization of results and background layers, rendered with fsbrain")
 
