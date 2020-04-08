@@ -44,3 +44,17 @@ brain_data = brain$data;
 # Volume visualization
 
 
+A brain volume file contains one or more three-dimensional (3D) single channel (grayscale) images, typically encoded as integer arrays representing intensity values at each voxel. A 3D image is sometimes called a *z-stack* of 2D-images, or more general as a collection of 2D image *slices*. The *fsbrain* library offers two different ways to view 3D images: a *lightbox* mode, which shows a grid of several 2D slices, and a true 3D view that renders voxels or meshes computed from them.
+
+
+## Lightbox view
+
+
+
+
+
+## 3D voxel and mesh visualization
+
+These types of visualizations are most suitable for interactive use. They rely on a binary definition of *foreground* versus *background* voxels to show the contents of a 3D image. For most grayscale images, especially pre-processed ones, thresholding is enough to identify the foreground.
+
+
