@@ -41,16 +41,31 @@ brain_data = brain$data;
 ```
 
 
+
 # Volume visualization
 
 
 A brain volume file contains one or more three-dimensional (3D) single channel (grayscale) images, typically encoded as integer arrays representing intensity values at each voxel. A 3D image is sometimes called a *z-stack* of 2D-images, or more general as a collection of 2D image *slices*. The *fsbrain* library offers two different ways to view 3D images: a *lightbox* mode, which shows a grid of several 2D slices, and a true 3D view that renders voxels or meshes computed from them.
 
 
+An important thing to keep in mind when visualizing volume data is the range of your intensity values. They may be in range 0-255, 0-65535, or 0-1. Most visualization functions expect input values to be normalized to the range 0-1, so you may need to perform a normalization step (see the examples below).
+
+
 ## Lightbox view
 
 
+Here is an example that loads a brain volume, computes a bounding box, and visualizes some slices along the first axis in lightbox view:
 
+```{r, eval = FALSE}
+brain = subject.volume(subjects_dir, subject_id, 'brain') / 255;
+bounded_brain = vol.boundary.box(brain, apply=TRUE);
+vol.lightbox(bounded_brain);
+```
+
+
+Have a look at optional arguments to the functions to see how to modify the threshold used when computing the bounding box, how to define which slices are displayed, and how to change the slice axis.
+
+Notice that we scaled the raw data by 255 in this example, as the volume file contains values in the theoretical range 0-255. If none of the voxels actually reaches the max value of 255, you could scale by the actual max value, of course.
 
 
 ## 3D voxel and mesh visualization
