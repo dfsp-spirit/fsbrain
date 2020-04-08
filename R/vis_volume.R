@@ -338,12 +338,14 @@ vol.boundary.mask <- function(volume, plane=1L, threshold=0L) {
 #'
 #' @param threshold numerical, the threshold intensity used to separate background and foreground. All voxels with intensity values greater than this value will be considered `foreground` voxels.
 #'
+#' @param apply logical, whether to directly apply the bounding box and return the resulting volume instead.
+#'
 #' @return named list with 2 entries: `from` is an integer vector of length 3, defining the minimal (x,y,z) foreground indices. `to` is an integer vector of length 3, defining the maximal (x,y,z) foreground indices.
 #'
 #' @family volume utility
 #'
 #' @export
-vol.boundary.box <- function(volume, threshold=0L) {
+vol.boundary.box <- function(volume, threshold=0L, apply=FALSE) {
     if(length(dim(volume)) != 3) {
         stop(sprintf("Volume must have exactly 3 dimensions but has %d.\n", length(dim(volume))));
     }
@@ -356,7 +358,26 @@ vol.boundary.box <- function(volume, threshold=0L) {
         max_index_per_axis[axis] = Position(function(x) x >= 1L, colmax, right=TRUE);
     }
     coords = boxcoords.from.bbox(min_index_per_axis, max_index_per_axis);
-    return(list("from"=min_index_per_axis, "to"=max_index_per_axis, "edge_coords"=coords));
+    bbox = list("from"=min_index_per_axis, "to"=max_index_per_axis, "edge_coords"=coords);
+    if(apply) {
+        return(vol.boundary.box.apply(volume, bbox));
+    } else {
+        return(bbox);
+    }
+}
+
+
+#' @title Apply a boundary box to a volume, returning the inner volume part
+#'
+#' @param volume a 3D image volume
+#'
+#' @param bbox
+#'
+#' @return a 3D image volume, the inner volume part, resulting from the application of the boundary box
+#'
+#' @export
+vol.boundary.box.apply <- function(volume, bbox) {
+    return(volume[bbox$from[1]:bbox$to[1], bbox$from[2]:bbox$to[2], bbox$from[3]:bbox$to[3]]);
 }
 
 
