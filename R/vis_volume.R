@@ -371,7 +371,7 @@ vol.boundary.box <- function(volume, threshold=0L, apply=FALSE) {
 #'
 #' @param volume a 3D image volume
 #'
-#' @param bbox
+#' @param bbox the boundary box
 #'
 #' @return a 3D image volume, the inner volume part, resulting from the application of the boundary box
 #'

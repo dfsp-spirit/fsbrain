@@ -9,7 +9,7 @@ vol.boundary.box.apply(volume, bbox)
 \arguments{
 \item{volume}{a 3D image volume}
 
-\item{bbox}{}
+\item{bbox}{the boundary box}
 }
 \value{
 a 3D image volume, the inner volume part, resulting from the application of the boundary box
