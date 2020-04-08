@@ -62,6 +62,7 @@ bounded_brain = vol.boundary.box(brain, apply=TRUE);
 vol.lightbox(bounded_brain);
 ```
 
+![**Figure 1**: Lightbox view.](fsbrain_lightbox.jpg)
 
 Have a look at optional arguments to the functions to see how to modify the threshold used when computing the bounding box, how to define which slices are displayed, and how to change the slice axis.
 
