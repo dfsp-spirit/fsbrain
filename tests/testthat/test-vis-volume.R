@@ -154,8 +154,7 @@ test_that("A brain volume can be visualized as a lightbox", {
     brain = subject.volume(subjects_dir, subject_id, 'brain') / 255;
 
     # Compute and apply bbox to exclude empty outer parts
-    bbox = vol.boundary.box(brain);
-    brain = brain[bbox$from[1]:bbox$to[1], bbox$from[2]:bbox$to[2], bbox$from[3]:bbox$to[3]];
+    brain = vol.boundary.box(brain, apply=TRUE);
 
     # Now test that the merged image can be visualized as a lightbox:
     imgplane = 1;
