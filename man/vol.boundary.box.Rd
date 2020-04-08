@@ -4,12 +4,14 @@
 \alias{vol.boundary.box}
 \title{Compute 3D bounding box of a volume.}
 \usage{
-vol.boundary.box(volume, threshold = 0L)
+vol.boundary.box(volume, threshold = 0L, apply = FALSE)
 }
 \arguments{
 \item{volume}{a 3D image volume}
 
 \item{threshold}{numerical, the threshold intensity used to separate background and foreground. All voxels with intensity values greater than this value will be considered `foreground` voxels.}
+
+\item{apply}{logical, whether to directly apply the bounding box and return the resulting volume instead.}
 }
 \value{
 named list with 2 entries: `from` is an integer vector of length 3, defining the minimal (x,y,z) foreground indices. `to` is an integer vector of length 3, defining the maximal (x,y,z) foreground indices.
