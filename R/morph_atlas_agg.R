@@ -177,18 +177,18 @@ group.agg.atlas.native <- function(subjects_dir, subjects_list, measure, hemi, a
 #'
 #' @return dataframe with aggregated values for all regions and subjects, with n columns and m rows, where n is the number of subjects and m is the number of regions.
 #'
-# @examples # these are disabled because R dev on CRAN seems to ignore the donttest for some reason and then dies of course.
-# \donttest{
-#    fsbrain::download_optional_data();
-#    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
-#    agg = group.agg.atlas.standard(subjects_dir, c('subject1', 'subject2'),
-#     'thickness', 'lh', 'aparc', fwhm='10');
-#    # Visualize the mean values. Could use any subject, typically
-#    #  one would use fsaverage. Here we use subject1:
-#    agg$subject = NULL;   # remove non-numeric column.
-#    vis.region.values.on.subject(subjects_dir, 'subject1', 'aparc',
-#     lh_region_value_list=colMeans(agg), rh_region_value_list=NULL);
-# }
+#' @examples
+#' \dontrun{
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+#'    agg = group.agg.atlas.standard(subjects_dir, c('subject1', 'subject2'),
+#'     'thickness', 'lh', 'aparc', fwhm='10');
+#'    # Visualize the mean values. Could use any subject, typically
+#'    #  one would use fsaverage. Here we use subject1:
+#'    agg$subject = NULL;   # remove non-numeric column.
+#'    vis.region.values.on.subject(subjects_dir, 'subject1', 'aparc',
+#'     lh_region_value_list=colMeans(agg), rh_region_value_list=NULL);
+#' }
 #'
 #' @family aggregation functions
 #' @family atlas functions
