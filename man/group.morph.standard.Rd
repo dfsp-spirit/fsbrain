@@ -32,7 +32,7 @@ named list with standard space morph data, the names are the subject identifiers
 Load standard space morphometry data (like 'surf/lh.area') for a group of subjects from disk. Uses knowledge about the FreeSurfer directory structure to load the correct file.
 }
 \examples{
-\donttest{
+\dontrun{
    fsbrain::download_optional_data();
    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
    subjects_list = c("subject1", "subject2");
@@ -40,7 +40,7 @@ Load standard space morphometry data (like 'surf/lh.area') for a group of subjec
    mean(fulldata$subject1);
 
    cortexdata = group.morph.standard(subjects_dir, subjects_list, "thickness",
-    "lh", fwhm='10', cortex_only=TRUE);
+    "lh", fwhm='10', cortex_only=FALSE);
    mean(cortexdata$subject1, na.rm=TRUE);
 }
 
