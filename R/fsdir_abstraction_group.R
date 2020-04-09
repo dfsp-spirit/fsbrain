@@ -71,7 +71,7 @@ group.morph.native <- function(subjects_dir, subjects_list, measure, hemi, forma
 #' @family morphometry data functions
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    subjects_list = c("subject1", "subject2");
@@ -79,7 +79,7 @@ group.morph.native <- function(subjects_dir, subjects_list, measure, hemi, forma
 #'    mean(fulldata$subject1);
 #'
 #'    cortexdata = group.morph.standard(subjects_dir, subjects_list, "thickness",
-#'     "lh", fwhm='10', cortex_only=TRUE);
+#'     "lh", fwhm='10', cortex_only=FALSE);
 #'    mean(cortexdata$subject1, na.rm=TRUE);
 #' }
 #'
