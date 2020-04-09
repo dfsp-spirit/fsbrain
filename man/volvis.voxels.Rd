@@ -11,7 +11,7 @@ volvis.voxels(volume, render_every = 1, voxelcol = NULL, ...)
 
 \item{render_every}{integer, how many to skip before rendering the next one (to improve performance and/or see deeper structures). Use higher values to see a less dense representation of your data that usually still allows you to see the general shape, but at lower computational burden. Set to 1 to render every (foreground) voxel.}
 
-\item{voxelcol}{character string or a *voxel coloring*. A *voxel coloring* can be specified in three ways: 1) the string 'from_intensities' will compute colors based on the intensity values of the foreground voxels in the volume, applying normalization of the intensity values if needed. 2) an array of RGB color strings: will be used to retrieve the colors for all foreground vertices, at their CRS indices. 3) A vector with length identical to the number of foreground voxels in the volume: will be applied directly.  Obvisouly, you should not pass a color material parameter (see `...`) when using this.}
+\item{voxelcol}{character string or a *voxel coloring*. A *voxel coloring* can be specified in three ways: 1) the string 'from_intensity' will compute colors based on the intensity values of the foreground voxels in the volume, applying normalization of the intensity values if needed. 2) an array of RGB color strings: will be used to retrieve the colors for all foreground vertices, at their CRS indices. 3) A vector with length identical to the number of foreground voxels in the volume: will be applied directly.  Obvisouly, you should not pass a color material parameter (see `...`) when using this.}
 
 \item{...}{material properties, passed to \code{\link[rgl]{triangles3d}}. Example: \code{color = "#0000ff", lit=FALSE}.}
 }
