@@ -4,9 +4,16 @@
 \alias{group.label.from.annot}
 \title{Extract a region from an atlas annotation as a label for a group of subjects.}
 \usage{
-group.label.from.annot(subjects_dir, subjects_list, hemi, atlas, region,
-  return_one_based_indices = TRUE, invert = FALSE,
-  error_on_invalid_region = TRUE)
+group.label.from.annot(
+  subjects_dir,
+  subjects_list,
+  hemi,
+  atlas,
+  region,
+  return_one_based_indices = TRUE,
+  invert = FALSE,
+  error_on_invalid_region = TRUE
+)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -32,18 +39,19 @@ named list of integer vectors with label data: for each subject, the list of ver
 The returned label can be used to mask morphometry data, e.g., to set the values of a certain region to NaN or to extract only values from a certain region.
 }
 \seealso{
-Other atlas functions: \code{\link{get.atlas.region.names}},
-  \code{\link{group.agg.atlas.native}},
-  \code{\link{group.agg.atlas.standard}},
-  \code{\link{group.annot}},
-  \code{\link{label.from.annotdata}},
-  \code{\link{label.to.annot}},
-  \code{\link{regions.to.ignore}},
-  \code{\link{spread.values.over.annot}},
-  \code{\link{spread.values.over.hemi}},
-  \code{\link{spread.values.over.subject}},
-  \code{\link{subject.annot}},
-  \code{\link{subject.atlas.agg}},
-  \code{\link{subject.label.from.annot}}
+Other atlas functions: 
+\code{\link{get.atlas.region.names}()},
+\code{\link{group.agg.atlas.native}()},
+\code{\link{group.agg.atlas.standard}()},
+\code{\link{group.annot}()},
+\code{\link{label.from.annotdata}()},
+\code{\link{label.to.annot}()},
+\code{\link{regions.to.ignore}()},
+\code{\link{spread.values.over.annot}()},
+\code{\link{spread.values.over.hemi}()},
+\code{\link{spread.values.over.subject}()},
+\code{\link{subject.annot}()},
+\code{\link{subject.atlas.agg}()},
+\code{\link{subject.label.from.annot}()}
 }
 \concept{atlas functions}

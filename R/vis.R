@@ -67,13 +67,15 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi="bo
         measure_data = clip.data(measure_data, lower=clip_range[1], upper=clip_range[2]);
     }
 
-    both_hemi_colors = collayer.from.morphlike.data(measure_data$lh, measure_data$rh, makecmap_options=makecmap_options);
+    both_hemi_colors = collayer.from.morphlike.data(measure_data$lh, measure_data$rh, makecmap_options=makecmap_options, return_map=TRUE);
+    map = both_hemi_colors$map;
+    both_hemi_colors$map = NULL;
     if(!is.null(bg)) {
         background = collayer.bg(subjects_dir, subject_id, bg, hemi=hemi);
         both_hemi_colors = collayers.merge(list("fg"=both_hemi_colors, "bg"=background));
     }
 
-    coloredmeshes = coloredmeshes.from.color(subjects_dir, subject_id, both_hemi_colors, hemi, surface=surface, metadata=list('src_data'=measure_data, 'makecmap_options'=makecmap_options));
+    coloredmeshes = coloredmeshes.from.color(subjects_dir, subject_id, both_hemi_colors, hemi, surface=surface, metadata=list('src_data'=measure_data, 'map'=map, 'makecmap_options'=makecmap_options));
 
     return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, style = style)));
 }
@@ -138,13 +140,15 @@ vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi="
         measure_data = clip.data(measure_data, lower=clip_range[1], upper=clip_range[2]);
     }
 
-    both_hemi_colors = collayer.from.morphlike.data(measure_data$lh, measure_data$rh, makecmap_options=makecmap_options);
+    both_hemi_colors = collayer.from.morphlike.data(measure_data$lh, measure_data$rh, makecmap_options=makecmap_options, return_map = TRUE);
+    map = both_hemi_colors$map;
+    both_hemi_colors$map = NULL;
     if(!is.null(bg)) {
         background = collayer.bg(subjects_dir, subject_id, bg, hemi=hemi);
         both_hemi_colors = collayers.merge(list("fg"=both_hemi_colors, "bg"=background));
     }
 
-    coloredmeshes = coloredmeshes.from.color(template_subjects_dir, template_subject, both_hemi_colors, hemi, surface=surface, metadata=list("src_data"=measure_data, "makecmap_options"=makecmap_options));
+    coloredmeshes = coloredmeshes.from.color(template_subjects_dir, template_subject, both_hemi_colors, hemi, surface=surface, metadata=list("src_data"=measure_data, "map"=map, "makecmap_options"=makecmap_options));
 
     return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar)));
 }

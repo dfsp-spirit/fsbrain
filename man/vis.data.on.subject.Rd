@@ -4,10 +4,20 @@
 \alias{vis.data.on.subject}
 \title{Visualize arbitrary data on the surface of any subject.}
 \usage{
-vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh,
-  morph_data_rh, surface = "white", colormap = NULL, views = c("t4"),
-  rgloptions = list(), rglactions = list(), draw_colorbar = FALSE,
-  makecmap_options = list(colFn = squash::jet), bg = NULL)
+vis.data.on.subject(
+  subjects_dir,
+  vis_subject_id,
+  morph_data_lh,
+  morph_data_rh,
+  surface = "white",
+  colormap = NULL,
+  views = c("t4"),
+  rgloptions = list(),
+  rglactions = list(),
+  draw_colorbar = FALSE,
+  makecmap_options = list(colFn = squash::jet),
+  bg = NULL
+)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -51,22 +61,24 @@ Creates a surface mesh, applies a colormap transform the morphometry data values
 
 }
 \seealso{
-Other visualization functions: \code{\link{vis.color.on.subject}},
-  \code{\link{vis.data.on.fsaverage}},
-  \code{\link{vis.labeldata.on.subject}},
-  \code{\link{vis.mask.on.subject}},
-  \code{\link{vis.region.values.on.subject}},
-  \code{\link{vis.subject.annot}},
-  \code{\link{vis.subject.label}},
-  \code{\link{vis.subject.morph.native}},
-  \code{\link{vis.subject.morph.standard}},
-  \code{\link{vis.symmetric.data.on.subject}},
-  \code{\link{vislayout.from.coloredmeshes}}
+Other visualization functions: 
+\code{\link{vis.color.on.subject}()},
+\code{\link{vis.data.on.fsaverage}()},
+\code{\link{vis.labeldata.on.subject}()},
+\code{\link{vis.mask.on.subject}()},
+\code{\link{vis.region.values.on.subject}()},
+\code{\link{vis.subject.annot}()},
+\code{\link{vis.subject.label}()},
+\code{\link{vis.subject.morph.native}()},
+\code{\link{vis.subject.morph.standard}()},
+\code{\link{vis.symmetric.data.on.subject}()},
+\code{\link{vislayout.from.coloredmeshes}()}
 
-Other morphometry visualization functions: \code{\link{vis.data.on.fsaverage}},
-  \code{\link{vis.subject.morph.native}},
-  \code{\link{vis.subject.morph.standard}},
-  \code{\link{vis.symmetric.data.on.subject}}
+Other morphometry visualization functions: 
+\code{\link{vis.data.on.fsaverage}()},
+\code{\link{vis.subject.morph.native}()},
+\code{\link{vis.subject.morph.standard}()},
+\code{\link{vis.symmetric.data.on.subject}()}
 }
 \concept{morphometry visualization functions}
 \concept{visualization functions}

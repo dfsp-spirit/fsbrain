@@ -4,8 +4,12 @@
 \alias{collayer.from.morphlike.data}
 \title{Compute surface color layer from morph-like data.}
 \usage{
-collayer.from.morphlike.data(lh_morph_data = NULL,
-  rh_morph_data = NULL, makecmap_options = list(colFn = squash::jet))
+collayer.from.morphlike.data(
+  lh_morph_data = NULL,
+  rh_morph_data = NULL,
+  makecmap_options = list(colFn = squash::jet),
+  return_map = FALSE
+)
 }
 \arguments{
 \item{lh_morph_data}{numerical vector, can be NULL}
@@ -13,6 +17,8 @@ collayer.from.morphlike.data(lh_morph_data = NULL,
 \item{rh_morph_data}{numerical vector, can be NULL}
 
 \item{makecmap_options}{named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.}
+
+\item{return_map}{logical, whether to add the colormap as entry 'map' in the returned list}
 }
 \value{
 named hemi list, each entry is a vector of color strings, one color per surface vertex. The coloring represents the morph data.
@@ -23,13 +29,14 @@ Compute surface color layer from morph-like data.
 \seealso{
 You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
 
-Other surface color layer: \code{\link{collayer.bg.atlas}},
-  \code{\link{collayer.bg.meancurv}},
-  \code{\link{collayer.bg.sulc}},
-  \code{\link{collayer.bg}},
-  \code{\link{collayer.from.annotdata}},
-  \code{\link{collayer.from.annot}},
-  \code{\link{collayer.from.mask.data}},
-  \code{\link{collayers.merge}}
+Other surface color layer: 
+\code{\link{collayer.bg.atlas}()},
+\code{\link{collayer.bg.meancurv}()},
+\code{\link{collayer.bg.sulc}()},
+\code{\link{collayer.bg}()},
+\code{\link{collayer.from.annotdata}()},
+\code{\link{collayer.from.annot}()},
+\code{\link{collayer.from.mask.data}()},
+\code{\link{collayers.merge}()}
 }
 \concept{surface color layer}

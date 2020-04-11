@@ -4,10 +4,12 @@
 \alias{draw.colorbar}
 \title{Draw coloredbar into background of current plot.}
 \usage{
-draw.colorbar(coloredmeshes, horizontal = FALSE)
+draw.colorbar(coloredmeshes, horizontal = FALSE, ...)
 }
 \arguments{
 \item{horizontal}{logical, whether the colorbar should be drawn in horizontal orientation. Defaults to `TRUE`.}
+
+\item{...}{extra params passed to \code{\link[fields]{imageplot}}}
 
 \item{coloredmesh}{fs.coloredmesh as returned by the coloredmesh.from.* functions.}
 }

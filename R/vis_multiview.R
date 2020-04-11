@@ -197,7 +197,7 @@ get.sorted.cmeshes <- function(coloredmeshes) {
 #'
 #' @keywords internal
 #' @importFrom rgl open3d bg3d wire3d shade3d mfrow3d next3d text3d rgl.viewpoint
-brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", draw_labels = FALSE, rgloptions = list(), rglactions = list(), draw_colorbar = FALSE) {
+unused.brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", draw_labels = FALSE, rgloptions = list(), rglactions = list(), draw_colorbar = FALSE) {
 
     label_shift_y = -20;
 
@@ -205,9 +205,11 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
         stop("Parameter 'coloredmeshes' must be a list.");
     }
 
-    layout_dim_x = 2;
-    layout_dim_y = 2;
-    num_views = layout_dim_x * layout_dim_y;
+    layout_dim_x = 4L; # 2 for the plots, 2 for the (potential) colorbars
+    layout_dim_y = 4L;
+
+    # draw_colorbar could be a string: right, bottom, horizontal (all), vertical (all)
+    # see https://rdrr.io/rforge/rgl/man/mfrow3d.html
 
 
     sorted_meshes = get.sorted.cmeshes(coloredmeshes);
@@ -252,6 +254,94 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     rgl::rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
         rgl::text3d(0,label_shift_y,0,"medial rh");
+    }
+
+
+    perform.rglactions(rglactions);
+    return(invisible(coloredmeshes));
+}
+
+
+brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", draw_labels = FALSE, rgloptions = list(), rglactions = list(), draw_colorbar = FALSE) {
+
+    label_shift_y = -20;
+
+    if(!is.list(coloredmeshes)) {
+        stop("Parameter 'coloredmeshes' must be a list.");
+    }
+
+    horizontal = FALSE;
+    if(draw_colorbar == TRUE) {
+        draw_colorbar = "vertical";
+    }
+
+    if(draw_colorbar == "vertical") {
+        layout_mat = matrix(c(1, 2, 5, 3, 4, 6), ncol=3, byrow = T);
+    } else if (draw_colorbar == "vertical_every") {
+        stop("Not implemented yet");
+    } else if(draw_colorbar == "horizontal") {
+        horizontal = TRUE;
+        layout_mat = matrix(seq.int(6), ncol=2, byrow = T);
+    } else if(draw_colorbar == "horizontal_every") {
+        stop("Not implemented yet");
+    } else {
+        # assume FALSE
+        layout_mat = matrix(seq.int(4), ncol=2, byrow = T);
+    }
+
+
+    # draw_colorbar could be a string: right, bottom, horizontal (all), vertical (all)
+    # see https://rdrr.io/rforge/rgl/man/mfrow3d.html
+
+
+    sorted_meshes = get.sorted.cmeshes(coloredmeshes);
+    lh_meshes = sorted_meshes$lh;
+    rh_meshes = sorted_meshes$rh;
+
+    rgl::open3d();
+    do.call(rgl::par3d, rgloptions);
+    Sys.sleep(1);
+    rgl::bg3d(background);
+    rgl::layout3d(layout_mat);
+
+    # Create the upper left view: draw only the left hemi, from the left
+    rgl::next3d();
+    vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style);
+    rgl::rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
+    if(draw_labels) {
+        rgl::text3d(0,label_shift_y,0,"lateral lh");
+    }
+
+    # Create the upper right view
+    rgl::next3d();
+    vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style);
+    rgl::rgl.viewpoint(90, 0, fov=0, interactive=FALSE);
+    if(draw_labels) {
+        rgl::text3d(0,label_shift_y,0,"lateral rh");
+    }
+
+
+    # Create the lower left view
+    rgl::next3d();
+    vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style);
+    rgl::rgl.viewpoint(90, 0, fov=0, interactive=FALSE);
+    if(draw_labels) {
+        rgl::text3d(0,label_shift_y,0,"medial lh");
+    }
+
+
+    # Create the lower right view
+    rgl::next3d();
+    vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style);
+    rgl::rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
+    if(draw_labels) {
+        rgl::text3d(0,label_shift_y,0,"medial rh");
+    }
+
+    if(draw_colorbar != FALSE) {
+        rgl::next3d();
+        draw.colorbar(coloredmeshes, horizontal=horizontal);
+        rgl::next3d();
     }
 
 

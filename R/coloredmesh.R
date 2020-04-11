@@ -79,9 +79,10 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
     }
 
     mesh = rgl::tmesh3d(c(t(surface_mesh$vertices)), c(t(surface_mesh$faces)), homogeneous=FALSE);
-    col = squash::cmap(morph_data, map = do.call(squash::makecmap, utils::modifyList(list(morph_data), makecmap_options)));
+    map = do.call(squash::makecmap, utils::modifyList(list(morph_data), makecmap_options));
+    col = squash::cmap(morph_data, map=map);
 
-    return(fs.coloredmesh(mesh, col, hemi, metadata=list("src_data"=morph_data, "data_range"=range(morph_data, finite=TRUE), "makecmap_options"=makecmap_options)));
+    return(fs.coloredmesh(mesh, col, hemi, metadata=list("src_data"=morph_data, "map"=map, "data_range"=range(morph_data, finite=TRUE), "makecmap_options"=makecmap_options)));
 }
 
 
@@ -209,10 +210,12 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
 
     if(is.null(morph_data)) {
         col = 'white';
+        map = NULL;
     } else {
-        col = squash::cmap(morph_data, map = do.call(squash::makecmap, utils::modifyList(list(morph_data), makecmap_options)));
+        map = do.call(squash::makecmap, utils::modifyList(list(morph_data), makecmap_options));
+        col = squash::cmap(morph_data, map=map);
     }
-    return(fs.coloredmesh(mesh, col, hemi, metadata=list("src_data"=morph_data, "data_range"=range(morph_data, finite=TRUE), "makecmap_options"=makecmap_options)));
+    return(fs.coloredmesh(mesh, col, hemi, metadata=list("src_data"=morph_data, "map"=map, "data_range"=range(morph_data, finite=TRUE), "makecmap_options"=makecmap_options)));
 }
 
 
@@ -257,8 +260,10 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
     #    render = FALSE;
     #}
 
-    col = squash::cmap(morph_data, map = do.call(squash::makecmap, utils::modifyList(list(morph_data), makecmap_options)));
-    return(fs.coloredmesh(mesh, col, hemi, metadata=list("morph_data"=morph_data, "data_range"=range(morph_data, finite=TRUE), "cmap_fun"=makecmap_options$colFn)));
+    map = do.call(squash::makecmap, utils::modifyList(list(morph_data), makecmap_options));
+    col = squash::cmap(morph_data, map = map);
+
+    return(fs.coloredmesh(mesh, col, hemi, metadata=list("morph_data"=morph_data, "map"=map, "data_range"=range(morph_data, finite=TRUE), "cmap_fun"=makecmap_options$colFn)));
 }
 
 
@@ -387,8 +392,9 @@ coloredmesh.from.mask <- function(subjects_dir, subject_id, mask, hemi, surface=
     }
 
     mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
-    col = squash::cmap(morph_like_data, map = do.call(squash::makecmap, utils::modifyList(list(morph_like_data), makecmap_options)));
-    return(fs.coloredmesh(mesh, col, hemi, metadata=list("src_data"=morph_like_data, "data_range"=range(morph_like_data, finite=TRUE), "makecmap_options"=makecmap_options)));
+    map = do.call(squash::makecmap, utils::modifyList(list(morph_like_data), makecmap_options));
+    col = squash::cmap(morph_like_data, map = map);
+    return(fs.coloredmesh(mesh, col, hemi, metadata=list("src_data"=morph_like_data, "map"=map, "data_range"=range(morph_like_data, finite=TRUE), "makecmap_options"=makecmap_options)));
 }
 
 
@@ -459,7 +465,7 @@ fs.coloredmesh <- function(mesh, col, hemi, render=TRUE, metadata=NULL) {
 
     md_entries = names(metadata);
     for (mde in md_entries) {
-        if(! mde %in% c("src_data", "data_range", "makecmap_options")) {
+        if(! mde %in% c("src_data", "data_range", "makecmap_options", "map")) {
             stop(sprintf("Untypical metadata entry '%s' found in colormesh metadata.\n", mde));
         }
     }

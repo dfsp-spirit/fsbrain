@@ -241,22 +241,25 @@ vis.rotated.coloredmeshes <- function(renderables, rotation_angle, x, y, z, styl
 #'
 #' @param horizontal logical, whether the colorbar should be drawn in horizontal orientation. Defaults to `TRUE`.
 #'
+#' @param ... extra params passed to \code{\link[fields]{imageplot}}
+#'
 #' @importFrom rgl bgplot3d
 #' @importFrom squash cmap makecmap
 #' @importFrom fields image.plot
 #' @keywords internal
-draw.colorbar <- function(coloredmeshes, horizontal=FALSE) {
+draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
     if(! is.list(coloredmeshes)) {
         stop("Parameter 'coloredmeshes' must be a list.");
     }
 
     combined_data_range = coloredmeshes.combined.data.range(coloredmeshes);
+    cat(sprintf("Combined data range: %f %f\n", combined_data_range[1], combined_data_range[2]));
     combined_colors = coloredmeshes.combined.colors(coloredmeshes);
 
     if(is.null(combined_data_range) | is.null(combined_colors)) {
         warning("Requested to draw colorbar, but meshes do not contain the required metadata. Skipping.");
     } else {
-        rgl::bgplot3d(fields::image.plot(add=TRUE, legend.only = TRUE, zlim = combined_data_range, col = sort(combined_colors), horizontal = horizontal));
+        rgl::bgplot3d(fields::image.plot(add=FALSE, legend.only = TRUE, zlim = combined_data_range, col = sort(combined_colors), horizontal = horizontal, ...));
     }
 }
 

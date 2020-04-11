@@ -4,10 +4,19 @@
 \alias{vis.labeldata.on.subject}
 \title{Visualize a label on the surface of a subject.}
 \usage{
-vis.labeldata.on.subject(subjects_dir, vis_subject_id, lh_labeldata,
-  rh_labeldata, surface = "white", colormap = NULL, views = c("t4"),
-  rgloptions = list(), rglactions = list(), draw_colorbar = FALSE,
-  makecmap_options = list(colFn = squash::rainbow2))
+vis.labeldata.on.subject(
+  subjects_dir,
+  vis_subject_id,
+  lh_labeldata,
+  rh_labeldata,
+  surface = "white",
+  colormap = NULL,
+  views = c("t4"),
+  rgloptions = list(),
+  rglactions = list(),
+  draw_colorbar = FALSE,
+  makecmap_options = list(colFn = squash::rainbow2)
+)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -59,22 +68,24 @@ Visualizes a label. Note that a label is just a set of vertices, and that you ca
 
 }
 \seealso{
-Other label functions: \code{\link{apply.label.to.morphdata}},
-  \code{\link{apply.labeldata.to.morphdata}},
-  \code{\link{subject.mask}},
-  \code{\link{vis.subject.label}}
+Other label functions: 
+\code{\link{apply.label.to.morphdata}()},
+\code{\link{apply.labeldata.to.morphdata}()},
+\code{\link{subject.mask}()},
+\code{\link{vis.subject.label}()}
 
-Other visualization functions: \code{\link{vis.color.on.subject}},
-  \code{\link{vis.data.on.fsaverage}},
-  \code{\link{vis.data.on.subject}},
-  \code{\link{vis.mask.on.subject}},
-  \code{\link{vis.region.values.on.subject}},
-  \code{\link{vis.subject.annot}},
-  \code{\link{vis.subject.label}},
-  \code{\link{vis.subject.morph.native}},
-  \code{\link{vis.subject.morph.standard}},
-  \code{\link{vis.symmetric.data.on.subject}},
-  \code{\link{vislayout.from.coloredmeshes}}
+Other visualization functions: 
+\code{\link{vis.color.on.subject}()},
+\code{\link{vis.data.on.fsaverage}()},
+\code{\link{vis.data.on.subject}()},
+\code{\link{vis.mask.on.subject}()},
+\code{\link{vis.region.values.on.subject}()},
+\code{\link{vis.subject.annot}()},
+\code{\link{vis.subject.label}()},
+\code{\link{vis.subject.morph.native}()},
+\code{\link{vis.subject.morph.standard}()},
+\code{\link{vis.symmetric.data.on.subject}()},
+\code{\link{vislayout.from.coloredmeshes}()}
 }
 \concept{label functions}
 \concept{visualization functions}

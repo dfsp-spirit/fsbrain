@@ -4,8 +4,14 @@
 \alias{coloredmeshes.from.color}
 \title{Create coloredmeshes for both hemis using pre-defined colors.}
 \usage{
-coloredmeshes.from.color(subjects_dir, subject_id, color_data, hemi,
-  surface = "white", metadata = NULL)
+coloredmeshes.from.color(
+  subjects_dir,
+  subject_id,
+  color_data,
+  hemi,
+  surface = "white",
+  metadata = NULL
+)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}

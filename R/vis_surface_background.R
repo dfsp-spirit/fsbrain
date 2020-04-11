@@ -195,6 +195,8 @@ collayer.bg.atlas <- function(subjects_dir, subject_id, hemi="both", atlas="apar
 #'
 #' @param makecmap_options named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.
 #'
+#' @param return_map logical, whether to add the colormap as entry 'map' in the returned list
+#'
 #' @return named hemi list, each entry is a vector of color strings, one color per surface vertex. The coloring represents the morph data.
 #'
 #' @seealso You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
@@ -203,7 +205,7 @@ collayer.bg.atlas <- function(subjects_dir, subject_id, hemi="both", atlas="apar
 #' @importFrom utils modifyList
 #' @importFrom squash cmap makecmap jet
 #' @export
-collayer.from.morphlike.data <- function(lh_morph_data=NULL, rh_morph_data=NULL, makecmap_options=list('colFn'=squash::jet)) {
+collayer.from.morphlike.data <- function(lh_morph_data=NULL, rh_morph_data=NULL, makecmap_options=list('colFn'=squash::jet), return_map=FALSE) {
     if(is.null(lh_morph_data) | is.null(rh_morph_data)) {
 
         if(is.null(lh_morph_data) & is.null(rh_morph_data)) {
@@ -219,8 +221,13 @@ collayer.from.morphlike.data <- function(lh_morph_data=NULL, rh_morph_data=NULL,
             morph_data = lh_morph_data;
         }
 
-        color_layer = squash::cmap(morph_data, map = do.call(squash::makecmap, utils::modifyList(list(morph_data), makecmap_options)));
-        return(hemilist.wrap(color_layer, hemi));
+        map = do.call(squash::makecmap, utils::modifyList(list(morph_data), makecmap_options));
+        single_hemi_color_layer = squash::cmap(morph_data, map = map);
+        collayer = hemilist.wrap(single_hemi_color_layer, hemi);
+        if(return_map) {
+            collayer$map = map;
+        }
+        return(collayer);
     } else {
         merged_morph_data = c(lh_morph_data, rh_morph_data);
         common_cmap = do.call(squash::makecmap, utils::modifyList(list(merged_morph_data), makecmap_options));
@@ -234,7 +241,11 @@ collayer.from.morphlike.data <- function(lh_morph_data=NULL, rh_morph_data=NULL,
         } else {
             rh_layer = NULL;
         }
-        return(list("lh"=lh_layer, "rh"=rh_layer));
+        collayer = list("lh"=lh_layer, "rh"=rh_layer);
+        if(return_map) {
+            collayer$map = common_cmap;
+        }
+        return(collayer);
     }
 }
 
