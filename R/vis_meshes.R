@@ -275,9 +275,9 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
             warning("Requested to draw colorbar, but meshes do not contain the required metadata. Skipping.");
         } else {
             if(horizontal) {
-                rgl::bgplot3d({plot.new(); squash::hkey(cmap, skip=2L, stretch = 3)});
+                rgl::bgplot3d({plot.new(); squash::hkey(cmap, skip=2L, stretch = 3, x=0, y=0)});
             } else {
-                rgl::bgplot3d({plot.new(); squash::vkey(cmap, skip=2L, stretch = 3)});
+                rgl::bgplot3d({plot.new(); squash::vkey(cmap, skip=2L, stretch = 3, x=0, y=0)});
             }
         }
     } else {

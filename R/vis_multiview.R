@@ -346,12 +346,9 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 
     if(draw_colorbar != FALSE) {
         rgl::next3d(reuse=FALSE);
-        #rgl::text3d(0,0,0,"x");
         draw.colorbar(coloredmeshes, horizontal=horizontal);
         rgl::next3d(reuse=FALSE);
-        #rgl::text3d(0,0,0,"y");
         draw.colorbar(coloredmeshes, horizontal=horizontal);
-        #rgl::next3d();
     }
 
 
