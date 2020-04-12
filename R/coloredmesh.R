@@ -1,6 +1,6 @@
 # Functions for generating coloredmeshes from data and managing their colormaps.
 
-
+#' @keywords internal
 coloredmeshes.combined.colors <- function(coloredmeshes) {
     combined_colors = c();
     for(cmesh in coloredmeshes) {
@@ -11,6 +11,18 @@ coloredmeshes.combined.colors <- function(coloredmeshes) {
     return(combined_colors);
 }
 
+#' @keywords internal
+coloredmeshes.combined.cmap <- function(coloredmeshes) {
+    # If any of the coloredmeshes has a map, it is the correct one: when there are 2 meshes, they share a map. Otherwise it is the map for that mesh.
+    for(cmesh in coloredmeshes) {
+        if(hasIn(cmesh, c('metadata', 'map'))) {
+            return(cmesh$metadata$map);
+        }
+    }
+    return(NULL);
+}
+
+#' @keywords internal
 coloredmeshes.combined.data.range <- function(coloredmeshes) {
     combined_data = c();
     for(cmesh in coloredmeshes) {

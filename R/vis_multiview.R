@@ -277,16 +277,22 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 
     if(draw_colorbar == "vertical") {
         layout_mat = matrix(c(1, 2, 5, 3, 4, 6), ncol=3, byrow = T);
+        layout_column_widths = c(3L, 3L, 1L);
+        layout_row_heights = rep(1L, nrow(layout_mat));
     } else if (draw_colorbar == "vertical_every") {
         stop("Not implemented yet");
     } else if(draw_colorbar == "horizontal") {
         horizontal = TRUE;
         layout_mat = matrix(seq.int(6), ncol=2, byrow = T);
+        layout_row_heights = c(3L, 3L, 1L);
+        layout_column_widths = rep(1L, ncol(layout_mat));
     } else if(draw_colorbar == "horizontal_every") {
         stop("Not implemented yet");
     } else {
         # assume FALSE
         layout_mat = matrix(seq.int(4), ncol=2, byrow = T);
+        layout_column_widths = rep(1L, ncol(layout_mat));
+        layout_row_heights = rep(1L, nrow(layout_mat));
     }
 
 
@@ -302,10 +308,10 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     do.call(rgl::par3d, rgloptions);
     Sys.sleep(1);
     rgl::bg3d(background);
-    rgl::layout3d(layout_mat);
+    rgl::layout3d(layout_mat, widths=layout_column_widths, height=layout_row_heights);
 
     # Create the upper left view: draw only the left hemi, from the left
-    rgl::next3d();
+    rgl::next3d(reuse=TRUE);
     vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style);
     rgl::rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
@@ -313,7 +319,7 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     }
 
     # Create the upper right view
-    rgl::next3d();
+    rgl::next3d(reuse=FALSE);
     vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style);
     rgl::rgl.viewpoint(90, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
@@ -322,7 +328,7 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 
 
     # Create the lower left view
-    rgl::next3d();
+    rgl::next3d(reuse=FALSE);
     vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style);
     rgl::rgl.viewpoint(90, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
@@ -331,7 +337,7 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 
 
     # Create the lower right view
-    rgl::next3d();
+    rgl::next3d(reuse=FALSE);
     vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style);
     rgl::rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
@@ -339,9 +345,13 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     }
 
     if(draw_colorbar != FALSE) {
-        rgl::next3d();
+        rgl::next3d(reuse=FALSE);
+        #rgl::text3d(0,0,0,"x");
         draw.colorbar(coloredmeshes, horizontal=horizontal);
-        rgl::next3d();
+        rgl::next3d(reuse=FALSE);
+        #rgl::text3d(0,0,0,"y");
+        draw.colorbar(coloredmeshes, horizontal=horizontal);
+        #rgl::next3d();
     }
 
 

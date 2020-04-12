@@ -252,14 +252,36 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
         stop("Parameter 'coloredmeshes' must be a list.");
     }
 
-    combined_data_range = coloredmeshes.combined.data.range(coloredmeshes);
-    cat(sprintf("Combined data range: %f %f\n", combined_data_range[1], combined_data_range[2]));
-    combined_colors = coloredmeshes.combined.colors(coloredmeshes);
+    if(length(coloredmeshes) < 1L) {
+        warning("Requested to draw colorbar, but mesh list empty. Skipping.");
+        return(invisible(NULL));
+    }
 
-    if(is.null(combined_data_range) | is.null(combined_colors)) {
-        warning("Requested to draw colorbar, but meshes do not contain the required metadata. Skipping.");
+    colorbar_type = "squash";   # 'fields' or 'squash'
+
+    if(colorbar_type == "fields") {
+
+        combined_data_range = coloredmeshes.combined.data.range(coloredmeshes);
+        combined_colors = coloredmeshes.combined.colors(coloredmeshes);
+
+        if(is.null(combined_data_range) | is.null(combined_colors)) {
+            warning("Requested to draw colorbar, but meshes do not contain the required metadata. Skipping.");
+        } else {
+            rgl::bgplot3d({plot.new(); fields::image.plot(add=T, graphics.reset=F, legend.only = TRUE, zlim = combined_data_range, col = sort(combined_colors), horizontal = horizontal, ...)});
+        }
+    } else if(colorbar_type == "squash") {
+        cmap = coloredmeshes.combined.cmap(coloredmeshes);
+        if(is.null(cmap)) {
+            warning("Requested to draw colorbar, but meshes do not contain the required metadata. Skipping.");
+        } else {
+            if(horizontal) {
+                rgl::bgplot3d({plot.new(); squash::hkey(cmap, skip=2L, stretch = 3)});
+            } else {
+                rgl::bgplot3d({plot.new(); squash::vkey(cmap, skip=2L, stretch = 3)});
+            }
+        }
     } else {
-        rgl::bgplot3d(fields::image.plot(add=FALSE, legend.only = TRUE, zlim = combined_data_range, col = sort(combined_colors), horizontal = horizontal, ...));
+        warning("Invalid colormap type, skipping.");
     }
 }
 
