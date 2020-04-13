@@ -257,7 +257,10 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
         return(invisible(NULL));
     }
 
-    colorbar_type = "squash";   # 'fields' or 'squash'
+    colorbar_type = "gg";   # 'fields' or 'squash'
+    # Both colorbar functions suck:
+    #  - the squash::hkey/vkey one changes its size depending on the number of colors, it seems usable for about 10 colors. It is also ugly as hell.
+    #  - the fields::imageplot seems to draw to some temp image file, and sometimes the file disappears (?) before it is used by bgplot3d, and the colorbar is empty (has no colors, it is a white bar)
 
     if(colorbar_type == "fields") {
 
@@ -280,6 +283,9 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
                 rgl::bgplot3d({plot.new(); squash::vkey(cmap, skip=2L, stretch = 3, x=0, y=0)});
             }
         }
+    } else if(colorbar_type == "gg") {
+        # what about fields::colorbar.plot()?
+
     } else {
         warning("Invalid colormap type, skipping.");
     }

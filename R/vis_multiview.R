@@ -279,20 +279,18 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
         layout_mat = matrix(c(1, 2, 5, 3, 4, 6), ncol=3, byrow = T);
         layout_column_widths = c(3L, 3L, 1L);
         layout_row_heights = rep(1L, nrow(layout_mat));
-    } else if (draw_colorbar == "vertical_every") {
-        stop("Not implemented yet");
     } else if(draw_colorbar == "horizontal") {
         horizontal = TRUE;
         layout_mat = matrix(seq.int(6), ncol=2, byrow = T);
         layout_row_heights = c(3L, 3L, 1L);
         layout_column_widths = rep(1L, ncol(layout_mat));
-    } else if(draw_colorbar == "horizontal_every") {
-        stop("Not implemented yet");
-    } else {
+    } else if(draw_colorbar == FALSE) {
         # assume FALSE
         layout_mat = matrix(seq.int(4), ncol=2, byrow = T);
         layout_column_widths = rep(1L, ncol(layout_mat));
         layout_row_heights = rep(1L, nrow(layout_mat));
+    } else {
+        stop("Invalid setting for 'draw_colorbar'. Use a logical value or one of 'horizontal' or 'vertical'.");
     }
 
 
