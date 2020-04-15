@@ -27,10 +27,10 @@ Rotate a 3D array in 90 degree steps along an axis. This leads to an array with 
    brain = subject.volume(subjects_dir, 'subject1', 'brain') / 255;
    # Show a lightbox along the third axis. Note that the orientation in the
    #  visualization is not very intuitive: the brain lies on the side.
-   vol.lightbox(brain, axis=3);
+   volvis.lightbox(brain, axis=3);
    # Rotate the whole brain volume by 90 degrees clockwise along
    #  the third axis to fix the orientation:
-   vol.lightbox(rotate3D(brain, axis=3, degrees = 90), axis=3);
+   volvis.lightbox(rotate3D(brain, axis=3, degrees = 90), axis=3);
 }
 
 }

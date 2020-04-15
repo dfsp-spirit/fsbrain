@@ -318,10 +318,11 @@ apply.transform <- function(object, matrix_fun) {
 #'
 #'
 #' @examples
-#'    # Plot a 3D cloud of 20000 red voxels:
-#'    centers = matrix(rnorm(20000*3)*100, ncol=3);
+#' \donttest{
+#'    # Plot a 3D cloud of 500 red voxels:
+#'    centers = matrix(rnorm(500*3)*100, ncol=3);
 #'    rglvoxels(centers, voxelcol="red");
-#'
+#' }
 #' @export
 rglvoxels <- function(centers, r=1.0, voxelcol=NULL, ...) {
     coloredvoxels = list();

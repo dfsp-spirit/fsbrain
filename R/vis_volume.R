@@ -4,7 +4,7 @@
 
 #' @title Extract a slice of a 3D image stack.
 #'
-#' @description Extracts one or more 2D slices from a 3D image (or a frame of a 4D image). To display the result, you can use \code{\link[fsbrain]{vol.lightbox}}.
+#' @description Extracts one or more 2D slices from a 3D image (or a frame of a 4D image). To display the result, you can use \code{\link[fsbrain]{volvis.lightbox}}.
 #'
 #' @param volume a 3D or 4D image volume. Note that empty dimensions will be dropped before any processing, and the remaining volume must have 3 or 4 dimensions.
 #'
@@ -192,10 +192,10 @@ rotate90 <- function(mtx, times=1L, clockwise=TRUE) {
 #'    brain = subject.volume(subjects_dir, 'subject1', 'brain') / 255;
 #'    # Show a lightbox along the third axis. Note that the orientation in the
 #'    #  visualization is not very intuitive: the brain lies on the side.
-#'    vol.lightbox(brain, axis=3);
+#'    volvis.lightbox(brain, axis=3);
 #'    # Rotate the whole brain volume by 90 degrees clockwise along
 #'    #  the third axis to fix the orientation:
-#'    vol.lightbox(rotate3D(brain, axis=3, degrees = 90), axis=3);
+#'    volvis.lightbox(rotate3D(brain, axis=3, degrees = 90), axis=3);
 #' }
 #'
 #' @family volume math
@@ -577,7 +577,7 @@ vol.overlay.colors.from.activation <- function(volume, colormap_fn=squash::blueo
 #' @family volume visualization
 #'
 #' @export
-vol.lightbox <- function(volume, slices=-5, axis=1L, per_row=5L, per_col=NULL, border_geometry="5x5", background_color = "#000000", arrange_single_image=FALSE) {
+volvis.lightbox <- function(volume, slices=-5, axis=1L, per_row=5L, per_col=NULL, border_geometry="5x5", background_color = "#000000", arrange_single_image=FALSE) {
 
     skip_border = FALSE;
     if(length(dim(volume)) == 2) {
@@ -893,7 +893,7 @@ vol.intensity.to.color <- function(volume, scale=NULL) {
 
         num_dims = length(dim(volume));
         if(num_dims == 3L) {
-            return(array(grDevices::rgb(volume, volume, volume), dim(volume))); # try magick::image_read(vol.slice(return_value)) or vol.lightbox(return_value)
+            return(array(grDevices::rgb(volume, volume, volume), dim(volume))); # try magick::image_read(vol.slice(return_value)) or volvis.lightbox(return_value)
         } else if (num_dims == 2L) {
             return(matrix(grDevices::rgb(as.vector(volume), as.vector(volume), as.vector(volume)), nrow=nrow(volume)));
         } else if (is.vector(volume)) {

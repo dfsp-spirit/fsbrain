@@ -136,7 +136,7 @@ test_that("A brain volume and an overlay can be merged", {
     magick::image_read(vol.slice(merged, 95));
 
     # Now test that the merged image can be visualized as a lightbox:
-    lb = vol.lightbox(merged);       # This is large, so it is better to write it to disk and open in an external viewer.
+    lb = volvis.lightbox(merged);       # This is large, so it is better to write it to disk and open in an external viewer.
     magick::image_write(lb, path="brain_lightbox.png");
 
     expect_equal(1L, 1L);   # empty tests will be skipped
@@ -159,17 +159,17 @@ test_that("A brain volume can be visualized as a lightbox", {
     # Now test that the merged image can be visualized as a lightbox:
     imgplane = 1;
 
-    vol.lightbox(brain, axis=imgplane);
+    volvis.lightbox(brain, axis=imgplane);
 
     do_write_images_to_disk = FALSE;
     if(do_write_images_to_disk) {
-        magick::image_write(vol.lightbox(brain, axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
+        magick::image_write(volvis.lightbox(brain, axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
 
         imgplane = 2;
-        magick::image_write(vol.lightbox(rotate3D(brain, axis=imgplane), axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
+        magick::image_write(volvis.lightbox(rotate3D(brain, axis=imgplane), axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
 
         imgplane = 3;
-        magick::image_write(vol.lightbox(rotate3D(brain, axis=imgplane), axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
+        magick::image_write(volvis.lightbox(rotate3D(brain, axis=imgplane), axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
     }
 
     expect_equal(1L, 1L);   # prevent skipping
@@ -216,17 +216,17 @@ test_that("A brain volume can be visualized as a lightbox colored from the aseg"
 
     # Now test that the merged image can be visualized as a lightbox:
     imgplane = 1;
-    vol.lightbox(colored_brain, axis=imgplane);
+    volvis.lightbox(colored_brain, axis=imgplane);
 
     do_write_images_to_disk = FALSE;
     if(do_write_images_to_disk) {
-        magick::image_write(vol.lightbox(colored_brain, axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
+        magick::image_write(volvis.lightbox(colored_brain, axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
 
         imgplane = 2;
-        magick::image_write(vol.lightbox(rotate3D(colored_brain, axis=imgplane), axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
+        magick::image_write(volvis.lightbox(rotate3D(colored_brain, axis=imgplane), axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
 
         imgplane = 3;
-        magick::image_write(vol.lightbox(rotate3D(colored_brain, axis=imgplane), axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
+        magick::image_write(volvis.lightbox(rotate3D(colored_brain, axis=imgplane), axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
     }
 
     expect_equal(1L, 1L);   # prevent skipping

@@ -30,7 +30,7 @@ vol.slice(
 slice data. If `slice_index` is a scalar, a numerical 2D matrix (a 2D image from the stack). Otherwise, a numerical 3D array that contains the selected 2D images.
 }
 \description{
-Extracts one or more 2D slices from a 3D image (or a frame of a 4D image). To display the result, you can use \code{\link[fsbrain]{vol.lightbox}}.
+Extracts one or more 2D slices from a 3D image (or a frame of a 4D image). To display the result, you can use \code{\link[fsbrain]{volvis.lightbox}}.
 }
 \seealso{
 Other volume utility: 

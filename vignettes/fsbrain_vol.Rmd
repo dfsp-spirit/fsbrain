@@ -59,7 +59,7 @@ Here is an example that loads a brain volume, computes a bounding box, and visua
 ```{r, eval = FALSE}
 brain = subject.volume(subjects_dir, subject_id, 'brain') / 255;
 bounded_brain = vol.boundary.box(brain, apply=TRUE);
-vol.lightbox(bounded_brain);
+volvis.lightbox(bounded_brain);
 ```
 
 ![**Figure 1**: Lightbox view.](fsbrain_lightbox.jpg)

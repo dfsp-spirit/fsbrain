@@ -3,7 +3,7 @@ fsbrain Changes
 
 Version 0.1.0
 -------------
-- Add many new volume manipulation and rendering functions, e.g., lightbox view in vol.lightbox
+- Add many new volume manipulation and rendering functions, e.g., lightbox view in volvis.lightbox
 - Support cortex_only parameter also in morph concat functions
 - Fix bug #2: cortex_only parameter was ignored by group.agg.morph.native and group.agg.morph.standard
 - Add subject.mask function to compute medial wall mask (or other masks) for a subject
