@@ -197,71 +197,6 @@ get.sorted.cmeshes <- function(coloredmeshes) {
 #'
 #' @keywords internal
 #' @importFrom rgl open3d bg3d wire3d shade3d mfrow3d next3d text3d rgl.viewpoint
-unused.brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", draw_labels = FALSE, rgloptions = list(), rglactions = list(), draw_colorbar = FALSE) {
-
-    label_shift_y = -20;
-
-    if(!is.list(coloredmeshes)) {
-        stop("Parameter 'coloredmeshes' must be a list.");
-    }
-
-    layout_dim_x = 4L; # 2 for the plots, 2 for the (potential) colorbars
-    layout_dim_y = 4L;
-
-    # draw_colorbar could be a string: right, bottom, horizontal (all), vertical (all)
-    # see https://rdrr.io/rforge/rgl/man/mfrow3d.html
-
-
-    sorted_meshes = get.sorted.cmeshes(coloredmeshes);
-    lh_meshes = sorted_meshes$lh;
-    rh_meshes = sorted_meshes$rh;
-
-    rgl::open3d();
-    do.call(rgl::par3d, rgloptions);
-    Sys.sleep(1);
-    rgl::bg3d(background);
-    rgl::mfrow3d(layout_dim_x, layout_dim_y);
-
-    # Create the upper left view: draw only the left hemi, from the left
-    rgl::next3d();
-    vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style);
-    rgl::rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
-    if(draw_labels) {
-        rgl::text3d(0,label_shift_y,0,"lateral lh");
-    }
-
-    # Create the upper right view
-    rgl::next3d();
-    vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style);
-    rgl::rgl.viewpoint(90, 0, fov=0, interactive=FALSE);
-    if(draw_labels) {
-        rgl::text3d(0,label_shift_y,0,"lateral rh");
-    }
-
-
-    # Create the lower left view
-    rgl::next3d();
-    vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style, draw_colorbar=(draw_colorbar && (length(rh_meshes)==0)));
-    rgl::rgl.viewpoint(90, 0, fov=0, interactive=FALSE);
-    if(draw_labels) {
-        rgl::text3d(0,label_shift_y,0,"medial lh");
-    }
-
-
-    # Create the lower right view
-    rgl::next3d();
-    vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style, draw_colorbar=draw_colorbar);
-    rgl::rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
-    if(draw_labels) {
-        rgl::text3d(0,label_shift_y,0,"medial rh");
-    }
-
-
-    perform.rglactions(rglactions);
-    return(invisible(coloredmeshes));
-}
-
-
 brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", draw_labels = FALSE, rgloptions = list(), rglactions = list(), draw_colorbar = FALSE) {
 
     label_shift_y = -20;
@@ -292,10 +227,6 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     } else {
         stop("Invalid setting for 'draw_colorbar'. Use a logical value or one of 'horizontal' or 'vertical'.");
     }
-
-
-    # draw_colorbar could be a string: right, bottom, horizontal (all), vertical (all)
-    # see https://rdrr.io/rforge/rgl/man/mfrow3d.html
 
 
     sorted_meshes = get.sorted.cmeshes(coloredmeshes);
@@ -568,6 +499,30 @@ brainview.sd <- function(coloredmeshes, view_angle, background="white", skip_all
         stop("Parameter 'coloredmeshes' must be a list.");
     }
 
+    horizontal = FALSE;
+    if(draw_colorbar == TRUE) {
+        draw_colorbar = "vertical";
+    }
+
+    if(draw_colorbar == "vertical") {
+        layout_mat = matrix(c(1, 2), ncol=2, byrow = T);
+        layout_column_widths = c(3L, 1L);
+        layout_row_heights = rep(1L, nrow(layout_mat));
+    } else if(draw_colorbar == "horizontal") {
+        horizontal = TRUE;
+        layout_mat = matrix(c(1, 2), ncol=1, byrow = T);
+        layout_row_heights = c(3L, 1L);
+        layout_column_widths = rep(1L, ncol(layout_mat));
+    } else if(draw_colorbar == FALSE) {
+        # assume FALSE
+        layout_mat = NULL;
+        layout_column_widths = NULL;
+        layout_row_heights = NULL;
+    } else {
+        stop("Invalid setting for 'draw_colorbar'. Use a logical value or one of 'horizontal' or 'vertical'.");
+    }
+
+
     sorted_meshes = get.sorted.cmeshes(coloredmeshes);
     lh_meshes = sorted_meshes$lh;
     rh_meshes = sorted_meshes$rh;
@@ -578,33 +533,43 @@ brainview.sd <- function(coloredmeshes, view_angle, background="white", skip_all
     Sys.sleep(1);
     rgl::bg3d(background);
 
+    if(is.character(draw_colorbar)) {
+        rgl::layout3d(layout_mat, widths=layout_column_widths, height=layout_row_heights);
+        rgl::next3d(reuse=TRUE);
+    }
+
 
     if(view_angle == "lateral_lh") {
-        vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style, draw_colorbar = draw_colorbar);
+        vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style);
         rgl::rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
     } else if (view_angle == "dorsal") {
-        vis.rotated.coloredmeshes(coloredmeshes, 0, 1, 0, 0, style=style, draw_colorbar = draw_colorbar);
+        vis.rotated.coloredmeshes(coloredmeshes, 0, 1, 0, 0, style=style);
         rgl::rgl.viewpoint(0, 0, fov=0, interactive=FALSE);
     } else if(view_angle == "lateral_rh") {
-        vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style, draw_colorbar = draw_colorbar);
+        vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style);
         rgl::rgl.viewpoint(90, 0, fov=0, interactive=FALSE);
     } else if(view_angle == "medial_lh") {
-        vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style, draw_colorbar = draw_colorbar);
+        vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style);
         rgl::rgl.viewpoint(90, 0, fov=0, interactive=FALSE);
     } else if(view_angle == "ventral") {
-        vis.rotated.coloredmeshes(coloredmeshes, pi, 1, 0, 0, style=style, draw_colorbar = draw_colorbar);
+        vis.rotated.coloredmeshes(coloredmeshes, pi, 1, 0, 0, style=style);
         rgl::rgl.viewpoint(0, 0, fov=0, interactive=FALSE);
     } else if(view_angle == "medial_rh") {
-        vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style, draw_colorbar = draw_colorbar);
+        vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style);
         rgl::rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
     } else if(view_angle == "rostral") {
-        vis.rotated.coloredmeshes(coloredmeshes, pi/2, 1, 0, 0, style=style, draw_colorbar = draw_colorbar);
+        vis.rotated.coloredmeshes(coloredmeshes, pi/2, 1, 0, 0, style=style);
         rgl.viewpoint(0, 0, fov=0, interactive=FALSE);
     } else if(view_angle == "caudal") {
-        vis.rotated.coloredmeshes(coloredmeshes, pi/2, 1, 0, 0, style=style, draw_colorbar = draw_colorbar);
+        vis.rotated.coloredmeshes(coloredmeshes, pi/2, 1, 0, 0, style=style);
         rgl::rgl.viewpoint(180, 0, fov=0, interactive=FALSE);
     } else {
         stop(sprintf("Invalid view_angle '%s'. Must be one of 'lateral_lh', 'dorsal', 'lateral_rh', 'medial_lh', 'ventral', 'medial_rh', 'rostral' or 'caudal'.\n", view_angle));
+    }
+
+    if(is.character(draw_colorbar)) {
+        rgl::next3d(reuse=FALSE);
+        draw.colorbar(coloredmeshes, horizontal=horizontal);
     }
 
     perform.rglactions(rglactions);

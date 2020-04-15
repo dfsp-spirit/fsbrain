@@ -241,7 +241,7 @@ vis.rotated.coloredmeshes <- function(renderables, rotation_angle, x, y, z, styl
 #'
 #' @param horizontal logical, whether the colorbar should be drawn in horizontal orientation. Defaults to `TRUE`.
 #'
-#' @param ... extra params passed to \code{\link[fields]{imageplot}}
+#' @param ... extra params passed to \code{\link[fields]{image.plot}}
 #'
 #' @importFrom rgl bgplot3d
 #' @importFrom squash cmap makecmap
@@ -257,10 +257,10 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
         return(invisible(NULL));
     }
 
-    colorbar_type = "gg";   # 'fields' or 'squash'
-    # Both colorbar functions suck:
+    colorbar_type = "fields";   # 'fields' or 'squash'
+    # Both colorbar functions are not optimal:
     #  - the squash::hkey/vkey one changes its size depending on the number of colors, it seems usable for about 10 colors. It is also ugly as hell.
-    #  - the fields::imageplot seems to draw to some temp image file, and sometimes the file disappears (?) before it is used by bgplot3d, and the colorbar is empty (has no colors, it is a white bar)
+    #  - when using fields::imageplot, sometimes the colorbar is empty (i.e., it is completely white instead of showing the colors)
 
     if(colorbar_type == "fields") {
 

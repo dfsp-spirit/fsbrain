@@ -161,9 +161,9 @@ test_that("We can visualize a subset of the regions of the Desikan atlas on fsav
 
 
 test_that("We can visualize clusters on fsaverage with a background.", {
-    skip_if_not(box.has.fsaverage(), "This test requires fsaverage.");
+    skip_if_not(box.has.freesurfer() & box.has.fsaverage(), "This test requires the full fsaverage subject with curv data.");
 
-    subjects_dir = find.subjectsdir.of("fsaverage")$found_at;
+    subjects_dir = file.path(find.freesurferhome()$found_at, 'subjects');
     subject_id = 'fsaverage';
 
     lh_demo_cluster_file = system.file("extdata", "lh.clusters_fsaverage.mgz", package = "fsbrain", mustWork = TRUE);
