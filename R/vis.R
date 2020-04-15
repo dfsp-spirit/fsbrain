@@ -350,6 +350,10 @@ perform.na.mapping <- function(data, map_to_NA) {
 #'    num_verts_subject1_rh = 153333;
 #'    color_rh = rep('#333333', num_verts_subject1_rh);
 #'    color_rh[1:30000] = '#00ff00';
+#'    color_rh[30001:60000] = '#ff0000';
+#'    color_rh[60001:90000] = '#0000ff';
+#'    color_rh[90001:120000] = '#ffff00';
+#'    color_rh[120001:150000] = '#00ffff';
 #'    vis.color.on.subject(subjects_dir, 'subject1', color_lh, color_rh);
 #' }
 #'
