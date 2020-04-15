@@ -37,17 +37,47 @@ vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRU
         }
     }
 
+    horizontal = FALSE;
+    if(draw_colorbar == TRUE) {
+        draw_colorbar = "vertical";
+    }
+
+    if(draw_colorbar == "vertical") {
+        layout_mat = matrix(c(1, 2), ncol=2, byrow = T);
+        layout_column_widths = c(3L, 1L);
+        layout_row_heights = rep(1L, nrow(layout_mat));
+    } else if(draw_colorbar == "horizontal") {
+        horizontal = TRUE;
+        layout_mat = matrix(c(1, 2), ncol=1, byrow = T);
+        layout_row_heights = c(3L, 1L);
+        layout_column_widths = rep(1L, ncol(layout_mat));
+    } else if(draw_colorbar == FALSE) {
+        # assume FALSE
+        layout_mat = NULL;
+        layout_column_widths = NULL;
+        layout_row_heights = NULL;
+    } else {
+        stop("Invalid setting for 'draw_colorbar'. Use a logical value or one of 'horizontal' or 'vertical'.");
+    }
+
     rgl::open3d();
     do.call(rgl::par3d, rgloptions);
     Sys.sleep(1);
 
     rgl::bg3d(background);
-    for(cmesh in coloredmeshes) {
-        vis.renderable(cmesh, skip_all_na=TRUE, style=style);
+
+    if(is.character(draw_colorbar)) {
+        rgl::layout3d(layout_mat, widths=layout_column_widths, height=layout_row_heights);
+        rgl::next3d(reuse=TRUE);
     }
 
-    if(draw_colorbar) {
-        draw.colorbar(coloredmeshes);
+    for(cmesh in coloredmeshes) {
+        vis.renderable(cmesh, skip_all_na=skip_all_na, style=style);
+    }
+
+    if(is.character(draw_colorbar)) {
+        rgl::next3d(reuse=FALSE);
+        draw.colorbar(coloredmeshes, horizontal=horizontal);
     }
 
     perform.rglactions(rglactions);
@@ -283,9 +313,6 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
                 rgl::bgplot3d({plot.new(); squash::vkey(cmap, skip=2L, stretch = 3, x=0, y=0)});
             }
         }
-    } else if(colorbar_type == "gg") {
-        # what about fields::colorbar.plot()?
-
     } else {
         warning("Invalid colormap type, skipping.");
     }
