@@ -487,6 +487,24 @@ Technically, a color layer is just a nemd list with entries 'lh' and/or 'rh', ea
 
 ## General visualization options
 
+### Figure size
+
+The default output resolution (device window size) in `rgl` is very low, and it is highly recommended to increase it. The default size may be so small that there is not enough space to draw a colorbar. You can set the device window size globally. E.g., if you want the window to have 1200 x 1200 pixels, and the window should be placed at screen pixel position `(50, 50)`, i.e., near the upper left corner of your screen, you would do:
+
+```{r, eval = FALSE}
+library('rgl');
+r3dDefaults$windowRect=c(50, 50, 1200, 1200);
+```
+
+Now call any fsbrain visualization function, and the setting will be used.
+
+It is also possible to set this when calling an fsbrain visualization function, in which case it is only applied to the current function call. For any visualization function that accepts a parameter named 'rgloptions', use something like this:
+
+```{r, eval = FALSE}
+rgloptions = list('windowRect'=c(50, 50, 1200, 1200));
+```
+
+
 ### Different views
 
 You can visualize the data in different views. So far, we have used only the *si* view. The following views are available:
