@@ -104,7 +104,7 @@ arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    # Use any vis function to get coloredmeshes. You can visualize morphometry,
