@@ -39,7 +39,7 @@ list of coloredmeshes. The coloredmeshes used for the visualization.
 Create a tight layout view of coloredmeshes from several angles. Creates separate `sd_<angle>` images, then crops and finally merges them into a single output image with image magick. The `coloredmeshes` to pass to this function are usually obtained by running any `vis*` function (like \code{\link[fsbrain]{vis.subject.morph.native}}, \code{\link[fsbrain]{vis.subject.morph.standard}}, \code{\link[fsbrain]{vis.subject.label}}, \code{\link[fsbrain]{vis.subject.annot}}, and others). That means you can use this function to visualize all kinds of data, e.g., morphometry data in native and standard space, labels, and brain atlases.
 }
 \examples{
-\donttest{
+\dontrun{
    fsbrain::download_optional_data();
    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
    # Use any vis function to get coloredmeshes. You can visualize morphometry,
