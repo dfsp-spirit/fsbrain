@@ -1,6 +1,7 @@
 # Tests for surface color layers.
 
 test_that("A mean curvature color layer can be loaded", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires the full test data and X11.");
     subjects_dir = testdatapath.subjectsdir.full.subject1();
 
@@ -49,7 +50,7 @@ test_that("Alphablending works", {
 
 test_that("An annotation-based or atlas color layer can be created", {
 
-
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 
@@ -74,7 +75,7 @@ test_that("An annotation-based or atlas color layer can be created", {
 
 
 test_that("An outline layer based on an annotation can be created", {
-
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires the full test data and X11.");
     subjects_dir = testdatapath.subjectsdir.full.subject1();
 

@@ -1,4 +1,7 @@
 test_that("Loading of native space whole brain morph data on group level works", {
+
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
@@ -25,6 +28,9 @@ test_that("Loading of native space whole brain morph data on group level works",
 
 
 test_that("Loading of native space whole brain morph data restricted to the cortex on group level works", {
+
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
@@ -53,6 +59,9 @@ test_that("Loading of native space whole brain morph data restricted to the cort
 
 
 test_that("Loading of standard space whole brain morph data on group level works", {
+
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
@@ -75,6 +84,9 @@ test_that("Loading of standard space whole brain morph data on group level works
 
 
 test_that("Label data can be read on group level", {
+
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
@@ -93,6 +105,9 @@ test_that("Label data can be read on group level", {
 })
 
 test_that("Annotation data can be read on group level", {
+
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");

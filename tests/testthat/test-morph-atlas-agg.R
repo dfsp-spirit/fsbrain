@@ -57,6 +57,7 @@ test_that("Aggregation on subject level works", {
 
 
 test_that("Region-based aggregation on group level works in native space", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
@@ -118,6 +119,8 @@ test_that("Region-based aggregation on group level works in native space", {
 
 
 test_that("Spreading a single value over an atlas region works from agg.res result", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+
     annot_file = system.file("extdata", "lh.aparc.annot.gz", package = "freesurferformats", mustWork = TRUE);
     annot = freesurferformats::read.fs.annot(annot_file);
 
@@ -159,6 +162,7 @@ test_that("Spreading a single value over an atlas region works from manually cre
 })
 
 test_that("Writing MGH data spread over regions works", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip when test data missing, e.g., on travis
@@ -181,11 +185,12 @@ test_that("Writing MGH data spread over regions works", {
 })
 
 test_that("Writing faverage region values works", {
-    hemi = "lh"
-    atlas = "aparc"
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+    hemi = "lh";
+    atlas = "aparc";
 
     region_names_aparc = c('unknown', 'bankssts', 'caudalanteriorcingulate', 'caudalmiddlefrontal', 'corpuscallosum', 'cuneus', 'entorhinal', 'fusiform', 'inferiorparietal', 'inferiortemporal', 'isthmuscingulate', 'lateraloccipital', 'lateralorbitofrontal', 'lingual', 'medialorbitofrontal', 'middletemporal', 'parahippocampal', 'paracentral', 'parsopercularis', 'parsorbitalis', 'parstriangularis', 'pericalcarine', 'postcentral', 'posteriorcingulate', 'precentral', 'precuneus', 'rostralanteriorcingulate','rostralmiddlefrontal', 'superiorfrontal', 'superiorparietal', 'superiortemporal', 'supramarginal', 'frontalpole', 'temporalpole', 'transversetemporal', 'insula')
-    num_regions = length(region_names_aparc)
+    num_regions = length(region_names_aparc);
     region_value_list = as.list(rnorm(num_regions, mean=5, sd=1.5));
     names(region_value_list) = region_names_aparc;
     region_value_list$bankssts= 0.1;
@@ -208,6 +213,7 @@ test_that("Writing faverage region values works", {
 })
 
 test_that("Atlas region names can be retrieved", {
+  skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
   subjects_dir = path.expand("~/data/tim_only")
   fsaverage_dir = path.expand("~/data/tim_only/fsaverage")
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip when test data missing, e.g., on travis
@@ -230,6 +236,7 @@ test_that("Atlas region names can be retrieved", {
 
 
 test_that("Region-based aggregation on group level works in native space", {
+  skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
   fsbrain::download_optional_data();
   subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
@@ -296,69 +303,71 @@ test_that("Region-based aggregation on group level works in native space", {
 
 
 test_that("Suggested regions to be ignored can be retrieved for an atlas", {
-  reg_aparc= regions.to.ignore('aparc');
-  expect_equal(length(reg_aparc), 2);
+    reg_aparc= regions.to.ignore('aparc');
+    expect_equal(length(reg_aparc), 2);
 
-  reg_aparc.a2009s= regions.to.ignore('aparc.a2009s');
-  expect_equal(length(reg_aparc.a2009s), 2);
+    reg_aparc.a2009s= regions.to.ignore('aparc.a2009s');
+    expect_equal(length(reg_aparc.a2009s), 2);
 
-  reg_nosuchatlas= regions.to.ignore('nosuchatlas');
-  expect_equal(length(reg_nosuchatlas), 0);
+    reg_nosuchatlas= regions.to.ignore('nosuchatlas');
+    expect_equal(length(reg_nosuchatlas), 0);
 })
 
 
 test_that("Subject annotation works", {
-  fsbrain::download_optional_data();
-  subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
-  skip_if_not(dir.exists(subjects_dir), message="Test data missing.")
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+    skip_if_not(dir.exists(subjects_dir), message="Test data missing.")
 
-  subject_id = "subject1";
-  annot = subject.annot(subjects_dir, subject_id, "lh", "aparc");
+    subject_id = "subject1";
+    annot = subject.annot(subjects_dir, subject_id, "lh", "aparc");
 
-  num_verts_subject1_lh = 149244
-  expect_equal(length(annot$vertices), num_verts_subject1_lh);
-  expect_equal(length(annot$label_codes), num_verts_subject1_lh);
-  expect_equal(length(annot$label_names), num_verts_subject1_lh);
-  expect_equal(length(annot$hex_colors_rgb), num_verts_subject1_lh);
+    num_verts_subject1_lh = 149244
+    expect_equal(length(annot$vertices), num_verts_subject1_lh);
+    expect_equal(length(annot$label_codes), num_verts_subject1_lh);
+    expect_equal(length(annot$label_names), num_verts_subject1_lh);
+    expect_equal(length(annot$hex_colors_rgb), num_verts_subject1_lh);
 
-  expect_equal(annot$colortable$num_entries, 36);
-  expect_equal(nrow(annot$colortable$table), 36);
-  expect_equal(nrow(annot$colortable_df), 36);
+    expect_equal(annot$colortable$num_entries, 36);
+    expect_equal(nrow(annot$colortable$table), 36);
+    expect_equal(nrow(annot$colortable_df), 36);
 })
 
 
 test_that("Merging annotations works", {
-  fsbrain::download_optional_data();
-  subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
-  skip_if_not(dir.exists(subjects_dir), message="Test data missing.")
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+    skip_if_not(dir.exists(subjects_dir), message="Test data missing.")
 
-  subject_id = "subject1";
-  lh_annot = subject.annot(subjects_dir, subject_id, "lh", "aparc");
-  rh_annot = subject.annot(subjects_dir, subject_id, "rh", "aparc");
+    subject_id = "subject1";
+    lh_annot = subject.annot(subjects_dir, subject_id, "lh", "aparc");
+    rh_annot = subject.annot(subjects_dir, subject_id, "rh", "aparc");
 
-  num_verts_subject1_lh = 149244
-  num_verts_subject1_rh = 153333
-  num_verts_subject1_both = num_verts_subject1_lh + num_verts_subject1_rh
+    num_verts_subject1_lh = 149244
+    num_verts_subject1_rh = 153333
+    num_verts_subject1_both = num_verts_subject1_lh + num_verts_subject1_rh
 
-  annot = merge.hemi.annots(lh_annot, rh_annot);
-  # Ensure vertex-wise data was merged.
-  expect_equal(length(annot$vertices), num_verts_subject1_both);
-  expect_equal(length(annot$label_codes), num_verts_subject1_both);
-  expect_equal(length(annot$label_names), num_verts_subject1_both);
-  expect_equal(length(annot$hex_colors_rgb), num_verts_subject1_both);
+    annot = merge.hemi.annots(lh_annot, rh_annot);
+    # Ensure vertex-wise data was merged.
+    expect_equal(length(annot$vertices), num_verts_subject1_both);
+    expect_equal(length(annot$label_codes), num_verts_subject1_both);
+    expect_equal(length(annot$label_names), num_verts_subject1_both);
+    expect_equal(length(annot$hex_colors_rgb), num_verts_subject1_both);
 
-  # Ensure that the colortable entries were not duplicated
-  expect_equal(lh_annot$colortable$num_entries, 36);
-  expect_equal(nrow(lh_annot$colortable$table), 36);
-  expect_equal(nrow(lh_annot$colortable_df), 36);
+    # Ensure that the colortable entries were not duplicated
+    expect_equal(lh_annot$colortable$num_entries, 36);
+    expect_equal(nrow(lh_annot$colortable$table), 36);
+    expect_equal(nrow(lh_annot$colortable_df), 36);
 
-  expect_equal(rh_annot$colortable$num_entries, 36);
-  expect_equal(nrow(rh_annot$colortable$table), 36);
-  expect_equal(nrow(rh_annot$colortable_df), 36);
+    expect_equal(rh_annot$colortable$num_entries, 36);
+    expect_equal(nrow(rh_annot$colortable$table), 36);
+    expect_equal(nrow(rh_annot$colortable_df), 36);
 
-  expect_equal(annot$colortable$num_entries, 36);
-  expect_equal(nrow(annot$colortable$table), 36);
-  expect_equal(nrow(annot$colortable_df), 36);
+    expect_equal(annot$colortable$num_entries, 36);
+    expect_equal(nrow(annot$colortable$table), 36);
+    expect_equal(nrow(annot$colortable_df), 36);
 })
 
 

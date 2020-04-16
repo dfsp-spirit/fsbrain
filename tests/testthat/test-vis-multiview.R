@@ -5,6 +5,7 @@
 # You may want to set a globale default for windowrect, e.g.: `library('rgl'); r3dDefaults$windowRect <- c(50,50, 800, 800);`
 
 test_that("We can visualize morphometry data in multiview.", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires the full test data and X11.");
 
     fsbrain::download_optional_data();
@@ -58,6 +59,7 @@ test_that("We can visualize morphometry data in multiview.", {
 
 
 test_that("We can visualize p values or other arbitrary data, one value per atlas region.", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires the full test data and X11.");
     fsbrain::download_optional_data();
 
@@ -86,6 +88,7 @@ test_that("We can visualize p values or other arbitrary data, one value per atla
 
 
 test_that("We can visualize data on fsaverage if available", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires the full test data and X11.");
     subjects_dir = testdatapath.subjectsdir.full.subject1();
 
@@ -105,6 +108,7 @@ test_that("We can visualize data on fsaverage if available", {
 
 
 test_that("We can record a gif movie of a rotating brain.", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(run.extralong.tests(), "This test takes ages.");
 
     fsbrain::download_optional_data();
@@ -143,6 +147,7 @@ test_that("We can record a gif movie of a rotating brain.", {
 
 
 test_that("A label can be visualized.", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.has.x11display(), "This test requires X11.");
 
     fsbrain::download_optional_data();
@@ -158,6 +163,7 @@ test_that("A label can be visualized.", {
 })
 
 test_that("A region from an atlas can be converted to a label and visualized.", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires the full test data and X11.");
     subjects_dir = testdatapath.subjectsdir.full.subject1();
 
@@ -194,6 +200,7 @@ test_that("A region from an atlas can be converted to a label and visualized.", 
 
 
 test_that("We can visualize label data or arbitrary sets of vertices.", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires the full test data and X11.");
     subjects_dir = testdatapath.subjectsdir.full.subject1();
 
@@ -220,6 +227,7 @@ test_that("We can visualize label data or arbitrary sets of vertices.", {
 
 
 test_that("We can combine an output view with a separate colormap.", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(run.extralong.tests(), "This test requires the full test data and X11, and takes ages.");
     subjects_dir = testdatapath.subjectsdir.full.subject1();
 
@@ -308,6 +316,7 @@ test_that("We can combine an output view with a separate colormap.", {
 
 
 test_that("We can construct a tight layout image by merging several sd views.", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires X11 and imagemagick.");
 
     fsbrain::download_optional_data();

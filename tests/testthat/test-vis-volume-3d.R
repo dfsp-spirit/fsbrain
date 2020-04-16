@@ -1,7 +1,7 @@
 
 
 test_that("A brain volume or parts of it can be rendered in voxel mode", {
-
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires X11 and all test data.");
 
     fsbrain::download_optional_data();
@@ -38,7 +38,7 @@ test_that("A brain volume or parts of it can be rendered in voxel mode", {
 
 
 test_that("A brain volume segmentation can be rendered with correct colors from the aseg", {
-
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires X11, an aseg.mgz file for the demo subject and the FreeSurferColorLUT.");
 
     fsbrain::download_optional_data();
@@ -79,7 +79,7 @@ test_that("A brain volume segmentation can be rendered with correct colors from 
 
 
 test_that("Brain structures can be rendered as contours using misc3d", {
-
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires X11, the misc3d package, and an aseg.mgz file for the demo subject.");
 
     fsbrain::download_optional_data();
@@ -121,7 +121,7 @@ test_that("Brain structures can be rendered as contours using misc3d", {
 
 
 test_that("The pial surface drawn as a transparent wrapping over the white surface", {
-
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires X11 and extra data.");
 
     fsbrain::download_optional_data();
@@ -141,7 +141,7 @@ test_that("The pial surface drawn as a transparent wrapping over the white surfa
 
 
 test_that("Voxels can be rotated and rendered in a brainview", {
-
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires X11.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -159,7 +159,7 @@ test_that("Voxels can be rotated and rendered in a brainview", {
 
 
 test_that("A misc3d contour (Triangles3D instance) can be rotated and rendered in a brainview", {
-
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires X11.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");

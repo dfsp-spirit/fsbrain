@@ -1,6 +1,7 @@
 
 
 test_that("Aggregation of native space whole brain morph data on group level works", {
+  skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
   fsbrain::download_optional_data();
   subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
@@ -21,6 +22,7 @@ test_that("Aggregation of native space whole brain morph data on group level wor
 
 
 test_that("Aggregation of native space whole brain morph data restricted to the cortex on group level works", {
+  skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
   fsbrain::download_optional_data();
   subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
@@ -41,6 +43,7 @@ test_that("Aggregation of native space whole brain morph data restricted to the 
 
 
 test_that("Aggregation of native space whole brain morph data on group level works with cast set to FALSE", {
+  skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
   fsbrain::download_optional_data();
   subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
@@ -61,6 +64,7 @@ test_that("Aggregation of native space whole brain morph data on group level wor
 
 
 test_that("Aggregation of standard space whole brain morph data on group level works with cast=TRUE", {
+  skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
   fsbrain::download_optional_data();
   subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
   skip_if_not(dir.exists(subjects_dir), message="Test data missing."); # skip on travis
@@ -82,6 +86,7 @@ test_that("Aggregation of standard space whole brain morph data on group level w
 
 
 test_that("Aggregation of standard space whole brain morph data on group level works for several measures and hemis with cast=FALSE", {
+  skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
   fsbrain::download_optional_data();
   subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
@@ -104,6 +109,7 @@ test_that("Aggregation of standard space whole brain morph data on group level w
 
 
 test_that("Aggregation of native space whole brain morph data on group level works for several measures and hemis", {
+  skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
   fsbrain::download_optional_data();
   subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
@@ -126,6 +132,7 @@ test_that("Aggregation of native space whole brain morph data on group level wor
 
 
 test_that("Aggregation of native space whole brain morph data on group level works for several measures and hemis with cast=TRUE", {
+  skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
   fsbrain::download_optional_data();
   subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
@@ -147,6 +154,7 @@ test_that("Aggregation of native space whole brain morph data on group level wor
 
 
 test_that("Aggregation of standard space whole brain morph data on group level works for several measures and hemis with cast=TRUE", {
+  skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
   fsbrain::download_optional_data();
   subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
@@ -168,7 +176,8 @@ test_that("Aggregation of standard space whole brain morph data on group level w
 
 
 test_that("Aggregation of native space whole brain morph data on group level restricted to the cortex works for several measures and hemis", {
-  fsbrain::download_optional_data();
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+    fsbrain::download_optional_data();
   subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
   skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
 

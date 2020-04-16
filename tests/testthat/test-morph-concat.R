@@ -1,4 +1,5 @@
 test_that("Concatination of native space measures works for a single hemisphere", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
@@ -16,6 +17,7 @@ test_that("Concatination of native space measures works for a single hemisphere"
 })
 
 test_that("Concatination of native space measures works for both hemispheres", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
@@ -35,6 +37,7 @@ test_that("Concatination of native space measures works for both hemispheres", {
 
 
 test_that("Concatination of standard space measures works for a single hemisphere", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis
@@ -50,6 +53,7 @@ test_that("Concatination of standard space measures works for a single hemispher
 })
 
 test_that("Concatination of standard space measures works for both hemispheres", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip on travis

@@ -1,5 +1,5 @@
 test_that("A brain volume for a single subject can be loaded", {
-
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
@@ -23,7 +23,7 @@ test_that("A brain volume for a single subject can be loaded", {
 
 
 test_that("Brain volume CRS voxels are rendered at the correct surface space RAS coordinates", {
-
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     # This test shows that the vol.vox.from.crs() function and the vox2ras_tkr() functions work correctly.
     # In combination, they allow to plot the voxels from a brain volume (which have no coorindates associated with them,
     # -- just indices) at coordinates in surface RAS space that lead to a proper super-position of the brain surfaces and
@@ -72,7 +72,7 @@ test_that("Brain volume CRS voxels are rendered at the correct surface space RAS
 
 
 test_that("The loaded brain volume is in the correct orientation and the fs CRS to R CRS transformation works", {
-
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");

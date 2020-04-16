@@ -2,6 +2,7 @@
 # You can run them by copying & pasting the code into an R session. Treat it as examples.
 
 test_that("We can visualize morphometry data.", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires X11.");
 
     fsbrain::download_optional_data();
@@ -18,6 +19,7 @@ test_that("We can visualize morphometry data.", {
 
 
 test_that("We can visualize annotation atlas data.", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires X11.");
 
     fsbrain::download_optional_data();
@@ -32,6 +34,7 @@ test_that("We can visualize annotation atlas data.", {
 
 
 test_that("We can visualize arbitrary data on a subjects surface.", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires X11.");
 
     fsbrain::download_optional_data();
@@ -51,6 +54,7 @@ test_that("We can visualize arbitrary data on a subjects surface.", {
 
 
 test_that("We can visualize arbitrary data on the fsaverage surfaces if available.", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires X11.");
 
     subjects_dir_query = find.subjectsdir.of(subject_id='fsaverage', mustWork = FALSE);
@@ -72,6 +76,7 @@ test_that("We can visualize arbitrary data on the fsaverage surfaces if availabl
 
 
 test_that("We can visualize one value per atlas region on a subject.", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires X11.");
 
     fsbrain::download_optional_data();
@@ -99,6 +104,7 @@ test_that("We can visualize one value per atlas region on a subject.", {
 
 
 test_that("We can visualize one value per Desikan atlas region on fsaverage.", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires X11.");
 
     subjects_dir = find.subjectsdir.of("fsaverage")$found_at;
@@ -131,6 +137,7 @@ test_that("We can visualize one value per Desikan atlas region on fsaverage.", {
 
 
 test_that("We can visualize a subset of the regions of the Desikan atlas on fsaverage.", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.has.fsaverage(), "This test requires fsaverage.");
 
     subjects_dir = find.subjectsdir.of("fsaverage")$found_at;
@@ -161,6 +168,7 @@ test_that("We can visualize a subset of the regions of the Desikan atlas on fsav
 
 
 test_that("We can visualize clusters on fsaverage with a background.", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.has.freesurfer() & box.has.fsaverage(), "This test requires the full fsaverage subject with curv data.");
 
     subjects_dir = file.path(find.freesurferhome()$found_at, 'subjects');

@@ -1,4 +1,7 @@
 test_that("Loading of native space whole brain morph data on subject level works", {
+
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
@@ -12,6 +15,7 @@ test_that("Loading of native space whole brain morph data on subject level works
 
 
 test_that("Loading of native space whole brain morph data on subject level works for both hemis", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
@@ -27,6 +31,7 @@ test_that("Loading of native space whole brain morph data on subject level works
 
 
 test_that("Loading of native space whole brain morph data on subject level, limited to the cortex, works", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
@@ -44,6 +49,7 @@ test_that("Loading of native space whole brain morph data on subject level, limi
 
 
 test_that("Standard space morphometry data can be read on subject level", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
@@ -57,6 +63,7 @@ test_that("Standard space morphometry data can be read on subject level", {
 
 
 test_that("Standard space morphometry data can be read on subject level for both hemis", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
@@ -71,6 +78,7 @@ test_that("Standard space morphometry data can be read on subject level for both
 
 
 test_that("Label data can be read on subject level", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
@@ -87,6 +95,7 @@ test_that("Label data can be read on subject level", {
 
 
 test_that("Surface data can be read on subject level", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
@@ -142,6 +151,7 @@ test_that("An existing mask can be modified by applying more inverted labels", {
 
 
 test_that("We can build a mask from an atlas region and edit it", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     fsbrain::download_optional_data();
 
     # Define the data to use:
@@ -171,6 +181,7 @@ test_that("We can build a mask from an atlas region and edit it", {
 
 
 test_that("We can compute the medial mask for a subject", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     fsbrain::download_optional_data();
 
     # Define the data to use:
