@@ -701,4 +701,24 @@ subject.surface <- function(subjects_dir, subject_id, surface, hemi) {
 }
 
 
+#' @title Load labels representing brain lobes.
+#'
+#' @description This gives you labels that represent brain lobes for a subject. The lobe definition is based on the Desikan-Killiany atlas (Desikan *et al.*, 2010) as suggested on the FreeSurfer website at https://surfer.nmr.mgh.harvard.edu/fswiki/CorticalParcellation.
+#'
+#' @inheritParams subject.surface
+#'
+#' @family atlas functions
+#'
+#' @export
+subject.label.lobes <- function(subjects_dir, subject_id, hemi='both') {
+    atlas = 'aparc';
+}
+
+
+#' @keywords internal
+hemi.lobe.labels <- function(subjects_dir, subject_id, hemi) {
+
+}
+
+
 

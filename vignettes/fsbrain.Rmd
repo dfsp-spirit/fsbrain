@@ -278,7 +278,7 @@ Other parameters exist to define the template subject, which defaults to 'fsaver
 
 # Working with atlas data
 
-
+By default, FreeSurfer computes brain surface parcellations based on three different brain atlases for your subjects: the Desikan-Killiany atlas ('aparc' files, Desikan *et al.*, 2006), the Destrieux atlas ('aparc.a2009s' files, Destrieux *et al.*, 2010) , and the DKT or Mindboggle 40 atlas ('aparc.DKTatlas40' files). The following functions support working with atlas data.
 
 ## Creating a label from an atlas region
 
@@ -287,7 +287,7 @@ One can use the *label.from.annotdata()* function on subject level, or the *grou
 ```{r, eval = FALSE}
 surface = 'white';
 hemi = 'both';
-atlas = 'aparc';
+atlas = 'aparc';  # one of 'aparc', 'aparc.a2009s', or 'aparc.DKTatlas40'.
 region = 'bankssts';
 
 # Create a label from a region of an annotation or atlas:
