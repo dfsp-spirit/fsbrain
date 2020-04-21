@@ -471,7 +471,7 @@ subject.filepath.any <- function(subjects_dir, subject_id, relative_path_parts, 
 #'
 #' @param subject_id string. The subject identifier
 #'
-#' @param label string. Name of the label file, without the hemi part (if any), but including the '.label' suffix. E.g., 'cortex.label' for '?h.cortex.label'. You can also pass just the label (e.g., 'cortex'): if the string does not end with the suffix '.label', that suffix gets added auomatically.
+#' @param label string. Name of the label file, without the hemi part. You can include the '.label' suffix. E.g., 'cortex.label' for '?h.cortex.label'. You can also pass just the label (e.g., 'cortex'): if the string does not end with the suffix '.label', that suffix gets added auomatically.
 #'
 #' @param hemi string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the label data files to be loaded. For 'both', see the information on the return value.
 #'
@@ -707,17 +707,49 @@ subject.surface <- function(subjects_dir, subject_id, surface, hemi) {
 #'
 #' @inheritParams subject.surface
 #'
+#' @param include_cingulate logical, whether to include the vertices of the cingulate in the lobes
+#'
 #' @family atlas functions
+#' @family label functions
 #'
 #' @export
-subject.label.lobes <- function(subjects_dir, subject_id, hemi='both') {
-    atlas = 'aparc';
+subject.label.lobes <- function(subjects_dir, subject_id, hemi='both', include_cingulate=TRUE) {
+
+    if(!(hemi %in% c("lh", "rh", "both"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
+    }
+
+    ret_list = list();
+
+    if(hemi %in% c("lh", "both")) {
+        ret_list$lh = hemi.lobe.labels(subjects_dir, subject_id, 'lh', include_cingulate=include_cingulate);
+    }
+    if(hemi %in% c("rh", "both")) {
+        ret_list$rh = hemi.lobe.labels(subjects_dir, subject_id, 'rh', include_cingulate=include_cingulate);
+    }
+    return(ret_list);
 }
 
 
 #' @keywords internal
-hemi.lobe.labels <- function(subjects_dir, subject_id, hemi) {
+hemi.lobe.labels <- function(subjects_dir, subject_id, hemi, include_cingulate=TRUE) {
 
+    if(!(hemi %in% c("lh", "rh"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
+    }
+
+    atlas = 'aparc';
+    annot = subject.annot(subjects_dir, subject_id, hemi, atlas);
+
+    frontal_lobe_regions = c('superiorfrontal', 'rostralmiddlefrontal', 'caudalmiddlefrontal' , 'parstriangularis', 'parsopercularis', 'parsorbitalis', 'lateralorbitofrontal', 'medialorbitofrontal', 'paracentral', 'precentral', 'frontalpole');
+    parietal_lobe_regions = c('superiorparietal', 'inferiorparietal', 'supramarginal', 'postcentral', 'precuneus');
+    temporal_lobe_regions = c('superiortemporal', 'inferiortemporal', 'middletemporal', 'bankssts', 'fusiform', 'transversetemporal', 'entorhinal', 'parahippocampal', 'temporalpole');
+    occipital_lobe_regions = c('lateraloccipital', 'lingual', 'cuneus', 'pericalcarine');
+
+    if(include_cingulate) {
+        frontal_lobe_regions = c(frontal_lobe_regions, 'caudalanteriorcingulate', 'rostralanteriorcingulate');
+        parietal_lobe_regions = c(parietal_lobe_regions, 'posteriorcingulate', 'isthmuscingulate');
+    }
 }
 
 
