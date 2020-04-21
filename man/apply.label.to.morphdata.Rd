@@ -35,7 +35,7 @@ This function will set all values in morphdata which are *not* part of the label
 \seealso{
 Other label functions: 
 \code{\link{apply.labeldata.to.morphdata}()},
-\code{\link{subject.label.lobes}()},
+\code{\link{subject.lobes}()},
 \code{\link{subject.mask}()},
 \code{\link{vis.labeldata.on.subject}()},
 \code{\link{vis.subject.label}()}

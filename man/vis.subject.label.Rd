@@ -82,7 +82,7 @@ Other visualization functions:
 Other label functions: 
 \code{\link{apply.label.to.morphdata}()},
 \code{\link{apply.labeldata.to.morphdata}()},
-\code{\link{subject.label.lobes}()},
+\code{\link{subject.lobes}()},
 \code{\link{subject.mask}()},
 \code{\link{vis.labeldata.on.subject}()}
 }

@@ -713,7 +713,7 @@ subject.surface <- function(subjects_dir, subject_id, surface, hemi) {
 #' @family label functions
 #'
 #' @export
-subject.label.lobes <- function(subjects_dir, subject_id, hemi='both', include_cingulate=TRUE) {
+subject.lobes <- function(subjects_dir, subject_id, hemi='both', include_cingulate=TRUE, as_annot=FALSE) {
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
@@ -722,10 +722,10 @@ subject.label.lobes <- function(subjects_dir, subject_id, hemi='both', include_c
     ret_list = list();
 
     if(hemi %in% c("lh", "both")) {
-        ret_list$lh = hemi.lobe.labels(subjects_dir, subject_id, 'lh', include_cingulate=include_cingulate);
+        ret_list$lh = hemi.lobe.labels(subjects_dir, subject_id, 'lh', include_cingulate=include_cingulate, as_annot=as_annot);
     }
     if(hemi %in% c("rh", "both")) {
-        ret_list$rh = hemi.lobe.labels(subjects_dir, subject_id, 'rh', include_cingulate=include_cingulate);
+        ret_list$rh = hemi.lobe.labels(subjects_dir, subject_id, 'rh', include_cingulate=include_cingulate, as_annot=as_annot);
     }
     return(ret_list);
 }
@@ -733,10 +733,14 @@ subject.label.lobes <- function(subjects_dir, subject_id, hemi='both', include_c
 
 #' @title Compute lobe labels for a single hemi from aparc atlas.
 #'
-#' @note see subject.label.lobes for details
+#' @inheritParams subject.lobes
+#'
+#' @param hemi string, one of 'lh' or 'rh'. The hemisphere name.
+#'
+#' @note See \code{\link[fsbrain]{subject.lobes}} for details.
 #'
 #' @keywords internal
-hemi.lobe.labels <- function(subjects_dir, subject_id, hemi, include_cingulate=TRUE) {
+hemi.lobe.labels <- function(subjects_dir, subject_id, hemi, include_cingulate=TRUE, as_annot=FALSE) {
 
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
@@ -760,7 +764,15 @@ hemi.lobe.labels <- function(subjects_dir, subject_id, hemi, include_cingulate=T
     lobe_indices[annot$label_names %in% parietal_lobe_regions] = 2L;
     lobe_indices[annot$label_names %in% temporal_lobe_regions] = 3L;
     lobe_indices[annot$label_names %in% occipital_lobe_regions] = 4L;
-    return(lobe_indices);
+
+    if(as_annot) {
+        num_vertices_in_surface = length(annot$vertices);
+        label_vertices_by_region = list('unknown2'=which(lobe_indices==0L), 'frontal'=which(lobe_indices==1L), 'parietal'=which(lobe_indices==2L), 'temporal'=which(lobe_indices==3L), 'occipetal'=which(lobe_indices==4L));
+        output_annot = label.to.annot(label_vertices_by_region, num_vertices_in_surface);
+        return(output_annot);
+    } else {
+        return(lobe_indices);
+    }
 }
 
 

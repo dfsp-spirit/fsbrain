@@ -52,6 +52,6 @@ Other atlas functions:
 \code{\link{subject.annot}()},
 \code{\link{subject.atlas.agg}()},
 \code{\link{subject.label.from.annot}()},
-\code{\link{subject.label.lobes}()}
+\code{\link{subject.lobes}()}
 }
 \concept{atlas functions}

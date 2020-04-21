@@ -135,15 +135,20 @@ group.label.from.annot <- function(subjects_dir, subjects_list, hemi, atlas, reg
 #' @importFrom squash rainbow2
 #' @export
 label.to.annot <- function(label_vertices_by_region, num_vertices_in_surface, colortable_df=NULL, index_of_unknown_region=1L) {
+
+    if('unknown' %in% names(label_vertices_by_region)) {
+        stop("The region name 'unknown' must not occur in names of parameter 'label_vertices_by_region'.");
+    }
+
     if(is.null(colortable_df)) {
         # Automatically generate a colortable_df
-        num_regions_including_unknown = length(label_vertices_by_region) + 1;
+        num_regions_including_unknown = length(label_vertices_by_region) + 1L;
         rgb255colors = grDevices::col2rgb(squash::rainbow2(num_regions_including_unknown), alpha = TRUE);
         r = rgb255colors[1,];
         g = rgb255colors[2,];
         b = rgb255colors[3,];
         a = rgb255colors[4,];
-        colortable_df = data.frame("struct_index"=seq(0, num_regions_including_unknown-1), "struct_name"=c("unknown", names(label_vertices_by_region)), "r"=r, "g"=g, "b"=b, "a"=a);
+        colortable_df = data.frame("struct_index"=seq(0, num_regions_including_unknown-1L), "struct_name"=c("unknown", names(label_vertices_by_region)), "r"=r, "g"=g, "b"=b, "a"=a);
 
     } else {
         if(length(label_vertices_by_region) != nrow(colortable_df) - 1L) {
@@ -182,11 +187,15 @@ label.to.annot <- function(label_vertices_by_region, num_vertices_in_surface, co
     for(label_region in names(label_vertices_by_region)) {
         if(label_region %in% colortable_df$struct_name) {
             region_code = subset(colortable_df, colortable_df$struct_name == label_region)$code;
+            if(length(region_code) != 1L) {
+                stop(sprintf("Could not determine unique code for region '%s', found %d codes.\n", label_region, length(region_code)));
+            }
             label_vertices = label_vertices_by_region[[label_region]];
-            label_codes[label_vertices] = region_code;
-
-            label_names[label_vertices] = subset(colortable_df, colortable_df$struct_name == label_region)$struct_name;
-            hex_colors_rgb[label_vertices] = subset(colortable_df, colortable_df$struct_name == label_region)$hex_color_string_rgb;
+            if(length(label_vertices) >= 1L) {
+                label_codes[label_vertices] = region_code;
+                label_names[label_vertices] = subset(colortable_df, colortable_df$struct_name == label_region)$struct_name;
+                hex_colors_rgb[label_vertices] = subset(colortable_df, colortable_df$struct_name == label_region)$hex_color_string_rgb;
+            }
         } else {
             stop(sprintf("Vertices for region '%s' cannot be assigned a code: region does not occur in colortable_df column 'struct_name'.\n", label_region));
         }

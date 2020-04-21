@@ -71,7 +71,7 @@ Visualizes a label. Note that a label is just a set of vertices, and that you ca
 Other label functions: 
 \code{\link{apply.label.to.morphdata}()},
 \code{\link{apply.labeldata.to.morphdata}()},
-\code{\link{subject.label.lobes}()},
+\code{\link{subject.lobes}()},
 \code{\link{subject.mask}()},
 \code{\link{vis.subject.label}()}
 
