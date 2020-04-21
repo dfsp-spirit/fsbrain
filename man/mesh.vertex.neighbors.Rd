@@ -4,8 +4,12 @@
 \alias{mesh.vertex.neighbors}
 \title{Compute neighborhood of a vertex}
 \usage{
-mesh.vertex.neighbors(surface, source_vertices, k = 1L,
-  restrict_to_vertices = NULL)
+mesh.vertex.neighbors(
+  surface,
+  source_vertices,
+  k = 1L,
+  restrict_to_vertices = NULL
+)
 }
 \arguments{
 \item{surface}{a surface as returned by functions like \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}.}
@@ -23,10 +27,11 @@ the neighborhood as a list with two entries: "faces": integer vector, the face i
 Given a set of query vertex indices and a mesh *m*, compute all vertices which are adjacent to the query vertices in the mesh. A vertex *u* is *adjacent* to another vertex *v* iff there exists an edge *e = (u, v)* in *m*. While you could call this function repeatedly with the old output as its new input to extend the neighborhood, you should maybe use a proper graph library for this.
 }
 \seealso{
-Other surface mesh functions: \code{\link{face.edges}},
-  \code{\link{label.border}},
-  \code{\link{mesh.vertex.included.faces}},
-  \code{\link{subject.surface}},
-  \code{\link{vis.path.along.verts}}
+Other surface mesh functions: 
+\code{\link{face.edges}()},
+\code{\link{label.border}()},
+\code{\link{mesh.vertex.included.faces}()},
+\code{\link{subject.surface}()},
+\code{\link{vis.path.along.verts}()}
 }
 \concept{surface mesh functions}

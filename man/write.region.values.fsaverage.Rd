@@ -4,9 +4,16 @@
 \alias{write.region.values.fsaverage}
 \title{Write one value per atlas region for a template subject.}
 \usage{
-write.region.values.fsaverage(hemi, atlas, region_value_list, output_file,
-  template_subject = "fsaverage", template_subjects_dir = NULL,
-  show_freeview_tip = FALSE, value_for_unlisted_regions = NaN)
+write.region.values.fsaverage(
+  hemi,
+  atlas,
+  region_value_list,
+  output_file,
+  template_subject = "fsaverage",
+  template_subjects_dir = NULL,
+  show_freeview_tip = FALSE,
+  value_for_unlisted_regions = NaN
+)
 }
 \arguments{
 \item{hemi, }{string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.}
@@ -32,7 +39,8 @@ a named list with the following entries: "data": a vector containing the data. "
 Given an atlas and a list that contains one value for each atlas region, write a morphometry file in which all region vertices are assigned the value. Can be used to plot stuff like p-values or effect sizes onto brain regions.
 }
 \seealso{
-Other output functions: \code{\link{write.region.aggregated}},
-  \code{\link{write.region.values}}
+Other output functions: 
+\code{\link{write.region.aggregated}()},
+\code{\link{write.region.values}()}
 }
 \concept{output functions}

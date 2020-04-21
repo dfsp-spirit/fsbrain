@@ -4,9 +4,16 @@
 \alias{coloredmesh.from.morphdata}
 \title{Create a coloredmesh from arbitrary data.}
 \usage{
-coloredmesh.from.morphdata(subjects_dir, vis_subject_id, morph_data, hemi,
-  surface = "white", colormap = NULL, all_nan_backup_value = 0,
-  makecmap_options = list(colFn = squash::jet))
+coloredmesh.from.morphdata(
+  subjects_dir,
+  vis_subject_id,
+  morph_data,
+  hemi,
+  surface = "white",
+  colormap = NULL,
+  all_nan_backup_value = 0,
+  makecmap_options = list(colFn = squash::jet)
+)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}

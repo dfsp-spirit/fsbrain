@@ -4,11 +4,21 @@
 \alias{vis.symmetric.data.on.subject}
 \title{Visualize clusters or activation data on the surface of any subject.}
 \usage{
-vis.symmetric.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh,
-  morph_data_rh, surface = "white", colormap = NULL, views = c("t4"),
-  rgloptions = list(), rglactions = list(), draw_colorbar = FALSE,
-  makecmap_options = list(colFn = squash::jet, symm = TRUE, col.na =
-  "#FFFFFF00"), map_to_NA = c(0), bg = NULL)
+vis.symmetric.data.on.subject(
+  subjects_dir,
+  vis_subject_id,
+  morph_data_lh,
+  morph_data_rh,
+  surface = "white",
+  colormap = NULL,
+  views = c("t4"),
+  rgloptions = list(),
+  rglactions = list(),
+  draw_colorbar = FALSE,
+  makecmap_options = list(colFn = squash::jet, symm = TRUE, col.na = "#FFFFFF00"),
+  map_to_NA = c(0),
+  bg = NULL
+)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -54,22 +64,24 @@ This function is intended to plot symmetric data around zero (like positive and 
 
 }
 \seealso{
-Other visualization functions: \code{\link{vis.color.on.subject}},
-  \code{\link{vis.data.on.fsaverage}},
-  \code{\link{vis.data.on.subject}},
-  \code{\link{vis.labeldata.on.subject}},
-  \code{\link{vis.mask.on.subject}},
-  \code{\link{vis.region.values.on.subject}},
-  \code{\link{vis.subject.annot}},
-  \code{\link{vis.subject.label}},
-  \code{\link{vis.subject.morph.native}},
-  \code{\link{vis.subject.morph.standard}},
-  \code{\link{vislayout.from.coloredmeshes}}
+Other visualization functions: 
+\code{\link{vis.color.on.subject}()},
+\code{\link{vis.data.on.fsaverage}()},
+\code{\link{vis.data.on.subject}()},
+\code{\link{vis.labeldata.on.subject}()},
+\code{\link{vis.mask.on.subject}()},
+\code{\link{vis.region.values.on.subject}()},
+\code{\link{vis.subject.annot}()},
+\code{\link{vis.subject.label}()},
+\code{\link{vis.subject.morph.native}()},
+\code{\link{vis.subject.morph.standard}()},
+\code{\link{vislayout.from.coloredmeshes}()}
 
-Other morphometry visualization functions: \code{\link{vis.data.on.fsaverage}},
-  \code{\link{vis.data.on.subject}},
-  \code{\link{vis.subject.morph.native}},
-  \code{\link{vis.subject.morph.standard}}
+Other morphometry visualization functions: 
+\code{\link{vis.data.on.fsaverage}()},
+\code{\link{vis.data.on.subject}()},
+\code{\link{vis.subject.morph.native}()},
+\code{\link{vis.subject.morph.standard}()}
 }
 \concept{morphometry visualization functions}
 \concept{visualization functions}

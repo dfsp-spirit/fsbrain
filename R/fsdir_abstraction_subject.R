@@ -754,6 +754,13 @@ hemi.lobe.labels <- function(subjects_dir, subject_id, hemi, include_cingulate=T
         frontal_lobe_regions = c(frontal_lobe_regions, 'caudalanteriorcingulate', 'rostralanteriorcingulate');
         parietal_lobe_regions = c(parietal_lobe_regions, 'posteriorcingulate', 'isthmuscingulate');
     }
+
+    lobe_indices = rep(0L, length(annot$vertices));
+    lobe_indices[annot$label_names %in% frontal_lobe_regions] = 1L;
+    lobe_indices[annot$label_names %in% parietal_lobe_regions] = 2L;
+    lobe_indices[annot$label_names %in% temporal_lobe_regions] = 3L;
+    lobe_indices[annot$label_names %in% occipital_lobe_regions] = 4L;
+    return(lobe_indices);
 }
 
 
