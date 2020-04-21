@@ -156,6 +156,7 @@ vol.vox.from.crs <- function(fs_crs, add_affine=FALSE) {
 #'
 #' @export
 vox2ras_tkr <- function() {
+    cat(sprintf("################### RUNNING vox2ras_tkr ###############\n"));
     return(matrix(c(-1,0,0,0, 0,0,-1,0, 0,1,0,0, 128,-128,128,1), nrow = 4));
 }
 

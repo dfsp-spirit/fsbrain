@@ -71,14 +71,16 @@ Notice that we scaled the raw data by 255 in this example, as the volume file co
 
 ## 3D voxel and mesh visualization
 
-These types of visualizations are most suitable for interactive use. They rely on a binary definition of *foreground* versus *background* voxels to show the contents of a 3D image. For most grayscale images, especially pre-processed ones, simple thresholding is enough to identify the foreground.
+These types of visualizations are most suitable for interactive use. They rely on a binary definition of *foreground* (which are rendered) versus *background* voxels (which are not rendered) to show the contents of a 3D image. For most grayscale images, especially pre-processed ones, simple thresholding is enough to identify the foreground. Set the background to `NA` before rendering. In the following example, we load a brain volume with intensity values in range 0-255, and set the voxels with intensity values in range 0-5 as background.
+
+*Notice:* If you do not set anything to background after loading a volume, it may take a long time to render the image and the result will be a single large block.
 
 
 ```{r, eval = FALSE}
 brain = subject.volume(subjects_dir, subject_id, 'brain');
-threshold = 1L;
+threshold = 5L;
 brain[which(brain <= threshold, arr.ind = TRUE)] = NA;  # mark background
-brain_hull = vol.hull(brain); # remove inner triangles
+brain_hull = vol.hull(brain);                           # remove inner triangles, optional but recommended
 volvis.voxels(brain_hull);
 ```
 
