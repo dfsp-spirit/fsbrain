@@ -731,6 +731,10 @@ subject.label.lobes <- function(subjects_dir, subject_id, hemi='both', include_c
 }
 
 
+#' @title Compute lobe labels for a single hemi from aparc atlas.
+#'
+#' @note see subject.label.lobes for details
+#'
 #' @keywords internal
 hemi.lobe.labels <- function(subjects_dir, subject_id, hemi, include_cingulate=TRUE) {
 
