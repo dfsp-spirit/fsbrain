@@ -4,24 +4,12 @@
 \alias{vis.subject.morph.standard}
 \title{Visualize native space morphometry data for a subject.}
 \usage{
-vis.subject.morph.standard(
-  subjects_dir,
-  subject_id,
-  measure,
-  hemi = "both",
-  fwhm = "10",
-  surface = "white",
-  template_subject = "fsaverage",
-  template_subjects_dir = NULL,
-  colormap = NULL,
-  views = c("t4"),
-  rgloptions = list(),
-  rglactions = list(),
-  draw_colorbar = FALSE,
-  cortex_only = FALSE,
-  makecmap_options = list(colFn = squash::jet),
-  bg = NULL
-)
+vis.subject.morph.standard(subjects_dir, subject_id, measure,
+  hemi = "both", fwhm = "10", surface = "white",
+  template_subject = "fsaverage", template_subjects_dir = NULL,
+  colormap = NULL, views = c("t4"), rgloptions = list(),
+  rglactions = list(), draw_colorbar = FALSE, cortex_only = FALSE,
+  makecmap_options = list(colFn = squash::jet), bg = NULL)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -48,7 +36,7 @@ vis.subject.morph.standard(
 
 \item{rglactions}{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.}
 
-\item{draw_colorbar}{logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See  \code{\link[fsbrain]{coloredmesh.plot.colorbar.separate}} for an alternative.}
+\item{draw_colorbar}{logical or one of the character strings 'vertical' or ''horizontal', whether to draw a colorbar. Notice: the colorbar is drawn to a separate subplot, and this only works if there is enough space for it, i.e., the plot resolution must be high enough. You may have to increase the plot size for the colorbar to show up, see the vignette for instructions. Defaults to FALSE. See  \code{\link[fsbrain]{coloredmesh.plot.colorbar.separate}} for an alternative.}
 
 \item{cortex_only}{logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the subject. Defaults to FALSE.}
 
@@ -78,24 +66,22 @@ Creates a surface mesh, applies a colormap transform the morphometry data values
 
 }
 \seealso{
-Other visualization functions: 
-\code{\link{vis.color.on.subject}()},
-\code{\link{vis.data.on.fsaverage}()},
-\code{\link{vis.data.on.subject}()},
-\code{\link{vis.labeldata.on.subject}()},
-\code{\link{vis.mask.on.subject}()},
-\code{\link{vis.region.values.on.subject}()},
-\code{\link{vis.subject.annot}()},
-\code{\link{vis.subject.label}()},
-\code{\link{vis.subject.morph.native}()},
-\code{\link{vis.symmetric.data.on.subject}()},
-\code{\link{vislayout.from.coloredmeshes}()}
+Other visualization functions: \code{\link{vis.color.on.subject}},
+  \code{\link{vis.data.on.fsaverage}},
+  \code{\link{vis.data.on.subject}},
+  \code{\link{vis.labeldata.on.subject}},
+  \code{\link{vis.mask.on.subject}},
+  \code{\link{vis.region.values.on.subject}},
+  \code{\link{vis.subject.annot}},
+  \code{\link{vis.subject.label}},
+  \code{\link{vis.subject.morph.native}},
+  \code{\link{vis.symmetric.data.on.subject}},
+  \code{\link{vislayout.from.coloredmeshes}}
 
-Other morphometry visualization functions: 
-\code{\link{vis.data.on.fsaverage}()},
-\code{\link{vis.data.on.subject}()},
-\code{\link{vis.subject.morph.native}()},
-\code{\link{vis.symmetric.data.on.subject}()}
+Other morphometry visualization functions: \code{\link{vis.data.on.fsaverage}},
+  \code{\link{vis.data.on.subject}},
+  \code{\link{vis.subject.morph.native}},
+  \code{\link{vis.symmetric.data.on.subject}}
 }
 \concept{morphometry visualization functions}
 \concept{visualization functions}

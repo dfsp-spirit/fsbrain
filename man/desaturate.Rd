@@ -24,7 +24,6 @@ Assumes sRGB color space.
 see https://en.wikipedia.org/wiki/Grayscale#Converting_color_to_grayscale
 }
 \seealso{
-Other color functions: 
-\code{\link{alphablend}()}
+Other color functions: \code{\link{alphablend}}
 }
 \concept{color functions}

@@ -4,21 +4,11 @@
 \alias{vis.symmetric.data.on.subject}
 \title{Visualize clusters or activation data on the surface of any subject.}
 \usage{
-vis.symmetric.data.on.subject(
-  subjects_dir,
-  vis_subject_id,
-  morph_data_lh,
-  morph_data_rh,
-  surface = "white",
-  colormap = NULL,
-  views = c("t4"),
-  rgloptions = list(),
-  rglactions = list(),
-  draw_colorbar = FALSE,
-  makecmap_options = list(colFn = squash::jet, symm = TRUE, col.na = "#FFFFFF00"),
-  map_to_NA = c(0),
-  bg = NULL
-)
+vis.symmetric.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh,
+  morph_data_rh, surface = "white", colormap = NULL, views = c("t4"),
+  rgloptions = list(), rglactions = list(), draw_colorbar = FALSE,
+  makecmap_options = list(colFn = squash::jet, symm = TRUE, col.na =
+  "#FFFFFF00"), map_to_NA = c(0), bg = NULL)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -39,7 +29,7 @@ vis.symmetric.data.on.subject(
 
 \item{rglactions}{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.}
 
-\item{draw_colorbar}{logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See  \code{\link[fsbrain]{coloredmesh.plot.colorbar.separate}} for an alternative.}
+\item{draw_colorbar}{logical or one of the character strings 'vertical' or ''horizontal', whether to draw a colorbar. Notice: the colorbar is drawn to a separate subplot, and this only works if there is enough space for it, i.e., the plot resolution must be high enough. You may have to increase the plot size for the colorbar to show up, see the vignette for instructions. Defaults to FALSE. See  \code{\link[fsbrain]{coloredmesh.plot.colorbar.separate}} for an alternative.}
 
 \item{makecmap_options}{named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'. Should include at least a colormap function as name 'colFn'.}
 
@@ -64,24 +54,22 @@ This function is intended to plot symmetric data around zero (like positive and 
 
 }
 \seealso{
-Other visualization functions: 
-\code{\link{vis.color.on.subject}()},
-\code{\link{vis.data.on.fsaverage}()},
-\code{\link{vis.data.on.subject}()},
-\code{\link{vis.labeldata.on.subject}()},
-\code{\link{vis.mask.on.subject}()},
-\code{\link{vis.region.values.on.subject}()},
-\code{\link{vis.subject.annot}()},
-\code{\link{vis.subject.label}()},
-\code{\link{vis.subject.morph.native}()},
-\code{\link{vis.subject.morph.standard}()},
-\code{\link{vislayout.from.coloredmeshes}()}
+Other visualization functions: \code{\link{vis.color.on.subject}},
+  \code{\link{vis.data.on.fsaverage}},
+  \code{\link{vis.data.on.subject}},
+  \code{\link{vis.labeldata.on.subject}},
+  \code{\link{vis.mask.on.subject}},
+  \code{\link{vis.region.values.on.subject}},
+  \code{\link{vis.subject.annot}},
+  \code{\link{vis.subject.label}},
+  \code{\link{vis.subject.morph.native}},
+  \code{\link{vis.subject.morph.standard}},
+  \code{\link{vislayout.from.coloredmeshes}}
 
-Other morphometry visualization functions: 
-\code{\link{vis.data.on.fsaverage}()},
-\code{\link{vis.data.on.subject}()},
-\code{\link{vis.subject.morph.native}()},
-\code{\link{vis.subject.morph.standard}()}
+Other morphometry visualization functions: \code{\link{vis.data.on.fsaverage}},
+  \code{\link{vis.data.on.subject}},
+  \code{\link{vis.subject.morph.native}},
+  \code{\link{vis.subject.morph.standard}}
 }
 \concept{morphometry visualization functions}
 \concept{visualization functions}

@@ -4,21 +4,11 @@
 \alias{vis.subject.label}
 \title{Visualize a binary label for a subject.}
 \usage{
-vis.subject.label(
-  subjects_dir,
-  subject_id,
-  label,
-  hemi,
-  surface = "white",
-  colormap = NULL,
-  views = c("t4"),
-  rgloptions = list(),
-  rglactions = list(),
-  draw_colorbar = FALSE,
-  makecmap_options = list(colFn = squash::rainbow2, col.na = "#FFFFFF00"),
-  map_to_NA = 0L,
-  bg = NULL
-)
+vis.subject.label(subjects_dir, subject_id, label, hemi,
+  surface = "white", colormap = NULL, views = c("t4"),
+  rgloptions = list(), rglactions = list(), draw_colorbar = FALSE,
+  makecmap_options = list(colFn = squash::rainbow2, col.na =
+  "#FFFFFF00"), map_to_NA = 0L, bg = NULL)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -39,7 +29,7 @@ vis.subject.label(
 
 \item{rglactions}{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.}
 
-\item{draw_colorbar}{logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See  \code{\link[fsbrain]{coloredmesh.plot.colorbar.separate}} for an alternative.}
+\item{draw_colorbar}{logical or one of the character strings 'vertical' or ''horizontal', whether to draw a colorbar. Notice: the colorbar is drawn to a separate subplot, and this only works if there is enough space for it, i.e., the plot resolution must be high enough. You may have to increase the plot size for the colorbar to show up, see the vignette for instructions. Defaults to FALSE. See  \code{\link[fsbrain]{coloredmesh.plot.colorbar.separate}} for an alternative.}
 
 \item{makecmap_options}{named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'. Should include at least a colormap function as name 'colFn'.}
 
@@ -66,24 +56,23 @@ Visualize a label for a subject. A label is just a logical vector with one entry
 
 }
 \seealso{
-Other visualization functions: 
-\code{\link{vis.color.on.subject}()},
-\code{\link{vis.data.on.fsaverage}()},
-\code{\link{vis.data.on.subject}()},
-\code{\link{vis.labeldata.on.subject}()},
-\code{\link{vis.mask.on.subject}()},
-\code{\link{vis.region.values.on.subject}()},
-\code{\link{vis.subject.annot}()},
-\code{\link{vis.subject.morph.native}()},
-\code{\link{vis.subject.morph.standard}()},
-\code{\link{vis.symmetric.data.on.subject}()},
-\code{\link{vislayout.from.coloredmeshes}()}
+Other visualization functions: \code{\link{vis.color.on.subject}},
+  \code{\link{vis.data.on.fsaverage}},
+  \code{\link{vis.data.on.subject}},
+  \code{\link{vis.labeldata.on.subject}},
+  \code{\link{vis.mask.on.subject}},
+  \code{\link{vis.region.values.on.subject}},
+  \code{\link{vis.subject.annot}},
+  \code{\link{vis.subject.morph.native}},
+  \code{\link{vis.subject.morph.standard}},
+  \code{\link{vis.symmetric.data.on.subject}},
+  \code{\link{vislayout.from.coloredmeshes}}
 
-Other label functions: 
-\code{\link{apply.label.to.morphdata}()},
-\code{\link{apply.labeldata.to.morphdata}()},
-\code{\link{subject.mask}()},
-\code{\link{vis.labeldata.on.subject}()}
+Other label functions: \code{\link{apply.label.to.morphdata}},
+  \code{\link{apply.labeldata.to.morphdata}},
+  \code{\link{subject.label.lobes}},
+  \code{\link{subject.mask}},
+  \code{\link{vis.labeldata.on.subject}}
 }
 \concept{label functions}
 \concept{visualization functions}

@@ -4,22 +4,12 @@
 \alias{vis.region.values.on.subject}
 \title{Visualize arbitrary data, one value per atlas region, on the surface of any subject (including template subjects).}
 \usage{
-vis.region.values.on.subject(
-  subjects_dir,
-  subject_id,
-  atlas,
-  lh_region_value_list,
-  rh_region_value_list,
-  surface = "white",
-  colormap = NULL,
-  views = c("t4"),
-  rgloptions = list(),
-  rglactions = list(),
-  value_for_unlisted_regions = NA,
-  draw_colorbar = FALSE,
-  makecmap_options = list(colFn = grDevices::heat.colors),
-  bg = NULL
-)
+vis.region.values.on.subject(subjects_dir, subject_id, atlas,
+  lh_region_value_list, rh_region_value_list, surface = "white",
+  colormap = NULL, views = c("t4"), rgloptions = list(),
+  rglactions = list(), value_for_unlisted_regions = NA,
+  draw_colorbar = FALSE, makecmap_options = list(colFn =
+  grDevices::heat.colors), bg = NULL)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -44,7 +34,7 @@ vis.region.values.on.subject(
 
 \item{value_for_unlisted_regions}{numerical scalar or `NaN`, the value to assign to regions which do not occur in the region_value_lists. Defaults to `NaN`.}
 
-\item{draw_colorbar}{logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See  \code{\link[fsbrain]{coloredmesh.plot.colorbar.separate}} for an alternative.}
+\item{draw_colorbar}{logical or one of the character strings 'vertical' or ''horizontal', whether to draw a colorbar. Notice: the colorbar is drawn to a separate subplot, and this only works if there is enough space for it, i.e., the plot resolution must be high enough. You may have to increase the plot size for the colorbar to show up, see the vignette for instructions. Defaults to FALSE. See  \code{\link[fsbrain]{coloredmesh.plot.colorbar.separate}} for an alternative.}
 
 \item{makecmap_options}{named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'. Should include at least a colormap function as name 'colFn'.}
 
@@ -76,21 +66,19 @@ This function can be used for rendering a single value (color) for all vertices 
 
 }
 \seealso{
-Other visualization functions: 
-\code{\link{vis.color.on.subject}()},
-\code{\link{vis.data.on.fsaverage}()},
-\code{\link{vis.data.on.subject}()},
-\code{\link{vis.labeldata.on.subject}()},
-\code{\link{vis.mask.on.subject}()},
-\code{\link{vis.subject.annot}()},
-\code{\link{vis.subject.label}()},
-\code{\link{vis.subject.morph.native}()},
-\code{\link{vis.subject.morph.standard}()},
-\code{\link{vis.symmetric.data.on.subject}()},
-\code{\link{vislayout.from.coloredmeshes}()}
+Other visualization functions: \code{\link{vis.color.on.subject}},
+  \code{\link{vis.data.on.fsaverage}},
+  \code{\link{vis.data.on.subject}},
+  \code{\link{vis.labeldata.on.subject}},
+  \code{\link{vis.mask.on.subject}},
+  \code{\link{vis.subject.annot}},
+  \code{\link{vis.subject.label}},
+  \code{\link{vis.subject.morph.native}},
+  \code{\link{vis.subject.morph.standard}},
+  \code{\link{vis.symmetric.data.on.subject}},
+  \code{\link{vislayout.from.coloredmeshes}}
 
-Other region-based visualization functions: 
-\code{\link{vis.subject.annot}()}
+Other region-based visualization functions: \code{\link{vis.subject.annot}}
 }
 \concept{region-based visualization functions}
 \concept{visualization functions}

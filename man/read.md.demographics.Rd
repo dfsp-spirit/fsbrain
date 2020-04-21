@@ -4,16 +4,9 @@
 \alias{read.md.demographics}
 \title{Read demographics file}
 \usage{
-read.md.demographics(
-  demographics_file,
-  column_names,
-  header = TRUE,
-  scale_and_center = FALSE,
-  sep = "",
-  report = FALSE,
-  stringsAsFactors = TRUE,
-  group_column_name = NULL
-)
+read.md.demographics(demographics_file, column_names, header = TRUE,
+  scale_and_center = FALSE, sep = "", report = FALSE,
+  stringsAsFactors = TRUE, group_column_name = NULL)
 }
 \arguments{
 \item{demographics_file, }{string. The path to the file.}
@@ -47,7 +40,6 @@ Load a list of subjects and metadata from a demographics file, i.e., a tab-separ
 
 }
 \seealso{
-Other metdata functions: 
-\code{\link{read.md.subjects}()}
+Other metdata functions: \code{\link{read.md.subjects}}
 }
 \concept{metdata functions}

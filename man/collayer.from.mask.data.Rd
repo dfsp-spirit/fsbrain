@@ -4,11 +4,8 @@
 \alias{collayer.from.mask.data}
 \title{Compute surface color layer from morph-like data.}
 \usage{
-collayer.from.mask.data(
-  lh_data = NULL,
-  rh_data = NULL,
-  makecmap_options = list(colFn = squash::rainbow2)
-)
+collayer.from.mask.data(lh_data = NULL, rh_data = NULL,
+  makecmap_options = list(colFn = squash::rainbow2))
 }
 \arguments{
 \item{lh_data}{integer vector,  can be NULL}
@@ -26,14 +23,13 @@ Compute surface color layer from morph-like data.
 \seealso{
 You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
 
-Other surface color layer: 
-\code{\link{collayer.bg.atlas}()},
-\code{\link{collayer.bg.meancurv}()},
-\code{\link{collayer.bg.sulc}()},
-\code{\link{collayer.bg}()},
-\code{\link{collayer.from.annotdata}()},
-\code{\link{collayer.from.annot}()},
-\code{\link{collayer.from.morphlike.data}()},
-\code{\link{collayers.merge}()}
+Other surface color layer: \code{\link{collayer.bg.atlas}},
+  \code{\link{collayer.bg.meancurv}},
+  \code{\link{collayer.bg.sulc}},
+  \code{\link{collayer.bg}},
+  \code{\link{collayer.from.annotdata}},
+  \code{\link{collayer.from.annot}},
+  \code{\link{collayer.from.morphlike.data}},
+  \code{\link{collayers.merge}}
 }
 \concept{surface color layer}

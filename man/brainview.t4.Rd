@@ -4,16 +4,9 @@
 \alias{brainview.t4}
 \title{Visualize a list of colored meshes from four angles.}
 \usage{
-brainview.t4(
-  coloredmeshes,
-  background = "white",
-  skip_all_na = TRUE,
-  style = "default",
-  draw_labels = FALSE,
-  rgloptions = list(),
-  rglactions = list(),
-  draw_colorbar = FALSE
-)
+brainview.t4(coloredmeshes, background = "white", skip_all_na = TRUE,
+  style = "default", draw_labels = FALSE, rgloptions = list(),
+  rglactions = list(), draw_colorbar = FALSE)
 }
 \arguments{
 \item{coloredmeshes, }{list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.}

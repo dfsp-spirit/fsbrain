@@ -4,13 +4,8 @@
 \alias{label.from.annotdata}
 \title{Extract a region from an annotation as a label.}
 \usage{
-label.from.annotdata(
-  annotdata,
-  region,
-  return_one_based_indices = TRUE,
-  invert = FALSE,
-  error_on_invalid_region = TRUE
-)
+label.from.annotdata(annotdata, region, return_one_based_indices = TRUE,
+  invert = FALSE, error_on_invalid_region = TRUE)
 }
 \arguments{
 \item{annotdata, }{annotation. An annotation for one hemisphere, as returned by \code{\link[fsbrain]{subject.annot}}. This must be the loaded data, not a path to a file.}
@@ -30,19 +25,19 @@ integer vector with label data: the list of vertex indices in the label. See 're
 The returned label can be used to mask morphometry data, e.g., to set the values of a certain region to `NaN` or to extract only values from a certain region.
 }
 \seealso{
-Other atlas functions: 
-\code{\link{get.atlas.region.names}()},
-\code{\link{group.agg.atlas.native}()},
-\code{\link{group.agg.atlas.standard}()},
-\code{\link{group.annot}()},
-\code{\link{group.label.from.annot}()},
-\code{\link{label.to.annot}()},
-\code{\link{regions.to.ignore}()},
-\code{\link{spread.values.over.annot}()},
-\code{\link{spread.values.over.hemi}()},
-\code{\link{spread.values.over.subject}()},
-\code{\link{subject.annot}()},
-\code{\link{subject.atlas.agg}()},
-\code{\link{subject.label.from.annot}()}
+Other atlas functions: \code{\link{get.atlas.region.names}},
+  \code{\link{group.agg.atlas.native}},
+  \code{\link{group.agg.atlas.standard}},
+  \code{\link{group.annot}},
+  \code{\link{group.label.from.annot}},
+  \code{\link{label.to.annot}},
+  \code{\link{regions.to.ignore}},
+  \code{\link{spread.values.over.annot}},
+  \code{\link{spread.values.over.hemi}},
+  \code{\link{spread.values.over.subject}},
+  \code{\link{subject.annot}},
+  \code{\link{subject.atlas.agg}},
+  \code{\link{subject.label.from.annot}},
+  \code{\link{subject.label.lobes}}
 }
 \concept{atlas functions}

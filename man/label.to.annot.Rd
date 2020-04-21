@@ -4,12 +4,8 @@
 \alias{label.to.annot}
 \title{Merge several labels into an annotation}
 \usage{
-label.to.annot(
-  label_vertices_by_region,
-  num_vertices_in_surface,
-  colortable_df = NULL,
-  index_of_unknown_region = 1L
-)
+label.to.annot(label_vertices_by_region, num_vertices_in_surface,
+  colortable_df = NULL, index_of_unknown_region = 1L)
 }
 \arguments{
 \item{label_vertices_by_region}{named list of integer vectors, the keys are strings which define region names, and the values are integer vectors: the vertex indices of the region.}
@@ -38,19 +34,19 @@ Merge several labels and a colortable into an annotation.
 
 }
 \seealso{
-Other atlas functions: 
-\code{\link{get.atlas.region.names}()},
-\code{\link{group.agg.atlas.native}()},
-\code{\link{group.agg.atlas.standard}()},
-\code{\link{group.annot}()},
-\code{\link{group.label.from.annot}()},
-\code{\link{label.from.annotdata}()},
-\code{\link{regions.to.ignore}()},
-\code{\link{spread.values.over.annot}()},
-\code{\link{spread.values.over.hemi}()},
-\code{\link{spread.values.over.subject}()},
-\code{\link{subject.annot}()},
-\code{\link{subject.atlas.agg}()},
-\code{\link{subject.label.from.annot}()}
+Other atlas functions: \code{\link{get.atlas.region.names}},
+  \code{\link{group.agg.atlas.native}},
+  \code{\link{group.agg.atlas.standard}},
+  \code{\link{group.annot}},
+  \code{\link{group.label.from.annot}},
+  \code{\link{label.from.annotdata}},
+  \code{\link{regions.to.ignore}},
+  \code{\link{spread.values.over.annot}},
+  \code{\link{spread.values.over.hemi}},
+  \code{\link{spread.values.over.subject}},
+  \code{\link{subject.annot}},
+  \code{\link{subject.atlas.agg}},
+  \code{\link{subject.label.from.annot}},
+  \code{\link{subject.label.lobes}}
 }
 \concept{atlas functions}

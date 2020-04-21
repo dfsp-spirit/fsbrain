@@ -4,16 +4,9 @@
 \alias{subject.label.from.annot}
 \title{Extract a region from an atlas annotation as a label for a subject.}
 \usage{
-subject.label.from.annot(
-  subjects_dir,
-  subject_id,
-  hemi,
-  atlas,
-  region,
-  return_one_based_indices = TRUE,
-  invert = FALSE,
-  error_on_invalid_region = TRUE
-)
+subject.label.from.annot(subjects_dir, subject_id, hemi, atlas, region,
+  return_one_based_indices = TRUE, invert = FALSE,
+  error_on_invalid_region = TRUE)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -39,19 +32,19 @@ integer vector with label data: the list of vertex indices in the label.
 The returned label can be used to mask morphometry data, e.g., to set the values of a certain region to NaN or to extract only values from a certain region.
 }
 \seealso{
-Other atlas functions: 
-\code{\link{get.atlas.region.names}()},
-\code{\link{group.agg.atlas.native}()},
-\code{\link{group.agg.atlas.standard}()},
-\code{\link{group.annot}()},
-\code{\link{group.label.from.annot}()},
-\code{\link{label.from.annotdata}()},
-\code{\link{label.to.annot}()},
-\code{\link{regions.to.ignore}()},
-\code{\link{spread.values.over.annot}()},
-\code{\link{spread.values.over.hemi}()},
-\code{\link{spread.values.over.subject}()},
-\code{\link{subject.annot}()},
-\code{\link{subject.atlas.agg}()}
+Other atlas functions: \code{\link{get.atlas.region.names}},
+  \code{\link{group.agg.atlas.native}},
+  \code{\link{group.agg.atlas.standard}},
+  \code{\link{group.annot}},
+  \code{\link{group.label.from.annot}},
+  \code{\link{label.from.annotdata}},
+  \code{\link{label.to.annot}},
+  \code{\link{regions.to.ignore}},
+  \code{\link{spread.values.over.annot}},
+  \code{\link{spread.values.over.hemi}},
+  \code{\link{spread.values.over.subject}},
+  \code{\link{subject.annot}},
+  \code{\link{subject.atlas.agg}},
+  \code{\link{subject.label.lobes}}
 }
 \concept{atlas functions}
