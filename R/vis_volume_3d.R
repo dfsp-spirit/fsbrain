@@ -213,7 +213,9 @@ hull.retain.along.axis <- function(volume, hull, dim_check=2L, upwards=TRUE, thi
 #'
 #' @param show logical, whether to display the triangles. Defaults to `TRUE`.
 #'
-#' @return the rendered triangles (a `Triangles3D` instance) with coordinates in surface RAS space if any, `NULL` otherwise.
+#' @param frame integer, the frame to show in case of a 4D input volume. Can also be the character string 'all' to draw the contents of all frames at once. Useful to plot white matter tracts from DTI data, where each tract is stored in a different frame.
+#'
+#' @return the rendered triangles (a `Triangles3D` instance) with coordinates in surface RAS space if any, `NULL` otherwise. This will be a list if you pass a 4D volume and select 'all' frames.
 #'
 #' @examples
 #' \donttest{
@@ -225,18 +227,37 @@ hull.retain.along.axis <- function(volume, hull, dim_check=2L, upwards=TRUE, thi
 #' }
 #'
 #' @export
-volvis.contour <- function(volume, level=80, show=TRUE) {
+volvis.contour <- function(volume, level=80, show=TRUE, frame=1L) {
     if (requireNamespace("misc3d", quietly = TRUE)) {
 
         if(freesurferformats::is.fs.volume(volume)) {
             volume = volume$data;
         }
 
-        if(length(dim(volume)) == 4L) {
-            volume = volume[,,,1]; # select 1st frame
-        }
+        ndim = length(dim(volume));
+        if(ndim == 4L) {
+            if(frame == "all") {
+                num_frames = dim(volume)[4];
 
-        surface_tris = misc3d::contour3d(volume, level=level, draw=FALSE);
+                all_tris = list();
+                for(frame_index in seq.int(num_frames)) {
+                    all_tris[[frame_index]] = misc3d::contour3d(volume[,,,frame_index], level=level, draw=FALSE);
+                }
+                names(all_tris) = NULL;
+
+                if(show) {
+                    vis.coloredmeshes(all_tris);
+                }
+                return(all_tris);
+            } else {
+                volume = volume[,,,frame]; # select requested single frame
+                surface_tris = misc3d::contour3d(volume, level=level, draw=FALSE);
+            }
+        } else if(ndim == 3L) {
+            surface_tris = misc3d::contour3d(volume, level=level, draw=FALSE);
+        } else {
+            stop("Input volume must have 3 or 4 dimensions.");
+        }
 
         if(show) {
             vis.coloredmeshes(list(surface_tris));
