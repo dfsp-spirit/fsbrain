@@ -709,6 +709,10 @@ subject.surface <- function(subjects_dir, subject_id, surface, hemi) {
 #'
 #' @param include_cingulate logical, whether to include the vertices of the cingulate in the lobes
 #'
+#' @param as_annot return a hemilist of annotations instead of the return value described in the *value* section
+#'
+#' @return hemilist of integer vectors, the vectors represent vertex indices of the hemispheres, and each vertex is assigned one of the following values: `0`=no_lobe, `1`=frontal, `2`=parietal, `3`=temporal, `4`=occipital.
+#'
 #' @family atlas functions
 #' @family label functions
 #'

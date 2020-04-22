@@ -13,7 +13,7 @@ vis.subject.annot(subjects_dir, subject_id, atlas, hemi = "both",
 
 \item{subject_id}{string. The subject identifier.}
 
-\item{atlas}{string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.}
+\item{atlas}{string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded. Can also be a hemilist of already loaded annotations.}
 
 \item{hemi}{string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the label data files to be loaded.}
 

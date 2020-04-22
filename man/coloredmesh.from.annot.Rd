@@ -26,4 +26,12 @@ coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} me
 \description{
 Create a coloredmesh from an annotation of an atlas.
 }
-\keyword{internal}
+\seealso{
+Other coloredmesh functions: \code{\link{coloredmesh.from.label}},
+  \code{\link{coloredmesh.from.mask}},
+  \code{\link{coloredmesh.from.morph.native}},
+  \code{\link{coloredmesh.from.morph.standard}},
+  \code{\link{coloredmesh.from.morphdata}},
+  \code{\link{coloredmeshes.from.color}}
+}
+\concept{coloredmesh functions}

@@ -55,6 +55,8 @@ coloredmeshes.combined.data.range <- function(coloredmeshes) {
 #'
 #' @return coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "render", logical, whether to render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
+#' @family coloredmesh functions
+#'
 #' @export
 #' @importFrom squash cmap makecmap jet
 #' @importFrom rgl tmesh3d rgl.open wire3d
@@ -145,6 +147,9 @@ coloredmesh.from.color <- function(subjects_dir, subject_id, color_data, hemi, s
 #'
 #' @return named list of coloredmeshes. Each entry is a named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "render", logical, whether to render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
+#' @family coloredmesh functions
+#'
+#' @export
 coloredmeshes.from.color <- function(subjects_dir, subject_id, color_data, hemi, surface="white", metadata=NULL) {
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh', or 'both' but is '%s'.\n", hemi));
@@ -179,7 +184,9 @@ coloredmeshes.from.color <- function(subjects_dir, subject_id, color_data, hemi,
 #'
 #' @return coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "render", logical, whether to render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
-#' @keywords internal
+#' @family coloredmesh functions
+#'
+#' @export
 #' @importFrom squash cmap makecmap jet
 #' @importFrom rgl tmesh3d rgl.open wire3d
 coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm, surface="white", template_subject='fsaverage', template_subjects_dir=NULL, colormap=NULL, clip = NULL, cortex_only=FALSE, makecmap_options=list('colFn'=squash::jet)) {
@@ -241,11 +248,13 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
 #'
 #' @return coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "render", logical, whether to render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
-#' @keywords internal
+#' @family coloredmesh functions
+#'
+#' @export
 #' @importFrom squash cmap makecmap jet
 #' @importFrom rgl tmesh3d rgl.open wire3d
 #' @importFrom utils modifyList
-coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data, hemi, surface="white", colormap=NULL, all_nan_backup_value = 0.0, makecmap_options=list('colFn'=squash::jet)) {
+coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data, hemi, surface="white", colormap=NULL, makecmap_options=list('colFn'=squash::jet)) {
 
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
@@ -290,7 +299,9 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
 #'
 #' @return coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "render", logical, whether to render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
-#' @keywords internal
+#' @family coloredmesh functions
+#'
+#' @export
 #' @importFrom squash cmap makecmap jet
 #' @importFrom rgl tmesh3d rgl.open wire3d
 coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surface="white", outline=FALSE) {
@@ -307,8 +318,12 @@ coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surfac
 
     if(is.character(atlas)) {
         annot = subject.annot(subjects_dir, subject_id, hemi, atlas);
-    } else {
+    } else if (freesurferformats::is.fs.annot(atlas)) {
         annot = atlas;
+    } else if(is.hemilist(atlas)) {
+        annot = atlas[[hemi]];
+    } else {
+        stop("Parameter 'atlas' has invalid type.");
     }
     mesh = rgl::tmesh3d(c(t(surface_mesh$vertices)), c(t(surface_mesh$faces)), homogeneous=FALSE);
     if(outline) {
@@ -334,7 +349,9 @@ coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surfac
 #'
 #' @return coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "render", logical, whether to render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
-#' @keywords internal
+#' @family coloredmesh functions
+#'
+#' @export
 #' @importFrom squash cmap makecmap rainbow2
 #' @importFrom rgl tmesh3d rgl.open wire3d
 coloredmesh.from.label <- function(subjects_dir, subject_id, label, hemi, surface="white", colormap=NULL, makecmap_options=list('colFn'=squash::rainbow2)) {
@@ -374,6 +391,7 @@ coloredmesh.from.label <- function(subjects_dir, subject_id, label, hemi, surfac
 #' @return coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "render", logical, whether to render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
 #' @family mask functions
+#' @family coloredmesh functions
 #' @export
 coloredmesh.from.mask <- function(subjects_dir, subject_id, mask, hemi, surface="white", colormap=NULL, surface_data=NULL, makecmap_options=list('colFn'=squash::rainbow2)) {
 

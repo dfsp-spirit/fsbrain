@@ -34,5 +34,13 @@ Create a coloredmesh from a mask.
 \seealso{
 Other mask functions: \code{\link{mask.from.labeldata.for.hemi}},
   \code{\link{vis.mask.on.subject}}
+
+Other coloredmesh functions: \code{\link{coloredmesh.from.annot}},
+  \code{\link{coloredmesh.from.label}},
+  \code{\link{coloredmesh.from.morph.native}},
+  \code{\link{coloredmesh.from.morph.standard}},
+  \code{\link{coloredmesh.from.morphdata}},
+  \code{\link{coloredmeshes.from.color}}
 }
+\concept{coloredmesh functions}
 \concept{mask functions}

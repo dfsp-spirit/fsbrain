@@ -200,14 +200,6 @@ test_that("We can compute the medial mask for a subject", {
 
     expect_equal(sum(mask$lh), num_cortex_verts_subject1_lh); # number of cortex vertices
     expect_equal(sum(mask$rh), num_cortex_verts_subject1_rh); # number of cortex vertices
-
-    # ## has been fixed there already, but will only be in the next release 0.1.8.
-    # lh_mask_file = tempfile(fileext = ".mgz");
-    # freesurferformats::write.fs.morph(lh_mask_file, as.integer(mask$lh));
-    #
-    # lh_mask_reread = freesurferformats::read.fs.morph(lh_mask_file);
-    # expect_equal(length(lh_mask_reread), num_verts_subject1_lh);
-    # expect_equal(sum(lh_mask_reread), num_cortex_verts_subject1_lh); # number of cortex vertices
 })
 
 
@@ -219,8 +211,27 @@ test_that("We can compute the lobes for a subject based on the aparc atlas", {
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     subject_id = 'subject1';
 
-    vi = subject.lobes(subjects_dir, subject_id);
-    vis.data.on.subject(subjects_dir, subject_id, vi$lh, vi$rh);
+    labeled_verts = subject.lobes(subjects_dir, subject_id);
+    vis.data.on.subject(subjects_dir, subject_id, labeled_verts$lh, labeled_verts$rh);
 
     expect_equal(1L, 1L);  # without expects, the test will be skipped
 })
+
+
+test_that("We can compute the lobes for a subject and get an annotation returned", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+    fsbrain::download_optional_data();
+
+    # Define the data to use:
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+    subject_id = 'subject1';
+
+    # We have the function return an annotation this time
+    annot_hemilist = subject.lobes(subjects_dir, subject_id, as_annot = TRUE);
+
+    # the vis.subject.annot function now works with hemilists of pre-loaded annotation data
+    vis.subject.annot(subjects_dir, subject_id, annot_hemilist);
+
+    expect_equal(1L, 1L);  # without expects, the test will be skipped
+})
+
