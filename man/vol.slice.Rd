@@ -4,14 +4,8 @@
 \alias{vol.slice}
 \title{Extract a slice of a 3D image stack.}
 \usage{
-vol.slice(
-  volume,
-  slice_index = NULL,
-  frame = 1L,
-  axis = 1L,
-  rotation = 0L,
-  flip = NULL
-)
+vol.slice(volume, slice_index = NULL, frame = 1L, axis = 1L,
+  rotation = 0L, flip = NULL)
 }
 \arguments{
 \item{volume}{a 3D or 4D image volume. Note that empty dimensions will be dropped before any processing, and the remaining volume must have 3 or 4 dimensions.}
@@ -33,11 +27,9 @@ slice data. If `slice_index` is a scalar, a numerical 2D matrix (a 2D image from
 Extracts one or more 2D slices from a 3D image (or a frame of a 4D image). To display the result, you can use \code{\link[fsbrain]{volvis.lightbox}}.
 }
 \seealso{
-Other volume utility: 
-\code{\link{vol.boundary.box}()},
-\code{\link{vol.imagestack}()},
-\code{\link{vol.merge}()},
-\code{\link{vol.overlay.colors.from.activation}()},
-\code{\link{vol.planes}()}
+Other volume utility: \code{\link{vol.boundary.box}},
+  \code{\link{vol.imagestack}}, \code{\link{vol.merge}},
+  \code{\link{vol.overlay.colors.from.activation}},
+  \code{\link{vol.planes}}
 }
 \concept{volume utility}

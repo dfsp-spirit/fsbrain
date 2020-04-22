@@ -4,15 +4,9 @@
 \alias{coloredmesh.from.label}
 \title{Create a coloredmesh from a label.}
 \usage{
-coloredmesh.from.label(
-  subjects_dir,
-  subject_id,
-  label,
-  hemi,
-  surface = "white",
-  colormap = NULL,
-  makecmap_options = list(colFn = squash::rainbow2)
-)
+coloredmesh.from.label(subjects_dir, subject_id, label, hemi,
+  surface = "white", colormap = NULL, makecmap_options = list(colFn =
+  squash::rainbow2))
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}

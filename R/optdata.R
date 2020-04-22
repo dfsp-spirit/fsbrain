@@ -51,7 +51,7 @@ download_optional_data <- function() {
                                     c(base_path_subject2, 'surf', 'rh.area.fwhm10.fsaverage.mgh'),
                                     c(base_path_subject2, 'mri', 'aseg.mgz'),
                                     c(base_path_subject2, 'mri', 'aparc+aseg.mgz'),
-                                    c(base_path_subject2, 'label', 'vol_midbrain.label'),
+                                    c(base_path_subject2, 'label', 'vol_midbrain.label')
                                     );
     local_filenames = c(local_filenames_subject1, local_filenames_subject2);
 
@@ -102,7 +102,7 @@ download_optional_data <- function() {
                  'surf/rh.area.fwhm10.fsaverage.mgh',
                  'mri/aseg.mgz',
                  'mri/aparc+aseg.mgz',
-                 'label/vol_midbrain.label',
+                 'label/vol_midbrain.label'
                  );
     ext_urls_subject1 = paste(ext_url_subject_part_subject1, ext_url_parts_each_subject, sep='');
     ext_urls_subject2 = paste(ext_url_subject_part_subject2, ext_url_parts_each_subject, sep='');

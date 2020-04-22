@@ -4,16 +4,9 @@
 \alias{coloredmesh.from.mask}
 \title{Create a coloredmesh from a mask.}
 \usage{
-coloredmesh.from.mask(
-  subjects_dir,
-  subject_id,
-  mask,
-  hemi,
-  surface = "white",
-  colormap = NULL,
-  surface_data = NULL,
-  makecmap_options = list(colFn = squash::rainbow2)
-)
+coloredmesh.from.mask(subjects_dir, subject_id, mask, hemi,
+  surface = "white", colormap = NULL, surface_data = NULL,
+  makecmap_options = list(colFn = squash::rainbow2))
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -39,8 +32,7 @@ coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} me
 Create a coloredmesh from a mask.
 }
 \seealso{
-Other mask functions: 
-\code{\link{mask.from.labeldata.for.hemi}()},
-\code{\link{vis.mask.on.subject}()}
+Other mask functions: \code{\link{mask.from.labeldata.for.hemi}},
+  \code{\link{vis.mask.on.subject}}
 }
 \concept{mask functions}

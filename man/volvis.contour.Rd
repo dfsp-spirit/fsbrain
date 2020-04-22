@@ -4,7 +4,8 @@
 \alias{volvis.contour}
 \title{Visualize contour of a volume.}
 \usage{
-volvis.contour(volume, level = 80, show = TRUE, frame = 1L, color = "white")
+volvis.contour(volume, level = 80, show = TRUE, frame = 1L,
+  color = "white")
 }
 \arguments{
 \item{volume}{a 3D brain volume}

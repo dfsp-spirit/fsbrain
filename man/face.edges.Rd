@@ -18,11 +18,10 @@ integer matrix of size (n, 2) where n is the number of edges. The indices (sourc
 Compute edges of a tri-mesh. Can compute all edges, or only a subset, given by the face indices in the mesh.
 }
 \seealso{
-Other surface mesh functions: 
-\code{\link{label.border}()},
-\code{\link{mesh.vertex.included.faces}()},
-\code{\link{mesh.vertex.neighbors}()},
-\code{\link{subject.surface}()},
-\code{\link{vis.path.along.verts}()}
+Other surface mesh functions: \code{\link{label.border}},
+  \code{\link{mesh.vertex.included.faces}},
+  \code{\link{mesh.vertex.neighbors}},
+  \code{\link{subject.surface}},
+  \code{\link{vis.path.along.verts}}
 }
 \concept{surface mesh functions}

@@ -35,7 +35,6 @@ Rotate a 3D array in 90 degree steps along an axis. This leads to an array with 
 
 }
 \seealso{
-Other volume math: 
-\code{\link{flip3D}()}
+Other volume math: \code{\link{flip3D}}
 }
 \concept{volume math}

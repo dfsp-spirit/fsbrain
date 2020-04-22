@@ -4,16 +4,9 @@
 \alias{brainview.sd}
 \title{Visualize a list of colored meshes from a single defined angle.}
 \usage{
-brainview.sd(
-  coloredmeshes,
-  view_angle,
-  background = "white",
-  skip_all_na = TRUE,
-  style = "default",
-  rgloptions = list(),
-  rglactions = list(),
-  draw_colorbar = FALSE
-)
+brainview.sd(coloredmeshes, view_angle, background = "white",
+  skip_all_na = TRUE, style = "default", rgloptions = list(),
+  rglactions = list(), draw_colorbar = FALSE)
 }
 \arguments{
 \item{coloredmeshes, }{list of coloredmesh. A coloredmesh is a named list as returned by the `coloredmesh.from*` functions (like \code{\link[fsbrain]{coloredmesh.from.morph.native}}). It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh. Note that the `vis*` functions (like \code{\link[fsbrain]{vis.subject.morph.native}}) all return a list of coloredmeshes.}

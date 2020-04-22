@@ -4,15 +4,8 @@
 \alias{vis.rotated.coloredmeshes}
 \title{Rotate and visualize coloredmeshes, applying a style.}
 \usage{
-vis.rotated.coloredmeshes(
-  renderables,
-  rotation_angle,
-  x,
-  y,
-  z,
-  style = "default",
-  draw_colorbar = FALSE
-)
+vis.rotated.coloredmeshes(renderables, rotation_angle, x, y, z,
+  style = "default", draw_colorbar = FALSE)
 }
 \arguments{
 \item{rotation_angle}{angle in radians. Passed to \code{\link[rgl]{rotate3d}}.}
