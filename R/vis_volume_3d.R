@@ -215,6 +215,8 @@ hull.retain.along.axis <- function(volume, hull, dim_check=2L, upwards=TRUE, thi
 #'
 #' @param frame integer, the frame to show in case of a 4D input volume. Can also be the character string 'all' to draw the contents of all frames at once. Useful to plot white matter tracts from DTI data, where each tract is stored in a different frame.
 #'
+#' @param color the color to use when plotting. Can be a vector of colors when plotting all frames of a 4D image (one color per frame).
+#'
 #' @return the rendered triangles (a `Triangles3D` instance) with coordinates in surface RAS space if any, `NULL` otherwise. This will be a list if you pass a 4D volume and select 'all' frames.
 #'
 #' @examples
@@ -227,7 +229,7 @@ hull.retain.along.axis <- function(volume, hull, dim_check=2L, upwards=TRUE, thi
 #' }
 #'
 #' @export
-volvis.contour <- function(volume, level=80, show=TRUE, frame=1L) {
+volvis.contour <- function(volume, level=80, show=TRUE, frame=1L, color='white') {
     if (requireNamespace("misc3d", quietly = TRUE)) {
 
         if(freesurferformats::is.fs.volume(volume)) {
@@ -239,16 +241,24 @@ volvis.contour <- function(volume, level=80, show=TRUE, frame=1L) {
             if(frame == "all") {
                 num_frames = dim(volume)[4];
 
+                if(length(color) == 1L) {
+                    color = rep(color, num_frames);
+                }
+                if(length(color) != num_frames) {
+                    stop("Length of color parameter must be 1 or exactly the number of frames (4th dim) in the image.");
+                }
+
                 all_tris = list();
                 for(frame_index in seq.int(num_frames)) {
                     all_tris[[frame_index]] = misc3d::contour3d(volume[,,,frame_index], level=level, draw=FALSE);
+                    all_tris[[frame_index]]$color = color[[frame_index]];
                 }
                 names(all_tris) = NULL;
 
                 if(show) {
                     vis.coloredmeshes(all_tris);
                 }
-                return(all_tris);
+                return(invisible(all_tris));
             } else {
                 volume = volume[,,,frame]; # select requested single frame
                 surface_tris = misc3d::contour3d(volume, level=level, draw=FALSE);
@@ -259,6 +269,10 @@ volvis.contour <- function(volume, level=80, show=TRUE, frame=1L) {
             stop("Input volume must have 3 or 4 dimensions.");
         }
 
+        if(length(color) != 1L) {
+            stop("Color must have length 1 for a 3D volume.");
+        }
+        surface_tris$color = color;
         if(show) {
             vis.coloredmeshes(list(surface_tris));
         }
