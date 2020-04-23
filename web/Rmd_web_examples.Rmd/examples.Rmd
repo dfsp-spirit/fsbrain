@@ -30,9 +30,17 @@ Let's start with a basic example and plot cortical thickness on the surface of o
 vis.subject.morph.native(sjd, sj, 'thickness')
 ```
 
-The default view shows the brain from four different angles. Maybe you prefer a different view?
+This loaded the morphometry data files `surf/lh.thickness` and `surf/rh.thickness` of the subject, applied a colormap to the values, and visualized the results on the white surface, i.e., the brain surface meshes in the files `surf/lh.white` and `surf/rh.white`.
+
+The default view above shows the brain from four different angles in four tiles and is called `t4` view. Maybe you prefer a different view? In addition, let's mask the medial wall (the large blue parts in the lower two tiles).
 
 ```{r rgl=TRUE, dev='png'}
-vis.subject.morph.native(sjd, sj, 'thickness', views='t9')
+vis.subject.morph.native(sjd, sj, 'thickness', views='t9', cortex_only = TRUE)
+```
+
+Next, we will try a third view, add a colorbar, use the pial surface, and plot something different.
+
+```{r rgl=TRUE, dev='png'}
+vis.subject.morph.native(sjd, sj, 'volume', views='si', cortex_only = TRUE, draw_colorbar = 'vertical')
 ```
 
