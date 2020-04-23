@@ -22,6 +22,13 @@ sjd = '~/data/subject1_only'
 sj = 'subject1'
 ```
 
+Now increase the figure size.
+
+```{r}
+library('rgl')
+r3dDefaults$windowRect=c(0, 0, 800, 800);
+```
+
 ## Visualizing native space morphometry data: cortical thickness
 
 Let's start with a basic example and plot cortical thickness on the surface of our demo subject:
@@ -41,6 +48,13 @@ vis.subject.morph.native(sjd, sj, 'thickness', views='t9', cortex_only = TRUE)
 Next, we will try a third view, add a colorbar, use the pial surface, and plot something different.
 
 ```{r rgl=TRUE, dev='png'}
-vis.subject.morph.native(sjd, sj, 'volume', views='si', cortex_only = TRUE, draw_colorbar = 'vertical')
+vis.subject.morph.native(sjd, sj, 'volume', views='si', cortex_only = TRUE, draw_colorbar = 'vertical', surface = 'pial')
 ```
 
+That does not look very exciting. Why? The volume data has a tail:
+
+```{r}
+hist(subject.morph.native(sjd, sj, 'volume', hemi = 'both'))
+```
+
+There are various solutions to this problem,
