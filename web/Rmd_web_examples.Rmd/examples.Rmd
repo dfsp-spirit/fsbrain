@@ -1,0 +1,38 @@
+---
+title: "fsbrain examples"
+author: "Tim Schäfer"
+date: "April 23, 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+rgl::setupKnitr()
+```
+
+# fsbrain Visualization Examples
+
+## Example data
+
+First we specify a subjects dir and the subject we want to use. Feel free to replace this with your data.
+
+```{r}
+library('fsbrain')
+sjd = '~/data/subject1_only'
+sj = 'subject1'
+```
+
+## Visualizing native space morphometry data: cortical thickness
+
+Let's start with a basic example and plot cortical thickness on the surface of our demo subject:
+
+```{r rgl=TRUE, dev='png'}
+vis.subject.morph.native(sjd, sj, 'thickness')
+```
+
+The default view shows the brain from four different angles. Maybe you prefer a different view?
+
+```{r rgl=TRUE, dev='png'}
+vis.subject.morph.native(sjd, sj, 'thickness', views='t9')
+```
+
