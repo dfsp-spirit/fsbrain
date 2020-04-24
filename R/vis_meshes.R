@@ -287,7 +287,7 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
         return(invisible(NULL));
     }
 
-    colorbar_type = "fields";   # 'fields' or 'squash'
+    colorbar_type = "plain";   # 'fields' or 'squash' or 'plain'
     # Both colorbar functions are not optimal:
     #  - the squash::hkey/vkey one changes its size depending on the number of colors, it seems usable for about 10 colors. It is also ugly as hell.
     #  - when using fields::imageplot, sometimes the colorbar is empty (i.e., it is completely white instead of showing the colors)
@@ -302,21 +302,43 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
         } else {
             rgl::bgplot3d({plot.new(); fields::image.plot(add=T, graphics.reset=F, legend.only = TRUE, zlim = combined_data_range, col = sort(combined_colors), horizontal = horizontal, ...)});
         }
-    } else if(colorbar_type == "squash") {
+    } else if(colorbar_type == "squash" | colorbar_type == 'plain') {
         cmap = coloredmeshes.combined.cmap(coloredmeshes);
         if(is.null(cmap)) {
             warning("Requested to draw colorbar, but meshes do not contain the required metadata. Skipping.");
         } else {
             if(horizontal) {
-                rgl::bgplot3d({plot.new(); squash::hkey(cmap, skip=2L, stretch = 3, x=0, y=0)});
+                if(colorbar_type == "squash") {
+                    rgl::bgplot3d({plot.new(); squash::hkey(cmap, skip=2L, stretch = 3, x=0, y=0)});
+                } else {
+                    rgl::bgplot3d({plot.new(); plot.fsbrain.colorbar(cmap$colors, horizontal = horizontal)});
+                }
             } else {
-                rgl::bgplot3d({plot.new(); squash::vkey(cmap, skip=2L, stretch = 3, x=0, y=0)});
+                if(colorbar_type == "squash") {
+                    rgl::bgplot3d({plot.new(); squash::vkey(cmap, skip=2L, stretch = 3, x=0, y=0)});
+                } else {
+                    rgl::bgplot3d({plot.new(); plot.fsbrain.colorbar(cmap$colors, horizontal = horizontal)});
+                }
             }
         }
     } else {
         warning("Invalid colormap type, skipping.");
     }
 }
+
+
+#' @importFrom graphics plot
+#' @importFrom grDevices as.raster
+#' @keywords internal
+plot.fsbrain.colorbar <- function(colors, horizontal=FALSE) {
+    if(horizontal) {
+        graphics::plot(t(grDevices::as.raster(cmap$colors)));
+    } else {
+        graphics::plot(t(grDevices::as.raster(cmap$colors)));
+    }
+}
+
+
 
 #' @title Draw colorbar for coloredmeshes in separate 2D plot.
 #'
