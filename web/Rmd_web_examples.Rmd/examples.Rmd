@@ -26,12 +26,12 @@ Now increase the figure size.
 
 ```{r}
 library('rgl')
-r3dDefaults$windowRect=c(0, 0, 800, 800);
+r3dDefaults$windowRect=c(0, 0, 900, 900);
 ```
 
 ## Visualizing native space morphometry data: cortical thickness
 
-Let's start with a basic example and plot cortical thickness on the surface of our demo subject:
+Let's start with a basic example and plot cortical thickness on the surface of our subject:
 
 ```{r rgl=TRUE, dev='png'}
 vis.subject.morph.native(sjd, sj, 'thickness')
@@ -39,13 +39,19 @@ vis.subject.morph.native(sjd, sj, 'thickness')
 
 This loaded the morphometry data files `surf/lh.thickness` and `surf/rh.thickness` of the subject, applied a colormap to the values, and visualized the results on the white surface, i.e., the brain surface meshes in the files `surf/lh.white` and `surf/rh.white`.
 
+## Changing the view and masking the medial wall
+
 The default view above shows the brain from four different angles in four tiles and is called `t4` view. Maybe you prefer a different view? In addition, let's mask the medial wall (the large blue parts in the lower two tiles).
 
 ```{r rgl=TRUE, dev='png'}
 vis.subject.morph.native(sjd, sj, 'thickness', views='t9', cortex_only = TRUE)
 ```
 
-Next, we will try a third view, add a colorbar, use the pial surface, and plot something different.
+The mask for the medial wall was created by setting the data of all vertices which are not part of the cortex to `NA`, based on the cortex definition in the label files `label/lh.cortex.label` and `label/rh.cortex.label` of the subject.
+
+## Visualizing data with outliers, tails, or other non-normal data
+
+Next, we will try a third view, add a colorbar, use the pial surface, and plot something different. Let's try cortex volume.
 
 ```{r rgl=TRUE, dev='png'}
 vis.subject.morph.native(sjd, sj, 'volume', views='si', cortex_only = TRUE, draw_colorbar = 'vertical', surface = 'pial')
@@ -57,4 +63,12 @@ That does not look very exciting. Why? The volume data has a tail:
 hist(subject.morph.native(sjd, sj, 'volume', hemi = 'both'))
 ```
 
-There are various solutions to this problem,
+There are various solutions to this problem, but for plotting, the easiest one is to apply some function that removes outliers or performs some other sort of data transformation before plotting. You can pass any transformation function you want using *rglactions*, in the next example we clip the data.
+
+The `si` view is single interactive view, and you can rotate the brain with your mouse in an R session. That is not possible in this markdown document though, so better try it in R. We will use another view here and switch back to the white surface.
+
+```{r rgl=TRUE, dev='png'}
+vis.subject.morph.native(sjd, sj, 'volume', views='sd_caudal', cortex_only = TRUE, draw_colorbar = 'vertical',  rglactions=list('trans_fun'=clip.data))
+```
+
+That looks better.
