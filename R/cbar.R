@@ -44,17 +44,14 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
         if(is.null(cmap)) {
             warning("Requested to draw colorbar, but meshes do not contain the required metadata. Skipping.");
         } else {
-            if(horizontal) {
-                if(colorbar_type == "squash") {
+            if(colorbar_type == "plain") {
+                rgl::bgplot3d({plot.new(); plot.fsbrain.colorbar(cmap$colors, horizontal = horizontal)});
+            } else {
+                # squash
+                if(horizontal) {
                     rgl::bgplot3d({plot.new(); squash::hkey(cmap, skip=2L, stretch = 3, x=0, y=0)});
                 } else {
-                    rgl::bgplot3d({plot.new(); plot.fsbrain.colorbar(cmap$colors, horizontal = horizontal)});
-                }
-            } else {
-                if(colorbar_type == "squash") {
                     rgl::bgplot3d({plot.new(); squash::vkey(cmap, skip=2L, stretch = 3, x=0, y=0)});
-                } else {
-                    rgl::bgplot3d({plot.new(); plot.fsbrain.colorbar(cmap$colors, horizontal = horizontal)});
                 }
             }
         }
@@ -77,9 +74,9 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
 #' @keywords internal
 plot.fsbrain.colorbar <- function(colors, horizontal=FALSE) {
     if(horizontal) {
-        graphics::plot(t(grDevices::as.raster(cmap$colors)));
+        graphics::plot(t(grDevices::as.raster(colors)));
     } else {
-        graphics::plot(t(grDevices::as.raster(cmap$colors)));
+        graphics::plot(grDevices::as.raster(colors));
     }
 }
 
