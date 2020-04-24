@@ -51,16 +51,16 @@ The mask for the medial wall was created by setting the data of all vertices whi
 
 ## Visualizing data with outliers, tails, or other non-normal data
 
-Next, we will try a third view, add a colorbar, use the pial surface, and plot something different. Let's try cortex volume.
+Next, we will try a third view, add a colorbar, use the pial surface, and plot something different. Let's try mean curvature.
 
 ```{r rgl=TRUE, dev='png'}
-vis.subject.morph.native(sjd, sj, 'volume', views='si', cortex_only = TRUE, draw_colorbar = 'vertical', surface = 'pial')
+vis.subject.morph.native(sjd, sj, 'curv', views='si', cortex_only = TRUE, draw_colorbar = 'vertical', surface = 'pial')
 ```
 
-That does not look very exciting. Why? The volume data has a tail:
+That does not look very exciting. Why? The curvature data has a tail and is far from Normal:
 
 ```{r}
-hist(subject.morph.native(sjd, sj, 'volume', hemi = 'both'))
+hist(subject.morph.native(sjd, sj, 'curv', hemi = 'both'))
 ```
 
 There are various solutions to this problem, but for plotting, the easiest one is to apply some function that removes outliers or performs some other sort of data transformation before plotting. You can pass any transformation function you want using *rglactions*, in the next example we clip the data.
@@ -68,7 +68,7 @@ There are various solutions to this problem, but for plotting, the easiest one i
 The `si` view is single interactive view, and you can rotate the brain with your mouse in an R session. That is not possible in this markdown document though, so better try it in R. We will use another view here and switch back to the white surface.
 
 ```{r rgl=TRUE, dev='png'}
-vis.subject.morph.native(sjd, sj, 'volume', views='sd_caudal', cortex_only = TRUE, draw_colorbar = 'vertical',  rglactions=list('trans_fun'=clip.data))
+vis.subject.morph.native(sjd, sj, 'curv', views='sd_medial_lh', cortex_only = TRUE, draw_colorbar = 'horizontal',  rglactions=list('trans_fun'=clip.data))
 ```
 
 That looks better.
