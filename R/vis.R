@@ -62,10 +62,11 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi="bo
         measure_data = subject.morph.native(subjects_dir, subject_id, measure, hemi, cortex_only=cortex_only, split_by_hemi=TRUE);
     }
 
-    if(rglactions.has.key(rglactions, 'clip_data')) {
-        clip_range = rglactions$clip_data;
-        measure_data = clip.data(measure_data, lower=clip_range[1], upper=clip_range[2]);
-    }
+    #if(rglactions.has.key(rglactions, 'clip_data')) {
+    #    clip_range = rglactions$clip_data;
+    #    measure_data = clip.data(measure_data, lower=clip_range[1], upper=clip_range[2]);
+    #}
+    measure_data = rglactions.transform(measure_data, rglactions);
 
     both_hemi_colors = collayer.from.morphlike.data(measure_data$lh, measure_data$rh, makecmap_options=makecmap_options, return_map=TRUE);
     map = both_hemi_colors$map;
@@ -135,10 +136,7 @@ vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi="
         measure_data = subject.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm=fwhm, template_subject=template_subject, cortex_only=cortex_only, split_by_hemi=TRUE);
     }
 
-    if(rglactions.has.key(rglactions, 'clip_data')) {
-        clip_range = rglactions$clip_data;
-        measure_data = clip.data(measure_data, lower=clip_range[1], upper=clip_range[2]);
-    }
+    measure_data = rglactions.transform(measure_data, rglactions);
 
     both_hemi_colors = collayer.from.morphlike.data(measure_data$lh, measure_data$rh, makecmap_options=makecmap_options, return_map = TRUE);
     map = both_hemi_colors$map;
@@ -151,6 +149,27 @@ vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi="
     coloredmeshes = coloredmeshes.from.color(template_subjects_dir, template_subject, both_hemi_colors, hemi, surface=surface, metadata=list("src_data"=measure_data, "map"=map, "makecmap_options"=makecmap_options));
 
     return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar)));
+}
+
+rglactions.transform <- function(measure_data, rglactions) {
+    if(is.null(rglactions)) {
+        return(measure_data);
+    }
+    if(is.hemilist(measure_data)) {
+        return(lapply(measure_data, rglactions.transform, rglactions=rglactions));
+    }
+    if(hasIn(rglactions, list('clip_data'))) {
+        clip_range = rglactions$clip_data;
+        measure_data = clip.data(measure_data, lower=clip_range[1], upper=clip_range[2]);
+    }
+    if(hasIn(rglactions, list('trans_fun'))) {
+        trans_fun = rglactions$trans_fun;
+        if(! is.function(trans_fun)) {
+            stop("The value of rglactions entry 'trans_fun' must be a function.");
+        }
+        measure_data = trans_fun(measure_data);
+    }
+    return(measure_data);
 }
 
 
