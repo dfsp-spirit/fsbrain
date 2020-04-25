@@ -11,6 +11,7 @@
 #' @param ... extra params passed to \code{\link[fields]{image.plot}}
 #'
 #' @importFrom rgl bgplot3d
+#' @importFrom graphics par
 #' @importFrom squash cmap makecmap
 #' @importFrom fields image.plot
 #' @keywords internal
@@ -39,7 +40,7 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
         if(is.null(combined_data_range) | is.null(combined_colors)) {
             warning("Requested to draw colorbar, but meshes do not contain the required metadata. Skipping.");
         } else {
-            rgl::bgplot3d({op = par(mar = rep(0.1, 4)); plot.new(); fields::image.plot(add=T, legend.only = TRUE, zlim = combined_data_range, col = combined_colors_sorted, horizontal = horizontal, ...); par(op);});
+            rgl::bgplot3d({op = graphics::par(mar = rep(0.1, 4)); plot.new(); fields::image.plot(add=T, legend.only = TRUE, zlim = combined_data_range, col = combined_colors_sorted, horizontal = horizontal, ...); graphics::par(op);});
         }
     } else if(colorbar_type == "squash" | colorbar_type == 'plain') {
         cmap = coloredmeshes.combined.cmap.sorted(coloredmeshes);
@@ -47,13 +48,13 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
             warning("Requested to draw colorbar, but meshes do not contain the required metadata. Skipping.");
         } else {
             if(colorbar_type == "plain") {
-                rgl::bgplot3d({op = par(mar = rep(0.1, 4)); plot.new(); plot.fsbrain.colorbar(cmap$colors, horizontal = horizontal); par(op); });
+                rgl::bgplot3d({op = graphics::par(mar = rep(0.1, 4)); plot.new(); plot.fsbrain.colorbar(cmap$colors, horizontal = horizontal); graphics::par(op); });
             } else {
                 # squash
                 if(horizontal) {
-                    rgl::bgplot3d({op = par(mar = rep(0.1, 4)); plot.new(); squash::hkey(cmap, skip=2L, stretch = 3, x=0, y=0); par(op);});
+                    rgl::bgplot3d({op = graphics::par(mar = rep(0.1, 4)); plot.new(); squash::hkey(cmap, skip=2L, stretch = 3, x=0, y=0); graphics::par(op);});
                 } else {
-                    rgl::bgplot3d({op = par(mar = rep(0.1, 4)); plot.new(); squash::vkey(cmap, skip=2L, stretch = 3, x=0, y=0); par(op);});
+                    rgl::bgplot3d({op = graphics::par(mar = rep(0.1, 4)); plot.new(); squash::vkey(cmap, skip=2L, stretch = 3, x=0, y=0); graphics::par(op);});
                 }
             }
         }

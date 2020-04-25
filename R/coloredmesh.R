@@ -394,8 +394,8 @@ coloredmesh.from.mask <- function(subjects_dir, subject_id, mask, hemi, surface=
     mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
     map = do.call(squash::makecmap, utils::modifyList(list(morph_like_data), makecmap_options));
     col = squash::cmap(morph_like_data, map = map);
-    map_sorted = do.call(squash::makecmap, utils::modifyList(list(sort(morph_data)), makecmap_options));
-    col_sorted = squash::cmap(morph_data, map=map_sorted);
+    map_sorted = do.call(squash::makecmap, utils::modifyList(list(sort(morph_like_data)), makecmap_options));
+    col_sorted = squash::cmap(morph_like_data, map=map_sorted);
     return(fs.coloredmesh(mesh, col, hemi, metadata=list("src_data"=morph_like_data, "col_sorted"=col_sorted, "map"=map, "map_sorted"=map_sorted, "data_range"=range(morph_like_data, finite=TRUE), "makecmap_options"=makecmap_options)));
 }
 
