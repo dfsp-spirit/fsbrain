@@ -483,7 +483,7 @@ makecmakeopts.merge <- function(makecmap_options, colormap, default_colormap=squ
 
   if(is.null(makecmap_options$colFn)) {
     if(is.null(colormap)) {
-      warning("No valid colormap function found in parameters 'makecmap_options' or 'colormap', using the default colormap.");
+      #warning("No valid colormap function defined in parameters 'makecmap_options$colFn' or 'colormap', using the default colormap.");
       makecmap_options$colFn = default_colormap;
     } else {
       makecmap_options$colFn = colormap;
