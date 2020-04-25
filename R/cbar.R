@@ -69,7 +69,7 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
 #'
 #' @note This function assumes that there is an open plot, use \code{plot.new()} to create one before calling this function if that is not the case
 #'
-#' @importFrom graphics plot
+#' @importFrom graphics plot box
 #' @importFrom grDevices as.raster
 #' @keywords internal
 plot.fsbrain.colorbar <- function(colors, horizontal=FALSE) {
@@ -78,6 +78,7 @@ plot.fsbrain.colorbar <- function(colors, horizontal=FALSE) {
     } else {
         graphics::plot(grDevices::as.raster(colors));
     }
+    graphics::box();
 }
 
 
