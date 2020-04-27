@@ -271,32 +271,20 @@ coloredmeshes.combined.data.range <- function(coloredmeshes) {
 #'
 #' @export
 vis.colortable.legend <- function(colortable) {
+
+
     if(! is.data.frame(colortable)) {
-        stop("Parameter 'colortable' must be a data.frame.");
+        if(freesurferformats::is.fs.annot(colortable)) {
+            # An annotation was passed, extract the colortable from it.
+            colortable = colortable$colortable_df;
+        } else {
+            stop("Parameter 'colortable' must be a colortable data.frame or a loaded annotation (fs.annot).");
+        }
+
     }
-
-    xu = graphics::strheight("whatever");
-    yu = graphics::strwidth("whatever");
-
-    x_start = 3 * xu;
-    y_start = 3 * yu;
-
-    rect_width = 2 * xu;
-    rect_height = 2 * yu;
-
-    vertical_spacer = rect_height * 0.5; # extra space between the botton of one rect and the top of the next one
-    horitzontal_spacer = rect_width * 0.5;  # extra space between the right end of the rect and the start of the label text next to it
-
-    num_rows = nrow(colortable); # number of rows we need to plot
 
     graphics::plot.new();
-    graphics::plot.window(xlim=c(0, 100), ylim=c(0, 100));
+    legend("topleft", legend=annot$colortable_df$struct_name, fill=annot$colortable_df$hex_color_string_rgb, bty = "n");
 
-    for(row_idx in seq.int(nrow(colortable))) {
-        y_this_rect = y_start + ((row_idx -1L) * (rect_height+vertical_spacer));
-        graphics::rect(x_start, y_this_rect, x_start + rect_width, y_this_rect + rect_height, border = "black", col=colortable$hex_color_string_rgb[[row_idx]]);
-        #strheight(s, units = "user", cex = NULL, font = NULL, vfont = NULL, ...)cat(sprintf("using color '%s'\n", colortable$hex_color_string_rgb[[row_idx]]))
-        graphics::text(x_start + rect_width + horitzontal_spacer, y_this_rect, colortable$struct_name[[row_idx]]);
-    }
 }
 
