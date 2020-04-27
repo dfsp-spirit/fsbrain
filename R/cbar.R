@@ -255,23 +255,30 @@ coloredmeshes.combined.data.range <- function(coloredmeshes) {
 }
 
 
-#' @title Create new colortable legend plot.
+#' @title Create a colortable legend plot.
 #'
-#' @description This plots a legend for a colortable, showing the region names and their assigned colors. This is useful when plotting annotation or atlas data, for which a colorbar makes little sense.
+#' @description This plots a legend for a colortable, showing the region names and their assigned colors. This is useful when plotting annotation data, for which a colorbar makes little sense.
 #'
 #' @param colortable dataframe, a colortable as returned by read.fs.colortable or the inner colrotable_df returned by subject.annot
+#'
+#' @param ncols positive integer, the number of columns to use
+#'
+#' @param plot_struct_index logical, whether to plot the region index from tge 'struct_index' field. If there is no such field, this is silently ignored.
+#'
+#' @note This function plots one or more legends (see \code{\link[graphics]{legend}}). For the typical number of regions in an atlas, this should work pretty well. If you plot a very large number of regions (like the full FreeSurferColorLUT), you will have to adapt the device size.
 #'
 #' @examples
 #' \donttest{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    annot = subject.annot(subjects_dir, 'subject1', 'lh', 'aparc');
-#'    vis.colortable.legend(annot$colortable_df);
+#'    vis.colortable.legend(annot$colortable_df, ncols=3);
 #' }
 #'
+#' @importFrom graphics legend par plot.new plot
+#' @importFrom grDevices rgb
 #' @export
-vis.colortable.legend <- function(colortable) {
-
+vis.colortable.legend <- function(colortable, ncols=1L, plot_struct_index=TRUE) {
 
     if(! is.data.frame(colortable)) {
         if(freesurferformats::is.fs.annot(colortable)) {
@@ -280,11 +287,31 @@ vis.colortable.legend <- function(colortable) {
         } else {
             stop("Parameter 'colortable' must be a colortable data.frame or a loaded annotation (fs.annot).");
         }
+    }
 
+    if(is.null(colortable$hex_color_string_rgb)) {
+        colortable$hex_color_string_rgb = grDevices::rgb(colortable$r/255., colortable$g/255., colortable$b/255.);
     }
 
     graphics::plot.new();
-    legend("topleft", legend=annot$colortable_df$struct_name, fill=annot$colortable_df$hex_color_string_rgb, bty = "n");
+    num_regions = nrow(colortable);               # the total number of regions in the colortable
+    n_per_legend = ceiling(num_regions / ncols);  # we may plot several legends, this is how many regions are listed in each legend.
 
+    graphics::plot.new();
+    graphics::par(mfrow = c(1L, ncols));     # create a multi-plot drawing area consisting of 3x1 cells
+    #cat(sprintf("Using %d columns, %d entries per legend/column\n", ncols, n_per_legend))
+
+    for(legend_idx in seq.int(ncols)) {
+        start_idx = ((legend_idx -1L) * n_per_legend) + 1L;
+        end_idx = min(start_idx + n_per_legend -1L, num_regions);
+        #cat(sprintf("- Plotting from %d to %d in column # %d\n", start_idx, end_idx, legend_idx))
+
+        graphics::plot(1, type="n", axes=FALSE, xlab="", ylab=""); # Create empty plot, this is needed to switch to the next cell
+        legend_text = colortable$struct_name[start_idx:end_idx];
+        if(plot_struct_index & ! is.null(colortable$struct_index)) {
+            legend_text = paste(colortable$struct_index[start_idx:end_idx], legend_text);
+        }
+        graphics::legend("topleft", legend=legend_text, fill=colortable$hex_color_string_rgb[start_idx:end_idx], bty = "n");
+    }
 }
 
