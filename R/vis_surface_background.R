@@ -221,16 +221,25 @@ collayer.from.morphlike.data <- function(lh_morph_data=NULL, rh_morph_data=NULL,
             morph_data = lh_morph_data;
         }
 
+        if(! 'colFn' %in% makecmap_options) {
+            warning("No colFn given");
+        }
+
         map = do.call(squash::makecmap, utils::modifyList(list(morph_data), makecmap_options));
+        map_sorted = do.call(squash::makecmap, utils::modifyList(list(sort(morph_data)), makecmap_options));
         single_hemi_color_layer = squash::cmap(morph_data, map = map);
         collayer = hemilist.wrap(single_hemi_color_layer, hemi);
         if(return_map) {
             collayer$map = map;
+            collayer$map_sorted = map_sorted;
+            collayer$col_sorted = squash::cmap(sort(morph_data), map = map_sorted);
         }
         return(collayer);
     } else {
         merged_morph_data = c(lh_morph_data, rh_morph_data);
+
         common_cmap = do.call(squash::makecmap, utils::modifyList(list(merged_morph_data), makecmap_options));
+        common_cmap_sorted = do.call(squash::makecmap, utils::modifyList(list(sort(merged_morph_data)), makecmap_options));
         if(is.numeric(lh_morph_data)) {
             lh_layer = squash::cmap(lh_morph_data, map = common_cmap);
         } else {
@@ -244,6 +253,8 @@ collayer.from.morphlike.data <- function(lh_morph_data=NULL, rh_morph_data=NULL,
         collayer = list("lh"=lh_layer, "rh"=rh_layer);
         if(return_map) {
             collayer$map = common_cmap;
+            collayer$map_sorted = common_cmap_sorted;
+            collayer$col_sorted = squash::cmap(sort(merged_morph_data), map = common_cmap_sorted);
         }
         return(collayer);
     }

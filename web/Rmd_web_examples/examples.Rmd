@@ -1,5 +1,5 @@
 ---
-title: "fsbrain examples"
+title: "fsbrain visualization examples"
 author: "Tim Schäfer"
 date: "April 23, 2020"
 output: html_document
@@ -10,7 +10,6 @@ knitr::opts_chunk$set(echo = TRUE)
 rgl::setupKnitr()
 ```
 
-# fsbrain Visualization Examples
 
 ## Example data
 
@@ -57,7 +56,7 @@ Next, we will try a third view, add a colorbar, use the pial surface, and plot s
 vis.subject.morph.native(sjd, sj, 'curv', views='si', cortex_only = TRUE, draw_colorbar = 'vertical', surface = 'pial')
 ```
 
-That does not look very exciting. Why? The curvature data has a tail and is far from Normal:
+That does not look very exciting. Why? The curvature data has long tails and is far from Normal:
 
 ```{r}
 hist(subject.morph.native(sjd, sj, 'curv', hemi = 'both'))
@@ -71,4 +70,42 @@ The `si` view is single interactive view, and you can rotate the brain with your
 vis.subject.morph.native(sjd, sj, 'curv', views='sd_medial_lh', cortex_only = TRUE, draw_colorbar = 'horizontal',  rglactions=list('trans_fun'=clip.data))
 ```
 
-That looks better.
+That looks more suitable.
+
+
+## Standard space data
+
+
+In group studies, you typically have a single standard space that data gets mapped to for comparison. For FreeSurfer surface data, typically the *fsaverage* subject is used, but you could create and use your own template, of course. Let's have a look at some standard space data mapped to fsaverage. We will use sulcal depths in this example.
+
+```{r rgl=TRUE, dev='png'}
+vis.subject.morph.standard(sjd, sj, 'sulc', cortex_only = TRUE, fwhm="5");
+```
+
+
+This loaded the morphometry data files `surf/?h.curv.fwhm5.fsaverage.mgh` of the subject, applied a colormap to the values, and visualized the results on the white surface of fsaverage (also using the fsaverage cortex labels). The function will do its best to find fsaverage automatically, but if it fails or you want to use a different template subject, have a look at the optional parameters `template_subject` and `template_subjects_dir`.
+
+When data is mapped to standard space, they will get smoothed and different versions with a number of kernel settings will be available after running FreeSurfer's `recon-all` with the `qcache` option. That is what the `fwhm` parameter is about. Try different values depending on what files you have, start with "5", "10", or "15".
+
+
+## Adjusting the colormap
+
+The exact colormap you use is a matter of taste, but you should maybe chose a type of colormap that is suitable for your data: *sequential* like `heat` for morphometry data, *diverging* like `cm.colors` for positive and negative clusters, or *qualitative* like `Set3` from the `RColorbrewer` package for atlas regions. The default colormap used by fsbrain is a sequential multi-hue palette (`squash::rainbow2`).
+
+A great and popular sequential palette is `viridis` from the `viridis` package. Here we used the `makecmap_options` parameter to use it:
+
+```{r rgl=TRUE, dev='png'}
+vis.subject.morph.standard(sjd, sj, 'sulc', cortex_only = TRUE, fwhm="15", makecmap_options = list('colFn'=viridis::viridis), draw_colorbar = T, views='sd_dorsal');
+```
+
+
+Try some different colormaps and see which one you like best. If you want to use interpolated colormaps with many colors based on the `RColorBrewer` palettes (which have too few colors for morphometry data in most cases), try something like this:
+
+```{r rgl=TRUE, dev='png'}
+manyblues = colorRampPalette(RColorBrewer::brewer.pal(9, name="Blues"));
+vis.subject.morph.standard(sjd, sj, 'area', makecmap_options = list('colFn'=manyblues), draw_colorbar = T, views='sd_dorsal');
+```
+
+
+
+

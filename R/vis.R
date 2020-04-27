@@ -62,21 +62,21 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi="bo
         measure_data = subject.morph.native(subjects_dir, subject_id, measure, hemi, cortex_only=cortex_only, split_by_hemi=TRUE);
     }
 
-    #if(rglactions.has.key(rglactions, 'clip_data')) {
-    #    clip_range = rglactions$clip_data;
-    #    measure_data = clip.data(measure_data, lower=clip_range[1], upper=clip_range[2]);
-    #}
-    measure_data = rglactions.transform(measure_data, rglactions);
+    measure_data = rglactions.transform(measure_data, rglactions); # apply transform or data clipping
 
     both_hemi_colors = collayer.from.morphlike.data(measure_data$lh, measure_data$rh, makecmap_options=makecmap_options, return_map=TRUE);
     map = both_hemi_colors$map;
+    map_sorted = both_hemi_colors$map_sorted;
+    col_sorted = both_hemi_colors$col_sorted;
     both_hemi_colors$map = NULL;
+    both_hemi_colors$map_sorted = NULL;
+    both_hemi_colors$col_sorted = NULL;
     if(!is.null(bg)) {
         background = collayer.bg(subjects_dir, subject_id, bg, hemi=hemi);
         both_hemi_colors = collayers.merge(list("fg"=both_hemi_colors, "bg"=background));
     }
 
-    coloredmeshes = coloredmeshes.from.color(subjects_dir, subject_id, both_hemi_colors, hemi, surface=surface, metadata=list('src_data'=measure_data, 'map'=map, 'makecmap_options'=makecmap_options));
+    coloredmeshes = coloredmeshes.from.color(subjects_dir, subject_id, both_hemi_colors, hemi, surface=surface, metadata=list('src_data'=measure_data, 'map'=map, 'map_sorted'=map_sorted, 'col_sorted'=col_sorted, 'makecmap_options'=makecmap_options));
 
     return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, style = style)));
 }
@@ -140,13 +140,17 @@ vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi="
 
     both_hemi_colors = collayer.from.morphlike.data(measure_data$lh, measure_data$rh, makecmap_options=makecmap_options, return_map = TRUE);
     map = both_hemi_colors$map;
+    map_sorted = both_hemi_colors$map_sorted;
+    col_sorted = both_hemi_colors$col_sorted;
     both_hemi_colors$map = NULL;
+    both_hemi_colors$map_sorted = NULL;
+    both_hemi_colors$col_sorted= NULL;
     if(!is.null(bg)) {
         background = collayer.bg(subjects_dir, subject_id, bg, hemi=hemi);
         both_hemi_colors = collayers.merge(list("fg"=both_hemi_colors, "bg"=background));
     }
 
-    coloredmeshes = coloredmeshes.from.color(template_subjects_dir, template_subject, both_hemi_colors, hemi, surface=surface, metadata=list("src_data"=measure_data, "map"=map, "makecmap_options"=makecmap_options));
+    coloredmeshes = coloredmeshes.from.color(template_subjects_dir, template_subject, both_hemi_colors, hemi, surface=surface, metadata=list("src_data"=measure_data, "map"=map, "map_sorted"=map_sorted, "col_sorted"=col_sorted, "makecmap_options"=makecmap_options));
 
     return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar)));
 }

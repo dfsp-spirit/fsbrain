@@ -2,22 +2,22 @@
 % Please edit documentation in R/cbar.R
 \name{vis.colortable.legend}
 \alias{vis.colortable.legend}
-\title{Create a colortable legend plot.}
+\title{Create a separate legend plot for a colortable or an annotation.}
 \usage{
 vis.colortable.legend(colortable, ncols = 1L, plot_struct_index = TRUE)
 }
 \arguments{
-\item{colortable}{dataframe, a colortable as returned by read.fs.colortable or the inner colrotable_df returned by subject.annot}
+\item{colortable}{dataframe, a colortable as returned by \code{\link[freesurferformats]{read.fs.colortable}} or the inner 'colortable_df' returned by \code{\link[fsbrain]{subject.annot}}. One can also pass an annotation (*fs.annot* instance).}
 
-\item{ncols}{positive integer, the number of columns to use}
+\item{ncols}{positive integer, the number of columns to use when plotting}
 
 \item{plot_struct_index}{logical, whether to plot the region index from tge 'struct_index' field. If there is no such field, this is silently ignored.}
 }
 \description{
-This plots a legend for a colortable, showing the region names and their assigned colors. This is useful when plotting annotation data, for which a colorbar makes little sense.
+This plots a legend for a colortable or an atlas (annotation), showing the region names and their assigned colors. This function creates a new plot.
 }
 \note{
-This function plots one or more legends (see \code{\link[graphics]{legend}}). For the typical number of regions in an atlas, this should work pretty well. If you plot a very large number of regions (like the full FreeSurferColorLUT), you will have to adapt the device size.
+This function plots one or more legends (see \code{\link[graphics]{legend}}). You may have to adapt the device size before calling this function if you inted to plot a large colortable.
 }
 \examples{
 \donttest{

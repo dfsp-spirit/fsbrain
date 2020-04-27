@@ -37,7 +37,7 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
         combined_colors = coloredmeshes.combined.colors(coloredmeshes);
         combined_colors_sorted = coloredmeshes.combined.colors.sorted(coloredmeshes);
 
-        if(is.null(combined_data_range) | is.null(combined_colors)) {
+        if(is.null(combined_data_range) | is.null(combined_colors_sorted)) {
             warning("Requested to draw colorbar, but meshes do not contain the required metadata. Skipping.");
         } else {
             rgl::bgplot3d({op = graphics::par(mar = rep(0.1, 4)); plot.new(); fields::image.plot(add=T, legend.only = TRUE, zlim = combined_data_range, col = combined_colors_sorted, horizontal = horizontal, ...); graphics::par(op);});
@@ -135,14 +135,13 @@ coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=TRUE, image.p
 
 
     col = coloredmeshes.combined.colors(coloredmeshes);
+    col_sorted = coloredmeshes.combined.colors.sorted(coloredmeshes);
     data_range = coloredmeshes.combined.data.range(coloredmeshes);
 
-    if(is.null(col) | is.null(data_range)) {
+    if(is.null(col) | is.null(col_sorted) | is.null(data_range)) {
         warning("Requested to draw a colorbar based on meshes, but they do not contain the required metadata, skipping. Make sure the meshes contain colors and a data range.");
         return(ret_list);
     }
-
-    col_sorted = sort(col);
 
     ret_list$col = col;
     ret_list$col_sorted = col_sorted;
@@ -255,17 +254,17 @@ coloredmeshes.combined.data.range <- function(coloredmeshes) {
 }
 
 
-#' @title Create a colortable legend plot.
+#' @title Create a separate legend plot for a colortable or an annotation.
 #'
-#' @description This plots a legend for a colortable, showing the region names and their assigned colors. This is useful when plotting annotation data, for which a colorbar makes little sense.
+#' @description This plots a legend for a colortable or an atlas (annotation), showing the region names and their assigned colors. This function creates a new plot.
 #'
-#' @param colortable dataframe, a colortable as returned by read.fs.colortable or the inner colrotable_df returned by subject.annot
+#' @param colortable dataframe, a colortable as returned by \code{\link[freesurferformats]{read.fs.colortable}} or the inner 'colortable_df' returned by \code{\link[fsbrain]{subject.annot}}. One can also pass an annotation (*fs.annot* instance).
 #'
-#' @param ncols positive integer, the number of columns to use
+#' @param ncols positive integer, the number of columns to use when plotting
 #'
 #' @param plot_struct_index logical, whether to plot the region index from tge 'struct_index' field. If there is no such field, this is silently ignored.
 #'
-#' @note This function plots one or more legends (see \code{\link[graphics]{legend}}). For the typical number of regions in an atlas, this should work pretty well. If you plot a very large number of regions (like the full FreeSurferColorLUT), you will have to adapt the device size.
+#' @note This function plots one or more legends (see \code{\link[graphics]{legend}}). You may have to adapt the device size before calling this function if you inted to plot a large colortable.
 #'
 #' @examples
 #' \donttest{
