@@ -15,12 +15,12 @@ test_that("We can visualize morphometry data in multiview.", {
     measure = 'thickness';
     surface = 'white';
 
-    rgloptions=list("windowRect"=c(80,80,1200,1200));     # the first 2 entries give the position on screen, the rest defines resolution as width, height in px
+    rgloptions=list("windowRect"=c(80,80,900,900));     # the first 2 entries give the position on screen, the rest defines resolution as width, height in px
     rglactions = list("snapshot_png"="~/fsbrain.png", "clip_data"=c(0.05, 0.95));
     rglactionsmovie = list("snapshot_png"="~/fsbrain.png", "movie"="brain_rot");
 
     coloredmeshes = vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('si', 't4', 't9'), rgloptions=rgloptions, rglactions=rglactions);
-    coloredmeshes = vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('si'));
+    #coloredmeshes = vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('si'));
 
     vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('t4'), draw_colorbar =TRUE, rgloptions = rgloptions, rglactions = list("snapshot_png"="~/brain_t4.png"));
     vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', views=c('t9'), rgloptions = rgloptions, rglactions = list("snapshot_png"="~/brain_t9.png"));
@@ -97,9 +97,10 @@ test_that("We can visualize data on fsaverage if available", {
 
     rgloptions=list("windowRect"=c(50,50,1200,1200));     # the first 2 entries give the position on screen, the rest defines resolution as width, height in px
     rglactions = list("snapshot_png"="~/fsbrain_t4_fsavg.png");
+    makecmap_options = list('colFn'=grDevices::terrain.colors);
 
     if(dir.exists(fsaverage_dir)) {
-         vis.subject.morph.standard(subjects_dir, 'subject1', 'thickness', 'both', '10', template_subjects_dir=fsaverage_dir, rgloptions=rgloptions, rglactions=rglactions);
+         vis.subject.morph.standard(subjects_dir, 'subject1', 'thickness', 'both', '10', template_subjects_dir=fsaverage_dir, rgloptions=rgloptions, rglactions=rglactions, draw_colorbar=T);
     } else {
         message("No fsaverage found.");
     }
