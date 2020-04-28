@@ -6,7 +6,7 @@
 \usage{
 collayer.from.morphlike.data(lh_morph_data = NULL,
   rh_morph_data = NULL, makecmap_options = list(colFn = squash::jet),
-  return_map = FALSE)
+  return_metadata = FALSE)
 }
 \arguments{
 \item{lh_morph_data}{numerical vector, can be NULL}
@@ -15,7 +15,7 @@ collayer.from.morphlike.data(lh_morph_data = NULL,
 
 \item{makecmap_options}{named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.}
 
-\item{return_map}{logical, whether to add the colormap as entry 'map' in the returned list}
+\item{return_metadata}{logical, whether to return additional metadata as entry 'metadata' in the returned list}
 }
 \value{
 named hemi list, each entry is a vector of color strings, one color per surface vertex. The coloring represents the morph data.

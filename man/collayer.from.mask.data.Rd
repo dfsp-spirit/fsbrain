@@ -8,7 +8,7 @@ collayer.from.mask.data(lh_data = NULL, rh_data = NULL,
   makecmap_options = list(colFn = squash::rainbow2))
 }
 \arguments{
-\item{lh_data}{integer vector,  can be NULL}
+\item{lh_data}{integer vector, can be NULL}
 
 \item{rh_data}{numerical vector, can be NULL}
 

@@ -195,7 +195,7 @@ collayer.bg.atlas <- function(subjects_dir, subject_id, hemi="both", atlas="apar
 #'
 #' @param makecmap_options named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.
 #'
-#' @param return_map logical, whether to add the colormap as entry 'map' in the returned list
+#' @param return_metadata logical, whether to return additional metadata as entry 'metadata' in the returned list
 #'
 #' @return named hemi list, each entry is a vector of color strings, one color per surface vertex. The coloring represents the morph data.
 #'
@@ -205,7 +205,7 @@ collayer.bg.atlas <- function(subjects_dir, subject_id, hemi="both", atlas="apar
 #' @importFrom utils modifyList
 #' @importFrom squash cmap makecmap jet
 #' @export
-collayer.from.morphlike.data <- function(lh_morph_data=NULL, rh_morph_data=NULL, makecmap_options=list('colFn'=squash::jet), return_map=FALSE) {
+collayer.from.morphlike.data <- function(lh_morph_data=NULL, rh_morph_data=NULL, makecmap_options=list('colFn'=squash::jet), return_metadata=FALSE) {
     if(is.null(lh_morph_data) | is.null(rh_morph_data)) {
 
         if(is.null(lh_morph_data) & is.null(rh_morph_data)) {
@@ -226,20 +226,18 @@ collayer.from.morphlike.data <- function(lh_morph_data=NULL, rh_morph_data=NULL,
         }
 
         map = do.call(squash::makecmap, utils::modifyList(list(morph_data), makecmap_options));
-        map_sorted = do.call(squash::makecmap, utils::modifyList(list(sort(morph_data)), makecmap_options));
         single_hemi_color_layer = squash::cmap(morph_data, map = map);
         collayer = hemilist.wrap(single_hemi_color_layer, hemi);
-        if(return_map) {
-            collayer$map = map;
-            collayer$map_sorted = map_sorted;
-            collayer$col_sorted = squash::cmap(sort(morph_data), map = map_sorted);
+        if(return_metadata) {
+            map_sorted = do.call(squash::makecmap, utils::modifyList(list(sort(morph_data)), makecmap_options));
+            col_sorted = squash::cmap(sort(morph_data), map = map_sorted);
+            collayer$metadata = list('map'=map, 'map_sorted'=map_sorted, 'col_sorted'=col_sorted);
         }
         return(collayer);
     } else {
         merged_morph_data = c(lh_morph_data, rh_morph_data);
 
         common_cmap = do.call(squash::makecmap, utils::modifyList(list(merged_morph_data), makecmap_options));
-        common_cmap_sorted = do.call(squash::makecmap, utils::modifyList(list(sort(merged_morph_data)), makecmap_options));
         if(is.numeric(lh_morph_data)) {
             lh_layer = squash::cmap(lh_morph_data, map = common_cmap);
         } else {
@@ -251,10 +249,10 @@ collayer.from.morphlike.data <- function(lh_morph_data=NULL, rh_morph_data=NULL,
             rh_layer = NULL;
         }
         collayer = list("lh"=lh_layer, "rh"=rh_layer);
-        if(return_map) {
-            collayer$map = common_cmap;
-            collayer$map_sorted = common_cmap_sorted;
-            collayer$col_sorted = squash::cmap(sort(merged_morph_data), map = common_cmap_sorted);
+        if(return_metadata) {
+            common_cmap_sorted = do.call(squash::makecmap, utils::modifyList(list(sort(merged_morph_data)), makecmap_options));
+            col_sorted = squash::cmap(sort(merged_morph_data), map = common_cmap_sorted);
+            collayer$metadata = list('map'=common_cmap, 'map_sorted'=common_cmap_sorted, 'col_sorted'=col_sorted);
         }
         return(collayer);
     }
@@ -263,7 +261,7 @@ collayer.from.morphlike.data <- function(lh_morph_data=NULL, rh_morph_data=NULL,
 
 #' @title Compute surface color layer from morph-like data.
 #'
-#' @param lh_data integer vector,  can be NULL
+#' @param lh_data integer vector, can be NULL
 #'
 #' @param rh_data numerical vector, can be NULL
 #'

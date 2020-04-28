@@ -25,7 +25,7 @@ Now increase the figure size.
 
 ```{r}
 library('rgl')
-r3dDefaults$windowRect=c(0, 0, 900, 900);
+r3dDefaults$windowRect=c(20, 20, 900, 900);
 ```
 
 ## Visualizing native space morphometry data: cortical thickness
