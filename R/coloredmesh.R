@@ -90,6 +90,11 @@ coloredmesh.from.color <- function(subjects_dir, subject_id, color_data, hemi, s
 
     if(freesurferformats::is.fs.surface(surface)) {
         surface_mesh = surface;
+    } else if(is.hemilist(surface)) {
+        surface_mesh = surface[[hemi]];
+        if(! freesurferformats::is.fs.surface(surface_mesh)) {
+            stop(sprintf("Hemilist in parameter 'surface' does not contain an fs.surface instance for hemi '%s'.\n", hemi));
+        }
     } else {
         surface_mesh = subject.surface(subjects_dir, subject_id, surface, hemi);
     }
