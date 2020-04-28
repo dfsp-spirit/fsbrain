@@ -1,6 +1,6 @@
 # The fsbrain FAQ
 
-### **Q**: What kind of data do I need for fsbrain?
+### **Q**: What kind of input data do I need for fsbrain?
 
 The *fsbrain* software is designed to be used with the output of the [FreeSurfer](http://freesurfer.net/) *recon-all* command and compatible software. Running recon-all on your T1w MRI scan results in a directory structure full of different files and file types for each subject. The *fsbrain* library uses knowledge on the directory layout to load the proper data.
 
