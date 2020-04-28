@@ -43,6 +43,9 @@ list of coloredmeshes. The coloredmeshes used for the visualization.
 \description{
 Visualize a label for a subject. A label is just a logical vector with one entry for each vertex in the mesh. Each vertex may additionally be associated with a scalar value, but this function ignored that.
 }
+\note{
+Drawing a colorbar for label data makes limited sense, use a legend instead. The colorbar can give a rough overview of the relative number of label and non-label vertices though, so it is possible to request one.
+}
 \examples{
 \donttest{
    fsbrain::download_optional_data();
