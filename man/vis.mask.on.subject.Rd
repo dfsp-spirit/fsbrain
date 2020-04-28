@@ -7,7 +7,7 @@
 vis.mask.on.subject(subjects_dir, vis_subject_id, mask_lh, mask_rh,
   surface = "white", colormap = NULL, views = c("t4"),
   rgloptions = list(), rglactions = list(), draw_colorbar = FALSE,
-  makecmap_options = list(colFn = squash::rainbow2))
+  makecmap_options = list(colFn = label.colFn.inv))
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}

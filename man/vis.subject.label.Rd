@@ -7,8 +7,8 @@
 vis.subject.label(subjects_dir, subject_id, label, hemi,
   surface = "white", colormap = NULL, views = c("t4"),
   rgloptions = list(), rglactions = list(), draw_colorbar = FALSE,
-  makecmap_options = list(colFn = squash::rainbow2, col.na =
-  "#FFFFFF00"), map_to_NA = 0L, bg = NULL)
+  makecmap_options = list(colFn = label.colFn.inv, col.na = "#FFFFFF00"),
+  map_to_NA = 0L, bg = NULL)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}

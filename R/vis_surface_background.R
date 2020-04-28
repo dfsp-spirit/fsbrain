@@ -275,7 +275,7 @@ collayer.from.morphlike.data <- function(lh_morph_data=NULL, rh_morph_data=NULL,
 #' @importFrom utils modifyList
 #' @importFrom squash cmap makecmap rainbow2
 #' @export
-collayer.from.mask.data <- function(lh_data=NULL, rh_data=NULL, makecmap_options=list('colFn'=squash::rainbow2)) {
+collayer.from.mask.data <- function(lh_data=NULL, rh_data=NULL, makecmap_options=list('colFn'=label.colFn)) {
     if(is.null(lh_data) | is.null(rh_data)) {
 
         if(is.null(lh_data) & is.null(rh_data)) {
@@ -318,6 +318,47 @@ collayer.from.mask.data <- function(lh_data=NULL, rh_data=NULL, makecmap_options
         }
         return(list("lh"=lh_layer, "rh"=rh_layer));
     }
+}
+
+
+#' @title A simple colormap function for binary colors.
+#'
+#' @description Useful for plotting labels.
+#'
+#' @param n positive integer, the number of colors. Must be 1 or 2 for this function.
+#'
+#' @return vector of 'n' RGB colorstrings
+#'
+#' @export
+label.colFn <- function(n=2L, col_a='#228B22', col_b="#FFFFFF") {
+    n = as.integer(n);
+    if(n < 1) {
+        stop(sprintf("Parameter 'n' must be >= 1L but is '%d'.\n", n));
+    }
+    if(n == 1L) {
+        return();
+    } else if(n==2L) {
+        return(c(col_b, col_a));
+    } else {
+        n_half = as.integer(ceiling(n/2.0));
+        col = rep(col_a, n);
+        col[1:n_half] = col_b;
+        return(col);
+    }
+}
+
+
+#' @title A simple colormap function for binary colors.
+#'
+#' @description Useful for plotting labels.
+#'
+#' @param n positive integer, the number of colors. Must be 1 or 2 for this function.
+#'
+#' @return vector of 'n' RGB colorstrings
+#'
+#' @export
+label.colFn.inv <- function(n=2L, col_a='#228B22', col_b="#FFFFFF") {
+    return(label.colFn(n=n, col_a=col_b, col_b=col_a));
 }
 
 

@@ -181,6 +181,8 @@ rglactions.transform <- function(measure_data, rglactions) {
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
+#' @note Drawing a colorbar for label data makes limited sense, use a legend instead. The colorbar can give a rough overview of the relative number of label and non-label vertices though, so it is possible to request one.
+#'
 #' @examples
 #' \donttest{
 #'    fsbrain::download_optional_data();
@@ -197,7 +199,7 @@ rglactions.transform <- function(measure_data, rglactions) {
 #'
 #' @importFrom squash rainbow2
 #' @export
-vis.subject.label <- function(subjects_dir, subject_id, label, hemi, surface="white", colormap=NULL, views=c("t4"), rgloptions = list(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=squash::rainbow2, 'col.na'='#FFFFFF00'), map_to_NA=0L, bg=NULL) {
+vis.subject.label <- function(subjects_dir, subject_id, label, hemi, surface="white", colormap=NULL, views=c("t4"), rgloptions = list(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=label.colFn.inv, 'col.na'='#FFFFFF00'), map_to_NA=0L, bg=NULL) {
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
@@ -416,6 +418,8 @@ vis.color.on.subject <- function(subjects_dir, vis_subject_id, color_lh, color_r
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
+#' @note Drawing a colorbar for label data makes limited sense, use a legend instead. The colorbar can give a rough overview of the relative number of label and non-label vertices though, so it is possible to request one.
+#'
 #' @examples
 #' \donttest{
 #'    fsbrain::download_optional_data();
@@ -453,7 +457,7 @@ vis.color.on.subject <- function(subjects_dir, vis_subject_id, color_lh, color_r
 #'
 #' @importFrom squash rainbow2
 #' @export
-vis.mask.on.subject <- function(subjects_dir, vis_subject_id, mask_lh, mask_rh, surface="white", colormap=NULL, views=c('t4'), rgloptions=list(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=squash::rainbow2)) {
+vis.mask.on.subject <- function(subjects_dir, vis_subject_id, mask_lh, mask_rh, surface="white", colormap=NULL, views=c('t4'), rgloptions=list(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=label.colFn.inv)) {
 
     if(is.null(mask_lh) && is.null(mask_rh)) {
         stop(sprintf("Only one of mask_lh or mask_rh can be NULL.\n"));
@@ -506,12 +510,14 @@ vis.mask.on.subject <- function(subjects_dir, vis_subject_id, mask_lh, mask_rh, 
 #'    rh_labeldata_neighborhood$vertices, surface=surface, views=c('si'));
 #' }
 #'
+#' @note Drawing a colorbar for label data makes limited sense, use a legend instead. The colorbar can give a rough overview of the relative number of label and non-label vertices though, so it is possible to request one.
+#'
 #' @family label functions
 #' @family visualization functions
 #'
 #' @importFrom squash rainbow2
 #' @export
-vis.labeldata.on.subject <- function(subjects_dir, vis_subject_id, lh_labeldata, rh_labeldata, surface="white", colormap=NULL, views=c('t4'), rgloptions=list(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=squash::rainbow2)) {
+vis.labeldata.on.subject <- function(subjects_dir, vis_subject_id, lh_labeldata, rh_labeldata, surface="white", colormap=NULL, views=c('t4'), rgloptions=list(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=label.colFn.inv)) {
 
     if(is.null(lh_labeldata) && is.null(rh_labeldata)) {
         stop(sprintf("Only one of lh_labeldata or rh_labeldata can be NULL.\n"));
