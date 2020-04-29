@@ -8,9 +8,9 @@ However, fsbrain is not limited to FreeSurfer output, see below.
 
 ### **Q**: Which file formats are supported? 
 
-The *fsbrain* library uses [freesurferformats](https://github.com/dfsp-spirit/freesurferformats) to load a variety of neuroimaging file formats, including data exchange formats used by other brain imaging software. See the freesurferformats website for the full list.
+The *fsbrain* library uses [freesurferformats](https://github.com/dfsp-spirit/freesurferformats) to load a variety of neuroimaging file formats, including data exchange formats used by other brain imaging software. See the [freesurferformats website](https://github.com/dfsp-spirit/freesurferformats) for the full list.
 
-### **Q**: I want to load a single file that is on my harddisk, not with the standard recon-all output directory structure. How can I load it?
+### **Q**: I want to load a single file that is *somewhere* on my harddisk, i.e., not within a standard recon-all output directory structure. How can I load it?
 
 You can use [freesurferformats](https://github.com/dfsp-spirit/freesurferformats) directly to load the data, then pass it to fsbrain. See the next question for an example.
 
