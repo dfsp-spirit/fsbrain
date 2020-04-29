@@ -9,6 +9,7 @@ README_DEVELOPMENT.md
 CONTRIBUTING.md
 LICENSE_FULL
 CHANGES
+FAQ.md
 \.travis\.yml
 ^appveyor\.yml$
 web/
