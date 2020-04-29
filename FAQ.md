@@ -2,7 +2,9 @@
 
 ### **Q**: What kind of input data do I need for fsbrain?
 
-The *fsbrain* software is designed to be used with the output of the [FreeSurfer](http://freesurfer.net/) *recon-all* command and compatible software. Running recon-all on your T1w MRI scan results in a directory structure full of different files and file types for each subject. The *fsbrain* library uses knowledge on the directory layout to load the proper data.
+The *fsbrain* software is designed to be used with the output of [FreeSurfer](http://freesurfer.net/).  Running *recon-all* on your T1w MRI scan results in a directory structure full of different files and file types for each subject. The *fsbrain* library uses knowledge on this directory layout to load the proper data.
+
+However, fsbrain is not limited to FreeSurfer output, see below.
 
 ### **Q**: Which file formats are supported? 
 
@@ -22,7 +24,8 @@ Yes, the [computational anatomy toolbox (CAT12)](http://www.neuro.uni-jena.de/ca
 Try the following to visualize the gyrification data for the left hemisphere in *fsbrain*:
 
 ```
-lh_surf = freesurferformats::read_nisurface('~/data/subject1_spm12/surf/lh.central.subject1.gii');
+lh_surf = freesurferformats::read_nisurface('~/data/subject1_spm12/surf/lh.central.subject1');
 lh_gyrification = freesurferformats::read.fs.curv('~/data/subject1_spm12/surf/lh.gyrification.subject1');
 vis.data.on.subject('~/data/', 'subject1_spm12', lh_gyrification, NULL, surface=lh_surf);
 ```
+
