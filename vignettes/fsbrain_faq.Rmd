@@ -72,3 +72,11 @@ vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', rglactions
 
 This opens the plot in a window as usual and also saves it in PNG format to the file *subject1_thickness.png* in your home directory.
 
+
+## Various topics
+
+### Can I integrate the plots produced by *fsbrain* into an R Markdown document (thr R equivalent of a Python jupyter notebook)?
+
+Yes, see the files in the directory [web/example_notebooks](https://github.com/dfsp-spirit/fsbrain/tree/master/web/example_notebooks) of the *fsbrain* repository. The Rmd files in that directory are actually notebooks in R markdown format.
+
+
