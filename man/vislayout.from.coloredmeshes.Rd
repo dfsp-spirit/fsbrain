@@ -4,11 +4,16 @@
 \alias{vislayout.from.coloredmeshes}
 \title{Visualize coloredmeshes from several angles and combine the images into a new figure.}
 \usage{
-vislayout.from.coloredmeshes(coloredmeshes,
+vislayout.from.coloredmeshes(
+  coloredmeshes,
   view_angles = get.view.angle.names(angle_set = "t4"),
-  rgloptions = list(), rglactions = list(), style = "default",
-  output_img = "fsbrain_arranged.png", silent = FALSE,
-  grid_like = TRUE)
+  rgloptions = list(),
+  rglactions = list(),
+  style = "default",
+  output_img = "fsbrain_arranged.png",
+  silent = FALSE,
+  grid_like = TRUE
+)
 }
 \arguments{
 \item{coloredmeshes, }{list of coloredmesh. A coloredmesh is a named list as returned by the `coloredmesh.from*` functions (like \code{\link[fsbrain]{coloredmesh.from.morph.native}}). It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh. The `vis*` functions (like \code{\link[fsbrain]{vis.subject.morph.native}}) all return a list of coloredmeshes.}
@@ -53,16 +58,17 @@ Create a tight layout view of coloredmeshes from several angles. Creates separat
 
 }
 \seealso{
-Other visualization functions: \code{\link{vis.color.on.subject}},
-  \code{\link{vis.data.on.fsaverage}},
-  \code{\link{vis.data.on.subject}},
-  \code{\link{vis.labeldata.on.subject}},
-  \code{\link{vis.mask.on.subject}},
-  \code{\link{vis.region.values.on.subject}},
-  \code{\link{vis.subject.annot}},
-  \code{\link{vis.subject.label}},
-  \code{\link{vis.subject.morph.native}},
-  \code{\link{vis.subject.morph.standard}},
-  \code{\link{vis.symmetric.data.on.subject}}
+Other visualization functions: 
+\code{\link{vis.color.on.subject}()},
+\code{\link{vis.data.on.fsaverage}()},
+\code{\link{vis.data.on.subject}()},
+\code{\link{vis.labeldata.on.subject}()},
+\code{\link{vis.mask.on.subject}()},
+\code{\link{vis.region.values.on.subject}()},
+\code{\link{vis.subject.annot}()},
+\code{\link{vis.subject.label}()},
+\code{\link{vis.subject.morph.native}()},
+\code{\link{vis.subject.morph.standard}()},
+\code{\link{vis.symmetric.data.on.subject}()}
 }
 \concept{visualization functions}

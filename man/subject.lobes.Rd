@@ -4,8 +4,13 @@
 \alias{subject.lobes}
 \title{Load labels representing brain lobes.}
 \usage{
-subject.lobes(subjects_dir, subject_id, hemi = "both",
-  include_cingulate = TRUE, as_annot = FALSE)
+subject.lobes(
+  subjects_dir,
+  subject_id,
+  hemi = "both",
+  include_cingulate = TRUE,
+  as_annot = FALSE
+)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -25,26 +30,28 @@ hemilist of integer vectors, the vectors represent vertex indices of the hemisph
 This gives you labels that represent brain lobes for a subject. The lobe definition is based on the Desikan-Killiany atlas (Desikan *et al.*, 2010) as suggested on the FreeSurfer website at https://surfer.nmr.mgh.harvard.edu/fswiki/CorticalParcellation.
 }
 \seealso{
-Other atlas functions: \code{\link{get.atlas.region.names}},
-  \code{\link{group.agg.atlas.native}},
-  \code{\link{group.agg.atlas.standard}},
-  \code{\link{group.annot}},
-  \code{\link{group.label.from.annot}},
-  \code{\link{label.from.annotdata}},
-  \code{\link{label.to.annot}},
-  \code{\link{regions.to.ignore}},
-  \code{\link{spread.values.over.annot}},
-  \code{\link{spread.values.over.hemi}},
-  \code{\link{spread.values.over.subject}},
-  \code{\link{subject.annot}},
-  \code{\link{subject.atlas.agg}},
-  \code{\link{subject.label.from.annot}}
+Other atlas functions: 
+\code{\link{get.atlas.region.names}()},
+\code{\link{group.agg.atlas.native}()},
+\code{\link{group.agg.atlas.standard}()},
+\code{\link{group.annot}()},
+\code{\link{group.label.from.annot}()},
+\code{\link{label.from.annotdata}()},
+\code{\link{label.to.annot}()},
+\code{\link{regions.to.ignore}()},
+\code{\link{spread.values.over.annot}()},
+\code{\link{spread.values.over.hemi}()},
+\code{\link{spread.values.over.subject}()},
+\code{\link{subject.annot}()},
+\code{\link{subject.atlas.agg}()},
+\code{\link{subject.label.from.annot}()}
 
-Other label functions: \code{\link{apply.label.to.morphdata}},
-  \code{\link{apply.labeldata.to.morphdata}},
-  \code{\link{subject.mask}},
-  \code{\link{vis.labeldata.on.subject}},
-  \code{\link{vis.subject.label}}
+Other label functions: 
+\code{\link{apply.label.to.morphdata}()},
+\code{\link{apply.labeldata.to.morphdata}()},
+\code{\link{subject.mask}()},
+\code{\link{vis.labeldata.on.subject}()},
+\code{\link{vis.subject.label}()}
 }
 \concept{atlas functions}
 \concept{label functions}

@@ -1,4 +1,13 @@
-# The fsbrain FAQ
+---
+title: "The fsbrain FAQ"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{fsbrain frequently asked questions}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+## Input data
 
 ### **Q**: What kind of input data do I need for fsbrain?
 
@@ -23,9 +32,43 @@ Yes, the [computational anatomy toolbox (CAT12)](http://www.neuro.uni-jena.de/ca
 
 Try the following to visualize the gyrification data for the left hemisphere in *fsbrain*:
 
-```
-lh_surf = freesurferformats::read_nisurface('~/data/subject1_spm12/surf/lh.central.subject1');
+```{r, eval = FALSE}
+lh_surf = freesurferformats::read_nisurface('~/data/subject1_spm12/surf/lh.central.subject1.gii');
 lh_gyrification = freesurferformats::read.fs.curv('~/data/subject1_spm12/surf/lh.gyrification.subject1');
 vis.data.on.subject('~/data/', 'subject1_spm12', lh_gyrification, NULL, surface=lh_surf);
 ```
+
+## Visualization
+
+
+### How can I increase the output image resolution?
+
+To increase the output resolution, you need to increase the size of the *rgl* rendering device. To do this globally, before you call any fsbrain rendering function:
+
+```{r, eval = FALSE}
+library('rgl');
+r3dDefaults$windowRect=c(20, 20, 1800, 1200);
+```
+
+This instructs *rgl* to create new rendering devices at screen position 20, 20 (close to the upper left corner) with a size of 1800x1200 pixels.
+
+Alternatively, you can control the size when calling an *fsbrain* visualization function by passing the same information in the optional `rgloptions` parameter, like this:
+
+```{r, eval = FALSE}
+rglo = list('windowRect'=c(20, 20, 1800, 1200));
+vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', rgloptions=rglo);
+```
+
+###  How can I save high quality figures to PNG images?
+
+Note that fsbrain renders images, which means the output is pixel-based (i.e., bitmap as opposed to vector graphics). To get high quality output, you need to increase the size of the *rgl* rendering device, as explained in the last question.
+
+To save the plot to a file in PNG format, you can use an rglaction:
+
+```{r, eval = FALSE}
+rgla = list('snapshot_png'='~/subject1_thickness.png');
+vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', rglactions=rgla);
+```
+
+This opens the plot in a window as usual and also saves it in PNG format to the file *subject1_thickness.png* in your home directory.
 

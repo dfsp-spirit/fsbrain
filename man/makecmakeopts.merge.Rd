@@ -4,8 +4,7 @@
 \alias{makecmakeopts.merge}
 \title{Create final `makecmap_options` list}
 \usage{
-makecmakeopts.merge(makecmap_options, colormap,
-  default_colormap = squash::jet)
+makecmakeopts.merge(makecmap_options, colormap, default_colormap = squash::jet)
 }
 \arguments{
 \item{makecmap_options}{list of `makecmap_options` or `NULL`}

@@ -4,9 +4,15 @@
 \alias{collayer.bg.atlas}
 \title{Compute atlas or annotation surface color layer.}
 \usage{
-collayer.bg.atlas(subjects_dir, subject_id, hemi = "both",
-  atlas = "aparc", grayscale = !outline, outline = FALSE,
-  outline_surface = "white")
+collayer.bg.atlas(
+  subjects_dir,
+  subject_id,
+  hemi = "both",
+  atlas = "aparc",
+  grayscale = !outline,
+  outline = FALSE,
+  outline_surface = "white"
+)
 }
 \arguments{
 \item{subjects_dir}{character string, the FreeSurfer SUBJECTS_DIR.}
@@ -35,13 +41,14 @@ Using 'outline' mode is quite slow, and increasing the border thickness makes it
 \seealso{
 You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
 
-Other surface color layer: \code{\link{collayer.bg.meancurv}},
-  \code{\link{collayer.bg.sulc}},
-  \code{\link{collayer.bg}},
-  \code{\link{collayer.from.annotdata}},
-  \code{\link{collayer.from.annot}},
-  \code{\link{collayer.from.mask.data}},
-  \code{\link{collayer.from.morphlike.data}},
-  \code{\link{collayers.merge}}
+Other surface color layer: 
+\code{\link{collayer.bg.meancurv}()},
+\code{\link{collayer.bg.sulc}()},
+\code{\link{collayer.bg}()},
+\code{\link{collayer.from.annotdata}()},
+\code{\link{collayer.from.annot}()},
+\code{\link{collayer.from.mask.data}()},
+\code{\link{collayer.from.morphlike.data}()},
+\code{\link{collayers.merge}()}
 }
 \concept{surface color layer}

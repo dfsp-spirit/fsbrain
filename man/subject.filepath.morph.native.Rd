@@ -4,9 +4,15 @@
 \alias{subject.filepath.morph.native}
 \title{Construct filepath of native space morphometry data file.}
 \usage{
-subject.filepath.morph.native(subjects_dir, subject_id, measure, hemi,
-  format = "curv", warn_if_nonexistent = FALSE,
-  error_if_nonexistent = FALSE)
+subject.filepath.morph.native(
+  subjects_dir,
+  subject_id,
+  measure,
+  hemi,
+  format = "curv",
+  warn_if_nonexistent = FALSE,
+  error_if_nonexistent = FALSE
+)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}

@@ -4,8 +4,13 @@
 \alias{hull.retain.along.axis}
 \title{Copy the first *n* foreground voxel values.}
 \usage{
-hull.retain.along.axis(volume, hull, dim_check = 2L, upwards = TRUE,
-  thickness = 1L)
+hull.retain.along.axis(
+  volume,
+  hull,
+  dim_check = 2L,
+  upwards = TRUE,
+  thickness = 1L
+)
 }
 \arguments{
 \item{volume}{numeric 3d array, the full source volume.}

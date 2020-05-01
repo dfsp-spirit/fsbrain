@@ -4,9 +4,14 @@
 \alias{collayer.bg.meancurv}
 \title{Compute binarized mean curvature surface color layer.}
 \usage{
-collayer.bg.meancurv(subjects_dir, subject_id, hemi = "both",
-  cortex_only = FALSE, bin_colors = c("#898989", "#5e5e5e"),
-  bin_thresholds = c(0))
+collayer.bg.meancurv(
+  subjects_dir,
+  subject_id,
+  hemi = "both",
+  cortex_only = FALSE,
+  bin_colors = c("#898989", "#5e5e5e"),
+  bin_thresholds = c(0)
+)
 }
 \arguments{
 \item{subjects_dir}{character string, the FreeSurfer SUBJECTS_DIR.}
@@ -30,13 +35,14 @@ Compute a binarized mean curvature surface color layer, this is intended as a ba
 \seealso{
 You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
 
-Other surface color layer: \code{\link{collayer.bg.atlas}},
-  \code{\link{collayer.bg.sulc}},
-  \code{\link{collayer.bg}},
-  \code{\link{collayer.from.annotdata}},
-  \code{\link{collayer.from.annot}},
-  \code{\link{collayer.from.mask.data}},
-  \code{\link{collayer.from.morphlike.data}},
-  \code{\link{collayers.merge}}
+Other surface color layer: 
+\code{\link{collayer.bg.atlas}()},
+\code{\link{collayer.bg.sulc}()},
+\code{\link{collayer.bg}()},
+\code{\link{collayer.from.annotdata}()},
+\code{\link{collayer.from.annot}()},
+\code{\link{collayer.from.mask.data}()},
+\code{\link{collayer.from.morphlike.data}()},
+\code{\link{collayers.merge}()}
 }
 \concept{surface color layer}
