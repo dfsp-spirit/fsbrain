@@ -73,6 +73,44 @@ vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', rglactions
 This opens the plot in a window as usual and also saves it in PNG format to the file *subject1_thickness.png* in your home directory.
 
 
+### How can I change the colormap for the plots?
+
+Pass a colormap function to any visualization function that supports the *makecmap_options* parameter, as entry *colFn* like illustrated below:
+
+```{r, eval = FALSE}
+mkc = list('colFn'=viridis::viridis);
+vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', makecmap_options=mkc);
+```
+
+In that example, we used the popular *viridis* colormap. In R, it is available from the *viridis* package. If you don't have it, you can install it with:
+
+```{r, eval = FALSE}
+install.packages('viridis');
+```
+
+
+Of course, you can use any colormap function you want, currently the only limitation is that it should accept an integer parameter: the requested number of colors. 
+
+The exact number of colors that will be requested depends on your data, and if the colormap you want only supports very few colors, you can use a wrapper function. Here is an example for the very popular *RColorBrewer* package. Some of its colormaps have less than 10 colors, which is usually not enough for neuroimaging data. Here we wrap the 'Blues' palette, which has 9 colors:
+
+```{r, eval = FALSE}
+colFn_many_blues = colorRampPalette(RColorBrewer::brewer.pal(9, name="Blues"));
+mkc = list('colFn'=colFn_many_blues);
+```
+
+### The colorbar shows only very few different colors, why is that and how can I change it?
+
+The impression that the numbers of colors in the colorbar is lower than in the rendered image is a consequence of the rendering process: the lighting has an effect on the colors in the rendered image.
+
+
+You can set the parameter *n* to request more colors, which will lead to a smooth colorbar.
+
+```{r, eval = FALSE}
+mkc = list('n'=100L);
+```
+
+This also means that more colors are used in the rendered image, but the effect will be less noticable.
+
 ## Various topics
 
 ### Can I integrate the plots produced by *fsbrain* into an R Markdown document (thr R equivalent of a Python jupyter notebook)?
