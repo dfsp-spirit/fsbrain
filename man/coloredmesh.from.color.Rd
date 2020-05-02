@@ -10,7 +10,7 @@ coloredmesh.from.color(
   color_data,
   hemi,
   surface = "white",
-  metadata = NULL
+  metadata = list()
 )
 }
 \arguments{

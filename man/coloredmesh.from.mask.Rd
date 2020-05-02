@@ -28,7 +28,7 @@ coloredmesh.from.mask(
 
 \item{colormap}{a colormap function. See the squash package for some colormaps. Defaults to \code{\link[squash]{jet}}.}
 
-\item{surface_data}{optional surface object, as returned by \code{\link[fsbrain]{subject.surface}}. If given, used instead of loading the surface data from disk (which users of this function may already have done). Defaults to NULL.}
+\item{surface_data}{optional surface mesh object, as returned by \code{\link[fsbrain]{subject.surface}}. If given, used instead of loading the surface data from disk (which users of this function may already have done). Defaults to NULL.}
 
 \item{makecmap_options}{named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.}
 }
