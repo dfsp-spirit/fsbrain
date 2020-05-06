@@ -14,3 +14,13 @@ export.coloredmesh.ply(filepath, coloredmesh)
 \description{
 Exports coloredmeshes with vertex coloring to standard mesh files in Stanford Triangle (PLY) format. This is very hand for rendering in external standard 3D modeling software like \href{http://blender.org}{Blender}.
 }
+\examples{
+\dontrun{
+   fsbrain::download_optional_data();
+   subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+   coloredmeshes = vis.subject.morph.native(subjects_dir, 'subject1', 'thickness');
+   export.coloredmesh.ply('~/subject1_thickness_lh.ply', coloredmeshed$lh);
+}
+
+}
+\keyword{internal}

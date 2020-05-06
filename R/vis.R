@@ -574,7 +574,7 @@ vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage",
 #'
 #' @param atlas string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded. Can also be a hemilist of already loaded annotations.
 #'
-#' @param outline logical, whether to draw an outline only instead of filling the regions. Defaults to FALSE.
+#' @param outline logical, whether to draw an outline only instead of filling the regions. Defaults to `FALSE`. Instead of passing `TRUE`, one can also pass a list of extra parameters to pass to \code{\link[fsbrain]{annot.outline}}, e.g., \code{outline=list('outline_color'='#000000')}.
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
@@ -653,6 +653,4 @@ vis.region.values.on.subject <- function(subjects_dir, subject_id, atlas, lh_reg
     morph_like_data = spread.values.over.subject(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, value_for_unlisted_regions = value_for_unlisted_regions);
     return(invisible(vis.data.on.subject(subjects_dir, subject_id, morph_like_data$lh, morph_like_data$rh, surface=surface, views=views, rgloptions=rgloptions, rglactions=rglactions, draw_colorbar = draw_colorbar, makecmap_options=makecmap_options, bg=bg)));
 }
-
-
 

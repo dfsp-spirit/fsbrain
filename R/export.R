@@ -17,7 +17,7 @@
 #'    export.coloredmesh.ply('~/subject1_thickness_lh.ply', coloredmeshed$lh);
 #' }
 #'
-#' @export
+#' @keywords internal
 #' @importFrom grDevices col2rgb
 export.coloredmesh.ply <- function(filepath, coloredmesh) {
 

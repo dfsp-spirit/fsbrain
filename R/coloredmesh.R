@@ -291,6 +291,7 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
 #' @export
 #' @importFrom squash cmap makecmap jet
 #' @importFrom rgl tmesh3d rgl.open wire3d
+#' @importFrom utils modifyList
 coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surface="white", outline=FALSE) {
 
     if(!(hemi %in% c("lh", "rh"))) {
@@ -313,7 +314,12 @@ coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surfac
         stop("Parameter 'atlas' has invalid type.");
     }
     mesh = rgl::tmesh3d(c(t(surface_mesh$vertices)), c(t(surface_mesh$faces)), homogeneous=FALSE);
-    if(outline) {
+
+    if(is.list(outline)) {
+        annot_outline_extra_options = outline;
+        annot_outline_full_options = utils::modifyList(list(annot, surface_mesh), annot_outline_extra_options);
+        col = do.call(annot.outline, annot_outline_full_options);
+    } else if(outline == TRUE) {
         col = annot.outline(annot, surface_mesh);
     } else {
         col = annot$hex_colors_rgb;

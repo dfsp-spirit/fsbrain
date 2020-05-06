@@ -4,13 +4,9 @@
 \alias{annot.outline}
 \title{Compute outline vertex colors from annotation.}
 \usage{
-annot.outline(
-  annotdata,
-  surface_mesh,
-  background = "white",
-  silent = TRUE,
-  expand_inwards = 0L
-)
+annot.outline(annotdata, surface_mesh, background = "white",
+  silent = TRUE, expand_inwards = 0L, outline_color = NULL,
+  limit_to_regions = NULL)
 }
 \arguments{
 \item{annotdata}{an annotation, as returned by functions like \code{\link[fsbrain]{subject.annot}}.}
@@ -22,10 +18,17 @@ annot.outline(
 \item{silent}{logical, whether to suppress status messages.}
 
 \item{expand_inwards}{integer, additional thickness of the borders. Increases computation time, defaults to 0L.}
+
+\item{outline_color}{NULL or a color string (like 'black' or '#000000'), the color to use for the borders. If left at the default value `NULL`, the colors from the annotation color lookup table will be used.}
+
+\item{limit_to_regions}{vector of character strings or NULL, a list of regions for which to draw the outline (see \code{\link[fsbrain]{get.atlas.region.names}}). If NULL, all regions will be used.}
 }
 \value{
 vector of colors, one color for each mesh vertex
 }
 \description{
 For each region in an atlas, compute the outer border and color the respective vertices in the region-specific color from the annot's colortable.
+}
+\note{
+Sorry for the computational time, the mesh datastructure is not ideal for neighborhood search.
 }

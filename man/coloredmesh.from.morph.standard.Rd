@@ -4,20 +4,10 @@
 \alias{coloredmesh.from.morph.standard}
 \title{Create a coloredmesh from standard space morphometry data.}
 \usage{
-coloredmesh.from.morph.standard(
-  subjects_dir,
-  subject_id,
-  measure,
-  hemi,
-  fwhm,
-  surface = "white",
-  template_subject = "fsaverage",
-  template_subjects_dir = NULL,
-  colormap = NULL,
-  clip = NULL,
-  cortex_only = FALSE,
-  makecmap_options = list(colFn = squash::jet)
-)
+coloredmesh.from.morph.standard(subjects_dir, subject_id, measure, hemi,
+  fwhm, surface = "white", template_subject = "fsaverage",
+  template_subjects_dir = NULL, colormap = NULL, clip = NULL,
+  cortex_only = FALSE, makecmap_options = list(colFn = squash::jet))
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -51,12 +41,11 @@ coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} me
 Create a coloredmesh from standard space morphometry data.
 }
 \seealso{
-Other coloredmesh functions: 
-\code{\link{coloredmesh.from.annot}()},
-\code{\link{coloredmesh.from.label}()},
-\code{\link{coloredmesh.from.mask}()},
-\code{\link{coloredmesh.from.morph.native}()},
-\code{\link{coloredmesh.from.morphdata}()},
-\code{\link{coloredmeshes.from.color}()}
+Other coloredmesh functions: \code{\link{coloredmesh.from.annot}},
+  \code{\link{coloredmesh.from.label}},
+  \code{\link{coloredmesh.from.mask}},
+  \code{\link{coloredmesh.from.morph.native}},
+  \code{\link{coloredmesh.from.morphdata}},
+  \code{\link{coloredmeshes.from.color}}
 }
 \concept{coloredmesh functions}

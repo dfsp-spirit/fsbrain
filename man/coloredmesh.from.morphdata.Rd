@@ -4,15 +4,9 @@
 \alias{coloredmesh.from.morphdata}
 \title{Create a coloredmesh from arbitrary data.}
 \usage{
-coloredmesh.from.morphdata(
-  subjects_dir,
-  vis_subject_id,
-  morph_data,
-  hemi,
-  surface = "white",
-  colormap = NULL,
-  makecmap_options = list(colFn = squash::jet)
-)
+coloredmesh.from.morphdata(subjects_dir, vis_subject_id, morph_data, hemi,
+  surface = "white", colormap = NULL, makecmap_options = list(colFn =
+  squash::jet))
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -36,12 +30,11 @@ coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} me
 Create a coloredmesh from arbitrary data.
 }
 \seealso{
-Other coloredmesh functions: 
-\code{\link{coloredmesh.from.annot}()},
-\code{\link{coloredmesh.from.label}()},
-\code{\link{coloredmesh.from.mask}()},
-\code{\link{coloredmesh.from.morph.native}()},
-\code{\link{coloredmesh.from.morph.standard}()},
-\code{\link{coloredmeshes.from.color}()}
+Other coloredmesh functions: \code{\link{coloredmesh.from.annot}},
+  \code{\link{coloredmesh.from.label}},
+  \code{\link{coloredmesh.from.mask}},
+  \code{\link{coloredmesh.from.morph.native}},
+  \code{\link{coloredmesh.from.morph.standard}},
+  \code{\link{coloredmeshes.from.color}}
 }
 \concept{coloredmesh functions}

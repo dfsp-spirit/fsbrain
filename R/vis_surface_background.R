@@ -327,6 +327,10 @@ collayer.from.mask.data <- function(lh_data=NULL, rh_data=NULL, makecmap_options
 #'
 #' @param n positive integer, the number of colors. Must be 1 or 2 for this function.
 #'
+#' @param col_a color string, the foreground color
+#'
+#' @param col_b color string, the background color
+#'
 #' @return vector of 'n' RGB colorstrings
 #'
 #' @export
@@ -354,6 +358,10 @@ label.colFn <- function(n=2L, col_a='#228B22', col_b="#FFFFFF") {
 #'
 #' @param n positive integer, the number of colors. Must be 1 or 2 for this function.
 #'
+#' @param col_a color string, the foreground color
+#'
+#' @param col_b color string, the background color
+#'
 #' @return vector of 'n' RGB colorstrings
 #'
 #' @export
@@ -371,7 +379,6 @@ label.colFn.inv <- function(n=2L, col_a='#228B22', col_b="#FFFFFF") {
 #' @return named hemi list, each entry is a vector of color strings, one color per surface vertex. The coloring represents the atlas data.
 #'
 #' @seealso You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
-#'
 #' @family surface color layer
 #' @export
 collayer.from.annotdata <- function(lh_annotdata=NULL, rh_annotdata=NULL) {

@@ -4,21 +4,11 @@
 \alias{vis.subject.label}
 \title{Visualize a binary label for a subject.}
 \usage{
-vis.subject.label(
-  subjects_dir,
-  subject_id,
-  label,
-  hemi,
-  surface = "white",
-  colormap = NULL,
-  views = c("t4"),
-  rgloptions = list(),
-  rglactions = list(),
-  draw_colorbar = FALSE,
+vis.subject.label(subjects_dir, subject_id, label, hemi,
+  surface = "white", colormap = NULL, views = c("t4"),
+  rgloptions = list(), rglactions = list(), draw_colorbar = FALSE,
   makecmap_options = list(colFn = label.colFn.inv, col.na = "#FFFFFF00"),
-  map_to_NA = 0L,
-  bg = NULL
-)
+  map_to_NA = 0L, bg = NULL)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -69,25 +59,22 @@ Drawing a colorbar for label data makes limited sense, use a legend instead. The
 
 }
 \seealso{
-Other visualization functions: 
-\code{\link{vis.color.on.subject}()},
-\code{\link{vis.data.on.fsaverage}()},
-\code{\link{vis.data.on.subject}()},
-\code{\link{vis.labeldata.on.subject}()},
-\code{\link{vis.mask.on.subject}()},
-\code{\link{vis.region.values.on.subject}()},
-\code{\link{vis.subject.annot}()},
-\code{\link{vis.subject.morph.native}()},
-\code{\link{vis.subject.morph.standard}()},
-\code{\link{vis.symmetric.data.on.subject}()},
-\code{\link{vislayout.from.coloredmeshes}()}
+Other visualization functions: \code{\link{vis.color.on.subject}},
+  \code{\link{vis.data.on.fsaverage}},
+  \code{\link{vis.data.on.subject}},
+  \code{\link{vis.labeldata.on.subject}},
+  \code{\link{vis.mask.on.subject}},
+  \code{\link{vis.region.values.on.subject}},
+  \code{\link{vis.subject.annot}},
+  \code{\link{vis.subject.morph.native}},
+  \code{\link{vis.subject.morph.standard}},
+  \code{\link{vis.symmetric.data.on.subject}},
+  \code{\link{vislayout.from.coloredmeshes}}
 
-Other label functions: 
-\code{\link{apply.label.to.morphdata}()},
-\code{\link{apply.labeldata.to.morphdata}()},
-\code{\link{subject.lobes}()},
-\code{\link{subject.mask}()},
-\code{\link{vis.labeldata.on.subject}()}
+Other label functions: \code{\link{apply.label.to.morphdata}},
+  \code{\link{apply.labeldata.to.morphdata}},
+  \code{\link{subject.lobes}}, \code{\link{subject.mask}},
+  \code{\link{vis.labeldata.on.subject}}
 }
 \concept{label functions}
 \concept{visualization functions}

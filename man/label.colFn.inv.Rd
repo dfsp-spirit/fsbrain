@@ -8,6 +8,10 @@ label.colFn.inv(n = 2L, col_a = "#228B22", col_b = "#FFFFFF")
 }
 \arguments{
 \item{n}{positive integer, the number of colors. Must be 1 or 2 for this function.}
+
+\item{col_a}{color string, the foreground color}
+
+\item{col_b}{color string, the background color}
 }
 \value{
 vector of 'n' RGB colorstrings

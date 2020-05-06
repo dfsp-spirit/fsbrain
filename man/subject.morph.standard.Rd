@@ -4,17 +4,9 @@
 \alias{subject.morph.standard}
 \title{Retrieve standard space morphometry data for a single subject.}
 \usage{
-subject.morph.standard(
-  subjects_dir,
-  subject_id,
-  measure,
-  hemi,
-  fwhm = "10",
-  template_subject = "fsaverage",
-  format = "mgh",
-  cortex_only = FALSE,
-  split_by_hemi = FALSE
-)
+subject.morph.standard(subjects_dir, subject_id, measure, hemi,
+  fwhm = "10", template_subject = "fsaverage", format = "mgh",
+  cortex_only = FALSE, split_by_hemi = FALSE)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -50,11 +42,10 @@ Load standard space morphometry data (like 'surf/lh.area.fwhm10.fsaverage.mgh') 
 
 }
 \seealso{
-Other morphometry data functions: 
-\code{\link{apply.label.to.morphdata}()},
-\code{\link{apply.labeldata.to.morphdata}()},
-\code{\link{group.morph.native}()},
-\code{\link{group.morph.standard}()},
-\code{\link{subject.morph.native}()}
+Other morphometry data functions: \code{\link{apply.label.to.morphdata}},
+  \code{\link{apply.labeldata.to.morphdata}},
+  \code{\link{group.morph.native}},
+  \code{\link{group.morph.standard}},
+  \code{\link{subject.morph.native}}
 }
 \concept{morphometry data functions}

@@ -4,20 +4,11 @@
 \alias{vis.data.on.fsaverage}
 \title{Visualize arbitrary data on the fsaverage template subject, if available.}
 \usage{
-vis.data.on.fsaverage(
-  subjects_dir = NULL,
-  vis_subject_id = "fsaverage",
-  morph_data_lh,
-  morph_data_rh,
-  surface = "white",
-  colormap = NULL,
-  views = c("t4"),
-  rgloptions = list(),
-  rglactions = list(),
-  draw_colorbar = FALSE,
-  makecmap_options = list(colFn = squash::jet),
-  bg = NULL
-)
+vis.data.on.fsaverage(subjects_dir = NULL,
+  vis_subject_id = "fsaverage", morph_data_lh, morph_data_rh,
+  surface = "white", colormap = NULL, views = c("t4"),
+  rgloptions = list(), rglactions = list(), draw_colorbar = FALSE,
+  makecmap_options = list(colFn = squash::jet), bg = NULL)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -51,24 +42,22 @@ list of coloredmeshes. The coloredmeshes used for the visualization.
 Creates a surface mesh, applies a colormap transform the morphometry data values into colors, and renders the resulting colored mesh in an interactive window. If hemi is 'both', the data is rendered for the whole brain. This function tries to automatically retrieve the subjects dir of the fsaverage template subject by checking the environment variables SUBJECTS_DIR and FREESURFER_HOME for the subject. The subject is required for its surfaces, which are not shipped with this package for licensing reasons.
 }
 \seealso{
-Other visualization functions: 
-\code{\link{vis.color.on.subject}()},
-\code{\link{vis.data.on.subject}()},
-\code{\link{vis.labeldata.on.subject}()},
-\code{\link{vis.mask.on.subject}()},
-\code{\link{vis.region.values.on.subject}()},
-\code{\link{vis.subject.annot}()},
-\code{\link{vis.subject.label}()},
-\code{\link{vis.subject.morph.native}()},
-\code{\link{vis.subject.morph.standard}()},
-\code{\link{vis.symmetric.data.on.subject}()},
-\code{\link{vislayout.from.coloredmeshes}()}
+Other visualization functions: \code{\link{vis.color.on.subject}},
+  \code{\link{vis.data.on.subject}},
+  \code{\link{vis.labeldata.on.subject}},
+  \code{\link{vis.mask.on.subject}},
+  \code{\link{vis.region.values.on.subject}},
+  \code{\link{vis.subject.annot}},
+  \code{\link{vis.subject.label}},
+  \code{\link{vis.subject.morph.native}},
+  \code{\link{vis.subject.morph.standard}},
+  \code{\link{vis.symmetric.data.on.subject}},
+  \code{\link{vislayout.from.coloredmeshes}}
 
-Other morphometry visualization functions: 
-\code{\link{vis.data.on.subject}()},
-\code{\link{vis.subject.morph.native}()},
-\code{\link{vis.subject.morph.standard}()},
-\code{\link{vis.symmetric.data.on.subject}()}
+Other morphometry visualization functions: \code{\link{vis.data.on.subject}},
+  \code{\link{vis.subject.morph.native}},
+  \code{\link{vis.subject.morph.standard}},
+  \code{\link{vis.symmetric.data.on.subject}}
 }
 \concept{morphometry visualization functions}
 \concept{visualization functions}

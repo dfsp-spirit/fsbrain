@@ -4,14 +4,8 @@
 \alias{coloredmesh.from.annot}
 \title{Create a coloredmesh from an annotation of an atlas.}
 \usage{
-coloredmesh.from.annot(
-  subjects_dir,
-  subject_id,
-  atlas,
-  hemi,
-  surface = "white",
-  outline = FALSE
-)
+coloredmesh.from.annot(subjects_dir, subject_id, atlas, hemi,
+  surface = "white", outline = FALSE)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -33,12 +27,11 @@ coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} me
 Create a coloredmesh from an annotation of an atlas.
 }
 \seealso{
-Other coloredmesh functions: 
-\code{\link{coloredmesh.from.label}()},
-\code{\link{coloredmesh.from.mask}()},
-\code{\link{coloredmesh.from.morph.native}()},
-\code{\link{coloredmesh.from.morph.standard}()},
-\code{\link{coloredmesh.from.morphdata}()},
-\code{\link{coloredmeshes.from.color}()}
+Other coloredmesh functions: \code{\link{coloredmesh.from.label}},
+  \code{\link{coloredmesh.from.mask}},
+  \code{\link{coloredmesh.from.morph.native}},
+  \code{\link{coloredmesh.from.morph.standard}},
+  \code{\link{coloredmesh.from.morphdata}},
+  \code{\link{coloredmeshes.from.color}}
 }
 \concept{coloredmesh functions}
