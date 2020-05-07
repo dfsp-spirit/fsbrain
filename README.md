@@ -160,6 +160,10 @@ Want to see brains spin? [Check this out.](./web/fsbrain_movies.md) (WARNING: lo
 
 First versions of some volume visualization functions are available in the current dev version. You can find [a preview of the results here](./web/fsbrain_volume.md).
 
+### Example Notebook
+
+To see a combination of example figures and the code used to produce them, you should have a look at the [example notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/tree/develop/web/Rmd_web_examples/examples.html).
+
 ## Contributing
 
 Please refer to [CONTRIBUTING.md](./CONTRIBUTING.md).
