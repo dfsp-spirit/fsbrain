@@ -15,10 +15,11 @@ vis.path.along.verts(surface_vertices, path_vertex_indices)
 To get a nice path along the surface, pass the vertex indices along a geodesic path. Note: You can first open an interactive brain view (`view='si'`) with a vis* function like \code{\link[fsbrain]{vis.subject.morph.native}}, then run this function to draw into the active plot.
 }
 \seealso{
-Other surface mesh functions: \code{\link{face.edges}},
-  \code{\link{label.border}},
-  \code{\link{mesh.vertex.included.faces}},
-  \code{\link{mesh.vertex.neighbors}},
-  \code{\link{subject.surface}}
+Other surface mesh functions: 
+\code{\link{face.edges}()},
+\code{\link{label.border}()},
+\code{\link{mesh.vertex.included.faces}()},
+\code{\link{mesh.vertex.neighbors}()},
+\code{\link{subject.surface}()}
 }
 \concept{surface mesh functions}

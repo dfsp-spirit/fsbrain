@@ -4,9 +4,14 @@
 \alias{collayer.bg.sulc}
 \title{Compute binarized sulcal depth surface color layer.}
 \usage{
-collayer.bg.sulc(subjects_dir, subject_id, hemi = "both",
-  cortex_only = FALSE, bin_colors = c("#898989", "#5e5e5e"),
-  bin_thresholds = c(0))
+collayer.bg.sulc(
+  subjects_dir,
+  subject_id,
+  hemi = "both",
+  cortex_only = FALSE,
+  bin_colors = c("#898989", "#5e5e5e"),
+  bin_thresholds = c(0)
+)
 }
 \arguments{
 \item{subjects_dir}{character string, the FreeSurfer SUBJECTS_DIR.}
@@ -30,13 +35,14 @@ Compute a binarized sulcal depth surface color layer, this is intended as a back
 \seealso{
 You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
 
-Other surface color layer: \code{\link{collayer.bg.atlas}},
-  \code{\link{collayer.bg.meancurv}},
-  \code{\link{collayer.bg}},
-  \code{\link{collayer.from.annotdata}},
-  \code{\link{collayer.from.annot}},
-  \code{\link{collayer.from.mask.data}},
-  \code{\link{collayer.from.morphlike.data}},
-  \code{\link{collayers.merge}}
+Other surface color layer: 
+\code{\link{collayer.bg.atlas}()},
+\code{\link{collayer.bg.meancurv}()},
+\code{\link{collayer.bg}()},
+\code{\link{collayer.from.annotdata}()},
+\code{\link{collayer.from.annot}()},
+\code{\link{collayer.from.mask.data}()},
+\code{\link{collayer.from.morphlike.data}()},
+\code{\link{collayers.merge}()}
 }
 \concept{surface color layer}

@@ -135,10 +135,10 @@ A unique option that is available with annotations is to draw outlines around th
 vis.subject.annot(sjd ,sj, 'aparc', outline = TRUE);
 ```
 
-You can customize the look of the outlines (or region borders) by passing a list of extra arguments to `annot.outline` instead of a logical value, see the documentation for details. Here is an example that draws a green border around the middletemporal region:
+You can customize the look of the outlines (or region borders) by passing a list of extra arguments to `annot.outline` instead of a logical value, see the documentation for details. Here is a more complex example that draws a green border around the middle temporal gyrus and a blue border around the postcentral gyrus:
 
 ```{r rgl=TRUE, dev='png'}
-vis.subject.annot(sjd ,sj, 'aparc', outline=list('outline_color'='#00FF00', 'limit_to_regions'=c('middletemporal'), expand_inwards=2L), surface="inflated", views="sd_lateral_lh")
+vis.subject.annot(sjd ,sj, 'aparc', outline=list('outline_color'=c('green', 'blue'), 'limit_to_regions'=c('middletemporal', 'postcentral'), expand_inwards=2L), surface="inflated", views="sd_lateral_lh");
 ```
 
 Note that you can also use this function for drawing borders around arbitrary custom regions (activation cluster or whatever). A custom region is a label, and you can convert a label (or several labels) to an annotation using `label.to.annot`.

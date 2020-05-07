@@ -124,7 +124,7 @@ mesh.vertex.included.faces <- function(surface_mesh, source_vertices) {
 #'
 #' @param outline_color NULL or a color string (like 'black' or '#000000'), the color to use for the borders. If left at the default value `NULL`, the colors from the annotation color lookup table will be used.
 #'
-#' @param limit_to_regions vector of character strings or NULL, a list of regions for which to draw the outline (see \code{\link[fsbrain]{get.atlas.region.names}}). If NULL, all regions will be used.
+#' @param limit_to_regions vector of character strings or NULL, a list of regions for which to draw the outline (see \code{\link[fsbrain]{get.atlas.region.names}}). If NULL, all regions will be used. If (and only if) this parameter is used, the 'outline_color' parameter can be a vector of color strings, one color per region.
 #'
 #' @return vector of colors, one color for each mesh vertex
 #'
@@ -148,12 +148,19 @@ annot.outline <- function(annotdata, surface_mesh, background="white", silent=TR
     for(region_idx in seq_len(annotdata$colortable$num_entries)) {
         region_name = annotdata$colortable$struct_names[[region_idx]];
 
+        region_index_in_limit_to_regions_parameter = NULL;
+
         if(! is.null(limit_to_regions)) {
           if(! is.character(limit_to_regions)) {
             stop("Parameter 'limit_to_regions' must be NULL or a vector of character strings.");
           }
           if(! region_name %in% limit_to_regions) {
             next;
+          } else {
+            region_index_in_limit_to_regions_parameter = which(limit_to_regions == region_name);
+            if(length(region_index_in_limit_to_regions_parameter) != 1L) {
+              stop("Regions in parameter 'limit_to_regions' must be unique.");
+            }
           }
         }
 
@@ -166,7 +173,16 @@ annot.outline <- function(annotdata, surface_mesh, background="white", silent=TR
         if(is.null(outline_color)) {
           col[label_border$vertices] = as.character(annotdata$colortable_df$hex_color_string_rgba[[region_idx]]);
         } else {
-          col[label_border$vertices] = outline_color;
+          if(length(outline_color) > 1L) {
+            if(length(outline_color) != length(limit_to_regions)) {
+              stop(sprintf("Number of colors in parameter 'outline_color' must be 1 or exactly the number of regions in parameter 'limit_to_regions' (%d), but is %d.\n", length(limit_to_regions), length(outline_color)));
+            }
+            if(! is.null(region_index_in_limit_to_regions_parameter)) {
+              col[label_border$vertices] = outline_color[region_index_in_limit_to_regions_parameter];
+            }
+          } else {
+            col[label_border$vertices] = outline_color;
+          }
         }
     }
     return(col);

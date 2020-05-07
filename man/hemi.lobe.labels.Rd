@@ -4,8 +4,13 @@
 \alias{hemi.lobe.labels}
 \title{Compute lobe labels for a single hemi from aparc atlas.}
 \usage{
-hemi.lobe.labels(subjects_dir, subject_id, hemi,
-  include_cingulate = TRUE, as_annot = FALSE)
+hemi.lobe.labels(
+  subjects_dir,
+  subject_id,
+  hemi,
+  include_cingulate = TRUE,
+  as_annot = FALSE
+)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}

@@ -4,8 +4,13 @@
 \alias{group.label}
 \title{Retrieve label data for a group of subjects.}
 \usage{
-group.label(subjects_dir, subjects_list, label, hemi,
-  return_one_based_indices = TRUE)
+group.label(
+  subjects_dir,
+  subjects_list,
+  label,
+  hemi,
+  return_one_based_indices = TRUE
+)
 }
 \arguments{
 \item{subjects_dir, }{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -34,8 +39,9 @@ Load a label (like 'label/lh.cortex.label') for a group of subjects from disk. U
 
 }
 \seealso{
-Other label data functions: \code{\link{labeldata.from.mask}},
-  \code{\link{mask.from.labeldata.for.hemi}},
-  \code{\link{subject.label}}
+Other label data functions: 
+\code{\link{labeldata.from.mask}()},
+\code{\link{mask.from.labeldata.for.hemi}()},
+\code{\link{subject.label}()}
 }
 \concept{label data functions}

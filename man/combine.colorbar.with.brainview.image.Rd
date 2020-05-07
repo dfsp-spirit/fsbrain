@@ -4,9 +4,15 @@
 \alias{combine.colorbar.with.brainview.image}
 \title{Combine a colorbar and a brainview image into a new figure.}
 \usage{
-combine.colorbar.with.brainview.image(brainview_img, colorbar_img,
-  output_img, offset = "+0+0", extend_brainview_img_height_by = 0L,
-  silent = FALSE, allow_colorbar_shrink = TRUE)
+combine.colorbar.with.brainview.image(
+  brainview_img,
+  colorbar_img,
+  output_img,
+  offset = "+0+0",
+  extend_brainview_img_height_by = 0L,
+  silent = FALSE,
+  allow_colorbar_shrink = TRUE
+)
 }
 \arguments{
 \item{brainview_img}{path to the main image containing the view of the brain, usually an image in PNG format}
@@ -27,7 +33,8 @@ combine.colorbar.with.brainview.image(brainview_img, colorbar_img,
 Combine a colorbar and a brainview image into a new figure.
 }
 \seealso{
-Other colorbar functions: \code{\link{coloredmesh.plot.colorbar.separate}},
-  \code{\link{combine.colorbar.with.brainview.animation}}
+Other colorbar functions: 
+\code{\link{coloredmesh.plot.colorbar.separate}()},
+\code{\link{combine.colorbar.with.brainview.animation}()}
 }
 \concept{colorbar functions}

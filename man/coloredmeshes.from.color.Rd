@@ -4,8 +4,14 @@
 \alias{coloredmeshes.from.color}
 \title{Create coloredmeshes for both hemis using pre-defined colors.}
 \usage{
-coloredmeshes.from.color(subjects_dir, subject_id, color_data, hemi,
-  surface = "white", metadata = list())
+coloredmeshes.from.color(
+  subjects_dir,
+  subject_id,
+  color_data,
+  hemi,
+  surface = "white",
+  metadata = list()
+)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -27,11 +33,12 @@ named list of coloredmeshes. Each entry is a named list with entries: "mesh" the
 Create coloredmeshes for both hemis using pre-defined colors.
 }
 \seealso{
-Other coloredmesh functions: \code{\link{coloredmesh.from.annot}},
-  \code{\link{coloredmesh.from.label}},
-  \code{\link{coloredmesh.from.mask}},
-  \code{\link{coloredmesh.from.morph.native}},
-  \code{\link{coloredmesh.from.morph.standard}},
-  \code{\link{coloredmesh.from.morphdata}}
+Other coloredmesh functions: 
+\code{\link{coloredmesh.from.annot}()},
+\code{\link{coloredmesh.from.label}()},
+\code{\link{coloredmesh.from.mask}()},
+\code{\link{coloredmesh.from.morph.native}()},
+\code{\link{coloredmesh.from.morph.standard}()},
+\code{\link{coloredmesh.from.morphdata}()}
 }
 \concept{coloredmesh functions}
