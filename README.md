@@ -162,7 +162,7 @@ First versions of some volume visualization functions are available in the curre
 
 ### Example Notebook
 
-To see a combination of example figures and the code used to produce them, you should have a look at the [example notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/tree/develop/web/Rmd_web_examples/examples.html).
+To see a combination of example figures and the code used to produce them, you should have a look at the [example notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples.html).
 
 ## Contributing
 
