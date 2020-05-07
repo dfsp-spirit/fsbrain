@@ -26,4 +26,4 @@ Suggests:
     magick,
     misc3d
 VignetteBuilder: knitr
-RoxygenNote: 7.0.0
+RoxygenNote: 7.1.0

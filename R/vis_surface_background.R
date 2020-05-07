@@ -150,9 +150,9 @@ collayer.bg.sulc <- function(subjects_dir, subject_id, hemi="both", cortex_only=
 #'
 #' @param grayscale logical, whether to convert the atlas colors to grayscale
 #'
-#' @param outline logical or integer, whether to draw the atlas regions as outlines only. If an integer, it is interpreted as the outline thickness. The value `TRUE` is equivalent to the integer value `1L` and leads to a thin border. The value `2L` will expand the border by 1. If this is active, the surface mesh of the subject must exist.
+#' @param outline logical, whether to draw an outline only instead of filling the regions. Defaults to `FALSE`. Instead of passing `TRUE`, one can also pass a list of extra parameters to pass to \code{\link[fsbrain]{annot.outline}}, e.g., \code{outline=list('outline_color'='#000000')}.
 #'
-#' @param outline_surface character string, the surface to load. Only relevant when 'outline' is used.
+#' @param outline_surface character string, the surface to load. Only relevant when 'outline' is used. (In that case the surface mesh is needed to compute the vertices forming the region borders.)
 #'
 #' @return a color layer, i.e., vector of color strings in a hemilist
 #'
@@ -161,20 +161,41 @@ collayer.bg.sulc <- function(subjects_dir, subject_id, hemi="both", cortex_only=
 #' @note Using 'outline' mode is quite slow, and increasing the border thickness makes it even slower.
 #'
 #' @family surface color layer
+#' @importFrom utils modifyList
 #' @export
-collayer.bg.atlas <- function(subjects_dir, subject_id, hemi="both", atlas="aparc", grayscale=!outline, outline=FALSE, outline_surface = "white") {
+collayer.bg.atlas <- function(subjects_dir, subject_id, hemi="both", atlas="aparc", grayscale=FALSE, outline=FALSE, outline_surface = "white") {
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
     }
 
-    outline = as.integer(outline);
-    if(outline >= 1L) {
+    if(is.list(outline)) {
+        annot_outline_extra_options = outline;
+        #annot_outline_full_options = utils::modifyList(list(annot, surface_mesh), annot_outline_extra_options);
+        #col = do.call(annot.outline, annot_outline_full_options);
+    } else if(outline == TRUE) {
+        annot_outline_extra_options = list('background' = '#FFFFFFFF');
+    } else if(is.integer(outline)) {
+        annot_outline_extra_options = list('background' = '#FFFFFFFF', 'expand_inwards' = outline - 1L);
+    } else {
+        annot_outline_extra_options = NULL; # do not use outline mode
+    }
+
+    use_outline_mode = ! is.null(annot_outline_extra_options);
+
+    if(use_outline_mode) {
         annot_layer = list();
         if(hemi %in% c("lh", "both")) {
-            annot_layer$lh = annot.outline(subject.annot(subjects_dir, subject_id, 'lh', atlas), subject.surface(subjects_dir, subject_id, outline_surface, 'lh'), background = '#FFFFFFFF', expand_inwards = outline - 1L);
+            annot = subject.annot(subjects_dir, subject_id, 'lh', atlas);
+            surface_mesh = subject.surface(subjects_dir, subject_id, outline_surface, 'lh');
+            annot_outline_full_options = utils::modifyList(list(annot, surface_mesh), annot_outline_extra_options);
+            annot_layer$lh = do.call(annot.outline, annot_outline_full_options);
         }
         if(hemi %in% c("rh", "both")) {
-            annot_layer$rh = annot.outline(subject.annot(subjects_dir, subject_id, 'rh', atlas), subject.surface(subjects_dir, subject_id, outline_surface, 'rh'), background = '#FFFFFFFF', expand_inwards = outline - 1L);
+            annot = subject.annot(subjects_dir, subject_id, 'rh', atlas);
+            surface_mesh = subject.surface(subjects_dir, subject_id, outline_surface, 'rh');
+            annot_outline_full_options = utils::modifyList(list(annot, surface_mesh), annot_outline_extra_options);
+            annot_layer$rh = do.call(annot.outline, annot_outline_full_options);
+            #annot_layer$rh = annot.outline(subject.annot(subjects_dir, subject_id, 'rh', atlas), subject.surface(subjects_dir, subject_id, outline_surface, 'rh'), background = '#FFFFFFFF', expand_inwards = outline - 1L);
         }
     } else {
         annot_layer = collayer.from.annot(subjects_dir, subject_id, hemi, atlas);

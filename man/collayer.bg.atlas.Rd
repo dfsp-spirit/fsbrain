@@ -9,7 +9,7 @@ collayer.bg.atlas(
   subject_id,
   hemi = "both",
   atlas = "aparc",
-  grayscale = !outline,
+  grayscale = FALSE,
   outline = FALSE,
   outline_surface = "white"
 )
@@ -25,9 +25,9 @@ collayer.bg.atlas(
 
 \item{grayscale}{logical, whether to convert the atlas colors to grayscale}
 
-\item{outline}{logical or integer, whether to draw the atlas regions as outlines only. If an integer, it is interpreted as the outline thickness. The value `TRUE` is equivalent to the integer value `1L` and leads to a thin border. The value `2L` will expand the border by 1. If this is active, the surface mesh of the subject must exist.}
+\item{outline}{logical, whether to draw an outline only instead of filling the regions. Defaults to `FALSE`. Instead of passing `TRUE`, one can also pass a list of extra parameters to pass to \code{\link[fsbrain]{annot.outline}}, e.g., \code{outline=list('outline_color'='#000000')}.}
 
-\item{outline_surface}{character string, the surface to load. Only relevant when 'outline' is used.}
+\item{outline_surface}{character string, the surface to load. Only relevant when 'outline' is used. (In that case the surface mesh is needed to compute the vertices forming the region borders.)}
 }
 \value{
 a color layer, i.e., vector of color strings in a hemilist
