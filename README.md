@@ -66,6 +66,7 @@ The documentation can be accessed from within an R session after you have loaded
 * Help for a specific function can be accessed in the usual R manner: `?<function>`, where you replace `<function>` with a function name. Like this: `?group.morph.native`.
 * Run `example(<function>)` to see a live demo that uses the function `<function>`. Like this: `example(group.morph.native)`.
 * The [unit tests](./tests/testthat/) that come with this package are essentially a list of examples that illustrate how to use the functions.
+* There is an online [example notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples.html) that shows various example plots in combination with the code used to produce them.
 
 
 ## Unit tests and Continuous integration
