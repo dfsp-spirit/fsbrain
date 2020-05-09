@@ -5,11 +5,11 @@
 #'
 #' @description Load a list of subjects from a subjects file, i.e., a simple text file containing one subject name per line.
 #'
-#' @param subjects_file, string. The path to the file.
+#' @param subjects_file character string, the path to the subjects file.
 #'
-#' @param header, logical. Whether the file starts with a header line. Defaults to FALSE.
+#' @param header logical, whether the file starts with a header line. Defaults to `FALSE`.
 #'
-#' @return a vector of strings. The subject IDs.
+#' @return vector of strings, the subject identifiers.
 #'
 #' @examples
 #'    subjects_file = system.file("extdata", "subjects.txt", package = "fsbrain", mustWork = TRUE);
@@ -41,9 +41,9 @@ read.md.subjects = function(subjects_file, header=FALSE) {
 #'
 #' @param scale_and_center, logical. Whether to center and scale the data. Defaults to FALSE.
 #'
-#' @param sep, string. Separator passed to utils::read.table(), defaults to tabulator.
+#' @param sep, string. Separator passed to \code{\link[utils]{read.table}}, defaults to tabulator.
 #'
-#' @param report, logical. Whether to write an overview, i.e., some descriptive statistics for each column, to STDOUT. Defaults to FALSE. See [fsbrain::report.on.demographics].
+#' @param report, logical. Whether to write an overview, i.e., some descriptive statistics for each column, to STDOUT. Defaults to FALSE. See \code{\link[fsbrain]{report.on.demographics}}.
 #'
 #' @param stringsAsFactors, logical. Whether to convert strings in the input data to factors. Defaults to TRUE.
 #'
@@ -99,16 +99,15 @@ read.md.demographics = function(demographics_file, column_names, header=TRUE, sc
 
 #' @title Print a demographics report
 #'
-#' @param demographics_df a demographics data.frame, as returned by [read.md.demographics]
+#' @param demographics_df a demographics data.frame, as returned by  \code{\link[fsbrain]{read.md.demographics}}.
 #'
-#' @param group_column_name, string or NULL. If given, the column name of the group column. It must be a factor column with 2 levels. Enables group-comparison tests. Defaults to NULL.
+#' @param group_column_name, string or NULL. If given, the column name of the group column. It must be a factor column with 2 levels. Enables group-comparison tests. Defaults to `NULL`.
 #'
-#' @param paired Whether the data of the two groups if paired (repeated measurements). Only relevant if group_column_name is given and tests for group differences are included in the report. Defaults to FALSE.
+#' @param paired Whether the data of the two groups if paired (repeated measurements). Only relevant if group_column_name is given and tests for group differences are included in the report. Defaults to `FALSE`.
 #'
 #' @return vector of character strings, the lines of the demographics report.
 #'
 #' @export
-#' @importFrom dplyr "%>%"
 #' @importFrom stats sd var.test t.test shapiro.test wilcox.test
 report.on.demographics = function(demographics_df, group_column_name=NULL, paired=FALSE) {
 
@@ -263,7 +262,6 @@ test.numerical.meandiff <- function(colname, group1_name, group2_name, group1_da
 #' @return vector of strings, the lines of the report. You can print to STDOUT or write it to a file.
 #'
 #' @keywords internal
-#' @importFrom dplyr "%>%"
 #' @importFrom stats sd var.test t.test shapiro.test wilcox.test
 test.numerical.meandiff.unpaired <- function(colname, group1_name, group2_name, group1_data_column, group2_data_column) {
   test_lines = c();
@@ -317,7 +315,6 @@ test.numerical.meandiff.unpaired <- function(colname, group1_name, group2_name, 
 #' @return vector of strings, the lines of the report. You can print to STDOUT or write it to a file.
 #'
 #' @keywords internal
-#' @importFrom dplyr "%>%"
 #' @importFrom stats sd var.test t.test shapiro.test wilcox.test
 test.numerical.meandiff.paired <- function(colname, condition1_name, condition2_name, condition1_data_column, condition2_data_column) {
   test_lines = c();
