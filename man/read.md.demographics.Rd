@@ -24,9 +24,9 @@ read.md.demographics(
 
 \item{scale_and_center, }{logical. Whether to center and scale the data. Defaults to FALSE.}
 
-\item{sep, }{string. Separator passed to utils::read.table(), defaults to tabulator.}
+\item{sep, }{string. Separator passed to \code{\link[utils]{read.table}}, defaults to tabulator.}
 
-\item{report, }{logical. Whether to write an overview, i.e., some descriptive statistics for each column, to STDOUT. Defaults to FALSE. See [fsbrain::report.on.demographics].}
+\item{report, }{logical. Whether to write an overview, i.e., some descriptive statistics for each column, to STDOUT. Defaults to FALSE. See \code{\link[fsbrain]{report.on.demographics}}.}
 
 \item{stringsAsFactors, }{logical. Whether to convert strings in the input data to factors. Defaults to TRUE.}
 

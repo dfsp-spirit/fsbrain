@@ -7,12 +7,12 @@
 read.md.subjects(subjects_file, header = FALSE)
 }
 \arguments{
-\item{subjects_file, }{string. The path to the file.}
+\item{subjects_file}{character string, the path to the subjects file.}
 
-\item{header, }{logical. Whether the file starts with a header line. Defaults to FALSE.}
+\item{header}{logical, whether the file starts with a header line. Defaults to `FALSE`.}
 }
 \value{
-a vector of strings. The subject IDs.
+vector of strings, the subject identifiers.
 }
 \description{
 Load a list of subjects from a subjects file, i.e., a simple text file containing one subject name per line.

@@ -61,8 +61,8 @@ read.md.subjects = function(subjects_file, header=FALSE) {
 #'    column_names = column_names, report = FALSE);
 #'
 #' @export
-#' @importFrom dplyr "%>%"
 #' @importFrom stats sd
+#' @importFrom utils read.table
 read.md.demographics = function(demographics_file, column_names, header=TRUE, scale_and_center=FALSE, sep='', report=FALSE, stringsAsFactors=TRUE, group_column_name=NULL) {
     if(! file.exists(demographics_file)) {
         stop(sprintf("Cannot access demographics file '%s'.\n", demographics_file));
@@ -85,7 +85,11 @@ read.md.demographics = function(demographics_file, column_names, header=TRUE, sc
           report_lines = c(report_lines, sprintf(" *Demographics report notice: the numeric data will be scaled and centered, and the report above represents the data BEFORE that operation.\n"));
         }
         scale2 <- function(x, na.rm = TRUE) (x - mean(x, na.rm = na.rm)) / stats::sd(x, na.rm);
-        demographics_df = demographics_df %>% dplyr::mutate_if(is.numeric, scale2);
+        for (cn in colnames(demographics_df)) {
+            if(is.numeric(demographics_df[[cn]])) {
+                demographics_df[[cn]] = scale2(demographics_df[[cn]]);
+            }
+        }
     }
 
     if(report) {

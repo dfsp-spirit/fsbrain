@@ -11,11 +11,11 @@ report.on.demographics(
 )
 }
 \arguments{
-\item{demographics_df}{a demographics data.frame, as returned by [read.md.demographics]}
+\item{demographics_df}{a demographics data.frame, as returned by  \code{\link[fsbrain]{read.md.demographics}}.}
 
-\item{group_column_name, }{string or NULL. If given, the column name of the group column. It must be a factor column with 2 levels. Enables group-comparison tests. Defaults to NULL.}
+\item{group_column_name, }{string or NULL. If given, the column name of the group column. It must be a factor column with 2 levels. Enables group-comparison tests. Defaults to `NULL`.}
 
-\item{paired}{Whether the data of the two groups if paired (repeated measurements). Only relevant if group_column_name is given and tests for group differences are included in the report. Defaults to FALSE.}
+\item{paired}{Whether the data of the two groups if paired (repeated measurements). Only relevant if group_column_name is given and tests for group differences are included in the report. Defaults to `FALSE`.}
 }
 \value{
 vector of character strings, the lines of the demographics report.
