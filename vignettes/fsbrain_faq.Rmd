@@ -126,6 +126,6 @@ Hint: you can load a color lookup table with `freesurferformats::read.fs.colorta
 
 ### Can I integrate the plots produced by *fsbrain* into an R Markdown document (the R equivalent of a Python jupyter notebook)?
 
-Yes, see the files in the directory [web/example_notebooks](https://github.com/dfsp-spirit/fsbrain/tree/master/web/example_notebooks) of the *fsbrain* repository. The Rmd files in that directory are actually notebooks in R markdown format.
+Yes, see the example notebook files in the directory [web](https://github.com/dfsp-spirit/fsbrain/tree/master/web/) of the *fsbrain* repository. The Rmd files in that directory are actually notebooks in R markdown format.
 
 
