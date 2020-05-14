@@ -1,6 +1,17 @@
 fsbrain Changes
 ===============
 
+
+Version 0.1.1
+-------------
+- Support export of coloredmeshes to PLY format
+- Add new vignette, a Frequently Askes Questions (FAQ) format
+- Add R notebook with code and live examples (web)
+- Improve documentation in docstrings
+- Improve colormap computation and handling, especially drawing of colorbars
+- Remove plyr dependendency, require freesurferformats 0.1.10
+
+
 Version 0.1.0
 -------------
 - Add many new volume manipulation and rendering functions, e.g., lightbox view in volvis.lightbox
