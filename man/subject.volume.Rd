@@ -41,7 +41,7 @@ Load a brain volume (like `mri/brain.mgz`) for a subject from disk. Uses knowled
    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
    brain = subject.volume(subjects_dir, 'subject1', 'brain', with_header = TRUE);
    # Use the vox2ras matrix from the header to compute RAS coordinates at CRS voxel (0, 0, 0):
-   brain$header$vox2ras_matrix %*% c(0,0,0,1);
+   brain$header$vox2ras_matrix \%*\% c(0,0,0,1);
 }
 
 }

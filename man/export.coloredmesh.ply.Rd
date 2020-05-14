@@ -9,7 +9,7 @@ export.coloredmesh.ply(filepath, coloredmesh)
 \arguments{
 \item{filepath}{The export filepath, including file name and extension.}
 
-\item{coloredmesh}{an 'fs.coloredmesh' instance, as returned (silently) by all surface visualization functions.}
+\item{coloredmesh}{an 'fs.coloredmesh' instance, as returned (silently) by all surface visualization functions, like \code{\link[fsbrain]{vis.subject.morph.native}}.}
 }
 \description{
 Exports coloredmeshes with vertex coloring to standard mesh files in Stanford Triangle (PLY) format. This is very hand for rendering in external standard 3D modeling software like \href{http://blender.org}{Blender}.
@@ -23,4 +23,3 @@ Exports coloredmeshes with vertex coloring to standard mesh files in Stanford Tr
 }
 
 }
-\keyword{internal}

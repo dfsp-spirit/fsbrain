@@ -265,7 +265,7 @@ label.border <- function(surface_mesh, label, inner_only=TRUE, expand_inwards=0L
         return(list("vertices"=c(), "edges"=c(), "faces"=c()));
     }
 
-    label_edges_sorted = t(apply(label_edges, 1, sort)) %>%  as.data.frame();    # Sort start and target vertex within edge to count edges (u,v) and (v,u) as 2 occurrences of same edge later.
+    label_edges_sorted = as.data.frame(t(apply(label_edges, 1, sort)));    # Sort start and target vertex within edge to count edges (u,v) and (v,u) as 2 occurrences of same edge later.
     #print(head(label_edges_sorted));
     edge_dt = data.table::as.data.table(label_edges_sorted);
     edgecount_dt = edge_dt[, .N, by = names(edge_dt)]; # add column 'N' which contains the counts (i.e., how often each edge occurs over all faces).

@@ -7,7 +7,7 @@
 #'
 #' @param filepath The export filepath, including file name and extension.
 #'
-#' @param coloredmesh an 'fs.coloredmesh' instance, as returned (silently) by all surface visualization functions.
+#' @param coloredmesh an 'fs.coloredmesh' instance, as returned (silently) by all surface visualization functions, like \code{\link[fsbrain]{vis.subject.morph.native}}.
 #'
 #' @examples
 #' \dontrun{
@@ -17,7 +17,7 @@
 #'    export.coloredmesh.ply('~/subject1_thickness_lh.ply', coloredmeshed$lh);
 #' }
 #'
-#' @keywords internal
+#' @export
 #' @importFrom grDevices col2rgb
 export.coloredmesh.ply <- function(filepath, coloredmesh) {
 
