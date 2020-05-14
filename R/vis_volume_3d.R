@@ -332,7 +332,7 @@ apply.transform <- function(object, matrix_fun) {
         m$v3 = apply.transform(m$v3, matrix_fun=matrix_fun);
         return(m);
     } else {
-        stop("Input type of parameter 'm' not supported. Must be numerical vector/matrix or Triangles3D.");
+        stop("Input type of parameter 'object' not supported. Must be numerical vector/matrix or Triangles3D.");
     }
 }
 
