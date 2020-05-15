@@ -106,6 +106,11 @@ manyblues = colorRampPalette(RColorBrewer::brewer.pal(9, name="Blues"));
 vis.subject.morph.standard(sjd, sj, 'area', makecmap_options = list('colFn'=manyblues), draw_colorbar = T, views='sd_dorsal');
 ```
 
+If you prefer a smoother colorbar, try increasing the number of colors by adapting the `makecmap_options` parameter, e.g.:
+
+```{r, eval = FALSE}
+makecmap_options = list('colFn'=manyblues, 'n=100')
+```
 
 ## Plotting atlas data
 
@@ -127,12 +132,12 @@ By default, FreeSurfer computes brain parcellations for the following brain atla
 Of course, one can select different view angles, surfaces, and other options as illustrated above for morphometry data. 
 
 
-## Outlines
+## Annotation Outlines
 
 A unique option that is available with annotations is to draw outlines around them:
 
 ```{r rgl=TRUE, dev='png'}
-vis.subject.annot(sjd ,sj, 'aparc', outline = TRUE);
+vis.subject.annot(sjd ,sj, 'aparc', outline = TRUE, surface="inflated");
 ```
 
 You can customize the look of the outlines (or region borders) by passing a list of extra arguments to `annot.outline` instead of a logical value, see the documentation for details. Here is a more complex example that draws a green border around the middle temporal gyrus and a blue border around the postcentral gyrus:
@@ -141,6 +146,66 @@ You can customize the look of the outlines (or region borders) by passing a list
 vis.subject.annot(sjd ,sj, 'aparc', outline=list('outline_color'=c('green', 'blue'), 'limit_to_regions'=c('middletemporal', 'postcentral'), expand_inwards=2L), surface="inflated", views="sd_lateral_lh");
 ```
 
-Note that you can also use this function for drawing borders around arbitrary custom regions (activation cluster or whatever). A custom region is a label, and you can convert a label (or several labels) to an annotation using `label.to.annot`.
+Note that you can also use this function for drawing borders around arbitrary custom regions (activation cluster or whatever). A custom region really is nothing but a label, and you can convert a label (or several labels) to an annotation using `label.to.annot`.
 
+### Labels
+
+Here is an axmaple for visualizing a label:
+
+```{r rgl=TRUE, dev='png'}
+vis.subject.label(sjd, sj, 'cortex', hemi='lh', views = 'sd_medial_lh');
+```
+
+Here, the file `label/lh.cortex.label` was used. If you want to visualize preloaded data, there is no need to save it to a file first, just use the `vis.labeldata.on.subject` function.
+
+### Results: region-based
+
+If you perform atlas based analyses, you will typically get one result (significance, effect size, or whatever) per atlas region. The function `vis.region.values.on.subject` comes in very handy here. Typically the results are displayed on the fsaverage subject, but you can use any subject you want:
+
+```{r rgl=TRUE, dev='png'}
+atlas = 'aparc';   # Desikan atlas
+# For the left hemisphere, we just assign a subset of the
+# atlas regions. The others will get the default value.
+lh_region_value_list = list("bankssts"=0.9, "precuneus"=0.7, "postcentral"=0.8, "lingual"=0.6);
+# For the right hemisphere, we retrieve the full list of regions for
+# the atlas, and assign random values to all of them.
+atlas_region_names = get.atlas.region.names(atlas, template_subjects_dir = sjd, template_subject = sj);
+rh_region_value_list = rnorm(length(atlas_region_names), 0.8, 0.2);
+names(rh_region_value_list) = atlas_region_names;
+
+vis.region.values.on.subject(sjd, sj, atlas, lh_region_value_list, rh_region_value_list, draw_colorbar = T);
+```
+
+
+If your data are symmetric around zero, e.g., t-values, you should use a symmetric colormap. An example is available in the default makecmap_topions settings of the `vis.symmetric.data.on.subject` function, which we will use next.
+
+
+### Results: vertex-based
+
+When performing vertex-wise analyses in standard space, you get one result per vertex, e.g., a t-map, which may be thresholded to yield clusters. Here is an example that visualizes the clusters and uses a gray-scale background computed from the mean curvature of the fsaverage cortex:
+
+
+```{r rgl=TRUE, dev='png'}
+subjects_dir = file.path(find.freesurferhome()$found_at, 'subjects');
+subject_id = 'fsaverage';
+
+lh_demo_cluster_file = system.file("extdata", "lh.clusters_fsaverage.mgz", package = "fsbrain", mustWork = TRUE);
+rh_demo_cluster_file = system.file("extdata", "rh.clusters_fsaverage.mgz", package = "fsbrain", mustWork = TRUE);
+
+lh_clust = freesurferformats::read.fs.morph(lh_demo_cluster_file);   # contains a single positive cluster (activation, group difference), the other values are 0
+rh_clust = freesurferformats::read.fs.morph(rh_demo_cluster_file);   # contains two negative clusters
+
+vis.symmetric.data.on.subject(subjects_dir, subject_id, lh_clust, rh_clust, bg="curv");
+```
+
+
+## Learning more
+
+To learn more, read the vignettes:
+
+```{r, eval = FALSE}
+browseVignettes('fsbrain');
+```
+
+In general, the vignettes are a great way to get started with *fsbrain*. You can also read them online at CRAN, they are linked on the [fsbrain page on GitHub](https://github.com/dfsp-spirit/fsbrain).
 
