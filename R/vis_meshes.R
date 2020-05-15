@@ -21,11 +21,12 @@
 #'
 #' @return the list of visualized coloredmeshes
 #'
-#' #' @examples
+#' @examples
 #' \donttest{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
-#'    cm = vis.subject.morph.native(subjects_dir, 'subject1', 'thickness', makecmap_options=list('n'=100));
+#'    cm = vis.subject.morph.native(subjects_dir, 'subject1', 'thickness',
+#'     makecmap_options=list('n'=100));
 #'    # You could mess with the meshes here.
 #'    vis.coloredmeshes(cm);
 #' }
