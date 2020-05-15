@@ -2,14 +2,16 @@ fsbrain Changes
 ===============
 
 
-Version 0.1.1
+Version 0.2.0
 -------------
+- Breaking: move rotate3D and flid3D function to freesurferformats. To update your code, replace fsbrain::rotate3D with freesurferformats::rotate3D.
 - Support export of coloredmeshes to PLY format
 - Add new vignette, a Frequently Askes Questions (FAQ) format
 - Add R notebook with code and live examples (web)
 - Improve documentation in docstrings
 - Improve colormap computation and handling, especially drawing of colorbars
 - Remove plyr dependendency, require freesurferformats 0.1.10
+- The 'colormap' argument to all vis functions is deprecated, use makecmap_options instead. See the vis function docs for an example.
 
 
 Version 0.1.0
