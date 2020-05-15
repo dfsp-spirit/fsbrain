@@ -10,6 +10,8 @@
 #'
 #' @param ... extra params passed to \code{\link[fields]{image.plot}}
 #'
+#' @note To adapt or change the colormap, you should use the makecmap_options parameter of the vis function used to construct the coloremeshes.
+#'
 #' @importFrom rgl bgplot3d
 #' @importFrom graphics par
 #' @importFrom squash cmap makecmap

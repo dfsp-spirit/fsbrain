@@ -17,7 +17,18 @@
 #'
 #' @param draw_colorbar logical. Whether to draw a colorbar. WARNING: Will only show up if there is enough space in the plot area and does not resize properly. Defaults to FALSE. See \code{\link[fsbrain]{coloredmesh.plot.colorbar.separate}} for an alternative.
 #'
+#' @note To change or adapt the colorbar, you should use the makecmap_options parameter when constructing them in a vis function. See the example.
+#'
 #' @return the list of visualized coloredmeshes
+#'
+#' #' @examples
+#' \donttest{
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+#'    cm = vis.subject.morph.native(subjects_dir, 'subject1', 'thickness', makecmap_options=list('n'=100));
+#'    # You could mess with the meshes here.
+#'    vis.coloredmeshes(cm);
+#' }
 #'
 #' @importFrom rgl open3d bg3d wire3d par3d
 #' @export
