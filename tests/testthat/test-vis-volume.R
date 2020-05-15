@@ -18,11 +18,11 @@ test_that("A brain volume can be turned into an animation", {
     magick::image_write(magick::image_animate(brain_stack, fps = 20), sprintf("MRI_axis%d.gif", imgplane));
 
     imgplane = 2;
-    brain_stack = vol.imagestack(rotate3D(foreground, axis=imgplane), imgplane);
+    brain_stack = vol.imagestack(freesurferformats::rotate3D(foreground, axis=imgplane), imgplane);
     magick::image_write(magick::image_animate(brain_stack, fps = 20), sprintf("MRI_axis%d.gif", imgplane));
 
     imgplane = 3;
-    brain_stack = vol.imagestack(rotate3D(foreground, axis=imgplane), imgplane);
+    brain_stack = vol.imagestack(freesurferformats::rotate3D(foreground, axis=imgplane), imgplane);
     magick::image_write(magick::image_animate(brain_stack, fps = 20), sprintf("MRI_axis%d.gif", imgplane));
 
     expect_equal(1L, 1L);  # empty tests will be skipped
@@ -167,10 +167,10 @@ test_that("A brain volume can be visualized as a lightbox", {
         magick::image_write(volvis.lightbox(brain, axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
 
         imgplane = 2;
-        magick::image_write(volvis.lightbox(rotate3D(brain, axis=imgplane), axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
+        magick::image_write(volvis.lightbox(freesurferformats::rotate3D(brain, axis=imgplane), axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
 
         imgplane = 3;
-        magick::image_write(volvis.lightbox(rotate3D(brain, axis=imgplane), axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
+        magick::image_write(volvis.lightbox(freesurferformats::rotate3D(brain, axis=imgplane), axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
     }
 
     expect_equal(1L, 1L);   # prevent skipping
@@ -224,10 +224,10 @@ test_that("A brain volume can be visualized as a lightbox colored from the aseg"
         magick::image_write(volvis.lightbox(colored_brain, axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
 
         imgplane = 2;
-        magick::image_write(volvis.lightbox(rotate3D(colored_brain, axis=imgplane), axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
+        magick::image_write(volvis.lightbox(freesurferformats::rotate3D(colored_brain, axis=imgplane), axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
 
         imgplane = 3;
-        magick::image_write(volvis.lightbox(rotate3D(colored_brain, axis=imgplane), axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
+        magick::image_write(volvis.lightbox(freesurferformats::rotate3D(colored_brain, axis=imgplane), axis=imgplane), path=sprintf("lightbox_axis%d.png", imgplane));
     }
 
     expect_equal(1L, 1L);   # prevent skipping
