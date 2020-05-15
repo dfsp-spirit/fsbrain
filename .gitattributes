@@ -1,5 +1,8 @@
 # Basic .gitattributes for a R repo.
 
+# Prevent github from claiming the project language was HTML because of the docs ><
+web/* linguist-vendored
+
 # Source files
 # ============
 *.Rdata text
