@@ -122,6 +122,26 @@ Yes, use the `vis.colortable.legend` function. You can pass an annotation or a c
 
 Hint: you can load a color lookup table with `freesurferformats::read.fs.colortable`.
 
+
+### There is too much whitespace between the different views of the brain. How can I reduce it?
+
+While this is not possible in `rgl`, fsbrain provides the `vislayout.from.coloredmeshes` function to achieve this using Image Magick. You need to have the suggested 'magick' package installed for this to work. The function renders separate images, crops the output figures to remove the background, then merges the seperate cropped images into a final output image and saves it as a PNG file. Here is a usage example:
+
+```{r, eval = FALSE}
+# To get coloredmeshes return value only, ignore the visualization:
+cm = vis.subject.morph.native(sjd, sj, 'thickness', makecmap_options = list('n'=100), cortex_only = T);
+# Produce high quality tight layout:
+vislayout.from.coloredmeshes(cm);
+```
+
+Note that your output resolution settings now count for each of the single images. This means that you will get quite high resolution output in combination with the tight layout. This makes the function ideal for producing plots for publications.
+
+You can adjust various settings, e.g., change the rendering stlyle, select different views, and save it to a custom file name in your home directory:
+
+```{r, eval = FALSE}
+vislayout.from.coloredmeshes(cm, style='shiny', view_angles = get.view.angle.names('t9'), output_img = "~/fig1.png")
+```
+
 ## Various topics
 
 ### Can I integrate the plots produced by *fsbrain* into an R Markdown document (the R equivalent of a Python jupyter notebook)?
