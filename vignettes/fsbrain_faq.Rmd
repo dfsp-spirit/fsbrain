@@ -41,7 +41,7 @@ vis.data.on.subject('~/data/', 'subject1_spm12', lh_gyrification, NULL, surface=
 ## Visualization
 
 
-### How can I increase the output image resolution?
+### How can I set the output image resolution?
 
 To increase the output resolution, you need to increase the size of the *rgl* rendering device. To do this globally, before you call any *fsbrain* rendering function:
 
@@ -134,13 +134,25 @@ cm = vis.subject.morph.native(sjd, sj, 'thickness', makecmap_options = list('n'=
 vislayout.from.coloredmeshes(cm);
 ```
 
-Note that your output resolution settings now count for each of the single images. This means that you will get quite high resolution output in combination with the tight layout. This makes the function ideal for producing plots for publications.
+Note that your output resolution settings (see question above) now count for each of the single images. This means that you will get quite high resolution output in combination with the tight layout. This makes the function ideal for producing plots for publications.
 
 You can adjust various settings, e.g., change the rendering stlyle, select different views, and save it to a custom file name in your home directory:
 
 ```{r, eval = FALSE}
-vislayout.from.coloredmeshes(cm, style='shiny', view_angles = get.view.angle.names('t9'), output_img = "~/fig1.png")
+output_brain_img = "~/fig1_brain.png";
+vislayout.from.coloredmeshes(cm, view_angles = get.view.angle.names(angle_set='t9'), output_img = output_brain_img);
 ```
+
+It is also possible to plot a separate colorbar image and combine that with the tight layout brainview image. Note that the settings for the colorbar are stored in the coloredmeshes, and can be adjusted by altering the initial call to `vis.subject.morph.native` (or whatever visualization function you use) above.
+
+```{r, eval = FALSE}
+output_cbar_img = "~/fig1_colorbar.png";
+output_final_img = "~/fig1.png";
+coloredmesh.plot.colorbar.separate(cm, image.plot_extra_options = list('horizontal' = TRUE), png_options = list('filename'=output_cbar_img, 'width'=1800));
+combine.colorbar.with.brainview.image(output_brain_img, output_cbar_img, output_final_img);
+```
+
+You may have to play a bit with the resolution settings of your brain images and the colorbar to get this right (the background cropping makes it hard to compute the exact values in advance). 
 
 ## Various topics
 
