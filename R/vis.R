@@ -314,7 +314,7 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, mor
 #'
 #' @importFrom squash jet
 #' @export
-vis.symmetric.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface="white", colormap=NULL, views=c('t4'), rgloptions=list(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=squash::jet, symm=TRUE, col.na='#FFFFFF00'), map_to_NA=c(0), bg=NULL) {
+vis.symmetric.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface="white", colormap=NULL, views=c('t4'), rgloptions=list(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=squash::jet, symm=TRUE, col.na='#FFFFFF00', 'n'=100), map_to_NA=c(0), bg=NULL) {
     makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
 
     morph_data_lh = perform.na.mapping(morph_data_lh, map_to_NA);
