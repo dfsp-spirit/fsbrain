@@ -99,6 +99,24 @@ mkc = list('colFn'=colFn_many_blues);
 vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', makecmap_options=mkc);
 ```
 
+
+### What are the best colormaps for my data?
+
+Chosing a colormap can be a surprisingly complex question and there are many publications which discuss this topic. You may want to consider what kind of data you have and what property you want to highlight, how many colors you need, whether you want colorblind-friendly colors, how they look when printed in grayscale, whether they look pleasing to you, and maybe many more dimensions.
+
+The most important thing is to decide is whether you need a sequential, qualitative, or diverging palette for your data.
+
+I am definitely not an expert, but here are some color functions I personally like and use with fsbrain:
+
+```{r, eval = FALSE}
+colFn_sequential = viridis::viridis;
+colFn_qualitative = function(n) { RColorBrewer::brewer.pal(n, name="Set2") }; # n <= 11
+colFn_diverging = grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, name="RdBu"));
+```
+
+They require the *viridis* and *RColorBrewer* packages to be installed. The qualitative map is fine if you do not have more than 11 different values.
+
+
 ### The colorbar shows only very few different colors, why is that and how can I change it?
 
 The impression that the numbers of colors in the colorbar is lower than in the rendered image is a consequence of the rendering process: the lighting (shadows, highlights) and the material properties (glossyness, partial transparency) have an effect on the appearance of colors in the rendered image.
