@@ -34,21 +34,21 @@ devtools::install_github("dfsp-spirit/fsbrain", build_vignettes=TRUE);
 
 A *system dependency* is a **non-R** software that is needed for the installation of a package. System dependencies cannot be installed automatically using the R package system, so you need to install them manually or using the package manager of your operating system.
 
-The *fsbrain* package itself does not have any system dependencies, however, it uses *rgl* for rendering. You can check the *SystemRequirements* section on the [rgl page at CRAN](https://CRAN.R-project.org/package=rgl) for the full list of rgl dependencies or read on.
+The *fsbrain* package itself does not have any system dependencies, however, it uses *rgl* for rendering. You can check the *SystemRequirements* section on the [rgl page at CRAN](https://CRAN.R-project.org/package=rgl) for the full list of rgl dependencies or read on. To get GIFTI format support, you will also need `libxml2-dev`.
 
-To install the system dependencies for *rgl*:
+To install the system dependencies for *rgl* and *xml2*:
 
 #### Linux System dependencies
 
-R packages are compiled under Linux, so you need some dev libraries. Before installing *fsbrain*, run the following command in your system shell (not in R):
+R packages are compiled from source by default under Linux, so you need some dev libraries. Before installing *fsbrain*, run the following command in your system shell (not in R):
 
 * for deb-based Linux distributions (Debian, Ubuntu, ...):
 ```shell
-sudo apt-get install libmagick++-dev libx11-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libfreetype6-dev
+sudo apt-get install libmagick++-dev libx11-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libfreetype6-dev libxml2-dev
 ```
 * for rpm-based Linux distributions (Fedora, CentOS, RHEL, ...):
 ```shell
-sudo yum install ImageMagick-c++-devel libX11-devel mesa-libGLU-devel freetype-devel
+sudo yum install ImageMagick-c++-devel libX11-devel mesa-libGLU-devel freetype-devel libxml2-devel
 ```
 
 #### MacOS System dependencies
