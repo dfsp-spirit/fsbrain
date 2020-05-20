@@ -23,7 +23,7 @@ The *fsbrain* library uses [freesurferformats](https://github.com/dfsp-spirit/fr
 
 You can use [freesurferformats](https://github.com/dfsp-spirit/freesurferformats) directly to load the data, then pass it to *fsbrain*. See the next question for an example.
 
-### **Q**: Can I use fsbrain to visualize data from SPM12 / CAT12?
+### **Q**: Can I use fsbrain to visualize data from SPM12 / CAT12 or other software packages?
 
 Yes, the [computational anatomy toolbox (CAT12)](http://www.neuro.uni-jena.de/cat/) for [SPM](https://www.fil.ion.ucl.ac.uk/spm/) writes surfaces in GIFTI format and the morphometry data in curv format, both formats are supported by *fsbrain*. After running CAT12 surface measure computation on your subject `subject1`, you should have the following files in the *surf/* subdir:
 
@@ -37,6 +37,10 @@ lh_surf = freesurferformats::read_nisurface('~/data/subject1_spm12/surf/lh.centr
 lh_gyrification = freesurferformats::read.fs.curv('~/data/subject1_spm12/surf/lh.gyrification.subject1');
 vis.data.on.subject('~/data/', 'subject1_spm12', lh_gyrification, NULL, surface=lh_surf);
 ```
+
+
+You should be able to load data from a number of different neuroimaging software packages with freesurferformats, as it supports the very common NIFTI and GIFTI file formats.
+
 
 ## Visualization
 
@@ -177,5 +181,19 @@ You may have to play a bit with the resolution settings of your brain images and
 ### Can I integrate the plots produced by *fsbrain* into an R Markdown document (the R equivalent of a Python jupyter notebook)?
 
 Yes, see the example notebook files in the directory [web](https://github.com/dfsp-spirit/fsbrain/tree/master/web/) of the *fsbrain* repository. The Rmd files in that directory are actually notebooks in R markdown format.
+
+## Technical problems
+
+### I am getting the error 'invalid value specified for graphical parameter plt', why?
+
+The full error most likely looks like this, or similar:
+
+```{r, eval = FALSE}
+Error in par(new = TRUE, pty = "m", plt = smallplot, err = -1) : 
+  invalid value specified for graphical parameter "plt"
+```
+
+
+If you experience this error, it most likely happened when you tried to plot something with a colorbar, and did not increase the device size (image resolution). The error occurs if there is no space for the colorbar plot, and the solution is to increase the resolution as explained in the answer to the question 'How can I set the output image resolution?' above.
 
 
