@@ -85,7 +85,7 @@ coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=TRUE, image.p
 
     if(length(coloredmeshes) < 1) {
         message("Requested to draw separate colorbar, but mesh list is empty. Skipping.");
-        return(invisible(ret_list));
+        return(invisible(NULL));
     }
 
     combined_data_range = coloredmeshes.combined.data.range(coloredmeshes);

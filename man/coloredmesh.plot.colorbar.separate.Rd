@@ -8,7 +8,7 @@ coloredmesh.plot.colorbar.separate(
   coloredmeshes,
   show = TRUE,
   image.plot_extra_options = list(horizontal = TRUE),
-  png_options = NULL,
+  png_options = list(filename = "cbar.png"),
   silent = FALSE
 )
 }
@@ -19,12 +19,9 @@ coloredmesh.plot.colorbar.separate(
 
 \item{image.plot_extra_options}{named list of extra optins to pass to \code{\link[fields]{image.plot}}. This can be used to add a legend to the colorbar, rotate the colorbar, or whatever. The options "legend_only", "zlim", and "col" are computed and set for you  by this function, so there is no need to pass these. Your list will be merged with the internal options, so you could overwrite named arguments if needed.}
 
-\item{png_options}{Options to pass to \code{\link[grDevices]{png}}, see the docs of that function for details. Allow you to save the plot as a png bitmap image. Example: \code{png_options = list("filename"="outfile.png", "width"=800)}. Defaults to NULL, which will not save anything.}
+\item{png_options}{Options to pass to \code{\link[grDevices]{png}}, see the docs of that function for details. Allow you to save the plot as a png bitmap image. Example: \code{png_options = list("filename"="cbar.png", "width"=800)}. Defaults to NULL, which will not save anything.}
 
 \item{silent}{logical, whether to suppress messages. Defaults to `FALSE`.}
-}
-\value{
-named list with the following entries: "full_data": the combined data from all coloredmeshes (can be NULL if they have no data). "colormap": the colormap function from the coloredmeshes (can be NULL if they have none).
 }
 \description{
 Draw a colorbar for the coloredmeshes to a separate 2D plot. Due to the suboptimal handling of colorbar drawing in the three-dimensional multi-panel views, it is often desirable to plot the colorbar in a separate window, export it from there and then manually add it to the final plot version in some image manipulation software like Inkscape. If you need more control over the colormap than offered by this function (e.g., setting the color value for NA values or making a symmetric colormap to ensure that the zero point for divergent colormaps is a neutral color), you should write custom code, and the return value from this function will come in handy to do that.

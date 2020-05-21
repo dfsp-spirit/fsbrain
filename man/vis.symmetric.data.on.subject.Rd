@@ -15,7 +15,8 @@ vis.symmetric.data.on.subject(
   rgloptions = list(),
   rglactions = list(),
   draw_colorbar = FALSE,
-  makecmap_options = list(colFn = squash::jet, symm = TRUE, col.na = "#FFFFFF00"),
+  makecmap_options = list(colFn = squash::jet, symm = TRUE, col.na = "#FFFFFF00", n =
+    100),
   map_to_NA = c(0),
   bg = NULL
 )
