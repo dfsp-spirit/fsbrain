@@ -82,8 +82,8 @@ This opens the plot in a window as usual and also saves it in PNG format to the 
 Pass a colormap function to any visualization function that supports the *makecmap_options* parameter, as entry *colFn* like illustrated below:
 
 ```{r, eval = FALSE}
-mkc = list('colFn'=viridis::viridis);
-vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', makecmap_options=mkc);
+makecmap_options = list('colFn'=viridis::viridis);
+vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', makecmap_options=makecmap_options);
 ```
 
 In that example, we used the popular *viridis* colormap. In R, it is available from the *viridis* package. If you don't have it, you can install it with:
@@ -99,8 +99,8 @@ The exact number of colors that will be requested depends on your data, and if t
 
 ```{r, eval = FALSE}
 colFn_many_blues = colorRampPalette(RColorBrewer::brewer.pal(9, name="Blues"));
-mkc = list('colFn'=colFn_many_blues);
-vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', makecmap_options=mkc);
+makecmap_options = list('colFn'=colFn_many_blues);
+vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', makecmap_options=makecmap_options);
 ```
 
 
@@ -120,6 +120,17 @@ colFn_diverging = grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, name=
 
 They require the *viridis* and *RColorBrewer* packages to be installed. The qualitative map is fine if you do not have more than 11 different values.
 
+Make sure to read the next entry as well if you are using a diverging colormap.
+
+### I am using a diverging colormap. When plotting the colorbar (legend), the neutral value is not at zero. How to fix it? 
+
+When using a diverging colormap, make sure to set the *symm* option to *makecmap_options* when using a visualization function, like this:
+
+```{r, eval = FALSE}
+makecmap_options = list('colFn'=colFn_diverging, 'symm'=TRUE);
+```
+
+This ensures that the neutral color of the diverging colormap (usually white) is aligned with the zero mark in the colorbar/legend, by adapting the value range displayed on the colorbar.
 
 ### The colorbar shows only very few different colors, why is that and how can I change it?
 
