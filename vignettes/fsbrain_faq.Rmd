@@ -114,13 +114,26 @@ I am definitely not an expert, but here are some color functions I personally li
 
 ```{r, eval = FALSE}
 colFn_sequential = viridis::viridis;
-colFn_qualitative = function(n) { RColorBrewer::brewer.pal(n, name="Set2") }; # n <= 11
+colFn_qualitative = function(n) { RColorBrewer::brewer.pal(n, name="Set2"); } # n <= 11
 colFn_diverging = grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, name="RdBu"));
 ```
 
 They require the *viridis* and *RColorBrewer* packages to be installed. The qualitative map is fine if you do not have more than 11 different values.
 
-If you have R >= 3.6, you may not need any extra packages: have a look at the `grDevices::hcl.colors` function. 
+If you have R >= 3.6, you may not need any extra packages: have a look at the `grDevices::hcl.colors` function. Here are some suggestions:
+
+```{r, eval = FALSE}
+colFn_sequential = function(n) { grDevices::hcl.colors(n, palette = "viridis"); }
+colFn_qualitative = function(n) { grDevices::hcl.colors(n, palette = "Dark 3"); }
+colFn_diverging = function(n) { grDevices::hcl.colors(n, palette = "Blue-Red 3"); }
+```
+
+
+If you want a heatmap-style colormap (single hue sequential, yellow/red), try:
+
+```{r, eval = FALSE}
+colFn_sequential_heat = function(n) { grDevices::hcl.colors(n, "YlOrRd"); }
+```
 
 Make sure to read the next entry as well if you are using a diverging colormap.
 
