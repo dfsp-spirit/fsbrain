@@ -36,13 +36,25 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
     if(colorbar_type == "fields") {
 
         combined_data_range = coloredmeshes.combined.data.range(coloredmeshes);
+        combined_data_range_symm = symmrange(combined_data_range);
         combined_colors = coloredmeshes.combined.colors(coloredmeshes);
         combined_colors_sorted = coloredmeshes.combined.colors.sorted(coloredmeshes);
+        combined_map = coloredmeshes.combined.cmap(coloredmeshes);
+        cmap_fun = coloredmeshes.combined.cmap_fun(coloredmeshes);
+        makecmap_options = coloredmeshes.get.md(coloredmeshes, 'makecmap_options');
 
-        if(is.null(combined_data_range) | is.null(combined_colors_sorted)) {
+        if(is.null(combined_data_range) | is.null(combined_colors_sorted) | is.null(combined_map) | is.null(cmap_fun)) {
             warning("Requested to draw colorbar, but meshes do not contain the required metadata. Skipping.");
         } else {
-            rgl::bgplot3d({op = graphics::par(mar = rep(0.1, 4)); plot.new(); fields::image.plot(add=T, legend.only = TRUE, zlim = combined_data_range, col = combined_colors_sorted, horizontal = horizontal, ...); graphics::par(op);});
+            print(class(cmap_fun))
+            print(cmap_fun)
+            cat(sprintf("zlim = %f, %f\n", combined_data_range[1], combined_data_range[2]))
+            if(makecmap_options$symm == TRUE) {
+                zlim = combined_data_range_symm;
+            } else {
+                zlim = combined_data_range
+            }
+            rgl::bgplot3d({op = graphics::par(mar = rep(0.1, 4)); plot.new(); fields::image.plot(add=T, legend.only = TRUE, zlim = zlim, col = cmap_fun(100), horizontal = horizontal, ...); graphics::par(op);});
         }
     } else if(colorbar_type == "squash" | colorbar_type == 'plain') {
         cmap = coloredmeshes.combined.cmap.sorted(coloredmeshes);
@@ -65,6 +77,14 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
     }
 }
 
+
+#' @keywords internal
+symmrange <- function(x) {
+    dmin = min(x, na.rm = T);
+    dmax = max(x, na.rm = T);
+    abs_max = max(abs(dmin), abs(dmax));
+    return(c(-abs_max, abs_max));
+}
 
 
 #' @title Draw a simple colorbar from colors.
@@ -220,6 +240,25 @@ coloredmeshes.combined.cmap <- function(coloredmeshes) {
 }
 
 
+#' @title Retrieve metadata from hemilist of coloredmeshes.
+#'
+#' @inheritParams coloredmeshes.combined.colors
+#'
+#' @return the metadata value at the given key/mdname
+#'
+#' @keywords internal
+coloredmeshes.get.md <- function(coloredmeshes, mdname) {
+    for(cmesh in coloredmeshes) {
+        if(hasIn(cmesh, c('metadata', mdname))) {
+            return(cmesh$metadata[[mdname]]);
+        }
+    }
+    return(NULL);
+}
+
+
+
+
 #' @title Retrieve combined sorted cmap from hemilist of coloredmeshes.
 #'
 #' @inheritParams coloredmeshes.combined.colors
@@ -253,6 +292,20 @@ coloredmeshes.combined.data.range <- function(coloredmeshes) {
         }
     }
     return(range(combined_data, finite=TRUE));
+}
+
+coloredmeshes.combined.cmap_fun <- function(coloredmeshes) {
+
+    for(cmesh in coloredmeshes) {
+        if(hasIn(cmesh, c('metadata', 'makecmap_options', 'colFn'))) {
+            if( ! is.function(cmesh$metadata$makecmap_options$colFn)) {
+                warning("Coloredmesh metadata entry 'makecmap_options$colFn' is not a function.");
+            }
+            return(cmesh$metadata$makecmap_options$colFn);
+        }
+    }
+
+    return(NULL);
 }
 
 
