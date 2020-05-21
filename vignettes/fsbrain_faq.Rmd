@@ -120,6 +120,8 @@ colFn_diverging = grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, name=
 
 They require the *viridis* and *RColorBrewer* packages to be installed. The qualitative map is fine if you do not have more than 11 different values.
 
+If you have R >= 3.6, you may not need any extra packages: have a look at the `grDevices::hcl.colors` function. 
+
 Make sure to read the next entry as well if you are using a diverging colormap.
 
 ### I am using a diverging colormap. When plotting the colorbar (legend), the neutral value is not at zero. How to fix it? 

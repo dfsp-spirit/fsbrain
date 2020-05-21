@@ -12,7 +12,7 @@ test_that("We can visualize morphometry data.", {
     measure = 'thickness';
     surface = 'white';
 
-    vis.subject.morph.native(subjects_dir, subject_id, measure, 'both');
+    vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', rgloptions = rglot(), draw_colorbar = T);
 
     expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
 })
