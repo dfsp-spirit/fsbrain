@@ -242,7 +242,7 @@ collayer.from.morphlike.data <- function(lh_morph_data=NULL, rh_morph_data=NULL,
             morph_data = lh_morph_data;
         }
 
-        if(! 'colFn' %in% makecmap_options) {
+        if(! 'colFn' %in% names(makecmap_options)) {
             warning("No colFn given");
         }
 
