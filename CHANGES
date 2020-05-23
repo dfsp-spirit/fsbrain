@@ -1,6 +1,12 @@
 fsbrain Changes
 ===============
 
+Version 0.3.0
+-------------
+- Breaking: Change order of the 2 parameters of get.view.angle.names(). It is very unlikely that this will break your client. The parameters are named, and using the names will make sure your code works with both the old and the new version.
+- Fix bug #6, incorrect rendering of colorbars.
+- Provide better defaults for makecmap_options and colormap (palette) functions.
+
 
 Version 0.2.0
 -------------

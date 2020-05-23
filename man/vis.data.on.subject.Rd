@@ -15,7 +15,7 @@ vis.data.on.subject(
   rgloptions = list(),
   rglactions = list(),
   draw_colorbar = FALSE,
-  makecmap_options = list(colFn = squash::jet),
+  makecmap_options = mkco.seq(),
   bg = NULL
 )
 }

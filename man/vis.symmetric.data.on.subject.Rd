@@ -15,8 +15,7 @@ vis.symmetric.data.on.subject(
   rgloptions = list(),
   rglactions = list(),
   draw_colorbar = FALSE,
-  makecmap_options = list(colFn = squash::jet, symm = TRUE, col.na = "#FFFFFF00", n =
-    100),
+  makecmap_options = list(colFn = cm.seq(), symm = TRUE, col.na = "#FFFFFF00", n = 100),
   map_to_NA = c(0),
   bg = NULL
 )
@@ -44,7 +43,7 @@ vis.symmetric.data.on.subject(
 
 \item{makecmap_options}{named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'. Should include at least a colormap function as name 'colFn'.}
 
-\item{map_to_NA}{the value or value range that should **not** be considered a cluster, and should thus be plotted as background color. If a single value, only exactly this value is used (typically 0). If two values, they are interpreted as a range, and a values between them are mapped to NA. If you prefer to map the data to NA yourself before using this function, pass `NULL`.}
+\item{map_to_NA}{the value or value range that should **not** be considered a cluster, and should thus be plotted as background color. These values will be set to NA, leading to transparcent rendering, so the background will be visible instead. If a single value, only exactly this value is used (typically 0). If two values, they are interpreted as a range, and a values between them are mapped to NA. If you prefer to map the data to NA yourself before using this function or do not want to use a , pass `NULL`.}
 
 \item{bg}{a background definition. Can be a surface color layer or a character string, see \code{\link[fsbrain]{collayer.bg}} for valid strings.}
 }

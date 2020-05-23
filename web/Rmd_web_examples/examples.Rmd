@@ -24,7 +24,7 @@ sj = 'subject1'
 Now increase the figure size.
 
 ```{r}
-library('rgl')
+library('rgl');
 r3dDefaults$windowRect=c(20, 20, 900, 900);
 ```
 

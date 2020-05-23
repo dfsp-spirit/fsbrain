@@ -17,7 +17,7 @@ vis.subject.morph.native(
   draw_colorbar = FALSE,
   cortex_only = FALSE,
   style = "default",
-  makecmap_options = list(colFn = squash::jet),
+  makecmap_options = mkco.seq(),
   bg = NULL
 )
 }

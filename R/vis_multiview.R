@@ -22,7 +22,7 @@ brainviews <- function(views, coloredmeshes, rgloptions = list(), rglactions = l
 
     # Wrap a single instance into a list if needed
     if(fsbrain.renderable(coloredmeshes)) {
-        print("Wrapping single renderable instance into list.");
+        message("Wrapping single renderable instance into list.");
         coloredmeshes = list(coloredmeshes);
     }
 
@@ -52,18 +52,18 @@ brainviews <- function(views, coloredmeshes, rgloptions = list(), rglactions = l
 #'
 #' @description The returned strings are used as constants to identify a view of type `sd_<angle>`. They can be used to construct entries for the parameter `views` of functions like \code{\link[fsbrain]{vis.subject.morph.native}}, or directly as parameter 'view_angles' for functions like \code{\link[fsbrain]{vislayout.from.coloredmeshes}}.
 #'
-#' @param add_sd_prefix logical, whether the prefix 'sd_' should be added to the string. This will construct full view names. If set to false, only the substring after the prefix 'sd_' will be returned. This is used internally only and should not be needed in general.
-#'
 #' @param angle_set string, which view subset to return. Available subsets are: 'all' (or alias 't9'): for all 9 angles. 't4': for the t4 views. 'medial': the 2 medial views, one for each hemi. 'lateral': the 2 lateral views, one for each hemi. 'lh': medial and laterial for the left hemisphere. 'rh': medial and laterial for the right hemisphere.
+#'
+#' @param add_sd_prefix logical, whether the prefix 'sd_' should be added to the string. This will construct full view names. If set to false, only the substring after the prefix 'sd_' will be returned. This is used internally only and should not be needed in general.
 #'
 #' @return vector of character strings, all valid view angle strings.
 #' @export
-get.view.angle.names <- function(add_sd_prefix=TRUE, angle_set="all") {
-    if(angle_set == "all" || angle_set == "t9") {
+get.view.angle.names <- function(angle_set="all", add_sd_prefix=TRUE) {
+    if(angle_set == "all" | angle_set == "t9" | angle_set == "t8") {
         angles = c('lateral_lh', 'dorsal', 'lateral_rh', 'medial_lh', 'ventral', 'medial_rh', 'rostral', 'caudal');
     } else if(angle_set == "t4") {
         angles = c('lateral_lh', 'lateral_rh', 'medial_lh', 'medial_rh');
-    } else if(angle_set == "medial") {
+    } else if(angle_set == "medial" | angle_set == "t2") {
         angles = c('medial_lh', 'medial_rh');
     } else if(angle_set == "lateral") {
         angles = c('lateral_lh', 'lateral_rh');

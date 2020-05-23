@@ -47,7 +47,7 @@
 #'
 #' @importFrom squash jet
 #' @export
-vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi="both", surface="white", colormap=NULL, views=c("t4"), rgloptions = list(), rglactions = list(), draw_colorbar = FALSE, cortex_only=FALSE, style = 'default', makecmap_options=list('colFn'=squash::jet), bg=NULL) {
+vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi="both", surface="white", colormap=NULL, views=c("t4"), rgloptions = list(), rglactions = list(), draw_colorbar = FALSE, cortex_only=FALSE, style = 'default', makecmap_options=mkco.seq(), bg=NULL) {
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
@@ -147,6 +147,16 @@ vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi="
     return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar)));
 }
 
+
+#' @title Apply data transformation rglactions.
+#'
+#' @param measure_data numeric vector, or hemilist of numeric vectors. The data, usually vertex-wise morphometry data.
+#'
+#' @param rglactions named list, passed as parameter 'rglactions' to functions like \code{\link[fsbrain]{vis.subject.morph.native}}.
+#'
+#' @return the transformed data
+#'
+#' @keywords internal
 rglactions.transform <- function(measure_data, rglactions) {
     if(is.null(rglactions)) {
         return(measure_data);
@@ -275,7 +285,7 @@ vis.subject.label <- function(subjects_dir, subject_id, label, hemi, surface="wh
 #'
 #' @importFrom squash jet
 #' @export
-vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface="white", colormap=NULL, views=c('t4'), rgloptions=list(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=squash::jet), bg=NULL) {
+vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface="white", colormap=NULL, views=c('t4'), rgloptions=list(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=mkco.seq(), bg=NULL) {
 
     if(is.null(morph_data_lh) && is.null(morph_data_rh)) {
         stop(sprintf("Only one of morph_data_lh or morph_data_rh can be NULL.\n"));
@@ -296,7 +306,7 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, mor
 #'
 #' @inheritParams vis.data.on.subject
 #'
-#' @param map_to_NA the value or value range that should **not** be considered a cluster, and should thus be plotted as background color. If a single value, only exactly this value is used (typically 0). If two values, they are interpreted as a range, and a values between them are mapped to NA. If you prefer to map the data to NA yourself before using this function, pass `NULL`.
+#' @param map_to_NA the value or value range that should **not** be considered a cluster, and should thus be plotted as background color. These values will be set to NA, leading to transparcent rendering, so the background will be visible instead. If a single value, only exactly this value is used (typically 0). If two values, they are interpreted as a range, and a values between them are mapped to NA. If you prefer to map the data to NA yourself before using this function or do not want to use a , pass `NULL`.
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
@@ -314,7 +324,7 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, mor
 #'
 #' @importFrom squash jet
 #' @export
-vis.symmetric.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface="white", colormap=NULL, views=c('t4'), rgloptions=list(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=squash::jet, symm=TRUE, col.na='#FFFFFF00', 'n'=100), map_to_NA=c(0), bg=NULL) {
+vis.symmetric.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface="white", colormap=NULL, views=c('t4'), rgloptions=list(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=cm.seq(), symm=TRUE, col.na='#FFFFFF00', 'n'=100), map_to_NA=c(0), bg=NULL) {
     makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
 
     morph_data_lh = perform.na.mapping(morph_data_lh, map_to_NA);
@@ -326,11 +336,11 @@ vis.symmetric.data.on.subject <- function(subjects_dir, vis_subject_id, morph_da
 
 #' Perform NA mapping for transparency
 #'
-#' @description Usually this is done so that the NA values are plotted transparently, so your can see a background color through the respective colors.
+#' @description Usually this is done so that the `NA` values are plotted transparently, so your can see a background color through the respective colors.
 #'
 #' @param data numeric vector
 #'
-#' @param map_to_NA the value or value range that should **not** be mapped to `NA`. If a single value, only exactly this value is used. If two values, they are interpreted as a range, and a values between them are mapped to NA. If you pass `NULL`, the data are returned as-is.
+#' @param map_to_NA the value or value range that should be mapped to `NA`. If a single value, only exactly this value is used. If two values, they are interpreted as a range, and a values between them are mapped to `NA`. If you pass `NULL`, the data are returned as-is.
 #'
 #' @return the mapped data
 #'
@@ -554,7 +564,7 @@ vis.labeldata.on.subject <- function(subjects_dir, vis_subject_id, lh_labeldata,
 #'
 #' @importFrom squash jet
 #' @export
-vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage", morph_data_lh, morph_data_rh, surface="white", colormap=NULL, views=c('t4'), rgloptions = list(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=squash::jet), bg=NULL) {
+vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage", morph_data_lh, morph_data_rh, surface="white", colormap=NULL, views=c('t4'), rgloptions = list(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=mkco.seq(), bg=NULL) {
 
     if(is.null(subjects_dir)) {
         subjects_dir = find.subjectsdir.of(subject_id=vis_subject_id, mustWork = TRUE);
