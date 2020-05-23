@@ -275,3 +275,125 @@ plot.fsbrain.colorbar <- function(colors, horizontal=FALSE) {
     }
 }
 
+
+#' @title Return the standard fsbrain sequential colormap.
+#'
+#' @param report logical, whether to print a message with a name of the chosen colormap, in format \code{package::function#palette}.
+#'
+#' @note This returns a sequential, multi-hue palette.
+#'
+#' @export
+cm.seq <- function(report=FALSE) {
+    if(requireNamespace('grDevices', quietly = TRUE)) {
+        if(exists('hcl.colors')) {
+            if(report) { message('grDevices::hcl.colors#viridis'); }
+            return(function(n) { grDevices::hcl.colors(n, palette = "viridis"); });
+        }
+    }
+    if(requireNamespace('viridis', quietly = TRUE)) {
+        if(report) { message('viridis::viridis#viridis'); }
+        return(viridis::viridis);
+    }
+    if(requireNamespace('RColorBrewer', quietly = TRUE)) {
+        if(report) { message('RColorBrewer::brewer.pal#YlGn'); }
+        return(grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, name="YlGn")));
+    }
+    if(report) { message('squash::jet#jet'); }
+    return(squash::jet); # ahem.
+}
+
+
+#' @title Return the standard fsbrain heat colormap.
+#'
+#' @inheritParams cm.seq
+#'
+#' @note The heat palette is a sequential, single-hue palette.
+#'
+#' @export
+cm.heat <- function(report=FALSE) {
+    if(requireNamespace('grDevices', quietly = TRUE)) {
+        if(exists('hcl.colors')) {
+            if(report) { message('grDevices::hcl.colors#YlOrRd'); }
+            return(function(n) { grDevices::hcl.colors(n, palette = "YlOrRd"); });
+        }
+    }
+    if(report) { message('grDevices::heat.colors#heat.colors'); }
+    return(grDevices::heat.colors);
+}
+
+
+#' @title Return the standard fsbrain diverging colormap.
+#'
+#' @inheritParams cm.seq
+#'
+#' @note Returns some diverging palette, suitable for visualizing data that is centered around zero.
+#'
+#' @export
+cm.div <- function(report=FALSE) {
+    if(requireNamespace('grDevices', quietly = TRUE)) {
+        if(exists('hcl.colors')) {
+            if(report) { message('grDevices::hcl.colors#Blue-Red 3'); }
+            return(function(n) { grDevices::hcl.colors(n, palette = "Blue-Red 3"); });
+        }
+    }
+    if(requireNamespace('RColorBrewer', quietly = TRUE)) {
+        if(report) { message('RColorBrewer::brewer.pal#RdBu'); }
+        return(grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, name="RdBu")));
+    }
+    if(report) { message('grDevices::cm.colors#cm.colors'); }
+    return(grDevices::cm.colors);
+}
+
+
+#' @title Return the standard fsbrain qualitative colormap.
+#'
+#' @inheritParams cm.seq
+#'
+#' @note Returns some qualitative palette, suitable for visualizing categorical data.
+#'
+#' @export
+cm.qual <- function(report=FALSE) {
+    if(requireNamespace('grDevices', quietly = TRUE)) {
+        if(exists('hcl.colors')) {
+            if(report) { message('grDevices::hcl.colors#Dark 3'); }
+            return(function(n) { grDevices::hcl.colors(n, palette = "Dark 3"); });
+        }
+    }
+    if(requireNamespace('RColorBrewer', quietly = TRUE)) {
+        if(report) { message('RColorBrewer::brewer.pal#Dark2'); }
+        return( function(n) {
+                if(n <= 11L) {
+                    return(RColorBrewer::brewer.pal(n, name="Dark2"));
+                } else {
+                    return(grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, name="Dark2")));
+                }
+            }
+        );
+    }
+    if(report) { message('grDevices::cm.colors#cm.colors'); }
+    return(grDevices::cm.colors);
+}
+
+
+#' @title Return recommended 'makecmap_options' for sequential data.
+#'
+#' @description This function returns recommended visualization settings (a colormap function and suitable other settings) for the given type of data. The return value is meant to be passed as parameter 'makecmap_options' to the vis.* functions, e.g., \code{\link[fsbrain]{vis.subject.morph.native}}.
+#'
+#' @return named list, visualization settings to be used as 'makecmap_options' for sequential data.
+#'
+#' @export
+mkco.seq <- function() {
+    return(list('colFn'=cm.seq(), 'n'=100L));
+}
+
+
+#' @title Return recommended 'makecmap_options' for diverging data.
+#'
+#' @description This function returns recommended visualization settings (a colormap function and suitable other settings) for the given type of data. The return value is meant to be passed as parameter 'makecmap_options' to the vis.* functions, e.g., \code{\link[fsbrain]{vis.subject.morph.native}}.
+#'
+#' @return named list, visualization settings to be used as 'makecmap_options' for diverging data.
+#'
+#' @export
+mkco.div <- function() {
+    return(list('colFn'=cm.div(), 'n'=100L, 'symm'=TRUE));
+}
