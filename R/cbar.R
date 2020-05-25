@@ -59,6 +59,8 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
 #'
 #' @param silent logical, whether to suppress messages. Defaults to `FALSE`.
 #'
+#' @param trim_png logical, whether to trim the output PNG image using image magick, i.e., remove everything but the foreground. Ignored unless an output PNG image is actually written (see 'png_options') and the 'magick' package is installed.
+#'
 #' @examples
 #' \donttest{
 #'    fsbrain::download_optional_data();
@@ -81,7 +83,7 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
 #' @importFrom grDevices png pdf dev.off
 #' @importFrom utils modifyList
 #' @export
-coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=TRUE, image.plot_extra_options = list("horizontal"=TRUE), png_options=list('filename'='cbar.png'), silent=FALSE) {
+coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=TRUE, image.plot_extra_options = list('horizontal'=FALSE, 'legend.cex'=1.8, 'legend.width'=1.5, 'axis.args'=list('cex.axis'=2.0)), png_options=list('filename'='cbar.png', 'width'=1000, 'height'=1000, 'bg'='#FFFFFF00'), silent=FALSE, trim_png=TRUE) {
 
     if(length(coloredmeshes) < 1) {
         message("Requested to draw separate colorbar, but mesh list is empty. Skipping.");
@@ -119,6 +121,15 @@ coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=TRUE, image.p
         if(! is.null(png_options$filename)) {
             if(! silent) {
                 message(sprintf("Colorbar image written to file '%s'.\n", png_options$filename));
+            }
+            if(trim_png) {
+                if (requireNamespace("magick", quietly = TRUE)) {
+                    cbar_img = magick::image_read(png_options$filename);
+                    cbar_img_trimmed = magick::image_trim(cbar_img);
+                    magick::image_write(cbar_img_trimmed, path = png_options$filename);
+                } else {
+                    warning("Ignored request to trim colorbar image: this functionality requires the 'magick' package.")
+                }
             }
         }
     }

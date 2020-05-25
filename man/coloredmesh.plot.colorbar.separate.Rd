@@ -7,9 +7,12 @@
 coloredmesh.plot.colorbar.separate(
   coloredmeshes,
   show = TRUE,
-  image.plot_extra_options = list(horizontal = TRUE),
-  png_options = list(filename = "cbar.png"),
-  silent = FALSE
+  image.plot_extra_options = list(horizontal = FALSE, legend.cex = 1.8, legend.width =
+    1.5, axis.args = list(cex.axis = 2)),
+  png_options = list(filename = "cbar.png", width = 1000, height = 1000, bg =
+    "#FFFFFF00"),
+  silent = FALSE,
+  trim_png = TRUE
 )
 }
 \arguments{
@@ -22,6 +25,8 @@ coloredmesh.plot.colorbar.separate(
 \item{png_options}{Options to pass to \code{\link[grDevices]{png}}, see the docs of that function for details. Allow you to save the plot as a png bitmap image. Example: \code{png_options = list("filename"="cbar.png", "width"=800)}. Defaults to NULL, which will not save anything.}
 
 \item{silent}{logical, whether to suppress messages. Defaults to `FALSE`.}
+
+\item{trim_png}{logical, whether to trim the output PNG image using image magick, i.e., remove everything but the foreground. Ignored unless an output PNG image is actually written (see 'png_options') and the 'magick' package is installed.}
 }
 \description{
 Draw a colorbar for the coloredmeshes to a separate 2D plot. Due to the suboptimal handling of colorbar drawing in the three-dimensional multi-panel views, it is often desirable to plot the colorbar in a separate window, export it from there and then manually add it to the final plot version in some image manipulation software like Inkscape. If you need more control over the colormap than offered by this function (e.g., setting the color value for NA values or making a symmetric colormap to ensure that the zero point for divergent colormaps is a neutral color), you should write custom code, and the return value from this function will come in handy to do that.
