@@ -7,7 +7,7 @@
 rglot()
 }
 \value{
-named list, usable as 'rgl_options' parameter for vis functions.
+named list, usable as 'rgl_options' parameter for vis functions like \code{\link[fsbrain]{vis.subject.morph.native}}.
 }
 \description{
 This function defines the figure size that is used during the unit tests.

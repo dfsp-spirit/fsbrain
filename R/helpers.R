@@ -727,15 +727,11 @@ find.freesurferhome <- function(mustWork=FALSE) {
 #'
 #' @description This function defines the figure size that is used during the unit tests.
 #'
-#' @return named list, usable as 'rgl_options' parameter for vis functions.
+#' @return named list, usable as 'rgl_options' parameter for vis functions like \code{\link[fsbrain]{vis.subject.morph.native}}.
 #'
 #' @note This function is public so one can copy and paste unit test code into the R console, but you should not consider it part of the official functions and use it in your client code.
 #'
 #' @export
 rglot <- function() {
-    wr = c(50, 50, 800, 600);
-    if(hasIn(r3dDefaults, 'windowRect')) {
-        return(list('windowRect' = r3dDefaults$windowRect));    # honour it if the user has set something.
-    }
-    return(list('windowRect'=wr));
+    return(list('windowRect' = c(50, 50, 800, 800)));
 }

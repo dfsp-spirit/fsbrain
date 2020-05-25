@@ -23,6 +23,8 @@ Suggests:
     rmarkdown,
     testthat (>= 2.1.0),
     magick,
-    misc3d
+    misc3d,
+    viridis,
+    RColorBrewer
 VignetteBuilder: knitr
 RoxygenNote: 7.1.0

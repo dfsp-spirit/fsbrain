@@ -27,7 +27,7 @@ test_that("We can visualize annotation atlas data.", {
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     subject_id = 'subject1';
 
-    vis.subject.annot(subjects_dir, subject_id, 'aparc', 'both');
+    vis.subject.annot(subjects_dir, subject_id, 'aparc', 'both', rgloptions = rglot());
 
     expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
 })
@@ -47,7 +47,7 @@ test_that("We can visualize arbitrary data on a subjects surface.", {
     morph_data_lh = rnorm(num_verts_subject1_lh, 2.0, 1.0);
     morph_data_rh = rnorm(num_verts_subject1_rh, 2.0, 1.0);
 
-    vis.data.on.subject(subjects_dir, subject_id, morph_data_lh, morph_data_rh);
+    vis.data.on.subject(subjects_dir, subject_id, morph_data_lh, morph_data_rh, rgloptions = rglot(), draw_colorbar = T);
 
     expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
 })
@@ -69,7 +69,7 @@ test_that("We can visualize arbitrary data on the fsaverage surfaces if availabl
     morph_data_lh = rnorm(num_verts_fsaverage, 2.0, 1.0);
     morph_data_rh = rnorm(num_verts_fsaverage, 2.0, 1.0);
 
-    vis.data.on.fsaverage(morph_data_lh=morph_data_lh, morph_data_rh=morph_data_rh);
+    vis.data.on.fsaverage(morph_data_lh=morph_data_lh, morph_data_rh=morph_data_rh, rgloptions = rglot(), draw_colorbar = T);
 
     expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
 })

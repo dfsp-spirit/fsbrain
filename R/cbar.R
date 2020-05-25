@@ -282,6 +282,7 @@ plot.fsbrain.colorbar <- function(colors, horizontal=FALSE) {
 #'
 #' @note This returns a sequential, multi-hue palette.
 #'
+#' @importFrom squash jet
 #' @export
 cm.seq <- function(report=FALSE) {
     if(requireNamespace('grDevices', quietly = TRUE)) {
