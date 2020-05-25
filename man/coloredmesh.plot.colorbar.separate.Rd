@@ -8,7 +8,7 @@ coloredmesh.plot.colorbar.separate(
   coloredmeshes,
   show = TRUE,
   image.plot_extra_options = list(horizontal = FALSE, legend.cex = 1.8, legend.width =
-    1.5, axis.args = list(cex.axis = 2)),
+    1.5, axis.args = list(cex.axis = 3)),
   png_options = list(filename = "cbar.png", width = 1000, height = 1000, bg =
     "#FFFFFF00"),
   silent = FALSE,

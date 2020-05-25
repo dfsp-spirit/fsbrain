@@ -29,6 +29,9 @@ arrange.brainview.images(
 
 \item{background_color}{string, a valid ImageMagick color string such as "white" or "#000080". The color to use when extending images (e.g., when creating the border).}
 }
+\value{
+vector of character strings, paths to the brainview images. This is the input parameter 'brainview_images'.
+}
 \description{
 Combine several brainview images into a new figure.
 }

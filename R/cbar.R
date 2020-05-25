@@ -399,6 +399,18 @@ mkco.seq <- function() {
 }
 
 
+#' @title Return recommended 'makecmap_options' for sequential data with heatmap style.
+#'
+#' @description This function returns recommended visualization settings (a colormap function and suitable other settings) for the given type of data. The return value is meant to be passed as parameter 'makecmap_options' to the vis.* functions, e.g., \code{\link[fsbrain]{vis.subject.morph.native}}.
+#'
+#' @return named list, visualization settings to be used as 'makecmap_options' for sequential data with heatmap style.
+#'
+#' @export
+mkco.heat <- function() {
+    return(list('colFn'=cm.heat(), 'n'=100L));
+}
+
+
 #' @title Return recommended 'makecmap_options' for diverging data.
 #'
 #' @description This function returns recommended visualization settings (a colormap function and suitable other settings) for the given type of data. The return value is meant to be passed as parameter 'makecmap_options' to the vis.* functions, e.g., \code{\link[fsbrain]{vis.subject.morph.native}}.

@@ -11,23 +11,26 @@ combine.colorbar.with.brainview.image(
   offset = "+0+0",
   extend_brainview_img_height_by = 0L,
   silent = FALSE,
-  allow_colorbar_shrink = TRUE
+  allow_colorbar_shrink = TRUE,
+  horizontal = TRUE
 )
 }
 \arguments{
-\item{brainview_img}{path to the main image containing the view of the brain, usually an image in PNG format}
+\item{brainview_img}{path to the main image containing the view of the brain, usually an image in PNG format.}
 
-\item{colorbar_img}{path to the main image containing the separate colorbar, usually an image in PNG format}
+\item{colorbar_img}{path to the main image containing the separate colorbar, usually an image in PNG format.}
 
-\item{output_img}{path to output image that including the file extension}
+\item{output_img}{path to output image that including the file extension.}
 
 \item{offset}{offset string passed to \code{\link[magick]{image_composite}}. Allows you to shift the location of the colorbar in the final image.}
 
-\item{extend_brainview_img_height_by}{integer value in pixels, the size of the lower border to add to the brainview_img. Use this if the lower part of the colorbar is off the image canvas.}
+\item{extend_brainview_img_height_by}{integer value in pixels, the size of the lower border to add to the brainview_img. Increase this if the lower part of the colorbar is off the image canvas.}
 
 \item{silent}{logical, whether to silence all messages}
 
 \item{allow_colorbar_shrink}{logical, whether to shrink the colorbar to the width of the animation in case it is considerably wider (more than 20 percent). Defaults to TRUE.}
+
+\item{horizontal}{logical, whether the colorbar is horizontal. If so, it will be added below the 'brainview_img'. If it is vertical, it will be added to the right of the 'brainview_img'.}
 }
 \description{
 Combine a colorbar and a brainview image into a new figure.
