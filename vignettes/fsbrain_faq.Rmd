@@ -154,7 +154,7 @@ The impression that the numbers of colors in the colorbar is lower than in the r
 You can set the parameter *n* in the *makecmap_options* (see above) to request more colors, which will lead to a smooth colorbar.
 
 ```{r, eval = FALSE}
-mkc = list('n'=100L);
+mkc = list('n'=200L);
 vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', makecmap_options=mkc);
 ```
 
@@ -177,7 +177,7 @@ While this is not possible in `rgl`, fsbrain provides the `vislayout.from.colore
 
 ```{r, eval = FALSE}
 # To get coloredmeshes return value only, ignore the visualization:
-cm = vis.subject.morph.native(sjd, sj, 'thickness', makecmap_options = list('n'=100), cortex_only = T);
+cm = vis.subject.morph.native(sjd, sj, 'thickness', makecmap_options = list('n'=200), cortex_only = T);
 # Produce high quality tight layout:
 vislayout.from.coloredmeshes(cm);
 ```
