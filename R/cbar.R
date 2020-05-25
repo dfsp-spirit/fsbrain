@@ -83,7 +83,7 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
 #' @importFrom grDevices png pdf dev.off
 #' @importFrom utils modifyList
 #' @export
-coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=TRUE, image.plot_extra_options = list('horizontal'=FALSE, 'legend.cex'=1.8, 'legend.width'=1.5, 'axis.args'=list('cex.axis'=2.0)), png_options=list('filename'='cbar.png', 'width'=1000, 'height'=1000, 'bg'='#FFFFFF00'), silent=FALSE, trim_png=TRUE) {
+coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=TRUE, image.plot_extra_options = list('horizontal'=FALSE, 'legend.cex'=1.8, 'legend.width'=1.5, 'axis.args'=list('cex.axis'=3.0)), png_options=list('filename'='cbar.png', 'width'=1000, 'height'=1000, 'bg'='#FFFFFF00'), silent=FALSE, trim_png=TRUE) {
 
     if(length(coloredmeshes) < 1) {
         message("Requested to draw separate colorbar, but mesh list is empty. Skipping.");
