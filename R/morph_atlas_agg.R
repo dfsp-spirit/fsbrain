@@ -582,7 +582,7 @@ write.region.values.fsaverage <- function(hemi, atlas, region_value_list, output
     }
   }
   return_list$data = morph_data;
-  return(return_list);
+  return(invisible(return_list));
 }
 
 
