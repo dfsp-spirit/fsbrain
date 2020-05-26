@@ -19,7 +19,7 @@ vis.subject.morph.standard(
   rglactions = list(),
   draw_colorbar = FALSE,
   cortex_only = FALSE,
-  makecmap_options = list(colFn = squash::jet),
+  makecmap_options = mkco.seq(),
   bg = NULL
 )
 }

@@ -9,10 +9,10 @@ combine.colorbar.with.brainview.image(
   colorbar_img,
   output_img,
   offset = "+0+0",
-  extend_brainview_img_height_by = 0L,
+  extend_brainview_img_height_by = NULL,
   silent = FALSE,
   allow_colorbar_shrink = TRUE,
-  horizontal = TRUE
+  horizontal = FALSE
 )
 }
 \arguments{

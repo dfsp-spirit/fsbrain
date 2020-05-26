@@ -61,6 +61,8 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
 #'
 #' @param trim_png logical, whether to trim the output PNG image using image magick, i.e., remove everything but the foreground. Ignored unless an output PNG image is actually written (see 'png_options') and the 'magick' package is installed.
 #'
+#' @note If you increase the output resolution of the colorbar (using 'png_options'), you will have to increase the font sizes as well (using 'image.plot_extra_options'), otherwise the axis and legend labels will be hard to read.
+#'
 #' @examples
 #' \donttest{
 #'    fsbrain::download_optional_data();
@@ -83,7 +85,7 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
 #' @importFrom grDevices png pdf dev.off
 #' @importFrom utils modifyList
 #' @export
-coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=TRUE, image.plot_extra_options = list('horizontal'=FALSE, 'legend.cex'=1.8, 'legend.width'=1.5, 'axis.args'=list('cex.axis'=3.0)), png_options=list('filename'='cbar.png', 'width'=1000, 'height'=1000, 'bg'='#FFFFFF00'), silent=FALSE, trim_png=TRUE) {
+coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=FALSE, image.plot_extra_options = list(horizontal=FALSE, 'legend.cex'=1.8, 'legend.width'=2, 'legend.mar' = 12, 'axis.args'=list('cex.axis'=5.0)), png_options=list('filename'='cbar.png', 'width'=1400, 'height'=1400, 'bg'='#FFFFFF00'), silent=FALSE, trim_png=TRUE) {
 
     if(length(coloredmeshes) < 1) {
         message("Requested to draw separate colorbar, but mesh list is empty. Skipping.");
@@ -113,6 +115,11 @@ coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=TRUE, image.p
         do.call(fields::image.plot, image.plot_options);
     }
 
+    is_horizontal = FALSE;
+    if('horizontal' %in% names(image.plot_options)) {
+        is_horizontal = image.plot_options$horizontal;
+    }
+
     if(! is.null(png_options)) {
         do.call(png, png_options);
         plot.new();
@@ -120,7 +127,8 @@ coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=TRUE, image.p
         dev.off();
         if(! is.null(png_options$filename)) {
             if(! silent) {
-                message(sprintf("Colorbar image written to file '%s'.\n", png_options$filename));
+                orientation_string = ifelse(is_horizontal, 'Horizontal', 'Vertical');
+                message(sprintf("%s colorbar image written to file '%s'.\n", orientation_string, png_options$filename));
             }
             if(trim_png) {
                 if (requireNamespace("magick", quietly = TRUE)) {
@@ -128,7 +136,7 @@ coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=TRUE, image.p
                     cbar_img_trimmed = magick::image_trim(cbar_img);
                     magick::image_write(cbar_img_trimmed, path = png_options$filename);
                 } else {
-                    warning("Ignored request to trim colorbar image: this functionality requires the 'magick' package.")
+                    warning("Ignored request to trim colorbar image: this functionality requires the 'magick' package.");
                 }
             }
         }
