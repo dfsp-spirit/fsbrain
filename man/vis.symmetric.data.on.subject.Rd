@@ -15,7 +15,7 @@ vis.symmetric.data.on.subject(
   rgloptions = list(),
   rglactions = list(),
   draw_colorbar = FALSE,
-  makecmap_options = list(colFn = cm.seq(), symm = TRUE, col.na = "#FFFFFF00", n = 100),
+  makecmap_options = list(colFn = cm.div(), symm = TRUE, col.na = "#FFFFFF00", n = 100),
   map_to_NA = c(0),
   bg = NULL
 )
