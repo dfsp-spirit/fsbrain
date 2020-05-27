@@ -5,9 +5,9 @@
 \title{Combine a colorbar and a brainview image into a new figure.}
 \usage{
 combine.colorbar.with.brainview.image(
-  brainview_img,
-  colorbar_img,
-  output_img,
+  brainview_img = "fsbrain_arranged.png",
+  colorbar_img = "fsbrain_cbar.png",
+  output_img = "fsbrain_merged.png",
   offset = "+0+0",
   extend_brainview_img_height_by = NULL,
   silent = FALSE,
@@ -20,7 +20,7 @@ combine.colorbar.with.brainview.image(
 
 \item{colorbar_img}{path to the main image containing the separate colorbar, usually an image in PNG format.}
 
-\item{output_img}{path to output image that including the file extension.}
+\item{output_img}{path to output image, including the file extension.}
 
 \item{offset}{offset string passed to \code{\link[magick]{image_composite}}. Allows you to shift the location of the colorbar in the final image.}
 
