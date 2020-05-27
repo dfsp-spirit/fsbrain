@@ -55,7 +55,7 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
 #'
 #' @param image.plot_extra_options named list of extra optins to pass to \code{\link[fields]{image.plot}}. This can be used to add a legend to the colorbar, rotate the colorbar, or whatever. The options "legend_only", "zlim", and "col" are computed and set for you  by this function, so there is no need to pass these. Your list will be merged with the internal options, so you could overwrite named arguments if needed.
 #'
-#' @param png_options Options to pass to \code{\link[grDevices]{png}}, see the docs of that function for details. Allow you to save the plot as a png bitmap image. Example: \code{png_options = list("filename"="cbar.png", "width"=800)}. Defaults to NULL, which will not save anything.
+#' @param png_options Options to pass to \code{\link[grDevices]{png}}, see the docs of that function for details. Allow you to save the plot as a png bitmap image. Example: \code{png_options = list("filename"="fsbrain_cbar.png", "width"=800)}. Defaults to NULL, which will not save anything.
 #'
 #' @param silent logical, whether to suppress messages. Defaults to `FALSE`.
 #'
@@ -85,7 +85,7 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
 #' @importFrom grDevices png pdf dev.off
 #' @importFrom utils modifyList
 #' @export
-coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=FALSE, image.plot_extra_options = list(horizontal=FALSE, 'legend.cex'=1.8, 'legend.width'=2, 'legend.mar' = 12, 'axis.args'=list('cex.axis'=5.0)), png_options=list('filename'='cbar.png', 'width'=1400, 'height'=1400, 'bg'='#FFFFFF00'), silent=FALSE, trim_png=TRUE) {
+coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=FALSE, image.plot_extra_options = list(horizontal=FALSE, 'legend.cex'=1.8, 'legend.width'=2, 'legend.mar' = 12, 'axis.args'=list('cex.axis'=5.0)), png_options=list('filename'='fsbrain_cbar.png', 'width'=1400, 'height'=1400, 'bg'='#FFFFFF00'), silent=FALSE, trim_png=TRUE) {
 
     if(length(coloredmeshes) < 1) {
         message("Requested to draw separate colorbar, but mesh list is empty. Skipping.");
