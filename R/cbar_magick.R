@@ -97,6 +97,8 @@ combine.colorbar.with.brainview.image <- function(brainview_img = "fsbrain_arran
 }
 
 
+#' @title Combine a vertical colorbar and a brainview image into a new figure.
+#'
 #' @inheritParams combine.colorbar.with.brainview.image
 #'
 #' @param extend_brainview_img_width_by integer value in pixels, the size of the right border to add to the brainview_img. Increase this if the right part of the colorbar is off the image canvas.
