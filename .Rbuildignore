@@ -9,6 +9,9 @@ README_DEVELOPMENT.md
 CONTRIBUTING.md
 LICENSE_FULL
 CHANGES
+fsbrain_arranged.png
+fsbrain_cbar.png
+fsbrain_merged.png
 \.travis\.yml
 ^appveyor\.yml$
 web/
