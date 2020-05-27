@@ -1,11 +1,12 @@
 fsbrain Changes
 ===============
 
-Version 0.3.0
+Version 0.2.1
 -------------
-- Breaking: Change order of the 2 parameters of get.view.angle.names(). It is very unlikely that this will break your client. The parameters are named, and using the names will make sure your code works with both the old and the new version.
-- Fix bug #6, incorrect rendering of colorbars.
-- Provide better defaults for makecmap_options and colormap (palette) functions.
+- Fix a bug in colorbar drawing that lead to wrong colors (see #6)
+- Change defaults in functions for drawing a separate colorbar and combining it with arranged images
+- Support combining both horizontal and vertical cbars with a brainview image
+- Suggest viridis and RColorBrewer packages for great colors, use them if available
 
 
 Version 0.2.0
