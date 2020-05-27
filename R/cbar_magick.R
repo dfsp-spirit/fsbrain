@@ -8,7 +8,7 @@
 #'
 #' @param colorbar_img path to the main image containing the separate colorbar, usually an image in PNG format.
 #'
-#' @param output_img path to output image that including the file extension.
+#' @param output_img path to output image, including the file extension.
 #'
 #' @param offset offset string passed to \code{\link[magick]{image_composite}}. Allows you to shift the location of the colorbar in the final image.
 #'
@@ -22,7 +22,7 @@
 #'
 #' @family colorbar functions
 #' @export
-combine.colorbar.with.brainview.image <- function(brainview_img, colorbar_img, output_img, offset="+0+0", extend_brainview_img_height_by=NULL, silent=FALSE, allow_colorbar_shrink=TRUE, horizontal=FALSE) {
+combine.colorbar.with.brainview.image <- function(brainview_img = "fsbrain_arranged.png", colorbar_img = "fsbrain_cbar.png", output_img = "fsbrain_merged.png", offset="+0+0", extend_brainview_img_height_by=NULL, silent=FALSE, allow_colorbar_shrink=TRUE, horizontal=FALSE) {
 
     if(! horizontal) {
         return(invisible(combine.colorbar.with.brainview.image.vertical(brainview_img, colorbar_img, output_img, offset=offset, extend_brainview_img_width_by=extend_brainview_img_height_by, silent=silent, allow_colorbar_shrink=allow_colorbar_shrink)));
