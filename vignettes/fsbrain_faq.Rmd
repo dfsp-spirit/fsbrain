@@ -187,15 +187,15 @@ Note that your output resolution settings (see question above) now count for eac
 You can adjust various settings, e.g., change the rendering stlyle, select different views, and save it to a custom file name in your home directory:
 
 ```{r, eval = FALSE}
-output_brain_img = "~/fig1_brain.png";
+output_brain_img = "fsbrain_arranged.png";
 vislayout.from.coloredmeshes(cm, view_angles = get.view.angle.names(angle_set='t9'), output_img = output_brain_img);
 ```
 
 It is also possible to plot a separate colorbar image and combine that with the tight layout brainview image. Note that the settings for the colorbar are stored in the coloredmeshes, and can be adjusted by altering the initial call to `vis.subject.morph.native` (or whatever visualization function you use) above.
 
 ```{r, eval = FALSE}
-output_cbar_img = "~/fig1_colorbar.png";
-output_final_img = "~/fig1.png";
+output_cbar_img = "fsbrain_cbar.png";
+output_final_img = "fsbrain_merged.png";
 coloredmesh.plot.colorbar.separate(cm, image.plot_extra_options = list('horizontal' = TRUE), png_options = list('filename'=output_cbar_img, 'width'=1800));
 combine.colorbar.with.brainview.image(output_brain_img, output_cbar_img, output_final_img);
 ```
@@ -204,9 +204,9 @@ You may have to play a bit with the resolution settings of your brain images and
 
 ## Various topics
 
-### Can I integrate the plots produced by *fsbrain* into an R Markdown document (the R equivalent of a Python jupyter notebook)?
+### Can I integrate the plots produced by *fsbrain* into an R Markdown document (the R equivalent of a Python Jupyter notebook)?
 
-Yes, see the example notebook files in the directory [web](https://github.com/dfsp-spirit/fsbrain/tree/master/web/) of the *fsbrain* repository. The Rmd files in that directory are actually notebooks in R markdown format.
+Yes, see the example notebook files in the directory [web](https://github.com/dfsp-spirit/fsbrain/tree/master/web/Rmd_web_examples) of the *fsbrain* repository. The Rmd files are actually notebooks in R markdown format.
 
 ## Technical problems
 
