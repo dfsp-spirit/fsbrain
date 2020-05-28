@@ -41,9 +41,3 @@ string, the file path.
 \description{
 Construct filepath of standard space morphometry data file.
 }
-\examples{
-   filepath_lh_thickness_std =
-   subject.filepath.morph.standard("/media/ext/data/study1", "subject1",
-    "thickness", "lh", fwhm="25");
-
-}

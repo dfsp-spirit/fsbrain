@@ -35,8 +35,3 @@ string, the file path.
 \description{
 Construct filepath of native space morphometry data file.
 }
-\examples{
-   filepath_lh_thickness =
-   subject.filepath.morph.native("/media/ext/data/study1", "subject1", "thickness", "lh");
-
-}

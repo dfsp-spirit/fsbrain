@@ -336,11 +336,6 @@ subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm
 #'
 #' @return string, the file path.
 #'
-#' @examples
-#'    filepath_lh_thickness_std =
-#'    subject.filepath.morph.standard("/media/ext/data/study1", "subject1",
-#'     "thickness", "lh", fwhm="25");
-#'
 #' @export
 subject.filepath.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm='10', template_subject='fsaverage', format='auto', warn_if_nonexistent=FALSE, error_if_nonexistent=FALSE) {
     if(!(hemi %in% c("lh", "rh"))) {
@@ -391,10 +386,6 @@ subject.filepath.morph.standard <- function(subjects_dir, subject_id, measure, h
 #' @param error_if_nonexistent logical. Whether to raise an error if the file does not exist or cannot be accessed. Defaults to FALSE.
 #'
 #' @return string, the file path.
-#'
-#' @examples
-#'    filepath_lh_thickness =
-#'    subject.filepath.morph.native("/media/ext/data/study1", "subject1", "thickness", "lh");
 #'
 #' @export
 subject.filepath.morph.native <- function(subjects_dir, subject_id, measure, hemi, format='curv', warn_if_nonexistent=FALSE, error_if_nonexistent=FALSE) {
