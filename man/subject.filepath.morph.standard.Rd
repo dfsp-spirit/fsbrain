@@ -11,7 +11,7 @@ subject.filepath.morph.standard(
   hemi,
   fwhm = "10",
   template_subject = "fsaverage",
-  format = "mgh",
+  format = "auto",
   warn_if_nonexistent = FALSE,
   error_if_nonexistent = FALSE
 )

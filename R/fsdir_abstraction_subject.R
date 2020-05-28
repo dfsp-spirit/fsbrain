@@ -277,13 +277,13 @@ subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm
     }
 
     if(hemi == "both") {
-        lh_curvfile = subject.filepath.morph.standard(subjects_dir, subject_id, measure, "lh", fwhm, error_if_nonexistent=TRUE);
+        lh_curvfile = subject.filepath.morph.standard(subjects_dir, subject_id, measure, "lh", fwhm, template_subject = template_subject, error_if_nonexistent=TRUE);
         lh_morph_data = freesurferformats::read.fs.morph(lh_curvfile);
         if(cortex_only) {
             lh_morph_data = apply.label.to.morphdata(lh_morph_data, subjects_dir, template_subject, "lh", 'cortex');
         }
 
-        rh_curvfile = subject.filepath.morph.standard(subjects_dir, subject_id, measure, "rh", fwhm, error_if_nonexistent=TRUE);
+        rh_curvfile = subject.filepath.morph.standard(subjects_dir, subject_id, measure, "rh", fwhm, template_subject = template_subject, error_if_nonexistent=TRUE);
         rh_morph_data = freesurferformats::read.fs.morph(rh_curvfile);
         if(cortex_only) {
             rh_morph_data = apply.label.to.morphdata(rh_morph_data, subjects_dir, template_subject, "rh", 'cortex');
@@ -297,7 +297,7 @@ subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm
         return(merged_morph_data);
 
     } else {
-        curvfile = subject.filepath.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm, error_if_nonexistent=TRUE);
+        curvfile = subject.filepath.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm, template_subject = template_subject, error_if_nonexistent=TRUE);
         morph_data = freesurferformats::read.fs.morph(curvfile);
         if(cortex_only) {
             morph_data = apply.label.to.morphdata(morph_data, subjects_dir, template_subject, hemi, 'cortex');
@@ -342,18 +342,23 @@ subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm
 #'     "thickness", "lh", fwhm="25");
 #'
 #' @export
-subject.filepath.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm='10', template_subject='fsaverage', format='mgh', warn_if_nonexistent=FALSE, error_if_nonexistent=FALSE) {
+subject.filepath.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm='10', template_subject='fsaverage', format='auto', warn_if_nonexistent=FALSE, error_if_nonexistent=FALSE) {
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
 
-    if(nchar(fwhm) > 0) {
+    if(! is.null(fwhm)) {
         fwhm_tag = sprintf(".fwhm%s", fwhm)
     } else {
         fwhm_tag = "" # Support opening files without any FWHM part
     }
 
-    curvfile = file.path(subjects_dir, subject_id, "surf", sprintf("%s.%s%s.%s%s", hemi, measure, fwhm_tag, template_subject, freesurferformats::fs.get.morph.file.ext.for.format(format)));
+    if(tolower(format) == 'auto') {
+        curvfile_base = file.path(subjects_dir, subject_id, "surf", sprintf("%s.%s%s.%s", hemi, measure, fwhm_tag, template_subject));
+        curvfile = readable.files(curvfile_base, precedence=c('.mgh', '.mgz', ''));
+    } else {
+        curvfile = file.path(subjects_dir, subject_id, "surf", sprintf("%s.%s%s.%s%s", hemi, measure, fwhm_tag, template_subject, freesurferformats::fs.get.morph.file.ext.for.format(format)));
+    }
 
     if(!file.exists(curvfile)) {
         msg = sprintf("Standard space morphometry file '%s' for subject '%s' measure '%s' hemi '%s' fwhm '%s' cannot be accessed.\n", curvfile, subject_id, measure, hemi, fwhm);
