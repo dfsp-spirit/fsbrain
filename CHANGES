@@ -1,6 +1,11 @@
 fsbrain Changes
 ===============
 
+Version 0.3.0
+-------------
+- Fix reading standard space data from template subjects other than fsaverage
+
+
 Version 0.2.1
 -------------
 - Fix a bug in colorbar drawing that lead to wrong colors (see #6)
