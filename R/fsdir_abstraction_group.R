@@ -37,6 +37,8 @@ group.morph.native <- function(subjects_dir, subjects_list, measure, hemi, forma
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
     }
 
+    check.subjectslist(subjects_list);
+
     data_all_subjects = list();
     for(subject_id in subjects_list) {
         data_all_subjects[[subject_id]] = subject.morph.native(subjects_dir, subject_id, measure, hemi, format=format, cortex_only=cortex_only);
@@ -66,6 +68,8 @@ group.morph.native <- function(subjects_dir, subjects_list, measure, hemi, forma
 #'
 #' @param cortex_only logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the template subject. Defaults to FALSE.
 #'
+#' @param df logical, whether to return a dataframe instead of the named list. The dataframe will have one subject per row, and n columns, where n is the number of vertices of the template subject surface.
+#'
 #' @return named list with standard space morph data, the names are the subject identifiers from the subjects_list, and the values are morphometry data vectors (all with identical length, the data is mapped to a template subject).
 #'
 #' @family morphometry data functions
@@ -84,11 +88,13 @@ group.morph.native <- function(subjects_dir, subjects_list, measure, hemi, forma
 #' }
 #'
 #' @export
-group.morph.standard <- function(subjects_dir, subjects_list, measure, hemi, fwhm='10', template_subject='fsaverage', format='mgh', cortex_only=FALSE) {
+group.morph.standard <- function(subjects_dir, subjects_list, measure, hemi='both', fwhm='10', template_subject='fsaverage', format='mgh', cortex_only=FALSE, df=FALSE) {
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
     }
+
+    check.subjectslist(subjects_list, subjects_dir=subjects_dir);
 
     data_all_subjects = list();
     for(subject_id in subjects_list) {
@@ -96,6 +102,45 @@ group.morph.standard <- function(subjects_dir, subjects_list, measure, hemi, fwh
     }
 
     return(data_all_subjects);
+}
+
+
+#' @title Check whether the subjects_list looks good, warn if not.
+#'
+#' @param subjects_list vector of character strings, the subject IDs.
+#'
+#' @param subjects_dir optional, character string. The full path to the subjects directory containing all subjects. If given, extra checks will be performed, e.g., whether the subjects exist in this directory.
+#'
+#' @param report_name character string, the variable name that should be used for the list in the messages.
+#'
+#' @keywords internal
+check.subjectslist <- function(subjects_list, subjects_dir=NULL, report_name='subjects_list') {
+    if(is.null(subjects_list)) {
+        warning(sprintf("The '%s' must not be NULL.\n", report_name));
+    } else {
+        if(length(subjects_list) < 1L) {
+            warning(sprintf("The '%s' is empty.\n", report_name));
+        }
+        if(length(subjects_list) != length(unique(subjects_list))) {
+            warning(sprintf("The '%s' contains %d duplicate entries.\n", report_name, (length(subjects_list) - length(unique(subjects_list)))));
+        }
+        if(! is.null(subjects_dir)) {
+            if(! dir.exists(subjects_dir)) {
+                stop(sprintf("The subjects_dir at '%s' does not exist.\n", subjects_dir));
+            } else {
+                subjects_missing_dir = c();
+                for(subject in subjects_list) {
+                    sjd = file.path(subjects_dir, subject);
+                    if(! dir.exists(sjd)) {
+                        subjects_missing_dir = c(subjects_missing_dir, subject);
+                    }
+                }
+                if(length(subjects_missing_dir) > 0L) {
+                    stop(sprintf("Directories for the following %d subjects missing in subjects directory '%s': %s\n", length(subjects_missing_dir), subjects_dir, paste(subjects_missing_dir, collapse=', ')));
+                }
+            }
+        }
+    }
 }
 
 
@@ -131,6 +176,8 @@ group.label <- function(subjects_dir, subjects_list, label, hemi, return_one_bas
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
+
+    check.subjectslist(subjects_list);
 
     all_labels = list();
     for(subject_id in subjects_list) {
@@ -172,6 +219,8 @@ group.annot <- function(subjects_dir, subjects_list, hemi, atlas) {
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
     }
+
+    check.subjectslist(subjects_list);
 
     all_annots = list();
     for(subject_id in subjects_list) {
