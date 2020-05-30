@@ -88,6 +88,7 @@ group.morph.agg.native <- function(subjects_dir, subjects_list, measure, hemi, a
 #' @family global aggregation functions
 #'
 #' @export
+#' @importFrom utils modifyList
 group.morph.agg.standard <- function(subjects_dir, subjects_list, measure, hemi, fwhm, agg_fun = mean, template_subject='fsaverage', format='mgh', cast=TRUE, cortex_only=FALSE, agg_fun_extra_params=NULL) {
   if(!(hemi %in% c("lh", "rh", "both"))) {
     stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
@@ -129,6 +130,52 @@ group.morph.agg.standard <- function(subjects_dir, subjects_list, measure, hemi,
   }
 
   return(agg_all_subjects);
+}
+
+
+
+
+#' @title Aggregate standard space morphometry data over subjects.
+#'
+#' @description Aggregate vertex-wise values over subjects, leading to one aggregated measure per vertex.
+#'
+#' @inheritParams group.morph.agg.standard
+#'
+#' @param split_by_hemi logical, whether to return a hemilist
+#'
+#' @family aggregation functions
+#'
+#' @importFrom utils modifyList
+#' @export
+group.morph.agg.standard.vertex <- function(subjects_dir, subjects_list, measure, hemi, fwhm, agg_fun = mean, template_subject='fsaverage', format='mgh', cortex_only=FALSE, agg_fun_extra_params=NULL, split_by_hemi=FALSE) {
+
+    if(!(hemi %in% c("lh", "rh", "both"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
+    }
+
+    if(split_by_hemi) {
+        ret_list = list();
+        if(hemi %in% c("lh", "both")) {
+            ret_list$lh = group.morph.agg.standard.vertex(subjects_dir, subjects_list, measure, 'lh', fwhm, agg_fun=agg_fun, template_subject=template_subject, format=format, cortex_only=cortex_only, agg_fun_extra_params=agg_fun_extra_params);
+        }
+        if(hemi %in% c("rh", "both")) {
+            ret_list$rh = group.morph.agg.standard.vertex(subjects_dir, subjects_list, measure, 'rh', fwhm, agg_fun=agg_fun, template_subject=template_subject, format=format, cortex_only=cortex_only, agg_fun_extra_params=agg_fun_extra_params);
+        }
+        return(ret_list);
+    }
+
+    df = group.morph.standard(subjects_dir, subjects_list, measure, hemi=hemi, fwhm=fwhm, template_subject=template_subject, format=format, cortex_only=cortex_only, df=TRUE);
+
+    df_axis = 1;
+    agg_fun_default_params = list(df, df_axis, agg_fun);
+    if( ! is.null(agg_fun_extra_params)) {
+        agg_fun_params = modifyList(agg_fun_default_params, agg_fun_extra_params);
+    } else {
+        agg_fun_params = agg_fun_default_params;
+    }
+    vert_agg = do.call(apply, agg_fun_params);
+    names(vert_agg) = NULL;
+    return(vert_agg);
 }
 
 

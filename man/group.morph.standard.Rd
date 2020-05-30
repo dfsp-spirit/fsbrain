@@ -8,11 +8,12 @@ group.morph.standard(
   subjects_dir,
   subjects_list,
   measure,
-  hemi,
+  hemi = "both",
   fwhm = "10",
   template_subject = "fsaverage",
   format = "mgh",
-  cortex_only = FALSE
+  cortex_only = FALSE,
+  df = FALSE
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ group.morph.standard(
 \item{format, }{string. One of 'mgh', 'mgz', 'curv'. Defaults to 'mgh'.}
 
 \item{cortex_only}{logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the template subject. Defaults to FALSE.}
+
+\item{df}{logical, whether to return a dataframe instead of the named list. The dataframe will have one subject per column, and *n* rows, where *n* is the number of vertices of the template subject surface.}
 }
 \value{
 named list with standard space morph data, the names are the subject identifiers from the subjects_list, and the values are morphometry data vectors (all with identical length, the data is mapped to a template subject).

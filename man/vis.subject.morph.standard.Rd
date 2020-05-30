@@ -2,7 +2,7 @@
 % Please edit documentation in R/vis.R
 \name{vis.subject.morph.standard}
 \alias{vis.subject.morph.standard}
-\title{Visualize native space morphometry data for a subject.}
+\title{Visualize native space morphometry data for a subject or a group.}
 \usage{
 vis.subject.morph.standard(
   subjects_dir,
@@ -26,13 +26,13 @@ vis.subject.morph.standard(
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
 
-\item{subject_id}{string. The subject identifier.}
+\item{subject_id}{character string or vector of character strings, the subject or subjects. For a single subjects, its data will be plotted. If a group of subjects is given instead, at each vertex the mean value over all the subjects will be plotted.}
 
 \item{measure}{string. The morphometry data to use. E.g., 'area' or 'thickness'. Pass NULL to render just the surface in white, without any data.}
 
 \item{hemi}{string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the label data files to be loaded.}
 
-\item{fwhm}{string, smoothing setting. The smoothing part of the filename, typically something like '0', '5', '10', ...,  or '25'.}
+\item{fwhm}{string, smoothing setting (full width at half maximum of the kernel). The smoothing part of the filename, typically something like '0', '5', '10', ...,  or '25'.}
 
 \item{surface}{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 
@@ -60,7 +60,7 @@ vis.subject.morph.standard(
 list of coloredmeshes. The coloredmeshes used for the visualization.
 }
 \description{
-Creates a surface mesh, applies a colormap transform the morphometry data values into colors, and renders the resulting colored mesh in an interactive window. If hemi is 'both', the data is rendered for the whole brain.
+Renders standard space morphometry data for a single subject, or the group mean for a group of subjects. The default template subject is fsaverage.
 }
 \examples{
 \donttest{

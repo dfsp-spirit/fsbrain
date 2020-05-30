@@ -80,13 +80,15 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi="bo
 
 
 
-#' @title Visualize native space morphometry data for a subject.
+#' @title Visualize native space morphometry data for a subject or a group.
 #'
-#' @description Creates a surface mesh, applies a colormap transform the morphometry data values into colors, and renders the resulting colored mesh in an interactive window. If hemi is 'both', the data is rendered for the whole brain.
+#' @description Renders standard space morphometry data for a single subject, or the group mean for a group of subjects. The default template subject is fsaverage.
 #'
 #' @inheritParams vis.subject.morph.native
 #'
-#' @param fwhm string, smoothing setting. The smoothing part of the filename, typically something like '0', '5', '10', ...,  or '25'.
+#' @param subject_id character string or vector of character strings, the subject or subjects. For a single subjects, its data will be plotted. If a group of subjects is given instead, at each vertex the mean value over all the subjects will be plotted.
+#'
+#' @param fwhm string, smoothing setting (full width at half maximum of the kernel). The smoothing part of the filename, typically something like '0', '5', '10', ...,  or '25'.
 #'
 #' @param template_subject The template subject used. This will be used as part of the filename, and its surfaces are loaded for data visualization. Defaults to 'fsaverage'.
 #'
@@ -119,6 +121,8 @@ vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi="
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
     }
 
+    check.subjectslist(subject_id, subjects_dir=subjects_dir);
+
     makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
 
     if(is.null(template_subjects_dir)) {
@@ -129,7 +133,12 @@ vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi="
         measure_data = measure;
         hemi = hemilist.derive.hemi(measure_data);  # need to rewrite the hemi, depending on the passed data
     } else {
-        measure_data = subject.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm=fwhm, template_subject=template_subject, cortex_only=cortex_only, split_by_hemi=TRUE);
+        if(length(subject_id) > 1L) {
+            subjects_list = subject_id;
+            measure_data = group.morph.agg.standard.vertex(subjects_dir, subjects_list, measure, hemi, fwhm=fwhm, template_subject=template_subject, cortex_only=cortex_only, split_by_hemi=TRUE)
+        } else {
+            measure_data = subject.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm=fwhm, template_subject=template_subject, cortex_only=cortex_only, split_by_hemi=TRUE);
+        }
     }
 
     measure_data = rglactions.transform(measure_data, rglactions);

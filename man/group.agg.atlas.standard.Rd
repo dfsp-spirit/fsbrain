@@ -58,6 +58,7 @@ Aggregate standard space morphometry data over brain atlas regions, e.g., comput
 \seealso{
 Other aggregation functions: 
 \code{\link{group.agg.atlas.native}()},
+\code{\link{group.morph.agg.standard.vertex}()},
 \code{\link{subject.atlas.agg}()}
 
 Other atlas functions: 

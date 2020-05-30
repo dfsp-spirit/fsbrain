@@ -39,7 +39,8 @@ Aggregate morphometry data over brain atlas regions, e.g., compute the mean thic
 \seealso{
 Other aggregation functions: 
 \code{\link{group.agg.atlas.native}()},
-\code{\link{group.agg.atlas.standard}()}
+\code{\link{group.agg.atlas.standard}()},
+\code{\link{group.morph.agg.standard.vertex}()}
 
 Other atlas functions: 
 \code{\link{get.atlas.region.names}()},

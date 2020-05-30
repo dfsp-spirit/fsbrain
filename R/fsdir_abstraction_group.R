@@ -37,7 +37,7 @@ group.morph.native <- function(subjects_dir, subjects_list, measure, hemi, forma
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
     }
 
-    check.subjectslist(subjects_list);
+    check.subjectslist(subjects_list, subjects_dir=subjects_dir);
 
     data_all_subjects = list();
     for(subject_id in subjects_list) {
@@ -68,7 +68,7 @@ group.morph.native <- function(subjects_dir, subjects_list, measure, hemi, forma
 #'
 #' @param cortex_only logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the template subject. Defaults to FALSE.
 #'
-#' @param df logical, whether to return a dataframe instead of the named list. The dataframe will have one subject per row, and n columns, where n is the number of vertices of the template subject surface.
+#' @param df logical, whether to return a dataframe instead of the named list. The dataframe will have one subject per column, and *n* rows, where *n* is the number of vertices of the template subject surface.
 #'
 #' @return named list with standard space morph data, the names are the subject identifiers from the subjects_list, and the values are morphometry data vectors (all with identical length, the data is mapped to a template subject).
 #'
@@ -101,6 +101,9 @@ group.morph.standard <- function(subjects_dir, subjects_list, measure, hemi='bot
         data_all_subjects[[subject_id]] = subject.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm=fwhm, template_subject=template_subject, format=format, cortex_only=cortex_only);
     }
 
+    if(df) {
+        return(as.data.frame(data_all_subjects));
+    }
     return(data_all_subjects);
 }
 
@@ -177,7 +180,7 @@ group.label <- function(subjects_dir, subjects_list, label, hemi, return_one_bas
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
 
-    check.subjectslist(subjects_list);
+    check.subjectslist(subjects_list, subjects_dir=subjects_dir);
 
     all_labels = list();
     for(subject_id in subjects_list) {
@@ -220,7 +223,7 @@ group.annot <- function(subjects_dir, subjects_list, hemi, atlas) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
     }
 
-    check.subjectslist(subjects_list);
+    check.subjectslist(subjects_list, subjects_dir=subjects_dir);
 
     all_annots = list();
     for(subject_id in subjects_list) {
