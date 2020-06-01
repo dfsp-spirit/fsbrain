@@ -4,15 +4,17 @@
 \alias{getIn}
 \title{Retrieve values from nested named lists}
 \usage{
-getIn(named_list, listkeys)
+getIn(named_list, listkeys, default = NULL)
 }
 \arguments{
 \item{named_list}{a named list}
 
 \item{listkeys}{vector of character strings, the nested names of the lists}
+
+\item{default}{the default value to return in case the requested value is `NULL`.}
 }
 \value{
-the value at the path through the lists, or NULL if no such path exists
+the value at the path through the lists, or `NULL` (or the 'default') if no such path exists.
 }
 \description{
 Retrieve values from nested named lists
@@ -22,5 +24,6 @@ Retrieve values from nested named lists
    getIn(data, c("regions", "frontal", "thickness"));       # 2.3
    getIn(data, c("regions", "frontal", "nosuchentry"));     # NULL
    getIn(data, c("regions", "nosuchregion", "thickness"));  # NULL
+   getIn(data, c("regions", "nosuchregion", "thickness"), default=14);  # 14
 
 }

@@ -7,12 +7,12 @@
 qc.from.regionwise.df(
   rdf,
   z_threshold = 2.8,
-  verbosity = 1L,
+  verbosity = 0L,
   num_bad_regions_allowed = 1L
 )
 }
 \arguments{
-\item{rdf}{data.frame, the region data. The first column must contain the subject identifier, all other columns should contain numerical data for a single region. (Each row represents a subject.)}
+\item{rdf}{data.frame, the region data. The first column must contain the subject identifier, all other columns should contain numerical data for a single region. (Each row represents a subject.) This can be produced by calling \code{\link[fsbrain]{group.agg.atlas.native}}.}
 
 \item{z_threshold}{numerical, the cutoff value for considering a subject an outlier (in standard deviations).}
 
@@ -21,7 +21,7 @@ qc.from.regionwise.df(
 \item{num_bad_regions_allowed}{integer, the number of regions in which subjects are allowed to be outliers without being reported as potentially failed segmentation}
 }
 \value{
-vector of character strings, the subject identifiers which potentially failed segmentation
+named list with entries: 'failed_subjects': vector of character strings, the subject identifiers which potentially failed segmentation
 }
 \description{
 Determine subjects that potentially failed segmentation, based on region-wise data. The data can be anything, but there must be one numerical value per subject per region.

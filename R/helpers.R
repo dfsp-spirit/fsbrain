@@ -551,16 +551,19 @@ makecmakeopts.merge <- function(makecmap_options, colormap, default_colormap=squ
 #'
 #' @param listkeys vector of character strings, the nested names of the lists
 #'
-#' @return the value at the path through the lists, or NULL if no such path exists
+#' @param default the default value to return in case the requested value is `NULL`.
+#'
+#' @return the value at the path through the lists, or `NULL` (or the 'default') if no such path exists.
 #'
 #' @examples
 #'    data = list("regions"=list("frontal"=list("thickness"=2.3, "area"=2345)));
 #'    getIn(data, c("regions", "frontal", "thickness"));       # 2.3
 #'    getIn(data, c("regions", "frontal", "nosuchentry"));     # NULL
 #'    getIn(data, c("regions", "nosuchregion", "thickness"));  # NULL
+#'    getIn(data, c("regions", "nosuchregion", "thickness"), default=14);  # 14
 #'
 #' @export
-getIn <- function(named_list, listkeys) {
+getIn <- function(named_list, listkeys, default=NULL) {
   num_keys = length(listkeys);
   if(length(named_list) < 1L | num_keys  < 1L) {
     return(NULL);
@@ -587,6 +590,7 @@ getIn <- function(named_list, listkeys) {
     }
   }
 }
+
 
 #' @title Check for values in nested named lists
 #'
@@ -661,6 +665,30 @@ find.subjectsdir.of <- function(subject_id='fsaverage', mustWork=FALSE) {
   }
 
   return(ret);
+}
+
+
+#' @title Return path to fsaverage dir.
+#'
+#' @return the path to the fsaverage directory (NOT including the 'fsaverage' dir itself).
+#'
+#' @note This function will stop (i.e., raise an error) if the directory cannot be found.
+#'
+#' @export
+fsaverage.path <- function() {
+    return(find.subjectsdir.of(subject_id='fsaverage', mustWork=TRUE)$found_at);
+}
+
+
+#' @title Return FreeSurfer path.
+#'
+#' @return the FreeSurfer path, typically what the environment variable `FREESURFER_HOME` points to.
+#'
+#' @note This function will stop (i.e., raise an error) if the directory cannot be found.
+#'
+#' @export
+fs.home <- function() {
+    return(find.freesurferhome(mustWork=TRUE)$found_at);
 }
 
 

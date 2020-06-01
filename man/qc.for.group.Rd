@@ -20,7 +20,7 @@ qc.for.group(subjects_dir, subjects_list, measure, hemi, atlas, ...)
 \item{...}{parameters passed to \code{\link[fsbrain]{qc.from.regionwise.df}}.}
 }
 \value{
-see \code{\link[fsbrain]{qc.from.regionwise.df}}
+qc result as a hemilist, each entry contains a named list as returned by \code{\link[fsbrain]{qc.from.regionwise.df}}.
 }
 \description{
 Determine subjects that potentially failed segmentation, based on region-wise morphometry data. The stats can be computed from any kind of data, but something like area or volume most likely works best. The stats are based on the mean of the region values, so the measure should at least roughly follow a normal distribution.

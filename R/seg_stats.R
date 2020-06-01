@@ -1,10 +1,13 @@
-
+# Functions for quality checking datasets.
+# These functions work on group data pre-processed with recon-all. They allow one to assess the relative quality of the
+# subjects/scans, and also give an overview on regions which often show problems. This is based on outliers, which are
+# identified based on segmentation statistics (like surface area in a certain brain atlas region).
 
 #' @title Perform data quality check based on a dataframe containing aggregated region-wise data.
 #'
 #' @description Determine subjects that potentially failed segmentation, based on region-wise data. The data can be anything, but there must be one numerical value per subject per region.
 #'
-#' @param rdf data.frame, the region data. The first column must contain the subject identifier, all other columns should contain numerical data for a single region. (Each row represents a subject.)
+#' @param rdf data.frame, the region data. The first column must contain the subject identifier, all other columns should contain numerical data for a single region. (Each row represents a subject.) This can be produced by calling \code{\link[fsbrain]{group.agg.atlas.native}}.
 #'
 #' @param z_threshold numerical, the cutoff value for considering a subject an outlier (in standard deviations).
 #'
@@ -23,6 +26,16 @@ qc.from.regionwise.df <- function(rdf, z_threshold=2.8, verbosity=0L, num_bad_re
     # the column name of the subjects column contains a short table type
     # description, something like 'lh.aparc.area'.
     table_type = colnames(dt)[1];
+    table_type_parts = strsplit(table_type, ".", fixed=T)[[1]];
+    if(length(table_type_parts) == 3L) {
+        hemi = table_type_parts[1];
+        atlas = table_type_parts[2];
+        measure = table_type_parts[3];
+    } else {
+        # no usable metadata in subjects column name.
+        hemi = atlas = measure = NULL;
+    }
+    metadata = list('hemi'=hemi, 'atlas'=atlas, 'measure'=measure);
 
     # Separate subjects column so we have an all-numerical data.frame
     subjects = dt[[table_type]];
@@ -78,7 +91,7 @@ qc.from.regionwise.df <- function(rdf, z_threshold=2.8, verbosity=0L, num_bad_re
             }
         }
     }
-    return(list("failed_subjects"=potentially_failed_subjects, "mean_dists_z"=mean_dists_z, "num_outlier_subjects_per_region"=num_outlier_subjects_per_region));
+    return(list("failed_subjects"=potentially_failed_subjects, "mean_dists_z"=mean_dists_z, "num_outlier_subjects_per_region"=num_outlier_subjects_per_region, "metadata"=metadata));
 }
 
 
@@ -109,7 +122,7 @@ qc.from.segstats.table <- function(filepath, ...) {
 #'
 #' @param filepath_rh path to equivalent right hemisphere input file.
 #'
-#' @return a hemilist, each entry contains a named list as returned by \code{\link[fsbrain]{qc.from.regionwise.df}}.
+#' @return qc result as a hemilist, each entry contains a named list as returned by \code{\link[fsbrain]{qc.from.regionwise.df}}.
 #'
 #' @export
 qc.from.segstats.tables <- function(filepath_lh, filepath_rh, ...) {
@@ -132,7 +145,7 @@ qc.from.segstats.tables <- function(filepath_lh, filepath_rh, ...) {
 #'
 #' @param ... parameters passed to \code{\link[fsbrain]{qc.from.regionwise.df}}.
 #'
-#' @return a hemilist, each entry contains a named list as returned by \code{\link[fsbrain]{qc.from.regionwise.df}}.
+#' @return qc result as a hemilist, each entry contains a named list as returned by \code{\link[fsbrain]{qc.from.regionwise.df}}.
 #'
 #' @family quality check functions
 #'
@@ -152,5 +165,25 @@ qc.for.group <- function(subjects_dir, subjects_list, measure, hemi, atlas,  ...
         res_hl$rh = qc.from.regionwise.df(rdf, ...);
     }
     return(res_hl);
+}
+
+
+#' @title Visualize the number of outlier subjects per region in your dataset.
+#'
+#' @description The function helps you to see which regions are affected the most by QC issues: for each region, it plots the number of subjects which are outliers in the region.
+#'
+#' @param qc_res as returned by QC functions like \code{\link[fsbrain]{qc.for.group}}.
+#'
+#' @inheritParams vis.region.values.on.subject
+#'
+#' @param ... extra parameters passed to \code{\link[fsbrain]{vis.region.values.on.subject}}.
+#'
+#' @note You can visualize this on any subject you like, 'fsaverage' is a typical choice. The atlas must be the one used during the QC step.
+#'
+#' @export
+qc.vis.failcount.by.region <- function(qc_res, atlas, subjects_dir=fsaverage.path(), subject_id='fsaverage', ...) {
+    lh_data = getIn(qc_res, c('lh' , 'num_outlier_subjects_per_region'));
+    rh_data = getIn(qc_res, c('rh' , 'num_outlier_subjects_per_region'));
+    return(invisible(vis.region.values.on.subject(subjects_dir, subject_id, atlas, lh_region_value_list=lh_data, rh_region_value_list=rh_data , ...)));
 }
 

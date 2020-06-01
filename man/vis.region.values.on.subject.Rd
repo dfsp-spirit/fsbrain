@@ -17,7 +17,7 @@ vis.region.values.on.subject(
   rglactions = list(),
   value_for_unlisted_regions = NA,
   draw_colorbar = FALSE,
-  makecmap_options = list(colFn = grDevices::heat.colors),
+  makecmap_options = mkco.heat(),
   bg = NULL
 )
 }
