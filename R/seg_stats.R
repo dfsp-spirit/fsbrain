@@ -126,6 +126,9 @@ qc.from.segstats.table <- function(filepath, ...) {
 #'
 #' @export
 qc.from.segstats.tables <- function(filepath_lh, filepath_rh, ...) {
+    if(is.null(filepath_lh) & is.null(filepath_lh)) {
+        stop("No more than one of 'filepath_lh' and 'filepath_rh' can be NULL.");
+    }
     res_hl = list();
     if(! is.null(filepath_lh)) {
         res_hl$lh = qc.from.segstats.table(filepath_lh, ...);
@@ -150,7 +153,10 @@ qc.from.segstats.tables <- function(filepath_lh, filepath_rh, ...) {
 #' @family quality check functions
 #'
 #' @export
-qc.for.group <- function(subjects_dir, subjects_list, measure, hemi, atlas,  ...) {
+qc.for.group <- function(subjects_dir, subjects_list, measure, atlas, hemi='both', ...) {
+    if( ! hemi %in% c('lh', 'rh', 'both')) {
+        stop("Parameter 'hemi' must be one of 'lh', 'rh', or 'both'.");
+    }
     res_hl = list();
     if(hemi %in% c('lh', 'both')) {
         rdf = group.agg.atlas.native(subjects_dir, subjects_list, measure, 'lh', atlas);
@@ -172,11 +178,11 @@ qc.for.group <- function(subjects_dir, subjects_list, measure, hemi, atlas,  ...
 #'
 #' @description The function helps you to see which regions are affected the most by QC issues: for each region, it plots the number of subjects which are outliers in the region.
 #'
-#' @param qc_res as returned by QC functions like \code{\link[fsbrain]{qc.for.group}}.
+#' @param qc_res hemilist of QC results, as returned by functions like \code{\link[fsbrain]{qc.for.group}} or \code{\link[fsbrain]{qc.from.segstats.tables}}.
 #'
 #' @inheritParams vis.region.values.on.subject
 #'
-#' @param ... extra parameters passed to \code{\link[fsbrain]{vis.region.values.on.subject}}.
+#' @param ... extra parameters passed to \code{\link[fsbrain]{vis.region.values.on.subject}}. E.g., to change to interactive view, get a colorbar and better resolution, try: \code{draw_colorbar=T, rgloptions = rglot(), views='si'}.
 #'
 #' @note You can visualize this on any subject you like, 'fsaverage' is a typical choice. The atlas must be the one used during the QC step.
 #'
@@ -184,6 +190,9 @@ qc.for.group <- function(subjects_dir, subjects_list, measure, hemi, atlas,  ...
 qc.vis.failcount.by.region <- function(qc_res, atlas, subjects_dir=fsaverage.path(), subject_id='fsaverage', ...) {
     lh_data = getIn(qc_res, c('lh' , 'num_outlier_subjects_per_region'));
     rh_data = getIn(qc_res, c('rh' , 'num_outlier_subjects_per_region'));
-    return(invisible(vis.region.values.on.subject(subjects_dir, subject_id, atlas, lh_region_value_list=lh_data, rh_region_value_list=rh_data , ...)));
+    num_colors_needed = max(as.integer(lh_data), as.integer(rh_data));
+    makecmap_options = mkco.heat();
+    makecmap_options$n = num_colors_needed;
+    return(invisible(vis.region.values.on.subject(subjects_dir, subject_id, atlas, lh_region_value_list=lh_data, rh_region_value_list=rh_data, makecmap_options=makecmap_options, ...)));
 }
 

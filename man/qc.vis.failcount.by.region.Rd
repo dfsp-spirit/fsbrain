@@ -13,7 +13,7 @@ qc.vis.failcount.by.region(
 )
 }
 \arguments{
-\item{qc_res}{as returned by QC functions like \code{\link[fsbrain]{qc.for.group}}.}
+\item{qc_res}{hemilist of QC results, as returned by functions like \code{\link[fsbrain]{qc.for.group}} or \code{\link[fsbrain]{qc.from.segstats.tables}}.}
 
 \item{atlas}{string. The brain atlas to use. E.g., 'aparc' or 'aparc.a2009s'.}
 
@@ -21,7 +21,7 @@ qc.vis.failcount.by.region(
 
 \item{subject_id}{string. The subject identifier.}
 
-\item{...}{extra parameters passed to \code{\link[fsbrain]{vis.region.values.on.subject}}.}
+\item{...}{extra parameters passed to \code{\link[fsbrain]{vis.region.values.on.subject}}. E.g., to change to interactive view, get a colorbar and better resolution, try: \code{draw_colorbar=T, rgloptions = rglot(), views='si'}.}
 }
 \description{
 The function helps you to see which regions are affected the most by QC issues: for each region, it plots the number of subjects which are outliers in the region.

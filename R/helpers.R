@@ -676,7 +676,7 @@ find.subjectsdir.of <- function(subject_id='fsaverage', mustWork=FALSE) {
 #'
 #' @export
 fsaverage.path <- function() {
-    return(find.subjectsdir.of(subject_id='fsaverage', mustWork=TRUE)$found_at);
+    return(find.subjectsdir.of(subject_id='fsaverage', mustWork=TRUE));
 }
 
 
@@ -688,7 +688,7 @@ fsaverage.path <- function() {
 #'
 #' @export
 fs.home <- function() {
-    return(find.freesurferhome(mustWork=TRUE)$found_at);
+    return(find.freesurferhome(mustWork=TRUE));
 }
 
 
