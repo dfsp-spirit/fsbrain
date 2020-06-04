@@ -96,7 +96,9 @@ The *fsbrain* package is [free software](https://en.wikipedia.org/wiki/Free_soft
 Note: The file LICENSE in this repository is a CRAN license template only (as required by CRAN) and does not contain the full MIT  license text. See the file [LICENSE_FULL](./LICENSE_FULL) for the full license text.
 
 
-## Citation
+## Citation and Publications
+
+A paper is in the making. For now, cite the R package.
 
 You can generate the citation for the version you use by typing the following command in R:
 
@@ -126,11 +128,9 @@ A BibTeX entry for LaTeX users is
   }
 ```
 
-The Digital Object Identifier (DOI) for fsbrain is: [10.5281/zenodo.3559816](https://dx.doi.org/10.5281/zenodo.3559816)
+The Digital Object Identifier (DOI) for fsbrain is: [10.5281/zenodo.3559816](https://dx.doi.org/10.5281/zenodo.3559816). Note that this DOI always points to the latest version, so be sure to still include the package version in the citation.
 
-Note that this DOI always points to the latest version, so be sure to still include the package version in the citation.
-
-
+A poster of *fsbrain* has been presented at INSAR 2020 Annual Meeting: [Abstract](https://insar.confex.com/insar/2020/meetingapp.cgi/Paper/33181), [ePoster](https://insar.confex.com/insar/2020/techdemo/eposter.cgi?eposterid=227)
 
 ## Visualization examples
 
