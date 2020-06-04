@@ -98,9 +98,7 @@ Note: The file LICENSE in this repository is a CRAN license template only (as re
 
 ## Citation and Publications
 
-A paper is in the making. For now, cite the R package.
-
-You can generate the citation for the version you use by typing the following command in R:
+A paper is in the making. For now, cite the R package. You can generate the citation for the version you use by typing the following command in R:
 
 ```
 citation("fsbrain")
