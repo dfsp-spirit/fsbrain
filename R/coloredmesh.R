@@ -452,7 +452,7 @@ is.fs.coloredmesh <- function(x) inherits(x, "fs.coloredmesh")
 #'
 #' @param mesh a `mesh3d` instance as returned by \code{\link[rgl]{tmesh3d}} or an `fs.surface` brain surface mesh as returned by functions like \code{\link[fsbrain]{subject.surface}}.
 #'
-#' @param col vector of vertex colors for the mesh, one color per vertex
+#' @param col vector of vertex colors for the mesh, one color per vertex. Expanded if exactly one color.
 #'
 #' @param hemi character string, one of 'lh' or 'rh'
 #'
@@ -473,7 +473,11 @@ fs.coloredmesh <- function(mesh, col, hemi, render=TRUE, metadata=NULL) {
         stop("Parameter 'mesh' must be a mesh3d or fs.surface instance.");
     }
     if(ncol(mesh$vb) != length(col)) {
-        warning(sprintf("The mesh3d instance from parameter 'mesh' has %d vertices, but %d colors passed in parameter 'col'.\n", ncol(mesh$vb), length(col)));
+        if(length(col) == 1L) {
+            col = rep(col, ncol(mesh$vb));
+        } else {
+            warning(sprintf("The mesh3d instance from parameter 'mesh' has %d vertices, but %d colors passed in parameter 'col'.\n", ncol(mesh$vb), length(col)));
+        }
     }
     if(!is.null(hemi)) {
         if(!(hemi %in% c("lh", "rh"))) {
@@ -499,5 +503,4 @@ fs.coloredmesh <- function(mesh, col, hemi, render=TRUE, metadata=NULL) {
     class(cm) = c("fs.coloredmesh", class(cm));
     return(cm);
 }
-
 

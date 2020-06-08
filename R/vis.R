@@ -673,3 +673,4 @@ vis.region.values.on.subject <- function(subjects_dir, subject_id, atlas, lh_reg
     return(invisible(vis.data.on.subject(subjects_dir, subject_id, morph_like_data$lh, morph_like_data$rh, surface=surface, views=views, rgloptions=rgloptions, rglactions=rglactions, draw_colorbar = draw_colorbar, makecmap_options=makecmap_options, bg=bg)));
 }
 
+
