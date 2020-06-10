@@ -275,6 +275,48 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
 }
 
 
+#' @title Generate coloredmesh from loaded data.
+#'
+#' @param fs_surface an fs.surface instance
+#'
+#' @param morph_data numerical vector, per-vertex data (typically morphometry) for the mesh. If given, takes precedence over 'col' parameter.
+#'
+#' @param col vector of colors, typically hex color strings like '#FF00FF'. The per-vertex-colors for the mesh. Alternative to morph_data.
+#'
+#' @param hemi character string, one of 'lh' or 'rh'. Metadata, the hemisphere. May be used by visualization functions to decide whether to draw the mesh in certain views.
+#'
+#' @inheritParams coloredmesh.from.morphdata
+#'
+#' @return as fs.coloredmesh instance
+#'
+#' @export
+coloredmesh.from.preloaded.data <- function(fs_surface, morph_data=NULL, col=NULL, hemi='lh', makecmap_options=mkco.seq()) {
+    if( ! freesurferformats::is.fs.surface(fs_surface)) {
+        stop("Parameter 'fs_surface' must be an fs.surface instance");
+    }
+    mesh = rgl::tmesh3d(c(t(fs_surface$vertices)), c(t(fs_surface$faces)), homogeneous=FALSE);
+    if(! is.null(morph_data)) {
+        if(! hasIn(makecmap_options, c('colFn'))) {
+            makecmap_options$colFn = mkco.seq()$colFn;
+        }
+        data_range = range(morph_data, finite=TRUE);
+        map = do.call(squash::makecmap, utils::modifyList(list(morph_data), makecmap_options));
+        col = squash::cmap(morph_data, map = map);
+    } else {
+        map = NULL;
+        data_range = NULL;
+        if(is.null(col)) {
+            col = rep("#FFFFFF", nrow(fs_surface$vertices));
+        }
+        if(length(col) == 1L) {
+            col = rep(col, nrow(fs_surface$vertices));
+        }
+    }
+
+    return(fs.coloredmesh(mesh, col, hemi, metadata=list("src_data"=morph_data, "fs_mesh"=fs_surface, "map"=map, "data_range"=data_range, "cmap_fun"=makecmap_options$colFn)));
+}
+
+
 
 #' @title Create a coloredmesh from an annotation of an atlas.
 #'
@@ -454,24 +496,30 @@ is.fs.coloredmesh <- function(x) inherits(x, "fs.coloredmesh")
 #'
 #' @param col vector of vertex colors for the mesh, one color per vertex
 #'
-#' @param hemi character string, one of 'lh' or 'rh'
+#' @param hemi character string, one of 'lh' or 'rh'. This may be used by visualization functions to decide whether or not to show this mesh in a certain view.
 #'
 #' @param render logical, whether to render this mesh during visualization
 #'
 #' @param metadata optional, named list containing metadata
 #'
+#' @param add_normals logical, whether to compute normals and save them in the mesh.
+#'
 #' @return an `fs.coloredmesh` instance. The only fields one should use in client code are 'mesh', 'hemi' and 'col', all others are considered internal and may change without notice.
 #'
 #' @importFrom freesurferformats is.fs.surface
-#' @importFrom rgl tmesh3d
+#' @importFrom rgl tmesh3d addNormals
 #' @export
-fs.coloredmesh <- function(mesh, col, hemi, render=TRUE, metadata=NULL) {
+fs.coloredmesh <- function(mesh, col, hemi, render=TRUE, metadata=NULL, add_normals=TRUE) {
     if(freesurferformats::is.fs.surface(mesh)) {
         mesh = rgl::tmesh3d(c(t(mesh$vertices)), c(t(mesh$faces)), homogeneous=FALSE);
     }
     if(!inherits(mesh, "mesh3d")) {
         stop("Parameter 'mesh' must be a mesh3d or fs.surface instance.");
     }
+    if(add_normals) {
+        mesh = rgl::addNormals(mesh);
+    }
+
     if(ncol(mesh$vb) != length(col)) {
         warning(sprintf("The mesh3d instance from parameter 'mesh' has %d vertices, but %d colors passed in parameter 'col'.\n", ncol(mesh$vb), length(col)));
     }
@@ -490,7 +538,7 @@ fs.coloredmesh <- function(mesh, col, hemi, render=TRUE, metadata=NULL) {
 
     md_entries = names(metadata);
     for (mde in md_entries) {
-        if(! mde %in% c("src_data", "fs_mesh", "data_range", "makecmap_options", "map", "map_sorted", "col_sorted")) {
+        if(! mde %in% c("src_data", "fs_mesh", "data_range", "makecmap_options", "map", "map_sorted", "col_sorted", "cmap_fun")) {
             warning(sprintf("Untypical metadata entry '%s' found in colormesh metadata.\n", mde));
         }
     }

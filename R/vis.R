@@ -673,3 +673,14 @@ vis.region.values.on.subject <- function(subjects_dir, subject_id, atlas, lh_reg
     return(invisible(vis.data.on.subject(subjects_dir, subject_id, morph_like_data$lh, morph_like_data$rh, surface=surface, views=views, rgloptions=rgloptions, rglactions=rglactions, draw_colorbar = draw_colorbar, makecmap_options=makecmap_options, bg=bg)));
 }
 
+
+#' @export
+vis.fs.surface <- function(fs_surface, col="white", per_vertex_data=NULL, hemi="lh", makecmap_options=mkco.seq(), ...) {
+    if( ! is.null(per_vertex_data)) {
+        col = NULL;
+    }
+    cm_list = list();
+    cm_list[[hemi]] = coloredmesh.from.preloaded.data(fs_surface, morph_data=per_vertex_data, col=col, hemi=hemi, makecmap_options=makecmap_options);
+    return(invisible(vis.coloredmeshes(cm_list, ...)));
+}
+
