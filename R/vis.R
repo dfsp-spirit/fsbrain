@@ -676,22 +676,28 @@ vis.region.values.on.subject <- function(subjects_dir, subject_id, atlas, lh_reg
 
 #' @title Visualize fs.surface mesh
 #'
-#' @param fs_surface an fs.surface instance, as returned by function like \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}.
+#' @param fs_surface an fs.surface instance, as returned by function like \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}. If a character string, it is assumed to be the full path of a surface file, and the respective file is loaded with \code{\link[freesurferformats]{read.fs.surface}}.
 #'
 #' @param col vector of colors, the per-vertex-colors. Defaults to white.
 #'
-#' @param per_vertex_data numerical vector, per-vertex data. If given, takes precedence over 'col'. Used to color the mesh using the colormap options in parameter 'makecmap_options'.
+#' @param per_vertex_data numerical vector, per-vertex data. If given, takes precedence over 'col'. Used to color the mesh using the colormap options in parameter 'makecmap_options'. If a character string, it is assumed to be the full path of a morphometry data file, and the respective file is loaded with \code{\link[freesurferformats]{read.fs.morph}}.
 #'
 #' @inheritParams fs.coloredmesh
 #'
 #' @inheritParams vis.subject.morph.native
 #'
-#' @param ... extra paramters to pass to \code{\link[fsbrain]{vis.coloredmeshes}}.
+#' @param ... extra parameters to pass to \code{\link[fsbrain]{vis.coloredmeshes}}.
 #'
 #' @export
 vis.fs.surface <- function(fs_surface, col="white", per_vertex_data=NULL, hemi="lh", makecmap_options=mkco.seq(), ...) {
     if( ! is.null(per_vertex_data)) {
         col = NULL;
+        if(is.character(per_vertex_data)) {   # treat as path to a morph file
+            per_vertex_data = freesurferformats::read.fs.morph(per_vertex_data);
+        }
+    }
+    if(is.character(fs_surface)) {
+        fs_surface = freesurferformats::read.fs.surface(fs_surface);
     }
     cm_list = list();
     cm_list[[hemi]] = coloredmesh.from.preloaded.data(fs_surface, morph_data=per_vertex_data, col=col, hemi=hemi, makecmap_options=makecmap_options);
