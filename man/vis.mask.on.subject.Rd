@@ -45,7 +45,7 @@ vis.mask.on.subject(
 list of coloredmeshes. The coloredmeshes used for the visualization.
 }
 \description{
-A mask is a logical vector that contains one value per vertex. You can create it manually, or use functions like [fsbrain::mask.from.labeldata.for.hemi] to create and modify it. Check the example for this function.
+A mask is a logical vector that contains one value per vertex. You can create it manually, or use functions like \code{\link[fsbrain]{mask.from.labeldata.for.hemi}} to create and modify it. Check the example for this function.
 }
 \note{
 Drawing a colorbar for label data makes limited sense, use a legend instead. The colorbar can give a rough overview of the relative number of label and non-label vertices though, so it is possible to request one.

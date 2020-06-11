@@ -509,7 +509,7 @@ is.fs.coloredmesh <- function(x) inherits(x, "fs.coloredmesh")
 #' @importFrom freesurferformats is.fs.surface
 #' @importFrom rgl tmesh3d addNormals
 #' @export
-fs.coloredmesh <- function(mesh, col, hemi, render=TRUE, metadata=NULL, add_normals=TRUE) {
+fs.coloredmesh <- function(mesh, col, hemi, render=TRUE, metadata=NULL, add_normals=FALSE) {
     if(freesurferformats::is.fs.surface(mesh)) {
         mesh = rgl::tmesh3d(c(t(mesh$vertices)), c(t(mesh$faces)), homogeneous=FALSE);
     }

@@ -10,13 +10,13 @@ fs.coloredmesh(
   hemi,
   render = TRUE,
   metadata = NULL,
-  add_normals = TRUE
+  add_normals = FALSE
 )
 }
 \arguments{
 \item{mesh}{a `mesh3d` instance as returned by \code{\link[rgl]{tmesh3d}} or an `fs.surface` brain surface mesh as returned by functions like \code{\link[fsbrain]{subject.surface}}.}
 
-\item{col}{vector of vertex colors for the mesh, one color per vertex}
+\item{col}{vector of vertex colors for the mesh, one color per vertex. Expanded if exactly one color.}
 
 \item{hemi}{character string, one of 'lh' or 'rh'. This may be used by visualization functions to decide whether or not to show this mesh in a certain view.}
 

@@ -427,7 +427,7 @@ vis.color.on.subject <- function(subjects_dir, vis_subject_id, color_lh, color_r
 
 #' @title Visualize a vertex mask on the surface of a subject.
 #'
-#' @description A mask is a logical vector that contains one value per vertex. You can create it manually, or use functions like [fsbrain::mask.from.labeldata.for.hemi] to create and modify it. Check the example for this function.
+#' @description A mask is a logical vector that contains one value per vertex. You can create it manually, or use functions like \code{\link[fsbrain]{mask.from.labeldata.for.hemi}} to create and modify it. Check the example for this function.
 #'
 #' @inheritParams vis.data.on.subject
 #'
@@ -674,7 +674,20 @@ vis.region.values.on.subject <- function(subjects_dir, subject_id, atlas, lh_reg
 }
 
 
-
+#' @title Visualize fs.surface mesh
+#'
+#' @param fs_surface an fs.surface instance, as returned by function like \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}.
+#'
+#' @param col vector of colors, the per-vertex-colors. Defaults to white.
+#'
+#' @param per_vertex_data numerical vector, per-vertex data. If given, takes precedence over 'col'. Used to color the mesh using the colormap options in parameter 'makecmap_options'.
+#'
+#' @inheritParams fs.coloredmesh
+#'
+#' @inheritParams vis.subject.morph.native
+#'
+#' @param ... extra paramters to pass to \code{\link[fsbrain]{vis.coloredmeshes}}.
+#'
 #' @export
 vis.fs.surface <- function(fs_surface, col="white", per_vertex_data=NULL, hemi="lh", makecmap_options=mkco.seq(), ...) {
     if( ! is.null(per_vertex_data)) {
