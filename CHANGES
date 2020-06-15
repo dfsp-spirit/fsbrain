@@ -4,6 +4,7 @@ fsbrain Changes
 Version 0.3.0
 -------------
 - Fix reading standard space data from template subjects other than fsaverage
+- Add new cbry colormap and related mkco.cluster function, great for visualizing clusters
 
 
 Version 0.2.1
