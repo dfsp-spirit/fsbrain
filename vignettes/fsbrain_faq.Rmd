@@ -223,3 +223,22 @@ Error in par(new = TRUE, pty = "m", plt = smallplot, err = -1) :
 If you experience this error, it most likely happened when you tried to plot something with a colorbar, and did not increase the device size (image resolution). The error occurs if there is no space for the colorbar plot, and the solution is to increase the resolution as explained in the answer to the question 'How can I set the output image resolution?' above.
 
 
+### I am getting the error 'Error in squash::cmap, found x values outside map range'
+
+This can happen when visualizing morphometry data with function like `vis.subject.morph.native`. The full error most likely looks like this, or similar:
+
+```{r, eval = FALSE}
+vis.subject.morph.native(sjd, sj, 'your_measure_here')
+Error in squash::cmap(lh_morph_data, map = common_cmap) : 
+  Found 2193 values outside map range.
+```
+
+Most likely you have outliers or NaN values in the medial wall, just try plotting without it:
+
+```{r, eval = FALSE}
+vis.subject.morph.native(sjd, sj, 'your_measure_here', cortex_only = T)
+```
+
+If this does not help, load the data and inspect it manually.
+
+
