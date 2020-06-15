@@ -344,8 +344,6 @@ cm.heat <- function(report=FALSE) {
 
 #' @title Get cyan blue red yellow colormap function.
 #'
-#' @inheritParams cm.seq
-#'
 #' @note Returns a diverging palette with negative values in blue/cyan and positive ones in red/yellow, suitable for visualizing data that is centered around zero. Often used for clusters in neuroscience.
 #'
 #' @export

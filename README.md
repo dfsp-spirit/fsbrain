@@ -26,7 +26,7 @@ This version is not guaranteed to be in a usable state, try at your own risk and
 From an R session:
 
 ```r
-install.packages(c("devtools", "knitr", "rmarkdown", "testthat"));
+install.packages(c("devtools", "knitr", "markdown", "rmarkdown", "testthat", "qpdf"));
 devtools::install_github("dfsp-spirit/fsbrain", build_vignettes=TRUE);
 ```
 
@@ -44,7 +44,7 @@ R packages are compiled from source by default under Linux, so you need some dev
 
 * for deb-based Linux distributions (Debian, Ubuntu, ...):
 ```shell
-sudo apt-get install libmagick++-dev libx11-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libfreetype6-dev libxml2-dev
+sudo apt-get install libmagick++-dev libx11-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libfreetype6-dev libxml2-dev libssh-dev libcurl4-openssl-dev
 ```
 * for rpm-based Linux distributions (Fedora, CentOS, RHEL, ...):
 ```shell

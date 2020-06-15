@@ -2,7 +2,7 @@
 title: "The fsbrain FAQ"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{fsbrain frequently asked questions}
+  %\VignetteIndexEntry{The fsbrain FAQ}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---

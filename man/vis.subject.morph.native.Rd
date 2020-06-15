@@ -12,7 +12,7 @@ vis.subject.morph.native(
   surface = "white",
   colormap = NULL,
   views = c("t4"),
-  rgloptions = list(),
+  rgloptions = rglot(),
   rglactions = list(),
   draw_colorbar = FALSE,
   cortex_only = FALSE,
