@@ -233,12 +233,25 @@ Error in squash::cmap(lh_morph_data, map = common_cmap) :
   Found 2193 values outside map range.
 ```
 
-Most likely you have outliers or NaN values in the medial wall, just try plotting without it:
+Most likely you have `Inf` values in your data, most likely in the medial wall, just try plotting without it:
 
 ```{r, eval = FALSE}
 vis.subject.morph.native(sjd, sj, 'your_measure_here', cortex_only = T)
 ```
 
 If this does not help, load the data and inspect it manually.
+
+
+### I am getting the warning 'RGL: unable to open X11 display' when loading fsbrain
+
+The full message most likely looks like this:
+
+```{r, eval = FALSE}
+Warning messages:
+1: In rgl.init(initValue, onlyNULL) : RGL: unable to open X11 display
+2: 'rgl.init' failed, running with 'rgl.useNULL = TRUE'.
+```
+
+This happens if you do not have X11, or no window can be opened. Possible reasons include that you are running R on a remote host using an SSH connection without X11 forwarding, or that you do not have XQuartz installed under MacOS.
 
 
