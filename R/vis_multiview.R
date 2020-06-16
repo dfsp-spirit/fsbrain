@@ -107,7 +107,37 @@ brainview.si <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     if(!is.list(coloredmeshes)) {
         stop("Parameter 'coloredmeshes' must be a list.");
     }
+
+    coloredmeshes = shift.hemis.rglactions(coloredmeshes, rglactions);
+
     return(invisible(vis.coloredmeshes(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, style = style)));
+}
+
+
+#' @title Shift hemis apart if indicated in rglactions
+#'
+#' @param coloredmeshes hemilist of coloredmeshes
+#'
+#' @param rglactions the rglactions, a named list as passed to functions like vis.subject.morph.native.
+#'
+#' @return hemilist of coloredmeshes, the coordinates may or may not have been shifted, depending on the rglactions.
+#'
+#' @keywords internal
+shift.hemis.rglactions <- function(coloredmeshes, rglactions) {
+    if(rglactions.has.key(rglactions, 'shift_hemis_apart')) {
+        shift_hemis = rglactions$shift_hemis_apart;
+        if(is.logical(shift_hemis)) {
+            if(shift_hemis) {
+                return(shift.hemis.apart(coloredmeshes));
+            }
+        } else if(is.list(shift_hemis)) {
+            # interprete the list as extra parameters to pass to shift.hemis.apart
+            return(do.call(shift.hemis.apart, utils::modifyList(list(coloredmeshes), shift_hemis)));
+        } else {
+            warning("Value in rglactions$shift_hemis_apart is not supported, ignored. Not shifting hemis.");
+        }
+    }
+    return(coloredmeshes);
 }
 
 
@@ -146,6 +176,9 @@ brainview.sr <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     if(!is.list(coloredmeshes)) {
         stop("Parameter 'coloredmeshes' must be a list.");
     }
+
+    coloredmeshes = shift.hemis.rglactions(coloredmeshes, rglactions);
+
     return(invisible(vis.coloredmeshes.rotating(coloredmeshes, x=x, y=y, z=z, rpm=rpm, duration=duration, rgloptions = rgloptions, rglactions = rglactions, style = style)));
 }
 
@@ -400,12 +433,7 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     rgl::bg3d(background);
     rgl::layout3d(layout_mat, widths=layout_column_widths, height=layout_row_heights);
 
-    shift_meshes_apart = T;
-    if(shift_meshes_apart) {
-        coloredmeshes_potentially_shifted = shift.hemis.apart(coloredmeshes, shift_by = NULL);
-    } else {
-        coloredmeshes_potentially_shifted = coloredmeshes;
-    }
+    coloredmeshes_potentially_shifted = shift.hemis.rglactions(coloredmeshes, rglactions);
 
 
     #  ------------------ Row 1 --------------------
@@ -624,11 +652,16 @@ brainview.sd <- function(coloredmeshes, view_angle, background="white", skip_all
 #' @return hemilist of coloredmeshes, the shifted meshes
 #'
 #' @export
-shift.hemis.apart <- function(coloredmeshes_hl, shift_by=c(-50, 50), axis=1L) {
+shift.hemis.apart <- function(coloredmeshes_hl, shift_by=NULL, axis=1L) {
     axis = as.integer(axis);
 
     if(axis < 1L | axis > 3L) {
         stop("Parameter 'axis' must be 1, 2 or 3.");
+    }
+
+    if(is.null(coloredmeshes_hl$lh) | is.null(coloredmeshes_hl$rh)) {
+        # Silently do nothing if there is only a single hemisphere to plot (avoids pointless warning below).
+        return(coloredmeshes_hl);
     }
 
     if(hasIn(coloredmeshes_hl, c('lh', 'metadata', 'fs_mesh')) & hasIn(coloredmeshes_hl, c('rh', 'metadata', 'fs_mesh'))) {

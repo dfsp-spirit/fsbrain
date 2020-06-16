@@ -4,7 +4,7 @@
 \alias{shift.hemis.apart}
 \title{Shift hemispheres apart.}
 \usage{
-shift.hemis.apart(coloredmeshes_hl, shift_by = c(-50, 50), axis = 1L)
+shift.hemis.apart(coloredmeshes_hl, shift_by = NULL, axis = 1L)
 }
 \arguments{
 \item{coloredmeshes_hl}{hemilist of coloredmeshes}
