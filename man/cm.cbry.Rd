@@ -4,7 +4,7 @@
 \alias{cm.cbry}
 \title{Get cyan blue red yellow colormap function.}
 \usage{
-cm.cbry(n)
+cm.cbry()
 }
 \description{
 Get cyan blue red yellow colormap function.

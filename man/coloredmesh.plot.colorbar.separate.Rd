@@ -35,7 +35,7 @@ Draw a colorbar for the coloredmeshes to a separate 2D plot. Due to the suboptim
 If you increase the output resolution of the colorbar (using 'png_options'), you will have to increase the font sizes as well (using 'image.plot_extra_options'), otherwise the axis and legend labels will be hard to read.
 }
 \examples{
-\donttest{
+\dontrun{
    fsbrain::download_optional_data();
    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
    coloredmeshes = vis.subject.morph.native(subjects_dir, 'subject1',
