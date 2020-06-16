@@ -400,6 +400,13 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     rgl::bg3d(background);
     rgl::layout3d(layout_mat, widths=layout_column_widths, height=layout_row_heights);
 
+    shift_meshes_apart = T;
+    if(shift_meshes_apart) {
+        coloredmeshes_potentially_shifted = shift.hemis.apart(coloredmeshes, shift_by = NULL);
+    } else {
+        coloredmeshes_potentially_shifted = coloredmeshes;
+    }
+
 
     #  ------------------ Row 1 --------------------
 
@@ -414,7 +421,7 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 
     # Create the upper central view: draw both hemis from above (top view)
     rgl::next3d(reuse=FALSE);
-    vis.rotated.coloredmeshes(coloredmeshes, 0, 1, 0, 0, style=style);
+    vis.rotated.coloredmeshes(coloredmeshes_potentially_shifted, 0, 1, 0, 0, style=style);
     rgl::rgl.viewpoint(0, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
         rgl::text3d(0,label_shift_y_dorsal,0,"dorsal");
@@ -442,7 +449,7 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 
     # Create the 2nd row central view: draw both hemis from below (bottom view)
     rgl::next3d(reuse=FALSE);
-    vis.rotated.coloredmeshes(coloredmeshes, pi, 1, 0, 0, style=style);
+    vis.rotated.coloredmeshes(coloredmeshes_potentially_shifted, pi, 1, 0, 0, style=style);
     rgl::rgl.viewpoint(0, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
         rgl::text3d(0,label_shift_y_ventral,0,"ventral");
@@ -463,7 +470,7 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 
     # Create the bottom left view: draw only the left hemi, from the left
     rgl::next3d(reuse=FALSE);
-    vis.rotated.coloredmeshes(coloredmeshes, pi/2, 1, 0, 0, style=style);
+    vis.rotated.coloredmeshes(coloredmeshes_potentially_shifted, pi/2, 1, 0, 0, style=style);
     rgl.viewpoint(0, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
         rgl::text3d(0,label_shift_y,0,"rostral");
@@ -477,7 +484,7 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 
     # Create the bottom right view
     rgl::next3d(reuse=FALSE);
-    vis.rotated.coloredmeshes(coloredmeshes, pi/2, 1, 0, 0, style=style);
+    vis.rotated.coloredmeshes(coloredmeshes_potentially_shifted, pi/2, 1, 0, 0, style=style);
     rgl::rgl.viewpoint(180, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
         rgl::text3d(0,label_shift_y,0,"caudal");
@@ -601,5 +608,67 @@ brainview.sd <- function(coloredmeshes, view_angle, background="white", skip_all
     perform.rglactions(rglactions);
 
     return(invisible(coloredmeshes));
+}
+
+
+#' @title Shift hemispheres apart.
+#'
+#' @description  Modify mesh coordinates of a hemilist of coloredmeshes to introduce a gap between the two hemispheres.
+#'
+#' @param coloredmeshes_hl hemilist of coloredmeshes
+#'
+#' @param shift_by numerical vector of length 2, the amount by which to shift the hemis. The first value is for the left hemi, the second for the right hemi (values can be negative). Pass NULL to determine the shift automatically from the mesh coordinates.
+#'
+#' @param axis positive integer, one of 1L, 2L or 3L. The axis on which to shift (x,y,z).
+#'
+#' @return hemilist of coloredmeshes, the shifted meshes
+#'
+#' @export
+shift.hemis.apart <- function(coloredmeshes_hl, shift_by=c(-50, 50), axis=1L) {
+    axis = as.integer(axis);
+
+    if(axis < 1L | axis > 3L) {
+        stop("Parameter 'axis' must be 1, 2 or 3.");
+    }
+
+    if(hasIn(coloredmeshes_hl, c('lh', 'metadata', 'fs_mesh')) & hasIn(coloredmeshes_hl, c('rh', 'metadata', 'fs_mesh'))) {
+        lh_src_mesh = coloredmeshes_hl$lh$metadata$fs_mesh;
+        rh_src_mesh = coloredmeshes_hl$rh$metadata$fs_mesh;
+
+        if(is.null(shift_by)) {
+            if(min(lh_src_mesh$vertices[,axis]) < min(rh_src_mesh$vertices[,axis])) {
+                first_on_axis = 'lh';
+                overlap = max(lh_src_mesh$vertices[,axis]) - min(rh_src_mesh$vertices[,axis]);
+                if(overlap > 0L) {
+                    shift_by = c(-overlap/2.0, overlap/2.0);
+                } else {
+                    return(coloredmeshes_hl);
+                }
+            } else {
+                first_on_axis = 'rh';
+                overlap = max(rh_src_mesh$vertices[,axis]) - min(lh_src_mesh$vertices[,axis]);
+                if(overlap > 0L) {
+                    shift_by = c(overlap/2.0, -overlap/2.0);
+                } else {
+                    return(coloredmeshes_hl);
+                }
+            }
+        }
+
+        lh_src_mesh$vertices[,axis] = lh_src_mesh$vertices[,axis] + shift_by[1];
+        lh_new_tmesh = rgl::tmesh3d(c(t(lh_src_mesh$vertices)), c(t(lh_src_mesh$faces)), homogeneous=FALSE);
+        coloredmeshes_hl$lh$mesh$vb = lh_new_tmesh$vb;
+        coloredmeshes_hl$lh$mesh$it = lh_new_tmesh$it;
+
+
+        rh_src_mesh$vertices[,axis] = rh_src_mesh$vertices[,axis] + shift_by[2];
+        rh_new_tmesh = rgl::tmesh3d(c(t(rh_src_mesh$vertices)), c(t(rh_src_mesh$faces)), homogeneous=FALSE);
+        coloredmeshes_hl$rh$mesh$vb = rh_new_tmesh$vb;
+        coloredmeshes_hl$rh$mesh$it = rh_new_tmesh$it;
+    } else {
+        warning("Missing coloredmesh metadata, ignored request to shift meshes apart");
+    }
+
+    return(coloredmeshes_hl);
 }
 
