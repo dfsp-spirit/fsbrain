@@ -294,10 +294,10 @@ vis.subject.label <- function(subjects_dir, subject_id, label, hemi, surface="wh
 #'
 #' @importFrom squash jet
 #' @export
-vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface="white", colormap=NULL, views=c('t4'), rgloptions=list(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=mkco.seq(), bg=NULL) {
+vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface="white", colormap=NULL, views=c('t4'), rgloptions=rglot(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=mkco.seq(), bg=NULL) {
 
     if(is.null(morph_data_lh) && is.null(morph_data_rh)) {
-        stop(sprintf("Only one of morph_data_lh or morph_data_rh can be NULL.\n"));
+        stop(sprintf("Only one of 'morph_data_lh' or 'morph_data_rh' can be NULL.\n"));
     }
 
     makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
