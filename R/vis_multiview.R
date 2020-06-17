@@ -114,33 +114,6 @@ brainview.si <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 }
 
 
-#' @title Shift hemis apart if indicated in rglactions
-#'
-#' @param coloredmeshes hemilist of coloredmeshes
-#'
-#' @param rglactions the rglactions, a named list as passed to functions like vis.subject.morph.native.
-#'
-#' @return hemilist of coloredmeshes, the coordinates may or may not have been shifted, depending on the rglactions.
-#'
-#' @keywords internal
-shift.hemis.rglactions <- function(coloredmeshes, rglactions) {
-    if(rglactions.has.key(rglactions, 'shift_hemis_apart')) {
-        shift_hemis = rglactions$shift_hemis_apart;
-        if(is.logical(shift_hemis)) {
-            if(shift_hemis) {
-                return(shift.hemis.apart(coloredmeshes));
-            }
-        } else if(is.list(shift_hemis)) {
-            # interprete the list as extra parameters to pass to shift.hemis.apart
-            return(do.call(shift.hemis.apart, utils::modifyList(list(coloredmeshes), shift_hemis)));
-        } else {
-            warning("Value in rglactions$shift_hemis_apart is not supported, ignored. Not shifting hemis.");
-        }
-    }
-    return(coloredmeshes);
-}
-
-
 #' @title Visualize a list of colored meshes, rotating the camera around them.
 #'
 #' @param coloredmeshes, list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
@@ -645,18 +618,26 @@ brainview.sd <- function(coloredmeshes, view_angle, background="white", skip_all
 #'
 #' @param coloredmeshes_hl hemilist of coloredmeshes
 #'
-#' @param shift_by numerical vector of length 2, the amount by which to shift the hemis. The first value is for the left hemi, the second for the right hemi (values can be negative). Pass NULL to determine the shift automatically from the mesh coordinates.
+#' @param shift_by numerical vector of length 2, the amount by which to shift the hemis. The first value is for the left hemi, the second for the right hemi (values can be negative). Pass `NULL` to determine the shift automatically from the mesh coordinates, and adapt 'hemi_order_on_axis' to define how that happens.
 #'
 #' @param axis positive integer, one of 1L, 2L or 3L. The axis on which to shift (x,y,z).
+#'
+#' @param hemi_order_on_axis character string, one of 'auto', 'auto_flipped', 'lr' or 'rl'. Defines how to determine the order of the hemis on the axes. This is ignored unless 'shift_by' is `NULL`. The 'auto' setting assumes that the hemisphere with the smaller minimal vertex coordinate (on the given axis) comes first. Note that if the overlap (or shift) is extreme, this may not hold anymore. Therefore, the default value is 'lr', which works for FreeSurfer data. The 'auto_flipped' setting will always return the inverse of 'auto', so if 'auto' did not work, 'auto_flipped' will.
+#'
+#' @param min_dist numerical scalar, the minimal distance of the hemispheres. Ignored unless 'shift_by' is `NULL`.
 #'
 #' @return hemilist of coloredmeshes, the shifted meshes
 #'
 #' @export
-shift.hemis.apart <- function(coloredmeshes_hl, shift_by=NULL, axis=1L) {
+shift.hemis.apart <- function(coloredmeshes_hl, shift_by=NULL, axis=1L, hemi_order_on_axis='lr', min_dist=0) {
     axis = as.integer(axis);
 
     if(axis < 1L | axis > 3L) {
         stop("Parameter 'axis' must be 1, 2 or 3.");
+    }
+
+    if(! hemi_order_on_axis %in% c('auto', 'auto_flipped', 'lr', 'rl')) {
+        stop("Parameter 'hemi_order_on_axis' must be one of 'auto', 'auto_flipped', 'lr', or 'rl'.");
     }
 
     if(is.null(coloredmeshes_hl$lh) | is.null(coloredmeshes_hl$rh)) {
@@ -669,17 +650,31 @@ shift.hemis.apart <- function(coloredmeshes_hl, shift_by=NULL, axis=1L) {
         rh_src_mesh = coloredmeshes_hl$rh$metadata$fs_mesh;
 
         if(is.null(shift_by)) {
-            if(min(lh_src_mesh$vertices[,axis]) < min(rh_src_mesh$vertices[,axis])) {
-                first_on_axis = 'lh';
-                overlap = max(lh_src_mesh$vertices[,axis]) - min(rh_src_mesh$vertices[,axis]);
+            if(startsWith(hemi_order_on_axis, 'auto')) {
+                if(min(lh_src_mesh$vertices[,axis]) < min(rh_src_mesh$vertices[,axis])) {
+                    lh_is_first_on_axis = TRUE;
+                } else {
+                    lh_is_first_on_axis = FALSE;
+                }
+                if(hemi_order_on_axis == 'auto_flipped') {
+                    lh_is_first_on_axis = !(lh_is_first_on_axis);
+                }
+            } else if(hemi_order_on_axis == 'lr') {
+                lh_is_first_on_axis = TRUE;
+            } else {
+                lh_is_first_on_axis = FALSE;
+            }
+
+            if(lh_is_first_on_axis) {
+                overlap = max(lh_src_mesh$vertices[,axis]) - min(rh_src_mesh$vertices[,axis]) + min_dist;
+                #cat(sprintf("overlap=%f, min_dist=%f\n", overlap, min_dist));
                 if(overlap > 0L) {
                     shift_by = c(-overlap/2.0, overlap/2.0);
                 } else {
                     return(coloredmeshes_hl);
                 }
             } else {
-                first_on_axis = 'rh';
-                overlap = max(rh_src_mesh$vertices[,axis]) - min(lh_src_mesh$vertices[,axis]);
+                overlap = max(rh_src_mesh$vertices[,axis]) - min(lh_src_mesh$vertices[,axis]) + min_dist;
                 if(overlap > 0L) {
                     shift_by = c(overlap/2.0, -overlap/2.0);
                 } else {
@@ -705,3 +700,39 @@ shift.hemis.apart <- function(coloredmeshes_hl, shift_by=NULL, axis=1L) {
     return(coloredmeshes_hl);
 }
 
+
+#' @title Shift hemis apart if indicated in rglactions
+#'
+#' @param coloredmeshes hemilist of coloredmeshes
+#'
+#' @param rglactions the rglactions, a named list as passed to functions like vis.subject.morph.native.
+#'
+#' @return hemilist of coloredmeshes, the coordinates may or may not have been shifted, depending on the rglactions.
+#'
+#' @keywords internal
+shift.hemis.rglactions <- function(coloredmeshes, rglactions) {
+    if(rglactions.has.key(rglactions, 'shift_hemis_apart')) {
+        shift_hemis = rglactions$shift_hemis_apart;
+        if(is.logical(shift_hemis)) {
+            if(shift_hemis) {
+                return(shift.hemis.apart(coloredmeshes, hemi_order_on_axis='lr'));
+            }
+        } else if(is.list(shift_hemis)) {
+            # interprete the list as extra parameters to pass to shift.hemis.apart
+            return(do.call(shift.hemis.apart, utils::modifyList(list(coloredmeshes), shift_hemis)));
+        } else if(is.character(shift_hemis)) {
+            if(shift_hemis == 'lr' | shift_hemis == 'lhrh') {
+                return(shift.hemis.apart(coloredmeshes, hemi_order_on_axis='lr'));
+            } else if(shift_hemis == 'rl' | shift_hemis == 'rhlh') {
+                return(shift.hemis.apart(coloredmeshes, hemi_order_on_axis='rl'));
+            } else if(shift_hemis == 'auto' | shift_hemis == 'auto_flipped') {
+                return(shift.hemis.apart(coloredmeshes, hemi_order_on_axis=shift_hemis));
+            } else {
+                warning("Value in rglactions$shift_hemis_apart is not supported, ignored. Not shifting hemis.");
+            }
+        } else {
+            warning("Value in rglactions$shift_hemis_apart is not supported, ignored. Not shifting hemis.");
+        }
+    }
+    return(coloredmeshes);
+}
