@@ -12,6 +12,8 @@ vdata.split.by.hemi(subjects_dir, subject_id, vdata, surface = "white")
 \item{subject_id}{string. The subject identifier}
 
 \item{vdata}{numerical vector of data for both hemispheres, one value per vertex}
+
+\item{surface}{the surface to load to determine the vertex counts}
 }
 \value{
 a hemilist, each entry contains the data part of the respective hemi.

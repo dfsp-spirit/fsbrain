@@ -771,6 +771,8 @@ rglot <- function() {
 #'
 #' @param vdata numerical vector of data for both hemispheres, one value per vertex
 #'
+#' @param surface the surface to load to determine the vertex counts
+#'
 #' @inheritParams subject.morph.native
 #'
 #' @note Instead of calling this function to split the data, you could use the 'split_by_hemi' parameter of \code{\link[fsbrain]{subject.morph.native}}.
