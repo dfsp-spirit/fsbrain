@@ -164,7 +164,7 @@ This also means that more colors are used in the rendered image, but the effect 
 
 Yes, see the answer to the next question for details.
 
-### Can I get a color legend when plotting a segmentation, based on a color lookup table (like the *FreeSurferColorLUT.txt* file)?
+### Can I get a color legend when plotting a segmentation/parcellation (different brain regions), based on a color lookup table (like the *FreeSurferColorLUT.txt* file)?
 
 Yes, use the `vis.colortable.legend` function. You can pass an annotation or a color lookup table, and it will create a plot that shows the colors and the structure (or region) names. The output will be a separate plot, so you can use standard R methods to save it in vector formats like PDF for best quality. 
 
@@ -202,11 +202,36 @@ combine.colorbar.with.brainview.image(output_brain_img, output_cbar_img, output_
 
 You may have to play a bit with the resolution settings of your brain images and the colorbar to get this right (the background cropping makes it hard to compute the exact values in advance). 
 
+### When visualizing data on the inflated surface, the left and right hemisphere overlap and look garbled. How to fix that?
+
+This happens due to the inflation. One can use the `rglactions` parameter to push the hemis apart. By default, it pushes them apart by the amount they overlap:
+
+```{r, eval = FALSE}
+vis.subject.morph.native(sjd, sj, 'thickness', rglactions = list('shift_hemis_apart'=TRUE), surface='inflated', views='si');
+```
+
+You can also set a distance manually:
+
+```{r, eval = FALSE}
+vis.subject.morph.native(sjd, sj, 'thickness', rglactions = list('shift_hemis_apart'=list('min_dist'=20)), surface='inflated', views='si');
+```
+
+If you need more customization options, have a look at the `shift.hemis.apart` function. If you pass a named list in the rglactions for 'shift_hemis_apart' (like in the previous example), the entries are passed on to that function.
+
 ## Various topics
 
 ### Can I integrate the plots produced by *fsbrain* into an R Markdown document (the R equivalent of a Python Jupyter notebook)?
 
 Yes, see the example notebook files in the directory [web](https://github.com/dfsp-spirit/fsbrain/tree/master/web/Rmd_web_examples) of the *fsbrain* repository. The Rmd files are actually notebooks in R markdown format.
+
+### Can I use fsbrain to visualize arbitrary triangular meshes in R?
+
+Yes, *fsbrain* is not limited to brain surface meshes, and a wide array of mesh file formats are supported. Keep in mind though that fsbrain works with triangular meshes. To visualize a mesh from a file, the easiest way is to use `vis.fs.surface`:
+
+```{r, eval = FALSE}
+vis.fs.surface('~/Documents/my_mesh.ply');
+```
+
 
 ## Technical problems
 

@@ -12,7 +12,7 @@ vis.data.on.subject(
   surface = "white",
   colormap = NULL,
   views = c("t4"),
-  rgloptions = list(),
+  rgloptions = rglot(),
   rglactions = list(),
   draw_colorbar = FALSE,
   makecmap_options = mkco.seq(),
