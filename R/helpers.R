@@ -763,3 +763,32 @@ find.freesurferhome <- function(mustWork=FALSE) {
 rglot <- function() {
     return(list('windowRect' = c(50, 50, 800, 800)));
 }
+
+
+#' @title Split morph data vector at hemisphere boundary.
+#'
+#' @description Given a single vector of per-vertex data for a mesh, split it at the hemi boundary. This is achieved by loading the respective surface and checking the number of vertices for the 2 hemispheres.
+#'
+#' @param vdata numerical vector of data for both hemispheres, one value per vertex
+#'
+#' @param surface the surface to load to determine the vertex counts
+#'
+#' @inheritParams subject.morph.native
+#'
+#' @note Instead of calling this function to split the data, you could use the 'split_by_hemi' parameter of \code{\link[fsbrain]{subject.morph.native}}.
+#'
+#' @return a hemilist, each entry contains the data part of the respective hemi.
+#' @export
+vdata.split.by.hemi <- function(subjects_dir, subject_id, vdata, surface='white') {
+  lh_surf = subject.surface(subjects_dir, subject_id, surface=surface, hemi='lh');
+  rh_surf = subject.surface(subjects_dir, subject_id, surface=surface, hemi='rh');
+  num_verts_lh = nrow(lh_surf$vertices);
+  num_verts_rh = nrow(rh_surf$vertices);
+  if(length(vdata) != num_verts_lh+num_verts_rh) {
+    if(length(vdata) == (163842*2L)) {
+      warning("Hint: The length of 'vdata' matches the number of vertices in the fsaverage template. Wrong 'subject_id' parameter with standard space data?");
+    }
+    stop(sprintf("Cannot split data: surfaces contain a total of %d vertices (lh=%d, rh=%d), but vdata has length %d. Lengths must match.\n", (num_verts_lh+num_verts_rh), num_verts_lh, num_verts_rh, length(vdata)));
+  }
+  return(list('lh'=vdata[1:num_verts_lh], 'rh'=vdata[(num_verts_lh+1L):(num_verts_lh+num_verts_rh)]));
+}
