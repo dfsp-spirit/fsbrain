@@ -66,7 +66,7 @@ vol.slice <- function(volume, slice_index=NULL, frame=1L, axis=1L, rotation=0L, 
 
     if(rotation != 0L) {
         if(length(slice_index) == 1) {
-            slice = rotate2D(slice, rotation);
+            slice = freesurferformats::rotate2D(slice, rotation);
         } else {
             slice = freesurferformats::rotate3D(slice, axis=axis, degrees=rotation);
         }
@@ -74,7 +74,7 @@ vol.slice <- function(volume, slice_index=NULL, frame=1L, axis=1L, rotation=0L, 
 
     if(!is.null(flip)) {
         if(length(slice_index) == 1) {
-            slice = flip2D(slice, how = flip);
+            slice = freesurferformats::flip2D(slice, how = flip);
         } else {
             slice = freesurferformats::flip3D(slice, axis = axis, how = flip);
         }
