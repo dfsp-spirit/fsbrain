@@ -31,9 +31,10 @@
 #' }
 #'
 #' @export
-subject.volume <- function(subjects_dir, subject_id, volume, format='AUTO', drop_empty_dims=TRUE, with_header=FALSE, mri_subdir=NULL) {
-    if(!(format %in% c('AUTO', 'mgh', 'mgz'))) {
-        stop(sprintf("The volume format must be one of ('AUTO', 'mgh', 'mgz') but is '%s'.\n", format));
+subject.volume <- function(subjects_dir, subject_id, volume, format='auto', drop_empty_dims=TRUE, with_header=FALSE, mri_subdir=NULL) {
+    formats =tolower(format);
+    if(!(format %in% c('auto', 'mgh', 'mgz'))) {
+        stop(sprintf("The volume format must be one of ('auto', 'mgh', 'mgz') but is '%s'.\n", format));
     }
 
     if(is.null(mri_subdir)) {
@@ -42,49 +43,13 @@ subject.volume <- function(subjects_dir, subject_id, volume, format='AUTO', drop
         volume_filepath_noext = file.path(subjects_dir, subject_id, 'mri', mri_subdir, volume);
     }
 
-    if(format=="AUTO") {
-        volume_file = readable.volume(volume_filepath_noext);
+    if(format=="auto") {
+        volume_file = freesurferformats::readable.files(volume_filepath_noext, precedence = c(".mgh", ".mgz"));
     } else {
         volume_file = paste(volume_filepath_noext, ".", format, sep='');
     }
 
     return(freesurferformats::read.fs.mgh(volume_file, drop_empty_dims=drop_empty_dims, with_header=with_header));
-}
-
-
-#' @title Find files with the given base name and extensions that exist.
-#'
-#' @description Note that in the current implementation, the case of the filepath and the extension must match.
-#'
-#' @param filepath character string, path to a file without extension
-#'
-#' @param precedence vector of character strings, the file extensions to check.
-#'
-#' @param error_if_none logical, whether to raise an error if none of the files exist
-#'
-#' @param return_all logical, whether to return all readable files instead of just the first one
-#'
-#' @return character string, the path to the first existing file (or NULL if none of them exists).
-#'
-#' @keywords internal
-readable.volume <- function(filepath, precedence=c('.mgh', '.mgz'), error_if_none=TRUE, return_all=FALSE) {
-    candidate_files = paste(filepath, precedence, sep='');
-    readable_files = c();
-    for(cfile in candidate_files) {
-        if(file.exists(cfile)) {
-            if(return_all) {
-                readable_files = c(readable_files, cfile);
-            } else {
-                return(cfile);
-            }
-        }
-    }
-
-    if(length(readable_files) == 0 & error_if_none) {
-        stop(sprintf("At location '%s' exists no file with any of the %d extensions '%s'.\n", filepath, length(precedence), paste(precedence, collapse=' ')));
-    } else {
-        return(readable_files);
-    }
 }
 
 

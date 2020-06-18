@@ -350,7 +350,7 @@ subject.filepath.morph.standard <- function(subjects_dir, subject_id, measure, h
 
     if(tolower(format) == 'auto') {
         curvfile_base = file.path(subjects_dir, subject_id, "surf", sprintf("%s.%s%s.%s", hemi, measure, fwhm_tag, template_subject));
-        curvfile = readable.files(curvfile_base, precedence=c('.mgh', '.mgz', ''));
+        curvfile = freesurferformats::readable.files(curvfile_base, precedence=c('.mgh', '.mgz', ''));
     } else {
         curvfile = file.path(subjects_dir, subject_id, "surf", sprintf("%s.%s%s.%s%s", hemi, measure, fwhm_tag, template_subject, freesurferformats::fs.get.morph.file.ext.for.format(format)));
     }

@@ -8,7 +8,7 @@ subject.volume(
   subjects_dir,
   subject_id,
   volume,
-  format = "AUTO",
+  format = "auto",
   drop_empty_dims = TRUE,
   with_header = FALSE,
   mri_subdir = NULL
