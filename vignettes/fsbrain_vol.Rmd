@@ -1,5 +1,5 @@
 ---
-title: "fsbrain: Visualizing Brain Volume Data From Structural Neuroimaging in GNU R"
+title: "Brain volume visualization with fsbrain"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Brain volume visualization with fsbrain}

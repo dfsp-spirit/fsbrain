@@ -2,7 +2,7 @@
 title: "fsbrain: Managing and Visualizing Structural Neuroimaging Data in GNU R"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Analysis of structural neuroimaging data with fsbrain}
+  %\VignetteIndexEntry{fsbrain: Managing and Visualizing Structural Neuroimaging Data in GNU R}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---

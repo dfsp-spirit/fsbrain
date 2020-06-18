@@ -218,7 +218,7 @@ rglactions.transform <- function(measure_data, rglactions) {
 #'
 #' @importFrom squash rainbow2
 #' @export
-vis.subject.label <- function(subjects_dir, subject_id, label, hemi, surface="white", colormap=NULL, views=c("t4"), rgloptions = list(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=label.colFn.inv, 'col.na'='#FFFFFF00'), map_to_NA=0L, bg=NULL) {
+vis.subject.label <- function(subjects_dir, subject_id, label, hemi, surface="white", colormap=NULL, views=c("t4"), rgloptions = rglot(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=label.colFn.inv, 'col.na'='#FFFFFF00'), map_to_NA=0L, bg=NULL) {
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
@@ -573,7 +573,7 @@ vis.labeldata.on.subject <- function(subjects_dir, vis_subject_id, lh_labeldata,
 #'
 #' @importFrom squash jet
 #' @export
-vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage", morph_data_lh, morph_data_rh, surface="white", colormap=NULL, views=c('t4'), rgloptions = list(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=mkco.seq(), bg=NULL) {
+vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage", morph_data_lh, morph_data_rh, surface="white", colormap=NULL, views=c('t4'), rgloptions = rglot(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=mkco.seq(), bg=NULL) {
 
     if(is.null(subjects_dir)) {
         subjects_dir = find.subjectsdir.of(subject_id=vis_subject_id, mustWork = TRUE);
