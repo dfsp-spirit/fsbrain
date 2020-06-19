@@ -456,7 +456,7 @@ write.region.values <- function(subjects_dir, subject_id, hemi, atlas, region_va
 #'
 #' @param atlas, string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.
 #'
-#' @param region_value_list, named list. A list in which the names are atlas regions, and the values are the value to write to all vertices of that region.
+#' @param region_value_list, named list. A list in which the names are atlas regions, and the values are the value to write to all vertices of that region. You can pass an unnamed list or vector, but then the length must exactly match the number of regions in the atlas, and the order must match the annotation file of the subject and hemisphere. Use with care, and keep in mind that some subjects do not have all regions.
 #'
 #' @param value_for_unlisted_regions, numeric scalar. The value to assign to vertices which are part of atlas regions that are not listed in region_value_list. Defaults to NaN.
 #'
@@ -474,16 +474,44 @@ write.region.values <- function(subjects_dir, subject_id, hemi, atlas, region_va
 #' @family atlas functions
 #'
 #' @export
-spread.values.over.hemi <- function(subjects_dir, subject_id, hemi, atlas, region_value_list, value_for_unlisted_regions=NaN) {
+spread.values.over.hemi <- function(subjects_dir, subject_id, hemi, atlas, region_value_list, value_for_unlisted_regions=NA) {
   if(!(hemi %in% c("lh", "rh"))) {
     stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
   }
 
   annot = subject.annot(subjects_dir, subject_id, hemi, atlas);
+
+  if(is.null(names(region_value_list))) {
+    # This is not a named list. If the number of values matches the number of atlas regions, we can still use it.
+    regions = annot$colortable$struct_names;
+    if(length(region_value_list) == length(regions)) {
+      names(region_value_list) = regions;
+      message(sprintf("Received unnamed list for hemi '%s'. That's totally fine, here is the assumed mapping for double-checking:\n%s\n", hemi, pp.named.list(region_value_list)));
+    } else {
+      stop(sprintf("Received unnamed data of length %d, but atlas '%s' has %d regions for subject '%s' hemi '%s'. Pass a named list, or make sure the length of your data matches the number of atlas regions.\n", length(region_value_list), atlas, length(regions), subject_id, hemi));
+    }
+  }
+
   spread = spread.values.over.annot(annot, region_value_list, value_for_unlisted_regions=value_for_unlisted_regions);
   morph_data = spread$spread_data;
   return(morph_data);
 }
+
+
+#' @title Pretty-print a named list or vector.
+#'
+#' @param named_list a named list or vector
+#'
+#' @return character string, the printed list
+#'
+#' @keywords internal
+pp.named.list <- function(named_list) {
+  dkeys = names(named_list);
+  dvalues = named_list;
+  names(named_list) = NULL;
+  return(paste(dkeys, dvalues, sep='=', collapse=" "));
+}
+
 
 #' @title Spread the values in the region_value_list and return them for one hemisphere.
 #'

@@ -627,6 +627,11 @@ labeldata.from.mask <- function(mask, invert=FALSE) {
 #'
 #' @export
 subject.annot <- function(subjects_dir, subject_id, hemi, atlas) {
+
+    if(!(hemi %in% c("lh", "rh", "both"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
+    }
+
     if(hemi == "both") {
         lh_annot_file = file.path(subjects_dir, subject_id, "label", sprintf("%s.%s.annot", "lh", atlas));
         if(!file.exists(lh_annot_file)) {
