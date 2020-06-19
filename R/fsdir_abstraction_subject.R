@@ -582,7 +582,7 @@ mask.from.labeldata.for.hemi <- function(labels, num_vertices_in_hemi, invert_la
 
 #' @title Create labeldata from a mask.
 #'
-#' @description Create labeldata from a mask. This function is trivial and only calls \code{\link[base]{which}} after performing basic sanity checks.
+#' @description Create labeldata from a mask. This function is trivial and only calls \code{\link{which}} after performing basic sanity checks.
 #'
 #' @param mask a logical vector
 #'

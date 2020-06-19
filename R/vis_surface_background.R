@@ -214,7 +214,7 @@ collayer.bg.atlas <- function(subjects_dir, subject_id, hemi="both", atlas="apar
 #'
 #' @param rh_morph_data numerical vector, can be NULL
 #'
-#' @param makecmap_options named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.
+#' @param makecmap_options named list of parameters to pass to \code{\link{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.
 #'
 #' @param return_metadata logical, whether to return additional metadata as entry 'metadata' in the returned list
 #'
@@ -286,7 +286,7 @@ collayer.from.morphlike.data <- function(lh_morph_data=NULL, rh_morph_data=NULL,
 #'
 #' @param rh_data numerical vector, can be NULL
 #'
-#' @param makecmap_options named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.
+#' @param makecmap_options named list of parameters to pass to \code{\link{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.
 #'
 #' @return named hemi list, each entry is a vector of color strings, one color per surface vertex. The coloring represents the label data.
 #'

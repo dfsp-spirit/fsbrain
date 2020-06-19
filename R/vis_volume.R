@@ -278,11 +278,11 @@ vol.planes <- function(plane=NULL) {
 #'
 #' @description Create an image from each slice along the axis, then stack those into an ImageMagick image stack.
 #'
-#' @param volume a 3D image volume. Can be numeric, or something that can be read directly by \code{\link[magick]{image_read}} in 2D matrices (slices along the axis), e.g., a 3D array of color strings. If a 2D matrix is passed, the resulting stack will contain a single image.
+#' @param volume a 3D image volume. Can be numeric, or something that can be read directly by \code{\link{image_read}} in 2D matrices (slices along the axis), e.g., a 3D array of color strings. If a 2D matrix is passed, the resulting stack will contain a single image.
 #'
 #' @param axis positive integer in range 1L..3L or an axis name, the axis to use.
 #'
-#' @param intensity_scale integer, value by which to scale the intensities in the volume to the range `[0, 1]`. Only used for numeric volumes. Set to NULL for data that can be read directly by \code{\link[magick]{image_read}}, and to 1 for intensity data that requires no scaling. Defaults to 255, which is suitable for 8 bit image data.
+#' @param intensity_scale integer, value by which to scale the intensities in the volume to the range `[0, 1]`. Only used for numeric volumes. Set to NULL for data that can be read directly by \code{\link{image_read}}, and to 1 for intensity data that requires no scaling. Defaults to 255, which is suitable for 8 bit image data.
 #'
 #' @return a vectorized ImageMagick image, containing one subimage per slice. This can be interpreted as an animation or whatever.
 #'
@@ -358,7 +358,7 @@ vol.overlay.colors.from.activation <- function(volume, colormap_fn=squash::blueo
 #'
 #' @param per_col positive integer, the number of subimages per column in the output image. If `NULL`, automatically computed from the number of slices and the `per_row` parameter.
 #'
-#' @param border_geometry string, a geometry string passed to \code{\link[magick]{image_border}} to define the borders to add to each image tile. The default value adds 5 pixels, both horizontally and vertically.
+#' @param border_geometry string, a geometry string passed to \code{\link{image_border}} to define the borders to add to each image tile. The default value adds 5 pixels, both horizontally and vertically.
 #'
 #' @param background_color string, a valid ImageMagick color string such as "white" or "#000080". The color to use when extending images (e.g., when creating the border). Defaults to black.
 #'
@@ -715,7 +715,7 @@ normalize <- function(x) {
 
 #' @title Return triangles for a 3D cube or cuboid.
 #'
-#' @description Each row of the returned matrix encodes a point (the x, y, and z coordinates), and 3 consecutive rows encode a triangle. Obvisouly, a point will occur several times (as part of several triangles). The result can be passed to \code{\link[rgl]{triangles3d}} to render a 3D box. The defaults for the parameters will create a cube with edge length 1 centered at (0, 0, 0).
+#' @description Each row of the returned matrix encodes a point (the x, y, and z coordinates), and 3 consecutive rows encode a triangle. Obvisouly, a point will occur several times (as part of several triangles). The result can be passed to \code{\link{triangles3d}} to render a 3D box. The defaults for the parameters will create a cube with edge length 1 centered at (0, 0, 0).
 #'
 #' @param xmin numeric, minimal x coordinate
 #'

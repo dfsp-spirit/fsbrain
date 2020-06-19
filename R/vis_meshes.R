@@ -11,7 +11,7 @@
 #'
 #' @param style, a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
 #'
-#' @param rgloptions option list passed to \code{\link[rgl]{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))};
+#' @param rgloptions option list passed to \code{\link{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))};
 #'
 #' @param rglactions named list. A list in which the names are from a set of pre-defined actions. Defaults to the empty list.
 #'
@@ -168,17 +168,17 @@ vis.renderable <- function(cmesh, skip_all_na=TRUE, style="default") {
 #'
 #' @param style a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
 #'
-#' @param x rotation x axis value, passed to \code{\link[rgl]{spin3d}}. Defaults to 0.
+#' @param x rotation x axis value, passed to \code{\link{spin3d}}. Defaults to 0.
 #'
-#' @param y rotation y axis value, passed to \code{\link[rgl]{spin3d}}. Defaults to 1.
+#' @param y rotation y axis value, passed to \code{\link{spin3d}}. Defaults to 1.
 #'
-#' @param z rotation z axis value, passed to \code{\link[rgl]{spin3d}}. Defaults to 0.
+#' @param z rotation z axis value, passed to \code{\link{spin3d}}. Defaults to 0.
 #'
-#' @param rpm rotation rpm value, passed to \code{\link[rgl]{spin3d}}. Defaults to 15.
+#' @param rpm rotation rpm value, passed to \code{\link{spin3d}}. Defaults to 15.
 #'
-#' @param duration rotation duration value, passed to \code{\link[rgl]{spin3d}}. Defaults to 20.
+#' @param duration rotation duration value, passed to \code{\link{spin3d}}. Defaults to 20.
 #'
-#' @param rgloptions option list passed to \code{\link[rgl]{par3d}}. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));
+#' @param rgloptions option list passed to \code{\link{par3d}}. Example: rgloptions = list("windowRect"=c(50,50,1000,1000));
 #'
 #' @param rglactions named list. A list in which the names are from a set of pre-defined actions. Defaults to the empty list.
 #'
@@ -224,13 +224,13 @@ vis.coloredmeshes.rotating <- function(coloredmeshes, background="white", skip_a
 #'
 #' @param coloredmeshes list of renderables. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
 #'
-#' @param rotation_angle angle in radians. Passed to \code{\link[rgl]{rotate3d}}.
+#' @param rotation_angle angle in radians. Passed to \code{\link{rotate3d}}.
 #'
-#' @param x x value passed to \code{\link[rgl]{rotate3d}}.
+#' @param x x value passed to \code{\link{rotate3d}}.
 #'
-#' @param y y value passed to \code{\link[rgl]{rotate3d}}.
+#' @param y y value passed to \code{\link{rotate3d}}.
 #'
-#' @param z z value passed to \code{\link[rgl]{rotate3d}}.
+#' @param z z value passed to \code{\link{rotate3d}}.
 #'
 #' @param style a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
 #'
@@ -304,7 +304,7 @@ vis.coloredmesh <- function(cmesh, style="default") {
 #'
 #' @param style A style definition. Can be a character string like 'shiny' or 'from_mesh', or already a named lsit of material properties (which will be returned as-is).
 #'
-#' @return a style, resolved to a parameter list compatible with \code{\link[rgl]{material3d}}.
+#' @return a style, resolved to a parameter list compatible with \code{\link{material3d}}.
 #'
 #' @keywords internal
 get.rglstyle.parameters <- function(renderable, style) {
@@ -328,13 +328,13 @@ get.rglstyle.parameters <- function(renderable, style) {
 
 #' @title Get the default visualization style parameters as a named list.
 #'
-#' @description Run \code{\link[rgl]{material3d}} without arguments to see valid style keywords to create new styles.
+#' @description Run \code{\link{material3d}} without arguments to see valid style keywords to create new styles.
 #'
 #' @param style string. A style name. Available styles are one of: "default", "shiny", "semitransparent".
 #'
-#' @return a style, resolved to a parameter list compatible with \code{\link[rgl]{material3d}}.
+#' @return a style, resolved to a parameter list compatible with \code{\link{material3d}}.
 #'
-#' @seealso \code{\link[rgl]{shade3d}} can use the returned style
+#' @seealso \code{\link{shade3d}} can use the returned style
 #'
 #' @keywords internal
 get.rglstyle <- function(style) {
@@ -352,9 +352,9 @@ get.rglstyle <- function(style) {
 
 #' @title Get the default visualization style parameters as a named list.
 #'
-#' @description The default rendering style, which is is rather plain. Does not look super fancy, but allows for clear data visualization without distractions. Hint: Run \code{\link[rgl]{material3d}} without arguments to see valid style keywords to create new styles.
+#' @description The default rendering style, which is is rather plain. Does not look super fancy, but allows for clear data visualization without distractions. Hint: Run \code{\link{material3d}} without arguments to see valid style keywords to create new styles.
 #'
-#' @return named list, style parameters that can be passed to \code{\link[rgl]{shade3d}} via \code{\link[base]{do.call}}.
+#' @return named list, style parameters that can be passed to \code{\link{shade3d}} via \code{\link{do.call}}.
 #'
 #' @keywords internal
 get.rglstyle.default <- function() {
@@ -364,9 +364,9 @@ get.rglstyle.default <- function() {
 
 #' @title Get the semi-transparent visualization style parameters as a named list.
 #'
-#' @description Semitransparent rendering style. This style has a very negative impact on rendering performance. Hint: Run \code{\link[rgl]{material3d}} without arguments to see valid style keywords to create new styles.
+#' @description Semitransparent rendering style. This style has a very negative impact on rendering performance. Hint: Run \code{\link{material3d}} without arguments to see valid style keywords to create new styles.
 #'
-#' @return named list, style parameters that can be passed to \code{\link[rgl]{shade3d}} via \code{\link[base]{do.call}}.
+#' @return named list, style parameters that can be passed to \code{\link{shade3d}} via \code{\link{do.call}}.
 #'
 #' @keywords internal
 get.rglstyle.semitransparent <- function() {
@@ -376,9 +376,9 @@ get.rglstyle.semitransparent <- function() {
 
 #' @title Get a shiny visualization style.
 #'
-#' @description A shiny or glossy rendering style. Looks a bit more modern, but the resulting highlights may make the interpretation of the plotted data a bit harder in some areas. Hint: Run \code{\link[rgl]{material3d}} without arguments to see valid style keywords to create new styles.
+#' @description A shiny or glossy rendering style. Looks a bit more modern, but the resulting highlights may make the interpretation of the plotted data a bit harder in some areas. Hint: Run \code{\link{material3d}} without arguments to see valid style keywords to create new styles.
 #'
-#' @return named list, style parameters that can be passed to to \code{\link[rgl]{shade3d}} via \code{\link[base]{do.call}}.
+#' @return named list, style parameters that can be passed to to \code{\link{shade3d}} via \code{\link{do.call}}.
 #'
 #' @keywords internal
 get.rglstyle.shiny <- function() {

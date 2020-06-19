@@ -1,6 +1,6 @@
 #' @title Transform first character of a string to uppercase.
 #'
-#' @description Transform first character of a string to uppercase. This is useful when labeling plots. Important: this function does not know about different encodings, languages or anything, it just calls \code{\link[base]{toupper}} for the first character.
+#' @description Transform first character of a string to uppercase. This is useful when labeling plots. Important: this function does not know about different encodings, languages or anything, it just calls \code{\link{toupper}} for the first character.
 #'
 #' @param word, string. Any string.
 #'
@@ -474,7 +474,7 @@ hemilist.unwrap <- function(hemi_list, hemi=NULL, allow_null_list=FALSE) {
 #'
 #' @param hemi_list named list, can have entries 'lh' and/or 'rh'
 #'
-#' @return the data combined with \code{\link[base]{c}}, or NULL if both entries are NULL.
+#' @return the data combined with \code{\link{c}}, or NULL if both entries are NULL.
 #'
 #' @export
 hemilist.get.combined.data <- function(hemi_list) {
@@ -508,7 +508,7 @@ is.hemilist <- function(x) {
 
 #' @title Create final `makecmap_options` list
 #'
-#' @description Create final makecmap_options to pass to \code{\link[squash]{makecmap}} from existing `makecmap_options` and a colormap function. Used in the vis functions, like \code{\link[fsbrain]{vis.subject.morph.native}}, see the note.
+#' @description Create final makecmap_options to pass to \code{\link{makecmap}} from existing `makecmap_options` and a colormap function. Used in the vis functions, like \code{\link[fsbrain]{vis.subject.morph.native}}, see the note.
 #'
 #' @param makecmap_options list of `makecmap_options` or `NULL`
 #'
