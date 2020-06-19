@@ -7,9 +7,9 @@
 get.rglstyle.semitransparent()
 }
 \value{
-named list, style parameters that can be passed to \code{\link[rgl]{shade3d}} via \code{\link[base]{do.call}}.
+named list, style parameters that can be passed to \code{\link{shade3d}} via \code{\link{do.call}}.
 }
 \description{
-Semitransparent rendering style. This style has a very negative impact on rendering performance. Hint: Run \code{\link[rgl]{material3d}} without arguments to see valid style keywords to create new styles.
+Semitransparent rendering style. This style has a very negative impact on rendering performance. Hint: Run \code{\link{material3d}} without arguments to see valid style keywords to create new styles.
 }
 \keyword{internal}

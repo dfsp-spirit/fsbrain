@@ -13,13 +13,13 @@ rglvoxels(centers, r = 1, voxelcol = NULL, ...)
 
 \item{voxelcol}{vector of rgb color strings for the individual voxels. Its length must be identical to \code{nrow(centers)} if given.}
 
-\item{...}{material properties, passed to \code{\link[rgl]{triangles3d}}. Example: \code{color = "#0000ff", lit=FALSE}.}
+\item{...}{material properties, passed to \code{\link{triangles3d}}. Example: \code{color = "#0000ff", lit=FALSE}.}
 }
 \value{
 list of `fs.coloredvoxels` instances, invisible. The function is called for the side effect of visualizing the data, and usually you can ignore the return value.
 }
 \description{
-Draw 3D boxes at all given coordinates using rgl, analogous to \code{\link[rgl]{rgl.spheres}}. Constructs the coordinates for triangles making up the boxes, then uses \code{\link[rgl]{triangles3d}} to render them.
+Draw 3D boxes at all given coordinates using rgl, analogous to \code{\link{rgl.spheres}}. Constructs the coordinates for triangles making up the boxes, then uses \code{\link{triangles3d}} to render them.
 }
 \examples{
 \donttest{

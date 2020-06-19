@@ -21,7 +21,7 @@ coloredmesh.from.preloaded.data(
 
 \item{hemi}{character string, one of 'lh' or 'rh'. Metadata, the hemisphere. May be used by visualization functions to decide whether to draw the mesh in certain views.}
 
-\item{makecmap_options}{named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.}
+\item{makecmap_options}{named list of parameters to pass to \code{\link{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.}
 }
 \value{
 as fs.coloredmesh instance

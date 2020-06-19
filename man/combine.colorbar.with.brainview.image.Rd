@@ -22,7 +22,7 @@ combine.colorbar.with.brainview.image(
 
 \item{output_img}{path to output image, including the file extension.}
 
-\item{offset}{offset string passed to \code{\link[magick]{image_composite}}. Allows you to shift the location of the colorbar in the final image.}
+\item{offset}{offset string passed to \code{\link{image_composite}}. Allows you to shift the location of the colorbar in the final image.}
 
 \item{extend_brainview_img_height_by}{integer value in pixels, the size of the lower border to add to the brainview_img. Increase this if the lower part of the colorbar is off the image canvas.}
 

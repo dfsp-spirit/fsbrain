@@ -15,13 +15,13 @@ vis.rotated.coloredmeshes(
 )
 }
 \arguments{
-\item{rotation_angle}{angle in radians. Passed to \code{\link[rgl]{rotate3d}}.}
+\item{rotation_angle}{angle in radians. Passed to \code{\link{rotate3d}}.}
 
-\item{x}{x value passed to \code{\link[rgl]{rotate3d}}.}
+\item{x}{x value passed to \code{\link{rotate3d}}.}
 
-\item{y}{y value passed to \code{\link[rgl]{rotate3d}}.}
+\item{y}{y value passed to \code{\link{rotate3d}}.}
 
-\item{z}{z value passed to \code{\link[rgl]{rotate3d}}.}
+\item{z}{z value passed to \code{\link{rotate3d}}.}
 
 \item{style}{a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.}
 

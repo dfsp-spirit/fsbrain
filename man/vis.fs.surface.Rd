@@ -22,7 +22,7 @@ vis.fs.surface(
 
 \item{hemi}{character string, one of 'lh' or 'rh'. This may be used by visualization functions to decide whether or not to show this mesh in a certain view.}
 
-\item{makecmap_options}{named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'. Should include at least a colormap function as name 'colFn'.}
+\item{makecmap_options}{named list of parameters to pass to \code{\link{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'. Should include at least a colormap function as name 'colFn'.}
 
 \item{...}{extra parameters to pass to \code{\link[fsbrain]{vis.coloredmeshes}}.}
 }

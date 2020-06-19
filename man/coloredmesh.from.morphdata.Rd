@@ -25,12 +25,12 @@ coloredmesh.from.morphdata(
 
 \item{surface}{character string or `fs.surface` instance. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 
-\item{colormap}{a colormap function. See the squash package for some colormaps. Defaults to \code{\link[squash]{jet}}.}
+\item{colormap}{a colormap function. See the squash package for some colormaps. Defaults to \code{\link{jet}}.}
 
-\item{makecmap_options}{named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.}
+\item{makecmap_options}{named list of parameters to pass to \code{\link{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.}
 }
 \value{
-coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "render", logical, whether to render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'.
+coloredmesh. A named list with entries: "mesh" the \code{\link{tmesh3d}} mesh object. "col": the mesh colors. "render", logical, whether to render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'.
 }
 \description{
 Create a coloredmesh from arbitrary data.

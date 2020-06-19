@@ -29,7 +29,7 @@ group.multimorph.agg.standard(
 
 \item{fwhm, }{string. Smoothing as string, e.g. '10' or '25'.}
 
-\item{agg_fun, }{function. An R function that aggregates data, typically \code{\link[base]{max}}, mean, min or something similar. Note: this is NOT a string, put the function name without quotes. Defaults to mean.}
+\item{agg_fun, }{function. An R function that aggregates data, typically \code{\link{max}}, mean, min or something similar. Note: this is NOT a string, put the function name without quotes. Defaults to mean.}
 
 \item{template_subject, }{string. Template subject name, defaults to 'fsaverage'.}
 
@@ -37,7 +37,7 @@ group.multimorph.agg.standard(
 
 \item{cast, }{Whether a separate 'hemi' column should exist.}
 
-\item{cortex_only}{logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the subjects. Also not that the aggregation function will need to be able to cope with NA values if you set this to TRUE. You can use 'agg_fun_extra_params' if needed to achieve that, depending on the function. Foe example, if you use the \code{\link[base]{mean}} function, you could set \code{agg_fun_extra_params=list("na.rm"=TRUE)} to get the mean of the vertices which are not masked. Defaults to FALSE.}
+\item{cortex_only}{logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the subjects. Also not that the aggregation function will need to be able to cope with NA values if you set this to TRUE. You can use 'agg_fun_extra_params' if needed to achieve that, depending on the function. Foe example, if you use the \code{\link{mean}} function, you could set \code{agg_fun_extra_params=list("na.rm"=TRUE)} to get the mean of the vertices which are not masked. Defaults to FALSE.}
 
 \item{agg_fun_extra_params}{named list, extra parameters to pass to the aggregation function 'agg_fun' besides the loaded morphometry data. This is useful if you have masked the data and need to ignore NA values in the agg_fun.}
 }

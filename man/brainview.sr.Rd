@@ -23,7 +23,7 @@ brainview.sr(
 \arguments{
 \item{coloredmeshes, }{list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.}
 
-\item{background}{string, background color passed to \code{\link[rgl]{bg3d}}.}
+\item{background}{string, background color passed to \code{\link{bg3d}}.}
 
 \item{skip_all_na}{logical, whether to skip (i.e., not render) meshes in the list that have the property 'render' set to FALSE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.}
 
@@ -31,17 +31,17 @@ brainview.sr(
 
 \item{draw_labels}{logical, whether to draw label text for the different views that show information on the view direction and hemisphere displayed in a subplot. Defaults to FALSE.}
 
-\item{x}{rotation x axis value, passed to \code{\link[rgl]{spin3d}}. Defaults to 0.}
+\item{x}{rotation x axis value, passed to \code{\link{spin3d}}. Defaults to 0.}
 
-\item{y}{rotation y axis value, passed to \code{\link[rgl]{spin3d}}. Defaults to 1.}
+\item{y}{rotation y axis value, passed to \code{\link{spin3d}}. Defaults to 1.}
 
-\item{z}{rotation z axis value, passed to \code{\link[rgl]{spin3d}}. Defaults to 0.}
+\item{z}{rotation z axis value, passed to \code{\link{spin3d}}. Defaults to 0.}
 
-\item{rpm}{rotation rpm value, passed to \code{\link[rgl]{spin3d}}. Defaults to 15.}
+\item{rpm}{rotation rpm value, passed to \code{\link{spin3d}}. Defaults to 15.}
 
-\item{duration}{rotation duration value, passed to \code{\link[rgl]{spin3d}}. Defaults to 20.}
+\item{duration}{rotation duration value, passed to \code{\link{spin3d}}. Defaults to 20.}
 
-\item{rgloptions, }{named list. Parameters passed to \code{\link[rgl]{par3d}}. Defaults to the empty list.}
+\item{rgloptions, }{named list. Parameters passed to \code{\link{par3d}}. Defaults to the empty list.}
 
 \item{rglactions, }{named list. A list in which the names are from a set of pre-defined actions. Defaults to the empty list.}
 

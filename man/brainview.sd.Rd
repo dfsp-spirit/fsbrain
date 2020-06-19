@@ -20,13 +20,13 @@ brainview.sd(
 
 \item{view_angle}{character string, the view angle. One of 'lateral_lh', 'dorsal', 'lateral_rh', 'medial_lh', 'ventral', 'medial_rh', 'rostral' or 'caudal'. See \code{\link[fsbrain]{get.view.angle.names}}.}
 
-\item{background}{string, background color passed to \code{\link[rgl]{bg3d}}.}
+\item{background}{string, background color passed to \code{\link{bg3d}}.}
 
 \item{skip_all_na}{logical, whether to skip (i.e., not render) meshes in the list that have the property 'render' set to FALSE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.}
 
 \item{style, }{a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.}
 
-\item{rgloptions, }{named list. Parameters passed to \code{\link[rgl]{par3d}}. Defaults to the empty list. To increase plot resolution to 2000x1600 px, try: \code{rgloptions=list("windowRect"=c(50,50,2000,1600))}.}
+\item{rgloptions, }{named list. Parameters passed to \code{\link{par3d}}. Defaults to the empty list. To increase plot resolution to 2000x1600 px, try: \code{rgloptions=list("windowRect"=c(50,50,2000,1600))}.}
 
 \item{rglactions, }{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.}
 

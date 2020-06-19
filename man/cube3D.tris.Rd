@@ -36,7 +36,7 @@ cube3D.tris(
 numerical matrix with 36 rows and 3 columns, the 3D coordinates. Each row encodes a point (the x, y, and z coordinates), and 3 consecutive rows encode a triangle.
 }
 \description{
-Each row of the returned matrix encodes a point (the x, y, and z coordinates), and 3 consecutive rows encode a triangle. Obvisouly, a point will occur several times (as part of several triangles). The result can be passed to \code{\link[rgl]{triangles3d}} to render a 3D box. The defaults for the parameters will create a cube with edge length 1 centered at (0, 0, 0).
+Each row of the returned matrix encodes a point (the x, y, and z coordinates), and 3 consecutive rows encode a triangle. Obvisouly, a point will occur several times (as part of several triangles). The result can be passed to \code{\link{triangles3d}} to render a 3D box. The defaults for the parameters will create a cube with edge length 1 centered at (0, 0, 0).
 }
 \examples{
    # Create a cube with edge length 2, centered at (3,4,5):

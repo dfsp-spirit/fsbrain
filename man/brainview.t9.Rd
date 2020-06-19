@@ -18,7 +18,7 @@ brainview.t9(
 \arguments{
 \item{coloredmeshes, }{list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.}
 
-\item{background}{string, background color passed to \code{\link[rgl]{bg3d}}.}
+\item{background}{string, background color passed to \code{\link{bg3d}}.}
 
 \item{skip_all_na}{logical, whether to skip (i.e., not render) meshes in the list that have the property 'render' set to FALSE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.}
 
@@ -26,7 +26,7 @@ brainview.t9(
 
 \item{draw_labels}{logical, whether to draw label text for the different views that show information on the view direction and hemisphere displayed in a subplot. Defaults to FALSE.}
 
-\item{rgloptions, }{named list. Parameters passed to \code{\link[rgl]{par3d}}. Defaults to the empty list. To increase plot resolution to 2000x1600 px, try: \code{rgloptions=list("windowRect"=c(50,50,2000,1600))}.}
+\item{rgloptions, }{named list. Parameters passed to \code{\link{par3d}}. Defaults to the empty list. To increase plot resolution to 2000x1600 px, try: \code{rgloptions=list("windowRect"=c(50,50,2000,1600))}.}
 
 \item{rglactions, }{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.}
 

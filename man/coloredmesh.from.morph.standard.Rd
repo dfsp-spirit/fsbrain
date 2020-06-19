@@ -36,16 +36,16 @@ coloredmesh.from.morph.standard(
 
 \item{template_subjects_dir}{The template subjects dir. If `NULL`, the value of the parameter 'subjects_dir' is used. Defaults to NULL. If you have FreeSurfer installed and configured, and are using the standard fsaverage subject, try passing the result of calling 'file.path(Sys.getenv('FREESURFER_HOME'), 'subjects')'.}
 
-\item{colormap}{a colormap function. See the squash package for some colormaps. Defaults to \code{\link[squash]{jet}}.}
+\item{colormap}{a colormap function. See the squash package for some colormaps. Defaults to \code{\link{jet}}.}
 
 \item{clip}{numeric vector of length 2 or NULL. If given, the 2 values are interpreted as lower and upper percentiles, and the morph data is clipped at the given lower and upper percentile (see \code{\link[fsbrain]{clip.data}}). Defaults to NULL (no data clipping).}
 
 \item{cortex_only}{logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the subject. Defaults to FALSE.}
 
-\item{makecmap_options}{named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.}
+\item{makecmap_options}{named list of parameters to pass to \code{\link{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.}
 }
 \value{
-coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "render", logical, whether to render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'.
+coloredmesh. A named list with entries: "mesh" the \code{\link{tmesh3d}} mesh object. "col": the mesh colors. "render", logical, whether to render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'.
 }
 \description{
 Create a coloredmesh from standard space morphometry data.

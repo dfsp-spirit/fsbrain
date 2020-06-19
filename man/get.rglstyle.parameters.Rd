@@ -12,7 +12,7 @@ get.rglstyle.parameters(renderable, style)
 \item{style}{A style definition. Can be a character string like 'shiny' or 'from_mesh', or already a named lsit of material properties (which will be returned as-is).}
 }
 \value{
-a style, resolved to a parameter list compatible with \code{\link[rgl]{material3d}}.
+a style, resolved to a parameter list compatible with \code{\link{material3d}}.
 }
 \description{
 A style definition can be a character string like "shiny", already a parameter list, or a command like 'from_mesh' that tells us to get the style from the renderable. This function creates the final parameters from the definition and the renderable.

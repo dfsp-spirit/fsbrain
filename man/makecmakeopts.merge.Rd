@@ -17,7 +17,7 @@ makecmakeopts.merge(makecmap_options, colormap, default_colormap = squash::jet)
 valid `makecmap_options`
 }
 \description{
-Create final makecmap_options to pass to \code{\link[squash]{makecmap}} from existing `makecmap_options` and a colormap function. Used in the vis functions, like \code{\link[fsbrain]{vis.subject.morph.native}}, see the note.
+Create final makecmap_options to pass to \code{\link{makecmap}} from existing `makecmap_options` and a colormap function. Used in the vis functions, like \code{\link[fsbrain]{vis.subject.morph.native}}, see the note.
 }
 \note{
 For backwards compatibility, there are currently two different methods (parameters) to specify a colormap in the vis functions. This function merges the information from both methods.

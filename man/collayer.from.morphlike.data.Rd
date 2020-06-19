@@ -16,7 +16,7 @@ collayer.from.morphlike.data(
 
 \item{rh_morph_data}{numerical vector, can be NULL}
 
-\item{makecmap_options}{named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.}
+\item{makecmap_options}{named list of parameters to pass to \code{\link{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.}
 
 \item{return_metadata}{logical, whether to return additional metadata as entry 'metadata' in the returned list}
 }

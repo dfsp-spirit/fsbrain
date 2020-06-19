@@ -23,7 +23,7 @@ vis.coloredmeshes(
 
 \item{style, }{a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.}
 
-\item{rgloptions}{option list passed to \code{\link[rgl]{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))};}
+\item{rgloptions}{option list passed to \code{\link{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))};}
 
 \item{rglactions}{named list. A list in which the names are from a set of pre-defined actions. Defaults to the empty list.}
 

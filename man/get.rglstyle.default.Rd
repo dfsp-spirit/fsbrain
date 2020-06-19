@@ -7,9 +7,9 @@
 get.rglstyle.default()
 }
 \value{
-named list, style parameters that can be passed to \code{\link[rgl]{shade3d}} via \code{\link[base]{do.call}}.
+named list, style parameters that can be passed to \code{\link{shade3d}} via \code{\link{do.call}}.
 }
 \description{
-The default rendering style, which is is rather plain. Does not look super fancy, but allows for clear data visualization without distractions. Hint: Run \code{\link[rgl]{material3d}} without arguments to see valid style keywords to create new styles.
+The default rendering style, which is is rather plain. Does not look super fancy, but allows for clear data visualization without distractions. Hint: Run \code{\link{material3d}} without arguments to see valid style keywords to create new styles.
 }
 \keyword{internal}

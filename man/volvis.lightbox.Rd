@@ -26,7 +26,7 @@ volvis.lightbox(
 
 \item{per_col}{positive integer, the number of subimages per column in the output image. If `NULL`, automatically computed from the number of slices and the `per_row` parameter.}
 
-\item{border_geometry}{string, a geometry string passed to \code{\link[magick]{image_border}} to define the borders to add to each image tile. The default value adds 5 pixels, both horizontally and vertically.}
+\item{border_geometry}{string, a geometry string passed to \code{\link{image_border}} to define the borders to add to each image tile. The default value adds 5 pixels, both horizontally and vertically.}
 
 \item{background_color}{string, a valid ImageMagick color string such as "white" or "#000080". The color to use when extending images (e.g., when creating the border). Defaults to black.}
 

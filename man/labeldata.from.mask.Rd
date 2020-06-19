@@ -15,7 +15,7 @@ labeldata.from.mask(mask, invert = FALSE)
 labeldata. The list of indices which are TRUE in the mask (or the ones which FALSE if 'invert' is TRUE).
 }
 \description{
-Create labeldata from a mask. This function is trivial and only calls \code{\link[base]{which}} after performing basic sanity checks.
+Create labeldata from a mask. This function is trivial and only calls \code{\link{which}} after performing basic sanity checks.
 }
 \seealso{
 Other label data functions: 

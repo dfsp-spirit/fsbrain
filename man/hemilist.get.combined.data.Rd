@@ -10,7 +10,7 @@ hemilist.get.combined.data(hemi_list)
 \item{hemi_list}{named list, can have entries 'lh' and/or 'rh'}
 }
 \value{
-the data combined with \code{\link[base]{c}}, or NULL if both entries are NULL.
+the data combined with \code{\link{c}}, or NULL if both entries are NULL.
 }
 \description{
 Get combined data of hemi list

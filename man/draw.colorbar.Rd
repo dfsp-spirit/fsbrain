@@ -14,7 +14,7 @@ draw.colorbar(coloredmeshes, horizontal = FALSE, ...)
 \item{coloredmesh}{fs.coloredmesh as returned by the coloredmesh.from.* functions.}
 }
 \description{
-Requires a rgl 3d visualisation to be open that already contains a rendered object. Uses \code{\link[rgl]{bgplot3d}} to add a colorbar in the background of the plot using \code{\link[fields]{image.plot}}. Experimental.
+Requires a rgl 3d visualisation to be open that already contains a rendered object. Uses \code{\link{bgplot3d}} to add a colorbar in the background of the plot using \code{\link[fields]{image.plot}}. Experimental.
 }
 \note{
 To adapt or change the colormap, you should use the 'makecmap_options' parameter of the vis.* function used to construct the coloredmeshes (e.g., \code{\link[fsbrain]{vis.subject.morph.native}}).
