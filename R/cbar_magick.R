@@ -10,7 +10,7 @@
 #'
 #' @param output_img path to output image, including the file extension.
 #'
-#' @param offset offset string passed to \code{\link{image_composite}}. Allows you to shift the location of the colorbar in the final image.
+#' @param offset offset string passed to \code{magick::image_composite}. Allows you to shift the location of the colorbar in the final image.
 #'
 #' @param extend_brainview_img_height_by integer value in pixels, the size of the lower border to add to the brainview_img. Increase this if the lower part of the colorbar is off the image canvas.
 #'
@@ -185,7 +185,7 @@ combine.colorbar.with.brainview.image.vertical <- function(brainview_img, colorb
 #'
 #' @param output_animation path to output image in gif format, must include the '.gif' file extension
 #'
-#' @param offset offset string passed to \code{\link{image_composite}}. Allows you to shift the location of the colorbar in the final image.
+#' @param offset offset string passed to \code{magick::image_composite}. Allows you to shift the location of the colorbar in the final image.
 #'
 #' @param extend_brainview_img_height_by integer value in pixels, the size of the lower border to add to the brainview_img. Use this if the lower part of the colorbar is off the image canvas.
 #'

@@ -21,7 +21,7 @@ combine.colorbar.with.brainview.image.vertical(
 
 \item{output_img}{path to output image, including the file extension.}
 
-\item{offset}{offset string passed to \code{\link{image_composite}}. Allows you to shift the location of the colorbar in the final image.}
+\item{offset}{offset string passed to \code{magick::image_composite}. Allows you to shift the location of the colorbar in the final image.}
 
 \item{extend_brainview_img_width_by}{integer value in pixels, the size of the right border to add to the brainview_img. Increase this if the right part of the colorbar is off the image canvas.}
 

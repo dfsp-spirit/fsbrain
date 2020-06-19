@@ -16,9 +16,9 @@ vislayout.from.coloredmeshes(
 )
 }
 \arguments{
-\item{coloredmeshes, }{list of coloredmesh. A coloredmesh is a named list as returned by the `coloredmesh.from*` functions (like \code{\link[fsbrain]{coloredmesh.from.morph.native}}). It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh. The `vis*` functions (like \code{\link[fsbrain]{vis.subject.morph.native}}) all return a list of coloredmeshes.}
+\item{coloredmeshes, }{list of coloredmesh. A coloredmesh is a named list as returned by the `coloredmesh.from*` functions (like \code{\link{coloredmesh.from.morph.native}}). It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh. The `vis*` functions (like \code{\link[fsbrain]{vis.subject.morph.native}}) all return a list of coloredmeshes.}
 
-\item{view_angles}{list of strings. See \code{\link[fsbrain]{get.view.angle.names}} for all valid strings.}
+\item{view_angles}{list of strings. See \code{\link{get.view.angle.names}} for all valid strings.}
 
 \item{rgloptions}{option list passed to \code{\link{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))}.}
 
