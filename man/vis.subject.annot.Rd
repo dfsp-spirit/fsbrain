@@ -11,7 +11,7 @@ vis.subject.annot(
   hemi = "both",
   surface = "white",
   views = c("t4"),
-  rgloptions = list(),
+  rgloptions = rglot(),
   rglactions = list(),
   outline = FALSE
 )

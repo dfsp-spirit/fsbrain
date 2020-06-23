@@ -781,4 +781,31 @@ hemi.lobe.labels <- function(subjects_dir, subject_id, hemi, include_cingulate=T
 }
 
 
+#' @title Get subjects vertex count.
+#'
+#' @description Determine vertex counts for the brain meshes of a subject.
+#'
+#' @inheritParams subject.surface
+#'
+#' @param do_sum logical, whether to return the sum of the vertex counts for lh and rh. Ignored unless 'hemi' is 'both'. If set, a single scalar will be returned.
+#'
+#' @return integer of hemilist of integers, the vertex count. If hemi is 'both' and 'do_sum' is `FALSE`, a hemilist of integers is returned. Otherwise, a single integer.
+#'
+#' @export
+subject.num.verts <- function(subjects_dir, subject_id, surface='white', hemi='both', do_sum=FALSE) {
+    if(!(hemi %in% c("lh", "rh", "both"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
+    }
+    sf = subject.surface(subjects_dir, subject_id, surface=surface, hemi=hemi);
+
+    if(hemi == 'both') {
+        if(do_sum) {
+            return(nrow(sf$lh$vertices) + nrow(sf$rh$vertices));
+        }
+        return(list('lh'=nrow(sf$lh$vertices), 'rh'=nrow(sf$rh$vertices)));
+    }
+    return(nrow(sf$vertices));
+}
+
+
 

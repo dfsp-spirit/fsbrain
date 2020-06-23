@@ -11,7 +11,7 @@ vis.color.on.subject(
   color_rh,
   surface = "white",
   views = c("t4"),
-  rgloptions = list(),
+  rgloptions = rglot(),
   rglactions = list()
 )
 }

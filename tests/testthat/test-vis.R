@@ -182,3 +182,45 @@ test_that("We can visualize clusters on fsaverage with a background.", {
 
     expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
 })
+
+
+test_that("We can visualize arbitrary data on a subjects surface using a single data vector for both hemispheres.", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+    skip_if_not(box.can.run.all.tests(), "This test requires X11.");
+
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+    subject_id = 'subject1';
+
+    num_verts_subject1_lh = 149244;  # We need to know these to generate random data of suitable length.
+    num_verts_subject1_rh = 153333;
+
+    morph_data_both = rnorm((num_verts_subject1_lh + num_verts_subject1_rh), 2.0, 1.0);
+
+    # Check:
+    vis.data.on.subject(subjects_dir, subject_id, morph_data_both=morph_data_both, rgloptions = rglot(), draw_colorbar = T);
+    vis.symmetric.data.on.subject(subjects_dir, subject_id, morph_data_both=morph_data_both, rgloptions = rglot(), draw_colorbar = T);
+
+    expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
+})
+
+
+test_that("We can retrieve vertex counts for a subject.", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+    subject_id = 'subject1';
+
+    num_verts_subject1_lh = 149244L;  # We need to know these to generate random data of suitable length.
+    num_verts_subject1_rh = 153333L;
+
+    nv = subject.num.verts(subjects_dir, subject_id);
+    expect_equal(nv$lh, num_verts_subject1_lh);
+    expect_equal(nv$rh, num_verts_subject1_rh);
+
+    expect_equal(subject.num.verts(subjects_dir, subject_id, do_sum = TRUE), (num_verts_subject1_lh + num_verts_subject1_rh));
+    expect_equal(subject.num.verts(subjects_dir, subject_id, hemi = 'lh'), num_verts_subject1_lh);
+    expect_equal(subject.num.verts(subjects_dir, subject_id, hemi = 'rh'), num_verts_subject1_rh);
+})
+

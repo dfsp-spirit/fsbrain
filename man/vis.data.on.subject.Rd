@@ -7,8 +7,8 @@
 vis.data.on.subject(
   subjects_dir,
   vis_subject_id,
-  morph_data_lh,
-  morph_data_rh,
+  morph_data_lh = NULL,
+  morph_data_rh = NULL,
   surface = "white",
   colormap = NULL,
   views = c("t4"),
@@ -16,7 +16,8 @@ vis.data.on.subject(
   rglactions = list(),
   draw_colorbar = FALSE,
   makecmap_options = mkco.seq(),
-  bg = NULL
+  bg = NULL,
+  morph_data_both = NULL
 )
 }
 \arguments{
@@ -43,6 +44,8 @@ vis.data.on.subject(
 \item{makecmap_options}{named list of parameters to pass to \code{\link{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'. Should include at least a colormap function as name 'colFn'.}
 
 \item{bg}{a background definition. Can be a surface color layer or a character string, see \code{\link[fsbrain]{collayer.bg}} for valid strings.}
+
+\item{morph_data_both}{numeric vector or NULL, the data to visualize on both hemispheres. This must be a single vector with length equal to the sum of the vertex counts of the left and the right hemisphere. The data for the left hemisphere must come first. If this is given, 'morph_data_lh' and 'morph_data_rh' must be NULL.}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.
