@@ -109,6 +109,9 @@ rglactions.transform <- function(measure_data, rglactions) {
 #'
 #' @return a function that takes as argument the data, and clips it to the requested range. Designed to be used as \code{rglactions$trans_fun} in vis functions, to limit the colorbar and data range.
 #'
+#' @examples
+#'    rglactions = list("trans_fun"=limit_fun(2,3));
+#'
 #' @export
 limit_fun <- function(vmin, vmax) {
     limit_fun <- function(data) {

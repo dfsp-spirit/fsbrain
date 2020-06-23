@@ -17,3 +17,7 @@ a function that takes as argument the data, and clips it to the requested range.
 \description{
 Get data limiting function to use in rglactions as 'trans_fun' to transform data. This is typically used to limit the colorbar in a plot to a certain range. This is similar to \code{\link{clip.data}}, but uses absolute values instead of percentiles to clip.
 }
+\examples{
+   rglactions = list("trans_fun"=limit_fun(2,3)));
+
+}
