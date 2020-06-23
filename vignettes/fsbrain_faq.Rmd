@@ -77,6 +77,30 @@ vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', rglactions
 This opens the plot in a window as usual and also saves it in PNG format to the file *subject1_thickness.png* in your home directory.
 
 
+### When visualizing data with outliers and long tails, the colors are not helpful. What to do?
+
+If you have data with very few but extreme outliers, almost all of your plot will have a single color. This happens for example when plotting curvature data. You can of course first load the data using `subject.morph.native`, adjust it (transform it, remove outliers), and then plot it using `vis.data.on.subject`.
+
+In many cases, it is easier to use `rglactions` to clip the data to the 5th to 95th percentile, which can be done with an rglaction. E.g.:
+
+```{r, eval = FALSE}
+rgla = list('trans_fun'=clip.data);
+vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'curv', rglactions=rgla);
+```
+
+
+### Can I limit the data range, including the min and max values displayed on the color bar?
+
+This can be done using `rglactions` as well, in combination with `limit_fun`:
+
+```{r, eval = FALSE}
+rgla = list('trans_fun'=limit_fun(2,3));
+vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', rglactions=rgla);
+```
+
+This will limit your data to the range 2 to 3.
+
+
 ### How can I change the colormap for the plots?
 
 Pass a colormap function to any visualization function that supports the *makecmap_options* parameter, as entry *colFn* like illustrated below:

@@ -157,37 +157,6 @@ vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi="
 }
 
 
-#' @title Apply data transformation rglactions.
-#'
-#' @param measure_data numeric vector, or hemilist of numeric vectors. The data, usually vertex-wise morphometry data.
-#'
-#' @param rglactions named list, passed as parameter 'rglactions' to functions like \code{\link[fsbrain]{vis.subject.morph.native}}.
-#'
-#' @return the transformed data
-#'
-#' @keywords internal
-rglactions.transform <- function(measure_data, rglactions) {
-    if(is.null(rglactions)) {
-        return(measure_data);
-    }
-    if(is.hemilist(measure_data)) {
-        return(lapply(measure_data, rglactions.transform, rglactions=rglactions));
-    }
-    if(hasIn(rglactions, list('clip_data'))) {
-        clip_range = rglactions$clip_data;
-        measure_data = clip.data(measure_data, lower=clip_range[1], upper=clip_range[2]);
-    }
-    if(hasIn(rglactions, list('trans_fun'))) {
-        trans_fun = rglactions$trans_fun;
-        if(! is.function(trans_fun)) {
-            stop("The value of rglactions entry 'trans_fun' must be a function.");
-        }
-        measure_data = trans_fun(measure_data);
-    }
-    return(measure_data);
-}
-
-
 #' @title Visualize a binary label for a subject.
 #'
 #' @description Visualize a label for a subject. A label is just a logical vector with one entry for each vertex in the mesh. Each vertex may additionally be associated with a scalar value, but this function ignored that.

@@ -292,52 +292,6 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 }
 
 
-#' @title Perform rglactions, like taking screenshots.
-#'
-#' @description Take a list specifying actions and execute them. This function should be called once an rgl scene has been setup and rendered. A typical usecase is to save a screenshot of the scene.
-#'
-#' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
-#'
-#' @param at_index integer, the index to use in case of vectorized entries. Allows using different output_images for different views or similar.
-#'
-#' @keywords internal
-#' @importFrom rgl rgl.snapshot
-perform.rglactions <- function(rglactions, at_index=NULL) {
-    if(is.list(rglactions)) {
-        if("text" %in% names(rglactions)) {
-            do.call(rgl::text3d, rglactions$text);
-        }
-        if("snapshot_png" %in% names(rglactions)) {
-            if(length(rglactions$snapshot_png) == 1 || is.null(at_index)) {
-                output_image = path.expand(rglactions$snapshot_png);
-            } else {
-                if(length(rglactions$snapshot_png) < at_index) {
-                    warning(sprintf("Requested rglaction at_index '%d' but only %d entries exist for action 'snapshot_png'.\n", at_index, length(rglactions$snapshot_png)));
-                }
-                output_image = path.expand(rglactions$snapshot_png[[at_index]]);
-            }
-            rgl::rgl.snapshot(output_image, fmt="png");
-            message(sprintf("Screenshot written to '%s' (current working dir is '%s').\n", output_image, getwd()));
-        }
-    }
-}
-
-
-#' @title Check for a key in names of rglactions.
-#'
-#' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
-#'
-#' @return logical, whether the rglactions instance has the requested key as a name.
-#'
-#' @keywords internal
-rglactions.has.key <- function(rglactions, key) {
-    if(is.list(rglactions)) {
-        return(key %in% names(rglactions));
-    }
-    return(FALSE);
-}
-
-
 #' @title Visualize a list of colored meshes from nine angles.
 #'
 #' @param coloredmeshes, list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
@@ -701,38 +655,3 @@ shift.hemis.apart <- function(coloredmeshes_hl, shift_by=NULL, axis=1L, hemi_ord
 }
 
 
-#' @title Shift hemis apart if indicated in rglactions
-#'
-#' @param coloredmeshes hemilist of coloredmeshes
-#'
-#' @param rglactions the rglactions, a named list as passed to functions like vis.subject.morph.native.
-#'
-#' @return hemilist of coloredmeshes, the coordinates may or may not have been shifted, depending on the rglactions.
-#'
-#' @keywords internal
-shift.hemis.rglactions <- function(coloredmeshes, rglactions) {
-    if(rglactions.has.key(rglactions, 'shift_hemis_apart')) {
-        shift_hemis = rglactions$shift_hemis_apart;
-        if(is.logical(shift_hemis)) {
-            if(shift_hemis) {
-                return(shift.hemis.apart(coloredmeshes, hemi_order_on_axis='lr'));
-            }
-        } else if(is.list(shift_hemis)) {
-            # interprete the list as extra parameters to pass to shift.hemis.apart
-            return(do.call(shift.hemis.apart, utils::modifyList(list(coloredmeshes), shift_hemis)));
-        } else if(is.character(shift_hemis)) {
-            if(shift_hemis == 'lr' | shift_hemis == 'lhrh') {
-                return(shift.hemis.apart(coloredmeshes, hemi_order_on_axis='lr'));
-            } else if(shift_hemis == 'rl' | shift_hemis == 'rhlh') {
-                return(shift.hemis.apart(coloredmeshes, hemi_order_on_axis='rl'));
-            } else if(shift_hemis == 'auto' | shift_hemis == 'auto_flipped') {
-                return(shift.hemis.apart(coloredmeshes, hemi_order_on_axis=shift_hemis));
-            } else {
-                warning("Value in rglactions$shift_hemis_apart is not supported, ignored. Not shifting hemis.");
-            }
-        } else {
-            warning("Value in rglactions$shift_hemis_apart is not supported, ignored. Not shifting hemis.");
-        }
-    }
-    return(coloredmeshes);
-}
