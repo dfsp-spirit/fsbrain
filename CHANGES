@@ -11,6 +11,10 @@ Version 0.3.0
 -------------
 - Fix reading standard space data from template subjects other than fsaverage
 - Add new cbry colormap and related mkco.cluster function, great for visualizing clusters
+- Support pushing hemispheres apart to prevent overlapping inflated surfaces, fixes #7
+- Remove rotate2D, flip2D, and readable.files functions, they have been moved to the freesurferformats package
+- requires freesurferformats version >= 0.1.11 (up from 0.1.10)
+- default to using rglot() as rgloptions parameter (instead of empty list) for vis functions, i.e., increase default plot resolution
 
 
 Version 0.2.1
