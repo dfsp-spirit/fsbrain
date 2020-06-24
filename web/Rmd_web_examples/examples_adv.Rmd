@@ -35,8 +35,10 @@ The `vis.export.*` functions provide a high-level interface to export plots. The
 
 ```{r rgl=TRUE, fig.show = 'hide'}
 cm = vis.subject.morph.standard(sjd, sj, 'sulc', rglactions=list('no_vis'=T));
-img = vis.export.from.coloredmeshes(cm);
+img = vis.export.from.coloredmeshes(cm, colorbar_legend='Sulcal depth [mm]');
 ```
+
+The image gets exported as a PNG file into the current working directory. One can also show it directly:
 
 ```{r}
 img;
