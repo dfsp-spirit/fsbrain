@@ -562,7 +562,7 @@ vis.labeldata.on.subject <- function(subjects_dir, vis_subject_id, lh_labeldata,
 #' @family morphometry visualization functions
 #'
 #' @export
-vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage", morph_data_lh, morph_data_rh, surface="white", colormap=NULL, views=c('t4'), rgloptions = rglot(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=mkco.seq(), bg=NULL) {
+vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage", morph_data_lh=NULL, morph_data_rh=NULL, surface="white", colormap=NULL, views=c('t4'), rgloptions = rglot(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=mkco.seq(), bg=NULL, morph_data_both=NULL) {
 
     if(is.null(subjects_dir)) {
         subjects_dir = find.subjectsdir.of(subject_id=vis_subject_id, mustWork = TRUE);
@@ -570,7 +570,7 @@ vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage",
 
     makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
 
-    return(invisible(vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface=surface, views=views, rgloptions=rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, makecmap_options=makecmap_options, bg=bg)));
+    return(invisible(vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface=surface, views=views, rgloptions=rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, makecmap_options=makecmap_options, bg=bg, morph_data_both=morph_data_both)));
 }
 
 
