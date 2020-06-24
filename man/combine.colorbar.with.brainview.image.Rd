@@ -32,6 +32,9 @@ combine.colorbar.with.brainview.image(
 
 \item{horizontal}{logical, whether the colorbar is horizontal. If so, it will be added below the 'brainview_img'. If it is vertical, it will be added to the right of the 'brainview_img'.}
 }
+\value{
+named list with entries 'output_img_path': character string, path to saved image. 'merged_img': magick image instance, the merged image
+}
 \description{
 Combine a colorbar and a brainview image into a new figure.
 }

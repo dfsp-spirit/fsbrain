@@ -8,7 +8,7 @@ arrange.brainview.images(
   brainview_images,
   output_img,
   colorbar_img = NULL,
-  silent = FALSE,
+  silent = TRUE,
   grid_like = TRUE,
   border_geometry = "5x5",
   background_color = "white"
@@ -30,7 +30,7 @@ arrange.brainview.images(
 \item{background_color}{string, a valid ImageMagick color string such as "white" or "#000080". The color to use when extending images (e.g., when creating the border).}
 }
 \value{
-vector of character strings, paths to the brainview images. This is the input parameter 'brainview_images'.
+named list with entries: 'brainview_images': vector of character strings, the paths to the input images. 'outpt_img_path': character string, path to the output image. 'merged_img': the magick image instance.
 }
 \description{
 Combine several brainview images into a new figure.

@@ -7,7 +7,7 @@
 vislayout.from.coloredmeshes(
   coloredmeshes,
   view_angles = get.view.angle.names(angle_set = "t4"),
-  rgloptions = list(),
+  rgloptions = rglot(),
   rglactions = list(),
   style = "default",
   output_img = "fsbrain_arranged.png",
@@ -33,7 +33,7 @@ vislayout.from.coloredmeshes(
 \item{grid_like}{logical, whether to arrange the images in a grid-like fashion. If FALSE, they will all be merged horizontally. Passed to \code{\link[fsbrain]{arrange.brainview.images}}.}
 }
 \value{
-list of coloredmeshes. The coloredmeshes used for the visualization.
+named list, see \code{\link{arrange.brainview.images}} for details
 }
 \description{
 Create a tight layout view of coloredmeshes from several angles. Creates separate `sd_<angle>` images, then crops and finally merges them into a single output image with image magick. The `coloredmeshes` to pass to this function are usually obtained by running any `vis*` function (like \code{\link[fsbrain]{vis.subject.morph.native}}, \code{\link[fsbrain]{vis.subject.morph.standard}}, \code{\link[fsbrain]{vis.subject.label}}, \code{\link[fsbrain]{vis.subject.annot}}, and others). That means you can use this function to visualize all kinds of data, e.g., morphometry data in native and standard space, labels, and brain atlases.

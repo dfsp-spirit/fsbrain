@@ -4,12 +4,14 @@
 \alias{perform.rglactions}
 \title{Perform rglactions, like taking screenshots.}
 \usage{
-perform.rglactions(rglactions, at_index = NULL)
+perform.rglactions(rglactions, at_index = NULL, silent = TRUE)
 }
 \arguments{
 \item{rglactions, }{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.}
 
 \item{at_index}{integer, the index to use in case of vectorized entries. Allows using different output_images for different views or similar.}
+
+\item{silent}{logical, whether to suppress messages}
 }
 \description{
 Take a list specifying actions and execute them. This function should be called once an rgl scene has been setup and rendered. A typical usecase is to save a screenshot of the scene.

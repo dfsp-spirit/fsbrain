@@ -20,6 +20,8 @@
 #'
 #' @param horizontal logical, whether the colorbar is horizontal. If so, it will be added below the 'brainview_img'. If it is vertical, it will be added to the right of the 'brainview_img'.
 #'
+#' @return named list with entries 'output_img_path': character string, path to saved image. 'merged_img': magick image instance, the merged image
+#'
 #' @family colorbar functions
 #' @export
 combine.colorbar.with.brainview.image <- function(brainview_img = "fsbrain_arranged.png", colorbar_img = "fsbrain_cbar.png", output_img = "fsbrain_merged.png", offset="+0+0", extend_brainview_img_height_by=NULL, silent=FALSE, allow_colorbar_shrink=TRUE, horizontal=FALSE) {
@@ -91,9 +93,10 @@ combine.colorbar.with.brainview.image <- function(brainview_img = "fsbrain_arran
 
     } else {
         warning("The 'magick' package must be installed to use this functionality. Combined image NOT written.");
+        return(invisible(NULL));
     }
 
-    return(invisible(output_img));
+    return(invisible(list('output_img_path'=output_img, 'merged_img'=combined_img)));
 }
 
 
@@ -130,6 +133,7 @@ combine.colorbar.with.brainview.image.vertical <- function(brainview_img, colorb
         if(extend_brainview_img_width_by != 0L) {
             extend_dims = sprintf("%dx%d", width_main + extend_brainview_img_width_by, height_main);
             main_img = magick::image_extent(main_img, extend_dims, gravity="west", color=background_color);
+            height_main = magick::image_info(main_img)$height;
         }
 
 
@@ -169,11 +173,12 @@ combine.colorbar.with.brainview.image.vertical <- function(brainview_img, colorb
             message(sprintf("Combined image with vertical colorbar written to '%s'.\n", output_img));
         }
 
+        return(invisible(list('output_img_path'=output_img, 'merged_img'=combined_img)));
+
     } else {
         warning("The 'magick' package must be installed to use this functionality. Combined image NOT written.");
+        return(invisible(NULL));
     }
-
-    return(invisible(output_img));
 }
 
 

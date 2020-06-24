@@ -18,10 +18,10 @@
 #'
 #' @param background_color string, a valid ImageMagick color string such as "white" or "#000080". The color to use when extending images (e.g., when creating the border).
 #'
-#' @return vector of character strings, paths to the brainview images. This is the input parameter 'brainview_images'.
+#' @return named list with entries: 'brainview_images': vector of character strings, the paths to the input images. 'outpt_img_path': character string, path to the output image. 'merged_img': the magick image instance.
 #'
 #' @export
-arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=NULL, silent=FALSE, grid_like=TRUE, border_geometry="5x5", background_color = "white") {
+arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=NULL, silent=TRUE, grid_like=TRUE, border_geometry="5x5", background_color = "white") {
 
     if (requireNamespace("magick", quietly = TRUE)) {
 
@@ -75,12 +75,12 @@ arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=
         if(! silent) {
             message(sprintf("Merged image written to '%s' (current working dir is '%s').\n", output_img, getwd()));
         }
+        return(invisible(list('merged_img'=merged_img, 'brainview_images'=brainview_images, 'output_img_path'=output_img)));
 
     } else {
         warning("The 'magick' package must be installed to use this functionality. Merged image NOT written.");
+        return(invisible(NULL));
     }
-
-    return(invisible(brainview_images));
 }
 
 
@@ -104,7 +104,7 @@ arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=
 #'
 #' @param grid_like logical, whether to arrange the images in a grid-like fashion. If FALSE, they will all be merged horizontally. Passed to \code{\link[fsbrain]{arrange.brainview.images}}.
 #'
-#' @return list of coloredmeshes. The coloredmeshes used for the visualization.
+#' @return named list, see \code{\link{arrange.brainview.images}} for details
 #'
 #' @examples
 #' \dontrun{
@@ -126,7 +126,7 @@ arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=
 #'
 #' @family visualization functions
 #' @export
-vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.angle.names(angle_set = "t4"), rgloptions=list(), rglactions=list(), style="default", output_img="fsbrain_arranged.png", silent=FALSE, grid_like=TRUE) {
+vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.angle.names(angle_set = "t4"), rgloptions=rglot(), rglactions=list(), style="default", output_img="fsbrain_arranged.png", silent=FALSE, grid_like=TRUE) {
 
     if (requireNamespace("magick", quietly = TRUE)) {
         view_images = tempfile(view_angles, fileext = ".png");   # generate one temporary file name for each image
@@ -147,9 +147,45 @@ vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.ang
         }
 
         # Now merge them into one
-        arrange.brainview.images(view_images, output_img, silent=silent, grid_like=grid_like);
+        return(invisible(arrange.brainview.images(view_images, output_img, silent=silent, grid_like=grid_like)));
     } else {
         warning("The 'magick' package must be installed to use this functionality. Image with manual layout NOT written.");
+        return(invisible(NULL));
+    }
+}
+
+
+#' @title Export high-quality brainview image with horizontal colorbar.
+#'
+#' @description This function serves as an easy (but slightly inflexible) way to export a high-quality, tight-layout, horizontal colorbar figure to disk.
+#'
+#' @inheritParams vislayout.from.coloredmeshes
+#'
+#' @param colorbar_legend character string or NULL, the title for the colorbar.
+#'
+#' @param img_only logical, whether to return only the resulting image
+#'
+#' @return magick image instance or named list, depending on the value of 'img_only'. If the latter, the list contains the fields 'rev_vl', 'rev_cb', and 'rev_ex', which are the return values of the functions \code{vislayout.from.coloredmeshes}, \code{coloredmesh.plot.colorbar.separate}, and {combine.colorbar.with.brainview.image}, respectively.
+#'
+#' @note This function also exports the resulting image to disk in PNG format, in the current working directory, named 'fsbrain_merged.png'.
+#'
+#' @export
+vis.export.from.coloredmeshes <- function(coloredmeshes, colorbar_legend=NULL, img_only=TRUE) {
+
+    if (requireNamespace("magick", quietly = TRUE)) {
+        horizontal=TRUE;
+        silent = TRUE;
+        image.plot_extra_options = list(horizontal = horizontal, legend.cex = 1.8, legend.width = 2, legend.mar = 12, legend.line=-4, legend.lab=colorbar_legend, axis.args = list(cex.axis = 2))
+        res_vl = vislayout.from.coloredmeshes(coloredmeshes, rgloptions = list('windowRect'=c(50,50, 1000, 1000)), silent = silent);
+        res_cb = coloredmesh.plot.colorbar.separate(coloredmeshes, image.plot_extra_options=image.plot_extra_options, silent = silent);
+        res_ex = combine.colorbar.with.brainview.image(horizontal = horizontal, silent = silent);
+        if(img_only) {
+            return(res_ex$merged_img);
+        }
+        return(invisible(list('res_vl'=res_vl, 'res_cb'=res_cb, 'res_ex'=res_ex)));
+    } else {
+        warning("The 'magick' package must be installed to use this functionality. Image NOT written.");
+        return(invisible(NULL));
     }
 }
 

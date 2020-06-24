@@ -146,9 +146,11 @@ rglactions.has.key <- function(rglactions, key) {
 #'
 #' @param at_index integer, the index to use in case of vectorized entries. Allows using different output_images for different views or similar.
 #'
+#' @param silent logical, whether to suppress messages
+#'
 #' @keywords internal
 #' @importFrom rgl rgl.snapshot
-perform.rglactions <- function(rglactions, at_index=NULL) {
+perform.rglactions <- function(rglactions, at_index=NULL, silent=TRUE) {
     if(is.list(rglactions)) {
         if("text" %in% names(rglactions)) {
             do.call(rgl::text3d, rglactions$text);
@@ -163,7 +165,9 @@ perform.rglactions <- function(rglactions, at_index=NULL) {
                 output_image = path.expand(rglactions$snapshot_png[[at_index]]);
             }
             rgl::rgl.snapshot(output_image, fmt="png");
-            message(sprintf("Screenshot written to '%s' (current working dir is '%s').\n", output_image, getwd()));
+            if(! silent) {
+                message(sprintf("Screenshot written to '%s' (current working dir is '%s').\n", output_image, getwd()));
+            }
         }
     }
 }

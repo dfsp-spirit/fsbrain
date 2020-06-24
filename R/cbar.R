@@ -79,6 +79,8 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
 #'
 #' @family colorbar functions
 #'
+#' @return named list, entries: 'output_img_path': character string, the path to the output file, or NULL.
+#'
 #' @importFrom fields image.plot
 #' @importFrom squash cmap makecmap
 #' @importFrom graphics plot.new
@@ -140,9 +142,11 @@ coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=FALSE, image.
                 }
             }
         }
+    } else {
+        png_options = list('filename'=NULL);
     }
 
-    return(invisible(NULL));
+    return(invisible(list('output_img_path'=png_options$filename)));
 }
 
 
