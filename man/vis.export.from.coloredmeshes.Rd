@@ -26,3 +26,11 @@ This function serves as an easy (but slightly inflexible) way to export a high-q
 \note{
 This function also exports the resulting image to disk in PNG format, in the current working directory, named 'fsbrain_merged.png'.
 }
+\examples{
+\dontrun{
+    rand_data = rnorm(327684, 5, 1.5);
+    cm = vis.data.on.fsaverage(morph_data_both=rand_data, rglactions=list('no_vis'=T));
+    vis.export.from.coloredmeshes(cm, colorbar_legend='Random data');
+}
+
+}
