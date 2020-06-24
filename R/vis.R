@@ -74,7 +74,7 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi="bo
 
     coloredmeshes = coloredmeshes.from.color(subjects_dir, subject_id, both_hemi_colors, hemi, surface=surface, metadata=list('src_data'=measure_data, 'map'=metadata$map, 'map_sorted'=metadata$map_sorted, 'col_sorted'=metadata$col_sorted, 'makecmap_options'=makecmap_options));
 
-    if(getIn(rglactions, c('no_vis')) == TRUE) {
+    if(hasIn(rglactions, c('no_vis'))) {
         return(coloredmeshes);
     }
 
@@ -157,7 +157,7 @@ vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi="
 
     coloredmeshes = coloredmeshes.from.color(template_subjects_dir, template_subject, both_hemi_colors, hemi, surface=surface, metadata=list("src_data"=measure_data, "map"=metadata$map, "map_sorted"=metadata$map_sorted, "col_sorted"=metadata$col_sorted, "makecmap_options"=makecmap_options));
 
-    if(getIn(rglactions, c('no_vis')) == TRUE) {
+    if(hasIn(rglactions, c('no_vis'))) {
         return(coloredmeshes);
     }
 
@@ -235,7 +235,7 @@ vis.subject.label <- function(subjects_dir, subject_id, label, hemi, surface="wh
 
     coloredmeshes = coloredmeshes.from.color(subjects_dir, subject_id, both_hemi_colors, hemi, surface=surface, metadata=list("src_data"=mask_data, "map"=metadata$map, "map_sorted"=metadata$map_sorted, "col_sorted"=metadata$col_sorted, "makecmap_options"=makecmap_options));
 
-    if(getIn(rglactions, c('no_vis')) == TRUE) {
+    if(hasIn(rglactions, c('no_vis'))) {
         return(coloredmeshes);
     }
 
@@ -425,7 +425,7 @@ vis.color.on.subject <- function(subjects_dir, vis_subject_id, color_lh, color_r
         coloredmeshes$rh = cmesh_rh;
     }
 
-    if(getIn(rglactions, c('no_vis')) == TRUE) {
+    if(hasIn(rglactions, c('no_vis'))) {
         return(coloredmeshes);
     }
 
@@ -501,7 +501,7 @@ vis.mask.on.subject <- function(subjects_dir, vis_subject_id, mask_lh, mask_rh, 
         coloredmeshes$rh = coloredmesh.from.mask(subjects_dir, vis_subject_id, mask_rh, 'rh', surface=surface, makecmap_options=makecmap_options);
     }
 
-    if(getIn(rglactions, c('no_vis')) == TRUE) {
+    if(hasIn(rglactions, c('no_vis'))) {
         return(coloredmeshes);
     }
 
@@ -565,7 +565,7 @@ vis.labeldata.on.subject <- function(subjects_dir, vis_subject_id, lh_labeldata,
         coloredmeshes$rh = coloredmesh.from.label(subjects_dir, vis_subject_id, rh_labeldata, 'rh', surface=surface, makecmap_options=makecmap_options);
     }
 
-    if(getIn(rglactions, c('no_vis')) == TRUE) {
+    if(hasIn(rglactions, c('no_vis'))) {
         return(coloredmeshes);
     }
 
@@ -637,7 +637,7 @@ vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi='both', surf
         coloredmeshes$rh = coloredmesh.from.annot(subjects_dir, subject_id, atlas, 'rh', surface=surface, outline=outline);
     }
 
-    if(getIn(rglactions, c('no_vis')) == TRUE) {
+    if(hasIn(rglactions, c('no_vis'))) {
         return(coloredmeshes);
     }
 
