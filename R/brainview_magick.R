@@ -165,6 +165,10 @@ vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.ang
 #'
 #' @param img_only logical, whether to return only the resulting image
 #'
+#' @param horizonal logical, whether to plot the colorbar horizontally
+#'
+#' @param silent logical, whether to suppress messages
+#'
 #' @return magick image instance or named list, depending on the value of 'img_only'. If the latter, the list contains the fields 'rev_vl', 'rev_cb', and 'rev_ex', which are the return values of the functions \code{vislayout.from.coloredmeshes}, \code{coloredmesh.plot.colorbar.separate}, and {combine.colorbar.with.brainview.image}, respectively.
 #'
 #' @note This function also exports the resulting image to disk in PNG format, in the current working directory, named 'fsbrain_merged.png'.
@@ -177,11 +181,9 @@ vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.ang
 #' }
 #'
 #' @export
-vis.export.from.coloredmeshes <- function(coloredmeshes, colorbar_legend=NULL, img_only=TRUE) {
+vis.export.from.coloredmeshes <- function(coloredmeshes, colorbar_legend=NULL, img_only=TRUE, horizontal=TRUE, silent = TRUE) {
 
     if (requireNamespace("magick", quietly = TRUE)) {
-        horizontal=TRUE;
-        silent = TRUE;
         image.plot_extra_options = list(horizontal = horizontal, legend.cex = 1.8, legend.width = 2, legend.mar = 12, legend.line=-4, legend.lab=colorbar_legend, axis.args = list(cex.axis = 2))
         res_vl = vislayout.from.coloredmeshes(coloredmeshes, rgloptions = list('windowRect'=c(50,50, 1000, 1000)), silent = silent);
         res_cb = coloredmesh.plot.colorbar.separate(coloredmeshes, image.plot_extra_options=image.plot_extra_options, silent = silent);

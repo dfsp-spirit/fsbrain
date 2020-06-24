@@ -7,7 +7,9 @@
 vis.export.from.coloredmeshes(
   coloredmeshes,
   colorbar_legend = NULL,
-  img_only = TRUE
+  img_only = TRUE,
+  horizontal = TRUE,
+  silent = TRUE
 )
 }
 \arguments{
@@ -16,6 +18,10 @@ vis.export.from.coloredmeshes(
 \item{colorbar_legend}{character string or NULL, the title for the colorbar.}
 
 \item{img_only}{logical, whether to return only the resulting image}
+
+\item{silent}{logical, whether to suppress messages}
+
+\item{horizonal}{logical, whether to plot the colorbar horizontally}
 }
 \value{
 magick image instance or named list, depending on the value of 'img_only'. If the latter, the list contains the fields 'rev_vl', 'rev_cb', and 'rev_ex', which are the return values of the functions \code{vislayout.from.coloredmeshes}, \code{coloredmesh.plot.colorbar.separate}, and {combine.colorbar.with.brainview.image}, respectively.
