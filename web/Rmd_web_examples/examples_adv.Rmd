@@ -1,0 +1,56 @@
+---
+title: "fsbrain advanced visualization examples"
+author: "Tim Schäfer"
+date: "June 24, 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+rgl::setupKnitr()
+```
+
+
+## Example data
+
+First we specify a subjects dir and the subject we want to use. Feel free to replace this with your data.
+
+```{r}
+library('fsbrain')
+sjd = '~/data/subject1_only'
+sj = 'subject1'
+```
+
+Now increase the figure size.
+
+```{r}
+library('rgl');
+r3dDefaults$windowRect=c(20, 20, 900, 900);
+```
+
+
+## Eporting (almost) publication-ready plots
+
+The `vis.export.*` functions provide a high-level interface to export plots. They require the `magick` package.
+
+```{r rgl=TRUE, fig.show = 'hide'}
+cm = vis.subject.morph.standard(sjd, sj, 'sulc', rglactions=list('no_vis'=T));
+img = vis.export.from.coloredmeshes(cm);
+```
+
+```{r}
+img;
+```
+
+
+
+## Learning more
+
+To learn more, read the vignettes:
+
+```{r, eval = FALSE}
+browseVignettes('fsbrain');
+```
+
+In general, the vignettes are a great way to get started with *fsbrain*. You can also read them online at CRAN, they are linked on the [fsbrain page on GitHub](https://github.com/dfsp-spirit/fsbrain).
+
