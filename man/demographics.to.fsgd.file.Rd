@@ -15,7 +15,7 @@ demographics.to.fsgd.file(
 \arguments{
 \item{filepath}{character string, the path to the output file in FSGD format}
 
-\item{demographics_df}{data.frame, as returned by \code{read.md.demographics} or created manually. See note on character versus factor columns below.}
+\item{demographics_df}{data.frame, as returned by \code{read.md.demographics} or created manually. Note that the data.frame must not contain any character columns, they should be converted to factors.}
 
 \item{group_column_name}{character string, the column name of the group column in the 'demographics_df'}
 
@@ -28,7 +28,4 @@ vector of character strings, the lines written to the 'filepath', invisible.
 }
 \description{
 Write FreeSurfer Group Descriptor (FSGD) file from demographics dataframe.
-}
-\note{
-You will have to pay attention to strings vs factors in the input dataframe, as this influences the output strings (numeric factor levels versus the raw values).
 }

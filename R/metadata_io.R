@@ -105,7 +105,7 @@ read.md.demographics = function(demographics_file, column_names, header=TRUE, sc
 #'
 #' @param filepath character string, the path to the output file in FSGD format
 #'
-#' @param demographics_df data.frame, as returned by \code{read.md.demographics} or created manually. See note on character versus factor columns below.
+#' @param demographics_df data.frame, as returned by \code{read.md.demographics} or created manually. Note that the data.frame must not contain any character columns, they should be converted to factors.
 #'
 #' @param group_column_name character string, the column name of the group column in the 'demographics_df'
 #'
@@ -114,8 +114,6 @@ read.md.demographics = function(demographics_file, column_names, header=TRUE, sc
 #' @param var_columns vector of character strings, the column names to include as variables in the FSGD file. If NULL (the default), all columns will be included (with the exception of the group column and the subject id column).
 #'
 #' @return vector of character strings, the lines written to the 'filepath', invisible.
-#'
-#' @note You will have to pay attention to strings vs factors in the input dataframe, as this influences the output strings (numeric factor levels versus the raw values).
 #'
 #' @export
 demographics.to.fsgd.file <- function(filepath, demographics_df, group_column_name='group', subject_id_column_name='id', var_columns=NULL) {
@@ -168,9 +166,14 @@ demographics.to.fsgd.file <- function(filepath, demographics_df, group_column_na
     if(! cname %in% colnames(demographics_df)) {
       stop(sprintf("Invalid entry in 'var_columns': dataframe 'demographics_df' does not contain column named '%s'.\n", cname));
     }
+
     var_df[[cname]] = demographics_df[[cname]];
+    if(is.character(demographics_df[[cname]])) {
+      warning(sprintf("Invalid column type in 'var_columns': dataframe 'demographics_df' column '%s' is of type character, converting to factor.\n", cname));
+      var_df[[cname]] = as.factor(demographics_df[[cname]]);
+    }
   }
-  var_df$idx_dummy = NULL;
+  var_df$idx_dummy = NULL; # remove dummy column
 
 
   for(subject_idx in seq.int(nrow(demographics_df))) {
