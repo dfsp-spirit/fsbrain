@@ -105,7 +105,7 @@ read.md.demographics = function(demographics_file, column_names, header=TRUE, sc
 #'
 #' @param filepath character string, the path to the output file in FSGD format
 #'
-#' @param demographics_df data.frame, as returned by \code{read.md.demographics} or created manually
+#' @param demographics_df data.frame, as returned by \code{read.md.demographics} or created manually. See note on character versus factor columns below.
 #'
 #' @param group_column_name character string, the column name of the group column in the 'demographics_df'
 #'
@@ -115,7 +115,7 @@ read.md.demographics = function(demographics_file, column_names, header=TRUE, sc
 #'
 #' @return vector of character strings, the lines written to the 'filepath', invisible.
 #'
-#' @note You will have to pay attention to strings vs factors in the input dataframe, as this influences the output strings.
+#' @note You will have to pay attention to strings vs factors in the input dataframe, as this influences the output strings (numeric factor levels versus the raw values).
 #'
 #' @export
 demographics.to.fsgd.file <- function(filepath, demographics_df, group_column_name='group', subject_id_column_name='id', var_columns=NULL) {
@@ -154,7 +154,7 @@ demographics.to.fsgd.file <- function(filepath, demographics_df, group_column_na
 
   fsgd_lines = c("GroupDescriptorFile 1", "Title OSGM");
 
-  groups = unique(as.character(df[[group_column_name]]));
+  groups = unique(as.character(demographics_df[[group_column_name]]));
   for(group in groups) {
     fsgd_lines = c(fsgd_lines, sprintf("Class %s", group));
   }
