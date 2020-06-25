@@ -11,7 +11,7 @@ read.md.demographics(
   scale_and_center = FALSE,
   sep = "",
   report = FALSE,
-  stringsAsFactors = TRUE,
+  stringsAsFactors = FALSE,
   group_column_name = NULL
 )
 }

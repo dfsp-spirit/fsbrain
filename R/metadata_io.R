@@ -63,7 +63,7 @@ read.md.subjects = function(subjects_file, header=FALSE) {
 #' @export
 #' @importFrom stats sd
 #' @importFrom utils read.table
-read.md.demographics = function(demographics_file, column_names, header=TRUE, scale_and_center=FALSE, sep='', report=FALSE, stringsAsFactors=TRUE, group_column_name=NULL) {
+read.md.demographics = function(demographics_file, column_names, header=TRUE, scale_and_center=FALSE, sep='', report=FALSE, stringsAsFactors=FALSE, group_column_name=NULL) {
     if(! file.exists(demographics_file)) {
         stop(sprintf("Cannot access demographics file '%s'.\n", demographics_file));
     }
@@ -98,6 +98,92 @@ read.md.demographics = function(demographics_file, column_names, header=TRUE, sc
     }
 
     return(demographics_df);
+}
+
+
+#' @title Write FreeSurfer Group Descriptor (FSGD) file from demographics dataframe.
+#'
+#' @param filepath character string, the path to the output file in FSGD format
+#'
+#' @param demographics_df data.frame, as returned by \code{read.md.demographics} or created manually
+#'
+#' @param group_column_name character string, the column name of the group column in the 'demographics_df'
+#'
+#' @param subject_id_column_name character string, the column name of the subject identifier column in the 'demographics_df'
+#'
+#' @param var_columns vector of character strings, the column names to include as variables in the FSGD file. If NULL (the default), all columns will be included (with the exception of the group column and the subject id column).
+#'
+#' @return vector of character strings, the lines written to the 'filepath', invisible.
+#'
+#' @note You will have to pay attention to strings vs factors in the input dataframe, as this influences the output strings.
+#'
+#' @export
+demographics.to.fsgd.file <- function(filepath, demographics_df, group_column_name='group', subject_id_column_name='id', var_columns=NULL) {
+  #GroupDescriptorFile 1
+  #Title OSGM
+  #Class Group1
+  #Class Group2
+  #Variables Age Weight
+  #Input subject1 Group1 30 100
+  #Input subject2 Group2 40 120
+  if(! group_column_name %in% colnames(demographics_df)) {
+    stop(sprintf("Dataframe does not contain group column: no column named '%s'.\n", group_column_name));
+  }
+  if(! subject_id_column_name %in% colnames(demographics_df)) {
+    stop(sprintf("Dataframe does not contain subject identifier column: no column named '%s'.\n", subject_id_column_name));
+  }
+
+  if(is.null(var_columns)) {
+    var_columns = colnames(demographics_df);
+  }
+
+  # remove group and subject columns from variable columns, if needed
+  if(group_column_name %in% var_columns) {
+    group_column_index = which(var_columns == group_column_name);
+    retain_at_idx = rep(TRUE, length(var_columns));
+    retain_at_idx[group_column_index] = F;
+    var_columns = var_columns[retain_at_idx];
+  }
+  if(subject_id_column_name %in% var_columns) {
+    subject_id_column_index = which(var_columns == subject_id_column_name);
+    retain_at_idx = rep(TRUE, length(var_columns));
+    retain_at_idx[subject_id_column_index] = F;
+    var_columns = var_columns[retain_at_idx];
+  }
+
+
+  fsgd_lines = c("GroupDescriptorFile 1", "Title OSGM");
+
+  groups = unique(as.character(df[[group_column_name]]));
+  for(group in groups) {
+    fsgd_lines = c(fsgd_lines, sprintf("Class %s", group));
+  }
+
+  all_var_names = paste(var_columns, collapse=" ");
+  fsgd_lines = c(fsgd_lines, sprintf("Variables %s", all_var_names));
+
+  num_subjects = nrow(demographics_df);
+  var_df = data.frame('idx_dummy' = rep(seq.int(num_subjects), num_subjects));
+  for(cname in var_columns) {
+    if(! cname %in% colnames(demographics_df)) {
+      stop(sprintf("Invalid entry in 'var_columns': dataframe 'demographics_df' does not contain column named '%s'.\n", cname));
+    }
+    var_df[[cname]] = demographics_df[[cname]];
+  }
+  var_df$idx_dummy = NULL;
+
+
+  for(subject_idx in seq.int(nrow(demographics_df))) {
+    subject_group = as.character(demographics_df[[group_column_name]][subject_idx]);
+    subject_id = as.character(demographics_df[[subject_id_column_name]][subject_idx]);
+    subject_variables = paste(as.character(unname(var_df[subject_idx,])), collapse=" ");
+    subject_line = sprintf("Input %s %s %s", subject_id, subject_group, subject_variables);
+    fsgd_lines = c(fsgd_lines, subject_line);
+  }
+  fh = file(filepath);
+  writeLines(fsgd_lines, fh);
+  close(fh);
+  return(invisible(fsgd_lines));
 }
 
 
