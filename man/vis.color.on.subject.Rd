@@ -7,12 +7,13 @@
 vis.color.on.subject(
   subjects_dir,
   vis_subject_id,
-  color_lh,
-  color_rh,
+  color_lh = NULL,
+  color_rh = NULL,
   surface = "white",
   views = c("t4"),
   rgloptions = rglot(),
-  rglactions = list()
+  rglactions = list(),
+  color_both = NULL
 )
 }
 \arguments{
@@ -20,9 +21,9 @@ vis.color.on.subject(
 
 \item{vis_subject_id}{string. The subject identifier from which to obtain the surface for data visualization. Example: 'fsaverage'.}
 
-\item{color_lh}{vector of colors to visualize on the left hemisphere surface.}
+\item{color_lh}{vector of colors to visualize on the left hemisphere surface. Length must match number of vertices in hemi surface, or be a single color.}
 
-\item{color_rh}{vector of colors to visualize on the right hemisphere surface.}
+\item{color_rh}{vector of colors to visualize on the right hemisphere surface. Length must match number of vertices in hemi surface, or be a single color.}
 
 \item{surface}{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 
@@ -31,6 +32,8 @@ vis.color.on.subject(
 \item{rgloptions}{option list passed to \code{\link{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))}.}
 
 \item{rglactions}{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action. The following example clips outliers in the data before plotting and writes a screenshot in PNG format: \code{rglactions = list("snapshot_png"="~/fsbrain.png", "clip_data"=c(0.05, 0.95))}.}
+
+\item{color_both}{vector of colors to visualize on the left and right hemispheres. Alternative to 'color_lh' and 'color_rh'. Length must match sum of vertices in both hemis.}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.

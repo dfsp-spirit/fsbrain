@@ -252,7 +252,11 @@ vis.colortable.legend <- function(colortable, ncols=1L, plot_struct_index=TRUE) 
 
 #' @title Determine whether colorbar can be plotted with given metadata.
 #'
-#' @return logical
+#' @param combined_data_range numerical vector of length 2, the combined data range of the meshes as returned by \code{coloredmeshes.combined.data.range}
+#'
+#' @param makecmap_options the 'makecmap_options' from the metadata field of the 'coloredmeshes', see \code{coloredmeshes.get.md}
+#'
+#' @return logical, whether the metadata suffices to plot a colorbar
 #'
 #' @keywords internal
 can.plot.colorbar <- function(combined_data_range, makecmap_options) {
@@ -263,6 +267,20 @@ can.plot.colorbar <- function(combined_data_range, makecmap_options) {
         return(FALSE);
     }
     return(TRUE);
+}
+
+
+#' @title Determine whether colorbar can be plotted with given coloredmeshes.
+#'
+#' @param coloredmeshes hemilist of coloredmeshes
+#'
+#' @return logical, whether the metadata suffices to plot a colorbar
+#'
+#' @keywords internal
+can.plot.colorbar.from.coloredmeshes <- function(coloredmeshes) {
+    combined_data_range = coloredmeshes.combined.data.range(coloredmeshes);
+    makecmap_options = coloredmeshes.get.md(coloredmeshes, 'makecmap_options');
+    return(can.plot.colorbar(combined_data_range, makecmap_options));
 }
 
 

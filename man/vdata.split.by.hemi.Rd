@@ -4,7 +4,13 @@
 \alias{vdata.split.by.hemi}
 \title{Split morph data vector at hemisphere boundary.}
 \usage{
-vdata.split.by.hemi(subjects_dir, subject_id, vdata, surface = "white")
+vdata.split.by.hemi(
+  subjects_dir,
+  subject_id,
+  vdata,
+  surface = "white",
+  expand = TRUE
+)
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
@@ -14,6 +20,8 @@ vdata.split.by.hemi(subjects_dir, subject_id, vdata, surface = "white")
 \item{vdata}{numerical vector of data for both hemispheres, one value per vertex}
 
 \item{surface}{the surface to load to determine the vertex counts}
+
+\item{expand}{logical, whether to allow input of length 1, and expand (repeat) it to the length of the hemispheres.}
 }
 \value{
 a hemilist, each entry contains the data part of the respective hemi.

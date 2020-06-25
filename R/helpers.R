@@ -610,15 +610,21 @@ rglot <- function() {
 #'
 #' @param surface the surface to load to determine the vertex counts
 #'
+#' @param expand logical, whether to allow input of length 1, and expand (repeat) it to the length of the hemispheres.
+#'
 #' @inheritParams subject.morph.native
 #'
 #' @note Instead of calling this function to split the data, you could use the 'split_by_hemi' parameter of \code{\link[fsbrain]{subject.morph.native}}.
 #'
 #' @return a hemilist, each entry contains the data part of the respective hemi.
 #' @export
-vdata.split.by.hemi <- function(subjects_dir, subject_id, vdata, surface='white') {
+vdata.split.by.hemi <- function(subjects_dir, subject_id, vdata, surface='white', expand=TRUE) {
   nv = subject.num.verts(subjects_dir, subject_id, surface=surface);
-  if(length(vdata) != (nv$lh + nv$rh)) {
+  nv_sum = nv$lh + nv$rh;
+  if(length(vdata) == 1L && expand) {
+    vdata = rep(vdata, nv_sum);
+  }
+  if(length(vdata) != nv_sum) {
     if(length(vdata) == (163842L*2L)) {
       warning("Hint: The length of 'vdata' matches the number of vertices in the fsaverage template. Wrong 'subject_id' parameter with standard space data?");
     }

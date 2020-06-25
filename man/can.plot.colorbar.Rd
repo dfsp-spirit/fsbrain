@@ -6,8 +6,13 @@
 \usage{
 can.plot.colorbar(combined_data_range, makecmap_options)
 }
+\arguments{
+\item{combined_data_range}{numerical vector of length 2, the combined data range of the meshes as returned by \code{coloredmeshes.combined.data.range}}
+
+\item{makecmap_options}{the 'makecmap_options' from the metadata field of the 'coloredmeshes', see \code{coloredmeshes.get.md}}
+}
 \value{
-logical
+logical, whether the metadata suffices to plot a colorbar
 }
 \description{
 Determine whether colorbar can be plotted with given metadata.

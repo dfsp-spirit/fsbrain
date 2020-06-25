@@ -186,10 +186,18 @@ vis.export.from.coloredmeshes <- function(coloredmeshes, colorbar_legend=NULL, i
     if (requireNamespace("magick", quietly = TRUE)) {
         image.plot_extra_options = list(horizontal = horizontal, legend.cex = 1.8, legend.width = 2, legend.mar = 12, legend.line=-4, legend.lab=colorbar_legend, axis.args = list(cex.axis = 2))
         res_vl = vislayout.from.coloredmeshes(coloredmeshes, rgloptions = list('windowRect'=c(50,50, 1000, 1000)), silent = silent);
-        res_cb = coloredmesh.plot.colorbar.separate(coloredmeshes, image.plot_extra_options=image.plot_extra_options, silent = silent);
-        res_ex = combine.colorbar.with.brainview.image(horizontal = horizontal, silent = silent);
-        if(img_only) {
-            return(res_ex$merged_img);
+        if(can.plot.colorbar.from.coloredmeshes(coloredmeshes)) {
+            res_cb = coloredmesh.plot.colorbar.separate(coloredmeshes, image.plot_extra_options=image.plot_extra_options, silent = silent);
+            res_ex = combine.colorbar.with.brainview.image(horizontal = horizontal, silent = silent);
+            if(img_only) {
+                return(res_ex$merged_img);
+            }
+        } else {
+            res_cb = NULL;
+            rex_ex = NULL;
+            if(img_only) {
+                return(res_vl$merged_img);
+            }
         }
         return(invisible(list('res_vl'=res_vl, 'res_cb'=res_cb, 'res_ex'=res_ex)));
     } else {

@@ -382,9 +382,11 @@ perform.na.mapping <- function(data, map_to_NA) {
 #'
 #' @inheritParams vis.data.on.subject
 #'
-#' @param color_lh vector of colors to visualize on the left hemisphere surface.
+#' @param color_lh vector of colors to visualize on the left hemisphere surface. Length must match number of vertices in hemi surface, or be a single color.
 #'
-#' @param color_rh vector of colors to visualize on the right hemisphere surface.
+#' @param color_rh vector of colors to visualize on the right hemisphere surface. Length must match number of vertices in hemi surface, or be a single color.
+#'
+#' @param color_both vector of colors to visualize on the left and right hemispheres. Alternative to 'color_lh' and 'color_rh'. Length must match sum of vertices in both hemis.
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
@@ -407,13 +409,29 @@ perform.na.mapping <- function(data, map_to_NA) {
 #' @family surface visualization functions
 #'
 #' @export
-vis.color.on.subject <- function(subjects_dir, vis_subject_id, color_lh, color_rh, surface="white", views=c('t4'), rgloptions=rglot(), rglactions = list()) {
+vis.color.on.subject <- function(subjects_dir, vis_subject_id, color_lh=NULL, color_rh=NULL, surface="white", views=c('t4'), rgloptions=rglot(), rglactions = list(), color_both=NULL) {
 
-    if(is.null(color_lh) && is.null(color_rh)) {
-        stop(sprintf("Only one of color_lh or color_rh can be NULL.\n"));
-    }
 
     coloredmeshes = list();
+
+    if(is.null(color_lh) && is.null(color_rh)) {
+        if(is.null(color_both)) {
+            stop(sprintf("Only two of 'color_lh', 'color_rh' and 'color_both' can be NULL.\n"));
+        } else {
+            # Split the single vector into 2 vectors with lengths of the respective hemispheres.
+            if(is.hemilist(color_both)) {
+                color_by_hemi = color_both;
+            } else {
+                color_by_hemi = vdata.split.by.hemi(subjects_dir, vis_subject_id, color_both, surface=surface);
+            }
+            color_lh = color_by_hemi$lh;
+            color_rh = color_by_hemi$rh;
+        }
+    } else {
+        if( ! is.null(morph_data_both)) {
+            stop(sprintf("If 'color_lh' or 'color_rh' is given, 'color_both' must be NULL.\n"));
+        }
+    }
 
     if(! is.null(color_lh)) {
         cmesh_lh = coloredmesh.from.color(subjects_dir, vis_subject_id, color_lh, 'lh', surface=surface);
