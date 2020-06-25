@@ -63,7 +63,7 @@ read.md.subjects = function(subjects_file, header=FALSE) {
 #' @export
 #' @importFrom stats sd
 #' @importFrom utils read.table
-read.md.demographics = function(demographics_file, column_names, header=TRUE, scale_and_center=FALSE, sep='', report=FALSE, stringsAsFactors=FALSE, group_column_name=NULL) {
+read.md.demographics = function(demographics_file, column_names, header=TRUE, scale_and_center=FALSE, sep='', report=FALSE, stringsAsFactors=TRUE, group_column_name=NULL) {
     if(! file.exists(demographics_file)) {
         stop(sprintf("Cannot access demographics file '%s'.\n", demographics_file));
     }
