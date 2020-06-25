@@ -11,7 +11,7 @@ collayer.bg(subjects_dir, subject_id, bg, hemi = "both")
 
 \item{subject_id}{character string, the subject identifier.}
 
-\item{bg}{character string, a background name. One of 'curv', 'sulc', or 'aparc'.  If this is already a colorlayer in a hemilist, it will be returned as-is.}
+\item{bg}{character string, a background name. One of 'curv', 'curv_light', 'sulc', 'sulc_light', or 'aparc'.  If this is already a colorlayer in a hemilist, it will be returned as-is.}
 
 \item{hemi}{character string, one of 'lh', 'rh', or 'both'. The latter will merge the data for both hemis into a single vector.}
 }

@@ -45,7 +45,7 @@ vis.subject.label(
 
 \item{map_to_NA}{the value or value range that should **not** be considered part of the label, and should thus be plotted as background color. Only used if 'bg' is not `NULL`. If a single value, only excatly this value is used (typically 0). If two values, they are interpreted as a range, and a values between them are mapped to NA. If you prefer to map the data to NA yourself before using this function, pass `NULL`.}
 
-\item{bg}{a background definition. Can be a surface color layer or a character string, see \code{\link[fsbrain]{collayer.bg}} for valid strings.}
+\item{bg}{a background definition. Can be a surface color layer or a character string like 'curv_light' to select a pre-defined layer, see \code{\link[fsbrain]{collayer.bg}} for valid strings.}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.

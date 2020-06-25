@@ -31,7 +31,7 @@
 #'
 #' @param makecmap_options named list of parameters to pass to \code{\link{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'. Should include at least a colormap function as name 'colFn'.
 #'
-#' @param bg a background definition. Can be a surface color layer or a character string, see \code{\link[fsbrain]{collayer.bg}} for valid strings.
+#' @param bg a background definition. Can be a surface color layer or a character string like 'curv_light' to select a pre-defined layer, see \code{\link[fsbrain]{collayer.bg}} for valid strings.
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
@@ -322,7 +322,7 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh=NULL
 #'
 #' @importFrom squash jet
 #' @export
-vis.symmetric.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh=NULL, morph_data_rh=NULL, surface="white", colormap=NULL, views=c('t4'), rgloptions=rglot(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=cm.div(), symm=TRUE, col.na='#FFFFFF00', 'n'=100), map_to_NA=c(0), bg=NULL, morph_data_both=NULL) {
+vis.symmetric.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh=NULL, morph_data_rh=NULL, surface="white", colormap=NULL, views=c('t4'), rgloptions=rglot(), rglactions = list(), draw_colorbar = TRUE, makecmap_options=list('colFn'=cm.cbry(), symm=TRUE, col.na='#FFFFFF00', 'n'=200), map_to_NA=c(0), bg=NULL, morph_data_both=NULL) {
     makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
 
     if(is.null(morph_data_lh) && is.null(morph_data_rh)) {
@@ -428,7 +428,7 @@ vis.color.on.subject <- function(subjects_dir, vis_subject_id, color_lh=NULL, co
             color_rh = color_by_hemi$rh;
         }
     } else {
-        if( ! is.null(morph_data_both)) {
+        if( ! is.null(color_both)) {
             stop(sprintf("If 'color_lh' or 'color_rh' is given, 'color_both' must be NULL.\n"));
         }
     }

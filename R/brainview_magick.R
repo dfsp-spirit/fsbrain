@@ -165,7 +165,7 @@ vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.ang
 #'
 #' @param img_only logical, whether to return only the resulting image
 #'
-#' @param horizonal logical, whether to plot the colorbar horizontally
+#' @param horizontal logical, whether to plot the colorbar horizontally
 #'
 #' @param silent logical, whether to suppress messages
 #'

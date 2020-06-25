@@ -10,7 +10,7 @@
 #'
 #' @inheritParams collayer.bg.meancurv
 #'
-#' @param bg character string, a background name. One of 'curv', 'sulc', or 'aparc'.  If this is already a colorlayer in a hemilist, it will be returned as-is.
+#' @param bg character string, a background name. One of 'curv', 'curv_light', 'sulc', 'sulc_light', or 'aparc'.  If this is already a colorlayer in a hemilist, it will be returned as-is.
 #'
 #' @return a color layer, i.e., vector of color strings in a hemilist
 #'
@@ -29,8 +29,12 @@ collayer.bg <- function(subjects_dir, subject_id, bg, hemi="both") {
     } else if(is.character(bg)) {
         if(bg == "curv") {
             return(collayer.bg.meancurv(subjects_dir, subject_id, hemi=hemi));
+        } else if(bg == "curv_light") {
+            return(collayer.bg.meancurv(subjects_dir, subject_id, hemi=hemi, bin_colors=c('#eeeeee', '#bbbbbb')));
         } else if(bg == "sulc") {
             return(collayer.bg.sulc(subjects_dir, subject_id, hemi=hemi));
+        } else if(bg == "sulc_light") {
+            return(collayer.bg.sulc(subjects_dir, subject_id, hemi=hemi, bin_colors=c('#eeeeee', '#bbbbbb')));
         } else if(bg == "aparc") {
             return(collayer.bg.atlas(subjects_dir, subject_id, hemi=hemi, atlas='aparc'));
         } else {
