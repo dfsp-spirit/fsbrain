@@ -7,7 +7,7 @@
 #'
 #' @param subjects_file character string, the path to the subjects file.
 #'
-#' @param header logical, whether the file starts with a header line. Defaults to `FALSE`.
+#' @param header logical, whether the file starts with a header line.
 #'
 #' @return vector of strings, the subject identifiers.
 #'
@@ -15,10 +15,10 @@
 #'    subjects_file = system.file("extdata", "subjects.txt", package = "fsbrain", mustWork = TRUE);
 #'    subjects_list = read.md.subjects(subjects_file);
 #'
-#' @family metdata functions
+#' @family metadata functions
 #'
 #' @export
-read.md.subjects = function(subjects_file, header=FALSE) {
+read.md.subjects = function(subjects_file, header) {
     if(! file.exists(subjects_file)) {
         stop(sprintf("Cannot access subjects file '%s'.\n", subjects_file));
     }
@@ -51,7 +51,7 @@ read.md.subjects = function(subjects_file, header=FALSE) {
 #'
 #' @return a dataframe. The data in the file. String columns will be returned as factors, which you may want to adapt afterwards for the subject identifier column.
 #'
-#' @family metdata functions
+#' @family metadata functions
 #'
 #' @examples
 #'    demographics_file =
@@ -63,9 +63,12 @@ read.md.subjects = function(subjects_file, header=FALSE) {
 #' @export
 #' @importFrom stats sd
 #' @importFrom utils read.table
-read.md.demographics = function(demographics_file, column_names, header=TRUE, scale_and_center=FALSE, sep='', report=FALSE, stringsAsFactors=TRUE, group_column_name=NULL) {
+read.md.demographics = function(demographics_file, column_names, header, scale_and_center=FALSE, sep='', report=FALSE, stringsAsFactors=TRUE, group_column_name=NULL) {
     if(! file.exists(demographics_file)) {
         stop(sprintf("Cannot access demographics file '%s'.\n", demographics_file));
+    }
+    if(! is.logical(header)) {
+      stop("Parameter 'header' must be logical");
     }
     demographics_df = utils::read.table(demographics_file, header=header, sep=sep, stringsAsFactors=stringsAsFactors);
 
@@ -115,6 +118,8 @@ read.md.demographics = function(demographics_file, column_names, header=TRUE, sc
 #'
 #' @return vector of character strings, the lines written to the 'filepath', invisible.
 #'
+#' @family metadata functions
+#'
 #' @export
 demographics.to.fsgd.file <- function(filepath, demographics_df, group_column_name='group', subject_id_column_name='id', var_columns=NULL) {
   #GroupDescriptorFile 1
@@ -149,6 +154,23 @@ demographics.to.fsgd.file <- function(filepath, demographics_df, group_column_na
     var_columns = var_columns[retain_at_idx];
   }
 
+  # Separate numerical columns from factor/character columns, the latter will be part of the Classes
+
+  numeric_covariate_columns = c();
+  class_part_columns = c();
+  for(cname in var_columns) {
+      if(is.numeric(demographics_df[[cname]])) {
+          numeric_covariate_columns = c(numeric_covariate_columns, cname);
+      } else {
+          if(is.factor(demographics_df[[cname]])) {
+            warning(sprintf("Column '%s' is of type factor, which may lead to a Class name that is hard to read.\n", cname));
+          }
+
+          class_part_columns = c(class_part_columns, cname);
+      }
+  }
+  cat(sprintf("Found %d numerical covariates, %d factors that will become part of the subject class (in addition to the group column '%s').\n", length(numeric_covariate_columns), length(class_part_columns), group_column_name));
+
 
   fsgd_lines = c("GroupDescriptorFile 1", "Title OSGM");
 
@@ -157,30 +179,30 @@ demographics.to.fsgd.file <- function(filepath, demographics_df, group_column_na
     fsgd_lines = c(fsgd_lines, sprintf("Class %s", group));
   }
 
-  all_var_names = paste(var_columns, collapse=" ");
+  all_var_names = paste(numeric_covariate_columns, collapse=" ");
   fsgd_lines = c(fsgd_lines, sprintf("Variables %s", all_var_names));
 
   num_subjects = nrow(demographics_df);
-  var_df = data.frame('idx_dummy' = rep(seq.int(num_subjects), num_subjects));
   for(cname in var_columns) {
     if(! cname %in% colnames(demographics_df)) {
       stop(sprintf("Invalid entry in 'var_columns': dataframe 'demographics_df' does not contain column named '%s'.\n", cname));
     }
+  }
 
+  var_df = data.frame('idx_dummy' = rep(seq.int(num_subjects), num_subjects));
+  for(cname in numeric_covariate_columns) {
     var_df[[cname]] = demographics_df[[cname]];
-    if(is.character(demographics_df[[cname]])) {
-      warning(sprintf("Invalid column type in 'var_columns': dataframe 'demographics_df' column '%s' is of type character, converting to factor.\n", cname));
-      var_df[[cname]] = as.factor(demographics_df[[cname]]);
-    }
   }
   var_df$idx_dummy = NULL; # remove dummy column
 
 
   for(subject_idx in seq.int(nrow(demographics_df))) {
-    subject_group = as.character(demographics_df[[group_column_name]][subject_idx]);
+    #subject_group = as.character(demographics_df[[group_column_name]][subject_idx]);
+    class_columns = c(group_column_name, class_part_columns);
+    subject_class = get.subject.class(demographics_df, subject_idx, class_columns);
     subject_id = as.character(demographics_df[[subject_id_column_name]][subject_idx]);
     subject_variables = paste(as.character(unname(var_df[subject_idx,])), collapse=" ");
-    subject_line = sprintf("Input %s %s %s", subject_id, subject_group, subject_variables);
+    subject_line = sprintf("Input %s %s %s", subject_id, subject_class, subject_variables);
     fsgd_lines = c(fsgd_lines, subject_line);
   }
   fh = file(filepath);
@@ -189,6 +211,12 @@ demographics.to.fsgd.file <- function(filepath, demographics_df, group_column_na
   return(invisible(fsgd_lines));
 }
 
+
+#' @keywords internal
+get.subject.class <- function(demographics_df, row_idx, class_columns) {
+  df_values = unname(demographics_df[class_columns][row_idx,]);
+  return(paste(as.character(df_values), collapse=""));
+}
 
 #' @title Print a demographics report
 #'
@@ -199,6 +227,8 @@ demographics.to.fsgd.file <- function(filepath, demographics_df, group_column_na
 #' @param paired Whether the data of the two groups if paired (repeated measurements). Only relevant if group_column_name is given and tests for group differences are included in the report. Defaults to `FALSE`.
 #'
 #' @return vector of character strings, the lines of the demographics report.
+#'
+#' @family metadata functions
 #'
 #' @export
 #' @importFrom stats sd var.test t.test shapiro.test wilcox.test
