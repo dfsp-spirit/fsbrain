@@ -119,7 +119,8 @@ read.md.demographics = function(demographics_file, column_names, header, scale_a
 #' @return vector of character strings, the lines written to the 'filepath', invisible.
 #'
 #' @family metadata functions
-#'
+# demographics_df = read.md.demographics('~/data/truncation/demographics.txt', column_names=c('id', 'group', 'site', 'sex', 'age', 'iq', 'ct', 'saw', 'sap', 'tbv'), header=F, stringsAsFactors = F)
+# demographics.to.fsgd.file('~/test.fsgd', demographics_df, var_columns = c('site', 'sex', 'age', 'iq'))
 #' @export
 demographics.to.fsgd.file <- function(filepath, demographics_df, group_column_name='group', subject_id_column_name='id', var_columns=NULL) {
   #GroupDescriptorFile 1
