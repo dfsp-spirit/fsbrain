@@ -7,7 +7,7 @@
 read.md.demographics(
   demographics_file,
   column_names,
-  header = TRUE,
+  header,
   scale_and_center = FALSE,
   sep = "",
   report = FALSE,
@@ -47,7 +47,9 @@ Load a list of subjects and metadata from a demographics file, i.e., a tab-separ
 
 }
 \seealso{
-Other metdata functions: 
-\code{\link{read.md.subjects}()}
+Other metadata functions: 
+\code{\link{demographics.to.fsgd.file}()},
+\code{\link{read.md.subjects}()},
+\code{\link{report.on.demographics}()}
 }
-\concept{metdata functions}
+\concept{metadata functions}

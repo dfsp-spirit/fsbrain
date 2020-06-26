@@ -23,3 +23,10 @@ vector of character strings, the lines of the demographics report.
 \description{
 Print a demographics report
 }
+\seealso{
+Other metadata functions: 
+\code{\link{demographics.to.fsgd.file}()},
+\code{\link{read.md.demographics}()},
+\code{\link{read.md.subjects}()}
+}
+\concept{metadata functions}
