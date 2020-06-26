@@ -9,7 +9,8 @@ vis.export.from.coloredmeshes(
   colorbar_legend = NULL,
   img_only = TRUE,
   horizontal = TRUE,
-  silent = TRUE
+  silent = TRUE,
+  quality = 1L
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ vis.export.from.coloredmeshes(
 \item{horizontal}{logical, whether to plot the colorbar horizontally}
 
 \item{silent}{logical, whether to suppress messages}
+
+\item{quality}{integer, an arbitrary quality. This is the resolution per tile before trimming, divided by 1000, in pixels. Example: 1L means 1000x1000 pixels per tile before trimming. Currently supported values: \code{1L..5L}. Note that the resolution you can get is also limited by your screen resolution.}
 }
 \value{
 magick image instance or named list, depending on the value of 'img_only'. If the latter, the list contains the fields 'rev_vl', 'rev_cb', and 'rev_ex', which are the return values of the functions \code{vislayout.from.coloredmeshes}, \code{coloredmesh.plot.colorbar.separate}, and {combine.colorbar.with.brainview.image}, respectively.
@@ -30,7 +33,7 @@ magick image instance or named list, depending on the value of 'img_only'. If th
 This function serves as an easy (but slightly inflexible) way to export a high-quality, tight-layout, horizontal colorbar figure to disk.
 }
 \note{
-This function also exports the resulting image to disk in PNG format, in the current working directory, named 'fsbrain_merged.png'.
+This function also exports the resulting image to disk in PNG format, in the current working directory, named 'fsbrain_merged.png'. Note that your screen resolution has to be high enough to generate the final image.
 }
 \examples{
 \dontrun{

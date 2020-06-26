@@ -304,3 +304,8 @@ Warning messages:
 This happens if you do not have X11, or no window can be opened. Possible reasons include that you are running R on a remote host using an SSH connection without X11 forwarding, or that you do not have XQuartz installed under MacOS.
 
 
+### I am trying to plot a very large image with fsbrain, but the output is not as large as expected. Why?
+
+The output dimensions are limited by your screen resolution.
+
+

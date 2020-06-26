@@ -169,9 +169,11 @@ vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.ang
 #'
 #' @param silent logical, whether to suppress messages
 #'
+#' @param quality integer, an arbitrary quality. This is the resolution per tile before trimming, divided by 1000, in pixels. Example: 1L means 1000x1000 pixels per tile before trimming. Currently supported values: \code{1L..5L}. Note that the resolution you can get is also limited by your screen resolution.
+#'
 #' @return magick image instance or named list, depending on the value of 'img_only'. If the latter, the list contains the fields 'rev_vl', 'rev_cb', and 'rev_ex', which are the return values of the functions \code{vislayout.from.coloredmeshes}, \code{coloredmesh.plot.colorbar.separate}, and {combine.colorbar.with.brainview.image}, respectively.
 #'
-#' @note This function also exports the resulting image to disk in PNG format, in the current working directory, named 'fsbrain_merged.png'.
+#' @note This function also exports the resulting image to disk in PNG format, in the current working directory, named 'fsbrain_merged.png'. Note that your screen resolution has to be high enough to generate the final image.
 #'
 #' @examples
 #' \dontrun{
@@ -181,11 +183,20 @@ vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.ang
 #' }
 #'
 #' @export
-vis.export.from.coloredmeshes <- function(coloredmeshes, colorbar_legend=NULL, img_only=TRUE, horizontal=TRUE, silent = TRUE) {
+vis.export.from.coloredmeshes <- function(coloredmeshes, colorbar_legend=NULL, img_only=TRUE, horizontal=TRUE, silent = TRUE, quality=1L) {
 
     if (requireNamespace("magick", quietly = TRUE)) {
-        image.plot_extra_options = list(horizontal = horizontal, legend.cex = 1.8, legend.width = 2, legend.mar = 12, legend.line=-4, legend.lab=colorbar_legend, axis.args = list(cex.axis = 2))
-        res_vl = vislayout.from.coloredmeshes(coloredmeshes, rgloptions = list('windowRect'=c(50,50, 1000, 1000)), silent = silent);
+        quality = as.integer(quality);
+        if(quality < 1L | quality > 5L) {
+            stop("The parameter 'quality' must be an integer in range 1-5.");
+        }
+
+        image.plot_extra_options = list(horizontal = horizontal, legend.cex = 1.8 * quality, legend.width = 2 * quality, legend.mar = 12 * quality, legend.line=-4*quality, legend.lab=colorbar_legend, axis.args = list(cex.axis = 2*quality))
+        rgloptions = list('windowRect'=c(50,50, 1000 * quality, 1000 * quality));
+
+
+
+        res_vl = vislayout.from.coloredmeshes(coloredmeshes, rgloptions = rgloptions, silent = silent);
         if(can.plot.colorbar.from.coloredmeshes(coloredmeshes)) {
             res_cb = coloredmesh.plot.colorbar.separate(coloredmeshes, image.plot_extra_options=image.plot_extra_options, silent = silent);
             res_ex = combine.colorbar.with.brainview.image(horizontal = horizontal, silent = silent);
