@@ -18,7 +18,8 @@ vis.region.values.on.subject(
   value_for_unlisted_regions = NA,
   draw_colorbar = FALSE,
   makecmap_options = mkco.heat(),
-  bg = NULL
+  bg = NULL,
+  silent = FALSE
 )
 }
 \arguments{
@@ -28,7 +29,7 @@ vis.region.values.on.subject(
 
 \item{atlas}{string. The brain atlas to use. E.g., 'aparc' or 'aparc.a2009s'.}
 
-\item{lh_region_value_list}{named list. A list for the left hemisphere in which the names are atlas regions, and the values are the value to write to all vertices of that region. You can pass an unnamed list, but then the its length must exactly match the number of atlas regions. The order of values must also match the order of regions in the annotation, of course. The resulting mapping will be printed so you can check it.}
+\item{lh_region_value_list}{named list. A list for the left hemisphere in which the names are atlas regions, and the values are the value to write to all vertices of that region. You can pass an unnamed list, but then the its length must exactly match the number of atlas regions. The order of values must also match the order of regions in the annotation, of course. The resulting mapping will be printed so you can check it (unless 'silent' is set).}
 
 \item{rh_region_value_list}{named list. A list for the right hemisphere in which the names are atlas regions, and the values are the value to write to all vertices of that region.}
 
@@ -49,6 +50,8 @@ vis.region.values.on.subject(
 \item{makecmap_options}{named list of parameters to pass to \code{\link{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'. Should include at least a colormap function as name 'colFn'.}
 
 \item{bg}{a background definition. Can be a surface color layer or a character string like 'curv_light' to select a pre-defined layer, see \code{\link[fsbrain]{collayer.bg}} for valid strings.}
+
+\item{silent}{logical, whether to suppress mapping info in case of unnamed region value lists (see 'lh_region_value_list' description).}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.

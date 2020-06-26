@@ -10,7 +10,8 @@ spread.values.over.hemi(
   hemi,
   atlas,
   region_value_list,
-  value_for_unlisted_regions = NA
+  value_for_unlisted_regions = NA,
+  silent = FALSE
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ spread.values.over.hemi(
 \item{region_value_list, }{named list. A list in which the names are atlas regions, and the values are the value to write to all vertices of that region. You can pass an unnamed list or vector, but then the length must exactly match the number of regions in the atlas, and the order must match the annotation file of the subject and hemisphere. Use with care, and keep in mind that some subjects do not have all regions.}
 
 \item{value_for_unlisted_regions, }{numeric scalar. The value to assign to vertices which are part of atlas regions that are not listed in region_value_list. Defaults to NaN.}
+
+\item{silent}{logical, whether to suppress mapping info in case of unnamed region value lists (see 'lh_region_value_list' description).}
 }
 \value{
 numeric vector containing the data.

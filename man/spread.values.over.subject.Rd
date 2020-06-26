@@ -10,7 +10,8 @@ spread.values.over.subject(
   atlas,
   lh_region_value_list,
   rh_region_value_list,
-  value_for_unlisted_regions = NaN
+  value_for_unlisted_regions = NaN,
+  silent = FALSE
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ spread.values.over.subject(
 \item{rh_region_value_list, }{named list. A list in which the names are atlas regions, and the values are the value to write to all vertices of that region. Applied to the right hemisphere.}
 
 \item{value_for_unlisted_regions, }{numeric scalar. The value to assign to vertices which are part of atlas regions that are not listed in region_value_list. Defaults to NaN.}
+
+\item{silent}{logical, whether to suppress mapping info in case of unnamed region value lists (see 'lh_region_value_list' description).}
 }
 \value{
 named list with entries 'lh' and 'rh'. Each value is a numeric vector containing the data for the respective hemisphere.
