@@ -125,11 +125,13 @@ read.md.demographics = function(demographics_file, column_names, header, scale_a
 demographics.to.fsgd.file <- function(filepath, demographics_df, group_column_name='group', subject_id_column_name='id', var_columns=NULL) {
   #GroupDescriptorFile 1
   #Title OSGM
-  #Class Group1
-  #Class Group2
+  #Class Group1Male
+  #Class Group1Female
+  #Class Group2Male
+  #Class Group2Female
   #Variables Age Weight
-  #Input subject1 Group1 30 100
-  #Input subject2 Group2 40 120
+  #Input subject1 Group1Male 30 90
+  #Input subject2 Group2Female 40 65
   if(! group_column_name %in% colnames(demographics_df)) {
     stop(sprintf("Dataframe does not contain group column: no column named '%s'.\n", group_column_name));
   }
@@ -175,13 +177,8 @@ demographics.to.fsgd.file <- function(filepath, demographics_df, group_column_na
 
   fsgd_lines = c("GroupDescriptorFile 1", "Title OSGM");
 
-  groups = unique(as.character(demographics_df[[group_column_name]]));
-  for(group in groups) {
-    fsgd_lines = c(fsgd_lines, sprintf("Class %s", group));
-  }
-
   all_var_names = paste(numeric_covariate_columns, collapse=" ");
-  fsgd_lines = c(fsgd_lines, sprintf("Variables %s", all_var_names));
+  fsgd_variable_line = sprintf("Variables %s", all_var_names);
 
   num_subjects = nrow(demographics_df);
   for(cname in var_columns) {
@@ -197,15 +194,22 @@ demographics.to.fsgd.file <- function(filepath, demographics_df, group_column_na
   var_df$idx_dummy = NULL; # remove dummy column
 
 
+  fsgd_subject_lines = c();
+  fsgd_classes = c();
   for(subject_idx in seq.int(nrow(demographics_df))) {
-    #subject_group = as.character(demographics_df[[group_column_name]][subject_idx]);
     class_columns = c(group_column_name, class_part_columns);
     subject_class = get.subject.class(demographics_df, subject_idx, class_columns);
+    if(! subject_class %in% fsgd_classes) {
+        fsgd_classes = c(fsgd_classes, subject_class);
+    }
     subject_id = as.character(demographics_df[[subject_id_column_name]][subject_idx]);
     subject_variables = paste(as.character(unname(var_df[subject_idx,])), collapse=" ");
     subject_line = sprintf("Input %s %s %s", subject_id, subject_class, subject_variables);
-    fsgd_lines = c(fsgd_lines, subject_line);
+    fsgd_subject_lines = c(fsgd_subject_lines, subject_line);
   }
+  fsgd_class_lines = paste("Class", fsgd_classes);
+  fsgd_lines = c(fsgd_lines, fsgd_variable_line, fsgd_class_lines, fsgd_subject_lines);
+
   fh = file(filepath);
   writeLines(fsgd_lines, fh);
   close(fh);
