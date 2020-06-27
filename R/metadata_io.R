@@ -13,7 +13,7 @@
 #'
 #' @examples
 #'    subjects_file = system.file("extdata", "subjects.txt", package = "fsbrain", mustWork = TRUE);
-#'    subjects_list = read.md.subjects(subjects_file);
+#'    subjects_list = read.md.subjects(subjects_file, header = FALSE);
 #'
 #' @family metadata functions
 #'
@@ -58,7 +58,7 @@ read.md.subjects = function(subjects_file, header) {
 #'    system.file("extdata", "demographics.tsv", package = "fsbrain", mustWork = TRUE);
 #'    column_names = c("subject_id", "group", "age");
 #'    demographics = read.md.demographics(demographics_file,
-#'    column_names = column_names, report = FALSE);
+#'    header = TRUE, column_names = column_names, report = FALSE);
 #'
 #' @export
 #' @importFrom stats sd

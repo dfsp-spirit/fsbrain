@@ -43,7 +43,7 @@ Load a list of subjects and metadata from a demographics file, i.e., a tab-separ
    system.file("extdata", "demographics.tsv", package = "fsbrain", mustWork = TRUE);
    column_names = c("subject_id", "group", "age");
    demographics = read.md.demographics(demographics_file,
-   column_names = column_names, report = FALSE);
+   header = TRUE, column_names = column_names, report = FALSE);
 
 }
 \seealso{

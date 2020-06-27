@@ -19,7 +19,7 @@ Load a list of subjects from a subjects file, i.e., a simple text file containin
 }
 \examples{
    subjects_file = system.file("extdata", "subjects.txt", package = "fsbrain", mustWork = TRUE);
-   subjects_list = read.md.subjects(subjects_file);
+   subjects_list = read.md.subjects(subjects_file, header = FALSE);
 
 }
 \seealso{
