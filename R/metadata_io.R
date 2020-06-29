@@ -103,6 +103,15 @@ read.md.demographics = function(demographics_file, column_names, header, scale_a
     return(demographics_df);
 }
 
+# truncation:
+# demographics_df = read.md.demographics('~/data/truncation/demographics.txt', column_names=c('id', 'group', 'site', 'sex', 'age', 'iq', 'ct', 'saw', 'sap', 'tbv'), header=F, stringsAsFactors = F)
+# demographics.to.fsgd.file('~/truncation.fsgd', demographics_df, var_columns = c('site', 'sex', 'age', 'iq'))
+
+# lGI:
+# demographics_df = read.md.demographics('/Volumes/shared/projects/lgi_paper_AIMS/data/Demographics_639.txt', column_names=c('id', 'group', 'site', 'sex', 'age', 'iq', 'sa', 'ct', 'tbv'), header=F, stringsAsFactors = F)
+# demographics.to.fsgd.file('~/lgi.fsgd', demographics_df, var_columns = c('site', 'sex', 'age', 'iq'))
+
+
 
 #' @title Write FreeSurfer Group Descriptor (FSGD) file from demographics dataframe.
 #'
@@ -116,15 +125,17 @@ read.md.demographics = function(demographics_file, column_names, header, scale_a
 #'
 #' @param var_columns vector of character strings, the column names to include as variables in the FSGD file. If NULL (the default), all columns will be included (with the exception of the group column and the subject id column).
 #'
+#' @param ftitle character string, freeform title for the FSGD file
+#'
+#' @param fsgd_flag_lines vector of character strings, extra flag lines to write to the file. The default setting will activate de-meaning and rescaling.
+#'
 #' @return vector of character strings, the lines written to the 'filepath', invisible.
 #'
 #' @family metadata functions
-# demographics_df = read.md.demographics('~/data/truncation/demographics.txt', column_names=c('id', 'group', 'site', 'sex', 'age', 'iq', 'ct', 'saw', 'sap', 'tbv'), header=F, stringsAsFactors = F)
-# demographics.to.fsgd.file('~/test.fsgd', demographics_df, var_columns = c('site', 'sex', 'age', 'iq'))
 #' @export
-demographics.to.fsgd.file <- function(filepath, demographics_df, group_column_name='group', subject_id_column_name='id', var_columns=NULL) {
+demographics.to.fsgd.file <- function(filepath, demographics_df, group_column_name='group', subject_id_column_name='id', var_columns=NULL, ftitle="OSGM", fsgd_flag_lines=c("DeMeanFlag 1", "ReScaleFlag 1")) {
   #GroupDescriptorFile 1
-  #Title OSGM
+  #Title MyFSGD
   #Class Group1Male
   #Class Group1Female
   #Class Group2Male
@@ -175,7 +186,7 @@ demographics.to.fsgd.file <- function(filepath, demographics_df, group_column_na
   cat(sprintf("Found %d numerical covariates, %d factors that will become part of the subject class (in addition to the group column '%s').\n", length(numeric_covariate_columns), length(class_part_columns), group_column_name));
 
 
-  fsgd_lines = c("GroupDescriptorFile 1", "Title OSGM");
+  fsgd_lines = c("GroupDescriptorFile 1", sprintf("Title %s", ftitle));
 
   all_var_names = paste(numeric_covariate_columns, collapse=" ");
   fsgd_variable_line = sprintf("Variables %s", all_var_names);
@@ -208,7 +219,7 @@ demographics.to.fsgd.file <- function(filepath, demographics_df, group_column_na
     fsgd_subject_lines = c(fsgd_subject_lines, subject_line);
   }
   fsgd_class_lines = paste("Class", fsgd_classes);
-  fsgd_lines = c(fsgd_lines, fsgd_variable_line, fsgd_class_lines, fsgd_subject_lines);
+  fsgd_lines = c(fsgd_lines, fsgd_variable_line, fsgd_class_lines, fsgd_flag_lines, fsgd_subject_lines);
 
   fh = file(filepath);
   writeLines(fsgd_lines, fh);

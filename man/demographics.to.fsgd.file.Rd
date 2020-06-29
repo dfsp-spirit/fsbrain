@@ -9,7 +9,9 @@ demographics.to.fsgd.file(
   demographics_df,
   group_column_name = "group",
   subject_id_column_name = "id",
-  var_columns = NULL
+  var_columns = NULL,
+  ftitle = "OSGM",
+  fsgd_flag_lines = c("DeMeanFlag 1", "ReScaleFlag 1")
 )
 }
 \arguments{
@@ -22,6 +24,10 @@ demographics.to.fsgd.file(
 \item{subject_id_column_name}{character string, the column name of the subject identifier column in the 'demographics_df'}
 
 \item{var_columns}{vector of character strings, the column names to include as variables in the FSGD file. If NULL (the default), all columns will be included (with the exception of the group column and the subject id column).}
+
+\item{ftitle}{character string, freeform title for the FSGD file}
+
+\item{fsgd_flag_lines}{vector of character strings, extra flag lines to write to the file. The default setting will activate de-meaning and rescaling.}
 }
 \value{
 vector of character strings, the lines written to the 'filepath', invisible.
