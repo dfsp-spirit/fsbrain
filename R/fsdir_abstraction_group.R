@@ -137,6 +137,21 @@ group.morph.standard.sf <- function(filepath, df=TRUE) {
     }
 }
 
+write.group.morph.standard.sf <- function(filepath, data) {
+    if(is.data.frame(data)) {
+        data = data.matrix(data);
+        ddim = dim(data);
+        if(length(ddim) != 2L) {
+            stop("Invalid dataframe format.");
+        }
+        dim(data) = c(ddim[1], 1, 1, ddim[2]);
+    }
+    if(length(dim(data)) != 4L) {
+        stop("Data must have 4 dimensions.");
+    }
+    freesurferformats::write.fs.mgh(filepath, data);
+}
+
 
 #' @title Check whether the subjects_list looks good, warn if not.
 #'
