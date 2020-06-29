@@ -177,13 +177,13 @@ demographics.to.fsgd.file <- function(filepath, demographics_df, group_column_na
           numeric_covariate_columns = c(numeric_covariate_columns, cname);
       } else {
           if(is.factor(demographics_df[[cname]])) {
-            warning(sprintf("Column '%s' is of type factor, which may lead to a Class name that is hard to read.\n", cname));
+            message(sprintf("Column '%s' is of type factor, which may lead to a numerical Class name that is hard to read.\n", cname));
           }
 
           class_part_columns = c(class_part_columns, cname);
       }
   }
-  cat(sprintf("Found %d numerical covariates, %d factors that will become part of the subject class (in addition to the group column '%s').\n", length(numeric_covariate_columns), length(class_part_columns), group_column_name));
+  #cat(sprintf("Found %d numerical covariates, %d factors that will become part of the subject class (in addition to the group column '%s').\n", length(numeric_covariate_columns), length(class_part_columns), group_column_name));
 
 
   fsgd_lines = c("GroupDescriptorFile 1", sprintf("Title %s", ftitle));
@@ -228,11 +228,24 @@ demographics.to.fsgd.file <- function(filepath, demographics_df, group_column_na
 }
 
 
+#' @title Construct FSGD Class name from group and non-continuous covariate columns.
+#'
+#' @inheritParams demographics.to.fsgd.file
+#'
+#' @param row_idx integer, the row in the df that belongs to this subject
+#'
+#' @param class_columns the column names to use
+#'
+#' @param collapse character string, the separator
+#'
+#' @return character string, the Class name for this subject, derived from the values in the 'class_columns'.
+#'
 #' @keywords internal
-get.subject.class <- function(demographics_df, row_idx, class_columns) {
+get.subject.class <- function(demographics_df, row_idx, class_columns, collapse="_") {
   df_values = unname(demographics_df[class_columns][row_idx,]);
-  return(paste(as.character(df_values), collapse=""));
+  return(paste(as.character(df_values), collapse=collapse));
 }
+
 
 #' @title Print a demographics report
 #'
