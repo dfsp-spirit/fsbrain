@@ -7,6 +7,7 @@ Version 0.3.1
 - Add subject.num.verts function to easily retrieve the vertex counts of the meshes for a subject
 - Support new background color layers 'curv_light' and 'sulc_light'
 - The function vis.symmetric.data.on.subject defaults to a new colormap.
+- The metadata IO function to read subjects files and demographics files no longer have a default for the 'header' parameter. This is to prevent people from accidently skipping the first subject.
 
 
 Version 0.3.0
