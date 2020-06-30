@@ -100,6 +100,9 @@ mesh.vertex.included.faces <- function(surface_mesh, source_vertices) {
 #' @note Sorry for the computational time, the mesh datastructure is not ideal for neighborhood search.
 #'
 #' @export
+#' @importFrom foreach foreach
+#' @importFrom parallel detectCores
+#' @importFrom doParallel registerDoParallel
 annot.outline <- function(annotdata, surface_mesh, background="white", silent=TRUE, expand_inwards=0L, outline_color=NULL, limit_to_regions=NULL) {
 
     if(! freesurferformats::is.fs.annot(annotdata)) {
@@ -114,6 +117,8 @@ annot.outline <- function(annotdata, surface_mesh, background="white", silent=TR
         stop(sprintf("Annotation is for %d vertices but mesh contains %d, vertex counts must match.\n", length(annotdata$vertices), nrow(surface_mesh$vertices)));
     }
     col = rep(background, length(annotdata$vertices));
+    #doParallel::registerDoParallel(parallel::detectCores());
+    #foreach::foreach(region_idx = seq_len(annotdata$colortable$num_entries)) %dopar% {
     for(region_idx in seq_len(annotdata$colortable$num_entries)) {
         region_name = annotdata$colortable$struct_names[[region_idx]];
 
