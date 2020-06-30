@@ -4,6 +4,8 @@
 
 #' @title Combine several brainview images into a new figure.
 #'
+#' @description Create a new image from several image tiles, the exact layout depends on the number of given images.
+#'
 #' @param brainview_images vector of character strings, paths to the brainview images, usually in PNG format
 #'
 #' @param output_img path to output image that including the file extension
@@ -110,6 +112,8 @@ arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=
 
 #' @title Combine several brainview images as a grid into a new figure.
 #'
+#' @description Create a new image from several image tiles, the exact layout is a grid with n per row.
+#'
 #' @inheritParams arrange.brainview.images
 #'
 #' @param output_img path to output image that including the file extension
@@ -117,6 +121,8 @@ arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=
 #' @param num_per_row positive integer, the number of image tiles per row.
 #'
 #' @return named list with entries: 'brainview_images': vector of character strings, the paths to the input images. 'output_img_path': character string, path to the output image. 'merged_img': the magick image instance.
+#'
+#' @note The tiles are written row-wise, in the order in which they occur in the parameter 'brainview_images'.
 #'
 #' @export
 arrange.brainview.images.grid <- function(brainview_images, output_img, colorbar_img=NULL, silent=TRUE, num_per_row=10L, border_geometry="5x5", background_color = "white") {
