@@ -28,12 +28,18 @@ recycle <- function(x, times) {
 #'
 #' @inheritParams vis.subject.annot
 #'
+#' @param subject_id vector of subject identifiers
+#'
 #' @param view_angles see \code{\link{get.view.angle.names}}.
 #'
 #' @param output_img character string, the file path for the output image
 #'
+#' @param num_per_row positive integer, the number of tiles per row.
+#'
+#' @note The images are plotted row-wise, in the order in which they appear in the 'subject_id' parameter.
+#'
 #' @export
-vis.group.annot <- function(subjects_dir, subject_id, atlas, view_angles = 'sd_dorsal', output_img='fsbrain_group_annot.png') {
+vis.group.annot <- function(subjects_dir, subject_id, atlas, view_angles = 'sd_dorsal', output_img='fsbrain_group_annot.png', num_per_row = 10L) {
     num_subjects = length(subject_id);
     subjects_dir = recycle(subjects_dir, num_subjects);
     atlas = recycle(atlas, num_subjects);
@@ -46,5 +52,5 @@ vis.group.annot <- function(subjects_dir, subject_id, atlas, view_angles = 'sd_d
         vislayout.from.coloredmeshes(cm, view_angles=view_angles, output_img=subject_output_img, silent=TRUE, grid_like=TRUE);
         all_output_images[subject_idx] = subject_output_img;
     }
-    arrange.brainview.images(all_output_images, output_img=output_img);
+    return(invisible(arrange.brainview.images.grid(all_output_images, output_img=output_img, num_per_row = num_per_row, annotations = subject_id)));
 }

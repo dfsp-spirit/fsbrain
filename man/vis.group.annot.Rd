@@ -9,20 +9,26 @@ vis.group.annot(
   subject_id,
   atlas,
   view_angles = "sd_dorsal",
-  output_img = "fsbrain_group_annot.png"
+  output_img = "fsbrain_group_annot.png",
+  num_per_row = 10L
 )
 }
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
 
-\item{subject_id}{string. The subject identifier.}
+\item{subject_id}{vector of subject identifiers}
 
 \item{atlas}{string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded. Can also be a hemilist of already loaded annotations.}
 
 \item{view_angles}{see \code{\link{get.view.angle.names}}.}
 
 \item{output_img}{character string, the file path for the output image}
+
+\item{num_per_row}{positive integer, the number of tiles per row.}
 }
 \description{
 Plot annotation for a group of subjects.
+}
+\note{
+The images are plotted row-wise, in the order in which they appear in the 'subject_id' parameter.
 }

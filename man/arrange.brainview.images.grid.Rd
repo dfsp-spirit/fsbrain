@@ -11,7 +11,8 @@ arrange.brainview.images.grid(
   silent = TRUE,
   num_per_row = 10L,
   border_geometry = "5x5",
-  background_color = "white"
+  background_color = "white",
+  annotations = NULL
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ arrange.brainview.images.grid(
 \item{border_geometry}{string, a geometry string passed to \code{magick::image_border} to define the borders to add to each image tile. The default value adds 5 pixels, both horizontally and vertically.}
 
 \item{background_color}{string, a valid ImageMagick color string such as "white" or "#000080". The color to use when extending images (e.g., when creating the border).}
+
+\item{annotations}{vector of character strings or NULL, the (optional) text annotations for the images. Useful to print the subject identifier onto the individual tiles. Length must match number of image tiles in 'brainview_images'.}
 }
 \value{
 named list with entries: 'brainview_images': vector of character strings, the paths to the input images. 'output_img_path': character string, path to the output image. 'merged_img': the magick image instance.

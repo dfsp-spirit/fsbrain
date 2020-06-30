@@ -120,12 +120,14 @@ arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=
 #'
 #' @param num_per_row positive integer, the number of image tiles per row.
 #'
+#' @param annotations vector of character strings or NULL, the (optional) text annotations for the images. Useful to print the subject identifier onto the individual tiles. Length must match number of image tiles in 'brainview_images'.
+#'
 #' @return named list with entries: 'brainview_images': vector of character strings, the paths to the input images. 'output_img_path': character string, path to the output image. 'merged_img': the magick image instance.
 #'
 #' @note The tiles are written row-wise, in the order in which they occur in the parameter 'brainview_images'.
 #'
 #' @export
-arrange.brainview.images.grid <- function(brainview_images, output_img, colorbar_img=NULL, silent=TRUE, num_per_row=10L, border_geometry="5x5", background_color = "white") {
+arrange.brainview.images.grid <- function(brainview_images, output_img, colorbar_img=NULL, silent=TRUE, num_per_row=10L, border_geometry="5x5", background_color = "white", annotations=NULL) {
     if (requireNamespace("magick", quietly = TRUE)) {
 
         # load image files
@@ -138,11 +140,21 @@ arrange.brainview.images.grid <- function(brainview_images, output_img, colorbar
         images = magick::image_border(images, background_color, border_geometry);
         num_img = length(images);
 
+        images = images.rescale.to.max.canvas(images);
+
+        # annotate if requested
+        images = images.annotate(images, annotations);
+
+
+
         num_rows = as.integer(ceiling(num_img / num_per_row));
         num_in_last_row = (num_rows * num_per_row) %% num_img;
         start_img_idx = 1L;
         for(row_idx in seq.int(num_rows)) {
-            img_row = magick::image_append(images[start_img_idx:min((start_img_idx+num_per_row-1L),num_img)]);
+            row_start_idx = start_img_idx;
+            row_end_idx = min((start_img_idx+num_per_row-1L),num_img);
+            img_row = magick::image_append(images[row_start_idx:row_end_idx]);
+
             if(row_idx == 1L) {
                 merged_img = img_row;
             } else {
@@ -168,6 +180,88 @@ arrange.brainview.images.grid <- function(brainview_images, output_img, colorbar
         return(invisible(NULL));
     }
 }
+
+#' @title Rescale all images canvas to match the largest one.
+#'
+#' @param images vector of magick images
+#'
+#' @param background color string, like 'white' or '#00FF00'
+#'
+#' @return vector of magick images, the rescaled images
+#'
+#' @keywords internal
+images.rescale.to.max.canvas <- function(images, background="white") {
+    if (requireNamespace("magick", quietly = TRUE)) {
+        num_img = length(images);
+        # Determine max tile heigth and width to resize canvas of all tiles, so all images have the same width and height.
+        tile_widths = rep(NA, num_img);
+        tile_heights = rep(NA, num_img);
+        for(img_idx in seq.int(num_img)) {
+            tile_widths[img_idx] = magick::image_info(images[img_idx])$width;
+            tile_heights[img_idx] = magick::image_info(images[img_idx])$height;
+        }
+        max_tile_width = max(tile_widths);
+        max_tile_height = max(tile_heights);
+        #cat(sprintf("The min and max tile widths are %d and %d.\n", min(tile_widths), max_tile_width));
+        #cat(sprintf("The min and max tile heights are %d and %d.\n", min(tile_heights), max_tile_height));
+
+        geom_string = sprintf("%dx%d", max_tile_width, max_tile_height);
+
+        #cat(sprintf("Using geom string '%s' for the %d tiles.\n", geom_string, num_img));
+
+        imgs_rescaled = images;
+        for(img_idx in seq.int(num_img)) {
+            imgs_rescaled[img_idx] = magick::image_extent(images[img_idx], geom_string, color = background);
+        }
+        return(imgs_rescaled);
+
+    } else {
+        warning("The 'magick' package must be installed to use this functionality.");
+        return(invisible(NULL));
+    }
+}
+
+
+#' @title Annotate image with text.
+#'
+#' @inheritParams images.rescale.to.max.canvas
+#'
+#' @param annotations vector of character strings, the strings to print onto the tiles
+#'
+#' @param do_extend logical, whether to add the space for the annotation text below the existing image tile
+#'
+#' @return vector of magick images, the annotated images
+#'
+#' @keywords internal
+images.annotate <- function(images, annotations, do_extend = TRUE, background = 'white') {
+
+    if (requireNamespace("magick", quietly = TRUE)) {
+        num_img = length(images);
+
+        if(is.null(annotations)) {
+            return(images);
+        }
+        annotations = recycle(annotations, num_img);
+        imgs_annotated = images;
+        for(img_idx in seq.int(num_img)) {
+            font_size = 30L;
+            if(do_extend) {
+                extend_height_by = font_size * 2L;
+                lower_extension_img = magick::image_blank(magick::image_info(images[img_idx])$width, extend_height_by, background);
+                merged_img = magick::image_append(c(images[img_idx], lower_extension_img), stack = TRUE);
+            } else {
+                merged_img = images[img_idx];
+            }
+
+            imgs_annotated[img_idx] = magick::image_annotate(merged_img, annotations[img_idx], size = font_size, gravity = "south", color = "black");
+        }
+        return(imgs_annotated);
+    } else {
+        warning("The 'magick' package must be installed to use this functionality.");
+        return(invisible(NULL));
+    }
+}
+
 
 #' @title Visualize coloredmeshes from several angles and combine the images into a new figure.
 #'
