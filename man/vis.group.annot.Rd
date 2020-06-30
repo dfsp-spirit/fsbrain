@@ -19,7 +19,7 @@ vis.group.annot(
 
 \item{atlas}{string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded. Can also be a hemilist of already loaded annotations.}
 
-\item{view_angles}{see \code{\link{get.view.angle.names()}}.}
+\item{view_angles}{see \code{\link{get.view.angle.names}}.}
 
 \item{output_img}{character string, the file path for the output image}
 }

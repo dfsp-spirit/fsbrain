@@ -100,9 +100,9 @@ mesh.vertex.included.faces <- function(surface_mesh, source_vertices) {
 #' @note Sorry for the computational time, the mesh datastructure is not ideal for neighborhood search.
 #'
 #' @export
-#' @importFrom foreach foreach
-#' @importFrom parallel detectCores
-#' @importFrom doParallel registerDoParallel
+# @importFrom foreach foreach
+# @importFrom parallel detectCores
+# @importFrom doParallel registerDoParallel
 annot.outline <- function(annotdata, surface_mesh, background="white", silent=TRUE, expand_inwards=0L, outline_color=NULL, limit_to_regions=NULL) {
 
     if(! freesurferformats::is.fs.annot(annotdata)) {

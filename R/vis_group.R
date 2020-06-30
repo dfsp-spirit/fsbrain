@@ -28,7 +28,7 @@ recycle <- function(x, times) {
 #'
 #' @inheritParams vis.subject.annot
 #'
-#' @param view_angles see \code{\link{get.view.angle.names()}}.
+#' @param view_angles see \code{\link{get.view.angle.names}}.
 #'
 #' @param output_img character string, the file path for the output image
 #'
