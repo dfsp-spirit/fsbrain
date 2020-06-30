@@ -8,6 +8,8 @@ write.group.morph.standard.sf(filepath, data)
 }
 \arguments{
 \item{filepath}{character string, path to the target file, should end with '.mgh' or '.mgz'.}
+
+\item{data}{numerical 4d matrix, with first dimension holding 1D data for all vertices of a subject, 2nd and 3rd dimension are of length 1, and 4th dimenions is for each subject.}
 }
 \description{
 Write morphometry data for a group into a single MGH or MGZ file.

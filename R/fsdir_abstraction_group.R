@@ -146,6 +146,8 @@ group.morph.standard.sf <- function(filepath, df=TRUE) {
 #'
 #' @param filepath character string, path to the target file, should end with '.mgh' or '.mgz'.
 #'
+#' @param data numerical 4d matrix, with first dimension holding 1D data for all vertices of a subject, 2nd and 3rd dimension are of length 1, and 4th dimenions is for each subject.
+#'
 #' @note The file will contain no information on the subject identifiers. The data can be for one or both hemispheres. See \code{\link{group.morph.standard.sf}} to read the data back into R.
 #'
 #' @export
