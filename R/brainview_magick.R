@@ -18,7 +18,7 @@
 #'
 #' @param background_color string, a valid ImageMagick color string such as "white" or "#000080". The color to use when extending images (e.g., when creating the border).
 #'
-#' @return named list with entries: 'brainview_images': vector of character strings, the paths to the input images. 'outpt_img_path': character string, path to the output image. 'merged_img': the magick image instance.
+#' @return named list with entries: 'brainview_images': vector of character strings, the paths to the input images. 'output_img_path': character string, path to the output image. 'merged_img': the magick image instance.
 #'
 #' @export
 arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=NULL, silent=TRUE, grid_like=TRUE, border_geometry="5x5", background_color = "white") {
@@ -65,7 +65,31 @@ arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=
 
                 merged_img = magick::image_append(c(top_and_mid, bottom_row), stack = TRUE);
             } else {
-                merged_img = magick::image_append(images);
+                if(num_img <= 10L) {
+                    merged_img = magick::image_append(images);
+                } else {
+                    # For more than 10 images, plot 10 per row.
+                    num_per_row = 10L;
+                    num_rows = as.integer(ceiling(num_img / num_per_row));
+                    num_in_last_row = (num_rows * num_per_row) %% num_img;
+                    start_img_idx = 1L;
+                    for(row_idx in seq.int(num_rows)) {
+                        img_row = magick::image_append(images[start_img_idx:min((start_img_idx+num_per_row-1L),num_img)]);
+                        if(row_idx == 1L) {
+                            merged_img = img_row;
+                        } else {
+                            width_so_far = magick::image_info(merged_img)$width;
+                            width_img_row = magick::image_info(img_row)$width;
+                            width_missing = width_so_far - width_img_row;
+                            if(width_missing > 0L) {
+                                blank_right_img = magick::image_blank(width_missing, magick::image_info(img_row)$height, background_color);
+                                img_row = magick::image_append(c(img_row, blank_right_img));
+                            }
+                            merged_img = magick::image_append(c(merged_img, img_row), stack = TRUE);
+                        }
+                        start_img_idx = start_img_idx + num_per_row;
+                    }
+                }
             }
         } else {
             merged_img = magick::image_append(images);
@@ -83,6 +107,61 @@ arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=
     }
 }
 
+
+#' @title Combine several brainview images as a grid into a new figure.
+#'
+#' @inheritParams arrange.brainview.images
+#'
+#' @param output_img path to output image that including the file extension
+#'
+#' @param num_per_row positive integer, the number of image tiles per row.
+#'
+#' @return named list with entries: 'brainview_images': vector of character strings, the paths to the input images. 'output_img_path': character string, path to the output image. 'merged_img': the magick image instance.
+#'
+#' @export
+arrange.brainview.images.grid <- function(brainview_images, output_img, colorbar_img=NULL, silent=TRUE, num_per_row=10L, border_geometry="5x5", background_color = "white") {
+    if (requireNamespace("magick", quietly = TRUE)) {
+
+        # load image files
+        images = magick::image_read(brainview_images);
+
+        # trim images
+        images = magick::image_trim(images);
+
+        # Add tiny border back (to prevent them from touching each other)
+        images = magick::image_border(images, background_color, border_geometry);
+        num_img = length(images);
+
+        num_rows = as.integer(ceiling(num_img / num_per_row));
+        num_in_last_row = (num_rows * num_per_row) %% num_img;
+        start_img_idx = 1L;
+        for(row_idx in seq.int(num_rows)) {
+            img_row = magick::image_append(images[start_img_idx:min((start_img_idx+num_per_row-1L),num_img)]);
+            if(row_idx == 1L) {
+                merged_img = img_row;
+            } else {
+                width_so_far = magick::image_info(merged_img)$width;
+                width_img_row = magick::image_info(img_row)$width;
+                width_missing = width_so_far - width_img_row;
+                if(width_missing > 0L) {
+                    blank_right_img = magick::image_blank(width_missing, magick::image_info(img_row)$height, background_color);
+                    img_row = magick::image_append(c(img_row, blank_right_img));
+                }
+                merged_img = magick::image_append(c(merged_img, img_row), stack = TRUE);
+            }
+            start_img_idx = start_img_idx + num_per_row;
+        }
+
+        magick::image_write(merged_img, path = output_img);
+        if(! silent) {
+            message(sprintf("Merged image written to '%s' (current working dir is '%s').\n", output_img, getwd()));
+        }
+        return(invisible(list('merged_img'=merged_img, 'brainview_images'=brainview_images, 'output_img_path'=output_img)));
+    } else {
+        warning("The 'magick' package must be installed to use this functionality. Merged image NOT written.");
+        return(invisible(NULL));
+    }
+}
 
 #' @title Visualize coloredmeshes from several angles and combine the images into a new figure.
 #'
