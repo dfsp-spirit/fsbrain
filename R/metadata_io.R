@@ -497,4 +497,31 @@ test.numerical.meandiff.paired <- function(colname, condition1_name, condition2_
 }
 
 
+#' @title Read subjects list from an FSGD file.
+#'
+#' @param filepath character string, path to a FreeSurfer Group Descriptor (FSGD) file.
+#'
+#' @return vector of character strings, the subject identifiers
+#'
+#' @note This is not a parser for all data in an FSGD file.
+#'
+#' @seealso \code{\link{demographics.to.fsgd.file}}
+#'
+#' @export
+read.md.subjects.from.fsgd <- function(filepath) {
+  fsgd_lines = readLines(filepath);
+  subject_lines = fsgd_lines[startsWith(fsgd_lines, 'Input')];
+  subject_lines_split = strsplit(subject_lines, " ");
+  # A split line looks like: "Input"   "subj12345"   "control" "25"      "male"    "London"  "116"
+
+  num_subjects = length(subject_lines_split);
+
+  subjects = rep("", num_subjects);
+  for(row_idx in seq.int(num_subjects)) {
+    subjects[row_idx] = subject_lines_split[[row_idx]][2]; # The subject ID is at 2nd position.
+  }
+  return(subjects);
+}
+
+
 
