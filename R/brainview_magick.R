@@ -362,7 +362,7 @@ vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.ang
 #' }
 #'
 #' @export
-vis.export.from.coloredmeshes <- function(coloredmeshes, colorbar_legend=NULL, img_only=TRUE, horizontal=TRUE, silent = TRUE, quality=1L) {
+vis.export.from.coloredmeshes <- function(coloredmeshes, colorbar_legend=NULL, img_only=TRUE, horizontal=TRUE, silent = TRUE, quality=1L, output_img="fsbrain_arranged.png") {
 
     if (requireNamespace("magick", quietly = TRUE)) {
         quality = as.integer(quality);
@@ -375,14 +375,17 @@ vis.export.from.coloredmeshes <- function(coloredmeshes, colorbar_legend=NULL, i
 
 
 
-        res_vl = vislayout.from.coloredmeshes(coloredmeshes, rgloptions = rgloptions, silent = silent);
+
         if(can.plot.colorbar.from.coloredmeshes(coloredmeshes)) {
+            tmp_img = tempfile(fileext = ".png");
+            res_vl = vislayout.from.coloredmeshes(coloredmeshes, rgloptions = rgloptions, silent = silent, output_img = tmp_img);
             res_cb = coloredmesh.plot.colorbar.separate(coloredmeshes, image.plot_extra_options=image.plot_extra_options, silent = silent);
-            res_ex = combine.colorbar.with.brainview.image(horizontal = horizontal, silent = silent);
+            res_ex = combine.colorbar.with.brainview.image(horizontal = horizontal, silent = silent, brainview_img = tmp_img, output_img = output_img);
             if(img_only) {
                 return(res_ex$merged_img);
             }
         } else {
+            res_vl = vislayout.from.coloredmeshes(coloredmeshes, rgloptions = rgloptions, silent = silent, output_img = output_img);
             res_cb = NULL;
             rex_ex = NULL;
             if(img_only) {

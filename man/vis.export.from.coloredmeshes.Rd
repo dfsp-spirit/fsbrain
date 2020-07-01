@@ -10,7 +10,8 @@ vis.export.from.coloredmeshes(
   img_only = TRUE,
   horizontal = TRUE,
   silent = TRUE,
-  quality = 1L
+  quality = 1L,
+  output_img = "fsbrain_arranged.png"
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ vis.export.from.coloredmeshes(
 \item{silent}{logical, whether to suppress messages}
 
 \item{quality}{integer, an arbitrary quality. This is the resolution per tile before trimming, divided by 1000, in pixels. Example: 1L means 1000x1000 pixels per tile before trimming. Currently supported values: \code{1L..5L}. Note that the resolution you can get is also limited by your screen resolution.}
+
+\item{output_img}{string, path to the output file. Defaults to "fsbrain_arranged.png"}
 }
 \value{
 magick image instance or named list, depending on the value of 'img_only'. If the latter, the list contains the fields 'rev_vl', 'rev_cb', and 'rev_ex', which are the return values of the functions \code{vislayout.from.coloredmeshes}, \code{coloredmesh.plot.colorbar.separate}, and {combine.colorbar.with.brainview.image}, respectively.
