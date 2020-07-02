@@ -7,7 +7,7 @@
 subject.atlas.agg(
   vertex_morph_data,
   vertex_label_names,
-  agg_fun = mean,
+  agg_fun = base::mean,
   requested_label_names = c()
 )
 }
@@ -16,7 +16,7 @@ subject.atlas.agg(
 
 \item{vertex_label_names, }{string vector. The region names for the vertices, one string per vertex. The region names are typically loaded from an annotation file with the read.fs.annot function.}
 
-\item{agg_fun, }{function. An R function that aggregates data, typically max, mean, min or something similar. Note: this is NOT a string, put the function name without quotes. Defaults to mean.}
+\item{agg_fun, }{function. An R function that aggregates data, typically max, mean, min or something similar. Note: this is NOT a string, put the function name without quotes. Defaults to \code{base::mean}.}
 
 \item{requested_label_names, }{string vector. The label (or region) names that you want to occur in the output. If not specified, all region names which occur in the data are used. If given, and one of the requested names does NOT occur in the data, it will occur in the output with aggregation value NaN. If given, and one of the names from the data does NOT occur in the requested list, it will NOT occur in the output. So if you specify this, the output dataframe will contain a row for a region if and only if it is in the requested list.}
 }

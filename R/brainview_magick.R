@@ -120,14 +120,14 @@ arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=
 #'
 #' @param num_per_row positive integer, the number of image tiles per row.
 #'
-#' @param annotations vector of character strings or NULL, the (optional) text annotations for the images. Useful to print the subject identifier onto the individual tiles. Length must match number of image tiles in 'brainview_images'.
+#' @param captions vector of character strings or NULL, the (optional) text annotations for the images. Useful to print the subject identifier onto the individual tiles. Length must match number of image tiles in 'brainview_images'.
 #'
 #' @return named list with entries: 'brainview_images': vector of character strings, the paths to the input images. 'output_img_path': character string, path to the output image. 'merged_img': the magick image instance.
 #'
 #' @note The tiles are written row-wise, in the order in which they occur in the parameter 'brainview_images'.
 #'
 #' @export
-arrange.brainview.images.grid <- function(brainview_images, output_img, colorbar_img=NULL, silent=TRUE, num_per_row=10L, border_geometry="5x5", background_color = "white", annotations=NULL) {
+arrange.brainview.images.grid <- function(brainview_images, output_img, colorbar_img=NULL, silent=TRUE, num_per_row=10L, border_geometry="5x5", background_color = "white", captions=NULL) {
     if (requireNamespace("magick", quietly = TRUE)) {
 
         # load image files
@@ -143,7 +143,7 @@ arrange.brainview.images.grid <- function(brainview_images, output_img, colorbar
         images = images.rescale.to.max.canvas(images);
 
         # annotate if requested
-        images = images.annotate(images, annotations);
+        images = images.annotate(images, captions);
 
 
 

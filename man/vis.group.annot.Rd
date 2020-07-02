@@ -2,7 +2,7 @@
 % Please edit documentation in R/vis_group.R
 \name{vis.group.annot}
 \alias{vis.group.annot}
-\title{Plot annotation for a group of subjects.}
+\title{Plot atlas annotations for a group of subjects.}
 \usage{
 vis.group.annot(
   subjects_dir,
@@ -10,7 +10,8 @@ vis.group.annot(
   atlas,
   view_angles = "sd_dorsal",
   output_img = "fsbrain_group_annot.png",
-  num_per_row = 10L
+  num_per_row = 5L,
+  captions = subject_id
 )
 }
 \arguments{
@@ -22,13 +23,20 @@ vis.group.annot(
 
 \item{view_angles}{see \code{\link{get.view.angle.names}}.}
 
-\item{output_img}{character string, the file path for the output image}
+\item{output_img}{character string, the file path for the output image. Should end with '.png'.}
 
 \item{num_per_row}{positive integer, the number of tiles per row.}
+
+\item{captions}{optional vector of character strings, the short text annotations for the individual tiles. Typically used to plot the subject identifier.}
 }
 \description{
-Plot annotation for a group of subjects.
+Plot atlas annotations for a group of subjects and combine them into a single large image.
 }
 \note{
-The images are plotted row-wise, in the order in which they appear in the 'subject_id' parameter.
+The subjects are plotted row-wise, in the order in which they appear in the 'subject_id' parameter.
 }
+\seealso{
+Other group visualization functions: 
+\code{\link{vis.group.coloredmeshes}()}
+}
+\concept{group visualization functions}
