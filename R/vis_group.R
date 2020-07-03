@@ -30,7 +30,9 @@ recycle <- function(x, times) {
 #'
 #' @inheritParams vis.subject.annot
 #'
-#' @param subject_id vector of subject identifiers
+#' @param subject_id vector of character strings, the subject identifiers
+#'
+#' @param atlas vector of character strings, the atlas names. Example: \code{c('aparc', 'aparc.a2009s')}
 #'
 #' @param view_angles see \code{\link{get.view.angle.names}}.
 #'
@@ -40,19 +42,84 @@ recycle <- function(x, times) {
 #'
 #' @param captions optional vector of character strings, the short text annotations for the individual tiles. Typically used to plot the subject identifier.
 #'
-#' @note The subjects are plotted row-wise, in the order in which they appear in the 'subject_id' parameter.
+#' @param ... extra parameters passed to the subject level visualization function. Not all may make sense in this context. Example: \code{surface='pial'}.
+#'
+#' @note The subjects are plotted row-wise, in the order in which they appear in the 'subject_id' parameter. This function is vectorized over 'subject_id' and 'atlas'.
 #'
 #' @family group visualization functions
 #'
 #' @export
-vis.group.annot <- function(subjects_dir, subject_id, atlas, view_angles = 'sd_dorsal', output_img='fsbrain_group_annot.png', num_per_row = 5L, captions = subject_id) {
-    num_subjects = length(subject_id);
-    subjects_dir = recycle(subjects_dir, num_subjects);
-    atlas = recycle(atlas, num_subjects);
-    rglactions = list('no_vis'=TRUE);
+vis.group.annot <- function(subjects_dir, subject_id, atlas, view_angles = 'sd_dorsal', output_img='fsbrain_group_annot.png', num_per_row = 5L, captions = subject_id, rglactions = list('no_vis'=TRUE), ...) {
+    num_plots = max(length(subject_id), length(atlas));
+    if(num_plots > length(subject_id)) {
+        subject_id = recycle(subject_id, num_plots);
+        captions = subject_id;
+    }
+    subjects_dir = recycle(subjects_dir, num_plots);
+    atlas = recycle(atlas, num_plots);
     coloredmeshes = list();
-    for(subject_idx in seq.int(num_subjects)) {
-        coloredmeshes[[subject_idx]] = vis.subject.annot(subjects_dir[subject_idx], subject_id[subject_idx], atlas[subject_idx], rglactions = rglactions);
+    for(plot_idx in seq.int(num_plots)) {
+        coloredmeshes[[plot_idx]] = vis.subject.annot(subjects_dir[plot_idx], subject_id[plot_idx], atlas[plot_idx], views='si', rglactions = rglactions, ...);
+    }
+    return(invisible(vis.group.coloredmeshes(coloredmeshes, view_angles = view_angles, output_img = output_img, num_per_row = num_per_row, captions = captions)));
+}
+
+
+
+#' @title Plot native space morphometry data for a group of subjects.
+#'
+#' @description Plot native space morphometry data for a group of subjects and combine them into a single large image.
+#'
+#' @inheritParams vis.group.annot
+#'
+#' @param measure vector of character strings, the morphometry measures, e.g., \code{c('thickness', 'area')}
+#'
+#' @note The subjects are plotted row-wise, in the order in which they appear in the 'subject_id' parameter. This function is vectorized over 'subject_id' and 'measure'.
+#'
+#' @family group visualization functions
+#'
+#' @export
+vis.group.morph.native <- function(subjects_dir, subject_id, measure, view_angles = 'sd_dorsal', output_img='fsbrain_group_morph.png', num_per_row = 5L, captions = subject_id, rglactions = list('no_vis'=TRUE), ...) {
+    num_plots = max(length(subject_id), length(measure));
+    if(num_plots > length(subject_id)) {
+        subject_id = recycle(subject_id, num_plots);
+        captions = subject_id;
+    }
+    subjects_dir = recycle(subjects_dir, num_plots);
+    measure = recycle(measure, num_plots);
+    coloredmeshes = list();
+    for(plot_idx in seq.int(num_plots)) {
+        coloredmeshes[[plot_idx]] = vis.subject.morph.native(subjects_dir[plot_idx], subject_id[plot_idx], measure[plot_idx], views='si', rglactions = rglactions, ...);
+    }
+    return(invisible(vis.group.coloredmeshes(coloredmeshes, view_angles = view_angles, output_img = output_img, num_per_row = num_per_row, captions = captions)));
+}
+
+
+#' @title Plot standard space morphometry data for a group of subjects.
+#'
+#' @description Plot standard space morphometry data for a group of subjects and combine them into a single large image.
+#'
+#' @inheritParams vis.group.morph.native
+#'
+#' @param fwhm vector of character strings, the smoothing kernel FWHM strings, e.g., \code{c('0', '10', '15')}
+#'
+#' @note The subjects are plotted row-wise, in the order in which they appear in the 'subject_id' parameter. This function is vectorized over 'subject_id', 'measure' and 'fwhm'.
+#'
+#' @family group visualization functions
+#'
+#' @export
+vis.group.morph.standard <- function(subjects_dir, subject_id, measure, fwhm = "10", view_angles = 'sd_dorsal', output_img='fsbrain_group_morph.png', num_per_row = 5L, captions = subject_id, rglactions = list('no_vis'=TRUE), ...) {
+    num_plots = max(length(subject_id), length(measure),  length(fwhm));
+    if(num_plots > length(subject_id)) {
+        subject_id = recycle(subject_id, num_plots);
+        captions = subject_id;
+    }
+    subjects_dir = recycle(subjects_dir, num_plots);
+    fwhm = recycle(fwhm, num_plots);
+    measure = recycle(measure, num_plots);
+    coloredmeshes = list();
+    for(plot_idx in seq.int(num_plots)) {
+        coloredmeshes[[plot_idx]] = vis.subject.morph.standard(subjects_dir[plot_idx], subject_id[plot_idx], measure[plot_idx], fwhm=fwhm[plot_idx], views='si', rglactions = rglactions, ...);
     }
     return(invisible(vis.group.coloredmeshes(coloredmeshes, view_angles = view_angles, output_img = output_img, num_per_row = num_per_row, captions = captions)));
 }

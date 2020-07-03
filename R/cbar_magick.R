@@ -49,7 +49,7 @@ combine.colorbar.with.brainview.image <- function(brainview_img = "fsbrain_arran
 
         # Add a white border below the main image if requested. This leaves more space for the colorbar.
         if(is.null(extend_brainview_img_height_by)) {
-            extend_brainview_img_height_by = as.integer(round(height_cbar_trimmed * 1.5L));
+            extend_brainview_img_height_by = as.integer(round(height_cbar_trimmed * 1.5));
         }
         if(extend_brainview_img_height_by != 0L) {
             extend_dims = sprintf("%dx%d", width_main, (height_main + extend_brainview_img_height_by));
@@ -128,7 +128,7 @@ combine.colorbar.with.brainview.image.vertical <- function(brainview_img, colorb
 
         # Add a white border below the main image if requested. This leaves more space for the colorbar.
         if(is.null(extend_brainview_img_width_by)) {
-            extend_brainview_img_width_by = as.integer(round(width_cbar_trimmed * 1.5L));
+            extend_brainview_img_width_by = as.integer(round(width_cbar_trimmed * 1.5));
         }
         if(extend_brainview_img_width_by != 0L) {
             extend_dims = sprintf("%dx%d", width_main + extend_brainview_img_width_by, height_main);
