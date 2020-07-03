@@ -370,7 +370,7 @@ vis.export.from.coloredmeshes <- function(coloredmeshes, colorbar_legend=NULL, i
             stop("The parameter 'quality' must be an integer in range 1-5.");
         }
 
-        image.plot_extra_options = list(horizontal = horizontal, legend.cex = 1.8 * quality, legend.width = 2 * quality, legend.mar = 12 * quality, legend.line=-4*quality, legend.lab=colorbar_legend, axis.args = list(cex.axis = 2*quality))
+        image.plot_extra_options = list(horizontal = horizontal, legend.cex = 1.8 * quality, legend.width = 1.5 * quality, legend.mar = 12 * quality, legend.line=-4*quality, legend.lab=colorbar_legend, axis.args = list(cex.axis = 1.2 *quality))
         rgloptions = list('windowRect'=c(50,50, 1000 * quality, 1000 * quality));
 
 
