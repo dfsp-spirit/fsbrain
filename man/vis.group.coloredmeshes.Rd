@@ -31,6 +31,8 @@ This is a mid-level function, end users may want to call high-level functions li
 }
 \seealso{
 Other group visualization functions: 
+\code{\link{vis.data.on.group.native}()},
+\code{\link{vis.data.on.group.standard}()},
 \code{\link{vis.group.annot}()},
 \code{\link{vis.group.morph.native}()},
 \code{\link{vis.group.morph.standard}()}

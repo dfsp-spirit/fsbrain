@@ -125,28 +125,69 @@ vis.group.morph.standard <- function(subjects_dir, subject_id, measure, fwhm = "
 }
 
 
-#' @title Visualize data on a group of subjects.
+#' @title Visualize native space data on a group of subjects.
 #'
 #' @description Plot surface data on the native space surfaces of a group of subjects and combine the tiles into a single large image.
 #'
 #' @inheritParams vis.group.morph.native
 #'
-#' @param morph_data_both named list of numerical vectors, the morph data for both hemispheres. Can be loaded with \code{group.morph.native}.
+#' @param morph_data_both named list of numerical vectors, the morph data for both hemispheres of all subjects. Can be loaded with \code{\link{group.morph.native}}.
 #'
-#' @note The subjects are plotted row-wise, in the order in which they appear in the 'subject_id' parameter.
+#' @note The subjects are plotted row-wise, in the order in which they appear in the 'morph_data_both' parameter. The surfaces are loaded in the order of the 'subject_id' parameter, so the order in both must match.
 #'
 #' @family group visualization functions
 #'
 #' @export
-vis.data.on.group <- function(subjects_dir, subject_id, morph_data_both, view_angles = 'sd_dorsal', output_img='fsbrain_group_morph.png', num_per_row = 5L, captions = subject_id, rglactions = list('no_vis'=TRUE), ...) {
+vis.data.on.group.native <- function(subjects_dir, subject_id, morph_data_both, view_angles = 'sd_dorsal', output_img='fsbrain_group_morph.png', num_per_row = 5L, captions = subject_id, rglactions = list('no_vis'=TRUE), ...) {
     num_plots = length(subject_id);
     if(num_plots != length(morph_data_both)) {
         stop("Number of subjects in 'subject_id' must match number of entries in list 'morph_data_both'.");
     }
     coloredmeshes = list();
+    subjects_dir = recycle(subjects_dir, num_plots);
     for(plot_idx in seq.int(num_plots)) {
         subject = subject_id[[plot_idx]];
         coloredmeshes[[plot_idx]] = vis.data.on.subject(subjects_dir[plot_idx], subject_id[plot_idx], morph_data_both=morph_data_both[[subject]], views='si', rglactions = rglactions, ...);
+    }
+    return(invisible(vis.group.coloredmeshes(coloredmeshes, view_angles = view_angles, output_img = output_img, num_per_row = num_per_row, captions = captions)));
+}
+
+
+#' @title Visualize standard space data for a group on template.
+#'
+#' @description Plot standard space data for a group of subjects onto a template brain and combine the tiles into a single large image.
+#'
+#' @inheritParams vis.group.morph.native
+#'
+#' @param morph_data_both named list of numerical vectors, 4D array or dataframe, the morph data for both hemispheres of all subjects. Can be loaded with \code{\link{group.morph.standard}} or \code{\link{group.morph.standard.sf}}.
+#'
+#' @param subjects_dir character string, the path to the SUBJECTS_DIR containing the template subject
+#'
+#' @param vis_subject_id character string, the template subject name. A typical choice is 'fsaverage'.
+#'
+#' @param common_range logical, whether to use a common range for the data of all subjects. If `TRUE`, the same color will refer to the same value over different subjects. If `FALSE`, colors cannot be compared across subjects, but the dynamic range of the individual plots is improved.
+#'
+#' @note The subject data are plotted row-wise, in the order in which they appear in the 'morph_data_both' parameter.
+#'
+#' @family group visualization functions
+#'
+#' @export
+vis.data.on.group.standard <- function(subjects_dir, vis_subject_id, morph_data_both, captions = NULL, view_angles = 'sd_dorsal', output_img='fsbrain_group_morph.png', num_per_row = 5L, common_range = FALSE, rglactions = list('no_vis'=TRUE), ...) {
+    if(length(vis_subject_id) != 1L) {
+        stop("Parameter 'vis_subject' must have length one: this is the name of the template subject, which must be identical for all plotted datasets.");
+    }
+    if(length(subjects_dir) != 1L) {
+        stop("Parameter 'subjects_dir' must have length one: this is the directory of the template subject.");
+    }
+    morph_data_both = group.data.to.array(morph_data_both);
+    if(common_range) {
+        warning("Sorry, parameter 'common_range' not implemented yet.");
+    }
+    num_plots = dim(morph_data_both)[4];
+    coloredmeshes = list();
+    for(plot_idx in seq.int(num_plots)) {
+        subject_data = morph_data_both[,1,1,plot_idx];
+        coloredmeshes[[plot_idx]] = vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_both=subject_data, views='si', rglactions = rglactions, ...);
     }
     return(invisible(vis.group.coloredmeshes(coloredmeshes, view_angles = view_angles, output_img = output_img, num_per_row = num_per_row, captions = captions)));
 }

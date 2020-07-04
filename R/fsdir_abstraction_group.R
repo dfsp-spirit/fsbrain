@@ -152,6 +152,21 @@ group.morph.standard.sf <- function(filepath, df=TRUE) {
 #'
 #' @export
 write.group.morph.standard.sf <- function(filepath, data) {
+    data = group.data.to.matrix(data);
+    freesurferformats::write.fs.mgh(filepath, data);
+}
+
+
+#' @title Convert group 1D data to array format.
+#'
+#' @description In general, 1D morphometry data for a group can be stored in a dataframe, a named list, or already a 4D array. This function will convert the given format to matrix format.
+#'
+#' @param data 4D array, named list, or data.frame of group data. The data is expected to be a vector (1D) per subject, as suitable for surface based (vertex-wise) measures.
+#'
+#' @return the array form of the group data. No values are changed, this is only a different data type.
+#'
+#' @keywords internal
+group.data.to.array <- function(data) {
     if(is.list(data)) {
         data = as.data.frame(data);
     }
@@ -159,14 +174,17 @@ write.group.morph.standard.sf <- function(filepath, data) {
         data = data.matrix(data);
         ddim = dim(data);
         if(length(ddim) != 2L) {
-            stop("Invalid dataframe format.");
+            stop("Invalid dataframe format for 1D group morphometry data.");
         }
         dim(data) = c(ddim[1], 1, 1, ddim[2]);
+    }
+    if(! is.array(data)) {
+        stop("Parameter 'data' must be a matrix, named list, or data.frame.");
     }
     if(length(dim(data)) != 4L) {
         stop("Data must have 4 dimensions.");
     }
-    freesurferformats::write.fs.mgh(filepath, data);
+    return(data);
 }
 
 
@@ -250,6 +268,43 @@ group.label <- function(subjects_dir, subjects_list, label, hemi, return_one_bas
     }
 
     return(all_labels);
+}
+
+
+#' @title Retrieve surface mesh data for a group of subjects.
+#'
+#' @inheritParams group.label
+#'
+#' @param hemi string, one of 'lh', 'rh' or 'both'. The hemisphere name. Used to construct the names of the mesh files to be loaded.
+#'
+#' @param force_hemilist logical, whether to force the individual values inside the named return value list to be hemilists (even if the 'hemi' parameter is not set to 'both'). If this is FALSE, the inner values will contain the respective (lh or rh) surface only.
+#'
+#' @return named list of surfaces: Each name is a subject identifier from subjects_list, and the values are hemilists of `fs.surface` instances.
+#'
+#' @family mesh data functions
+#'
+#' @examples
+#' \donttest{
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+#'    subjects_list = c("subject1", "subject2");
+#'    surfaces = group.surface(subjects_dir, subjects_list, 'white', "both");
+#' }
+#'
+#' @export
+group.surface <- function(subjects_dir, subjects_list, surface, hemi='both', force_hemilist = TRUE) {
+
+    if(!(hemi %in% c("lh", "rh", "both"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
+    }
+
+    check.subjectslist(subjects_list, subjects_dir=subjects_dir);
+
+    all_surfaces = list();
+    for(subject_id in subjects_list) {
+        all_surfaces[[subject_id]] = subject.surface(subjects_dir, subject_id, surface, hemi, force_hemilist = force_hemilist);
+    }
+    return(all_surfaces);
 }
 
 

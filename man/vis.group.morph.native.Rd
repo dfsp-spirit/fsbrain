@@ -43,6 +43,8 @@ The subjects are plotted row-wise, in the order in which they appear in the 'sub
 }
 \seealso{
 Other group visualization functions: 
+\code{\link{vis.data.on.group.native}()},
+\code{\link{vis.data.on.group.standard}()},
 \code{\link{vis.group.annot}()},
 \code{\link{vis.group.coloredmeshes}()},
 \code{\link{vis.group.morph.standard}()}
