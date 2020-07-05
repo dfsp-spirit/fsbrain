@@ -17,6 +17,8 @@ group.surface(
 
 \item{subjects_list}{vector of strings. The subject identifiers.}
 
+\item{surface}{character string, the surface to load. Something like 'white' or 'pial'.}
+
 \item{hemi}{string, one of 'lh', 'rh' or 'both'. The hemisphere name. Used to construct the names of the mesh files to be loaded.}
 
 \item{force_hemilist}{logical, whether to force the individual values inside the named return value list to be hemilists (even if the 'hemi' parameter is not set to 'both'). If this is FALSE, the inner values will contain the respective (lh or rh) surface only.}

@@ -152,7 +152,7 @@ group.morph.standard.sf <- function(filepath, df=TRUE) {
 #'
 #' @export
 write.group.morph.standard.sf <- function(filepath, data) {
-    data = group.data.to.matrix(data);
+    data = group.data.to.array(data);
     freesurferformats::write.fs.mgh(filepath, data);
 }
 
@@ -276,6 +276,8 @@ group.label <- function(subjects_dir, subjects_list, label, hemi, return_one_bas
 #' @inheritParams group.label
 #'
 #' @param hemi string, one of 'lh', 'rh' or 'both'. The hemisphere name. Used to construct the names of the mesh files to be loaded.
+#'
+#' @param surface character string, the surface to load. Something like 'white' or 'pial'.
 #'
 #' @param force_hemilist logical, whether to force the individual values inside the named return value list to be hemilists (even if the 'hemi' parameter is not set to 'both'). If this is FALSE, the inner values will contain the respective (lh or rh) surface only.
 #'
