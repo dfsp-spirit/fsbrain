@@ -1,12 +1,12 @@
 
 test_that("Coords of EEG are plotted roughly in expected locations", {
-    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
-    skip_if_not(dir.exists(file.path(subjects_dir, 'fsaverage')), message="Test data for fsaverage missing.");
+    subjects_dir = find.subjectsdir.of("fsaverage")$found_at;
+    skip_if_not(find.subjectsdir.of("fsaverage")$found, message="Test data for fsaverage missing.");
 
-    vis.fs.surface(file.path(fsavgdir, 'fsaverage', 'surf', 'lh.white'));
+    vis.fs.surface(file.path(subjects_dir, 'fsaverage', 'surf', 'lh.white'));
     coords_near_eyes = eeg_coords(c("Fp1", "Fp2"));
     coords_near_ears = eeg_coords(c("A1", "A2"));
-    coords_near_ears = eeg_coords(c("A1", "A2"));
+    coord_nose = eeg_coords(c("Nz"));
     coord_top_center = eeg_coords(c("Cz"));
     coords_preauricular = eeg_coords(c("LPA", "RPA"));
 
