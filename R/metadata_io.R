@@ -63,7 +63,7 @@ read.md.subjects = function(subjects_file, header) {
 #' @export
 #' @importFrom stats sd
 #' @importFrom utils read.table
-read.md.demographics = function(demographics_file, column_names, header, scale_and_center=FALSE, sep='', report=FALSE, stringsAsFactors=TRUE, group_column_name=NULL) {
+read.md.demographics = function(demographics_file, column_names=NULL, header=FALSE, scale_and_center=FALSE, sep='', report=FALSE, stringsAsFactors=TRUE, group_column_name=NULL) {
     if(! file.exists(demographics_file)) {
         stop(sprintf("Cannot access demographics file '%s'.\n", demographics_file));
     }
@@ -72,11 +72,22 @@ read.md.demographics = function(demographics_file, column_names, header, scale_a
     }
     demographics_df = utils::read.table(demographics_file, header=header, sep=sep, stringsAsFactors=stringsAsFactors);
 
-    if(ncol(demographics_df) != length(column_names)) {
-      stop(sprintf("Column count mismatch in demographics file '%s': expected %d from 'column_names' parameter, but got %d.\n", demographics_file, length(column_names), ncol(demographics_df)));
+    if(! header) {
+        if(is.null(column_names)) {
+            stop("Parameter 'column_names' is required if the file has no header (see parameter 'header' if it does.).");
+        }
+        if(ncol(demographics_df) != length(column_names)) {
+          stop(sprintf("Column count mismatch in demographics file '%s': expected %d from 'column_names' parameter, but got %d.\n", demographics_file, length(column_names), ncol(demographics_df)));
+        }
+        colnames(demographics_df) = column_names;
+    } else {
+        if(! is.null(column_names)) {
+            if(ncol(demographics_df) != length(column_names)) {
+                stop(sprintf("Column count mismatch in demographics file '%s': expected %d from 'column_names' parameter, but got %d.\n", demographics_file, length(column_names), ncol(demographics_df)));
+            }
+            colnames(demographics_df) = column_names;
+        }
     }
-
-    colnames(demographics_df) = column_names;
 
     if(report) {
       report_lines = report.on.demographics(demographics_df, group_column_name=group_column_name);

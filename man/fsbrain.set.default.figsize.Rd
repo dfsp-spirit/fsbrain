@@ -19,5 +19,5 @@ fsbrain.set.default.figsize(width, height, xstart = 50L, ystart = 50L)
 Set default figure size for fsbrain visualization functions.
 }
 \note{
-This function overwrites \code{options("fsbrain.rgloptions")}. Output size is limited by your screen resolution. To set your preferred figsize for future R sessions, you could call this function in your \code{'~/.Rprofile'} file.
+This function overwrites \code{options("fsbrain.rgloptions")}. Output size is limited by your screen resolution. To set your preferred figure size for future R sessions, you could call this function in your \code{'~/.Rprofile'} file.
 }
