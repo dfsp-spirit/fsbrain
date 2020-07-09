@@ -44,7 +44,7 @@ img;
 ```
 
 
-## Group visualization
+## Group visualization: atlas annotations
 
 You can use fsbrain to plot data for a group of subjects, combined into a single output image. First we define our subjects list, then we plot the Desikan atlas parcellation for all of them:
 
@@ -59,6 +59,18 @@ The same output image rules as explained above are in place. Once more, to see t
 ```{r}
 img;
 ```
+
+## Group visualization: native space morphometry data
+
+## Group visualization: standard space morphometry data
+
+### Visualizing vertex-wise mean values for a group
+
+If you have native space data for a group of subjects, you can plot the mean value over all subjects at every vertex using the `vis.subject.morph.standard` function. Just pass your subjects list (`sjl` in the example above) for the 'subject_id' parameter.
+
+### Visualizing pre-loaded data for a group
+
+To visualize pre-loaded data on a group of subjects, use `vis.data.on.group.native` and `vis.data.on.group.standard`.  
 
 ## Learning more
 
