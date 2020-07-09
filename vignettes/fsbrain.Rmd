@@ -93,12 +93,29 @@ Typically the vertices of the medial wall are excluded from the analysis, as the
 fulldata = group.morph.native(subjects_dir, subjects_list, "thickness", "lh");
 mean(fulldata$subject1);
 
-# This time, restrict data to the cerebral cortex:
+# This time, restrict data to the cerebral cortex (the medial wall vertices will get NA values):
 cortexdata = group.morph.native(subjects_dir, subjects_list, "thickness", "lh", cortex_only=TRUE);
 mean(cortexdata$subject1, na.rm=TRUE);
 ```
 
 This also works for standard space data. Keep in mind that in that case, you need to have the files `label/lh.cortex.label` and `label/rh.cortex.label` available for your *template* subject.
+
+## Faster access to group data
+
+For large groups, loading many small files can become quite slow, and data is loaded very often (at least once per working day) during the analysis phase of a study. It will pay off to write a single group data file and reload from that as soon as you have created it. This is also what the FreeSurfer tool `mris_preproc` does: the 4th dimension in an MGZ file is used as the subject dimension. To write your group data to a single file:
+
+```{r, eval = FALSE}
+write.group.morph.standard.sf('~/mystudy/group_thickness_lh_fwhm10.mgz', groupdata_std);
+```
+
+Now you can change the data loading part of your script:
+
+```{r, eval = FALSE}
+#groupdata_std = group.morph.standard(subjects_dir, subjects_list, "thickness", "lh", fwhm="10");  # slow
+groupdata_std = group.morph.standard.sf('~/mystudy/group_thickness_lh_fwhm10.mgz');                # fast
+```
+
+Just take care when changing your `subjects_list` variable: you will have to update the data file.
 
 
 ## Labels for groups
