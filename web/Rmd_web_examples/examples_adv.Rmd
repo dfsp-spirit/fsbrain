@@ -45,6 +45,16 @@ img;
 ```
 
 
+## Group visualization
+
+You can use fsbrain to plot data for many subjects at once. First we define a subjects list, these are the subjects in our FreeSurfer subjects directory that we want to plot:
+
+```{r}
+sjd = "~/data/study1";                           # set SUBJECTS_DIR
+sjl = c('subject1', 'subject2', 'subject3');     # specify manually
+sjl2 = read.md.subjects("~/data/study1/subjects.txt", header = FALSE);  # read from ASCII subjects file (one per line)
+```
+
 
 ## Learning more
 

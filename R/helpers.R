@@ -633,7 +633,7 @@ rglo <- function() {
 #'
 #' @param ystart integer, default vertical position of plot window on screen, upper border is 0. The max value (lower border) depends on your screen resolution.
 #'
-#' @note This function overwrites \code{options("fsbrain.rgloptions")}. Output size is limited by your screen resolution.
+#' @note This function overwrites \code{options("fsbrain.rgloptions")}. Output size is limited by your screen resolution. To set your preferred figure size for future R sessions, you could call this function in your \code{'~/.Rprofile'} file.
 #'
 #' @export
 fsbrain.set.default.figsize <- function(width, height, xstart=50L, ystart=50L) {
