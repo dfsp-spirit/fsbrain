@@ -24,8 +24,7 @@ sj = 'subject1'
 Now increase the figure size.
 
 ```{r}
-library('rgl');
-r3dDefaults$windowRect=c(20, 20, 900, 900);
+fsbrain.set.default.figsize(1000, 1000);
 ```
 
 
@@ -38,7 +37,7 @@ cm = vis.subject.morph.standard(sjd, sj, 'sulc', rglactions=list('no_vis'=T));
 img = vis.export.from.coloredmeshes(cm, colorbar_legend='Sulcal depth [mm]');
 ```
 
-The image gets exported as a PNG file into the current working directory. One can also show it directly:
+The image gets exported as a PNG file into the current working directory by default, and you can set the 'output_img' parameter to save it wherever you want. One can also show it directly:
 
 ```{r}
 img;
@@ -47,16 +46,19 @@ img;
 
 ## Group visualization
 
-You can use fsbrain to plot data for many subjects at once. First we define our subjects directory and a subjects list:
+You can use fsbrain to plot data for a group of subjects, combined into a single output image. First we define our subjects list, then we plot the Desikan atlas parcellation for all of them:
 
-```{r}
-sjd = "~/data/study1";                           # set SUBJECTS_DIR
-
-sjl = c('subject1', 'subject2', 'subject3');                            # specify subjects list manually
-sjl2 = read.md.subjects("~/data/study1/subjects.txt", header = FALSE);  # read from ASCII subjects file (one subject per line)
-sjl3 = read.md.subjects.from.fsgd("~/data/study1/subjects.fsgd");  # read from FSGD file
+```{r rgl=TRUE, fig.show = 'hide'}
+sjd = '~/data/study1'
+sjl = paste('subject', 1:13, sep=""); # our subjects list: subject1, subject2, ... , subject13
+img = vis.group.annot(sjd, sjl, 'aparc');
 ```
 
+The same output image rules as explained above are in place. Once more, to see the image:
+
+```{r}
+img;
+```
 
 ## Learning more
 
