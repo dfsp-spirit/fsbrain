@@ -15,7 +15,7 @@ vis.subject.morph.standard(
   template_subjects_dir = NULL,
   colormap = NULL,
   views = c("t4"),
-  rgloptions = rglot(),
+  rgloptions = rglo(),
   rglactions = list(),
   draw_colorbar = FALSE,
   cortex_only = FALSE,

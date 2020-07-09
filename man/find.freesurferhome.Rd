@@ -15,3 +15,6 @@ named list with the following entries: "found": logical, whether it was found. "
 \description{
 Try to find directory containing the FreeSurfer installation, based on environment variables and *educated guessing*.
 }
+\seealso{
+\code{\link{fs.home}}
+}

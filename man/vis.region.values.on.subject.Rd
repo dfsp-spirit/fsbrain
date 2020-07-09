@@ -13,7 +13,7 @@ vis.region.values.on.subject(
   surface = "white",
   colormap = NULL,
   views = c("t4"),
-  rgloptions = rglot(),
+  rgloptions = rglo(),
   rglactions = list(),
   value_for_unlisted_regions = NA,
   draw_colorbar = FALSE,

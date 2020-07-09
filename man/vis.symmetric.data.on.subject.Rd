@@ -12,7 +12,7 @@ vis.symmetric.data.on.subject(
   surface = "white",
   colormap = NULL,
   views = c("t4"),
-  rgloptions = rglot(),
+  rgloptions = rglo(),
   rglactions = list(),
   draw_colorbar = TRUE,
   makecmap_options = list(colFn = cm.cbry(), symm = TRUE, col.na = "#FFFFFF00", n =

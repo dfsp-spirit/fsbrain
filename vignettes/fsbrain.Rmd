@@ -489,11 +489,10 @@ Technically, a color layer is just a nemd list with entries 'lh' and/or 'rh', ea
 
 ### Figure size
 
-The default output resolution (device window size) in `rgl` is very low, and it is highly recommended to increase it. The default size may be so small that there is not enough space to draw a colorbar. You can set the device window size globally. E.g., if you want the window to have 1200 x 1200 pixels, and the window should be placed at screen pixel position `(50, 50)`, i.e., near the upper left corner of your screen, you would do:
+The default output resolution (device window size) in `rgl` is very low, and it is highly recommended to increase it. The default size may be so small that there is not enough space to draw a colorbar. You can set the device window size globally. E.g., if you want the window to have 1200 x 1200 pixels, you would do:
 
 ```{r, eval = FALSE}
-library('rgl');
-r3dDefaults$windowRect=c(50, 50, 1200, 1200);
+fsbrain.set.default.figsize(1200, 1200);
 ```
 
 Now call any fsbrain visualization function, and the setting will be used.

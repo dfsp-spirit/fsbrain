@@ -12,7 +12,7 @@ vis.subject.label(
   surface = "white",
   colormap = NULL,
   views = c("t4"),
-  rgloptions = rglot(),
+  rgloptions = rglo(),
   rglactions = list(),
   draw_colorbar = FALSE,
   makecmap_options = list(colFn = label.colFn.inv, col.na = "#FFFFFF00"),

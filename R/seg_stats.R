@@ -182,7 +182,7 @@ qc.for.group <- function(subjects_dir, subjects_list, measure, atlas, hemi='both
 #'
 #' @inheritParams vis.region.values.on.subject
 #'
-#' @param ... extra parameters passed to \code{\link[fsbrain]{vis.region.values.on.subject}}. E.g., to change to interactive view, get a colorbar and better resolution, try: \code{draw_colorbar=T, rgloptions = rglot(), views='si'}.
+#' @param ... extra parameters passed to \code{\link[fsbrain]{vis.region.values.on.subject}}. E.g., to change to interactive view, get a colorbar and better resolution, try: \code{draw_colorbar=T, rgloptions = rglo(), views='si'}.
 #'
 #' @note You can visualize this on any subject you like, 'fsaverage' is a typical choice. The atlas must be the one used during the QC step.
 #'

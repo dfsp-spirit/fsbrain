@@ -50,17 +50,14 @@ You should be able to load data from a number of different neuroimaging software
 To increase the output resolution, you need to increase the size of the *rgl* rendering device. To do this globally, before you call any *fsbrain* rendering function:
 
 ```{r, eval = FALSE}
-library('rgl');
-r3dDefaults$windowRect=c(20, 20, 1800, 1200);
+fsbrain.set.default.figsize(1200, 1200);
 ```
-
-This instructs *rgl* to create new rendering devices at screen position 20, 20 (close to the upper left corner) with a size of 1800x1200 pixels.
 
 Alternatively, you can control the size when calling an *fsbrain* visualization function by passing the same information in the optional `rgloptions` parameter, like this:
 
 ```{r, eval = FALSE}
-rglo = list('windowRect'=c(20, 20, 1800, 1200));
-vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', rgloptions=rglo);
+rgloptions = list('windowRect'=c(20, 20, 1800, 1200));
+vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', rgloptions=rgloptions);
 ```
 
 ###  How can I save high quality figures to PNG images?
@@ -100,6 +97,8 @@ vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', rglactions
 
 This will limit your data to the range 2 to 3.
 
+If you want the data values outside the given range to be plotted as background (in the color for `NA` values), use `limit_fun_na` instead of `limit_fun`.
+
 
 ### How can I change the colormap for the plots?
 
@@ -130,7 +129,7 @@ vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', makecmap_o
 
 ### What are the best colormaps for my data?
 
-Chosing a colormap can be a surprisingly complex question and there are many publications which discuss this topic. You may want to consider what kind of data you have and what property you want to highlight, how many colors you need, whether you want colorblind-friendly colors, how they look when printed in grayscale, whether they look pleasing to you, and maybe many more dimensions.
+Choosing a colormap can be a surprisingly complex question and there are many publications which discuss this topic. You may want to consider what kind of data you have and what property you want to highlight, how many colors you need, whether you want colorblind-friendly colors, how they look when printed in gray-scale, whether they look pleasing to you, and maybe many more dimensions.
 
 The most important thing is to decide is whether you need a sequential, qualitative, or diverging palette for your data.
 
@@ -208,7 +207,7 @@ vislayout.from.coloredmeshes(cm);
 
 Note that your output resolution settings (see question above) now count for each of the single images. This means that you will get quite high resolution output in combination with the tight layout. This makes the function ideal for producing plots for publications.
 
-You can adjust various settings, e.g., change the rendering stlyle, select different views, and save it to a custom file name in your home directory:
+You can adjust various settings, e.g., change the rendering style, select different views, and save it to a custom file name in your home directory:
 
 ```{r, eval = FALSE}
 output_brain_img = "fsbrain_arranged.png";
@@ -224,7 +223,9 @@ coloredmesh.plot.colorbar.separate(cm, image.plot_extra_options = list('horizont
 combine.colorbar.with.brainview.image(output_brain_img, output_cbar_img, output_final_img);
 ```
 
-You may have to play a bit with the resolution settings of your brain images and the colorbar to get this right (the background cropping makes it hard to compute the exact values in advance). 
+You may have to play a bit with the resolution settings of your brain images and the colorbar to get this right (the background cropping makes it hard to compute the exact values in advance).
+
+You should also have a look at the new `vis.export.from.coloredmeshes` function.
 
 ### When visualizing data on the inflated surface, the left and right hemisphere overlap and look garbled. How to fix that?
 
@@ -307,5 +308,18 @@ This happens if you do not have X11, or no window can be opened. Possible reason
 ### I am trying to plot a very large image with fsbrain, but the output is not as large as expected. Why?
 
 The output dimensions are limited by your screen resolution.
+
+
+### What to do about the error 'lazy-load database is corrupt' when loading fsbrain?
+
+If you install the development version from github and try to load it without restarting R, you ma^y get this error:
+
+```{r, eval = FALSE}
+library("fsbrain")
+Error: package or namespace load failed for ‘fsbrain’ in get(method, envir = home):
+lazy-load database '/Users/youruser/Library/R/3.6/library/fsbrain/R/fsbrain.rdb' is corrupt
+```
+
+To fix this, simply restart R.
 
 

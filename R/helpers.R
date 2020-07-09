@@ -462,6 +462,8 @@ hasIn <- function(named_list, listkeys) {
 #'
 #' @return named list with the following entries: "found": logical, whether it was found. "found_at": Only set if found=TRUE, the path to the fsaverage directory (NOT including the fsaverage dir itself). "found_all_locations": list of all locations in which it was found. See 'mustWork' for important information.
 #'
+#' @seealso \code{\link{fsaverage.path}}
+#'
 #' @export
 find.subjectsdir.of <- function(subject_id='fsaverage', mustWork=FALSE) {
   ret = list();
@@ -542,6 +544,8 @@ fs.home <- function() {
 #'
 #' @return named list with the following entries: "found": logical, whether it was found. "found_at": Only set if found=TRUE, the path to the FreeSurfer installation directory (including the directory itself). See 'mustWork' for important information.
 #'
+#' @seealso \code{\link{fs.home}}
+#'
 #' @export
 find.freesurferhome <- function(mustWork=FALSE) {
   ret = list();
@@ -593,18 +597,49 @@ find.freesurferhome <- function(mustWork=FALSE) {
 }
 
 
-#' @title Get rgl_options for testing.
+#' @title Get rgloptions for testing.
 #'
-#' @description This function defines the figure size that is used during the unit tests.
+#' @description This function defines the figure size that is used during the unit tests. Currently \code{list('windowRect' = c(50, 50, 800, 800)}.
 #'
-#' @return named list, usable as 'rgl_options' parameter for vis functions like \code{\link[fsbrain]{vis.subject.morph.native}}.
-#'
-#' @note This function is public so one can copy and paste unit test code into the R console, but you should not consider it part of the official functions and use it in your client code.
+#' @return named list, usable as 'rgloptions' parameter for vis functions like \code{\link[fsbrain]{vis.subject.morph.native}}.
 #'
 #' @export
 rglot <- function() {
     return(list('windowRect' = c(50, 50, 800, 800)));
 }
+
+
+#' @title Get rgloptions and consider global options.
+#'
+#' @description This function retrieves the global rgloptions defined in \code{getOption('fsbrain.rgloptions')}, or, if this is not set, returns the value from \code{\link{rglot}}.
+#'
+#' @return named list, usable as 'rgloptions' parameter for vis functions like \code{\link[fsbrain]{vis.subject.morph.native}}.
+#'
+#' @note You can set the default size for all fsbrain figures to 1200x1200 pixels like this: \code{options("fsbrain.rgloptions"=list("windowRect"=c(50,50,1200,1200)))}.
+#'
+#' @export
+rglo <- function() {
+  return(getOption('fsbrain.rgloptions', default=rglot()));
+}
+
+
+#' @title Set default figure size for fsbrain visualization functions.
+#'
+#' @param width integer, default figure width in pixels
+#'
+#' @param height integer, default figure height in pixels
+#'
+#' @param xstart integer, default horizontal position of plot window on screen, left border is 0. The max value (right border) depends on your screen resolution.
+#'
+#' @param ystart integer, default vertical position of plot window on screen, upper border is 0. The max value (lower border) depends on your screen resolution.
+#'
+#' @note This function overwrites \code{options("fsbrain.rgloptions")}. Output size is limited by your screen resolution.
+#'
+#' @export
+fsbrain.set.default.figsize <- function(width, height, xstart=50L, ystart=50L) {
+    options("fsbrain.rgloptions"=list("windowRect"=c(xstart, ystart, width, height)));
+}
+
 
 
 #' @title Split morph data vector at hemisphere boundary.

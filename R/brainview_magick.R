@@ -305,7 +305,7 @@ images.annotate <- function(images, annotations, do_extend = TRUE, background = 
 #'
 #' @family visualization functions
 #' @export
-vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.angle.names(angle_set = "t4"), rgloptions=rglot(), rglactions=list(), style="default", output_img="fsbrain_arranged.png", silent=FALSE, grid_like=TRUE) {
+vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.angle.names(angle_set = "t4"), rgloptions = rglo(), rglactions=list(), style="default", output_img="fsbrain_arranged.png", silent=FALSE, grid_like=TRUE) {
 
     if (requireNamespace("magick", quietly = TRUE)) {
         view_images = tempfile(view_angles, fileext = ".png");   # generate one temporary file name for each image

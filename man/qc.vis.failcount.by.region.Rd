@@ -21,7 +21,7 @@ qc.vis.failcount.by.region(
 
 \item{subject_id}{string. The subject identifier.}
 
-\item{...}{extra parameters passed to \code{\link[fsbrain]{vis.region.values.on.subject}}. E.g., to change to interactive view, get a colorbar and better resolution, try: \code{draw_colorbar=T, rgloptions = rglot(), views='si'}.}
+\item{...}{extra parameters passed to \code{\link[fsbrain]{vis.region.values.on.subject}}. E.g., to change to interactive view, get a colorbar and better resolution, try: \code{draw_colorbar=T, rgloptions = rglo(), views='si'}.}
 }
 \description{
 The function helps you to see which regions are affected the most by QC issues: for each region, it plots the number of subjects which are outliers in the region.

@@ -2,16 +2,13 @@
 % Please edit documentation in R/helpers.R
 \name{rglot}
 \alias{rglot}
-\title{Get rgl_options for testing.}
+\title{Get rgloptions for testing.}
 \usage{
 rglot()
 }
 \value{
-named list, usable as 'rgl_options' parameter for vis functions like \code{\link[fsbrain]{vis.subject.morph.native}}.
+named list, usable as 'rgloptions' parameter for vis functions like \code{\link[fsbrain]{vis.subject.morph.native}}.
 }
 \description{
-This function defines the figure size that is used during the unit tests.
-}
-\note{
-This function is public so one can copy and paste unit test code into the R console, but you should not consider it part of the official functions and use it in your client code.
+This function defines the figure size that is used during the unit tests. Currently \code{list('windowRect' = c(50, 50, 800, 800)}.
 }

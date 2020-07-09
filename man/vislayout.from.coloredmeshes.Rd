@@ -7,7 +7,7 @@
 vislayout.from.coloredmeshes(
   coloredmeshes,
   view_angles = get.view.angle.names(angle_set = "t4"),
-  rgloptions = rglot(),
+  rgloptions = rglo(),
   rglactions = list(),
   style = "default",
   output_img = "fsbrain_arranged.png",
