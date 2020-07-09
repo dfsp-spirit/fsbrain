@@ -1,6 +1,6 @@
 
 
-#' @title Transform spherical coordinates to FreeSurfer surface space around fsaverage.
+#' @title Transform spherical coordinates to FreeSurfer surface space to plot things around a brain.
 #'
 #' @param lon numerical vector, the longitudes, passed to \code{sphereplot::sph2car}. See 'deg' for unit information.
 #'
@@ -12,6 +12,8 @@
 #'
 #' @param deg logical, whether to use degrees (as opposed to radians) as the unit for 'lat' and 'lon'. Passed to \code{sphereplot::sph2car}.
 #'
+#' @note This function can be used to plot things in FreeSurfer space using spherical coordinates, as commonly used in EEG to define electrode positions. Requires the 'sphereplot' package.
+#'
 #' @examples
 #' \dontrun{
 #'     # Draw voxels on a sphere around fsaverage:
@@ -22,17 +24,29 @@
 #'     fsbrain::rglvoxels(sph2fs(lon, lat), voxelcol = 'green');
 #' }
 #'
-#' @importFrom sphereplot sph2car
 #' @importFrom rgl translate3d
 #'
 #' @export
 sph2fs <- function(lon, lat, radius = surf.radius.fsaverage(), center=surf.center.fsaverage(), deg = TRUE) {
-    cartesian_coords = sphereplot::sph2car(lon, lat, radius=radius, deg=deg);
-    return(rgl::translate3d(data.matrix(cartesian_coords), center[1], center[2], center[3]));
+    if(requireNamespace('sphereplot', quietly = TRUE)) {
+        cartesian_coords = sphereplot::sph2car(lon, lat, radius=radius, deg=deg);
+        return(rgl::translate3d(data.matrix(cartesian_coords), center[1], center[2], center[3]));
+    } else {
+        stop("The 'sphereplot' package is required to use this functionality.");
+    }
 }
 
 
-#' @title Internal function to get some demo coords. Will be removed from public API. Do not use this.
+#' @title Internal function to get some demo EEG electrode coordinates. Will be removed from public API. Do not use this.
+#'
+#' @param label_subset vector of character strings, electrode names like 'Nz' or 'RPA'. ÖLeave at the default value `NULL` to get all available ones.
+#'
+#' @return data.frame with one row per electrode, and the following 3 columns: 'label': the electrode name, 'theta': the azimuth in degrees, 'phi': the latitude in degrees.
+#'
+#' @references \url{http://wiki.besa.de/index.php?title=Electrodes_and_Surface_Locations}
+#'
+#' @note There are lots of different naming conventions for spherical coordinates, see \url{https://en.wikipedia.org/wiki/Spherical_coordinate_system}.
+#'
 #' @export
 eeg_coords <- function(label_subset=NULL) {
 
@@ -61,17 +75,21 @@ eeg_coords <- function(label_subset=NULL) {
 
 #' @title Plot x, y and z axes in R,G,B.
 #'
-#' @description Plot positive x, y, and z axes from the center to 'len'. Gets added to current plot. Useful for debugging.
+#' @description Plot positive x, y, and z axes from the center to 'len'. Gets added to current plot. Useful for debugging and understanding the `rgl` coordinate system.
 #'
-#' @param len numeric scalar, length of axes
+#' @param len numeric scalar or vector of length 3, length of axes. You can specify a negative value to see the negative directions.
 #'
-#' @return Called from plotting side effect.
+#' @return `NULL`, called for the plotting side effect.
 #'
+#' @note The x, y and z axes are plotted in red, green, and blue, respectively.
+#'
+#' @importFrom rgl rgl.lines
 #' @export
 rgl.coord.lines <- function(len = 100) {
-    rgl.lines(x=c(0, len), y=c(0,0), z=c(0,0), col="red");
-    rgl.lines(x=c(0, 0), y=c(0,len), z=c(0,0), col="green");
-    rgl.lines(x=c(0, 0), y=c(0,0), z=c(0,len), col="blue");
+    len = recycle(len, 3L);
+    rgl::rgl.lines(x=c(0, len[1]), y=c(0,0), z=c(0,0), col="red");
+    rgl::rgl.lines(x=c(0, 0), y=c(0,len[2]), z=c(0,0), col="green");
+    rgl::rgl.lines(x=c(0, 0), y=c(0,0), z=c(0,len[3]), col="blue");
     return(invisible(NULL));
 }
 

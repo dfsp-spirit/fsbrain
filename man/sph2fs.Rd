@@ -2,7 +2,7 @@
 % Please edit documentation in R/spherical.R
 \name{sph2fs}
 \alias{sph2fs}
-\title{Transform spherical coordinates to FreeSurfer surface space around fsaverage.}
+\title{Transform spherical coordinates to FreeSurfer surface space to plot things around a brain.}
 \usage{
 sph2fs(
   lon,
@@ -24,7 +24,10 @@ sph2fs(
 \item{deg}{logical, whether to use degrees (as opposed to radians) as the unit for 'lat' and 'lon'. Passed to \code{sphereplot::sph2car}.}
 }
 \description{
-Transform spherical coordinates to FreeSurfer surface space around fsaverage.
+Transform spherical coordinates to FreeSurfer surface space to plot things around a brain.
+}
+\note{
+This function can be used to plot things in FreeSurfer space using spherical coordinates, as commonly used in EEG to define electrode positions. Requires the 'sphereplot' package.
 }
 \examples{
 \dontrun{
