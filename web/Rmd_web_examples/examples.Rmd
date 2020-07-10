@@ -149,7 +149,7 @@ Note that you can also use this function for drawing borders around arbitrary cu
 
 ### Labels
 
-Here is an axmaple for visualizing a label:
+Here is an example for visualizing a label:
 
 ```{r rgl=TRUE, dev='png'}
 vis.subject.label(sjd, sj, 'cortex', hemi='lh', views = 'sd_medial_lh');
