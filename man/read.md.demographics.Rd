@@ -6,8 +6,8 @@
 \usage{
 read.md.demographics(
   demographics_file,
-  column_names,
-  header,
+  column_names = NULL,
+  header = FALSE,
   scale_and_center = FALSE,
   sep = "",
   report = FALSE,
