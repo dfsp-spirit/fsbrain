@@ -10,7 +10,7 @@ is.fs.coloredvoxels(x)
 \item{x}{any `R` object}
 }
 \value{
-TRUE if its argument is a fs.coloredvoxels instance (that is, has "fs.coloredvoxels" amongst its classes) and FALSE otherwise.
+TRUE if its argument is a fs.coloredvoxels instance (that is, has "fs.coloredvoxels" among its classes) and FALSE otherwise.
 }
 \description{
 Check whether object is an fs.coloredvoxels instance (S3)

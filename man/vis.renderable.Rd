@@ -7,7 +7,7 @@
 vis.renderable(cmesh, skip_all_na = TRUE, style = "default")
 }
 \arguments{
-\item{cmesh}{an instance of one of the supported classes}
+\item{cmesh}{an instance of one of the supported renderable classes}
 
 \item{skip_all_na}{logical, whether to skip rendering hidden instances}
 

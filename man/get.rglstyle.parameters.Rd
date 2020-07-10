@@ -9,7 +9,7 @@ get.rglstyle.parameters(renderable, style)
 \arguments{
 \item{renderable}{A renderable (or any list) which includes a 'style' key. If it does not include such a key, the 'default' style will be used.}
 
-\item{style}{A style definition. Can be a character string like 'shiny' or 'from_mesh', or already a named lsit of material properties (which will be returned as-is).}
+\item{style}{A style definition. Can be a character string like 'shiny' or 'from_mesh', or already a named list of material properties (which will be returned as-is).}
 }
 \value{
 a style, resolved to a parameter list compatible with \code{\link{material3d}}.

@@ -54,7 +54,7 @@ test_that("A brain volume segmentation can be rendered with correct colors from 
     fs_home = find.freesurferhome()$found_at;
     ct = freesurferformats::read.fs.colortable(file.path(fs_home, 'FreeSurferColorLUT.txt'));
 
-    open3d();
+    rgl::open3d();
     all_regions_coloredvoxels = list();
     for(aseg_code in aseg_codes) {
         if(aseg_code == 0) { # skip background ('unknown').

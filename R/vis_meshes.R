@@ -125,7 +125,7 @@ is.Triangles3D <- function(x) inherits(x, "Triangles3D")
 #'
 #' @description Renders instances of `coloredmesh`, `coloredvoxels` and `Triangles3D`.
 #'
-#' @param cmesh an instance of one of the supported classes
+#' @param cmesh an instance of one of the supported renderable classes
 #'
 #' @param skip_all_na logical, whether to skip rendering hidden instances
 #'
@@ -143,6 +143,9 @@ vis.renderable <- function(cmesh, skip_all_na=TRUE, style="default") {
         }
     } else if (is.fs.coloredvoxels(cmesh)) {
         style_params = get.rglstyle.parameters(cmesh, style);
+        if(hasIn(cmesh, 'color')) {
+            style_params = modifyList(style_params, list("color"=cmesh$color));
+        }
         do.call(rgl::triangles3d, c(list(cmesh$voxeltris), style_params));
     } else if(is.Triangles3D(cmesh)) {
         if (requireNamespace("misc3d", quietly = TRUE)) {
@@ -302,7 +305,7 @@ vis.coloredmesh <- function(cmesh, style="default") {
 #'
 #' @param renderable A renderable (or any list) which includes a 'style' key. If it does not include such a key, the 'default' style will be used.
 #'
-#' @param style A style definition. Can be a character string like 'shiny' or 'from_mesh', or already a named lsit of material properties (which will be returned as-is).
+#' @param style A style definition. Can be a character string like 'shiny' or 'from_mesh', or already a named list of material properties (which will be returned as-is).
 #'
 #' @return a style, resolved to a parameter list compatible with \code{\link{material3d}}.
 #'

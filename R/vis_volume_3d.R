@@ -390,7 +390,7 @@ rglvoxels <- function(centers, r=1.0, voxelcol=NULL, ...) {
 #'
 #' @param x any `R` object
 #'
-#' @return TRUE if its argument is a fs.coloredvoxels instance (that is, has "fs.coloredvoxels" amongst its classes) and FALSE otherwise.
+#' @return TRUE if its argument is a fs.coloredvoxels instance (that is, has "fs.coloredvoxels" among its classes) and FALSE otherwise.
 #'
 #' @export
 is.fs.coloredvoxels <- function(x) inherits(x, "fs.coloredvoxels")
