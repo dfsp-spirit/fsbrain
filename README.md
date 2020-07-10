@@ -38,9 +38,9 @@ The *fsbrain* package itself does not have any system dependencies, however, it 
 
 To install the system dependencies for *rgl* and *xml2*:
 
-#### Linux System dependencies
+#### Linux System dependencies (or: building from source)
 
-R packages are compiled from source by default under Linux, so you need some dev libraries. Before installing *fsbrain*, run the following command in your system shell (not in R):
+R packages are compiled from source by default under Linux, so you need some development libraries. Before installing *fsbrain*, run the following command in your system shell (not in R):
 
 * for deb-based Linux distributions (Debian, Ubuntu, ...):
 ```shell
@@ -51,6 +51,8 @@ sudo apt-get install libmagick++-dev libx11-dev libgl1-mesa-dev libglu1-mesa-dev
 sudo yum install ImageMagick-c++-devel libX11-devel mesa-libGLU-devel freetype-devel libxml2-devel
 ```
 
+If you want to compile the package under any other operating system, you will need the libraries as well, of course.
+
 #### MacOS System dependencies
 
 Recent MacOS versions do not ship with an X11 environment. You will have to install the [xquartz X11 system](https://www.xquartz.org/) if you do not have it already. If you want to create GIF movies, make sure you have imagemagick installed (easiest via [homebrew](https://brew.sh/): `brew install imagemagick@6`).
@@ -60,6 +62,9 @@ Recent MacOS versions do not ship with an X11 environment. You will have to inst
 
 The documentation can be accessed from within an R session after you have loaded the *fsbrain* package:
 
+* There are two online R Markdown notebooks (like Jupyter Notebook in Python) that show various example plots in combination with the code used to produce them:
+  * [basic fsbrain example notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples.html): plotting subject data
+  * [advanced fsbrain example notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples_adv.html): plotting group data
 * A detailed vignette with explanations and examples for the functions of the package is included, run `browseVignettes("fsbrain")` to see the vignettes. You can also open the vignette directly:
   * learn how to load and visualize surface-based neuroimaging data and results: `vignette("fsbrain")` [read online at CRAN](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain.html)
   * learn how to load and visualize volume-based neuroimaging data and results: `vignette("fsbrain_vol")` [read online at CRAN](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain_vol.html)
@@ -67,7 +72,7 @@ The documentation can be accessed from within an R session after you have loaded
 * Help for a specific function can be accessed in the usual R manner: `?<function>`, where you replace `<function>` with a function name. Like this: `?group.morph.native`.
 * Run `example(<function>)` to see a live demo that uses the function `<function>`. Like this: `example(group.morph.native)`.
 * The [unit tests](./tests/testthat/) that come with this package are essentially a list of examples that illustrate how to use the functions.
-* There is an online [example notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples.html) that shows various example plots in combination with the code used to produce them.
+
 
 
 ## Unit tests and Continuous integration
