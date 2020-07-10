@@ -2,7 +2,7 @@
 % Please edit documentation in R/vis_group.R
 \name{recycle}
 \alias{recycle}
-\title{Recycle paramters.}
+\title{Recycle parameters or whatever.}
 \usage{
 recycle(x, times)
 }
@@ -15,7 +15,7 @@ recycle(x, times)
 a vector of length 'times', with the recycled 'x'
 }
 \description{
-Recycle paramters.
+Recycle parameters or whatever.
 }
 \note{
 Todo: most likely there is an R function for this already, find it.

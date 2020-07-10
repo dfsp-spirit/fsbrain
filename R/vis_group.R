@@ -1,6 +1,6 @@
 # group vis functions
 
-#' @title Recycle paramters.
+#' @title Recycle parameters or whatever.
 #'
 #' @param x a vector of whatever
 #'
@@ -44,6 +44,8 @@ recycle <- function(x, times) {
 #'
 #' @param ... extra parameters passed to the subject level visualization function. Not all may make sense in this context. Example: \code{surface='pial'}.
 #'
+#' @return named list, see the return value of \code{\link{arrange.brainview.images.grid}} for details.
+#'
 #' @note The subjects are plotted row-wise, in the order in which they appear in the 'subject_id' parameter. This function is vectorized over 'subject_id' and 'atlas'.
 #'
 #' @family group visualization functions
@@ -76,6 +78,8 @@ vis.group.annot <- function(subjects_dir, subject_id, atlas, view_angles = 'sd_d
 #'
 #' @note The subjects are plotted row-wise, in the order in which they appear in the 'subject_id' parameter. This function is vectorized over 'subject_id' and 'measure'.
 #'
+#' @return named list, see the return value of \code{\link{arrange.brainview.images.grid}} for details.
+#'
 #' @family group visualization functions
 #'
 #' @export
@@ -104,6 +108,8 @@ vis.group.morph.native <- function(subjects_dir, subject_id, measure, view_angle
 #' @param fwhm vector of character strings, the smoothing kernel FWHM strings, e.g., \code{c('0', '10', '15')}
 #'
 #' @note The subjects are plotted row-wise, in the order in which they appear in the 'subject_id' parameter. This function is vectorized over 'subject_id', 'measure' and 'fwhm'.
+#'
+#' @return named list, see the return value of \code{\link{arrange.brainview.images.grid}} for details.
 #'
 #' @family group visualization functions
 #'
@@ -134,6 +140,8 @@ vis.group.morph.standard <- function(subjects_dir, subject_id, measure, fwhm = "
 #' @param morph_data_both named list of numerical vectors, the morph data for both hemispheres of all subjects. Can be loaded with \code{\link{group.morph.native}}.
 #'
 #' @note The subjects are plotted row-wise, in the order in which they appear in the 'morph_data_both' parameter. The surfaces are loaded in the order of the 'subject_id' parameter, so the order in both must match.
+#'
+#' @return named list, see the return value of \code{\link{arrange.brainview.images.grid}} for details.
 #'
 #' @family group visualization functions
 #'
@@ -169,6 +177,8 @@ vis.data.on.group.native <- function(subjects_dir, subject_id, morph_data_both, 
 #'
 #' @note The subject data are plotted row-wise, in the order in which they appear in the 'morph_data_both' parameter.
 #'
+#' @return named list, see the return value of \code{\link{arrange.brainview.images.grid}} for details.
+#'
 #' @family group visualization functions
 #'
 #' @export
@@ -202,6 +212,8 @@ vis.data.on.group.standard <- function(subjects_dir, vis_subject_id, morph_data_
 #' @param coloredmeshes a list of coloredmeshes lists, each entry in the outer list contains the hemilist of coloredmeshes (lefgt and right hemisphere mesh) for one subject.
 #'
 #' @note This is a mid-level function, end users may want to call high-level functions like \code{\link{vis.group.annot}} instead.
+#'
+#' @return named list, see the return value of \code{\link{arrange.brainview.images.grid}} for details.
 #'
 #' @family group visualization functions
 #'

@@ -35,6 +35,9 @@ vis.group.annot(
 
 \item{...}{extra parameters passed to the subject level visualization function. Not all may make sense in this context. Example: \code{surface='pial'}.}
 }
+\value{
+named list, see the return value of \code{\link{arrange.brainview.images.grid}} for details.
+}
 \description{
 Plot atlas annotations for a group of subjects and combine them into a single large image.
 }

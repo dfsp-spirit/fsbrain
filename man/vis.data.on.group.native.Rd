@@ -35,6 +35,9 @@ vis.data.on.group.native(
 
 \item{...}{extra parameters passed to the subject level visualization function. Not all may make sense in this context. Example: \code{surface='pial'}.}
 }
+\value{
+named list, see the return value of \code{\link{arrange.brainview.images.grid}} for details.
+}
 \description{
 Plot surface data on the native space surfaces of a group of subjects and combine the tiles into a single large image.
 }

@@ -23,6 +23,9 @@ vis.group.coloredmeshes(
 
 \item{captions}{optional vector of character strings, the short text annotations for the individual tiles. Typically used to plot the subject identifier.}
 }
+\value{
+named list, see the return value of \code{\link{arrange.brainview.images.grid}} for details.
+}
 \description{
 Plot coloredmeshes for a group of subjects into a single image.
 }

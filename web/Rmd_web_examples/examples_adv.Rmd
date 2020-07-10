@@ -50,27 +50,71 @@ You can use fsbrain to plot data for a group of subjects, combined into a single
 
 ```{r rgl=TRUE, fig.show = 'hide'}
 sjd = '~/data/study1'
-sjl = paste('subject', 1:13, sep=""); # our subjects list: subject1, subject2, ... , subject13
-img = vis.group.annot(sjd, sjl, 'aparc');
+sjl = paste('subject', 1:7, sep=""); # our subjects list: subject1, subject2, ... , subject7
+res = vis.group.annot(sjd, sjl, 'aparc', num_per_row = 3);
 ```
 
 The same output image rules as explained above are in place. Once more, to see the image:
 
 ```{r}
-img;
+res$merged_img;
 ```
 
 ## Group visualization: native space morphometry data
 
+The function usage is equivalent to the `vis.group.annot` function above:
+
+```{r rgl=TRUE, fig.show = 'hide'}
+img = vis.group.morph.native(sjd, sjl, 'thickness', num_per_row = 3);
+```
+
 ## Group visualization: standard space morphometry data
+
+```{r rgl=TRUE, fig.show = 'hide'}
+res = vis.group.morph.standard(sjd, sjl, 'thickness', fwhm = "10", num_per_row = 3);
+```
+
+```{r}
+res$merged_img;
+```
 
 ### Visualizing vertex-wise mean values for a group
 
-If you have native space data for a group of subjects, you can plot the mean value over all subjects at every vertex using the `vis.subject.morph.standard` function. Just pass your subjects list (`sjl` in the example above) for the 'subject_id' parameter.
+If you have native space data for a group of subjects, you can plot the mean value over all subjects at every vertex using the `vis.subject.morph.standard` function. Just pass your subjects list (`sjl` in the example above) for the 'subject_id' parameter:
+
+```{r rgl=TRUE, dev='png'}
+vis.subject.morph.standard(sjd, sjl, 'thickness', fwhm = "10");
+```
+
+
+A more general method (not restricted to the mean of morphometry data from files) to achieve this is to use `vis.data.on.group.standard`, as explained below.
 
 ### Visualizing pre-loaded data for a group
 
-To visualize pre-loaded data on a group of subjects, use `vis.data.on.group.native` and `vis.data.on.group.standard`.  
+To visualize pre-loaded data on a group of subjects, use `vis.data.on.group.native` and `vis.data.on.group.standard`. For native space data:
+
+```{r rgl=TRUE, fig.show = 'hide'}
+morph_data_both = group.morph.native(sjd, sjl, 'thickness', hemi="both");
+# Do whatever you want with the data here, e.g., compute new descriptors.
+res = vis.data.on.group.native(sjd, sjl, morph_data_both = morph_data_both);
+```
+
+```{r}
+res$merged_img;
+```
+
+Here is another example for standard space group data:
+
+```{r rgl=TRUE, fig.show = 'hide'}
+morph_data_both_std = group.morph.standard(sjd, sjl, 'thickness', hemi="both", fwhm = "5");
+# Do whatever you want with the data here, e.g., compute new descriptors.
+res = vis.data.on.group.standard(sjd, vis_subject_id = 'fsaverage', morph_data_both = morph_data_both_std);
+```
+
+```{r}
+res$merged_img;
+```
+
 
 ## Learning more
 

@@ -24,8 +24,7 @@ sj = 'subject1'
 Now increase the figure size.
 
 ```{r}
-library('rgl');
-r3dDefaults$windowRect=c(20, 20, 900, 900);
+fsbrain.set.default.figsize(1000, 1000);
 ```
 
 ## Visualizing native space morphometry data: cortical thickness
@@ -195,7 +194,7 @@ rh_demo_cluster_file = system.file("extdata", "rh.clusters_fsaverage.mgz", packa
 lh_clust = freesurferformats::read.fs.morph(lh_demo_cluster_file);   # contains a single positive cluster (activation, group difference), the other values are 0
 rh_clust = freesurferformats::read.fs.morph(rh_demo_cluster_file);   # contains two negative clusters
 
-vis.symmetric.data.on.subject(subjects_dir, subject_id, lh_clust, rh_clust, bg="curv");
+vis.symmetric.data.on.subject(subjects_dir, subject_id, lh_clust, rh_clust, bg="curv_light");
 ```
 
 
