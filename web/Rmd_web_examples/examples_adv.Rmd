@@ -78,6 +78,14 @@ res = vis.group.morph.standard(sjd, sjl, 'thickness', fwhm = "10", num_per_row =
 res$merged_img;
 ```
 
+Note that the function is vectorized over the `subject_id`, `measure` and `fwhm` parameters, meaning that you can also use it to plot thickness at a number of different smoothing filters for a single subject, or plot 3 different descriptors (with different smoothing values if you feel like it) for a single subject:
+
+```{r, eval = FALSE}
+vis.group.morph.standard(sjd, 'subject1', 'thickness', fwhm = c("0", "10", "20"), num_per_row = 3);
+vis.group.morph.standard(sjd, 'subject1', c('thickness', 'area', 'volume'), fwhm = c("10", "10", "20"), num_per_row = 3);
+```
+
+
 ### Visualizing vertex-wise mean values for a group
 
 If you have native space data for a group of subjects, you can plot the mean value over all subjects at every vertex using the `vis.subject.morph.standard` function. Just pass your subjects list (`sjl` in the example above) for the 'subject_id' parameter:
