@@ -72,7 +72,11 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi="bo
         both_hemi_colors = collayers.merge(list("fg"=both_hemi_colors, "bg"=background));
     }
 
-    coloredmeshes = coloredmeshes.from.color(subjects_dir, subject_id, both_hemi_colors, hemi, surface=surface, metadata=list('src_data'=measure_data, 'map'=metadata$map, 'map_sorted'=metadata$map_sorted, 'col_sorted'=metadata$col_sorted, 'makecmap_options'=makecmap_options));
+    if(! is.hemilist(both_hemi_colors)) {
+        stop("both_hemi_colors must be a hemilist")
+    }
+
+    coloredmeshes = coloredmeshes.from.color(subjects_dir, subject_id, both_hemi_colors, hemi, surface=surface, metadata=list('src_data'=measure_data, 'map'=metadata$map, 'makecmap_options'=makecmap_options));
 
     if(hasIn(rglactions, c('no_vis'))) {
         return(coloredmeshes);
@@ -155,7 +159,7 @@ vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi="
         both_hemi_colors = collayers.merge(list("fg"=both_hemi_colors, "bg"=background));
     }
 
-    coloredmeshes = coloredmeshes.from.color(template_subjects_dir, template_subject, both_hemi_colors, hemi, surface=surface, metadata=list("src_data"=measure_data, "map"=metadata$map, "map_sorted"=metadata$map_sorted, "col_sorted"=metadata$col_sorted, "makecmap_options"=makecmap_options));
+    coloredmeshes = coloredmeshes.from.color(template_subjects_dir, template_subject, both_hemi_colors, hemi, surface=surface, metadata=list("src_data"=measure_data, "map"=metadata$map, "makecmap_options"=makecmap_options));
 
     if(hasIn(rglactions, c('no_vis'))) {
         return(coloredmeshes);
@@ -233,7 +237,7 @@ vis.subject.label <- function(subjects_dir, subject_id, label, hemi, surface="wh
         both_hemi_colors = collayers.merge(list("fg"=both_hemi_colors, "bg"=background));
     }
 
-    coloredmeshes = coloredmeshes.from.color(subjects_dir, subject_id, both_hemi_colors, hemi, surface=surface, metadata=list("src_data"=mask_data, "map"=metadata$map, "map_sorted"=metadata$map_sorted, "col_sorted"=metadata$col_sorted, "makecmap_options"=makecmap_options));
+    coloredmeshes = coloredmeshes.from.color(subjects_dir, subject_id, both_hemi_colors, hemi, surface=surface, metadata=list("src_data"=mask_data, "map"=metadata$map, "makecmap_options"=makecmap_options));
 
     if(hasIn(rglactions, c('no_vis'))) {
         return(coloredmeshes);

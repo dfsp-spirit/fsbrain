@@ -306,17 +306,13 @@ common.makecmap.range <- function(makecmap_options, lh_data=NULL, rh_data=NULL, 
     merged_data = c(lh_data, rh_data);
     common_cmap = do.call(squash::makecmap, utils::modifyList(list(force.to.range(merged_data, makecmap_options$range, allow_append = TRUE)), makecmap_options));
     common_cmap$colors = common_cmap$colors[1:length(merged_data)]; # Cut off extra values potentially added by force.to.range.
+    collayer = list();
     if(is.numeric(lh_data)) {
-        lh_layer = squash::cmap(force.to.range(lh_data, makecmap_options$range, allow_append = FALSE), map = common_cmap);
-    } else {
-        lh_layer = NULL;
+        collayer$lh = squash::cmap(force.to.range(lh_data, makecmap_options$range, allow_append = FALSE), map = common_cmap);
     }
     if(is.numeric(rh_data)) {
-        rh_layer = squash::cmap(force.to.range(rh_data, makecmap_options$range, allow_append = FALSE), map = common_cmap);
-    } else {
-        rh_layer = NULL;
+        collayer$rh = squash::cmap(force.to.range(rh_data, makecmap_options$range, allow_append = FALSE), map = common_cmap);
     }
-    collayer = list("lh"=lh_layer, "rh"=rh_layer);
     if(return_metadata) {
         collayer$metadata = list('map'=common_cmap);
     }

@@ -213,10 +213,8 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
     mesh = rgl::tmesh3d(c(t(surface_mesh$vertices)), c(t(surface_mesh$faces)), homogeneous=FALSE);
 
     if(is.null(morph_data)) {
-        col = 'white';
         map = NULL;
-        map_sorted = NULL;
-        col_sorted = NULL;
+        col = 'white';
     } else {
         map = do.call(squash::makecmap, utils::modifyList(list(morph_data), makecmap_options));
         col = squash::cmap(morph_data, map=map);
@@ -540,7 +538,7 @@ fs.coloredmesh <- function(mesh, col, hemi, render=TRUE, metadata=NULL, add_norm
 
     md_entries = names(metadata);
     for (mde in md_entries) {
-        if(! mde %in% c("src_data", "fs_mesh", "data_range", "makecmap_options", "map", "map_sorted", "col_sorted", "cmap_fun")) {
+        if(! mde %in% c("src_data", "fs_mesh", "data_range", "makecmap_options", "map", "cmap_fun")) {
             warning(sprintf("Untypical metadata entry '%s' found in colormesh metadata.\n", mde));
         }
     }

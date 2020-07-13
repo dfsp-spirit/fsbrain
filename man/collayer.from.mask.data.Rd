@@ -7,7 +7,7 @@
 collayer.from.mask.data(
   lh_data = NULL,
   rh_data = NULL,
-  makecmap_options = list(colFn = label.colFn)
+  makecmap_options = list(colFn = label.colFn, col.na = "#FFFFFF")
 )
 }
 \arguments{

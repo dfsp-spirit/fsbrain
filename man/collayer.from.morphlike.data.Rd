@@ -7,7 +7,7 @@
 collayer.from.morphlike.data(
   lh_morph_data = NULL,
   rh_morph_data = NULL,
-  makecmap_options = list(colFn = squash::jet),
+  makecmap_options = list(colFn = cm.seq()),
   return_metadata = FALSE
 )
 }
