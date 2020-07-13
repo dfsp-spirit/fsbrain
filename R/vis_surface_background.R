@@ -230,57 +230,147 @@ collayer.bg.atlas <- function(subjects_dir, subject_id, hemi="both", atlas="apar
 #' @importFrom utils modifyList
 #' @importFrom squash cmap makecmap jet
 #' @export
-collayer.from.morphlike.data <- function(lh_morph_data=NULL, rh_morph_data=NULL, makecmap_options=list('colFn'=squash::jet), return_metadata=FALSE) {
-    if(is.null(lh_morph_data) | is.null(rh_morph_data)) {
+collayer.from.morphlike.data <- function(lh_morph_data=NULL, rh_morph_data=NULL, makecmap_options=list('colFn'=cm.seq()), return_metadata=FALSE) {
 
-        if(is.null(lh_morph_data) & is.null(rh_morph_data)) {
-            warning("Both 'lh_morph_data' and 'rh_morph_data' are NULL, return a single white color value for each hemi.");
-            return(list("lh"="#FFFFFF", "rh"="#FFFFFF"));
-        }
-
-        if(is.null(lh_morph_data)) {
-            hemi = "rh";
-            morph_data = rh_morph_data;
-        } else {
-            hemi = "lh";
-            morph_data = lh_morph_data;
-        }
-
-        if(! 'colFn' %in% names(makecmap_options)) {
-            warning("No colFn given");
-        }
-
-        map = do.call(squash::makecmap, utils::modifyList(list(morph_data), makecmap_options));
-        single_hemi_color_layer = squash::cmap(morph_data, map = map);
-        collayer = hemilist.wrap(single_hemi_color_layer, hemi);
-        if(return_metadata) {
-            map_sorted = do.call(squash::makecmap, utils::modifyList(list(sort(morph_data)), makecmap_options));
-            col_sorted = squash::cmap(sort(morph_data), map = map_sorted);
-            collayer$metadata = list('map'=map, 'map_sorted'=map_sorted, 'col_sorted'=col_sorted);
-        }
-        return(collayer);
-    } else {
-        merged_morph_data = c(lh_morph_data, rh_morph_data);
-
-        common_cmap = do.call(squash::makecmap, utils::modifyList(list(merged_morph_data), makecmap_options));
-        if(is.numeric(lh_morph_data)) {
-            lh_layer = squash::cmap(lh_morph_data, map = common_cmap);
-        } else {
-            lh_layer = NULL;
-        }
-        if(is.numeric(rh_morph_data)) {
-            rh_layer = squash::cmap(rh_morph_data, map = common_cmap);
-        } else {
-            rh_layer = NULL;
-        }
-        collayer = list("lh"=lh_layer, "rh"=rh_layer);
-        if(return_metadata) {
-            common_cmap_sorted = do.call(squash::makecmap, utils::modifyList(list(sort(merged_morph_data)), makecmap_options));
-            col_sorted = squash::cmap(sort(merged_morph_data), map = common_cmap_sorted);
-            collayer$metadata = list('map'=common_cmap, 'map_sorted'=common_cmap_sorted, 'col_sorted'=col_sorted);
-        }
-        return(collayer);
+    if(! 'colFn' %in% names(makecmap_options)) {
+        stop("No 'colFn' present in parameter 'makecmap_options': a colormap function is required.");
     }
+
+    cmr = common.makecmap.range(makecmap_options, lh_data=lh_morph_data, rh_data=rh_morph_data, return_metadata = return_metadata);
+    return(cmr$collayer);
+#
+#     if(is.null(lh_morph_data) | is.null(rh_morph_data)) {
+#
+#         if(is.null(lh_morph_data) & is.null(rh_morph_data)) {
+#             warning("Both 'lh_morph_data' and 'rh_morph_data' are NULL, return a single white color value for each hemi.");
+#             return(list("lh"="#FFFFFF", "rh"="#FFFFFF"));
+#         }
+#
+#         if(is.null(lh_morph_data)) {
+#             hemi = "rh";
+#             morph_data = rh_morph_data;
+#         } else {
+#             hemi = "lh";
+#             morph_data = lh_morph_data;
+#         }
+#
+#         if(! 'colFn' %in% names(makecmap_options)) {
+#             warning("No colFn given");
+#         }
+#
+#         map = do.call(squash::makecmap, utils::modifyList(list(morph_data), makecmap_options));
+#         single_hemi_color_layer = squash::cmap(force.to.range(morph_data), map = map);
+#         collayer = hemilist.wrap(single_hemi_color_layer, hemi);
+#         if(return_metadata) {
+#             collayer$metadata = list('map'=map);
+#         }
+#         return(collayer);
+#     } else {
+#         merged_morph_data = c(lh_morph_data, rh_morph_data);
+#         common_cmap = do.call(squash::makecmap, utils::modifyList(list(force.to.range(merged_morph_data, makecmap_options$range, allow_append = TRUE)), makecmap_options));
+#         common_cmap$colors = common_cmap$colors[1:length(merged_morph_data)]; # Cut off extra values potentially added by force.to.range.
+#         if(is.numeric(lh_morph_data)) {
+#             lh_layer = squash::cmap(force.to.range(lh_morph_data, makecmap_options$range, allow_append = FALSE), map = common_cmap);
+#         } else {
+#             lh_layer = NULL;
+#         }
+#         if(is.numeric(rh_morph_data)) {
+#             rh_layer = squash::cmap(force.to.range(rh_morph_data, makecmap_options$range, allow_append = FALSE), map = common_cmap);
+#         } else {
+#             rh_layer = NULL;
+#         }
+#         collayer = list("lh"=lh_layer, "rh"=rh_layer);
+#         if(return_metadata) {
+#             collayer$metadata = list('map'=common_cmap);
+#         }
+#         return(collayer);
+#     }
+}
+
+
+#' @title Get cmap and colorlayer from data and makecmap_options.
+#'
+#' @inheritParams collayer.from.morphlike.data
+#'
+#' @param lh_data numeric vector, data for left hemisphere.
+#'
+#' @param rh_data numeric vector, data for right hemisphere.
+#'
+#' @description Applies a requested 'range' setting if present in makecmap_options. A shared colormap is used for the data of both hemispheres (if present).
+#'
+#' @keywords internal
+common.makecmap.range <- function(makecmap_options, lh_data=NULL, rh_data=NULL, return_metadata = FALSE) {
+    if(is.null(lh_data) & is.null(rh_data)) {
+        stop("Only one of 'lh_data' and 'rh_data' can be NULL.");
+    }
+    merged_data = c(lh_data, rh_data);
+    common_cmap = do.call(squash::makecmap, utils::modifyList(list(force.to.range(merged_data, makecmap_options$range, allow_append = TRUE)), makecmap_options));
+    common_cmap$colors = common_cmap$colors[1:length(merged_data)]; # Cut off extra values potentially added by force.to.range.
+    if(is.numeric(lh_data)) {
+        lh_layer = squash::cmap(force.to.range(lh_data, makecmap_options$range, allow_append = FALSE), map = common_cmap);
+    } else {
+        lh_layer = NULL;
+    }
+    if(is.numeric(rh_data)) {
+        rh_layer = squash::cmap(force.to.range(rh_data, makecmap_options$range, allow_append = FALSE), map = common_cmap);
+    } else {
+        rh_layer = NULL;
+    }
+    collayer = list("lh"=lh_layer, "rh"=rh_layer);
+    if(return_metadata) {
+        collayer$metadata = list('map'=common_cmap);
+    }
+    return(list('map'=common_cmap, 'collayer'=collayer));
+}
+
+
+
+#' @title Change data to ensure requested data_range.
+#'
+#' @param x numerical vector, the input data.
+#'
+#' @param data_range numerical vector of length 2, the range into which to force the data values in 'x'. If `NULL`, the input data in 'x' is returned as is.
+#'
+#' @param allow_append logical, whether to allow adding of more extreme data values. Allows a range larger than the data range. If set to `TRUE`, you will have to remove the extra values from the colors after generation of the colormap.
+#'
+#' @return Modified version of x. The data will be clamped and / or at most 2 values may be appended to x.
+#'
+#' @note This is an articial modfication of the data used for plotting a colormap with a fixed range.
+#'
+#' @keywords internal
+force.to.range <- function(x, data_range, allow_append = FALSE) {
+    if(is.null(data_range)) {
+        return(x);
+    }
+    if(! is.numeric(data_range)) {
+        stop("Parameter 'data_range' must be numeric vector of length 2.");
+    }
+    if(! is.numeric(x)) {
+        stop("Parameter 'x' must be numeric.");
+    }
+    if(length(data_range) != 2L) {
+        stop("Parameter 'data_range' must be numeric vector of length 2.");
+    }
+
+    if(allow_append) {
+        # Handle case were data_range is more extreme than the data: append a value to the data.
+        if(data_range[1] < min(x)) {
+            x = c(x, data_range[1]);
+        }
+        if(max(data_range) > max(x)) {
+            x = c(x, data_range[2]);
+        }
+    }
+
+    # Handle case were data_range is less extreme than the data: clamp the data.
+    if(data_range[1] > min(x)) {
+        x[x < data_range[1]] = data_range[1];
+    }
+
+    if(data_range[2] < max(x)) {
+        x[x > data_range[2]] = data_range[2];
+    }
+    return(x);
 }
 
 
@@ -300,11 +390,11 @@ collayer.from.morphlike.data <- function(lh_morph_data=NULL, rh_morph_data=NULL,
 #' @importFrom utils modifyList
 #' @importFrom squash cmap makecmap rainbow2
 #' @export
-collayer.from.mask.data <- function(lh_data=NULL, rh_data=NULL, makecmap_options=list('colFn'=label.colFn)) {
+collayer.from.mask.data <- function(lh_data=NULL, rh_data=NULL, makecmap_options=list('colFn'=label.colFn, 'col.na'='#FFFFFF')) {
     if(is.null(lh_data) | is.null(rh_data)) {
 
         if(is.null(lh_data) & is.null(rh_data)) {
-            warning("Both 'lh_data' and 'rh_data' are NULL, return a single white color value for each hemi.");
+            warning("Both 'lh_data' and 'rh_data' are NULL, returning a single white color value for each hemi.");
             return(list("lh"="#FFFFFF", "rh"="#FFFFFF"));
         }
 

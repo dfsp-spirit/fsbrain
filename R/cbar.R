@@ -27,17 +27,30 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
         return(invisible(NULL));
     }
 
-    combined_data_range = coloredmeshes.combined.data.range(coloredmeshes);
+
     makecmap_options = coloredmeshes.get.md(coloredmeshes, 'makecmap_options');
+
+    if(hasIn(makecmap_options, 'range')) {
+        combined_data_range = makecmap_options$range;
+        makecmap_options$range = NULL;
+        if(length(combined_data_range) != 2) {
+            stop("In makecmap_options: 'range' must be a numerical vector of length 2 if given.");
+        }
+        force_range = TRUE;
+    } else {
+        combined_data_range = coloredmeshes.combined.data.range(coloredmeshes);
+        force_range = FALSE;
+    }
 
     if(can.plot.colorbar(combined_data_range, makecmap_options)) {
         is_symmetric = ifelse(is.null(makecmap_options$symm), FALSE, makecmap_options$symm);
-        if(is_symmetric) {
+        if(is_symmetric & (!force_range)) {
             zlim = symmrange(combined_data_range)
         } else {
             zlim = combined_data_range;
         }
         num_col = ifelse(is.null(makecmap_options$n), 100L, makecmap_options$n);
+
         rgl::bgplot3d({op = graphics::par(mar = rep(0.1, 4)); plot.new(); fields::image.plot(add=T, legend.only = TRUE, zlim = zlim, col = makecmap_options$colFn(num_col), horizontal = horizontal, ...); graphics::par(op);});
     } else {
         warning("Requested to draw colorbar, but meshes do not contain the required metadata. Skipping.");
@@ -94,8 +107,19 @@ coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=FALSE, image.
         return(invisible(NULL));
     }
 
-    combined_data_range = coloredmeshes.combined.data.range(coloredmeshes);
+
     makecmap_options = coloredmeshes.get.md(coloredmeshes, 'makecmap_options');
+    if(hasIn(makecmap_options, 'range')) {
+        combined_data_range = makecmap_options$range;
+        makecmap_options$range = NULL;
+        if(length(combined_data_range) != 2) {
+            stop("In makecmap_options: 'range' must be a numerical vector of length 2 if given.");
+        }
+        force_range = TRUE;
+    } else {
+        combined_data_range = coloredmeshes.combined.data.range(coloredmeshes);
+        force_range = FALSE;
+    }
 
     if(! can.plot.colorbar(combined_data_range, makecmap_options)) {
         warning("Requested to draw a colorbar based on meshes, but they do not contain the required metadata, skipping.");
@@ -103,11 +127,12 @@ coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=FALSE, image.
     }
 
     is_symmetric = ifelse(is.null(makecmap_options$symm), FALSE, makecmap_options$symm);
-    if(is_symmetric) {
+    if(is_symmetric & !(force_range)) {
         zlim = symmrange(combined_data_range)
     } else {
         zlim = combined_data_range;
     }
+
     num_col = ifelse(is.null(makecmap_options$n), 100L, makecmap_options$n);
 
     image.plot_options_internal = list(legend.only=TRUE, zlim = zlim, col = makecmap_options$colFn(num_col), add=TRUE, graphics.reset=TRUE);
