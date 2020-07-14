@@ -7,7 +7,7 @@
 brainviews(
   views,
   coloredmeshes,
-  rgloptions = list(),
+  rgloptions = rglo(),
   rglactions = list(),
   style = "default",
   draw_colorbar = FALSE

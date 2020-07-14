@@ -10,7 +10,7 @@ brainview.t9(
   skip_all_na = TRUE,
   style = "default",
   draw_labels = FALSE,
-  rgloptions = list(),
+  rgloptions = rglo(),
   rglactions = list(),
   draw_colorbar = FALSE
 )

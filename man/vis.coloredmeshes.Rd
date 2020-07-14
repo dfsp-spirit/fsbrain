@@ -9,7 +9,7 @@ vis.coloredmeshes(
   background = "white",
   skip_all_na = TRUE,
   style = "default",
-  rgloptions = list(),
+  rgloptions = rglo(),
   rglactions = list(),
   draw_colorbar = FALSE
 )

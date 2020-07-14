@@ -15,7 +15,7 @@ brainview.sr(
   z = 0,
   rpm = 6,
   duration = 10,
-  rgloptions = list(),
+  rgloptions = rglo(),
   rglactions = list(),
   draw_colorbar = FALSE
 )

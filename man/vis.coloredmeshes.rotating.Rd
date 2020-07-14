@@ -14,7 +14,7 @@ vis.coloredmeshes.rotating(
   z = 1,
   rpm = 6,
   duration = 10,
-  rgloptions = list(),
+  rgloptions = rglo(),
   rglactions = list()
 )
 }
