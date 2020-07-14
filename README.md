@@ -6,6 +6,12 @@ A GNU R library for structural neuroimaging. Provides high-level functions to ac
 
 [Installation](#installation) | [Documentation](#documentation) | [Unit tests](#unit-tests-and-continuous-integration) | [License](#license) | [Citation](#citation) | [Visualization examples](#visualization-examples) | [Contributing](#contributing)
 
+
+## About
+
+The *fsbrain* R package provides a well-tested and consistent interface to neuroimaging data in [R](https://www.r-project.org/). It supports reading, writing, and visualizing various kinds of raw data and statistical results on brain surfaces and volumes. While the package provides a very convenient interface for working with data arranged in the standard [FreeSurfer](http://freesurfer.net/) directory structure (SUBJECTS_DIR), *fsbrain* is not limited to this layout or FreeSurfer file formats. You can load brain meshes, volumes, and data from a range of other neuroimaging software packages and visualize them. You could actually use the package to visualize (vertex-wise data on) arbitrary tri-meshes. The plots produced by *fsbrain* can be integrated into R notebooks or written to high-quality image files, ready for publication. The renderer used by *fsbrain* is [rgl](https://CRAN.R-project.org/package=rgl).
+
+
 ## Installation
 
 ### Recommended: install the stable fsbrain version from CRAN
@@ -165,9 +171,9 @@ Want to see brains spin? [Check this out.](./web/fsbrain_movies.md) (WARNING: lo
 
 First versions of some volume visualization functions are available in the current dev version. You can find [a preview of the results here](./web/fsbrain_volume.md).
 
-### Example Notebook
+### Example Notebooks
 
-To see a combination of example figures and the code used to produce them, you should have a look at the [example notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples.html).
+To see a combination of example figures and the code used to produce them, you should have a look at the example notebooks: [getting started notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples.html) and [advanced examples notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples_adv.html).
 
 ## Contributing
 
