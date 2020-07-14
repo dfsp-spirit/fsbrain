@@ -7,9 +7,9 @@
 makecmakeopts.merge(makecmap_options, colormap, default_colormap = squash::jet)
 }
 \arguments{
-\item{makecmap_options}{list of `makecmap_options` or `NULL`}
+\item{makecmap_options}{list of `makecmap_options` or `NULL`. Must contain at least the 'colFn' entry pointing to a colormap function.}
 
-\item{colormap}{a colormap function or `NULL`}
+\item{colormap}{a colormap function or `NULL`. Will trigger a warning if not `NULL`.}
 
 \item{default_colormap}{the colormap function to use in case none is found in the other parameters}
 }

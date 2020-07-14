@@ -20,6 +20,9 @@ common.makecmap.range(
 
 \item{return_metadata}{logical, whether to return additional metadata as entry 'metadata' in the returned list}
 }
+\value{
+named list, with entries 'map': named list, the squash cmap, and 'collayer': hemilist of color vectors
+}
 \description{
 Applies a requested 'range' setting if present in makecmap_options. A shared colormap is used for the data of both hemispheres (if present).
 }

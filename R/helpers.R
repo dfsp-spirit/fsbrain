@@ -352,9 +352,9 @@ read.colorcsv <- function(filepath) {
 #'
 #' @description Create final makecmap_options to pass to \code{\link{makecmap}} from existing `makecmap_options` and a colormap function. Used in the vis functions, like \code{\link[fsbrain]{vis.subject.morph.native}}, see the note.
 #'
-#' @param makecmap_options list of `makecmap_options` or `NULL`
+#' @param makecmap_options list of `makecmap_options` or `NULL`. Must contain at least the 'colFn' entry pointing to a colormap function.
 #'
-#' @param colormap a colormap function or `NULL`
+#' @param colormap a colormap function or `NULL`. Will trigger a warning if not `NULL`.
 #'
 #' @param default_colormap the colormap function to use in case none is found in the other parameters
 #'
@@ -367,6 +367,10 @@ read.colorcsv <- function(filepath) {
 makecmakeopts.merge <- function(makecmap_options, colormap, default_colormap=squash::jet) {
   if(is.null(makecmap_options)) {
     makecmap_options = list();
+  }
+
+  if(!is.null(colormap)) {
+    warning("The parameter 'colormap' is deprecated for all vis function and will be removed from fsbrain in the next release, please use 'makecmap_options$colFn' instead.");
   }
 
   if(is.null(makecmap_options$colFn)) {

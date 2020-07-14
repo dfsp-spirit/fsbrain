@@ -11,7 +11,7 @@ coloredmesh.from.morphdata(
   hemi,
   surface = "white",
   colormap = NULL,
-  makecmap_options = list(colFn = squash::jet)
+  makecmap_options = mkco.seq()
 )
 }
 \arguments{

@@ -28,7 +28,7 @@
 #' @export
 #' @importFrom squash cmap makecmap jet
 #' @importFrom rgl tmesh3d rgl.open wire3d
-coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hemi, surface="white", colormap=NULL, clip=NULL, cortex_only=FALSE, makecmap_options=list('colFn'=squash::jet)) {
+coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hemi, surface="white", colormap=NULL, clip=NULL, cortex_only=FALSE, makecmap_options=mkco.seq()) {
 
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
@@ -66,8 +66,11 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
     }
 
     mesh = rgl::tmesh3d(c(t(surface_mesh$vertices)), c(t(surface_mesh$faces)), homogeneous=FALSE);
-    map = do.call(squash::makecmap, utils::modifyList(list(morph_data), makecmap_options));
-    col = squash::cmap(morph_data, map=map);
+
+    morph_data_hl = hemilist.wrap(morph_data, hemi);
+    cmr = common.makecmap.range(makecmap_options, lh_data = morph_data_hl$lh, rh_data = morph_data_hl$rh, return_metadata = TRUE);
+    map = cmr$map;
+    col = cmr$collayer[[hemi]];
 
     return(fs.coloredmesh(mesh, col, hemi, metadata=list("src_data"=morph_data, "fs_mesh"=surface_mesh, "map"=map, "data_range"=range(morph_data, finite=TRUE), "makecmap_options"=makecmap_options)));
 }
@@ -169,7 +172,7 @@ coloredmeshes.from.color <- function(subjects_dir, subject_id, color_data, hemi,
 #' @export
 #' @importFrom squash cmap makecmap jet
 #' @importFrom rgl tmesh3d rgl.open wire3d
-coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm, surface="white", template_subject='fsaverage', template_subjects_dir=NULL, colormap=NULL, clip = NULL, cortex_only=FALSE, makecmap_options=list('colFn'=squash::jet)) {
+coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm, surface="white", template_subject='fsaverage', template_subjects_dir=NULL, colormap=NULL, clip = NULL, cortex_only=FALSE, makecmap_options=mkco.seq()) {
 
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
@@ -207,7 +210,7 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
     }
 
     if(nrow(surface_mesh$vertices) != length(morph_data)) {
-        warning(sprintf("Data mismatch: surface has %d vertices, but %d morphometry values passed in argument 'measure'.\n", nrow(surface_mesh$vertices), length(morph_data)));
+        warning(sprintf("Data mismatch: template surface has %d vertices, but %d morphometry values passed in argument 'measure'. Is the template subject '%s' correct?\n", nrow(surface_mesh$vertices), length(morph_data), template_subject));
     }
 
     mesh = rgl::tmesh3d(c(t(surface_mesh$vertices)), c(t(surface_mesh$faces)), homogeneous=FALSE);
@@ -216,8 +219,10 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
         map = NULL;
         col = 'white';
     } else {
-        map = do.call(squash::makecmap, utils::modifyList(list(morph_data), makecmap_options));
-        col = squash::cmap(morph_data, map=map);
+        morph_data_hl = hemilist.wrap(morph_data, hemi);
+        cmr = common.makecmap.range(makecmap_options, lh_data = morph_data_hl$lh, rh_data = morph_data_hl$rh);
+        map = cmr$map;
+        col = cmr$collayer[[hemi]];
     }
     return(fs.coloredmesh(mesh, col, hemi, metadata=list("src_data"=morph_data, "fs_mesh"=surface_mesh, "map"=map, "data_range"=range(morph_data, finite=TRUE), "makecmap_options"=makecmap_options)));
 }
@@ -236,10 +241,10 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
 #' @family coloredmesh functions
 #'
 #' @export
-#' @importFrom squash cmap makecmap jet
+#' @importFrom squash cmap makecmap
 #' @importFrom rgl tmesh3d rgl.open wire3d
 #' @importFrom utils modifyList
-coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data, hemi, surface="white", colormap=NULL, makecmap_options=list('colFn'=squash::jet)) {
+coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data, hemi, surface="white", colormap=NULL, makecmap_options=mkco.seq()) {
 
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
@@ -260,14 +265,10 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
 
     mesh = rgl::tmesh3d(c(t(surface_mesh$vertices)), c(t(surface_mesh$faces)), homogeneous=FALSE);
 
-    if(hasIn(makecmap_options, 'range')) {
-        print("Adapting range");
-        morph_data_makecmap = c(morph_data, makecmap_options$range);
-    } else  {
-        morph_data_makecmap = morph_data;
-    }
-    map = do.call(squash::makecmap, utils::modifyList(list(morph_data_makecmap), makecmap_options));
-    col = squash::cmap(morph_data, map = map);
+    morph_data_hl = hemilist.wrap(morph_data, hemi);
+    cmr = common.makecmap.range(makecmap_options, lh_data = morph_data_hl$lh, rh_data = morph_data_hl$rh);
+    map = cmr$map;
+    col = cmr$collayer[[hemi]];
 
     return(fs.coloredmesh(mesh, col, hemi, metadata=list("src_data"=morph_data, "fs_mesh"=surface_mesh, "map"=map, "data_range"=range(morph_data, finite=TRUE), "cmap_fun"=makecmap_options$colFn)));
 }
@@ -289,17 +290,25 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
 #'
 #' @export
 coloredmesh.from.preloaded.data <- function(fs_surface, morph_data=NULL, col=NULL, hemi='lh', makecmap_options=mkco.seq()) {
+    if(!(hemi %in% c("lh", "rh"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
+    }
+
     if( ! freesurferformats::is.fs.surface(fs_surface)) {
         stop("Parameter 'fs_surface' must be an fs.surface instance");
     }
+
     mesh = rgl::tmesh3d(c(t(fs_surface$vertices)), c(t(fs_surface$faces)), homogeneous=FALSE);
     if(! is.null(morph_data)) {
         if(! hasIn(makecmap_options, c('colFn'))) {
             makecmap_options$colFn = mkco.seq()$colFn;
         }
         data_range = range(morph_data, finite=TRUE);
-        map = do.call(squash::makecmap, utils::modifyList(list(morph_data), makecmap_options));
-        col = squash::cmap(morph_data, map = map);
+
+        morph_data_hl = hemilist.wrap(morph_data, hemi);
+        cmr = common.makecmap.range(makecmap_options, lh_data = morph_data_hl$lh, rh_data = morph_data_hl$rh);
+        map = cmr$map;
+        col = cmr$collayer[[hemi]];
     } else {
         map = NULL;
         data_range = NULL;
@@ -455,8 +464,12 @@ coloredmesh.from.mask <- function(subjects_dir, subject_id, mask, hemi, surface=
     }
 
     mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
-    map = do.call(squash::makecmap, utils::modifyList(list(morph_like_data), makecmap_options));
-    col = squash::cmap(morph_like_data, map = map);
+
+    morph_data_hl = hemilist.wrap(morph_like_data, hemi);
+    cmr = common.makecmap.range(makecmap_options, lh_data = morph_data_hl$lh, rh_data = morph_data_hl$rh);
+    map = cmr$map;
+    col = cmr$collayer[[hemi]];
+
     return(fs.coloredmesh(mesh, col, hemi, metadata=list("src_data"=morph_like_data, "fs_mesh"=surface_data, "map"=map, "data_range"=range(morph_like_data, finite=TRUE), "makecmap_options"=makecmap_options)));
 }
 

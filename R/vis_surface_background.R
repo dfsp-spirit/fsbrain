@@ -249,6 +249,8 @@ collayer.from.morphlike.data <- function(lh_morph_data=NULL, rh_morph_data=NULL,
 #'
 #' @description Applies a requested 'range' setting if present in makecmap_options. A shared colormap is used for the data of both hemispheres (if present).
 #'
+#' @return named list, with entries 'map': named list, the squash cmap, and 'collayer': hemilist of color vectors
+#'
 #' @keywords internal
 #' @importFrom utils modifyList
 #' @importFrom squash cmap makecmap
