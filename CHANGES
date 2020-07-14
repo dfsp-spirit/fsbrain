@@ -10,6 +10,12 @@ Version 0.3.1
 - The metadata IO function to read subjects files and demographics files no longer have a default for the 'header' parameter. This is to prevent people from accidently skipping the first subject.
 - Add functions for reading and writing morph data to and from a single MGH or MGZ file: group.morph.standard.sf and write.group.morph.standard.sf
 - Add function for writing FSGD files from demographics table (demographics.to.fsgd.file), and to read subjects list from FSGD files (read.md.subjects.from.fsgd)
+- new method to set default resolution, and more consistent usage of defaults: fsbrain.set.default.figsize()
+- Add group.surface function to load surfaces for a group of subjects
+- Add functions for visualization of groups of subjects at once: vis.group.morph.native, vis.group.morph.standard, vis.group.annot, ...
+- Extend advanced live notebook with group level plotting examples
+- Better support for limiting the plotted data range
+
 
 Version 0.3.0
 -------------
