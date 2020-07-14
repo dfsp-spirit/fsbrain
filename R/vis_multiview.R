@@ -18,7 +18,7 @@
 #' @seealso \code{\link[fsbrain]{get.view.angle.names}}
 #'
 #' @export
-brainviews <- function(views, coloredmeshes, rgloptions = list(), rglactions = list(), style="default", draw_colorbar = FALSE) {
+brainviews <- function(views, coloredmeshes, rgloptions = rglo(), rglactions = list(), style="default", draw_colorbar = FALSE) {
 
     # Wrap a single instance into a list if needed
     if(fsbrain.renderable(coloredmeshes)) {
@@ -102,7 +102,7 @@ get.view.angle.names <- function(angle_set="all", add_sd_prefix=TRUE) {
 #'
 #' @keywords internal
 #' @importFrom rgl open3d bg3d wire3d shade3d mfrow3d next3d text3d rgl.viewpoint
-brainview.si <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", draw_labels = FALSE, rgloptions = list(), rglactions=list(), draw_colorbar = FALSE) {
+brainview.si <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", draw_labels = FALSE, rgloptions = rglo(), rglactions=list(), draw_colorbar = FALSE) {
 
     if(!is.list(coloredmeshes)) {
         stop("Parameter 'coloredmeshes' must be a list.");
@@ -144,7 +144,7 @@ brainview.si <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 #'
 #' @keywords internal
 #' @importFrom rgl open3d bg3d wire3d shade3d mfrow3d next3d text3d rgl.viewpoint
-brainview.sr <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", draw_labels = FALSE, x=0, y=1, z=0, rpm=6, duration=10, rgloptions = list(), rglactions=list(), draw_colorbar = FALSE) {
+brainview.sr <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", draw_labels = FALSE, x=0, y=1, z=0, rpm=6, duration=10, rgloptions = rglo(), rglactions=list(), draw_colorbar = FALSE) {
 
     if(!is.list(coloredmeshes)) {
         stop("Parameter 'coloredmeshes' must be a list.");
@@ -203,7 +203,7 @@ get.sorted.cmeshes <- function(coloredmeshes) {
 #'
 #' @keywords internal
 #' @importFrom rgl open3d bg3d wire3d shade3d mfrow3d next3d text3d rgl.viewpoint
-brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", draw_labels = FALSE, rgloptions = list(), rglactions = list(), draw_colorbar = FALSE) {
+brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", draw_labels = FALSE, rgloptions = rglo(), rglactions = list(), draw_colorbar = FALSE) {
 
     label_shift_y = -20;
 
@@ -312,7 +312,7 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 #'
 #' @keywords internal
 #' @importFrom rgl open3d bg3d wire3d shade3d mfrow3d next3d text3d rgl.viewpoint
-brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", draw_labels = FALSE, rgloptions = list(), rglactions = list(), draw_colorbar = FALSE) {
+brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", draw_labels = FALSE, rgloptions = rglo(), rglactions = list(), draw_colorbar = FALSE) {
 
 
     label_shift_y = -20;
@@ -480,7 +480,7 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 #'
 #' @keywords internal
 #' @importFrom rgl open3d bg3d rgl.viewpoint
-brainview.sd <- function(coloredmeshes, view_angle, background="white", skip_all_na=TRUE, style="default", rgloptions = list(), rglactions = list(), draw_colorbar = FALSE) {
+brainview.sd <- function(coloredmeshes, view_angle, background="white", skip_all_na=TRUE, style="default", rgloptions = rglo(), rglactions = list(), draw_colorbar = FALSE) {
 
 
     if(!is.list(coloredmeshes)) {

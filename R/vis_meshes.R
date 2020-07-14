@@ -33,7 +33,7 @@
 #'
 #' @importFrom rgl open3d bg3d wire3d par3d
 #' @export
-vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", rgloptions=list(), rglactions=list(), draw_colorbar=FALSE) {
+vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", rgloptions = rglo(), rglactions=list(), draw_colorbar=FALSE) {
 
     if(!is.list(coloredmeshes)) {
         stop("Parameter coloredmeshes must be a list.");
@@ -189,7 +189,7 @@ vis.renderable <- function(cmesh, skip_all_na=TRUE, style="default") {
 #'
 #' @keywords internal
 #' @importFrom rgl open3d bg3d wire3d play3d spin3d
-vis.coloredmeshes.rotating <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", x=0, y=0, z=1, rpm=6, duration=10, rgloptions=list(), rglactions = list()) {
+vis.coloredmeshes.rotating <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", x=0, y=0, z=1, rpm=6, duration=10, rgloptions = rglo(), rglactions = list()) {
 
     if(!is.list(coloredmeshes)) {
         stop("Parameter coloredmeshes must be a list.");
