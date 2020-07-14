@@ -12,7 +12,6 @@ vis.data.on.group.standard(
   view_angles = "sd_dorsal",
   output_img = "fsbrain_group_morph.png",
   num_per_row = 5L,
-  common_range = FALSE,
   rglactions = list(no_vis = TRUE),
   ...
 )
@@ -32,8 +31,6 @@ vis.data.on.group.standard(
 
 \item{num_per_row}{positive integer, the number of tiles per row.}
 
-\item{common_range}{logical, whether to use a common range for the data of all subjects. If `TRUE`, the same color will refer to the same value over different subjects. If `FALSE`, colors cannot be compared across subjects, but the dynamic range of the individual plots is improved.}
-
 \item{rglactions}{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action. The following example clips outliers in the data before plotting and writes a screenshot in PNG format: \code{rglactions = list("snapshot_png"="~/fsbrain.png", "clip_data"=c(0.05, 0.95))}.}
 
 \item{...}{extra parameters passed to the subject level visualization function. Not all may make sense in this context. Example: \code{surface='pial'}.}
@@ -46,6 +43,8 @@ Plot standard space data for a group of subjects onto a template brain and combi
 }
 \note{
 The subject data are plotted row-wise, in the order in which they appear in the 'morph_data_both' parameter.
+
+You can force an identical plot range for all subjects, so that one color represents identical values across subjects, via 'makecmap_options'. E.g., for the ... parameter, pass \code{makecmap_options=list('colFn'=viridis::viridis, 'range'=c(0, 4)))}. Adapt the range to your data, e.g, \code{'range'=c(min(as.matrix(as.data.frame(morph_data_both))), max(as.matrix(as.data.frame(morph_data_both)))}.
 }
 \seealso{
 Other group visualization functions: 

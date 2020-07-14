@@ -173,16 +173,16 @@ vis.data.on.group.native <- function(subjects_dir, subject_id, morph_data_both, 
 #'
 #' @param vis_subject_id character string, the template subject name. A typical choice is 'fsaverage'.
 #'
-#' @param common_range logical, whether to use a common range for the data of all subjects. If `TRUE`, the same color will refer to the same value over different subjects. If `FALSE`, colors cannot be compared across subjects, but the dynamic range of the individual plots is improved.
-#'
 #' @note The subject data are plotted row-wise, in the order in which they appear in the 'morph_data_both' parameter.
 #'
 #' @return named list, see the return value of \code{\link{arrange.brainview.images.grid}} for details.
 #'
 #' @family group visualization functions
 #'
+#' @note You can force an identical plot range for all subjects, so that one color represents identical values across subjects, via 'makecmap_options'. E.g., for the ... parameter, pass \code{makecmap_options=list('colFn'=viridis::viridis, 'range'=c(0, 4)))}. Adapt the range to your data, e.g, \code{'range'=c(min(as.matrix(as.data.frame(morph_data_both))), max(as.matrix(as.data.frame(morph_data_both)))}.
+#'
 #' @export
-vis.data.on.group.standard <- function(subjects_dir, vis_subject_id, morph_data_both, captions = NULL, view_angles = 'sd_dorsal', output_img='fsbrain_group_morph.png', num_per_row = 5L, common_range = FALSE, rglactions = list('no_vis'=TRUE), ...) {
+vis.data.on.group.standard <- function(subjects_dir, vis_subject_id, morph_data_both, captions = NULL, view_angles = 'sd_dorsal', output_img='fsbrain_group_morph.png', num_per_row = 5L, rglactions = list('no_vis'=TRUE), ...) {
     if(length(vis_subject_id) != 1L) {
         stop("Parameter 'vis_subject' must have length one: this is the name of the template subject, which must be identical for all plotted datasets.");
     }

@@ -88,16 +88,25 @@ vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'curv', rglactions=rgla
 
 ### Can I limit the data range, including the min and max values displayed on the color bar?
 
-This can be done using `rglactions` as well, in combination with `limit_fun`:
+Yes, this can be achieved in different ways:
+
+Option 1: Use `rglactions` in combination with `limit_fun`:
 
 ```{r, eval = FALSE}
 rgla = list('trans_fun'=limit_fun(2,3));
-vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', rglactions=rgla);
+vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', rglactions = rgla);
 ```
 
 This will limit your data to the range 2 to 3.
 
 If you want the data values outside the given range to be plotted as background (in the color for `NA` values), use `limit_fun_na` instead of `limit_fun`.
+
+Option 2: If you want more flexibility, e.g., you also need support for a larger data range than the real data range of your subject, e.g., when plotting group data to ensure that all subjects use the same colors for identical values, you should use the 'range' entry in 'makecmap_options' instead:
+
+```{r, eval = FALSE}
+makecmap_options = list('range'=c(0,6));
+vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', makecmap_options = makecmap_options);
+```
 
 
 ### How can I change the colormap for the plots?
