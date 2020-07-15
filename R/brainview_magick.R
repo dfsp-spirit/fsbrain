@@ -384,11 +384,16 @@ vis.export.from.coloredmeshes <- function(coloredmeshes, colorbar_legend=NULL, i
                     image.plot_extra_options = list(horizontal = horizontal, legend.cex = font_s, legend.width = 2, legend.mar = 12, legend.line=-4, legend.lab=colorbar_legend, axis.args = list(cex.axis = font_s, mgp=c(3,(max(1.0, font_s -1)),0)));
                 }
             } else { # quality 2
-                font_s = 2.6;
-                image.plot_extra_options = list(horizontal = horizontal, legend.cex = font_s, legend.width = 4, legend.mar = 18, legend.line=-6, legend.lab=colorbar_legend, axis.args = list(cex.axis = font_s, mgp=c(3,(font_s*1.5),0)));
+                if(large_legend) {
+                    font_s = 4;
+                    image.plot_extra_options = list(horizontal = horizontal, legend.cex = font_s, legend.width = 4, legend.mar = 18, legend.line=-6, legend.lab=colorbar_legend, axis.args = list(cex.axis = font_s, mgp=c(3,(max(1.0, font_s -1)),0)));
+                } else {
+                    font_s = 2.6;
+                    image.plot_extra_options = list(horizontal = horizontal, legend.cex = font_s, legend.width = 4, legend.mar = 18, legend.line=-6, legend.lab=colorbar_legend, axis.args = list(cex.axis = font_s, mgp=c(3,(max(1.0, font_s -1)),0)));
+                }
             }
         }
-        rgloptions = list('windowRect'=c(50,50, 1000 * quality, 1000 * quality));
+        rgloptions = list('windowRect'=c(50, 50, 1000 * quality, 1000 * quality));
 
         if(can.plot.colorbar.from.coloredmeshes(coloredmeshes)) {
             tmp_img = tempfile(fileext = ".png");
