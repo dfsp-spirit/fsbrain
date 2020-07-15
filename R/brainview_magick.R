@@ -348,7 +348,7 @@ vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.ang
 #'
 #' @param silent logical, whether to suppress messages
 #'
-#' @param quality integer, an arbitrary quality. This is the resolution per tile before trimming, divided by 1000, in pixels. Example: 1L means 1000x1000 pixels per tile before trimming. Currently supported values: \code{1L..3L}. Note that the resolution you can get is also limited by your screen resolution.
+#' @param quality integer, an arbitrary quality. This is the resolution per tile before trimming, divided by 1000, in pixels. Example: 1L means 1000x1000 pixels per tile before trimming. Currently supported values: \code{1L..2L}. Note that the resolution you can get is also limited by your screen resolution.
 #'
 #' @return magick image instance or named list, depending on the value of 'img_only'. If the latter, the list contains the fields 'rev_vl', 'rev_cb', and 'rev_ex', which are the return values of the functions \code{vislayout.from.coloredmeshes}, \code{coloredmesh.plot.colorbar.separate}, and {combine.colorbar.with.brainview.image}, respectively.
 #'
@@ -366,11 +366,15 @@ vis.export.from.coloredmeshes <- function(coloredmeshes, colorbar_legend=NULL, i
 
     if (requireNamespace("magick", quietly = TRUE)) {
         quality = as.integer(quality);
-        if(quality < 1L | quality > 3L) {
-            stop("The parameter 'quality' must be an integer in range 1-3.");
+        if(quality < 1L | quality > 2L) {
+            stop("The parameter 'quality' must be an integer in range 1-2.");
         }
 
-        image.plot_extra_options = list(horizontal = horizontal, legend.cex = 1.8 * quality, legend.width = 1.5 * quality, legend.mar = 12 * quality, legend.line=-4*quality, legend.lab=colorbar_legend, axis.args = list(cex.axis = 1.2 *quality))
+        if(quality == 1L) {
+            image.plot_extra_options = list(horizontal = horizontal, legend.cex = 1.8, legend.width = 2, legend.mar = 12, legend.line=-4, legend.lab=colorbar_legend, axis.args = list(cex.axis = 1.8));
+        } else { # quality 2
+            image.plot_extra_options = list(horizontal = horizontal, legend.cex = 2.6, legend.width = 4, legend.mar = 18, legend.line=-6, legend.lab=colorbar_legend, axis.args = list(cex.axis = 2.6));
+        }
         rgloptions = list('windowRect'=c(50,50, 1000 * quality, 1000 * quality));
 
         if(can.plot.colorbar.from.coloredmeshes(coloredmeshes)) {
