@@ -46,6 +46,8 @@ Plot standard space morphometry data for a group of subjects and combine them in
 }
 \note{
 The subjects are plotted row-wise, in the order in which they appear in the 'subject_id' parameter. This function is vectorized over 'subject_id', 'measure' and 'fwhm'.
+
+You can force an identical plot range for all subjects, so that one color represents identical values across subjects, via 'makecmap_options'. E.g., for the ... parameter, pass \code{makecmap_options=list('colFn'=viridis::viridis, 'range'=c(0, 4)))}.
 }
 \seealso{
 Other group visualization functions: 

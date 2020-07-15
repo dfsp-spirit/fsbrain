@@ -44,7 +44,7 @@ Plot standard space data for a group of subjects onto a template brain and combi
 \note{
 The subject data are plotted row-wise, in the order in which they appear in the 'morph_data_both' parameter.
 
-You can force an identical plot range for all subjects, so that one color represents identical values across subjects, via 'makecmap_options'. E.g., for the ... parameter, pass \code{makecmap_options=list('colFn'=viridis::viridis, 'range'=c(0, 4)))}. Adapt the range to your data, e.g, \code{'range'=c(min(as.matrix(as.data.frame(morph_data_both))), max(as.matrix(as.data.frame(morph_data_both)))}.
+You can force an identical plot range for all subjects, so that one color represents identical values across subjects, via 'makecmap_options'. E.g., for the ... parameter, pass \code{makecmap_options=list('colFn'=viridis::viridis, 'range'=c(0, 4)))}.
 }
 \seealso{
 Other group visualization functions: 

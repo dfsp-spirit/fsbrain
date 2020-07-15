@@ -78,6 +78,8 @@ vis.group.annot <- function(subjects_dir, subject_id, atlas, view_angles = 'sd_d
 #'
 #' @note The subjects are plotted row-wise, in the order in which they appear in the 'subject_id' parameter. This function is vectorized over 'subject_id' and 'measure'.
 #'
+#' @note You can force an identical plot range for all subjects, so that one color represents identical values across subjects, via 'makecmap_options'. E.g., for the ... parameter, pass \code{makecmap_options=list('colFn'=viridis::viridis, 'range'=c(0, 4)))}.
+#'
 #' @return named list, see the return value of \code{\link{arrange.brainview.images.grid}} for details.
 #'
 #' @family group visualization functions
@@ -108,6 +110,8 @@ vis.group.morph.native <- function(subjects_dir, subject_id, measure, view_angle
 #' @param fwhm vector of character strings, the smoothing kernel FWHM strings, e.g., \code{c('0', '10', '15')}
 #'
 #' @note The subjects are plotted row-wise, in the order in which they appear in the 'subject_id' parameter. This function is vectorized over 'subject_id', 'measure' and 'fwhm'.
+#'
+#' @note You can force an identical plot range for all subjects, so that one color represents identical values across subjects, via 'makecmap_options'. E.g., for the ... parameter, pass \code{makecmap_options=list('colFn'=viridis::viridis, 'range'=c(0, 4)))}.
 #'
 #' @return named list, see the return value of \code{\link{arrange.brainview.images.grid}} for details.
 #'
@@ -141,6 +145,8 @@ vis.group.morph.standard <- function(subjects_dir, subject_id, measure, fwhm = "
 #'
 #' @note The subjects are plotted row-wise, in the order in which they appear in the 'morph_data_both' parameter. The surfaces are loaded in the order of the 'subject_id' parameter, so the order in both must match.
 #'
+#' @note You can force an identical plot range for all subjects, so that one color represents identical values across subjects, via 'makecmap_options'. E.g., for the ... parameter, pass \code{makecmap_options=list('colFn'=viridis::viridis, 'range'=c(0, 4)))}.
+#'
 #' @return named list, see the return value of \code{\link{arrange.brainview.images.grid}} for details.
 #'
 #' @family group visualization functions
@@ -173,13 +179,13 @@ vis.data.on.group.native <- function(subjects_dir, subject_id, morph_data_both, 
 #'
 #' @param vis_subject_id character string, the template subject name. A typical choice is 'fsaverage'.
 #'
-#' @note The subject data are plotted row-wise, in the order in which they appear in the 'morph_data_both' parameter.
-#'
 #' @return named list, see the return value of \code{\link{arrange.brainview.images.grid}} for details.
 #'
 #' @family group visualization functions
 #'
-#' @note You can force an identical plot range for all subjects, so that one color represents identical values across subjects, via 'makecmap_options'. E.g., for the ... parameter, pass \code{makecmap_options=list('colFn'=viridis::viridis, 'range'=c(0, 4)))}. Adapt the range to your data, e.g, \code{'range'=c(min(as.matrix(as.data.frame(morph_data_both))), max(as.matrix(as.data.frame(morph_data_both)))}.
+#' @note The subject data are plotted row-wise, in the order in which they appear in the 'morph_data_both' parameter.
+#'
+#' @note You can force an identical plot range for all subjects, so that one color represents identical values across subjects, via 'makecmap_options'. E.g., for the ... parameter, pass \code{makecmap_options=list('colFn'=viridis::viridis, 'range'=c(0, 4)))}.
 #'
 #' @export
 vis.data.on.group.standard <- function(subjects_dir, vis_subject_id, morph_data_both, captions = NULL, view_angles = 'sd_dorsal', output_img='fsbrain_group_morph.png', num_per_row = 5L, rglactions = list('no_vis'=TRUE), ...) {
@@ -190,9 +196,6 @@ vis.data.on.group.standard <- function(subjects_dir, vis_subject_id, morph_data_
         stop("Parameter 'subjects_dir' must have length one: this is the directory of the template subject.");
     }
     morph_data_both = group.data.to.array(morph_data_both);
-    if(common_range) {
-        warning("Sorry, parameter 'common_range' not implemented yet.");
-    }
     num_plots = dim(morph_data_both)[4];
     coloredmeshes = list();
     for(plot_idx in seq.int(num_plots)) {

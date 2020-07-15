@@ -43,6 +43,8 @@ Plot surface data on the native space surfaces of a group of subjects and combin
 }
 \note{
 The subjects are plotted row-wise, in the order in which they appear in the 'morph_data_both' parameter. The surfaces are loaded in the order of the 'subject_id' parameter, so the order in both must match.
+
+You can force an identical plot range for all subjects, so that one color represents identical values across subjects, via 'makecmap_options'. E.g., for the ... parameter, pass \code{makecmap_options=list('colFn'=viridis::viridis, 'range'=c(0, 4)))}.
 }
 \seealso{
 Other group visualization functions: 
