@@ -350,6 +350,10 @@ vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.ang
 #'
 #' @param quality integer, an arbitrary quality. This is the resolution per tile before trimming, divided by 1000, in pixels. Example: 1L means 1000x1000 pixels per tile before trimming. Currently supported values: \code{1L..2L}. Note that the resolution you can get is also limited by your screen resolution.
 #'
+#' @param image.plot_extra_options named list, custom options for fields::image.plot. Overwrites those derived from the quality setting. If in doubt, leave this alone.
+#'
+#' @param large_legend logical, whether to plot extra large legend text, affects the font size of the colorbar_legend and the tick labels.
+#'
 #' @return magick image instance or named list, depending on the value of 'img_only'. If the latter, the list contains the fields 'rev_vl', 'rev_cb', and 'rev_ex', which are the return values of the functions \code{vislayout.from.coloredmeshes}, \code{coloredmesh.plot.colorbar.separate}, and {combine.colorbar.with.brainview.image}, respectively.
 #'
 #' @note This function also exports the resulting image to disk in PNG format, in the current working directory, named 'fsbrain_merged.png'. Note that your screen resolution has to be high enough to generate the final image.
@@ -373,11 +377,11 @@ vis.export.from.coloredmeshes <- function(coloredmeshes, colorbar_legend=NULL, i
         if(is.null(image.plot_extra_options)) {
             if(quality == 1L) {
                 if(large_legend) {
-                    font_s = 2.6;
-                    image.plot_extra_options = list(horizontal = horizontal, legend.cex = font_s, legend.width = 4, legend.mar = 18, legend.line=-6, legend.lab=colorbar_legend, axis.args = list(cex.axis = font_s, mgp=c(3,(font_s*1.2),0)));
+                    font_s = 4;
+                    image.plot_extra_options = list(horizontal = horizontal, legend.cex = font_s, legend.width = 4, legend.mar = 18, legend.line=-6, legend.lab=colorbar_legend, axis.args = list(cex.axis = font_s, mgp=c(3,(max(1.0, font_s -1)),0)));
                 } else {
                     font_s = 1.8;
-                    image.plot_extra_options = list(horizontal = horizontal, legend.cex = font_s, legend.width = 2, legend.mar = 12, legend.line=-4, legend.lab=colorbar_legend, axis.args = list(cex.axis = font_s, mgp=c(3,(font_s*1.2),0)));
+                    image.plot_extra_options = list(horizontal = horizontal, legend.cex = font_s, legend.width = 2, legend.mar = 12, legend.line=-4, legend.lab=colorbar_legend, axis.args = list(cex.axis = font_s, mgp=c(3,(max(1.0, font_s -1)),0)));
                 }
             } else { # quality 2
                 font_s = 2.6;
