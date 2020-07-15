@@ -362,7 +362,7 @@ vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.ang
 #' }
 #'
 #' @export
-vis.export.from.coloredmeshes <- function(coloredmeshes, colorbar_legend=NULL, img_only=TRUE, horizontal=TRUE, silent = TRUE, quality=1L, output_img="fsbrain_arranged.png") {
+vis.export.from.coloredmeshes <- function(coloredmeshes, colorbar_legend=NULL, img_only=TRUE, horizontal=TRUE, silent = TRUE, quality=1L, output_img="fsbrain_arranged.png", image.plot_extra_options=NULL, large_legend=FALSE) {
 
     if (requireNamespace("magick", quietly = TRUE)) {
         quality = as.integer(quality);
@@ -370,10 +370,19 @@ vis.export.from.coloredmeshes <- function(coloredmeshes, colorbar_legend=NULL, i
             stop("The parameter 'quality' must be an integer in range 1-2.");
         }
 
-        if(quality == 1L) {
-            image.plot_extra_options = list(horizontal = horizontal, legend.cex = 1.8, legend.width = 2, legend.mar = 12, legend.line=-4, legend.lab=colorbar_legend, axis.args = list(cex.axis = 1.8));
-        } else { # quality 2
-            image.plot_extra_options = list(horizontal = horizontal, legend.cex = 2.6, legend.width = 4, legend.mar = 18, legend.line=-6, legend.lab=colorbar_legend, axis.args = list(cex.axis = 2.6));
+        if(is.null(image.plot_extra_options)) {
+            if(quality == 1L) {
+                if(large_legend) {
+                    font_s = 2.6;
+                    image.plot_extra_options = list(horizontal = horizontal, legend.cex = font_s, legend.width = 4, legend.mar = 18, legend.line=-6, legend.lab=colorbar_legend, axis.args = list(cex.axis = font_s, mgp=c(3,(font_s*1.2),0)));
+                } else {
+                    font_s = 1.8;
+                    image.plot_extra_options = list(horizontal = horizontal, legend.cex = font_s, legend.width = 2, legend.mar = 12, legend.line=-4, legend.lab=colorbar_legend, axis.args = list(cex.axis = font_s, mgp=c(3,(font_s*1.2),0)));
+                }
+            } else { # quality 2
+                font_s = 2.6;
+                image.plot_extra_options = list(horizontal = horizontal, legend.cex = font_s, legend.width = 4, legend.mar = 18, legend.line=-6, legend.lab=colorbar_legend, axis.args = list(cex.axis = font_s, mgp=c(3,(font_s*1.5),0)));
+            }
         }
         rgloptions = list('windowRect'=c(50,50, 1000 * quality, 1000 * quality));
 
