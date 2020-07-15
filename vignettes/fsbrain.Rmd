@@ -698,3 +698,41 @@ coloredmesh.plot.colorbar.separate(coloredmeshes, horizontal=TRUE);
 See the help for the `coloredmesh.plot.colorbar.separate()` function for more customization options.
 
 
+### Exporting publication quality plots
+
+In publications one typically has very little space, and the white space between in the plots shown above is too large. Therefore, we provide the `vis.export.from.coloredmeshes()` function, which creates a tight layout of the brain from four different angles, and adds a colorbar (if possible for the plotted data).
+
+```{r, eval = FALSE}
+coloredmeshes = vis.subject.morph.standard(subjects_dir, 'subject1', 'sulc', rglactions=list('no_vis'=T));
+img = vis.export.from.coloredmeshes(coloredmeshes, colorbar_legend='Sulcal depth [mm]', output_img='~/fig1.png');
+```
+
+This function creates four different plots, then trims the individual images and combines them into a final output image. This takes a bit longer (some seconds as opposed to almost instant visualization for the standard `vis.subject.*` functions) and is intended for exporting the final figures for a publication. For interactive use during the analysis, where the whitespace does not matter, we recommend using the faster `vis.subject.*` functions.
+
+Note that the `coloredmeshes` in the example above can be obtained not only from `vis.subject.morph.standard`, you can use any visualization function, try `vis.subject.annot`, `vis.subject.label`, or `vis.subject.morph.native`.
+
+See the R markdown notebooks linked in the documentation section of the [fsbrain website](https://github.com/dfsp-spirit/fsbrain) for a full example with output.
+
+
+### Visualizing groups of subjects
+
+We provide group level visualization functions like `vis.group.morph.native`, `vis.group.morph.standard`, and `vis.group.annot` which can produce a plot for a group of subjects.
+
+```{r, eval = FALSE}
+subjects_list = c('subject1', 'subject2', 'subject3');
+
+# Plot standard space thickness for 3 subjects:
+vis.group.morph.standard(subjects_dir, subjects_list, 'thickness', fwhm = "5", num_per_row = 3);
+
+# Plot thickness at 3 different smoothing levels for the same subject:
+vis.group.morph.standard(subjects_dir, 'subject1', 'thickness', fwhm = c("0", "10", "20"), num_per_row = 3);
+
+# Plot Desikan atlas parcellation for 3 subjects:
+vis.group.annot(subjects_dir, subjects_list, 'aparc', num_per_row = 3);
+```
+
+See the R markdown notebooks linked in the documentation section of the [fsbrain website](https://github.com/dfsp-spirit/fsbrain) for more examples with output.
+
+
+
+
