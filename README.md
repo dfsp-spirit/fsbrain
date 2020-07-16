@@ -141,7 +141,7 @@ A BibTeX entry for LaTeX users is
 
 The Digital Object Identifier (DOI) for fsbrain is: [10.5281/zenodo.3559816](https://dx.doi.org/10.5281/zenodo.3559816). Note that this DOI always points to the latest version, so be sure to still include the package version in the citation.
 
-A poster of *fsbrain* has been presented at INSAR 2020 Annual Meeting: [Abstract](https://insar.confex.com/insar/2020/meetingapp.cgi/Paper/33181), [ePoster](https://insar.confex.com/insar/2020/techdemo/eposter.cgi?eposterid=227)
+A poster of *fsbrain* has been presented at INSAR 2020 Annual Meeting: [Abstract](https://insar.confex.com/insar/2020/meetingapp.cgi/Paper/33181), [ePoster viewer](https://insar.confex.com/insar/2020/techdemo/eposter.cgi?eposterid=227), [PDF download](https://github.com/dfsp-spirit/fsbrain_gallery/raw/master/extra_materials/Poster_IMFAR2020_fsbrain.pdf)
 
 ## Visualization examples
 
