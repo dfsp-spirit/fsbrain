@@ -11,3 +11,8 @@ services:
 before_install:
   - sudo apt-get install -y mesa-common-dev libglu1-mesa-dev libmagick++-dev
 
+r_packages:
+  - covr
+
+after_success:
+  - Rscript -e 'library(covr); codecov()'
