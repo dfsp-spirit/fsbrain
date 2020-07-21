@@ -15,7 +15,7 @@
 #'
 #' @param num_bad_regions_allowed integer, the number of regions in which subjects are allowed to be outliers without being reported as potentially failed segmentation
 #'
-#' @return named list with entries: 'failed_subjects': vector of character strings, the subject identifiers which potentially failed segmentation
+#' @return named list with entries: 'failed_subjects': vector of character strings, the subject identifiers which potentially failed segmentation. 'mean_dists_z': distance to mean, in standard deviations, per subject per region. 'num_outlier_subjects_per_region': number of outlier subjects by region. 'metadata': named list of metadata, e.g., hemi, atlas and measure used to compute these QC results.
 #'
 #' @family quality check functions
 #'

@@ -21,7 +21,7 @@ qc.from.regionwise.df(
 \item{num_bad_regions_allowed}{integer, the number of regions in which subjects are allowed to be outliers without being reported as potentially failed segmentation}
 }
 \value{
-named list with entries: 'failed_subjects': vector of character strings, the subject identifiers which potentially failed segmentation
+named list with entries: 'failed_subjects': vector of character strings, the subject identifiers which potentially failed segmentation. 'mean_dists_z': distance to mean, in standard deviations, per subject per region. 'num_outlier_subjects_per_region': number of outlier subjects by region. 'metadata': named list of metadata, e.g., hemi, atlas and measure used to compute these QC results.
 }
 \description{
 Determine subjects that potentially failed segmentation, based on region-wise data. The data can be anything, but there must be one numerical value per subject per region.
