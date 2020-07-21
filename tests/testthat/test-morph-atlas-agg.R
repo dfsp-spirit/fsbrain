@@ -200,7 +200,7 @@ test_that("Writing faverage region values works", {
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip when test data missing, e.g., on travis
     skip_if_not(dir.exists(file.path(subjects_dir, 'fsaverage')), message="Test data for fsaverage missing.")
 
-    ret = write.region.values.fsaverage(hemi, atlas, region_value_list, output_file="/tmp/spread.mgz", template_subjects_dir=subjects_dir);
+    ret = write.region.values.fsaverage(hemi, atlas, region_value_list, output_file=tempfile(fileext = ".mgz"), template_subjects_dir=subjects_dir);
     data = ret$data;
     num_verts_fsaverage = 163842
     num_verts_fsaverage_bankssts = 2137
