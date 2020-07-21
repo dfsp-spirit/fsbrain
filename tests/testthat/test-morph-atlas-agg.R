@@ -214,10 +214,11 @@ test_that("Writing faverage region values works", {
 
 test_that("Atlas region names can be retrieved", {
   skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
-  subjects_dir = path.expand("~/data/tim_only")
-  fsaverage_dir = path.expand("~/data/tim_only/fsaverage")
-  skip_if_not(dir.exists(subjects_dir), message="Test data missing.") # skip when test data missing, e.g., on travis
-  skip_if_not(dir.exists(fsaverage_dir), message="Test data missing.") # skip when test data missing, e.g., on travis
+  fsbrain::download_optional_data();
+  fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
+  subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+  skip_if_not(dir.exists(subjects_dir), message="Test data missing."); # skip when test data missing, e.g., on travis
+  skip_if_not(dir.exists(file.path(subjects_dir, 'fsaverage')), message="Test data for fsaverage missing."); # skip when test data missing, e.g., on travis
 
   regions = get.atlas.region.names('aparc', template_subjects_dir=subjects_dir);
   expect_equal(length(regions), 36);
