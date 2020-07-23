@@ -13,7 +13,8 @@ vis.export.from.coloredmeshes(
   quality = 1L,
   output_img = "fsbrain_arranged.png",
   image.plot_extra_options = NULL,
-  large_legend = FALSE
+  large_legend = FALSE,
+  view_angles = get.view.angle.names(angle_set = "t4")
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ vis.export.from.coloredmeshes(
 \item{image.plot_extra_options}{named list, custom options for fields::image.plot. Overwrites those derived from the quality setting. If in doubt, leave this alone.}
 
 \item{large_legend}{logical, whether to plot extra large legend text, affects the font size of the colorbar_legend and the tick labels.}
+
+\item{view_angles}{list of strings. See \code{\link{get.view.angle.names}} for all valid strings.}
 }
 \value{
 magick image instance or named list, depending on the value of 'img_only'. If the latter, the list contains the fields 'rev_vl', 'rev_cb', and 'rev_ex', which are the return values of the functions \code{vislayout.from.coloredmeshes}, \code{coloredmesh.plot.colorbar.separate}, and {combine.colorbar.with.brainview.image}, respectively.
