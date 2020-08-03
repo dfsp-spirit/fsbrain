@@ -15,6 +15,8 @@ The plots produced by *fsbrain* can be integrated into R notebooks or written to
 
 ## Installation
 
+**This software is for research puposes only and shall not be used for any clinical use.**
+
 ### Recommended: install the stable fsbrain version from CRAN
 
 You can find the [fsbrain package on CRAN](https://cran.r-project.org/package=fsbrain), so all you need to do is:
