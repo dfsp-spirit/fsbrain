@@ -224,3 +224,45 @@ test_that("We can retrieve vertex counts for a subject.", {
     expect_equal(subject.num.verts(subjects_dir, subject_id, hemi = 'rh'), num_verts_subject1_rh);
 })
 
+
+test_that("We can visualize meshes using vis.fs.surface as expected.", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+    subject_id = 'subject1';
+
+    # Load data and surfaces
+    sf_lh = subject.surface(subjects_dir, subject_id, 'white', 'lh');
+    sf_rh = subject.surface(subjects_dir, subject_id, 'white', 'rh');
+    morph_lh = subject.morph.native(subjects_dir, subject_id, 'thickness', 'lh');
+    morph_rh = subject.morph.native(subjects_dir, subject_id, 'thickness', 'rh');
+
+
+    # Visualize a single lh mesh with morph data
+    cm = vis.fs.surface(sf_lh, per_vertex_data = morph_lh, hemi='lh');
+    expect_equal(length(cm), 1L);
+    expect_false(is.null(cm$lh));
+
+    # Visualize a single rh mesh with color data
+    cm = vis.fs.surface(sf_rh, col = 'green', hemi='rh');
+    expect_equal(length(cm), 1L);
+    expect_false(is.null(cm$rh));
+
+    # Visualize both hemispheres by passing hemilists
+    cm = vis.fs.surface(list('lh'=sf_lh, 'rh'=sf_rh), col = 'green', hemi='both');
+    expect_equal(length(cm), 2L);
+    expect_false(is.null(cm$lh));
+    expect_false(is.null(cm$rh));
+
+    # Visualize both hemispheres by passing hemilists, this time use morph data instead of colors
+    cm = vis.fs.surface(list('lh'=sf_lh, 'rh'=sf_rh), per_vertex_data=list('lh'=morph_lh, 'rh'=morph_rh), hemi='both');
+    expect_equal(length(cm), 2L);
+    expect_false(is.null(cm$lh));
+    expect_false(is.null(cm$rh));
+
+    # Errors should be thrown if parameters make no sense
+    expect_error(vis.fs.surface(list('lh'=sf_lh, 'rh'=sf_rh), per_vertex_data=list('lh'=morph_lh, 'rh'=morph_rh), hemi='lh')); # hemilist passed for surface but hemi is not both
+    expect_error(vis.fs.surface(sf_lh, per_vertex_data=list('lh'=morph_lh, 'rh'=morph_rh), hemi='lh')); # hemilist passed for per_vertex_data but hemi is not both
+})
+

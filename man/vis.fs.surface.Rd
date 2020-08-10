@@ -14,17 +14,20 @@ vis.fs.surface(
 )
 }
 \arguments{
-\item{fs_surface}{an fs.surface instance, as returned by function like \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}. If a character string, it is assumed to be the full path of a surface file, and the respective file is loaded with \code{\link[freesurferformats]{read.fs.surface}}.}
+\item{fs_surface}{an fs.surface instance, as returned by function like \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}. If a character string, it is assumed to be the full path of a surface file, and the respective file is loaded with \code{\link[freesurferformats]{read.fs.surface}}. If parameter 'hemi' is 'both', this must be a hemilist.}
 
-\item{col}{vector of colors, the per-vertex-colors. Defaults to white.}
+\item{col}{vector of colors, the per-vertex-colors. Defaults to white. Must be a single color or one color per vertex. If parameter 'hemi' is 'both', this must be a hemilist.}
 
-\item{per_vertex_data}{numerical vector, per-vertex data. If given, takes precedence over 'col'. Used to color the mesh using the colormap options in parameter 'makecmap_options'. If a character string, it is assumed to be the full path of a morphometry data file, and the respective file is loaded with \code{\link[freesurferformats]{read.fs.morph}}.}
+\item{per_vertex_data}{numerical vector, per-vertex data. If given, takes precedence over 'col'. Used to color the mesh using the colormap options in parameter 'makecmap_options'. If a character string, it is assumed to be the full path of a morphometry data file, and the respective file is loaded with \code{\link[freesurferformats]{read.fs.morph}}. If parameter 'hemi' is 'both', this must be a hemilist.}
 
 \item{hemi}{character string, one of 'lh' or 'rh'. This may be used by visualization functions to decide whether or not to show this mesh in a certain view.}
 
 \item{makecmap_options}{named list of parameters to pass to \code{\link{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'. Should include at least a colormap function as name 'colFn'.}
 
 \item{...}{extra parameters to pass to \code{\link[fsbrain]{vis.coloredmeshes}}.}
+}
+\value{
+see \code{\link{vis.coloredmeshes}}
 }
 \description{
 Render a mesh. All mesh formats supported by the *freesurferformats* package are supported, including OFF, PLY, OBJ, STL, and many more.

@@ -720,11 +720,11 @@ vis.region.values.on.subject <- function(subjects_dir, subject_id, atlas, lh_reg
 #'
 #' @description Render a mesh. All mesh formats supported by the *freesurferformats* package are supported, including OFF, PLY, OBJ, STL, and many more.
 #'
-#' @param fs_surface an fs.surface instance, as returned by function like \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}. If a character string, it is assumed to be the full path of a surface file, and the respective file is loaded with \code{\link[freesurferformats]{read.fs.surface}}.
+#' @param fs_surface an fs.surface instance, as returned by function like \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}. If a character string, it is assumed to be the full path of a surface file, and the respective file is loaded with \code{\link[freesurferformats]{read.fs.surface}}. If parameter 'hemi' is 'both', this must be a hemilist.
 #'
-#' @param col vector of colors, the per-vertex-colors. Defaults to white.
+#' @param col vector of colors, the per-vertex-colors. Defaults to white. Must be a single color or one color per vertex. If parameter 'hemi' is 'both', this must be a hemilist.
 #'
-#' @param per_vertex_data numerical vector, per-vertex data. If given, takes precedence over 'col'. Used to color the mesh using the colormap options in parameter 'makecmap_options'. If a character string, it is assumed to be the full path of a morphometry data file, and the respective file is loaded with \code{\link[freesurferformats]{read.fs.morph}}.
+#' @param per_vertex_data numerical vector, per-vertex data. If given, takes precedence over 'col'. Used to color the mesh using the colormap options in parameter 'makecmap_options'. If a character string, it is assumed to be the full path of a morphometry data file, and the respective file is loaded with \code{\link[freesurferformats]{read.fs.morph}}. If parameter 'hemi' is 'both', this must be a hemilist.
 #'
 #' @inheritParams fs.coloredmesh
 #'
@@ -734,18 +734,55 @@ vis.region.values.on.subject <- function(subjects_dir, subject_id, atlas, lh_reg
 #'
 #' @note This function can be used to visualize arbitrary triangular meshes in R. Despite its name, it is not limited to brain surface meshes.
 #'
+#' @return see \code{\link{vis.coloredmeshes}}
+#'
 #' @export
 vis.fs.surface <- function(fs_surface, col="white", per_vertex_data=NULL, hemi="lh", makecmap_options=mkco.seq(), ...) {
+    if(! hemi %in% c('lh', 'rh', 'both')) {
+        stop("Hemi must be one of 'lh', 'rh', 'both'.");
+    }
     if( ! is.null(per_vertex_data)) {
         col = NULL;
-        if(is.character(per_vertex_data)) {   # treat as path to a morph file
-            per_vertex_data = freesurferformats::read.fs.morph(per_vertex_data);
+        if(is.hemilist(per_vertex_data)) {
+            if(hemi != 'both') {
+                stop("Parameter 'hemi' must be 'both' if hemilist is passed for 'per_vertex_data'.");
+            }
+            if(is.character(per_vertex_data$lh)) {   # treat as path to a morph file
+                per_vertex_data$lh = freesurferformats::read.fs.morph(per_vertex_data$lh);
+            }
+            if(is.character(per_vertex_data$rh)) {   # treat as path to a morph file
+                per_vertex_data$rh = freesurferformats::read.fs.morph(per_vertex_data$rh);
+            }
+        } else {
+            if(is.character(per_vertex_data)) {   # treat as path to a morph file
+                per_vertex_data = freesurferformats::read.fs.morph(per_vertex_data);
+            }
         }
     }
-    if(is.character(fs_surface)) {
-        fs_surface = freesurferformats::read.fs.surface(fs_surface);
+    if(is.hemilist(fs_surface)) {
+        if(hemi != 'both') {
+            stop("Parameter 'hemi' must be 'both' if hemilist is passed for 'fs_surface'.");
+        }
+        if(is.character(fs_surface$lh)) {
+            fs_surface$lh = freesurferformats::read.fs.surface(fs_surface$lh);
+        }
+        if(is.character(fs_surface$rh)) {
+            fs_surface$rh = freesurferformats::read.fs.surface(fs_surface$rh);
+        }
+    } else {
+        if(is.character(fs_surface)) {
+            fs_surface = freesurferformats::read.fs.surface(fs_surface);
+        }
     }
     cm_list = list();
-    cm_list[[hemi]] = coloredmesh.from.preloaded.data(fs_surface, morph_data=per_vertex_data, col=col, hemi=hemi, makecmap_options=makecmap_options);
+    if(hemi == 'both') {
+        if(! is.hemilist(col)) {
+            col = list('lh'=col, 'rh'=col);
+        }
+        cm_list[['lh']] = coloredmesh.from.preloaded.data(fs_surface$lh, morph_data=per_vertex_data$lh, col=col$lh, hemi='lh', makecmap_options=makecmap_options);
+        cm_list[['rh']] = coloredmesh.from.preloaded.data(fs_surface$rh, morph_data=per_vertex_data$rh, col=col$rh, hemi='rh', makecmap_options=makecmap_options);
+    } else {
+        cm_list[[hemi]] = coloredmesh.from.preloaded.data(fs_surface, morph_data=per_vertex_data, col=col, hemi=hemi, makecmap_options=makecmap_options);
+    }
     return(invisible(vis.coloredmeshes(cm_list, ...)));
 }
