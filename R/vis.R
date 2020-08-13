@@ -348,6 +348,12 @@ vis.symmetric.data.on.subject <- function(subjects_dir, vis_subject_id, morph_da
         if( ! is.null(morph_data_both)) {
             stop(sprintf("If 'morph_data_lh' or 'morph_data_rh' is given, 'morph_data_both' must be NULL.\n"));
         }
+        if(is.character(morph_data_lh)) { # Treat as filepath
+            morph_data_lh = freesurferformats::read.fs.morph(morph_data_lh);
+        }
+        if(is.character(morph_data_rh)) { # Treat as filepath
+            morph_data_rh = freesurferformats::read.fs.morph(morph_data_rh);
+        }
     }
 
     morph_data_lh = perform.na.mapping(morph_data_lh, map_to_NA);
