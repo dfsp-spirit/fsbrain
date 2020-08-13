@@ -292,6 +292,12 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh=NULL
         if( ! is.null(morph_data_both)) {
             stop(sprintf("If 'morph_data_lh' or 'morph_data_rh' is given, 'morph_data_both' must be NULL.\n"));
         }
+        if(is.character(morph_data_lh)) { # Treat as filepath
+            morph_data_lh = freesurferformats::read.fs.morph(morph_data_lh);
+        }
+        if(is.character(morph_data_rh)) { # Treat as filepath
+            morph_data_rh = freesurferformats::read.fs.morph(morph_data_rh);
+        }
         measure = hemilist.wrap(morph_data_lh, 'lh');
         measure = hemilist.wrap(morph_data_rh, 'rh', measure);
     }
