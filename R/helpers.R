@@ -482,8 +482,9 @@ find.subjectsdir.of <- function(subject_id='fsaverage', mustWork=FALSE) {
   }
 
 
-  fs_home=Sys.getenv("FREESURFER_HOME");
-  if(nchar(fs_home) > 0) {
+  fs_home_search_res = find.freesurferhome();
+  if(fs_home_search_res$found) {
+    fs_home = fs_home_search_res$found_at;
     guessed_path = file.path(fs_home, "subjects", subject_id);
     if(dir.exists(guessed_path)) {
       ret$found = TRUE;
