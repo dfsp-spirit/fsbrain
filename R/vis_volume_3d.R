@@ -60,7 +60,7 @@ volvis.voxels <- function(volume, render_every=1, voxelcol=NULL, ...) {
         }
 
         if(length(voxelcol) != num_foreground_voxels) {
-            stop(sprintf("Bug: Voxel color mismatch. Computed %d voxel colors for %d foreground voxels.\n", length(voxelcol), num_foreground_voxels));
+            stop(sprintf("Bug: Voxel color mismatch. Computed %d voxel colors for %d foreground voxels.\n", length(voxelcol), num_foreground_voxels)); # nocov
         }
 
         # Filter the colors by the voxels which will actually be rendered:
@@ -69,7 +69,7 @@ volvis.voxels <- function(volume, render_every=1, voxelcol=NULL, ...) {
         }
 
         if(length(voxelcol) != num_rendered_voxels) {
-            stop(sprintf("Bug: Voxel color mismatch. Computed %d voxel colors for %d rendered voxels.\n", length(voxelcol), num_rendered_voxels));
+            stop(sprintf("Bug: Voxel color mismatch. Computed %d voxel colors for %d rendered voxels.\n", length(voxelcol), num_rendered_voxels)); # nocov
         }
     }
 
@@ -405,7 +405,7 @@ is.fs.coloredvoxels <- function(x) inherits(x, "fs.coloredvoxels")
 #'
 #' @export
 print.fs.coloredvoxels <- function(x, ...) {
-    cat(sprintf("Brain coloredvoxels with %d triangles.\n", nrow(x$voxeltris)/3L));
+    cat(sprintf("Brain coloredvoxels with %d triangles.\n", nrow(x$voxeltris)/3L));     # nocov start
     if(is.null(x$color)) {
         cat(sprintf("No color information.\n"));
     } else {
@@ -414,7 +414,7 @@ print.fs.coloredvoxels <- function(x, ...) {
         } else {
             cat(sprintf("Voxel color with %d entries.\n", length(x$color)));
         }
-    }
+    }                                                                                   # nocov end
 }
 
 

@@ -40,8 +40,37 @@ test_that("A brain volume or parts of it can be rendered in voxel mode", {
 test_that("A test volume or parts of it can be rendered in voxel mode", {
     myvol = gen.test.volume(c(40, 40, 40), bg = NA);
     volvis.voxels(myvol, render_every = 10);
+    volvis.voxels(myvol, render_every = 10, voxelcol = "blue");
+
+    myvol2 = gen.test.volume(c(40, 40, 40), bg = 0L);
+    volvis.voxels(myvol2, render_every = 10, voxelcol = "from_intensity");
+
+    testthat::expect_equal(dim(myvol), c(40, 40, 40)); # add a check to prevent skip
 })
 
+
+test_that("The voxel hull can be computed from a volume", {
+    myvol = gen.test.volume(c(25, 25, 25), bg = NA);
+    vh = vol.hull(myvol);
+    testthat::expect_equal(dim(myvol), dim(vh));
+})
+
+
+test_that("The voxel contour can be visualized for a volume", {
+    myvol = gen.test.volume(c(25, 25, 25), bg = 1L);
+    volvis.contour(myvol);
+    testthat::expect_equal(dim(myvol), c(25,25,25)); # add a check to prevent skip
+
+    testthat::expect_error(volvis.contour(myvol, color = c("white", "green"))); # color must be a scalar
+})
+
+
+test_that("The voxel contour can be visualized for a volume", {
+    centers = matrix(rnorm(500*3)*100, ncol=3);
+    rglvoxels(centers, voxelcol="red");
+    rglvoxels(centers);
+    testthat::expect_equal(1L, 1L); # add a check to prevent skip
+})
 
 test_that("A brain volume segmentation can be rendered with correct colors from the aseg", {
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");

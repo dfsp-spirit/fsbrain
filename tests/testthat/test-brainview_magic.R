@@ -12,7 +12,7 @@ test_that("Creating pub-ready figure export from coloredmeshes works.", {
     vis.export.from.coloredmeshes(cm, colorbar_legend='Random data', output_img = output_img);
     vis.export.from.coloredmeshes(cm, colorbar_legend='Random data', output_img = output_img, large_legend = TRUE);
 
-    vis.export.from.coloredmeshes(cm, colorbar_legend='Random data', output_img = output_img, quality = 2L);
+    vis.export.from.coloredmeshes(cm, colorbar_legend='Random data', output_img = output_img, quality = 2L, horizontal = FALSE);
     vis.export.from.coloredmeshes(cm, colorbar_legend='Random data', output_img = output_img, quality = 2L, large_legend = TRUE);
 
     expect_true(is.fs.coloredmesh(cm$lh));

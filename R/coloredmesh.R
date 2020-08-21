@@ -482,9 +482,9 @@ coloredmesh.from.mask <- function(subjects_dir, subject_id, mask, hemi, surface=
 #'
 #' @export
 print.fs.coloredmesh <- function(x, ...) {
-    cat(sprintf("Brain coloredmesh with %d vertices and %d faces.\n", ncol(x$mesh$vb), ncol(x$mesh$it)));
+    cat(sprintf("Brain coloredmesh with %d vertices and %d faces.\n", ncol(x$mesh$vb), ncol(x$mesh$it)));             # nocov start
     cat(sprintf(" * Hemi is '%s', will be rendered: %s.\n", x$hemi, !x$render));
-    cat(sprintf(" * Contains %d color values, %d unique colors.\n", length(x$col), length(unique(x$col))));
+    cat(sprintf(" * Contains %d color values, %d unique colors.\n", length(x$col), length(unique(x$col))));           # nocov end
 }
 
 
@@ -542,11 +542,11 @@ fs.coloredmesh <- function(mesh, col, hemi, render=TRUE, metadata=NULL, add_norm
         }
     }
     if(! is.logical(render)) {
-        stop("Parameter 'render' must be of type logical.");
+        stop("Parameter 'render' must be of type logical.");      # nocov
     }
 
     if(is.null(metadata)) {
-        metadata=list();
+        metadata=list();        # nocov
     }
 
     md_entries = names(metadata);
