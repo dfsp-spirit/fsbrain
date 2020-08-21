@@ -677,3 +677,24 @@ vdata.split.by.hemi <- function(subjects_dir, subject_id, vdata, surface='white'
   }
   return(list('lh'=vdata[1L:nv$lh], 'rh'=vdata[(nv$lh+1L):(nv$lh + nv$rh)]));
 }
+
+
+#' @title Generate test 3D volume of integers. The volume has an outer background area (intensity value 'bg') and an inner foreground areas (intensity value 200L).
+#'
+#' @param vdim integer vector of length 3, the dimensions
+#'
+#' @param bg value to use for outer background voxels. Typically `0L` or `NA`.
+#'
+#' @note This function exists for software testing purposes only, you should not use it in client code.
+#'
+#' @return a 3d array of integers
+#' @export
+gen.test.volume <- function(vdim=c(256L, 256L, 256L), bg = NA) {
+  data3d = rep(bg, prod(vdim));
+  v3d = array(data = data3d, dim = vdim);
+  vcenter = vdim %/% 2;
+  vcore_start = vcenter %/% 2;
+  vcore_end = vdim - vcore_start;
+  v3d[vcore_start[1]:vcore_end[1],vcore_start[2]:vcore_end[2],vcore_start[3]:vcore_end[3]] = 200L;
+  return(v3d);
+}

@@ -37,6 +37,12 @@ test_that("A brain volume or parts of it can be rendered in voxel mode", {
 })
 
 
+test_that("A test volume or parts of it can be rendered in voxel mode", {
+    myvol = gen.test.volume(c(40, 40, 40), bg = NA);
+    volvis.voxels(myvol, render_every = 10);
+})
+
+
 test_that("A brain volume segmentation can be rendered with correct colors from the aseg", {
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires X11, an aseg.mgz file for the demo subject and the FreeSurferColorLUT.");

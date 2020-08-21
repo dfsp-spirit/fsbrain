@@ -9,6 +9,9 @@ test_that("QC: outlier checks can be identified based on a data.frame with regio
 
     df = group.agg.atlas.native(subjects_dir, subjects_list, 'thickness', 'both', 'aparc');
     qc_res = qc.from.regionwise.df(df);
+    testthat::expect_true(is.data.frame(df));
+    testthat::expect_true(is.list(qc_res));
+
 })
 
 
@@ -20,4 +23,5 @@ test_that("QC: outlier checks can be computed based on an atlas for both hemis."
     subjects_list = c('subject1', 'subject2');
 
     qc_res_hl = qc.for.group(subjects_dir, subjects_list, 'thickness', 'aparc');
+    testthat::expect_true(is.list(qc_res_hl));
 })
