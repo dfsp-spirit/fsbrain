@@ -334,10 +334,10 @@ test_that("We can construct a tight layout image by merging several sd views.", 
 
 
 test_that("View angle names can be retrieved", {
-    expect_equal(get.view.angle.names("medial"), c("medial_lh", "medial_rh"));
-    expect_equal(get.view.angle.names("lateral"), c("lateral_lh", "lateral_rh"));
-    expect_equal(get.view.angle.names("lh"), c("lateral_lh", "medial_lh"));
-    expect_equal(get.view.angle.names("rh"), c("lateral_rh", "medial_rh"));
+    expect_equal(get.view.angle.names("medial"), c("sd_medial_lh", "sd_medial_rh"));
+    expect_equal(get.view.angle.names("lateral"), c("sd_lateral_lh", "sd_lateral_rh"));
+    expect_equal(get.view.angle.names("lh"), c("sd_lateral_lh", "sd_medial_lh"));
+    expect_equal(get.view.angle.names("rh"), c("sd_lateral_rh", "sd_medial_rh"));
 
     # check for expected errors
     expect_error(get.view.angle.names("no_such_set"));
