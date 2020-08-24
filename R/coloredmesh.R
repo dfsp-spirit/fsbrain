@@ -276,7 +276,7 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
 
 #' @title Generate coloredmesh from loaded data.
 #'
-#' @param fs_surface an fs.surface instance
+#' @param fs_surface an fs.surface instance or a character string, which will be interpreted as the path to a file and loaded with \code{freesurferformats::read.fs.surface}.
 #'
 #' @param morph_data numerical vector, per-vertex data (typically morphometry) for the mesh. If given, takes precedence over 'col' parameter.
 #'
@@ -289,13 +289,17 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
 #' @return as fs.coloredmesh instance
 #'
 #' @export
-coloredmesh.from.preloaded.data <- function(fs_surface, morph_data=NULL, col=NULL, hemi='lh', makecmap_options=mkco.seq()) {
+`coloredmesh.from.preloaded.data` <- function(fs_surface, morph_data=NULL, col=NULL, hemi='lh', makecmap_options=mkco.seq()) {
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
 
     if( ! freesurferformats::is.fs.surface(fs_surface)) {
-        stop("Parameter 'fs_surface' must be an fs.surface instance");
+        if(is.character(fs_surface)) {
+            fs_surface = freesurferformats::read.fs.surface(fs_surface);
+        } else {
+            stop("Parameter 'fs_surface' must be an fs.surface instance or filepath.");
+        }
     }
 
     mesh = rgl::tmesh3d(c(t(fs_surface$vertices)), c(t(fs_surface$faces)), homogeneous=FALSE);

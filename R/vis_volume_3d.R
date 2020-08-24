@@ -349,6 +349,8 @@ apply.transform <- function(object, matrix_fun) {
 #'
 #' @param ... material properties, passed to \code{\link{triangles3d}}. Example: \code{color = "#0000ff", lit=FALSE}.
 #'
+#' @param do_show logical, whether to visualize the result in the current rgl scene
+#'
 #' @return list of `fs.coloredvoxels` instances, invisible. The function is called for the side effect of visualizing the data, and usually you can ignore the return value.
 #'
 #'
@@ -359,7 +361,7 @@ apply.transform <- function(object, matrix_fun) {
 #'    rglvoxels(centers, voxelcol="red");
 #' }
 #' @export
-rglvoxels <- function(centers, r=1.0, voxelcol=NULL, ...) {
+rglvoxels <- function(centers, r=1.0, voxelcol=NULL, do_show = TRUE, ...) {
     coloredvoxels = list();
     if(is.null(voxelcol)) {
         coloredvox = list("voxeltris"=cubes3D.tris(centers, edge_length = r), "color"="#000000");
@@ -379,7 +381,9 @@ rglvoxels <- function(centers, r=1.0, voxelcol=NULL, ...) {
             coloredvox = list("voxeltris"=cubes3D.tris(centers[voxel_indices_this_color,], edge_length = r), "color"=rgbcol);
             class(coloredvox) = c("fs.coloredvoxels", class(coloredvox));
             coloredvoxels = append(coloredvoxels, list(coloredvox));
-            rgl::triangles3d(coloredvox$voxeltris, color = coloredvox$color, ...);
+            if(do_show) {
+                rgl::triangles3d(coloredvox$voxeltris, color = coloredvox$color, ...);
+            }
         }
     }
     return(invisible(coloredvoxels));

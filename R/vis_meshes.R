@@ -153,10 +153,10 @@ vis.renderable <- function(cmesh, skip_all_na=TRUE, style="default") {
             style_params = modifyList(style_params, list("add"=TRUE)); # Add image to existing scene, otherwise only the last one will be visible.
             do.call(misc3d::drawScene.rgl, c(list(cmesh), style_params));
         } else {
-            warning("The 'misc3d' package must be installed to render 'Triangles3D' instances. Skipping visualization.");
+            warning("The 'misc3d' package must be installed to render 'Triangles3D' instances. Skipping visualization."); # nocov
         }
     } else {
-        stop(sprintf("Received object with classes '%s', cannot render this. Pass an 'fs.coloredmesh', 'fs.coloredvoxels', or 'Triangles3D' instance.\n", paste(class(cmesh), collapse=" ")));
+        stop(sprintf("Received object with classes '%s', cannot render this. Pass an 'fs.coloredmesh', 'fs.coloredvoxels', or 'Triangles3D' instance.\n", paste(class(cmesh), collapse=" ")));  # nocov
     }
 }
 
@@ -187,7 +187,7 @@ vis.renderable <- function(cmesh, skip_all_na=TRUE, style="default") {
 #'
 #' @return the list of visualized coloredmeshes
 #'
-#' @keywords internal
+#' @export
 #' @importFrom rgl open3d bg3d wire3d play3d spin3d
 vis.coloredmeshes.rotating <- function(coloredmeshes, background="white", skip_all_na=TRUE, style="default", x=0, y=0, z=1, rpm=6, duration=10, rgloptions = rglo(), rglactions = list()) {
 
@@ -214,7 +214,7 @@ vis.coloredmeshes.rotating <- function(coloredmeshes, background="white", skip_a
             rgl::play3d(rgl::spin3d(axis = c(x, y, z), rpm = rpm), duration = duration);
         }
     } else {
-        warning("Cannot show rotating scene with NULL device.");
+        warning("Cannot show rotating scene with NULL device.");    # nocov
     }
 
     perform.rglactions(rglactions);

@@ -47,4 +47,3 @@ the list of visualized coloredmeshes
 \description{
 Visualize a list of colored meshes in a single scene and rotate them, movie-style.
 }
-\keyword{internal}

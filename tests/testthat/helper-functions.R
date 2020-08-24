@@ -60,3 +60,29 @@ testdatapath.subjectsdir.full.subject1 <- function () {
   return(file.path("~/data/subject1_only/"));
 }
 
+
+#' @title Get coloredmesh for unit tests.
+get.demo.coloredmesh <- function() {
+  cube_mesh = freesurferformats::read.fs.surface(system.file("extdata", "cube.gii", package = "fsbrain", mustWork = TRUE));
+  cm_lh = coloredmesh.from.preloaded.data(cube_mesh, morph_data = rnorm(nrow(cube_mesh$vertices)), hemi = 'lh');
+  return(cm_lh);
+}
+
+
+#' @title Get hemilist of coloredmeshes for unit tests.
+get.demo.coloredmeshes.hemilist <- function() {
+  cube_mesh = freesurferformats::read.fs.surface(system.file("extdata", "cube.gii", package = "fsbrain", mustWork = TRUE));
+  morph_data = rnorm(nrow(cube_mesh$vertices), 5.0, 1.0);
+  cm_lh = coloredmesh.from.preloaded.data(cube_mesh, morph_data = morph_data, hemi = 'lh');
+  cube_mesh_shifted = cube_mesh;
+  cube_mesh_shifted$vertices = cube_mesh_shifted$vertices + 3L;
+  cm_rh = coloredmesh.from.preloaded.data(cube_mesh_shifted, morph_data = morph_data, hemi = 'rh');
+  return(list('lh'=cm_lh, 'rh'=cm_rh));
+}
+
+
+#' @title Get coloredvoxels for unit tests.
+get.demo.coloredvoxels <- function(n = 100L) {
+  centers = matrix(rnorm(n*3)*100, ncol=3);
+  return(rglvoxels(centers, voxelcol="red", do_show = FALSE));
+}
