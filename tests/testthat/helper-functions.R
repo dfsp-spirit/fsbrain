@@ -62,21 +62,32 @@ testdatapath.subjectsdir.full.subject1 <- function () {
 
 
 #' @title Get coloredmesh for unit tests.
-get.demo.coloredmesh <- function() {
+get.demo.coloredmesh <- function(add_cbar_metadata = TRUE) {
   cube_mesh = freesurferformats::read.fs.surface(system.file("extdata", "cube.gii", package = "fsbrain", mustWork = TRUE));
-  cm_lh = coloredmesh.from.preloaded.data(cube_mesh, morph_data = rnorm(nrow(cube_mesh$vertices)), hemi = 'lh');
+  morph_data = seq.int(nrow(cube_mesh$vertices));
+  cm_lh = coloredmesh.from.preloaded.data(cube_mesh, morph_data = morph_data, hemi = 'lh');
+  if(add_cbar_metadata) {
+    cm_lh$metadata = list('makecmap_options' = mkco.seq(), 'src_data'=morph_data);
+  }
   return(cm_lh);
 }
 
 
 #' @title Get hemilist of coloredmeshes for unit tests.
-get.demo.coloredmeshes.hemilist <- function() {
+get.demo.coloredmeshes.hemilist <- function(add_cbar_metadata = TRUE) {
   cube_mesh = freesurferformats::read.fs.surface(system.file("extdata", "cube.gii", package = "fsbrain", mustWork = TRUE));
-  morph_data = rnorm(nrow(cube_mesh$vertices), 5.0, 1.0);
+  morph_data = seq.int(nrow(cube_mesh$vertices));
   cm_lh = coloredmesh.from.preloaded.data(cube_mesh, morph_data = morph_data, hemi = 'lh');
+  if(add_cbar_metadata) {
+    cm_lh$metadata = list('makecmap_options' = mkco.seq(), 'src_data'=morph_data);
+  }
+
   cube_mesh_shifted = cube_mesh;
   cube_mesh_shifted$vertices = cube_mesh_shifted$vertices + 3L;
   cm_rh = coloredmesh.from.preloaded.data(cube_mesh_shifted, morph_data = morph_data, hemi = 'rh');
+  if(add_cbar_metadata) {
+    cm_rh$metadata = list('makecmap_options' = mkco.seq(), 'src_data'=morph_data);
+  }
   return(list('lh'=cm_lh, 'rh'=cm_rh));
 }
 

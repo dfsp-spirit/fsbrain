@@ -10,7 +10,7 @@ test_that("A coloredmesh can be rendered using vis.coloredmeshes", {
 
     # error handling
     expect_error(vis.coloredmeshes("notameshlist")); # first parameter must be list
-    expect_error(vis.coloredmeshes(list())); # first parameter must not be empty list
+    expect_warning(vis.coloredmeshes(list())); # first parameter must not be empty list
     expect_error(vis.coloredmeshes(list("notamesh"))); # list in first parameter must contain renderables
     expect_error(vis.coloredmeshes(cm, draw_colorbar = "dunno")); # invalid colorbar setting
 })

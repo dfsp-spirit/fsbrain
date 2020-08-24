@@ -35,7 +35,6 @@ test_that("A coloredmesh can be created from standard space morph data", {
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
 
     cm = coloredmesh.from.morph.standard(subjects_dir, 'subject1', 'thickness', hemi='lh', fwhm='10');
-    cm = coloredmesh.from.morph.standard(subjects_dir, 'subject1', NULL, hemi='lh', fwhm='10');
 
     # errors
     expect_error(cm = coloredmesh.from.morph.standard(subjects_dir, 'subject1', 'thickness', hemi='nosuchhemi', fwhm='10')); # invalid hemi
