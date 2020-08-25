@@ -6,8 +6,10 @@ test_that("A brain volume for a single subject can be loaded", {
 
     subject_id = "subject1";
     brain = subject.volume(subjects_dir, subject_id, 'brain');
+    brain2 = subject.volume(subjects_dir, subject_id, 'brain', format = 'mgz');
 
     expect_equal(dim(brain), c(256, 256, 256));
+    expect_equal(dim(brain2), c(256, 256, 256));
 
     # Extract a single slice (2D image) from the volume
     slice = vol.slice(brain, 128);
@@ -19,6 +21,9 @@ test_that("A brain volume for a single subject can be loaded", {
 
     # Load the slice into image magick (need to adjust color range)
     #img = magick::image_read(grDevices::as.raster(slice / 255));
+
+    # error handling
+    testthat::expect_error(subject.volume(subjects_dir, subject_id, 'brain', format = "nosuchformat"));   # invalid format
 })
 
 
@@ -68,6 +73,35 @@ test_that("Brain volume CRS voxels are rendered at the correct surface space RAS
      # It shows that the brain surface lies within the volume boundaries, and the bounding box from the volume fits.
 
      expect_equal(1L, 1L);   # empty tests will be skipped
+
+     # error handling
+     expect_error(vol.vox.from.crs(fs_crs = "dunno")); # fs_crs must be numeric
+})
+
+
+test_that("The tkr vox2ras can be retrieved", {
+    r2v = ras2vox_tkr();
+    expect_true(is.matrix(r2v));
+})
+
+
+test_that("Voxel transform can be computed", {
+
+    # with vector
+    fs_crs = c(0L, 0L, 0L);
+    r_ind_eucli = vol.vox.from.crs(fs_crs);
+    r_ind_homog = vol.vox.from.crs(fs_crs, add_affine = TRUE);
+
+    expect_true(is.matrix(r_ind_eucli));
+    expect_true(is.matrix(r_ind_homog));
+
+    # with matrix
+    fs_crs_matrix = matrix(seq(6L), ncol = 3L, byrow = TRUE);
+    r_ind_eucli = vol.vox.from.crs(fs_crs_matrix);
+    r_ind_homog = vol.vox.from.crs(fs_crs_matrix, add_affine = TRUE);
+
+    expect_true(is.matrix(r_ind_eucli));
+    expect_true(is.matrix(r_ind_homog));
 })
 
 
