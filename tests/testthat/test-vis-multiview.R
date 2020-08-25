@@ -332,3 +332,27 @@ test_that("We can construct a tight layout image by merging several sd views.", 
     vislayout.from.coloredmeshes(coloredmeshes, view_angles=view_angles);
 })
 
+
+test_that("View angle names can be retrieved", {
+    expect_equal(get.view.angle.names("medial"), c("sd_medial_lh", "sd_medial_rh"));
+    expect_equal(get.view.angle.names("lateral"), c("sd_lateral_lh", "sd_lateral_rh"));
+    expect_equal(get.view.angle.names("lh"), c("sd_lateral_lh", "sd_medial_lh"));
+    expect_equal(get.view.angle.names("rh"), c("sd_lateral_rh", "sd_medial_rh"));
+
+    # check for expected errors
+    expect_error(get.view.angle.names("no_such_set"));
+})
+
+
+test_that("We can shift hemis apart", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+    fsbrain::download_optional_data();
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+
+    cm_lh = coloredmesh.from.morph.native(subjects_dir, 'subject1', 'thickness', hemi='lh');
+    cm_rh = coloredmesh.from.morph.native(subjects_dir, 'subject1', 'thickness', hemi='rh');
+    cm_hemilist = list('lh'=cm_lh, 'rh'=cm_rh);
+
+    cm_hl_shifted = shift.hemis.apart(cm_hemilist);
+    expect_true(is.hemilist(cm_hl_shifted));
+})

@@ -4,7 +4,7 @@
 \alias{rglvoxels}
 \title{Draw 3D boxes at locations using rgl.}
 \usage{
-rglvoxels(centers, r = 1, voxelcol = NULL, ...)
+rglvoxels(centers, r = 1, voxelcol = NULL, do_show = TRUE, ...)
 }
 \arguments{
 \item{centers}{numerical matrix with 3 columns. Each column represents the x, y, z coordinates of a center at which to create a cube.}
@@ -12,6 +12,8 @@ rglvoxels(centers, r = 1, voxelcol = NULL, ...)
 \item{r}{numerical vector or scalar, the cube edge length. This is the length of the axis-parallel edges of the cube. The vector must have length 1 (same edge length for all cubes), or the length must be identical to the number of rows in parameter `centers`.}
 
 \item{voxelcol}{vector of rgb color strings for the individual voxels. Its length must be identical to \code{nrow(centers)} if given.}
+
+\item{do_show}{logical, whether to visualize the result in the current rgl scene}
 
 \item{...}{material properties, passed to \code{\link{triangles3d}}. Example: \code{color = "#0000ff", lit=FALSE}.}
 }

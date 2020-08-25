@@ -13,7 +13,7 @@ coloredmesh.from.preloaded.data(
 )
 }
 \arguments{
-\item{fs_surface}{an fs.surface instance}
+\item{fs_surface}{an fs.surface instance or a character string, which will be interpreted as the path to a file and loaded with \code{freesurferformats::read.fs.surface}.}
 
 \item{morph_data}{numerical vector, per-vertex data (typically morphometry) for the mesh. If given, takes precedence over 'col' parameter.}
 

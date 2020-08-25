@@ -133,7 +133,7 @@ coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=FALSE, image.
         zlim = combined_data_range;
     }
 
-    num_col = ifelse(is.null(makecmap_options$n), 100L, makecmap_options$n);
+    num_col = ifelse(is.null(makecmap_options$n), 100L, makecmap_options$n);  # for small meshes with < 100 verts, the user will have to set n to <= num_verts
 
     image.plot_options_internal = list(legend.only=TRUE, zlim = zlim, col = makecmap_options$colFn(num_col), add=TRUE, graphics.reset=TRUE);
     image.plot_options = modifyList(image.plot_options_internal, image.plot_extra_options);

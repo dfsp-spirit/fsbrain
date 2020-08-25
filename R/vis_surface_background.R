@@ -258,15 +258,38 @@ common.makecmap.range <- function(makecmap_options, lh_data=NULL, rh_data=NULL, 
     if(is.null(lh_data) & is.null(rh_data)) {
         stop("Only one of 'lh_data' and 'rh_data' can be NULL.");
     }
+
     merged_data = c(lh_data, rh_data);
-    common_cmap = do.call(squash::makecmap, utils::modifyList(list(force.to.range(merged_data, makecmap_options$range, allow_append = TRUE)), makecmap_options));
+
+    # The value of makecmap_options$n must not be larger than data length. Otherwise you
+    # will get the squash::cmap error 'found n values outside map range'.
+    if(hasIn(makecmap_options, 'n')) {
+        if(makecmap_options$n > length(merged_data)) {
+            makecmap_options$n = length(merged_data);
+        }
+        if(is.numeric(lh_data)) {
+            if(makecmap_options$n > length(lh_data)) {
+                makecmap_options$n = length(lh_data);
+            }
+        }
+        if(is.numeric(rh_data)) {
+            if(makecmap_options$n > length(rh_data)) {
+                makecmap_options$n = length(rh_data);
+            }
+        }
+    }
+
+    merged_data_in_range = force.to.range(merged_data, makecmap_options$range, allow_append = TRUE);
+    common_cmap = do.call(squash::makecmap, utils::modifyList(list(merged_data_in_range), makecmap_options));
     common_cmap$colors = common_cmap$colors[1:length(merged_data)]; # Cut off extra values potentially added by force.to.range.
     collayer = list();
     if(is.numeric(lh_data)) {
-        collayer$lh = squash::cmap(force.to.range(lh_data, makecmap_options$range, allow_append = FALSE), map = common_cmap);
+        lh_data_in_range = force.to.range(lh_data, makecmap_options$range, allow_append = FALSE);
+        collayer$lh = squash::cmap(lh_data_in_range, map = common_cmap);
     }
     if(is.numeric(rh_data)) {
-        collayer$rh = squash::cmap(force.to.range(rh_data, makecmap_options$range, allow_append = FALSE), map = common_cmap);
+        rh_data_in_range = force.to.range(rh_data, makecmap_options$range, allow_append = FALSE);
+        collayer$rh = squash::cmap(rh_data_in_range, map = common_cmap);
     }
     if(return_metadata) {
         collayer$metadata = list('map'=common_cmap);
@@ -286,7 +309,7 @@ common.makecmap.range <- function(makecmap_options, lh_data=NULL, rh_data=NULL, 
 #'
 #' @return Modified version of x. The data will be clamped and / or at most 2 values may be appended to x.
 #'
-#' @note This is an articial modfication of the data used for plotting a colormap with a fixed range.
+#' @note This is an artificial modification of the data used for plotting a colormap with a fixed range.
 #'
 #' @keywords internal
 force.to.range <- function(x, data_range, allow_append = FALSE) {

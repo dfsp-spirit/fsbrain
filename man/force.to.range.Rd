@@ -20,6 +20,6 @@ Modified version of x. The data will be clamped and / or at most 2 values may be
 Change data to ensure requested data_range.
 }
 \note{
-This is an articial modfication of the data used for plotting a colormap with a fixed range.
+This is an artificial modification of the data used for plotting a colormap with a fixed range.
 }
 \keyword{internal}
