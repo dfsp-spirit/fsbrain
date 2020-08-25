@@ -92,16 +92,16 @@ test_that("Voxel transform can be computed", {
     r_ind_eucli = vol.vox.from.crs(fs_crs);
     r_ind_homog = vol.vox.from.crs(fs_crs, add_affine = TRUE);
 
-    expect_true(is.matrix(r_ind_eucli));
-    expect_true(is.matrix(r_ind_homog));
+    testthat::expect_true(is.vector(r_ind_eucli));
+    testthat::expect_true(is.vector(r_ind_homog));
 
     # with matrix
     fs_crs_matrix = matrix(seq(6L), ncol = 3L, byrow = TRUE);
-    r_ind_eucli = vol.vox.from.crs(fs_crs_matrix);
-    r_ind_homog = vol.vox.from.crs(fs_crs_matrix, add_affine = TRUE);
+    r_ind_eucli_mat = vol.vox.from.crs(fs_crs_matrix);
+    r_ind_homog_mat = vol.vox.from.crs(fs_crs_matrix, add_affine = TRUE);
 
-    expect_true(is.matrix(r_ind_eucli));
-    expect_true(is.matrix(r_ind_homog));
+    testthat::expect_true(is.matrix(r_ind_eucli_mat));
+    testthat::expect_true(is.matrix(r_ind_homog_mat));
 })
 
 
