@@ -24,7 +24,12 @@ box.can.run.all.tests <- function() {
   # This should only return TRUE on one of my (Tim's) computers, which have the full FreeSurfer data for subject1.
   # If I want to run all the tests, I still have to set the env var RUN_ALL_FSBRAIN_TESTS, e.g.,:
   #
-  #     Sys.setenv("RUN_ALL_FSBRAIN_TESTS"="fosho");
+  #     Sys.setenv("RUN_ALL_FSBRAIN_TESTS"="sure");
+  #
+  #     if you have the time:
+  #
+  #     Sys.setenv("RUN_ALL_FSBRAIN_TESTS"="sure");
+  #     # See run.extralong.tests() below.
   #
   return(box.has.all.testdata() & box.has.x11display() & nchar(Sys.getenv("RUN_ALL_FSBRAIN_TESTS")) > 0L);
 }
@@ -63,7 +68,7 @@ testdatapath.subjectsdir.full.subject1 <- function () {
 
 #' @title Get coloredmesh for unit tests.
 get.demo.coloredmesh <- function(add_cbar_metadata = TRUE) {
-  cube_mesh = freesurferformats::read.fs.surface(system.file("extdata", "cube.gii", package = "fsbrain", mustWork = TRUE));
+  cube_mesh = freesurferformats::read.fs.surface(system.file("extdata", "cube.ply", package = "fsbrain", mustWork = TRUE));
   morph_data = seq.int(nrow(cube_mesh$vertices));
   cm_lh = coloredmesh.from.preloaded.data(cube_mesh, morph_data = morph_data, hemi = 'lh');
   if(add_cbar_metadata) {
@@ -75,7 +80,7 @@ get.demo.coloredmesh <- function(add_cbar_metadata = TRUE) {
 
 #' @title Get hemilist of coloredmeshes for unit tests.
 get.demo.coloredmeshes.hemilist <- function(add_cbar_metadata = TRUE) {
-  cube_mesh = freesurferformats::read.fs.surface(system.file("extdata", "cube.gii", package = "fsbrain", mustWork = TRUE));
+  cube_mesh = freesurferformats::read.fs.surface(system.file("extdata", "cube.ply", package = "fsbrain", mustWork = TRUE));
   morph_data = seq.int(nrow(cube_mesh$vertices));
   cm_lh = coloredmesh.from.preloaded.data(cube_mesh, morph_data = morph_data, hemi = 'lh');
   if(add_cbar_metadata) {
