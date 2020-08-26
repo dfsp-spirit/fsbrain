@@ -242,7 +242,7 @@ vis.coloredmeshes.rotating <- function(coloredmeshes, background="white", skip_a
 #' @keywords internal
 vis.rotated.coloredmeshes <- function(renderables, rotation_angle, x, y, z, style="default", draw_colorbar=FALSE) {
     if(is.null(renderables)) {
-        return;
+        return(invisible(NULL));
     }
     for (mesh_idx in seq_len(length(renderables))) {     # usually this will only run once for the single mesh of a hemisphere.
         orig_renderable = renderables[[mesh_idx]];
@@ -423,4 +423,3 @@ sort.coloredmeshes.by.hemi <- function(coloredmeshes) {
     }
     return(list("lh"=lh_meshes, "rh"=rh_meshes));
 }
-
