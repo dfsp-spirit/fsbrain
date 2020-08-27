@@ -168,7 +168,7 @@ rglactions.has.key <- function(rglactions, key) {
 #'
 #' @description Take a list specifying actions and execute them. This function should be called once an rgl scene has been setup and rendered. A typical usecase is to save a screenshot of the scene.
 #'
-#' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
+#' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action. See \code{\link{rglactions}}.
 #'
 #' @param at_index integer, the index to use in case of vectorized entries. Allows using different output_images for different views or similar.
 #'
@@ -199,6 +199,21 @@ perform.rglactions <- function(rglactions, at_index=NULL, silent=TRUE) {
 }
 
 
-
+#' @title Create rglactions list, suitable to be passed as parameter to vis functions.
+#'
+#' @note List of all available rglactions: (1) `snapshot_png=filepath` takes a screenshot in PNG format and saves it in at `filepath`. (2) `trans_fun=function` uses the transformation function trans_fun to the data before mapping data values to colors and plotting. Popular transformation functions are \code{\link{limit_fun}}, \code{\link{limit_fun_na}}, and \code{\link{clip.data}}. (3) `text=arglist` calls \code{\link{text3d}} with the given args after plotting.
+#'
+#' @return named list, an example `rlgactions` instance that will save a screenshot of the plot produced by the vis function in the current working directory (see \code{getwd}), under the name 'fsbrain_out.png'.
+#'
+#' @examples
+#'    rgla_screenie = list('snapshot_png'='fsbain_out.png');
+#'    rgla_screenie = rglactions();   # same as above
+#'    rgla_clamp = list('trans_fun'=clip.data);
+#'    rgla_limit = list('trans_fun'=limit_fun(2,5));
+#'    rgla_ls = list('trans_fun'=limit_fun_na(2,5), 'snapshot_png'='~/fig1.png');
+#' @export
+rglactions <- function() {
+    return(list('snapshot_png'='fsbrain_out.png'));
+}
 
 

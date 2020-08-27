@@ -21,7 +21,7 @@
 #'
 #' @param rgloptions option list passed to \code{\link{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))}.
 #'
-#' @param rglactions named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action. The following example clips outliers in the data before plotting and writes a screenshot in PNG format: \code{rglactions = list("snapshot_png"="~/fsbrain.png", "clip_data"=c(0.05, 0.95))}.
+#' @param rglactions named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action. The following example clips outliers in the data before plotting and writes a screenshot in PNG format: \code{rglactions = list("snapshot_png"="~/fsbrain.png", "clip_data"=c(0.05, 0.95))}. See \code{\link{rglactions}}.
 #'
 #' @param draw_colorbar logical or one of the character strings 'vertical' or 'horizontal', whether to draw a colorbar. Notice: the colorbar is drawn to a separate subplot, and this only works if there is enough space for it, i.e., the plot resolution must be high enough. You may have to increase the plot size for the colorbar to show up, see the vignette for instructions. Defaults to `FALSE`. See  \code{\link[fsbrain]{coloredmesh.plot.colorbar.separate}} for an alternative.
 #'

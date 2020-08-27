@@ -7,7 +7,7 @@
 perform.rglactions(rglactions, at_index = NULL, silent = TRUE)
 }
 \arguments{
-\item{rglactions, }{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.}
+\item{rglactions, }{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action. See \code{\link{rglactions}}.}
 
 \item{at_index}{integer, the index to use in case of vectorized entries. Allows using different output_images for different views or similar.}
 

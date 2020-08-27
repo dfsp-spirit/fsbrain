@@ -26,3 +26,10 @@ test_that("The limit_na function can be created.", {
     data_lim = lf(data);
     expect_equal(length(data), length(data_lim));
 })
+
+
+test_that("The demo rglactions list for screenshot can be created", {
+    rgla = rglactions();
+    testthat::expect_true(is.list(rgla));
+})
+

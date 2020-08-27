@@ -31,7 +31,7 @@ vis.group.morph.native(
 
 \item{captions}{optional vector of character strings, the short text annotations for the individual tiles. Typically used to plot the subject identifier.}
 
-\item{rglactions}{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action. The following example clips outliers in the data before plotting and writes a screenshot in PNG format: \code{rglactions = list("snapshot_png"="~/fsbrain.png", "clip_data"=c(0.05, 0.95))}.}
+\item{rglactions}{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action. The following example clips outliers in the data before plotting and writes a screenshot in PNG format: \code{rglactions = list("snapshot_png"="~/fsbrain.png", "clip_data"=c(0.05, 0.95))}. See \code{\link{rglactions}}.}
 
 \item{...}{extra parameters passed to the subject level visualization function. Not all may make sense in this context. Example: \code{surface='pial'}.}
 }
