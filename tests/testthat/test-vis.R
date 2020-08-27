@@ -1,7 +1,7 @@
 # These tests are to be run manually and interactively, they are therefore skipped by default.
 # You can run them by copying & pasting the code into an R session. Treat it as examples.
 
-test_that("We can visualize morphometry data.", {
+test_that("We can visualize morphometry data from different views.", {
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires X11.");
 
@@ -12,9 +12,22 @@ test_that("We can visualize morphometry data.", {
     measure = 'thickness';
     surface = 'white';
 
-    vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', rgloptions = rglot(), draw_colorbar = T);
+    vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', rgloptions = rglot(), draw_colorbar = T, views = c("t9", "si", "sr"));
+    vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', rgloptions = rglot(), draw_colorbar = T, views = c("t4"), draw_colorbar = "horizontal");
+    vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', rgloptions = rglot(), draw_colorbar = T, views = c("t9"), draw_colorbar = "horizontal");
+
+    vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', rgloptions = rglot(), draw_colorbar = T, views = c("sd_lateral_lh"), draw_colorbar = "horizontal");
+    vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', rgloptions = rglot(), draw_colorbar = T, views = c("sd_ventral"), draw_colorbar = "vertical");
+    vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', rgloptions = rglot(), draw_colorbar = T, views = c("sd_rostral"), draw_colorbar = FALSE);
+    vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', rgloptions = rglot(), draw_colorbar = T, views = c("sd_caudal"), draw_colorbar = FALSE);
 
     expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
+
+    # error handling
+    expect_error(vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', rgloptions = rglot(), draw_colorbar = T, views = "nosuchview"));  # invalid views
+    expect_error(vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', rgloptions = rglot(), draw_colorbar = T, views = c("t4"), draw_colorbar = "dunno")); # invalid draw_colorbar setting in t4 view
+    expect_error(vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', rgloptions = rglot(), draw_colorbar = T, views = c("t9"), draw_colorbar = "dunno")); # invalid draw_colorbar setting in t9 view
+    expect_error(vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', rgloptions = rglot(), draw_colorbar = T, views = c("sd_laternal_lh"), draw_colorbar = "dunno")); # invalid draw_colorbar setting in sd_ view
 })
 
 
@@ -266,3 +279,19 @@ test_that("We can visualize meshes using vis.fs.surface as expected.", {
     expect_error(vis.fs.surface(sf_lh, per_vertex_data=list('lh'=morph_lh, 'rh'=morph_rh), hemi='lh')); # hemilist passed for per_vertex_data but hemi is not both
 })
 
+
+test_that("We can shift hemis apart, e.g. for inflated where lh and rh intersect.", {
+    cm = get.demo.coloredmeshes.hemilist();
+    cm_shifted = shift.hemis.apart(cm);
+    cm_shifted2 = shift.hemis.apart(cm, hemi_order_on_axis = 'auto');
+    cm_shifted3 = shift.hemis.apart(cm, hemi_order_on_axis = 'auto_flipped');
+    cm_shifted4 = shift.hemis.apart(cm, hemi_order_on_axis = 'lr');
+    cm_shifted5 = shift.hemis.apart(cm, hemi_order_on_axis = 'rl');
+
+    # error handling
+    expect_error(shift.hemis.apart(cm, axis = -1L));  # invalid axis
+    expect_error(shift.hemis.apart(cm, hemi_order_on_axis = "noidea"));  # invalid hemi order
+
+    cm_no_fs_mesh = get.demo.coloredmeshes.hemilist(add_cbar_metadata = FALSE);
+    expect_warning(shift.hemis.apart(cm_no_fs_mesh));  # meshes without source mesh metadata cannot be shifted, a warning will be raised
+})

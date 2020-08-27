@@ -84,14 +84,14 @@ get.demo.coloredmeshes.hemilist <- function(add_cbar_metadata = TRUE) {
   morph_data = seq.int(nrow(cube_mesh$vertices));
   cm_lh = coloredmesh.from.preloaded.data(cube_mesh, morph_data = morph_data, hemi = 'lh');
   if(add_cbar_metadata) {
-    cm_lh$metadata = list('makecmap_options' = mkco.seq(), 'src_data'=morph_data);
+    cm_lh$metadata = list('makecmap_options' = mkco.seq(), 'src_data'=morph_data, 'fs_mesh'=cube_mesh);
   }
 
   cube_mesh_shifted = cube_mesh;
   cube_mesh_shifted$vertices = cube_mesh_shifted$vertices + 3L;
   cm_rh = coloredmesh.from.preloaded.data(cube_mesh_shifted, morph_data = morph_data, hemi = 'rh');
   if(add_cbar_metadata) {
-    cm_rh$metadata = list('makecmap_options' = mkco.seq(), 'src_data'=morph_data);
+    cm_rh$metadata = list('makecmap_options' = mkco.seq(), 'src_data'=morph_data, 'fs_mesh'=cube_mesh_shifted);
   }
   return(list('lh'=cm_lh, 'rh'=cm_rh));
 }
