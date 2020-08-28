@@ -103,9 +103,12 @@ test_that("We can visualize meshes using vis.fs.surface as expected.", {
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     subject_id = 'subject1';
 
+    col_aparc = collayer.bg(subjects_dir, subject_id, "aparc");
+
+    skip_if_not(box.has.full.subject1(), message = "Full recon-all output for subject1 required");
+    subjects_dir = testdatapath.subjectsdir.full.subject1();
     col_curv = collayer.bg(subjects_dir, subject_id, "curv");
     col_curv_light = collayer.bg(subjects_dir, subject_id, "curv_light");
     col_sulc = collayer.bg(subjects_dir, subject_id, "sulc");
     col_sulc_light = collayer.bg(subjects_dir, subject_id, "sulc_light");
-    col_aparc = collayer.bg(subjects_dir, subject_id, "aparc");
 })

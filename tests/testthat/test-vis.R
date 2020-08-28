@@ -291,7 +291,4 @@ test_that("We can shift hemis apart, e.g. for inflated where lh and rh intersect
     # error handling
     expect_error(shift.hemis.apart(cm, axis = -1L));  # invalid axis
     expect_error(shift.hemis.apart(cm, hemi_order_on_axis = "noidea"));  # invalid hemi order
-
-    cm_no_fs_mesh = get.demo.coloredmeshes.hemilist(add_cbar_metadata = FALSE);
-    expect_warning(shift.hemis.apart(cm_no_fs_mesh));  # meshes without source mesh metadata cannot be shifted, a warning will be raised
 })
