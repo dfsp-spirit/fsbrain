@@ -49,7 +49,31 @@ test_that("Demographics file with header can be read with stringsAsFactors = FAL
 test_that("Demographics file reading fails with incorrect number of column names", {
   demogr_file = system.file("extdata", "demographics.tsv", package = "fsbrain", mustWork = TRUE);
   column_names = c("subject_id", "group", "age", "nosuchfield");
-  expect_error(demographics = read.md.demographics(demogr_file, header = TRUE, column_names = column_names, report = FALSE));
+  testthat::expect_error(demographics = read.md.demographics(demogr_file, header = TRUE, column_names = column_names, report = FALSE));
+  testthat::expect_error(demographics = read.md.demographics(tempfile()));  # no such file
+  testthat::expect_error(demographics = read.md.demographics(demogr_file, header = "I think so")); # header must be logical
+
+})
+
+
+test_that("Demographics reports can be shown", {
+    demogr_file = system.file("extdata", "demographics.tsv", package = "fsbrain", mustWork = TRUE);
+    demographics = read.md.demographics(demogr_file, header = TRUE, report = TRUE);
+    demographics2 = read.md.demographics(demogr_file, header = TRUE, report = TRUE, scale_and_center = TRUE);
+    expect_equal(nrow(demographics), 6);
+    expect_equal(nrow(demographics2), 6);
+})
+
+
+test_that("Demographics files without header can be read", {
+    demogr_file_nohdr = system.file("extdata", "demographics_nohdr.tsv", package = "fsbrain", mustWork = TRUE);
+
+    column_names = c("subject_id", "group", "age");
+    demographics = read.md.demographics(demogr_file_nohdr, header = FALSE, column_names = column_names);
+    expect_equal(nrow(demographics), 6);
+
+    # error handling
+    testthat::expect_error(demographics = read.md.demographics(demogr_file_nohdr, header = FALSE)); # column names required
 })
 
 
