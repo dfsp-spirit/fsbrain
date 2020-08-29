@@ -51,3 +51,18 @@ test_that("Demographics file reading fails with incorrect number of column names
   column_names = c("subject_id", "group", "age", "nosuchfield");
   expect_error(demographics = read.md.demographics(demogr_file, header = TRUE, column_names = column_names, report = FALSE));
 })
+
+
+test_that("A FreeSurfer Group Descriptor File (FSGD) can be written  subjects re-read.", {
+    demogr_file = system.file("extdata", "demographics.tsv", package = "fsbrain", mustWork = TRUE);
+    column_names = c("subject_id", "group", "age");
+    demographics = read.md.demographics(demogr_file, header = TRUE, column_names = column_names, report = FALSE, stringsAsFactors = FALSE);
+
+    tmpfile = tempfile(fileext = ".fsgd");
+    demographics.to.fsgd.file(tmpfile, demographics, subject_id_column_name = 'subject_id');
+
+    # re-read the subjects list
+    subjects_list = read.md.subjects.from.fsgd(tmpfile);
+    testthat::expect_equal(demographics$subject_id, subjects_list);
+})
+
