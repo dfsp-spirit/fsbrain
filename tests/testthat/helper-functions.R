@@ -102,3 +102,26 @@ get.demo.coloredvoxels <- function(n = 100L) {
   centers = matrix(rnorm(n*3)*100, ncol=3);
   return(rglvoxels(centers, voxelcol="red", do_show = FALSE));
 }
+
+
+#' @title Get 3D volume of integers in range 0-255 for unit tests. The volume has a background intensity and random cubes of other intensities.
+#'
+#' @param vd integer, dimension of the volume (will be used for all 3 axes).
+#'
+#' @param bg integer of NA, the value to use for the background
+#'
+#' @param num_centers integer, the number of clusters to spawn
+#'
+#' @return 3d array of integers, the volume
+get.demo.volume <- function(vd = 30L, bg = NA, num_centers = 8L) {
+    vdim = rep(vd, 3L);
+    data = rep(bg, prod(vdim));
+    vol = array(data, dim = vdim);
+    for(i in 1:num_centers) {    # create small cubes within the volume
+        csize = sample(3, size = 1);
+        cvalue = sample(255, size = 1);
+        center_xyz = sample((csize+1L):(vd-csize), size = 3);
+        vol[(center_xyz[1]-csize):center_xyz[1], (center_xyz[1]-csize):center_xyz[1], (center_xyz[1]-csize):center_xyz[1]] = cvalue;
+    }
+    return(vol);
+}

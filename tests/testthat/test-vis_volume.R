@@ -234,3 +234,9 @@ test_that("A brain volume can be visualized as a lightbox colored from the aseg"
 
 })
 
+
+test_that("Volume planes can be retrieved by name", {
+
+})
+
+# vol = get.demo.volume(bg=0L);
