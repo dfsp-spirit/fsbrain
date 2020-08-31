@@ -29,7 +29,25 @@ download_optional_data <- function() {
                            c(base_path_subject1, 'surf', 'rh.area.fwhm10.fsaverage.mgh'),
                            c(base_path_subject1, 'mri', 'aseg.mgz'),
                            c(base_path_subject1, 'mri', 'aparc+aseg.mgz'),
-                           c(base_path_subject1, 'label', 'vol_midbrain.label')
+                           c(base_path_subject1, 'label', 'vol_midbrain.label'),
+                           c(base_path_subject1, 'surf', 'lh.curv'),
+                           c(base_path_subject1, 'surf', 'rh.curv'),
+                           c(base_path_subject1, 'surf', 'lh.sulc'),
+                           c(base_path_subject1, 'surf', 'rh.sulc'),
+                           c(base_path_subject1, 'surf', 'lh.pial_lgi'),
+                           c(base_path_subject1, 'surf', 'rh.pial_lgi'),
+                           c(base_path_subject1, 'surf', 'lh.pial'),
+                           c(base_path_subject1, 'surf', 'rh.pial'),
+                           c(base_path_subject1, 'surf', 'lh.inflated'),
+                           c(base_path_subject1, 'surf', 'rh.inflated'),
+                           c(base_path_subject1, 'surf', 'lh.white.min'),
+                           c(base_path_subject1, 'surf', 'rh.white.min'),
+                           c(base_path_subject1, 'surf', 'lh.white.max'),
+                           c(base_path_subject1, 'surf', 'rh.white.max'),
+                           c(base_path_subject1, 'surf', 'lh.pial.min'),
+                           c(base_path_subject1, 'surf', 'rh.pial.min'),
+                           c(base_path_subject1, 'surf', 'lh.pial.max'),
+                           c(base_path_subject1, 'surf', 'rh.pial.max')
                            );
     base_path_subject2 = c('subjects_dir', 'subject2');
     local_filenames_subject2 = list(c(base_path_subject2, 'label', 'lh.aparc.a2009s.annot'),
@@ -51,7 +69,25 @@ download_optional_data <- function() {
                                     c(base_path_subject2, 'surf', 'rh.area.fwhm10.fsaverage.mgh'),
                                     c(base_path_subject2, 'mri', 'aseg.mgz'),
                                     c(base_path_subject2, 'mri', 'aparc+aseg.mgz'),
-                                    c(base_path_subject2, 'label', 'vol_midbrain.label')
+                                    c(base_path_subject2, 'label', 'vol_midbrain.label'),
+                                    c(base_path_subject2, 'surf', 'lh.curv'),
+                                    c(base_path_subject2, 'surf', 'rh.curv'),
+                                    c(base_path_subject2, 'surf', 'lh.sulc'),
+                                    c(base_path_subject2, 'surf', 'rh.sulc'),
+                                    c(base_path_subject2, 'surf', 'lh.pial_lgi'),
+                                    c(base_path_subject2, 'surf', 'rh.pial_lgi'),
+                                    c(base_path_subject2, 'surf', 'lh.pial'),
+                                    c(base_path_subject2, 'surf', 'rh.pial'),
+                                    c(base_path_subject2, 'surf', 'lh.inflated'),
+                                    c(base_path_subject2, 'surf', 'rh.inflated'),
+                                    c(base_path_subject2, 'surf', 'lh.white.min'),
+                                    c(base_path_subject2, 'surf', 'rh.white.min'),
+                                    c(base_path_subject2, 'surf', 'lh.white.max'),
+                                    c(base_path_subject2, 'surf', 'rh.white.max'),
+                                    c(base_path_subject2, 'surf', 'lh.pial.min'),
+                                    c(base_path_subject2, 'surf', 'rh.pial.min'),
+                                    c(base_path_subject2, 'surf', 'lh.pial.max'),
+                                    c(base_path_subject2, 'surf', 'rh.pial.max')
                                     );
     local_filenames = c(local_filenames_subject1, local_filenames_subject2);
 
@@ -75,7 +111,10 @@ download_optional_data <- function() {
                 '4b7d88484182326576218abdce8ac378',
                 '148a5b715d5f0686fe8ed2143e7e1987',
                 '600c8969bd6eaba8ef9cfe181d6ce17a',
-                '016316901d8148a0971dbb39c7395970'
+                '016316901d8148a0971dbb39c7395970', # midbrain label
+                'dae80996f45e1639ea81e17f4a08a879', # lh.curv
+                '8e8d24c2434cbcc72729fa06cbc13b47',
+                ''
                 );
 
     md5sums_subject2 = md5sums_subject1; # In our example data, subject2 is actually just a copy of subject1, so the md5 hashes are identical.
