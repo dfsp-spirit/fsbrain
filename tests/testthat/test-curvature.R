@@ -23,4 +23,6 @@ test_that("Shape descriptors can be computed", {
 
     # error handling
     expect_error(shape.descriptors(pc, descriptors = c('noidea'))); # invalid descriptor
+
+    vis.data.on.subject(subjects_dir, subject_id, morph_data_both = shape$shape_index, rglactions = list('trans_fun'=clip.data));
 })
