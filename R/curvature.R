@@ -42,6 +42,8 @@ shape.descriptor.names <- function() {
 #'
 #' @param descriptors vector of character strings, the descriptors you want. See \code{\link{shape.descriptor.names}} for all available names.
 #'
+#' @references Shimony et al. (2016). Comparison of cortical folding measures for evaluation of developing human brain. Neuroimage, 125, 780-790.
+#'
 #' @return dataframe of descriptor values, each columns contains one descriptor.
 #' @export
 shape.descriptors <- function(pc, descriptors=shape.descriptor.names()) {
@@ -103,17 +105,135 @@ shape.descriptors <- function(pc, descriptors=shape.descriptor.names()) {
 
 
 
-#' @title Compute the respective curvature measure.
-#'
-#' @inheritParams geom.curvatures
-#'
 #' @keywords internal
 gm.gaussian_curvature <- function(pc) { return(pc$principal_curvature_k_major * pc$principal_curvature_k_minor) };
 
 
-#' @title Compute the respective curvature measure.
-#'
-#' @param pc a 'principal_curvatures' list, see \code{\link{principal.curvatures}}.
-#'
 #' @keywords internal
 gm.mean_curvature <- function(pc) { return((pc$principal_curvature_k_major + pc$principal_curvature_k_minor) / 2.0) };
+
+
+#' @keywords internal
+gm.intrinsic_curvature_index <- function(pc) { return(max(gm.gaussian_curvature(pc), 0.0)) };
+
+
+#' @keywords internal
+gm.negative_intrinsic_curvature_index <- function(pc) { return(min(gm.gaussian_curvature(pc), 0.0)) };
+
+
+#' @keywords internal
+gm.gaussian_l2_norm <- function(pc) { k = gm.gaussian_curvature(pc); return(k * k); };
+
+
+#' @keywords internal
+gm.mean_l2_norm <- function(pc) { h = gm.mean_curvature(pc); return(h * h); };
+
+
+#' @keywords internal
+gm.absolute_intrinsic_curvature_index <- function(pc) { return(abs(gm.gaussian_curvature(pc))) };
+
+
+#' @keywords internal
+gm.mean_curvature_index <- function(pc) { return(max(gm.mean_curvature(pc), 0.0)) };
+
+
+#' @keywords internal
+gm.negative_mean_curvature_index <- function(pc) { return(min(gm.mean_curvature(pc), 0.0)) };
+
+
+#' @keywords internal
+gm.absolute_mean_curvature_index <- function(pc) { return(abs(gm.mean_curvature(pc))) };
+
+#' @keywords internal
+gm.folding_index <- function(pc) {
+    abs_k_maj = abs(pc$principal_curvature_k_major);
+    abs_k_min = abs(pc$principal_curvature_k_minor);
+    return(abs_k_maj * (abs_k_maj - abs_k_min));
+}
+
+
+#' @keywords internal
+gm.curvedness_index <- function(pc) {
+    return(sqrt((pc$principal_curvature_k_major * pc$principal_curvature_k_major + pc$principal_curvature_k_minor * pc$principal_curvature_k_minor) / 2.0));
+}
+
+
+#' @keywords internal
+gm.shape_index <- function(pc) {
+    return((2.0 * pi) * atan((pc$principal_curvature_k1 + pc$principal_curvature_k2) / (pc$principal_curvature_k2 - pc$principal_curvature_k1)));
+}
+
+
+#' @keywords internal
+gm.shape_type <- function(pc) {
+    shape_type = rep(0.0, length(pc$principal_curvature_k1));
+    border1 = -1.0;
+    border2 = -0.5;
+    border3 = 0.0;
+    border4 = 0.5;
+    border5 = 1.0;
+    shape_index = gm.shape_index(pc);
+    shape_type[shape_index >= border1 & shape_index < border2] = 1;
+    shape_type[shape_index >= border2 & shape_index < border3] = 2;
+    shape_type[shape_index >= border3 & shape_index < border4] = 3;
+    shape_type[shape_index >= border4 & shape_index < border5] = 4;
+    return(shape_type);
+}
+
+
+#' @keywords internal
+gm.area_fraction_of_intrinsic_curvature_index <- function(pc) {
+    k = gm.gaussian_curvature(pc);
+    condition_one = k > 0;
+    condition_zero = k <= 0;
+    af = 1 * condition_one + 0 * condition_zero + k * (!(condition_one | condition_zero));
+    return(af);
+}
+
+
+#' @keywords internal
+gm.area_fraction_of_negative_intrinsic_curvature_index <- function(pc) {
+    k = gm.gaussian_curvature(pc);
+    condition_one = k < 0;
+    condition_zero = k >= 0;
+    af = 1 * condition_one + 0 * condition_zero + k * (!(condition_one | condition_zero));
+    return(af);
+}
+
+
+#' @keywords internal
+gm.area_fraction_of_mean_curvature_index <- function(pc) {
+    h = gm.mean_curvature(pc);
+    condition_one = h > 0;
+    condition_zero = h <= 0;
+    af = 1 * condition_one + 0 * condition_zero + h * (!(condition_one | condition_zero));
+    return(af);
+}
+
+
+#' @keywords internal
+gm.area_fraction_of_negative_mean_curvature_index <- function(pc) {
+    h = gm.mean_curvature(pc);
+    condition_one = h < 0;
+    condition_zero = h >= 0;
+    af = 1 * condition_one + 0 * condition_zero + h * (!(condition_one | condition_zero));
+    return(af);
+}
+
+
+#' @keywords internal
+gm.sh2sh <- function(pc) {
+    mln = gm.mean_l2_norm(pc);
+    amci = gm.absolute_mean_curvature_index(pc);
+    return(mln / amci);
+}
+
+
+#' @keywords internal
+gm.sk2sk <- function(pc) {
+    gln = gm.gaussian_l2_norm(pc);
+    aici = gm.absolute_intrinsic_curvature_index(pc);
+    return(gln / aici);
+}
+
+

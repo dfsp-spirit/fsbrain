@@ -17,3 +17,6 @@ dataframe of descriptor values, each columns contains one descriptor.
 \description{
 Computes geometric curvature-based descriptors.
 }
+\references{
+Shimony et al. (2016). Comparison of cortical folding measures for evaluation of developing human brain. Neuroimage, 125, 780-790.
+}

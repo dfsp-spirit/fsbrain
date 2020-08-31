@@ -20,4 +20,7 @@ test_that("Shape descriptors can be computed", {
     # Compute shape descriptors
     shape = shape.descriptors(pc, descriptors = c('mean_curvature', 'gaussian_curvature'));
     expect_true(is.data.frame(shape));
+
+    # error handling
+    expect_error(shape.descriptors(pc, descriptors = c('noidea'))); # invalid descriptor
 })
