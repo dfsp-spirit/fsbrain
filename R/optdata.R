@@ -34,8 +34,6 @@ download_optional_data <- function() {
                            c(base_path_subject1, 'surf', 'rh.curv'),
                            c(base_path_subject1, 'surf', 'lh.sulc'),
                            c(base_path_subject1, 'surf', 'rh.sulc'),
-                           c(base_path_subject1, 'surf', 'lh.pial_lgi'),
-                           c(base_path_subject1, 'surf', 'rh.pial_lgi'),
                            c(base_path_subject1, 'surf', 'lh.pial'),
                            c(base_path_subject1, 'surf', 'rh.pial'),
                            c(base_path_subject1, 'surf', 'lh.inflated'),
@@ -47,7 +45,11 @@ download_optional_data <- function() {
                            c(base_path_subject1, 'surf', 'lh.pial.min'),
                            c(base_path_subject1, 'surf', 'rh.pial.min'),
                            c(base_path_subject1, 'surf', 'lh.pial.max'),
-                           c(base_path_subject1, 'surf', 'rh.pial.max')
+                           c(base_path_subject1, 'surf', 'rh.pial.max'),
+                           c(base_path_subject1, 'surf', 'lh.volume'),
+                           c(base_path_subject1, 'surf', 'rh.volume'),
+                           c(base_path_subject1, 'surf', 'lh.jacobian_white'),
+                           c(base_path_subject1, 'surf', 'rh.jacobian_white')
                            );
     base_path_subject2 = c('subjects_dir', 'subject2');
     local_filenames_subject2 = list(c(base_path_subject2, 'label', 'lh.aparc.a2009s.annot'),
@@ -74,8 +76,6 @@ download_optional_data <- function() {
                                     c(base_path_subject2, 'surf', 'rh.curv'),
                                     c(base_path_subject2, 'surf', 'lh.sulc'),
                                     c(base_path_subject2, 'surf', 'rh.sulc'),
-                                    c(base_path_subject2, 'surf', 'lh.pial_lgi'),
-                                    c(base_path_subject2, 'surf', 'rh.pial_lgi'),
                                     c(base_path_subject2, 'surf', 'lh.pial'),
                                     c(base_path_subject2, 'surf', 'rh.pial'),
                                     c(base_path_subject2, 'surf', 'lh.inflated'),
@@ -87,7 +87,11 @@ download_optional_data <- function() {
                                     c(base_path_subject2, 'surf', 'lh.pial.min'),
                                     c(base_path_subject2, 'surf', 'rh.pial.min'),
                                     c(base_path_subject2, 'surf', 'lh.pial.max'),
-                                    c(base_path_subject2, 'surf', 'rh.pial.max')
+                                    c(base_path_subject2, 'surf', 'rh.pial.max'),
+                                    c(base_path_subject1, 'surf', 'lh.volume'),
+                                    c(base_path_subject1, 'surf', 'rh.volume'),
+                                    c(base_path_subject1, 'surf', 'lh.jacobian_white'),
+                                    c(base_path_subject1, 'surf', 'rh.jacobian_white')
                                     );
     local_filenames = c(local_filenames_subject1, local_filenames_subject2);
 
@@ -114,7 +118,24 @@ download_optional_data <- function() {
                 '016316901d8148a0971dbb39c7395970', # midbrain label
                 'dae80996f45e1639ea81e17f4a08a879', # lh.curv
                 '8e8d24c2434cbcc72729fa06cbc13b47',
-                ''
+                'bc268800c1cb102a43e99a3ab061ca94', # lh.sulc
+                '13aec75d8712f14345688ce5ad53f648',
+                'c433b8925de4f74845e57d6172d6a3c2', # lh.pial
+                '78c05bd3aeacb7cdc9b1b075095209d4',
+                '7e7128b115ac48fee45816567988f7ff', # lh.inflated
+                '7f5aadf8f11065f379e123b723b0ef14',
+                'd69337d93d377684c5a2db9fd12379d4', # lh white k2 min
+                'bfd2fa8c2aee83f8f449aef9694ffb94',
+                '16024b469736f1ddf7fda81596c698db', # lh white k1 max
+                'b5aba6cb21c014feb546570c20ad574a',
+                'c5745dfe82180a198c9968467990b6ec', # lh pial k2 min
+                '0ebe2283126f09918289749745705326',
+                'db277584962e30b586d0768c46adb696', # lh pial k1 max
+                'a8456e694d8003a4e56efde824f6dc7a',
+                'ba84cc43ab41cfd4a694656cd5b6bb20', # volume
+                '94f9ea482af6f1b18038c5ebaddad2a8',
+                '85ad831974e9f5d86d8b000df98a277b', # jacobian
+                '6258b08da232576dd25a05d8359364c2'
                 );
 
     md5sums_subject2 = md5sums_subject1; # In our example data, subject2 is actually just a copy of subject1, so the md5 hashes are identical.
@@ -141,7 +162,27 @@ download_optional_data <- function() {
                  'surf/rh.area.fwhm10.fsaverage.mgh',
                  'mri/aseg.mgz',
                  'mri/aparc+aseg.mgz',
-                 'label/vol_midbrain.label'
+                 'label/vol_midbrain.label',
+                 'surf/lh.curv',
+                 'surf/rh.curv',
+                 'surf/lh.sulc',
+                 'surf/rh.sulc',
+                 'surf/lh.pial',
+                 'surf/rh.pial',
+                 'surf/lh.inflated',
+                 'surf/rh.inflated',
+                 'surf/lh.white.min',
+                 'surf/rh.white.min',
+                 'surf/lh.white.max',
+                 'surf/rh.white.max',
+                 'surf/lh.pial.min',
+                 'surf/rh.pial.min',
+                 'surf/lh.pial.max',
+                 'surf/rh.pial.max',
+                 'surf/lh.volume',
+                 'surf/rh.volume',
+                 'surf/lh.jacobian_white',
+                 'surf/rh.jacobian_white'
                  );
     ext_urls_subject1 = paste(ext_url_subject_part_subject1, ext_url_parts_each_subject, sep='');
     ext_urls_subject2 = paste(ext_url_subject_part_subject2, ext_url_parts_each_subject, sep='');
