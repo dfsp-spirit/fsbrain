@@ -14,7 +14,7 @@
 principal.curvatures <- function(k1_raw, k2_raw) {
      nv = length(k1_raw);
      if(nv != length(k2_raw)) {
-         stop(sprintf("Vectors k1_raw and k2_raw must have same lengths, but found %d and %d.\n", nv, length(k2)));
+         stop(sprintf("Vectors k1_raw and k2_raw must have same lengths, but found %d and %d.\n", nv, length(k2_raw)));
      }
      res_list = list();
      res_list$principal_curvature_k1 = ifelse(k1_raw >= k2_raw, k1_raw, k2_raw);

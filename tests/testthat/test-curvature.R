@@ -18,7 +18,7 @@ test_that("Shape descriptors can be computed", {
     vis.data.on.subject(subjects_dir, subject_id, morph_data_both = pc$principal_curvature_k1, rglactions = list('trans_fun'=clip.data));
 
     # Compute shape descriptors
-    shape = shape.descriptors(pc, descriptors = c('mean_curvature', 'gaussian_curvature'));
+    shape = shape.descriptors(pc);
     expect_true(is.data.frame(shape));
 
     # error handling
