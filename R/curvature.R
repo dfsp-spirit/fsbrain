@@ -114,11 +114,11 @@ gm.mean_curvature <- function(pc) { return((pc$principal_curvature_k_major + pc$
 
 
 #' @keywords internal
-gm.intrinsic_curvature_index <- function(pc) { return(max(gm.gaussian_curvature(pc), 0.0)) };
+gm.intrinsic_curvature_index <- function(pc) { return(pmax(gm.gaussian_curvature(pc), 0.0)) };
 
 
 #' @keywords internal
-gm.negative_intrinsic_curvature_index <- function(pc) { return(min(gm.gaussian_curvature(pc), 0.0)) };
+gm.negative_intrinsic_curvature_index <- function(pc) { return(pmin(gm.gaussian_curvature(pc), 0.0)) };
 
 
 #' @keywords internal
@@ -134,11 +134,11 @@ gm.absolute_intrinsic_curvature_index <- function(pc) { return(abs(gm.gaussian_c
 
 
 #' @keywords internal
-gm.mean_curvature_index <- function(pc) { return(max(gm.mean_curvature(pc), 0.0)) };
+gm.mean_curvature_index <- function(pc) { return(pmax(gm.mean_curvature(pc), 0.0)) };
 
 
 #' @keywords internal
-gm.negative_mean_curvature_index <- function(pc) { return(min(gm.mean_curvature(pc), 0.0)) };
+gm.negative_mean_curvature_index <- function(pc) { return(pmin(gm.mean_curvature(pc), 0.0)) };
 
 
 #' @keywords internal
