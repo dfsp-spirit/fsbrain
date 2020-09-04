@@ -3,6 +3,15 @@
 # See Shimony et al. (2016). Comparison of cortical folding measures for evaluation of developing human brain. Neuroimage, 125, 780-790.
 
 
+# One could also compute the curvatures directly in R using Rvcg:
+# sf = freesurferformats::read.fs.surface("~/data/tim_only/tim/surf/lh.white")
+# m3 = rgl::tmesh3d(c(t(sf$vertices)), c(t(sf$faces)), homogeneous=FALSE);
+# cr = Rvcg::vcgCurve(m3);
+# k1 = cr$K1;
+# k2 = cr$K2;
+# fsbrain::vis.data.on.subject("~/data/tim_only", "tim", morph_data_lh=(k1+k2), rglactions = list('trans_fun'=fsbrain::clip.data));
+
+
 #' @title Computes principal curvatures according to 2 definitions from raw k1 and k2 values.
 #'
 #' @param k1_raw numerical vector, one of the two principal curvatures, one value per vertex
