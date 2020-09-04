@@ -192,6 +192,17 @@ vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', makecmap_o
 
 This also means that more colors are used in the rendered image, but the effect will be less noticable.
 
+### Can I set a custom color for NA values in the plot, like the masked medial wall?
+
+By default, NA values are rendered in white. You can change this using col.na in makecmap_options:
+
+```{r, eval = FALSE}
+mkc = list('n'=200L, 'col.na'='orange');
+vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', cortex_only = TRUE, makecmap_options=mkc);
+```
+
+This is also useful when plotting clusters, just set all values which are not part of any cluster to NA.
+
 ### Can I get a color legend when plotting atlas regions from an annotation? I want to know the region names for the colors.
 
 Yes, see the answer to the next question for details.
