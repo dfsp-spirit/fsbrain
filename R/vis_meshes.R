@@ -334,22 +334,24 @@ get.rglstyle.parameters <- function(renderable, style) {
 #'
 #' @description Run \code{\link{material3d}} without arguments to see valid style keywords to create new styles.
 #'
-#' @param style string. A style name. Available styles are one of: "default", "shiny", "semitransparent".
+#' @param style string. A style name. Available styles are one of: "default", "shiny", "semitransparent", "edges".
 #'
 #' @return a style, resolved to a parameter list compatible with \code{\link{material3d}}.
 #'
 #' @seealso \code{\link{shade3d}} can use the returned style
 #'
-#' @keywords internal
+#' @export
 get.rglstyle <- function(style) {
     if(style == "default") {
         return(get.rglstyle.default());
     } else if (style == "shiny") {
         return(get.rglstyle.shiny());
+    } else if (style == "edges") {
+        return(get.rglstyle.edges());
     } else if (style == "semitransparent") {
         return(get.rglstyle.semitransparent());
     } else {
-        stop(sprintf("No such rendering style: '%s'. Try something like 'default', 'shiny', or 'semitransparent'.\n", style));
+        stop(sprintf("No such rendering style: '%s'. Try something like 'default', 'shiny', 'edges' or 'semitransparent'.\n", style));
     }
 }
 
@@ -376,6 +378,19 @@ get.rglstyle.default <- function() {
 get.rglstyle.semitransparent <- function() {
     return(list("shininess"=50, specular="black", alpha=0.5, front="filled", back="lines"));
 }
+
+
+#' @title Get the mesh edges visualization style parameters as a named list.
+#'
+#' @description Mesh edges rendering style.
+#'
+#' @return named list, style parameters that can be passed to \code{\link{shade3d}} via \code{\link{do.call}}.
+#'
+#' @keywords internal
+get.rglstyle.edges <- function() {
+    return(list(front="lines", back="lines", lwd=2.0, size=5.0));
+}
+
 
 
 #' @title Get a shiny visualization style.

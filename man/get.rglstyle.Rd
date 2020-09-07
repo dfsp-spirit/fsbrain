@@ -7,7 +7,7 @@
 get.rglstyle(style)
 }
 \arguments{
-\item{style}{string. A style name. Available styles are one of: "default", "shiny", "semitransparent".}
+\item{style}{string. A style name. Available styles are one of: "default", "shiny", "semitransparent", "edges".}
 }
 \value{
 a style, resolved to a parameter list compatible with \code{\link{material3d}}.
@@ -18,4 +18,3 @@ Run \code{\link{material3d}} without arguments to see valid style keywords to cr
 \seealso{
 \code{\link{shade3d}} can use the returned style
 }
-\keyword{internal}
