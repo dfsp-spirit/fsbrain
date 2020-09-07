@@ -20,7 +20,8 @@ vis.subject.morph.standard(
   draw_colorbar = FALSE,
   cortex_only = FALSE,
   makecmap_options = mkco.seq(),
-  bg = NULL
+  bg = NULL,
+  style = "default"
 )
 }
 \arguments{
@@ -55,6 +56,8 @@ vis.subject.morph.standard(
 \item{makecmap_options}{named list of parameters to pass to \code{\link{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'. Should include at least a colormap function as name 'colFn'.}
 
 \item{bg}{a background definition. Can be a surface color layer or a character string like 'curv_light' to select a pre-defined layer, see \code{\link[fsbrain]{collayer.bg}} for valid strings.}
+
+\item{style}{character string, a rendering style, e.g., 'default', 'shiny' or 'semitransparent'.}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.

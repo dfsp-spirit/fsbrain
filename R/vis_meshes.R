@@ -311,17 +311,18 @@ vis.coloredmesh <- function(cmesh, style="default") {
 #'
 #' @keywords internal
 get.rglstyle.parameters <- function(renderable, style) {
-    if(style == 'from_mesh') {
-        if(!is.null(renderable$style)) {
-            style = renderable$style;
-        } else {
-            style = 'default';
-        }
-    }
     if(is.list(style)) {
         style_params = style;
     } else if (is.character(style)) {
-        style_params = get.rglstyle(style);
+        if(style == 'from_mesh') {
+            if(!is.null(renderable$style)) {
+                style = renderable$style;
+            } else {
+                style = 'default';
+            }
+        } else {
+            style_params = get.rglstyle(style);
+        }
     } else {
         stop("Parameter 'style' must be a named list of style parameters or a string specifying an available style by name (e.g., 'default' or 'shiny').");
     }

@@ -123,7 +123,7 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi="bo
 #'
 #' @importFrom squash jet
 #' @export
-vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi="both", fwhm="10", surface="white", template_subject = 'fsaverage', template_subjects_dir = NULL, colormap=NULL, views=c("t4"), rgloptions = rglo(), rglactions = list(), draw_colorbar = FALSE, cortex_only = FALSE, makecmap_options=mkco.seq(), bg=NULL) {
+vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi="both", fwhm="10", surface="white", template_subject = 'fsaverage', template_subjects_dir = NULL, colormap=NULL, views=c("t4"), rgloptions = rglo(), rglactions = list(), draw_colorbar = FALSE, cortex_only = FALSE, makecmap_options=mkco.seq(), bg=NULL, style = 'default') {
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
@@ -165,7 +165,7 @@ vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi="
         return(coloredmeshes);
     }
 
-    return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar)));
+    return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, style = style)));
 }
 
 

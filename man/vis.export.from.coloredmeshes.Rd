@@ -13,8 +13,9 @@ vis.export.from.coloredmeshes(
   quality = 1L,
   output_img = "fsbrain_arranged.png",
   image.plot_extra_options = NULL,
-  large_legend = FALSE,
-  view_angles = get.view.angle.names(angle_set = "t4")
+  large_legend = TRUE,
+  view_angles = get.view.angle.names(angle_set = "t4"),
+  style = "default"
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ vis.export.from.coloredmeshes(
 \item{large_legend}{logical, whether to plot extra large legend text, affects the font size of the colorbar_legend and the tick labels.}
 
 \item{view_angles}{list of strings. See \code{\link{get.view.angle.names}} for all valid strings.}
+
+\item{style}{the rendering style, see \code{material3d} or use a predefined style like 'default' or 'shiny'.}
 }
 \value{
 magick image instance or named list, depending on the value of 'img_only'. If the latter, the list contains the fields 'rev_vl', 'rev_cb', and 'rev_ex', which are the return values of the functions \code{vislayout.from.coloredmeshes}, \code{coloredmesh.plot.colorbar.separate}, and {combine.colorbar.with.brainview.image}, respectively.
