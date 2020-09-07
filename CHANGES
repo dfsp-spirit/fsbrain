@@ -15,6 +15,7 @@ Version 0.3.1
 - Add functions for visualization of groups of subjects at once: vis.group.morph.native, vis.group.morph.standard, vis.group.annot, ...
 - Extend advanced live notebook with group level plotting examples
 - Better support for limiting the plotted data range
+- Add new rendering style 'edges', expose style argument for more vis functions
 
 
 Version 0.3.0
