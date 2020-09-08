@@ -203,14 +203,17 @@ test_that("A brain volume can be visualized as a lightbox colored from the aseg"
     skip_if_not(box.can.run.all.tests(), "This test requires X11, the 'magick' package (ImageMagick for R), and extra data.");
 
     fsbrain::download_optional_data();
+    fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
     subjects_dir = testdatapath.subjectsdir.full.subject1();
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
 
+    fsaverage_subject_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+
     subject_id = "subject1";
     brain = subject.volume(subjects_dir, subject_id, 'brain');
-    aseg = subject.volume(subjects_dir, subject_id, 'aparc+aseg');    # Not shipped with the package atm.
+    aseg = subject.volume(subjects_dir, subject_id, 'aparc+aseg');
 
-    colortable = freesurferformats::read.fs.colortable("~/software/freesurfer/FreeSurferColorLUT.txt");   # adapt path to your machine
+    colortable = freesurferformats::read.fs.colortable(file.path(fsaverage_subject_dir, 'fsaverage', 'ext', 'FreeSurferColorLUT.txt'));
     overlay_colors = vol.overlay.colors.from.colortable(aseg, colortable);
     colored_brain = vol.merge(brain/255, overlay_colors); # will also apply bounding box by default
 
