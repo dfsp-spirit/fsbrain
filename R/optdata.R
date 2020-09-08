@@ -196,9 +196,10 @@ download_optional_data <- function() {
     return(invisible(cfiles));
 }
 
+
 #' @title Download the FreeSurfer v6 fsaverage subject.
 #'
-#' @description Download some relevant files from the FreeSurfer v6 fsaverage subject. The files are subject to the FreeSurfer software license, see parameter 'accept_freesurfer_license' for details. This data is not required for the package to work. If you are working on a machine that has FreeSurfer installed, you already have this data anyways and do not need it. If not, it is very convenient to have it if you are using the fsaverage template subject to analyze your standard space data, as it is required for visualization of such data.
+#' @description Download some relevant files from the FreeSurfer v6 fsaverage subject. The files are subject to the FreeSurfer software license, see parameter 'accept_freesurfer_license' for details. This data is not required for the package to work. If you are working on a machine that has FreeSurfer installed, you already have this data anyways and do not need to download it. If not, it is very convenient to have it if you are using the fsaverage template subject to analyze your standard space data, as it is required for visualization of such data.
 #'
 #' @param accept_freesurfer_license logical, whether you accept the FreeSurfer license for fsaverage, available at https://surfer.nmr.mgh.harvard.edu/fswiki/FreeSurferSoftwareLicense. Defaults to FALSE.
 #'
@@ -210,7 +211,7 @@ download_fsaverage <- function(accept_freesurfer_license=FALSE) {
     if(! accept_freesurfer_license) {
         cat(sprintf("Nothing downloaded. You have to accept the FreeSurfer license to download and use fsaverage.\n"));
         cat(sprintf("Read the license at https://surfer.nmr.mgh.harvard.edu/fswiki/FreeSurferSoftwareLicense and set parameter 'accept_freesurfer_license' to TRUE if you accept it.\n"));
-        return();
+        return(invisible(NULL));
     }
 
     pkg_info = pkgfilecache::get_pkg_info("fsbrain");
@@ -268,6 +269,74 @@ download_fsaverage <- function(accept_freesurfer_license=FALSE) {
                                    'LICENSE'
     );
     ext_urls = paste(ext_url_subject_part_fsaverage, ext_url_parts_each_subject, sep='');
+    base_url = 'http://rcmd.org/projects/nitestdata/';
+    urls = paste(base_url, ext_urls, sep='');
+
+    cfiles = pkgfilecache::ensure_files_available(pkg_info, local_filenames, urls, md5sums=md5sums);
+    cfiles$file_status = NULL; # not exposed to end user
+    return(invisible(cfiles));
+}
+
+
+#' @title Download the FreeSurfer v6 low-resolution fsaverage3 subject.
+#'
+#' @description Download some relevant files from the FreeSurfer v6 fsaverage3 subject. The files are subject to the FreeSurfer software license, see parameter 'accept_freesurfer_license' for details. This data is not required for the package to work. If you are working on a machine that has FreeSurfer installed, you already have this data anyways and do not need to download it. Also downloads data for subject1 that has been mapped to fsaverage.
+#'
+#' @inheritParams download_fsaverage
+#'
+#' @return Named list. The list has entries: "available": vector of strings. The names of the files that are available in the local file cache. You can access them using get_optional_data_file(). "missing": vector of strings. The names of the files that this function was unable to retrieve.
+#'
+#' @note The subject fsaverage3 is a downsampled (low mesh resolution) version of the standard fsaverage. If you never heard about fsaverage3, you do not need it. You will have to manually re-sample your data in FreeSurfer if you want to use it with fsaverage3.
+#'
+#' @export
+download_fsaverage3 <- function(accept_freesurfer_license=FALSE) {
+
+    if(! accept_freesurfer_license) {
+        cat(sprintf("Nothing downloaded. You have to accept the FreeSurfer license to download and use fsaverage.\n"));
+        cat(sprintf("Read the license at https://surfer.nmr.mgh.harvard.edu/fswiki/FreeSurferSoftwareLicense and set parameter 'accept_freesurfer_license' to TRUE if you accept it.\n"));
+        return(invisible(NULL));
+    }
+
+    pkg_info = pkgfilecache::get_pkg_info("fsbrain");
+    base_path_fsaverage3 = c('subjects_dir', 'fsaverage3');
+    base_path_subject1 = c('subjects_dir', 'subject1');
+    local_filenames = list(c(base_path_fsaverage3, 'label', 'lh.cortex.label'),
+                           c(base_path_fsaverage3, 'label', 'rh.cortex.label'),
+                           c(base_path_fsaverage3, 'surf', 'lh.white'),
+                           c(base_path_fsaverage3, 'surf', 'rh.white'),
+                           c(base_path_fsaverage3, 'LICENSE'),
+                           c(base_path_subject1, 'surf', 'lh.thickness.fwhm0.fsaverage3.mgz'),
+                           c(base_path_subject1, 'surf', 'rh.thickness.fwhm0.fsaverage3.mgz')
+    );
+
+
+
+    md5sums = c('49a367e65ec7ecffbb721404b274fb3f', # fsaverage3 lh.cortex
+                '76e2d42894351427405cc01ab351719b',
+                'b014033974bc5b4deb8b54dc140abda8',
+                '09a133fd8499f3192e051bdbd8bec6e8',
+                'b39610adfe02fdce2ad9d30797c567b3',    # LICENSE fsaverage3
+                'd191f6833d1d36016b30504fed1ce138',  # subject1 lh.thickness.fwhm0.fsaverage3.mgz
+                'e874f8dc149fd11842f117c300d1a964'   # subject1 rh.thickness.fwhm0.fsaverage3.mgz
+    );
+
+
+
+    ext_url_subject_part_fsaverage3 = 'subjects_dir/fsaverage3/';
+    ext_url_parts_fsaverage3 = c('label/lh.cortex.label',
+                                   'label/rh.cortex.label',
+                                   'surf/lh.white',
+                                   'surf/rh.white',
+                                   'LICENSE'
+    );
+    ext_urls_fsaverage3 = paste(ext_url_subject_part_fsaverage3, ext_url_parts_fsaverage3, sep='');
+
+    ext_url_subject_part_subject1 = 'subjects_dir/subject1/';
+    ext_url_parts_subject1 = c('surf/lh.thickness.fwhm0.fsaverage3.mgz',
+                               'surf/rh.thickness.fwhm0.fsaverage3.mgz'
+    );
+    ext_urls_subject1 = paste(ext_url_subject_part_subject1, ext_url_parts_subject1, sep='');
+    ext_urls = c(ext_urls_fsaverage3, ext_urls_subject1);
     base_url = 'http://rcmd.org/projects/nitestdata/';
     urls = paste(base_url, ext_urls, sep='');
 
