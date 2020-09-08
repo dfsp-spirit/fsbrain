@@ -346,6 +346,45 @@ download_fsaverage3 <- function(accept_freesurfer_license=FALSE) {
 }
 
 
+#' @title Download extra data to reproduce the figures from the fsbrain paper.
+#'
+#' @return Named list. The list has entries: "available": vector of strings. The names of the files that are available in the local file cache. You can access them using get_optional_data_file(). "missing": vector of strings. The names of the files that this function was unable to retrieve.
+#'
+#' @note Called for side effect of data download.
+#'
+#' @export
+download_optional_paper_data <- function() {
+
+    pkg_info = pkgfilecache::get_pkg_info("fsbrain");
+    base_path_subject1 = c('subjects_dir', 'subject1');
+    local_filenames = list(c(base_path_subject1, 'surf', 'lh.tmap.fsaverage.curv'),
+                           c(base_path_subject1, 'surf', 'rh.tmap.fsaverage.curv')
+    );
+
+
+
+    md5sums = c('896a2f60ee654952d6358bb89eb0c686', # lh.tmap.fsaverage.curv
+                'fc251982f366aef0971d48d6edd4dc49'  # rh.tmap.fsaverage.curv
+    );
+
+
+
+    ext_url_subject_part_subject1 = 'subjects_dir/subject1/';
+    ext_url_parts_subject1 = c('surf/lh.tmap.fsaverage.curv',
+                               'surf/rh.tmap.fsaverage.curv'
+    );
+    ext_urls_subject1 = paste(ext_url_subject_part_subject1, ext_url_parts_subject1, sep='');
+    ext_urls = ext_urls_subject1;
+    base_url = 'http://rcmd.org/projects/nitestdata/';
+    urls = paste(base_url, ext_urls, sep='');
+
+    cfiles = pkgfilecache::ensure_files_available(pkg_info, local_filenames, urls, md5sums=md5sums);
+    cfiles$file_status = NULL; # not exposed to end user
+    return(invisible(cfiles));
+}
+
+
+
 #' @title Get file names available in package cache.
 #'
 #' @description Get file names of optional data files which are available in the local package cache. You can access these files with get_optional_data_file().

@@ -6,6 +6,7 @@ test_that("We can visualize morphometry data from different views.", {
     skip_if_not(box.can.run.all.tests(), "This test requires X11.");
 
     fsbrain::download_optional_data();
+    fsbrain::download_optional_paper_data();
 
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     subject_id = 'subject1';
