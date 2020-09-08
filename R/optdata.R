@@ -229,6 +229,8 @@ download_fsaverage <- function(accept_freesurfer_license=FALSE) {
                                     c(base_path_fsaverage, 'surf', 'rh.pial'),
                                     c(base_path_fsaverage, 'surf', 'lh.inflated'),
                                     c(base_path_fsaverage, 'surf', 'rh.inflated'),
+                                    c(base_path_fsaverage, 'surf', 'lh.curv'),
+                                    c(base_path_fsaverage, 'surf', 'rh.curv'),
                                     c(base_path_fsaverage, 'LICENSE')
     );
 
@@ -247,6 +249,8 @@ download_fsaverage <- function(accept_freesurfer_license=FALSE) {
                 '71f11c33db672360d7589c7dbd0e4a3f',
                 '95df985980d7eefa009ac104589ee3c5',
                 'bb4d58289aefcdf8d017e45e531c4807',
+                '3e81598a5ac0546443ec37d0ac477c80',
+                '76ad91d2488de081392313ad5a87fafb',
                 'b39610adfe02fdce2ad9d30797c567b3'    # LICENSE
     );
 
@@ -266,6 +270,8 @@ download_fsaverage <- function(accept_freesurfer_license=FALSE) {
                                    'surf/rh.pial',
                                    'surf/lh.inflated',
                                    'surf/rh.inflated',
+                                   'surf/lh.curv',
+                                   'surf/rh.curv',
                                    'LICENSE'
     );
     ext_urls = paste(ext_url_subject_part_fsaverage, ext_url_parts_each_subject, sep='');
@@ -357,21 +363,21 @@ download_optional_paper_data <- function() {
 
     pkg_info = pkgfilecache::get_pkg_info("fsbrain");
     base_path_subject1 = c('subjects_dir', 'subject1');
-    local_filenames = list(c(base_path_subject1, 'surf', 'lh.tmap.fsaverage.curv'),
-                           c(base_path_subject1, 'surf', 'rh.tmap.fsaverage.curv')
+    local_filenames = list(c(base_path_subject1, 'surf', 'lh.tmap.fsaverage'),
+                           c(base_path_subject1, 'surf', 'rh.tmap.fsaverage')
     );
 
 
 
-    md5sums = c('896a2f60ee654952d6358bb89eb0c686', # lh.tmap.fsaverage.curv
-                'fc251982f366aef0971d48d6edd4dc49'  # rh.tmap.fsaverage.curv
+    md5sums = c('896a2f60ee654952d6358bb89eb0c686', # lh.tmap.fsaverage
+                'fc251982f366aef0971d48d6edd4dc49'  # rh.tmap.fsaverage
     );
 
 
 
     ext_url_subject_part_subject1 = 'subjects_dir/subject1/';
-    ext_url_parts_subject1 = c('surf/lh.tmap.fsaverage.curv',
-                               'surf/rh.tmap.fsaverage.curv'
+    ext_url_parts_subject1 = c('surf/lh.tmap.fsaverage',
+                               'surf/rh.tmap.fsaverage'
     );
     ext_urls_subject1 = paste(ext_url_subject_part_subject1, ext_url_parts_subject1, sep='');
     ext_urls = ext_urls_subject1;
