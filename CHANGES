@@ -16,6 +16,8 @@ Version 0.3.1
 - Extend advanced live notebook with group level plotting examples
 - Better support for limiting the plotted data range
 - Add new rendering style 'edges', expose style argument for more vis functions
+- Fix bug in coloredmesh.from.morph.standard: custom template subject was ignored
+- Add option to download a few files from fsaverage3 under FreeSurfer license. User needs to accept license.
 
 
 Version 0.3.0
