@@ -89,14 +89,13 @@ test_that("We can visualize p values or other arbitrary data, one value per atla
 
 test_that("We can visualize data on fsaverage if available", {
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
-    skip_if_not(box.can.run.all.tests(), "This test requires the full test data and X11.");
-    subjects_dir = testdatapath.subjectsdir.full.subject1();
+    fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 
-    #fsaverage_dir = file.path(Sys.getenv('FREESURFER_HOME'), 'subjects');
-    fsaverage_dir = find.subjectsdir.of("fsaverage")$found_at;
+    fsaverage_dir = subjects_dir;
 
-    rgloptions=list("windowRect"=c(50,50,1200,1200));     # the first 2 entries give the position on screen, the rest defines resolution as width, height in px
-    rglactions = list("snapshot_png"="~/fsbrain_t4_fsavg.png");
+    rgloptions=list("windowRect"=c(50,50,900,900));
+    rglactions = list();
     makecmap_options = list('colFn'=grDevices::terrain.colors);
 
     if(dir.exists(fsaverage_dir)) {
@@ -104,7 +103,19 @@ test_that("We can visualize data on fsaverage if available", {
     } else {
         message("No fsaverage found.");
     }
+    testthat::expect_equal(1L, 1L);
+})
 
+
+test_that("We can visualize data on fsaverage3 if available", {
+    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+    fsbrain::download_fsaverage3(accept_freesurfer_license = TRUE);
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+
+    makecmap_options = list('colFn'=grDevices::terrain.colors, 'n'=100);
+
+    vis.subject.morph.standard(subjects_dir, 'subject1', 'thickness', 'both', fwhm='0', template_subject='fsaverage3');
+    testthat::expect_equal(1L, 1L);
 })
 
 
