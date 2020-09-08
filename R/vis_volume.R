@@ -875,7 +875,9 @@ vol.overlay.colors.from.colortable <- function(volume, colortable, ignored_struc
 
     overlay_colors = array(rep(NA, length(volume)), dim(volume));
 
-    for(row_idx in seq_len(nrow(colortable))) {
+    occuring_color_rows = which(colortable$struct_index %in% volume);
+
+    for(row_idx in occuring_color_rows) {
         ct_structure = colortable[row_idx, ];
         if(ct_structure$struct_index %in% ignored_struct_indices | ct_structure$struct_name %in% ignored_struct_names) {
             #cat(sprintf("Skipping colortable entry with struct_index %d, named '%s'.\n", ct_structure$struct_index, ct_structure$struct_name));
