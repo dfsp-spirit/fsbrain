@@ -366,6 +366,8 @@ vol.overlay.colors.from.activation <- function(volume, colormap_fn=squash::blueo
 #'
 #' @description If overlay_colors are given, the volume will be used as the background, and it will only be visible where overlay_colors has transparency.
 #'
+#' @return a magick image instance
+#'
 #' @family volume visualization
 #'
 #' @export
