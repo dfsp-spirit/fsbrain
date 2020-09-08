@@ -231,6 +231,7 @@ download_fsaverage <- function(accept_freesurfer_license=FALSE) {
                                     c(base_path_fsaverage, 'surf', 'rh.inflated'),
                                     c(base_path_fsaverage, 'surf', 'lh.curv'),
                                     c(base_path_fsaverage, 'surf', 'rh.curv'),
+                                    c(base_path_fsaverage, 'ext', 'FreeSurferColorLUT.txt'),
                                     c(base_path_fsaverage, 'LICENSE')
     );
 
@@ -251,6 +252,7 @@ download_fsaverage <- function(accept_freesurfer_license=FALSE) {
                 'bb4d58289aefcdf8d017e45e531c4807',
                 '3e81598a5ac0546443ec37d0ac477c80',
                 '76ad91d2488de081392313ad5a87fafb',
+                'a3735566ef949bd4d7ed303837cc5e77',  # color LUT
                 'b39610adfe02fdce2ad9d30797c567b3'    # LICENSE
     );
 
@@ -272,6 +274,7 @@ download_fsaverage <- function(accept_freesurfer_license=FALSE) {
                                    'surf/rh.inflated',
                                    'surf/lh.curv',
                                    'surf/rh.curv',
+                                   'ext/FreeSurferColorLUT.txt',
                                    'LICENSE'
     );
     ext_urls = paste(ext_url_subject_part_fsaverage, ext_url_parts_each_subject, sep='');
