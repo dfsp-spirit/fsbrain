@@ -32,6 +32,9 @@ volvis.lightbox(
 
 \item{arrange_single_image}{logical, whether to apply the given arrangement (from parameters `per_row` and `per_column`) even if a single slice (a 2D image) is passed as `volume`. Defaults to FALSE, which prevents that background tiles are added to fill the row up to `per_row` images. This also prevents the border from getting added to a single image, so all you see is the raw image. Set to `TRUE` if you want to arrange even a single image in a row with a border.}
 }
+\value{
+a magick image instance
+}
 \description{
 A lightbox is a single image that holds a set of subimages, arranged in a grid. The images can have a small border or spacing between them. Consecutive subimages will be appear the same row of the grid.
 
