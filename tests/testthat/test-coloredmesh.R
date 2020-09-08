@@ -31,10 +31,14 @@ test_that("A coloredmesh can be created from standard space morph data", {
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     fsbrain::download_optional_data();
     fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
+    fsbrain::download_fsaverage3(accept_freesurfer_license = TRUE);
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
 
     cm = coloredmesh.from.morph.standard(subjects_dir, 'subject1', 'thickness', hemi='lh', fwhm='10');
+
+    # Test with a custom template subject.
+    cm_fsaverage3 = coloredmesh.from.morph.standard(subjects_dir, 'subject1', 'thickness', hemi='lh', fwhm='0', template_subject = 'fsaverage3');
 
     # errors
     expect_error(cm = coloredmesh.from.morph.standard(subjects_dir, 'subject1', 'thickness', hemi='nosuchhemi', fwhm='10')); # invalid hemi

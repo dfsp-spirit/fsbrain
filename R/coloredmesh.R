@@ -190,7 +190,7 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
         if(is.numeric(measure)) {
             morph_data = measure;
         } else {
-            morph_data = subject.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm = fwhm, cortex_only = cortex_only);
+            morph_data = subject.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm = fwhm, cortex_only = cortex_only, template_subject = template_subject);
         }
     }
 
