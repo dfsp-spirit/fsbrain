@@ -20,3 +20,4 @@ Compute simple version of center and radius of 2 meshes.
 \note{
 This function treats the 'lh' and 'rh' meshes as a single mesh, and computes the properties for this combined mesh.
 }
+\keyword{internal}

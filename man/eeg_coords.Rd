@@ -16,8 +16,9 @@ data.frame with one row per electrode, and the following 3 columns: 'label': the
 Internal function to get some demo EEG electrode coordinates. Will be removed from public API. Do not use this.
 }
 \note{
-There are lots of different naming conventions for spherical coordinates, see \url{https://en.wikipedia.org/wiki/Spherical_coordinate_system}.
+There are lots of different naming conventions for spherical coordinates, see https://en.wikipedia.org/wiki/Spherical_coordinate_system.
 }
 \references{
-\url{http://wiki.besa.de/index.php?title=Electrodes_and_Surface_Locations}
+See http://wiki.besa.de/index.php?title=Electrodes_and_Surface_Locations
 }
+\keyword{internal}

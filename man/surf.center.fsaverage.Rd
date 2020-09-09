@@ -18,3 +18,4 @@ The coordinates are for the white surface and in surface space, i.e., based on t
 \seealso{
 \code{\link{surfs.props}}, which was used to compute the returned values.
 }
+\keyword{internal}

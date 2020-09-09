@@ -40,3 +40,4 @@ This function can be used to plot things in FreeSurfer space using spherical coo
 }
 
 }
+\keyword{internal}
