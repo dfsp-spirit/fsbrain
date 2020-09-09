@@ -3,7 +3,7 @@
 
 #' @title Export a coloredmeshes with vertexcolors in PLY format.
 #'
-#' @description Exports coloredmeshes with vertex coloring to standard mesh files in Stanford Triangle (PLY) format. This is very hand for rendering in external standard 3D modeling software like \href{http://blender.org}{Blender}.
+#' @description Exports coloredmeshes with vertex coloring to standard mesh files in Stanford Triangle (PLY) format. This is very hand for rendering in external standard 3D modeling software like Blender.
 #'
 #' @param filepath The export filepath, including file name and extension.
 #'
