@@ -141,6 +141,7 @@ test_that("A brain volume and an overlay can be merged", {
     magick::image_write(lb, path="brain_lightbox.png");
 
     expect_equal(1L, 1L);   # empty tests will be skipped
+    close.all.rgl.windows();
 })
 
 
@@ -174,6 +175,7 @@ test_that("A brain volume can be visualized as a lightbox", {
     }
 
     expect_equal(1L, 1L);   # prevent skipping
+    close.all.rgl.windows();
 })
 
 
@@ -234,12 +236,8 @@ test_that("A brain volume can be visualized as a lightbox colored from the aseg"
     }
 
     expect_equal(1L, 1L);   # prevent skipping
+    close.all.rgl.windows();
 
 })
 
 
-test_that("Volume planes can be retrieved by name", {
-
-})
-
-# vol = get.demo.volume(bg=0L);

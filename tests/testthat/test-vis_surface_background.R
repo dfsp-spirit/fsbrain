@@ -15,6 +15,7 @@ test_that("A mean curvature color layer can be loaded", {
     expect_equal(length(bgcol$rh), num_verts_subject1_rh);
 
     vis.color.on.subject(subjects_dir, subject_id, bgcol$lh, bgcol$rh, surface="inflated");
+    close.all.rgl.windows();
 })
 
 
@@ -94,6 +95,7 @@ test_that("An outline layer based on an annotation can be created", {
     expect_equal(length(unique(outline_layer$rh)), 35L);
 
     vis.color.on.subject(subjects_dir, 'subject1', outline_layer$lh, outline_layer$rh, surface = "inflated");
+    close.all.rgl.windows();
 })
 
 

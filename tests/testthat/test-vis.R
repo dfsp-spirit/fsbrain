@@ -29,6 +29,8 @@ test_that("We can visualize morphometry data from different views.", {
     expect_error(vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', rgloptions = rglot(), draw_colorbar = T, views = c("t4"), draw_colorbar = "dunno")); # invalid draw_colorbar setting in t4 view
     expect_error(vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', rgloptions = rglot(), draw_colorbar = T, views = c("t9"), draw_colorbar = "dunno")); # invalid draw_colorbar setting in t9 view
     expect_error(vis.subject.morph.native(subjects_dir, subject_id, measure, 'both', rgloptions = rglot(), draw_colorbar = T, views = c("sd_laternal_lh"), draw_colorbar = "dunno")); # invalid draw_colorbar setting in sd_ view
+
+    close.all.rgl.windows();
 })
 
 
@@ -44,6 +46,7 @@ test_that("We can visualize annotation atlas data.", {
     vis.subject.annot(subjects_dir, subject_id, 'aparc', 'both', rgloptions = rglot());
 
     expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
+    close.all.rgl.windows();
 })
 
 
@@ -86,6 +89,7 @@ test_that("We can visualize arbitrary data on the fsaverage surfaces if availabl
     vis.data.on.fsaverage(morph_data_lh=morph_data_lh, morph_data_rh=morph_data_rh, rgloptions = rglot(), draw_colorbar = T);
 
     expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
+    close.all.rgl.windows();
 })
 
 
@@ -114,6 +118,7 @@ test_that("We can visualize one value per atlas region on a subject.", {
     vis.data.on.subject(subjects_dir, subject_id, morph_data2$lh, morph_data2$rh);
 
     expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
+    close.all.rgl.windows();
 })
 
 
@@ -147,6 +152,7 @@ test_that("We can visualize one value per Desikan atlas region on fsaverage.", {
     # freesurferformats::write.fs.morph("~/rh.regiondata.mgz", morph_data$rh);
 
     expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
+    close.all.rgl.windows();
 })
 
 
@@ -178,6 +184,7 @@ test_that("We can visualize a subset of the regions of the Desikan atlas on fsav
     # freesurferformats::write.fs.morph("~/rh.regiondata.mgz", morph_data$rh);
 
     expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
+    close.all.rgl.windows();
 })
 
 
@@ -195,6 +202,7 @@ test_that("We can visualize clusters on fsaverage with a background.", {
     vis.symmetric.data.on.subject(subjects_dir, subject_id, lh_clust, rh_clust, bg="curv");
 
     expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
+    close.all.rgl.windows();
 })
 
 
@@ -216,6 +224,7 @@ test_that("We can visualize arbitrary data on a subjects surface using a single 
     vis.symmetric.data.on.subject(subjects_dir, subject_id, morph_data_both=morph_data_both, rgloptions = rglot(), draw_colorbar = T);
 
     expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
+    close.all.rgl.windows();
 })
 
 
@@ -278,6 +287,8 @@ test_that("We can visualize meshes using vis.fs.surface as expected.", {
     # Errors should be thrown if parameters make no sense
     expect_error(vis.fs.surface(list('lh'=sf_lh, 'rh'=sf_rh), per_vertex_data=list('lh'=morph_lh, 'rh'=morph_rh), hemi='lh')); # hemilist passed for surface but hemi is not both
     expect_error(vis.fs.surface(sf_lh, per_vertex_data=list('lh'=morph_lh, 'rh'=morph_rh), hemi='lh')); # hemilist passed for per_vertex_data but hemi is not both
+
+    close.all.rgl.windows();
 })
 
 

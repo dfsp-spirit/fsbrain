@@ -27,7 +27,7 @@ test_that("A brain volume or parts of it can be rendered in voxel mode", {
 
     render_animation = FALSE;
     if(render_animation) {
-        rgloptions=list("windowRect"=c(80,80,1200,1200));     # the first 2 entries give the position on screen, the rest defines resolution as width, height in px
+        rgloptions=list("windowRect"=c(80,80,800,800));
         rglactions = list("movie"="vox_ventricles_rot");
         vislayout.from.coloredmeshes(coloredvoxels, view_angles="sr", rgloptions = rgloptions, rglactions = rglactions);
     }
@@ -104,7 +104,7 @@ test_that("A brain volume segmentation can be rendered with correct colors from 
 
     render_animation = FALSE;
     if(render_animation) {
-        rgloptions=list("windowRect"=c(80,80,1200,1200));     # the first 2 entries give the position on screen, the rest defines resolution as width, height in px
+        rgloptions=list("windowRect"=c(80,80,800,800));
         rglactions = list("movie"="vox_aseg_rot");
         vislayout.from.coloredmeshes(all_regions_coloredvoxels, view_angles="sr", rgloptions = rgloptions, rglactions = rglactions);
     }
