@@ -26,7 +26,7 @@
 #'
 #' @importFrom rgl translate3d
 #'
-#' @export
+#' @keywords internal
 sph2fs <- function(lon, lat, radius = surf.radius.fsaverage(), center=surf.center.fsaverage(), deg = TRUE) {
     if(requireNamespace('sphereplot', quietly = TRUE)) {
         cartesian_coords = sphereplot::sph2car(lon, lat, radius=radius, deg=deg);
@@ -43,11 +43,11 @@ sph2fs <- function(lon, lat, radius = surf.radius.fsaverage(), center=surf.cente
 #'
 #' @return data.frame with one row per electrode, and the following 3 columns: 'label': the electrode name, 'theta': the azimuth in degrees, 'phi': the latitude in degrees.
 #'
-#' @references \url{http://wiki.besa.de/index.php?title=Electrodes_and_Surface_Locations}
+#' @references See http://wiki.besa.de/index.php?title=Electrodes_and_Surface_Locations
 #'
-#' @note There are lots of different naming conventions for spherical coordinates, see \url{https://en.wikipedia.org/wiki/Spherical_coordinate_system}.
+#' @note There are lots of different naming conventions for spherical coordinates, see https://en.wikipedia.org/wiki/Spherical_coordinate_system.
 #'
-#' @export
+#' @keywords internal
 eeg_coords <- function(label_subset=NULL) {
 
     # Fp1 and Fp2 are near the left and right eyebrow
@@ -84,7 +84,7 @@ eeg_coords <- function(label_subset=NULL) {
 #' @note The x, y and z axes are plotted in red, green, and blue, respectively.
 #'
 #' @importFrom rgl rgl.lines
-#' @export
+#' @keywords internal
 rgl.coord.lines <- function(len = 100) {
     len = recycle(len, 3L);
     rgl::rgl.lines(x=c(0, len[1]), y=c(0,0), z=c(0,0), col="red");
@@ -104,7 +104,7 @@ rgl.coord.lines <- function(len = 100) {
 #'
 #' @seealso \code{\link{surfs.props}}, which was used to compute the returned values.
 #'
-#' @export
+#' @keywords internal
 surf.radius.fsaverage <- function(maxr = TRUE) {
     radii_xyz = c(66.22490, 84.01643, 59.90088);
     if(maxr) {
@@ -121,7 +121,7 @@ surf.radius.fsaverage <- function(maxr = TRUE) {
 #' @note The coordinates are for the white surface and in surface space, i.e., based on the raw values stored in the `fsaverae/surf/lh.white` and `fsaverage/surf/rh.white` files, without applying any transformation.
 #'
 #' @seealso \code{\link{surfs.props}}, which was used to compute the returned values.
-#' @export
+#' @keywords internal
 surf.center.fsaverage <- function() {
     return(c(0.5622063, -18.4871483, 16.3729954));
 }
@@ -137,7 +137,7 @@ surf.center.fsaverage <- function() {
 #'
 #' @note This function treats the 'lh' and 'rh' meshes as a single mesh, and computes the properties for this combined mesh.
 #'
-#' @export
+#' @keywords internal
 surfs.props <- function(lh, rh) {
     if(is.character(lh)) {
         lh = freesurferformats::read.fs.surface(lh);
