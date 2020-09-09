@@ -275,6 +275,7 @@ vis.rotated.coloredmeshes <- function(renderables, rotation_angle, x, y, z, styl
     if(draw_colorbar) {
         draw.colorbar(renderables);
     }
+    return(invisible(NULL));
 }
 
 
