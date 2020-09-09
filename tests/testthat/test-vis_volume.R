@@ -26,10 +26,12 @@ test_that("A brain volume can be turned into an animation", {
     magick::image_write(magick::image_animate(brain_stack, fps = 20), sprintf("MRI_axis%d.gif", imgplane));
 
     expect_equal(1L, 1L);  # empty tests will be skipped
+    close.all.rgl.windows();
 })
 
 
 test_that("The axis-aligned bounding box of a 3D brain image can be computed", {
+    testthat::skip_on_cran(); # skip: leads to memory errors ('cannot allocate vector of size XX MB') on CRAN.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -45,6 +47,7 @@ test_that("The axis-aligned bounding box of a 3D brain image can be computed", {
     # Now select the inner foreground volume as a new image:
     foreground = brain[bbox$from[1]:bbox$to[1], bbox$from[2]:bbox$to[2], bbox$from[3]:bbox$to[3]];
     expect_equal(dim(foreground), c(135L, 153L, 178L));
+    close.all.rgl.windows();
 })
 
 
@@ -146,7 +149,7 @@ test_that("A brain volume and an overlay can be merged", {
 
 
 test_that("A brain volume can be visualized as a lightbox", {
-
+    testthat::skip_on_cran(); # skip: leads to memory errors ('cannot allocate vector of size XX MB') on CRAN.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");

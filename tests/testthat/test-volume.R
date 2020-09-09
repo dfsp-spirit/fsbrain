@@ -1,4 +1,5 @@
 test_that("A brain volume for a single subject can be loaded", {
+    testthat::skip_on_cran(); # skip: leads to memory errors ('cannot allocate vector of size XX MB') on CRAN.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -106,6 +107,7 @@ test_that("Voxel transform can be computed", {
 
 
 test_that("The loaded brain volume is in the correct orientation and the fs CRS to R CRS transformation works", {
+    testthat::skip_on_cran(); # skip: leads to memory errors ('cannot allocate vector of size XX MB') on CRAN.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
