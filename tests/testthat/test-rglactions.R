@@ -1,5 +1,6 @@
 
 test_that("Hemis can be shifted apart using rglactions for non-overlapping rendering.", {
+    testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
 
     fsbrain::download_optional_data();

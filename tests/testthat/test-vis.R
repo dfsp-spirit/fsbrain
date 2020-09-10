@@ -2,6 +2,7 @@
 # You can run them by copying & pasting the code into an R session. Treat it as examples.
 
 test_that("We can visualize morphometry data from different views.", {
+    testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires X11.");
 
@@ -35,6 +36,7 @@ test_that("We can visualize morphometry data from different views.", {
 
 
 test_that("We can visualize annotation atlas data.", {
+    testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires X11.");
 
@@ -51,6 +53,7 @@ test_that("We can visualize annotation atlas data.", {
 
 
 test_that("We can visualize arbitrary data on a subjects surface.", {
+    testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires X11.");
 
@@ -71,6 +74,7 @@ test_that("We can visualize arbitrary data on a subjects surface.", {
 
 
 test_that("We can visualize arbitrary data on the fsaverage surfaces if available.", {
+    testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires X11.");
 
@@ -123,6 +127,7 @@ test_that("We can visualize one value per atlas region on a subject.", {
 
 
 test_that("We can visualize one value per Desikan atlas region on fsaverage.", {
+    testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires X11.");
 
@@ -157,6 +162,7 @@ test_that("We can visualize one value per Desikan atlas region on fsaverage.", {
 
 
 test_that("We can visualize a subset of the regions of the Desikan atlas on fsaverage.", {
+    testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.has.fsaverage(), "This test requires fsaverage.");
 
@@ -189,6 +195,7 @@ test_that("We can visualize a subset of the regions of the Desikan atlas on fsav
 
 
 test_that("We can visualize clusters on fsaverage with a background.", {
+    testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.has.freesurfer() & box.has.fsaverage(), "This test requires the full fsaverage subject with curv data.");
 
@@ -249,6 +256,7 @@ test_that("We can retrieve vertex counts for a subject.", {
 
 
 test_that("We can visualize meshes using vis.fs.surface as expected.", {
+    testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
 
     fsbrain::download_optional_data();
