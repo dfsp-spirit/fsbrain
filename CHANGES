@@ -1,7 +1,7 @@
 fsbrain Changes
 ===============
 
-Version 0.3.1
+Version 0.4.0
 -------------
 - Support passing a single data vector for both hemis combined to vis.data.on.subject and vis.symmetric.data.on.subject
 - Add subject.num.verts function to easily retrieve the vertex counts of the meshes for a subject
