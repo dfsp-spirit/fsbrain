@@ -132,3 +132,18 @@ close.all.rgl.windows <- function() {
     rgl::rgl.close();
   }
 }
+
+
+#' @title Check whether currently running R version is less than the given one.
+rversion.less.than <- function(vmajor, vminor) {
+  if(as.numeric(R.version$major) < vmajor) {
+    return(TRUE);
+  }
+  if(as.numeric(R.version$major) == vmajor) {
+    if(as.numeric(R.version$minor) < vminor) {
+      return(TRUE);
+    }
+  }
+  return(FALSE);
+}
+
