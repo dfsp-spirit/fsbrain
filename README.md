@@ -113,37 +113,13 @@ Note: The file LICENSE in this repository is a CRAN license template only (as re
 
 ## Citation and Publications
 
-A paper is in the making. For now, cite the R package. You can generate the citation for the version you use by typing the following command in R:
+If you use fsbrain, please cite our paper:
 
-```
-citation("fsbrain")
-```
+* The preprint is available on biorxiv: [T. Schaefer, C. Ecker: fsbrain: an R package for the visualization of structural neuroimaging data](https://doi.org/10.1101/2020.09.18.302935). [direct link to PDF at biorxiv](https://www.biorxiv.org/content/10.1101/2020.09.18.302935v1.full.pdf)
 
-This will ouput something like this (but for the version you actually used, which is important for reproducibility):
-```
+Other materials related to fsbrain:
 
-To cite package ‘fsbrain’ in a publications use:
-
-  Tim Schäfer (2020). fsbrain: Managing and Visualizing Brain Surface Data. R package version
-  0.3.0. https://CRAN.R-project.org/package=fsbrain
-
-
-A BibTeX entry for LaTeX users is
-
-
-  @Manual{,
-    title = {fsbrain: Managing and Visualizing Brain Surface Data},
-    author = {Tim Schäfer},
-    year = {2020},
-    note = {R package version 0.3.0},
-    url = {https://CRAN.R-project.org/package=fsbrain},
-    doi = {10.5281/zenodo.3559816},
-  }
-```
-
-The Digital Object Identifier (DOI) for fsbrain is: [10.5281/zenodo.3559816](https://dx.doi.org/10.5281/zenodo.3559816). Note that this DOI always points to the latest version, so be sure to still include the package version in the citation.
-
-A poster of *fsbrain* has been presented at INSAR 2020 Annual Meeting: [Abstract](https://insar.confex.com/insar/2020/meetingapp.cgi/Paper/33181), [ePoster viewer](https://insar.confex.com/insar/2020/techdemo/eposter.cgi?eposterid=227), [PDF download](https://github.com/dfsp-spirit/fsbrain_gallery/raw/master/extra_materials/Poster_IMFAR2020_fsbrain.pdf)
+* A poster of *fsbrain* has been presented at INSAR 2020 Annual Meeting: [Abstract](https://insar.confex.com/insar/2020/meetingapp.cgi/Paper/33181), [ePoster viewer](https://insar.confex.com/insar/2020/techdemo/eposter.cgi?eposterid=227), [PDF download](https://github.com/dfsp-spirit/fsbrain_gallery/raw/master/extra_materials/Poster_IMFAR2020_fsbrain.pdf)
 
 ## Visualization examples
 
