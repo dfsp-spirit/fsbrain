@@ -7,9 +7,9 @@
 limit_fun_na(vmin, vmax)
 }
 \arguments{
-\item{vmin}{numerical scalar, the lower border. Data values below this will be set to vmin in the return value.}
+\item{vmin}{numerical scalar, the lower border. Data values below this will be set to `NA` in the return value.}
 
-\item{vmax}{numerical scalar, the upper border. Data values above this will be set to vmax in the return value.}
+\item{vmax}{numerical scalar, the upper border. Data values above this will be set to `NA` in the return value.}
 }
 \value{
 a function that takes as argument the data, and clips it to the requested range. I.e., values outside the range will be set to `NA`. Designed to be used as \code{rglactions$trans_fun} in vis functions, to limit the colorbar and data range.
@@ -23,4 +23,7 @@ This is useful for thresholding stuff like t-value maps. All values outside the 
 \examples{
    rglactions = list("trans_fun"=limit_fun_na(2,3));
 
+}
+\seealso{
+\code{\link{limit_fun_na_inside}} which will set the values inside the range to `NA`.
 }
