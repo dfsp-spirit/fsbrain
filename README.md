@@ -13,6 +13,10 @@ The *fsbrain* R package provides a well-tested and consistent interface to neuro
 The plots produced by *fsbrain* can be integrated into R notebooks or written to high-quality image files, ready for publication. The [rgl](https://CRAN.R-project.org/package=rgl) renderer used by *fsbrain* provides fast, hardware-accelerated rendering based on the OpenGL standard.
 
 
+## News
+
+* 2020-09-20: The preprint of our paper [T. Schaefer, C. Ecker: fsbrain: an R package for the visualization of structural neuroimaging data](https://doi.org/10.1101/2020.09.18.302935)' is now available on biorxiv.
+
 ## Installation
 
 **This software is for research puposes only and shall not be used for any clinical use.**
