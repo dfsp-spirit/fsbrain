@@ -289,7 +289,7 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
 #' @return as fs.coloredmesh instance
 #'
 #' @export
-`coloredmesh.from.preloaded.data` <- function(fs_surface, morph_data=NULL, col=NULL, hemi='lh', makecmap_options=mkco.seq()) {
+coloredmesh.from.preloaded.data <- function(fs_surface, morph_data=NULL, col=NULL, hemi='lh', makecmap_options=mkco.seq()) {
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
@@ -386,12 +386,13 @@ coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surfac
 }
 
 
-
 #' @title Create a coloredmesh from a label.
 #'
 #' @inheritParams coloredmesh.from.morph.native
 #'
 #' @param label string or vector of integers. If a string, the name of the label file, without the hemi part (if any), but including the '.label' suffix. E.g., 'cortex.label' for '?h.cortex.label'. Alternatively, the already loaded label data as a vector of integers.
+#'
+#' @param binary logical, whether to treat the label as binary
 #'
 #' @return coloredmesh. A named list with entries: "mesh" the \code{\link{tmesh3d}} mesh object. "col": the mesh colors. "render", logical, whether to render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
@@ -400,7 +401,7 @@ coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surfac
 #' @export
 #' @importFrom squash cmap makecmap rainbow2
 #' @importFrom rgl tmesh3d rgl.open wire3d
-coloredmesh.from.label <- function(subjects_dir, subject_id, label, hemi, surface="white", colormap=NULL, makecmap_options=list('colFn'=squash::rainbow2)) {
+coloredmesh.from.label <- function(subjects_dir, subject_id, label, hemi, surface="white", colormap=NULL, makecmap_options=list('colFn'=squash::rainbow2), binary = TRUE) {
 
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
@@ -415,13 +416,27 @@ coloredmesh.from.label <- function(subjects_dir, subject_id, label, hemi, surfac
     }
 
     if(is.character(label)) {
-        label_data = subject.label(subjects_dir, subject_id, label, hemi);
+        if(binary) {
+            label_data = subject.label(subjects_dir, subject_id, label, hemi);
+        } else {
+            label_data = subject.label(subjects_dir, subject_id, label, hemi, full = TRUE);
+        }
     } else {
         label_data = label;
     }
 
-    mask = mask.from.labeldata.for.hemi(list(label_data), nrow(surface_mesh$vertices));
-    return(coloredmesh.from.mask(subjects_dir, subject_id, mask, hemi, surface=surface, makecmap_options=makecmap_options, surface_data=surface_mesh));
+    if(binary) {
+        mask = mask.from.labeldata.for.hemi(list(label_data), nrow(surface_mesh$vertices));
+        return(coloredmesh.from.mask(subjects_dir, subject_id, mask, hemi, surface=surface, makecmap_options=makecmap_options, surface_data=surface_mesh));
+    } else {
+        if(freesurferformats::is.fs.label(label_data)) {
+            morph_data = rep(NA, subject.num.verts(subjects_dir, subject_id, surface = surface, hemi = hemi));
+            morph_data[label_data$vertexdata$vertex_index] = label_data$vertexdata$value;
+            return(coloredmesh.from.preloaded.data(surface_mesh, morph_data = morph_data));
+        } else {
+            stop("Parameter 'label' must be a full fs.label instance or a path if 'binary' is TRUE.");
+        }
+    }
 }
 
 

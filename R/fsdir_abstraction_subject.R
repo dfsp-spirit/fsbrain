@@ -473,6 +473,8 @@ subject.filepath.any <- function(subjects_dir, subject_id, relative_path_parts, 
 #'
 #' @param return_one_based_indices logical. Whether the indices should be 1-based. Indices are stored zero-based in the file, but R uses 1-based indices. Defaults to TRUE, which means that 1 will be added to all indices read from the file before returning them.
 #'
+#' @param full logical, whether to return the full label structure instead of only the vertex indices.
+#'
 #' @return integer vector with label data: the list of vertex indices in the label. See 'return_one_based_indices' for important information. If parameter `hemi` is set to `both`, a named list with entries `lh` and `rh` is returned, and the values of are the respective labels.
 #'
 #' @family label data functions
@@ -485,7 +487,7 @@ subject.filepath.any <- function(subjects_dir, subject_id, relative_path_parts, 
 #' }
 #'
 #' @export
-subject.label <- function(subjects_dir, subject_id, label, hemi, return_one_based_indices=TRUE) {
+subject.label <- function(subjects_dir, subject_id, label, hemi, return_one_based_indices=TRUE, full = FALSE) {
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh', or 'both' but is '%s'.\n", hemi));
@@ -507,7 +509,7 @@ subject.label <- function(subjects_dir, subject_id, label, hemi, return_one_base
     }
 
     labelfile = subject.filepath.any(subjects_dir, subject_id, c("label", label), hemi=hemi, file_tag="label", warn_if_nonexistent=TRUE);
-    return(freesurferformats::read.fs.label(labelfile, return_one_based_indices=return_one_based_indices));
+    return(freesurferformats::read.fs.label(labelfile, return_one_based_indices=return_one_based_indices, full = full));
 }
 
 #' @title Create a binary mask from labels.
