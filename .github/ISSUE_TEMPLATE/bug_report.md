@@ -20,8 +20,8 @@ A clear and concise description of what you expected to happen.
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
-**Environmnt:**
- - OS: [e.g. iOS]
+**Environment:**
+ - Operating System [e.g. MacOS10.13, or Ubuntu 20.04]:
  - R version (output of `R --version` in system shell):
  - fsbrain version (output of `packageVersion('fsbrain')` in R):
 
