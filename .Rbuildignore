@@ -18,3 +18,5 @@ fsbrain_group_annot\.png$
 ^appveyor\.yml$
 web/
 ^doc$
+^\.github$
+
