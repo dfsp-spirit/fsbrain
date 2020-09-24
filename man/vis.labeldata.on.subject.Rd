@@ -15,7 +15,8 @@ vis.labeldata.on.subject(
   rgloptions = rglo(),
   rglactions = list(),
   draw_colorbar = FALSE,
-  makecmap_options = list(colFn = label.colFn.inv)
+  makecmap_options = list(colFn = label.colFn.inv),
+  ...
 )
 }
 \arguments{
