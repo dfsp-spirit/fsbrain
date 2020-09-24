@@ -11,7 +11,8 @@ coloredmesh.from.label(
   hemi,
   surface = "white",
   colormap = NULL,
-  makecmap_options = list(colFn = squash::rainbow2)
+  makecmap_options = list(colFn = squash::rainbow2),
+  binary = TRUE
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ coloredmesh.from.label(
 \item{colormap}{a colormap function. See the squash package for some colormaps. Defaults to \code{\link{jet}}.}
 
 \item{makecmap_options}{named list of parameters to pass to \code{\link{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.}
+
+\item{binary}{logical, whether to treat the label as binary}
 }
 \value{
 coloredmesh. A named list with entries: "mesh" the \code{\link{tmesh3d}} mesh object. "col": the mesh colors. "render", logical, whether to render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'.

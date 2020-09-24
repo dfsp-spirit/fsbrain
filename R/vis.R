@@ -248,7 +248,6 @@ vis.subject.label <- function(subjects_dir, subject_id, label, hemi, surface="wh
 
 
 
-
 #' @title Visualize arbitrary data on the surface of any subject.
 #'
 #' @description Creates a surface mesh, applies a colormap transform the morphometry data values into colors, and renders the resulting colored mesh in an interactive window. If hemi is 'both', the data is rendered for the whole brain.
@@ -553,6 +552,8 @@ vis.mask.on.subject <- function(subjects_dir, vis_subject_id, mask_lh, mask_rh, 
 #'
 #' @param rh_labeldata integer vector of vertex indices for the right hemisphere
 #'
+#' @param ... extra arguments to pass to \code{\link{coloredmesh.from.label}}.
+#'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
 #' @examples
@@ -581,7 +582,7 @@ vis.mask.on.subject <- function(subjects_dir, vis_subject_id, mask_lh, mask_rh, 
 #'
 #' @importFrom squash rainbow2
 #' @export
-vis.labeldata.on.subject <- function(subjects_dir, vis_subject_id, lh_labeldata, rh_labeldata, surface="white", colormap=NULL, views=c('t4'), rgloptions=rglo(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=label.colFn.inv)) {
+vis.labeldata.on.subject <- function(subjects_dir, vis_subject_id, lh_labeldata, rh_labeldata, surface="white", colormap=NULL, views=c('t4'), rgloptions=rglo(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=label.colFn.inv), ...) {
 
     if(is.null(lh_labeldata) && is.null(rh_labeldata)) {
         stop(sprintf("Only one of lh_labeldata or rh_labeldata can be NULL.\n"));
@@ -592,11 +593,11 @@ vis.labeldata.on.subject <- function(subjects_dir, vis_subject_id, lh_labeldata,
     coloredmeshes = list();
 
     if(! is.null(lh_labeldata)) {
-        coloredmeshes$lh = coloredmesh.from.label(subjects_dir, vis_subject_id, lh_labeldata, 'lh', surface=surface, makecmap_options=makecmap_options);
+        coloredmeshes$lh = coloredmesh.from.label(subjects_dir, vis_subject_id, lh_labeldata, 'lh', surface=surface, makecmap_options=makecmap_options, ...);
     }
 
     if(! is.null(rh_labeldata)) {
-        coloredmeshes$rh = coloredmesh.from.label(subjects_dir, vis_subject_id, rh_labeldata, 'rh', surface=surface, makecmap_options=makecmap_options);
+        coloredmeshes$rh = coloredmesh.from.label(subjects_dir, vis_subject_id, rh_labeldata, 'rh', surface=surface, makecmap_options=makecmap_options, ...);
     }
 
     if(hasIn(rglactions, c('no_vis'))) {

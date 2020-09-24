@@ -1,0 +1,13 @@
+citHeader("To cite fsbrain in publications use:")
+
+citEntry(
+  entry        = "misc",
+  title        = "fsbrain: an {R} package for the visualization of structural neuroimaging data",
+  author       = personList(as.person("Tim Schaefer"), as.person("Christine Ecker")),
+  year         = "2020",
+  url          = "https://www.biorxiv.org/content/10.1101/2020.09.18.302935v1",
+  doi          = "10.1101/2020.09.18.302935",
+  textVersion  = paste("Tim Schaefer, Christine Ecker (2020).",
+                     "fsbrain: an R package for the visualization of structural neuroimaging data.",
+                     "bioRxiv doi: 10.1101/2020.09.18.302935")
+)

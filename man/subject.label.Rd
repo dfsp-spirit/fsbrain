@@ -9,7 +9,8 @@ subject.label(
   subject_id,
   label,
   hemi,
-  return_one_based_indices = TRUE
+  return_one_based_indices = TRUE,
+  full = FALSE
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ subject.label(
 \item{hemi}{string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the label data files to be loaded. For 'both', see the information on the return value.}
 
 \item{return_one_based_indices}{logical. Whether the indices should be 1-based. Indices are stored zero-based in the file, but R uses 1-based indices. Defaults to TRUE, which means that 1 will be added to all indices read from the file before returning them.}
+
+\item{full}{logical, whether to return the full label structure instead of only the vertex indices.}
 }
 \value{
 integer vector with label data: the list of vertex indices in the label. See 'return_one_based_indices' for important information. If parameter `hemi` is set to `both`, a named list with entries `lh` and `rh` is returned, and the values of are the respective labels.

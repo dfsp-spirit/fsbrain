@@ -117,13 +117,33 @@ Note: The file LICENSE in this repository is a CRAN license template only (as re
 
 ## Citation and Publications
 
-If you use fsbrain, please cite our paper:
+You can generate the citation for [our fsbrain paper](https://doi.org/10.1101/2020.09.18.302935) by typing the following command in R:
 
-* The preprint is available on biorxiv: [T. Schaefer, C. Ecker: fsbrain: an R package for the visualization of structural neuroimaging data](https://doi.org/10.1101/2020.09.18.302935). [direct link to PDF at biorxiv](https://www.biorxiv.org/content/10.1101/2020.09.18.302935v1.full.pdf)
+```
+citation("fsbrain")
+```
+
+This currently outputs:
+
+```
+To cite fsbrain in publications use:
+
+  Tim Schaefer, Christine Ecker (2020). fsbrain: an R package for the visualization of structural neuroimaging data. bioRxiv doi: 10.1101/2020.09.18.302935
+
+A BibTeX entry for LaTeX users is
+
+  @Misc{,
+    title = {fsbrain: an {R} package for the visualization of structural neuroimaging data},
+    author = {Tim Schaefer and Christine Ecker},
+    year = {2020},
+    url = {https://www.biorxiv.org/content/10.1101/2020.09.18.302935v1},
+    doi = {10.1101/2020.09.18.302935},
+  }
+```
 
 Other materials related to fsbrain:
 
-* A poster of *fsbrain* has been presented at INSAR 2020 Annual Meeting: [Abstract](https://insar.confex.com/insar/2020/meetingapp.cgi/Paper/33181), [ePoster viewer](https://insar.confex.com/insar/2020/techdemo/eposter.cgi?eposterid=227), [PDF download](https://github.com/dfsp-spirit/fsbrain_gallery/raw/master/extra_materials/Poster_IMFAR2020_fsbrain.pdf)
+* A poster on *fsbrain* has been presented at INSAR 2020 Annual Meeting: [Abstract](https://insar.confex.com/insar/2020/meetingapp.cgi/Paper/33181), [ePoster viewer](https://insar.confex.com/insar/2020/techdemo/eposter.cgi?eposterid=227), [PDF download](https://github.com/dfsp-spirit/fsbrain_gallery/raw/master/extra_materials/Poster_IMFAR2020_fsbrain.pdf)
 
 ## Visualization examples
 
@@ -163,3 +183,16 @@ To see a combination of example figures and the code used to produce them, you s
 Please refer to [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 If you have any question, suggestion or comment on fsbrain, please [open an issue](https://github.com/dfsp-spirit/fsbrain/issues). If you want to contact me via email, please use the maintainer email address listed on the [CRAN webpage for fsbrain](https://cran.r-project.org/package=fsbrain).
+
+
+## Related R packages
+
+Packages similar to fsbrain:
+
+* [ggseg](https://github.com/LCBC-UiO/ggseg) by Athanasia Mowinckel and Didac Vidal-Piñeiro: Plotting of atlas-based neuroimaging data in R.
+* [cerebroviz](https://github.com/ethanbahl/cerebroViz) by Ethan Bahl: Data mapping tool for visualizing spatiotemporal data in the brain.
+
+Packages to load neuroimaging data. These packages are used by fsbrain to load data for visualization.
+
+* [oro.nifti](https://github.com/muschellij2/oro.nifti) by Brandon Witcher et al. : Loading and manipulation of brain volumes from NIFTI files. Comes with some 2D visualization functions.
+* [freesurferformats](https://github.com/dfsp-spirit/freesurferformats) by Tim Schäfer (me): Loading writing various neuroimaging file formats and general mesh file formats, with a focus on FreeSurfer formats.
