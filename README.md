@@ -117,9 +117,29 @@ Note: The file LICENSE in this repository is a CRAN license template only (as re
 
 ## Citation and Publications
 
-If you use fsbrain, please cite our paper:
+You can generate the citation for [our fsbrain paper](https://doi.org/10.1101/2020.09.18.302935) by typing the following command in R:
 
-* The preprint is available on biorxiv: [T. Schaefer, C. Ecker: fsbrain: an R package for the visualization of structural neuroimaging data](https://doi.org/10.1101/2020.09.18.302935). [direct link to PDF at biorxiv](https://www.biorxiv.org/content/10.1101/2020.09.18.302935v1.full.pdf)
+```
+citation("fsbrain")
+```
+
+This currently outputs:
+
+```
+To cite fsbrain in publications use:
+
+  Tim Schaefer, Christine Ecker (2020). fsbrain: an R package for the visualization of structural neuroimaging data. bioRxiv doi: 10.1101/2020.09.18.302935
+
+A BibTeX entry for LaTeX users is
+
+  @Misc{,
+    title = {fsbrain: an {R} package for the visualization of structural neuroimaging data},
+    author = {Tim Schaefer and Christine Ecker},
+    year = {2020},
+    url = {https://www.biorxiv.org/content/10.1101/2020.09.18.302935v1},
+    doi = {10.1101/2020.09.18.302935},
+  }
+```
 
 Other materials related to fsbrain:
 
