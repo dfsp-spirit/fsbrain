@@ -192,7 +192,9 @@ Packages similar to fsbrain:
 * [ggseg](https://github.com/LCBC-UiO/ggseg) by Athanasia Mowinckel and Didac Vidal-Piñeiro: Plotting of atlas-based neuroimaging data in R.
 * [cerebroviz](https://github.com/ethanbahl/cerebroViz) by Ethan Bahl: Data mapping tool for visualizing spatiotemporal data in the brain.
 
-Packages to load neuroimaging data. These packages are used by fsbrain to load data for visualization.
+Packages used by fsbrain:
 
-* [oro.nifti](https://github.com/muschellij2/oro.nifti) by Brandon Witcher et al. : Loading and manipulation of brain volumes from NIFTI files. Comes with some 2D visualization functions.
-* [freesurferformats](https://github.com/dfsp-spirit/freesurferformats) by Tim Schäfer (me): Loading writing various neuroimaging file formats and general mesh file formats, with a focus on FreeSurfer formats.
+* [rgl](https://CRAN.R-project.org/package=rgl) by Daniel Adler, Duncan Murdoch et al.: OpenGL-based mesh renderer.
+* [oro.nifti](https://github.com/muschellij2/oro.nifti) by Brandon Witcher et al. : Loading and manipulation of brain volumes from NIFTI v1 files.
+* [freesurferformats](https://github.com/dfsp-spirit/freesurferformats) by Tim Schäfer (me): Loading and writing various neuroimaging file formats and general mesh file formats, with a focus on FreeSurfer formats.
+* [gifti](https://github.com/muschellij2/gifti/) and [cifti](https://github.com/muschellij2/cifti/) by John Muschelli: Read GIFTI and CIFTI format files.
