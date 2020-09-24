@@ -552,6 +552,8 @@ vis.mask.on.subject <- function(subjects_dir, vis_subject_id, mask_lh, mask_rh, 
 #'
 #' @param rh_labeldata integer vector of vertex indices for the right hemisphere
 #'
+#' @param ... extra arguments to pass to \code{\link{coloredmesh.from.label}}.
+#'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
 #' @examples
