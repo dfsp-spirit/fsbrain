@@ -17,13 +17,13 @@ Imports:
     rgl,
     squash,
     fields,
-    data.table
+    data.table,
+    magick
 Suggests:
     knitr,
     rmarkdown,
     testthat (>= 2.1.0),
     sphereplot (>= 1.5),
-    magick,
     misc3d,
     viridis,
     RColorBrewer
