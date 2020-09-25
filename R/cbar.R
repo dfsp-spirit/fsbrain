@@ -294,16 +294,9 @@ vis.colortable.legend <- function(colortable, ncols=1L, plot_struct_index=TRUE) 
 #' @keywords internal
 can.plot.colorbar <- function(combined_data_range, makecmap_options) {
     if(is.null(combined_data_range) | is.null(makecmap_options)) {
-        if(is.null(combined_data_range)) {
-            print("combined_data_range NULL");
-        }
-        if(is.null(makecmap_options)) {
-            print("makecmap_options NULL");
-        }
         return(FALSE);
     }
     if( ! is.function(makecmap_options$colFn)) {
-        print("makecmap_options$colFn not a func");
         return(FALSE);
     }
     return(TRUE);
