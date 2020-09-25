@@ -55,7 +55,7 @@ sfb = list('vertices'=t(bd$vertices), faces=t(bd$faces)+1L);
 class(sfb) = c(class(sfb), 'fs.surface');
 
 # show it with fsbrain
-fsbrain::vis.fs.surface(sfb)
+fsbrain::vis.fs.surface(sfb);
 ```
 
 If the DFS surface file contains vertex colors, labels and/or morphometry data, you can display that as well:
@@ -73,7 +73,7 @@ fsbrain::vis.fs.surface(sfb_thickness, col=rgb(t(bd_thickness$vColor)));
 fsbrain::vis.fs.surface(sfb_thickness, per_vertex_data = bd_thickness$labels);  
 
 # Display raw morphometry data (feel free to change the colormap).
-fsbrain::vis.fs.surface(sfb, per_vertex_data = bd_thickness$attributes);        
+fsbrain::vis.fs.surface(sfb_thickness, per_vertex_data = bd_thickness$attributes);        
 ```
 
 Note: The `bssr` package is not on CRAN (as of September 2020), you will have to install it from the BrainSuite website.
