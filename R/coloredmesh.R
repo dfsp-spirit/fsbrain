@@ -270,7 +270,7 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
     map = cmr$map;
     col = cmr$collayer[[hemi]];
 
-    return(fs.coloredmesh(mesh, col, hemi, metadata=list("src_data"=morph_data, "fs_mesh"=surface_mesh, "map"=map, "data_range"=range(morph_data, finite=TRUE), "cmap_fun"=makecmap_options$colFn)));
+    return(fs.coloredmesh(mesh, col, hemi, metadata=list("src_data"=morph_data, "fs_mesh"=surface_mesh, "map"=map, "data_range"=range(morph_data, finite=TRUE), "cmap_fun"=makecmap_options$colFn, "makecmap_options"=makecmap_options)));
 }
 
 
@@ -323,8 +323,7 @@ coloredmesh.from.preloaded.data <- function(fs_surface, morph_data=NULL, col=NUL
             col = rep(col, nrow(fs_surface$vertices));
         }
     }
-
-    return(fs.coloredmesh(mesh, col, hemi, metadata=list("src_data"=morph_data, "fs_mesh"=fs_surface, "map"=map, "data_range"=data_range, "cmap_fun"=makecmap_options$colFn)));
+    return(fs.coloredmesh(mesh, col, hemi, metadata=list("src_data"=morph_data, "fs_mesh"=fs_surface, "map"=map, "data_range"=data_range, "cmap_fun"=makecmap_options$colFn, "makecmap_options"=makecmap_options)));
 }
 
 
