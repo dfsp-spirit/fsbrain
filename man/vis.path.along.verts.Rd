@@ -4,12 +4,15 @@
 \alias{vis.path.along.verts}
 \title{Draw a 3D line from vertex to vertex}
 \usage{
-vis.path.along.verts(surface_vertices, path_vertex_indices)
+vis.path.along.verts(
+  surface_vertices,
+  path_vertex_indices = seq(1L, nrow(surface_vertices))
+)
 }
 \arguments{
 \item{surface_vertices}{float matrix of size (n, 3), the surface vertex coordinates, as returned as part of \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}, in the member "vertices".}
 
-\item{path_vertex_indices}{vector of vertex indices, the path. You will need to have it computed already. (This function does **not** compute geodesic paths. You can use it to visualize such a path though.)}
+\item{path_vertex_indices}{vector of vertex indices, the path. You will need to have it computed already. (This function does **not** compute geodesic paths. You can use it to visualize such a path though.) If omitted, the vertex coordinates will be traversed in their given order to create the path.}
 }
 \description{
 To get a nice path along the surface, pass the vertex indices along a geodesic path. Note: You can first open an interactive brain view (`view='si'`) with a vis* function like \code{\link[fsbrain]{vis.subject.morph.native}}, then run this function to draw into the active plot.

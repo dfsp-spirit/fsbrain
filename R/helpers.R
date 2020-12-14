@@ -169,13 +169,13 @@ annot.outline <- function(annotdata, surface_mesh, background="white", silent=TR
 #'
 #' @param surface_vertices float matrix of size (n, 3), the surface vertex coordinates, as returned as part of \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}, in the member "vertices".
 #'
-#' @param path_vertex_indices vector of vertex indices, the path. You will need to have it computed already. (This function does **not** compute geodesic paths. You can use it to visualize such a path though.)
+#' @param path_vertex_indices vector of vertex indices, the path. You will need to have it computed already. (This function does **not** compute geodesic paths. You can use it to visualize such a path though.) If omitted, the vertex coordinates will be traversed in their given order to create the path.
 #'
 #' @family surface mesh functions
 #'
 #' @export
 #' @importFrom rgl segments3d material3d
-vis.path.along.verts <- function(surface_vertices, path_vertex_indices) {
+vis.path.along.verts <- function(surface_vertices, path_vertex_indices = seq(1L, nrow(surface_vertices))) {
   path_vertex_coords = surface_vertices[path_vertex_indices,];
   path_segments = c();
 
