@@ -2,7 +2,7 @@
 # This is pretty experimental.
 
 
-#' @title Visualize DTI tracks from Diffusion Tools/TrackVis TRK format.
+#' @title Visualize DTI tracks from Diffusion Toolkit/TrackVis TRK format file.
 #'
 #' @param trk character string, the path to a TRK file that should be loaded. Alternatively, a loaded \code{trk} instance as returned by \code{freesurferformats::read.dti.trk}.
 #'
