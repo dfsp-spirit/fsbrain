@@ -189,19 +189,6 @@ vis.path.along.verts <- function(surface_vertices, path_vertex_indices = seq(1L,
       warning(sprintf("Path won't be visible, it only contains %d vertex/vertices.\n", num_path_points));
   }
 
-  # Old, slower version.
-  #path_segments = c();
-  #for(vertex_row_idx in seq_len(num_path_points)) {
-  #  path_segments = c(path_segments, path_vertex_coords[vertex_row_idx,]);
-  #  if(vertex_row_idx > 1 && vertex_row_idx < nrow(path_vertex_coords)) {
-  #    # Add the vertex again, because the segment function always takes pairs of start and end point.
-  #    # We want the old end point to be the next start point, so we have to duplicate the coords.
-  #    path_segments = c(path_segments, path_vertex_coords[vertex_row_idx,]);
-  #  }
-  #}
-  #path = matrix(path_segments, byrow = TRUE, ncol=3);
-
-  # Faster version
   if(num_path_points == 2L) {
       path = path_vertex_coords;
   } else {
@@ -210,11 +197,9 @@ vis.path.along.verts <- function(surface_vertices, path_vertex_indices = seq(1L,
       path[1,] = path_vertex_coords[1L, ]; # copy 1st value
       path[num_drawn_path_points, ] = path_vertex_coords[num_path_points, ]; # copy last value
       inner_original_values = path_vertex_coords[2L:(num_path_points-1L),];
-      #cat(sprintf("Original length %d, constructed new length %d, with %d inner values.\n", num_path_points, num_drawn_path_points, nrow(inner_original_values)));
 
       target_indices_one = seq(2L, (num_drawn_path_points-1L), by = 2);
       target_indices_two = seq(3L, (num_drawn_path_points-1L), by = 2);
-      #cat(sprintf("L1=%d, l2=%d.\n", length(target_indices_one), length(target_indices_two)));
       path[target_indices_one,] = inner_original_values;
       path[target_indices_two,] = inner_original_values;
   }

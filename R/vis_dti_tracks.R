@@ -14,7 +14,7 @@
 #'
 #' @importMethodsFrom freesurferformats read.dti.trk
 #' @export
-vis.dti.trk <- function(trk, filter_tracks = list('min_length' = 20, 'min_segment_count' = 8)) {
+vis.dti.trk <- function(trk, filter_tracks = list('min_length' = 15, 'min_segment_count' = 6)) {
     if(is.character(trk)) {
         trk = freesurferformats::read.dti.trk(trk);
     }
@@ -24,7 +24,6 @@ vis.dti.trk <- function(trk, filter_tracks = list('min_length' = 20, 'min_segmen
     }
 
     tracks = trk$tracks; # the potentially filtered tracks.
-
 
     if(is.list(filter_tracks)) {
         # Determine track lengths for filtering.
@@ -41,10 +40,6 @@ vis.dti.trk <- function(trk, filter_tracks = list('min_length' = 20, 'min_segmen
             tracks = tracks[which(tns >= filter_tracks$min_segment_count)];
         }
     }
-
-    #for(track_idx in 1L:length(tracks)) {
-    #    vis.path.along.verts(tracks[[track_idx]]$coords);
-    #}
 
     coord_list = lapply(tracks, function(x) {x$coords});
     vis.paths(coord_list);
