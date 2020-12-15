@@ -24,6 +24,8 @@ n x 3 matrix, the coordinates of the path, with appropriate ones duplicated for 
 To get a nice path along the surface, pass the vertex indices along a geodesic path. Note: You can first open an interactive brain view (`view='si'`) with a vis* function like \code{\link[fsbrain]{vis.subject.morph.native}}, then run this function to draw into the active plot.
 }
 \seealso{
+\code{vis.paths} if you need to draw many paths.
+
 Other surface mesh functions: 
 \code{\link{face.edges}()},
 \code{\link{label.border}()},

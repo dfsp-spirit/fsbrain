@@ -177,6 +177,8 @@ annot.outline <- function(annotdata, surface_mesh, background="white", silent=TR
 #'
 #' @family surface mesh functions
 #'
+#' @seealso \code{vis.paths} if you need to draw many paths.
+#'
 #' @export
 #' @importFrom rgl segments3d material3d
 vis.path.along.verts <- function(surface_vertices, path_vertex_indices = seq(1L, nrow(surface_vertices)), do_vis = TRUE) {
@@ -229,6 +231,8 @@ vis.path.along.verts <- function(surface_vertices, path_vertex_indices = seq(1L,
 #' @title Visualize many paths.
 #'
 #' @param coords_list list of matrices, each n x 3 matrix must contain the 3D coords for one path.
+#'
+#' @note This function is a lot faster than calling \code{vis.path.along.verts} many times and having it draw each time.
 #'
 #' @export
 vis.paths <- function(coords_list) {
