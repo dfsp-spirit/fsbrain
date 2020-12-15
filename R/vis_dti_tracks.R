@@ -42,9 +42,13 @@ vis.dti.trk <- function(trk, filter_tracks = list('min_length' = 20, 'min_segmen
         }
     }
 
-    for(track_idx in 1L:length(tracks)) {
-        vis.path.along.verts(tracks[[track_idx]]$coords);
-    }
+    #for(track_idx in 1L:length(tracks)) {
+    #    vis.path.along.verts(tracks[[track_idx]]$coords);
+    #}
+
+    coord_list = lapply(tracks, function(x) {x$coords});
+    vis.paths(coord_list);
+
     cat(sprintf("Rendered %d of %d tracks.\n", length(tracks), trk$header$n_count));
     return(invisible(trk));
 }

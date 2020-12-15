@@ -171,26 +171,77 @@ annot.outline <- function(annotdata, surface_mesh, background="white", silent=TR
 #'
 #' @param path_vertex_indices vector of vertex indices, the path. You will need to have it computed already. (This function does **not** compute geodesic paths. You can use it to visualize such a path though.) If omitted, the vertex coordinates will be traversed in their given order to create the path.
 #'
+#' @param do_vis logical, whether to actually draw the path.
+#'
+#' @return n x 3 matrix, the coordinates of the path, with appropriate ones duplicated for rgl pair-wise segments3d rendering.
+#'
 #' @family surface mesh functions
 #'
 #' @export
 #' @importFrom rgl segments3d material3d
-vis.path.along.verts <- function(surface_vertices, path_vertex_indices = seq(1L, nrow(surface_vertices))) {
+vis.path.along.verts <- function(surface_vertices, path_vertex_indices = seq(1L, nrow(surface_vertices)), do_vis = TRUE) {
   path_vertex_coords = surface_vertices[path_vertex_indices,];
-  path_segments = c();
 
-  for(vertex_row_idx in seq_len(nrow(path_vertex_coords))) {
-    path_segments = c(path_segments, path_vertex_coords[vertex_row_idx,]);
-    if(vertex_row_idx > 1 && vertex_row_idx < nrow(path_vertex_coords)) {
-      # Add the vertex again, because the segment function always takes pairs of start and end point.
-      # We want the old end point to be the next start point, so we have to duplicate the coords.
-      path_segments = c(path_segments, path_vertex_coords[vertex_row_idx,]);
-    }
+  num_path_points = nrow(path_vertex_coords);
+  if(num_path_points < 2L) {
+      warning(sprintf("Path won't be visible, it only contains %d vertex/vertices.\n", num_path_points));
   }
 
-  path = matrix(path_segments, byrow = TRUE, ncol=3);
-  rgl::material3d(size=2.0, lwd=2.0, color=c("red"), point_antialias=TRUE, line_antialias=TRUE);
-  rgl::segments3d(path[,1], path[,2], path[,3]);
+  # Old, slower version.
+  #path_segments = c();
+  #for(vertex_row_idx in seq_len(num_path_points)) {
+  #  path_segments = c(path_segments, path_vertex_coords[vertex_row_idx,]);
+  #  if(vertex_row_idx > 1 && vertex_row_idx < nrow(path_vertex_coords)) {
+  #    # Add the vertex again, because the segment function always takes pairs of start and end point.
+  #    # We want the old end point to be the next start point, so we have to duplicate the coords.
+  #    path_segments = c(path_segments, path_vertex_coords[vertex_row_idx,]);
+  #  }
+  #}
+  #path = matrix(path_segments, byrow = TRUE, ncol=3);
+
+  # Faster version
+  if(num_path_points == 2L) {
+      path = path_vertex_coords;
+  } else {
+      num_drawn_path_points = (2L * (num_path_points - 2L)) + 2L;
+      path = matrix(rep(NA, (num_drawn_path_points * 3L)), ncol = 3L);
+      path[1,] = path_vertex_coords[1L, ]; # copy 1st value
+      path[num_drawn_path_points, ] = path_vertex_coords[num_path_points, ]; # copy last value
+      inner_original_values = path_vertex_coords[2L:(num_path_points-1L),];
+      #cat(sprintf("Original length %d, constructed new length %d, with %d inner values.\n", num_path_points, num_drawn_path_points, nrow(inner_original_values)));
+
+      target_indices_one = seq(2L, (num_drawn_path_points-1L), by = 2);
+      target_indices_two = seq(3L, (num_drawn_path_points-1L), by = 2);
+      #cat(sprintf("L1=%d, l2=%d.\n", length(target_indices_one), length(target_indices_two)));
+      path[target_indices_one,] = inner_original_values;
+      path[target_indices_two,] = inner_original_values;
+  }
+
+  if(do_vis) {
+      rgl::material3d(size=2.0, lwd=2.0, color=c("red"), point_antialias=TRUE, line_antialias=TRUE);
+      rgl::segments3d(path[,1], path[,2], path[,3]);
+  }
+
+  return(invisible(path));
+}
+
+
+#' @title Visualize many paths.
+#'
+#' @param coords_list list of matrices, each n x 3 matrix must contain the 3D coords for one path.
+#'
+#' @export
+vis.paths <- function(coords_list) {
+    path = NULL;
+    for(path_coords in coords_list) {
+        if(is.null(path)) {
+            path = vis.path.along.verts(path_coords, do_vis = FALSE);
+        } else {
+            path = rbind(path, vis.path.along.verts(path_coords, do_vis = FALSE));
+        }
+    }
+    rgl::material3d(size=2.0, lwd=2.0, color=c("red"), point_antialias=TRUE, line_antialias=TRUE);
+    rgl::segments3d(path[,1], path[,2], path[,3]);
 }
 
 

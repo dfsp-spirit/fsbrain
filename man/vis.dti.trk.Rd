@@ -2,16 +2,21 @@
 % Please edit documentation in R/vis_dti_tracks.R
 \name{vis.dti.trk}
 \alias{vis.dti.trk}
-\title{Visualize DTI tracks from Diffusion Tools/TrackVis TRK format.}
+\title{Visualize DTI tracks from Diffusion Toolkit/TrackVis TRK format file.}
 \usage{
-vis.dti.trk(trk)
+vis.dti.trk(trk, filter_tracks = list(min_length = 20, min_segment_count = 8))
 }
 \arguments{
 \item{trk}{character string, the path to a TRK file that should be loaded. Alternatively, a loaded \code{trk} instance as returned by \code{freesurferformats::read.dti.trk}.}
+
+\item{filter_tracks}{optional, named list of filters. Can contain fields \code{min_length} and \code{min_segment_count}. Set the whole thing to \code{NULL} or an entry to 0 for no filtering.}
 }
 \value{
 The (loaded or received) \code{trk} instance. Note that this function is typically called for the side effect of visualization.
 }
 \description{
-Visualize DTI tracks from Diffusion Tools/TrackVis TRK format.
+Visualize DTI tracks from Diffusion Toolkit/TrackVis TRK format file.
+}
+\note{
+The current simple implementation is very slow if the number of tracks becomes large (several thousand tracks).
 }
