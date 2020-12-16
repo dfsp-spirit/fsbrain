@@ -299,10 +299,12 @@ flc <- function(coords_list) {
 #'
 #' @param coords_list list of \code{m} matrices, each \code{n} x 3 matrix must contain the 3D coords for one path.
 #'
+#' @param path_color a color value, the color in which to plot the paths.
+#'
 #' @note This function is a lot faster than calling \code{vis.path.along.verts} many times and having it draw each time.
 #'
 #' @export
-vis.paths <- function(coords_list) {
+vis.paths <- function(coords_list, path_color = "#FF0000") {
     if(! is.list(coords_list)) {
         stop("Parameter 'coords_list' must be a list.");
     }
@@ -314,7 +316,7 @@ vis.paths <- function(coords_list) {
             path = rbind(path, vis.path.along.verts(path_coords, do_vis = FALSE));
         }
     }
-    rgl::material3d(size=2.0, lwd=2.0, color=c("red"), point_antialias=TRUE, line_antialias=TRUE);
+    rgl::material3d(size = 1.0, lwd = 1.0, color = path_color, point_antialias = TRUE, line_antialias = TRUE);
     rgl::segments3d(path[,1], path[,2], path[,3]);
 }
 

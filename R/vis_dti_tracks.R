@@ -8,13 +8,15 @@
 #'
 #' @param filter_tracks optional, named list of filters. Can contain fields \code{min_length} and \code{min_segment_count}. Set the whole thing to \code{NULL} or an entry to 0 for no filtering.
 #'
+#' @param color_by_orientation logical, whether to color the tracks by orientation. Slower, but may make the resulting visualization easier to interprete.
+#'
 #' @return The (loaded or received) \code{trk} instance. Note that this function is typically called for the side effect of visualization.
 #'
 #' @note The current simple implementation is very slow if the number of tracks becomes large (several thousand tracks).
 #'
 #' @importMethodsFrom freesurferformats read.dti.trk
 #' @export
-vis.dti.trk <- function(trk, filter_tracks = list('min_length' = 15, 'min_segment_count' = 6)) {
+vis.dti.trk <- function(trk, filter_tracks = list('min_length' = 15, 'min_segment_count' = 6), color_by_orientation = FALSE) {
     if(is.character(trk)) {
         trk = freesurferformats::read.dti.trk(trk);
     }
@@ -42,9 +44,18 @@ vis.dti.trk <- function(trk, filter_tracks = list('min_length' = 15, 'min_segmen
     }
 
     coord_list = lapply(tracks, function(x) {x$coords});
-    vis.paths(coord_list);
 
-    cat(sprintf("Rendered %d of %d tracks.\n", length(tracks), trk$header$n_count));
+    if(color_by_orientation) {
+        track_colors = path.colors.from.orientation(coord_list); # n x 3 matrix
+        track_colors_str = grDevices::rgb(track_colors, maxColorValue = 255);
+        for(track_color in unique(track_colors_str)) {
+            vis.paths(coord_list[which(track_colors_str == track_color)], path_color = track_color);
+        }
+    } else {
+        vis.paths(coord_list);
+    }
+
+    message(sprintf("Rendered %d of %d tracks.\n", length(tracks), trk$header$n_count));
     return(invisible(trk));
 }
 

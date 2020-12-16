@@ -4,10 +4,12 @@
 \alias{vis.paths}
 \title{Visualize many paths.}
 \usage{
-vis.paths(coords_list)
+vis.paths(coords_list, path_color = "#FF0000")
 }
 \arguments{
 \item{coords_list}{list of \code{m} matrices, each \code{n} x 3 matrix must contain the 3D coords for one path.}
+
+\item{path_color}{a color value, the color in which to plot the paths.}
 }
 \description{
 Visualize many paths.
