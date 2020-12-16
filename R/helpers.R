@@ -213,14 +213,99 @@ vis.path.along.verts <- function(surface_vertices, path_vertex_indices = seq(1L,
 }
 
 
+#' @title Compute slopes of paths relative to axes.
+#'
+#' @inheritParams vis.paths
+#'
+#' @return \code{m} x 3 matrix, each row corresponds to a path and describes the 3 slopes of the path against the 3 planes/ x, y, and z axes (in that order).
+#'
+#' @keywords internal
+path.slopes <- function(coords_list) {
+    if(! is.list(coords_list)) {
+        stop("Parameter 'coords_list' must be a list.");
+    }
+
+    # Compute coords of first and last point of each track, we ignore the intermediate ones.
+    fl = flc(coords_list); # fl is an m x 6 matrix, each row contains 6 coords: the xyz of the first and last point of each track.
+    path_lengths = sqrt(abs((fl[,1]-fl[,4])*(fl[,1]-fl[,4])) +  abs((fl[,1]-fl[,4])*(fl[,1]-fl[,4])) + abs((fl[,2]-fl[,5])*(fl[,3]-fl[,6])));
+
+    # Compute slopes.
+    x_diff = fl[,1]-fl[,4];
+    y_diff = fl[,2]-fl[,5];
+    z_diff = fl[,3]-fl[,6];
+    axes_diffs = cbind(x_diff, y_diff, z_diff);
+    slopes_xyz = axes_diffs / path_lengths;
+    return(slopes_xyz);
+}
+
+
+#' @title Compute path color from its orientation.
+#'
+#' @inheritParams vis.paths
+#'
+#' @return \code{m} x 3 matrix, each row corresponds to a path and contains its color value (RGB, range 0..255).
+#'
+#' @keywords internal
+path.colors.from.orientation <- function(coords_list) {
+    if(! is.list(coords_list)) {
+        stop("Parameter 'coords_list' must be a list.");
+    }
+
+    num_paths = length(coords_list);
+    path_colors = matrix(rep(0L, (num_paths * 3L)), ncol = 3L); # init all white.
+
+    slopes = abs(path.slopes(coords_list));
+    for(path_idx in 1L:num_paths) {
+        full_channel = which.min(slopes[path_idx, ]);
+        path_colors[path_idx, full_channel] = 255L;
+    }
+    return(path_colors);
+}
+
+
+#' @title Given a list of path coordinates, create matrix containing only the first and last point of each path.
+#'
+#' @inheritParams vis.paths
+#'
+#' @return m x 6 numeric matrix, containing the first and last point of a path per row (two 3D xyz-coords, so 6 values per row).
+#'
+#' @keywords internal
+flc <- function(coords_list) {
+    if(! is.list(coords_list)) {
+        stop("Parameter 'coords_list' must be a list.");
+    }
+    num_tracks = length(coords_list);
+    if(num_tracks < 1L) {
+        stop("Empty coords_list, cannot determine first and last points of tracks.");
+    }
+    fl_coords = matrix(rep(NA, (num_tracks * 6L)), ncol = 6L);
+    current_fl_coords_row_idx = 1L;
+    for(path_idx in 1L:num_tracks) {
+        current_path_coords = coords_list[[path_idx]];
+        if(nrow(current_path_coords) < 2L) {
+            warning(sprintf("Skipping path # %d: consists only of a single point.\n", path_idx));
+            current_fl_coords_row_idx = current_fl_coords_row_idx + 1L;
+            next;
+        }
+        fl_coords[current_fl_coords_row_idx, 1:3] = current_path_coords[1L, ]; # first point of path.
+        fl_coords[current_fl_coords_row_idx, 4:6] = current_path_coords[nrow(current_path_coords), ]; # last point of path.
+        current_fl_coords_row_idx = current_fl_coords_row_idx + 1L;
+    }
+    return(fl_coords);
+}
+
+
 #' @title Visualize many paths.
 #'
-#' @param coords_list list of matrices, each n x 3 matrix must contain the 3D coords for one path.
+#' @param coords_list list of \code{m} matrices, each \code{n} x 3 matrix must contain the 3D coords for one path.
 #'
 #' @note This function is a lot faster than calling \code{vis.path.along.verts} many times and having it draw each time.
 #'
 #' @export
 vis.paths <- function(coords_list) {
+    if(! is.list(coords_list)) {
+        stop("Parameter 'coords_list' must be a list.");
+    }
     path = NULL;
     for(path_coords in coords_list) {
         if(is.null(path)) {

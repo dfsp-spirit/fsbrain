@@ -4,7 +4,7 @@
 \alias{vis.dti.trk}
 \title{Visualize DTI tracks from Diffusion Toolkit/TrackVis TRK format file.}
 \usage{
-vis.dti.trk(trk, filter_tracks = list(min_length = 20, min_segment_count = 8))
+vis.dti.trk(trk, filter_tracks = list(min_length = 15, min_segment_count = 6))
 }
 \arguments{
 \item{trk}{character string, the path to a TRK file that should be loaded. Alternatively, a loaded \code{trk} instance as returned by \code{freesurferformats::read.dti.trk}.}
