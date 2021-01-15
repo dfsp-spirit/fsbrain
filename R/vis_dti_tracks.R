@@ -14,6 +14,13 @@
 #'
 #' @note The current simple implementation is very slow if the number of tracks becomes large (several thousand tracks).
 #'
+#' @examples
+#' \dontrun{
+#' # Create the following file with Diffusion Toolkit from your DTI data:
+#' trk = freesurferformats::read.dti.trk("~/data/tim_only/tim/DICOM/dti.trk");
+#' vis.dti.trk(trk);
+#' }
+#'
 #' @importMethodsFrom freesurferformats read.dti.trk
 #' @export
 vis.dti.trk <- function(trk, filter_tracks = list('min_length' = 15, 'min_segment_count' = 6), color_by_orientation = FALSE) {

@@ -217,10 +217,12 @@ vis.path.along.verts <- function(surface_vertices, path_vertex_indices = seq(1L,
 #'
 #' @inheritParams vis.paths
 #'
+#' @param return_angles logical, whether to return angles instead of slopes. Angles are returned in degrees, and will range from \code{-90} to \code{+90}.
+#'
 #' @return \code{m} x 3 matrix, each row corresponds to a path and describes the 3 slopes of the path against the 3 planes/ x, y, and z axes (in that order).
 #'
 #' @keywords internal
-path.slopes <- function(coords_list) {
+path.slopes <- function(coords_list, return_angles = FALSE) {
     if(! is.list(coords_list)) {
         stop("Parameter 'coords_list' must be a list.");
     }
@@ -230,23 +232,43 @@ path.slopes <- function(coords_list) {
     path_lengths = sqrt(abs((fl[,1]-fl[,4])*(fl[,1]-fl[,4])) +  abs((fl[,1]-fl[,4])*(fl[,1]-fl[,4])) + abs((fl[,2]-fl[,5])*(fl[,3]-fl[,6])));
 
     # Compute slopes.
-    x_diff = fl[,1]-fl[,4];
+    x_diff = fl[,1]-fl[,4]; # The variable names should maybe rather represent the planes.
     y_diff = fl[,2]-fl[,5];
     z_diff = fl[,3]-fl[,6];
-    axes_diffs = cbind(x_diff, y_diff, z_diff);
-    slopes_xyz = axes_diffs / path_lengths;
-    return(slopes_xyz);
+
+    if(return_angles) {
+        # TODO: fix this, see https://math.stackexchange.com/questions/463415/angle-between-two-3d-lines
+        num_paths = nrow(fl);
+        x_angles = atan2(x_diff, rep(0L, num_paths));
+        y_angles = atan2(y_diff, rep(0L, num_paths));
+        z_angles = atan2(z_diff, rep(0L, num_paths));
+        return(rad2deg(cbind(x_angles, y_angles, z_angles)));
+    } else {
+        axes_diffs = cbind(x_diff, y_diff, z_diff);
+        slopes_xyz = axes_diffs / path_lengths;
+        return(slopes_xyz);
+    }
 }
+
+#' @title Convert raduians to degree
+#' @keywords internal
+rad2deg <- function(rad) {(rad * 180) / (pi)}
+
+#' @title Convert degree to radians
+#' @keywords internal
+deg2rad <- function(deg) {(deg * pi) / (180)}
 
 
 #' @title Compute path color from its orientation.
 #'
 #' @inheritParams vis.paths
 #'
+#' @param use_three_colors_only logical, whether to use only three different colors, based on closest axis.
+#'
 #' @return \code{m} x 3 matrix, each row corresponds to a path and contains its color value (RGB, range 0..255).
 #'
 #' @keywords internal
-path.colors.from.orientation <- function(coords_list) {
+path.colors.from.orientation <- function(coords_list, use_three_colors_only = FALSE) {
     if(! is.list(coords_list)) {
         stop("Parameter 'coords_list' must be a list.");
     }
@@ -254,13 +276,25 @@ path.colors.from.orientation <- function(coords_list) {
     num_paths = length(coords_list);
     path_colors = matrix(rep(0L, (num_paths * 3L)), ncol = 3L); # init all white.
 
-    slopes = abs(path.slopes(coords_list));
-    for(path_idx in 1L:num_paths) {
-        full_channel = which.min(slopes[path_idx, ]);
-        path_colors[path_idx, full_channel] = 255L;
+    if(use_three_colors_only) {
+        slopes = abs(path.slopes(coords_list));
+        for(path_idx in 1L:num_paths) {
+            full_channel = which.min(slopes[path_idx, ]);
+            path_colors[path_idx, full_channel] = 255L;
+        }
+    } else {
+        angles = path.slopes(coords_list, return_angles = TRUE); # in degrees, -90..+90
+        cat(sprintf("Found %d different angles between %f and %f.\n", length(unique(angles)), min(angles), max(angles)));
+        print(angles);
+        path_colors = cbind(as.integer(scale.to.range.zero.one(angles[,1])*255), as.integer(scale.to.range.zero.one(angles[,2])*255), as.integer(scale.to.range.zero.one(angles[,3])*255));
     }
+
     return(path_colors);
 }
+
+#' @title Scale given values to range 0..1.
+#' @keywords internal
+scale.to.range.zero.one <- function(x, ...){(x - min(x, ...)) / (max(x, ...) - min(x, ...))}
 
 
 #' @title Given a list of path coordinates, create matrix containing only the first and last point of each path.

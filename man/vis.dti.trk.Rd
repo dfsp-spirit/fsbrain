@@ -26,3 +26,11 @@ Visualize DTI tracks from Diffusion Toolkit/TrackVis TRK format file.
 \note{
 The current simple implementation is very slow if the number of tracks becomes large (several thousand tracks).
 }
+\examples{
+\dontrun{
+# Create the following file with Diffusion Toolkit from your DTI data:
+trk = freesurferformats::read.dti.trk("~/data/tim_only/tim/DICOM/dti.trk");
+vis.dti.trk(trk);
+}
+
+}
