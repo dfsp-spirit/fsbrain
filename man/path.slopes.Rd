@@ -9,7 +9,7 @@ path.slopes(coords_list, return_angles = FALSE)
 \arguments{
 \item{coords_list}{list of \code{m} matrices, each \code{n} x 3 matrix must contain the 3D coords for one path.}
 
-\item{return_angles}{logical, whether to return angles instead of slopes.}
+\item{return_angles}{logical, whether to return angles instead of slopes. Angles are returned in degrees, and will range from \code{-90} to \code{+90}.}
 }
 \value{
 \code{m} x 3 matrix, each row corresponds to a path and describes the 3 slopes of the path against the 3 planes/ x, y, and z axes (in that order).
