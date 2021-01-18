@@ -6,6 +6,5 @@
 # So we delete all data ONLY if we are on CRAN in this teardown file.
 
 if(!identical(Sys.getenv("NOT_CRAN"), "true")) {
-  freesurferformats::delete_all_opt_data();
   fsbrain::delete_all_optional_data();
 }
