@@ -21,7 +21,7 @@
 #' vis.dti.trk(trk);
 #' }
 #'
-#' @importMethodsFrom freesurferformats read.dti.trk
+#' @importFrom freesurferformats read.dti.trk
 #' @export
 vis.dti.trk <- function(trk, filter_tracks = list('min_length' = 15, 'min_segment_count' = 6), color_by_orientation = FALSE) {
     if(is.character(trk)) {
