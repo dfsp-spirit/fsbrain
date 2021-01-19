@@ -29,6 +29,10 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
 
 
     makecmap_options = coloredmeshes.get.md(coloredmeshes, 'makecmap_options');
+    if(is.null(makecmap_options)) {
+        warning("Requested to draw colorbar, but meshes contain no 'makecmap_options' metadata, falling back to defaults.");
+        makecmap_options = mkco.seq();
+    }
 
     if(hasIn(makecmap_options, 'range')) {
         combined_data_range = makecmap_options$range;
@@ -109,6 +113,10 @@ coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=FALSE, image.
 
 
     makecmap_options = coloredmeshes.get.md(coloredmeshes, 'makecmap_options');
+    if(is.null(makecmap_options)) {
+        warning("Requested to draw colorbar, but meshes contain no 'makecmap_options' metadata, falling back to defaults.");
+        makecmap_options = mkco.seq();
+    }
     if(hasIn(makecmap_options, 'range')) {
         combined_data_range = makecmap_options$range;
         makecmap_options$range = NULL;

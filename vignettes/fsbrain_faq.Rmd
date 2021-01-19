@@ -41,6 +41,42 @@ vis.data.on.subject('~/data/', 'subject1_spm12', lh_gyrification, NULL, surface=
 
 You should be able to load data from a number of different neuroimaging software packages with freesurferformats, as it supports the very common NIFTI and GIFTI file formats.
 
+### Can I used fsbrain to visualize surface data from BrainSuite surfaces in DFS format?
+
+
+Yes, you can install the BrainSuite `bssr` R package to read DFS files and then visualize them. In the following examples, the directory `~/data/brainsuite_subject1/` contains the output of the cortical surface extraction sequence from BrainSuite (I used version 19b), applied to the fsbrain demo subject 'subject1'.
+
+```{r, eval = FALSE}
+# read file with bssr package
+bd = bssr::readdfs('~/data/brainsuite_subject1/subject1_v1_sMRI.brain.dfs');
+
+# turn into fs.surface
+sfb = list('vertices'=t(bd$vertices), faces=t(bd$faces)+1L);
+class(sfb) = c(class(sfb), 'fs.surface');
+
+# show it with fsbrain
+fsbrain::vis.fs.surface(sfb);
+```
+
+If the DFS surface file contains vertex colors, labels and/or morphometry data, you can display that as well:
+
+```{r, eval = FALSE}
+# load and turn into fs.surface
+bd_thickness = bssr::readdfs('~/data/brainsuite_subject1/subject1_v1_sMRI.pvc-thickness_0-6mm.right.mid.cortex.dfs');
+sfb_thickness = list('vertices'=t(bd_thickness$vertices), faces=t(bd_thickness$faces)+1L);
+class(sfb_thickness) = c(class(sfb_thickness), 'fs.surface');
+
+# Display the vertex colors:
+fsbrain::vis.fs.surface(sfb_thickness, col=rgb(t(bd_thickness$vColor)));        
+
+# Display labels (feel free to change the colormap).
+fsbrain::vis.fs.surface(sfb_thickness, per_vertex_data = bd_thickness$labels);  
+
+# Display raw morphometry data (feel free to change the colormap).
+fsbrain::vis.fs.surface(sfb_thickness, per_vertex_data = bd_thickness$attributes);        
+```
+
+Note: The `bssr` package is not on CRAN (as of September 2020), you will have to install it from the BrainSuite website.
 
 ## Visualization
 

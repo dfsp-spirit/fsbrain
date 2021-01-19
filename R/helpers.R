@@ -169,28 +169,189 @@ annot.outline <- function(annotdata, surface_mesh, background="white", silent=TR
 #'
 #' @param surface_vertices float matrix of size (n, 3), the surface vertex coordinates, as returned as part of \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}, in the member "vertices".
 #'
-#' @param path_vertex_indices vector of vertex indices, the path. You will need to have it computed already. (This function does **not** compute geodesic paths. You can use it to visualize such a path though.)
+#' @param path_vertex_indices vector of vertex indices, the path. You will need to have it computed already. (This function does **not** compute geodesic paths. You can use it to visualize such a path though.) If omitted, the vertex coordinates will be traversed in their given order to create the path.
+#'
+#' @param do_vis logical, whether to actually draw the path.
+#'
+#' @return n x 3 matrix, the coordinates of the path, with appropriate ones duplicated for rgl pair-wise segments3d rendering.
 #'
 #' @family surface mesh functions
 #'
+#' @seealso \code{vis.paths} if you need to draw many paths.
+#'
 #' @export
 #' @importFrom rgl segments3d material3d
-vis.path.along.verts <- function(surface_vertices, path_vertex_indices) {
+vis.path.along.verts <- function(surface_vertices, path_vertex_indices = seq(1L, nrow(surface_vertices)), do_vis = TRUE) {
   path_vertex_coords = surface_vertices[path_vertex_indices,];
-  path_segments = c();
 
-  for(vertex_row_idx in seq_len(nrow(path_vertex_coords))) {
-    path_segments = c(path_segments, path_vertex_coords[vertex_row_idx,]);
-    if(vertex_row_idx > 1 && vertex_row_idx < nrow(path_vertex_coords)) {
-      # Add the vertex again, because the segment function always takes pairs of start and end point.
-      # We want the old end point to be the next start point, so we have to duplicate the coords.
-      path_segments = c(path_segments, path_vertex_coords[vertex_row_idx,]);
-    }
+  num_path_points = nrow(path_vertex_coords);
+  if(num_path_points < 2L) {
+      warning(sprintf("Path won't be visible, it only contains %d vertex/vertices.\n", num_path_points));
   }
 
-  path = matrix(path_segments, byrow = TRUE, ncol=3);
-  rgl::material3d(size=2.0, lwd=2.0, color=c("red"), point_antialias=TRUE, line_antialias=TRUE);
-  rgl::segments3d(path[,1], path[,2], path[,3]);
+  if(num_path_points == 2L) {
+      path = path_vertex_coords;
+  } else {
+      num_drawn_path_points = (2L * (num_path_points - 2L)) + 2L;
+      path = matrix(rep(NA, (num_drawn_path_points * 3L)), ncol = 3L);
+      path[1,] = path_vertex_coords[1L, ]; # copy 1st value
+      path[num_drawn_path_points, ] = path_vertex_coords[num_path_points, ]; # copy last value
+      inner_original_values = path_vertex_coords[2L:(num_path_points-1L),];
+
+      target_indices_one = seq(2L, (num_drawn_path_points-1L), by = 2);
+      target_indices_two = seq(3L, (num_drawn_path_points-1L), by = 2);
+      path[target_indices_one,] = inner_original_values;
+      path[target_indices_two,] = inner_original_values;
+  }
+
+  if(do_vis) {
+      rgl::material3d(size=2.0, lwd=2.0, color=c("red"), point_antialias=TRUE, line_antialias=TRUE);
+      rgl::segments3d(path[,1], path[,2], path[,3]);
+  }
+
+  return(invisible(path));
+}
+
+
+#' @title Compute slopes of paths relative to axes.
+#'
+#' @inheritParams vis.paths
+#'
+#' @param return_angles logical, whether to return angles instead of slopes. Angles are returned in degrees, and will range from \code{-90} to \code{+90}.
+#'
+#' @return \code{m} x 3 matrix, each row corresponds to a path and describes the 3 slopes of the path against the 3 planes/ x, y, and z axes (in that order).
+#'
+#' @keywords internal
+path.slopes <- function(coords_list, return_angles = FALSE) {
+    if(! is.list(coords_list)) {
+        stop("Parameter 'coords_list' must be a list.");
+    }
+
+    # Compute coords of first and last point of each track, we ignore the intermediate ones.
+    fl = flc(coords_list); # fl is an m x 6 matrix, each row contains 6 coords: the xyz of the first and last point of each track.
+    path_lengths = sqrt(abs((fl[,1]-fl[,4])*(fl[,1]-fl[,4])) +  abs((fl[,1]-fl[,4])*(fl[,1]-fl[,4])) + abs((fl[,2]-fl[,5])*(fl[,3]-fl[,6])));
+
+    # Compute slopes.
+    x_diff = fl[,1]-fl[,4]; # The variable names should maybe rather represent the planes.
+    y_diff = fl[,2]-fl[,5];
+    z_diff = fl[,3]-fl[,6];
+
+    if(return_angles) {
+        # TODO: fix this, see https://math.stackexchange.com/questions/463415/angle-between-two-3d-lines
+        num_paths = nrow(fl);
+        x_angles = atan2(x_diff, rep(0L, num_paths));
+        y_angles = atan2(y_diff, rep(0L, num_paths));
+        z_angles = atan2(z_diff, rep(0L, num_paths));
+        return(rad2deg(cbind(x_angles, y_angles, z_angles)));
+    } else {
+        axes_diffs = cbind(x_diff, y_diff, z_diff);
+        slopes_xyz = axes_diffs / path_lengths;
+        return(slopes_xyz);
+    }
+}
+
+#' @title Convert raduians to degree
+#' @keywords internal
+rad2deg <- function(rad) {(rad * 180) / (pi)}
+
+#' @title Convert degree to radians
+#' @keywords internal
+deg2rad <- function(deg) {(deg * pi) / (180)}
+
+
+#' @title Compute path color from its orientation.
+#'
+#' @inheritParams vis.paths
+#'
+#' @param use_three_colors_only logical, whether to use only three different colors, based on closest axis.
+#'
+#' @return \code{m} x 3 matrix, each row corresponds to a path and contains its color value (RGB, range 0..255).
+#'
+#' @keywords internal
+path.colors.from.orientation <- function(coords_list, use_three_colors_only = FALSE) {
+    if(! is.list(coords_list)) {
+        stop("Parameter 'coords_list' must be a list.");
+    }
+
+    num_paths = length(coords_list);
+    path_colors = matrix(rep(0L, (num_paths * 3L)), ncol = 3L); # init all white.
+
+    if(use_three_colors_only) {
+        slopes = abs(path.slopes(coords_list));
+        for(path_idx in 1L:num_paths) {
+            full_channel = which.min(slopes[path_idx, ]);
+            path_colors[path_idx, full_channel] = 255L;
+        }
+    } else {
+        angles = path.slopes(coords_list, return_angles = TRUE); # in degrees, -90..+90
+        cat(sprintf("Found %d different angles between %f and %f.\n", length(unique(angles)), min(angles), max(angles)));
+        print(angles);
+        path_colors = cbind(as.integer(scale.to.range.zero.one(angles[,1])*255), as.integer(scale.to.range.zero.one(angles[,2])*255), as.integer(scale.to.range.zero.one(angles[,3])*255));
+    }
+
+    return(path_colors);
+}
+
+#' @title Scale given values to range 0..1.
+#' @keywords internal
+scale.to.range.zero.one <- function(x, ...){(x - min(x, ...)) / (max(x, ...) - min(x, ...))}
+
+
+#' @title Given a list of path coordinates, create matrix containing only the first and last point of each path.
+#'
+#' @inheritParams vis.paths
+#'
+#' @return m x 6 numeric matrix, containing the first and last point of a path per row (two 3D xyz-coords, so 6 values per row).
+#'
+#' @keywords internal
+flc <- function(coords_list) {
+    if(! is.list(coords_list)) {
+        stop("Parameter 'coords_list' must be a list.");
+    }
+    num_tracks = length(coords_list);
+    if(num_tracks < 1L) {
+        stop("Empty coords_list, cannot determine first and last points of tracks.");
+    }
+    fl_coords = matrix(rep(NA, (num_tracks * 6L)), ncol = 6L);
+    current_fl_coords_row_idx = 1L;
+    for(path_idx in 1L:num_tracks) {
+        current_path_coords = coords_list[[path_idx]];
+        if(nrow(current_path_coords) < 2L) {
+            warning(sprintf("Skipping path # %d: consists only of a single point.\n", path_idx));
+            current_fl_coords_row_idx = current_fl_coords_row_idx + 1L;
+            next;
+        }
+        fl_coords[current_fl_coords_row_idx, 1:3] = current_path_coords[1L, ]; # first point of path.
+        fl_coords[current_fl_coords_row_idx, 4:6] = current_path_coords[nrow(current_path_coords), ]; # last point of path.
+        current_fl_coords_row_idx = current_fl_coords_row_idx + 1L;
+    }
+    return(fl_coords);
+}
+
+
+#' @title Visualize many paths.
+#'
+#' @param coords_list list of \code{m} matrices, each \code{n} x 3 matrix must contain the 3D coords for one path.
+#'
+#' @param path_color a color value, the color in which to plot the paths.
+#'
+#' @note This function is a lot faster than calling \code{vis.path.along.verts} many times and having it draw each time.
+#'
+#' @export
+vis.paths <- function(coords_list, path_color = "#FF0000") {
+    if(! is.list(coords_list)) {
+        stop("Parameter 'coords_list' must be a list.");
+    }
+    path = NULL;
+    for(path_coords in coords_list) {
+        if(is.null(path)) {
+            path = vis.path.along.verts(path_coords, do_vis = FALSE);
+        } else {
+            path = rbind(path, vis.path.along.verts(path_coords, do_vis = FALSE));
+        }
+    }
+    rgl::material3d(size = 1.0, lwd = 1.0, color = path_color, point_antialias = TRUE, line_antialias = TRUE);
+    rgl::segments3d(path[,1], path[,2], path[,3]);
 }
 
 

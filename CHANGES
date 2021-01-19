@@ -1,6 +1,13 @@
 fsbrain Changes
 ===============
 
+
+Version 0.4.1
+-------------
+- Support for visualizing TRK and TCK files (Fiber track files from Diffusion Tensor Imaging) created in Diffusion Toolkit and MRtrix3
+- Delete all unit test data after tests have been run if on CRAN
+
+
 Version 0.4.0
 -------------
 - Support passing a single data vector for both hemis combined to vis.data.on.subject and vis.symmetric.data.on.subject
