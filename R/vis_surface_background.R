@@ -328,6 +328,7 @@ force.to.range <- function(x, data_range, allow_append = FALSE) {
 
     if(allow_append) {
         # Handle case were data_range is more extreme than the data: append a value to the data.
+        cat(sprintf("Allow append: data length %d, min=%f.\n", length(data_range), min(x)));
         if(data_range[1] < min(x)) {
             x = c(x, data_range[1]);
         }
