@@ -356,6 +356,8 @@ vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.ang
 #'
 #' @param style the rendering style, see \code{material3d} or use a predefined style like 'default' or 'shiny'.
 #'
+#' @param grid_like logical, passed to \code{vislayout.from.coloredmeshes}.
+#'
 #' @return magick image instance or named list, depending on the value of 'img_only'. If the latter, the list contains the fields 'rev_vl', 'rev_cb', and 'rev_ex', which are the return values of the functions \code{vislayout.from.coloredmeshes}, \code{coloredmesh.plot.colorbar.separate}, and {combine.colorbar.with.brainview.image}, respectively.
 #'
 #' @note This function also exports the resulting image to disk in PNG format, in the current working directory, named 'fsbrain_merged.png'. Note that your screen resolution has to be high enough to generate the final image.
