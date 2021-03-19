@@ -368,7 +368,7 @@ vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.ang
 #' }
 #'
 #' @export
-vis.export.from.coloredmeshes <- function(coloredmeshes, colorbar_legend=NULL, img_only=TRUE, horizontal=TRUE, silent = TRUE, quality=1L, output_img="fsbrain_arranged.png", image.plot_extra_options=NULL, large_legend=TRUE, view_angles = get.view.angle.names(angle_set = "t4"), style = 'default') {
+vis.export.from.coloredmeshes <- function(coloredmeshes, colorbar_legend=NULL, img_only=TRUE, horizontal=TRUE, silent = TRUE, quality=1L, output_img="fsbrain_arranged.png", image.plot_extra_options=NULL, large_legend=TRUE, view_angles = get.view.angle.names(angle_set = "t4"), style = 'default', grid_like = TRUE) {
 
     if (requireNamespace("magick", quietly = TRUE)) {
         quality = as.integer(quality);
@@ -399,14 +399,14 @@ vis.export.from.coloredmeshes <- function(coloredmeshes, colorbar_legend=NULL, i
 
         if(can.plot.colorbar.from.coloredmeshes(coloredmeshes)) {
             tmp_img = tempfile(fileext = ".png");
-            res_vl = vislayout.from.coloredmeshes(coloredmeshes, rgloptions = rgloptions, view_angles = view_angles, silent = silent, output_img = tmp_img, style = style);
+            res_vl = vislayout.from.coloredmeshes(coloredmeshes, rgloptions = rgloptions, view_angles = view_angles, silent = silent, output_img = tmp_img, style = style, grid_like = grid_like);
             res_cb = coloredmesh.plot.colorbar.separate(coloredmeshes, image.plot_extra_options=image.plot_extra_options, silent = silent);
             res_ex = combine.colorbar.with.brainview.image(horizontal = horizontal, silent = silent, brainview_img = tmp_img, output_img = output_img);
             if(img_only) {
                 return(res_ex$merged_img);
             }
         } else {
-            res_vl = vislayout.from.coloredmeshes(coloredmeshes, rgloptions = rgloptions, view_angles = view_angles, silent = silent, output_img = output_img, style = style);
+            res_vl = vislayout.from.coloredmeshes(coloredmeshes, rgloptions = rgloptions, view_angles = view_angles, silent = silent, output_img = output_img, style = style, grid_like = grid_like);
             res_cb = NULL;
             rex_ex = NULL;
             if(img_only) {
