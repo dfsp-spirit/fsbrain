@@ -126,7 +126,7 @@ vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'curv', rglactions=rgla
 
 Yes, this can be achieved in different ways:
 
-Option 1: Use `rglactions` in combination with `limit_fun`:
+The first option is to use `rglactions` in combination with `limit_fun`:
 
 ```{r, eval = FALSE}
 rgla = list('trans_fun'=limit_fun(2,3));
@@ -137,12 +137,20 @@ This will limit your data to the range 2 to 3.
 
 If you want the data values outside the given range to be plotted as background (in the color for `NA` values), use `limit_fun_na` instead of `limit_fun`.
 
-Option 2: If you want more flexibility, e.g., you also need support for a larger data range than the real data range of your subject, e.g., when plotting group data to ensure that all subjects use the same colors for identical values, you should use the 'range' entry in 'makecmap_options' instead:
+See the answer to the next question for a second option.
+
+
+### How can I enforce fixed colorbar settings (i.e., one color should represent the same value) across several images?
+
+
+This typically means that you want a colorbar that shows a larger data range than the real data range of your subject, for some of the subjects. In this case you should use the 'range' entry in 'makecmap_options':
 
 ```{r, eval = FALSE}
 makecmap_options = list('range'=c(0,6));
 vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', makecmap_options = makecmap_options);
 ```
+
+This is useful when plotting group data to ensure that all subjects use the same colors for identical values, or when comparing statistical results.
 
 
 ### How can I change the colormap for the plots?
@@ -298,6 +306,21 @@ vis.subject.morph.native(sjd, sj, 'thickness', rglactions = list('shift_hemis_ap
 ```
 
 If you need more customization options, have a look at the `shift.hemis.apart` function. If you pass a named list in the rglactions for 'shift_hemis_apart' (like in the previous example), the entries are passed on to that function.
+
+### When plotting several views, can I have the subplots arranged in a horizontal strip (rather than 2x2 tiles)?
+
+There is no 'view' setting for that yet (like 't4' for 4 tiles), but you can set the 'grid_like' to false to get a horizontal strip of images. Here is an example:
+
+```{r, eval = FALSE}
+subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+
+view_angles = get.view.angle.names(angle_set = "t4");
+
+coloredmeshes = vis.subject.morph.native(subjects_dir, "subject1", "thickness", views=NULL);
+vislayout.from.coloredmeshes(coloredmeshes, view_angles = view_angles, grid_like=FALSE, output_img="~/fsbrain_horizontal.png");
+```
+
+If you want a colorbar, you can use `vis.export.from.coloredmeshes` instead of `vislayout.from.coloredmeshes`.
 
 ## Various topics
 
