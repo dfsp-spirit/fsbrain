@@ -1,6 +1,12 @@
 fsbrain Changes
 ===============
 
+Version 0.4.2
+-------------
+- Fix bug in makecmap_options 'range' handling, see #19 and #20
+- Improve documentation for makecmap_options 'range' handling: new entry in fsbrain FAQ vignette
+- Expose 'grid_like' parameter in vis.export.from.coloredmeshes to allow plotting a horizontal strip of images
+
 
 Version 0.4.1
 -------------

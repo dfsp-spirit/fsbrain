@@ -307,6 +307,21 @@ vis.subject.morph.native(sjd, sj, 'thickness', rglactions = list('shift_hemis_ap
 
 If you need more customization options, have a look at the `shift.hemis.apart` function. If you pass a named list in the rglactions for 'shift_hemis_apart' (like in the previous example), the entries are passed on to that function.
 
+### When plotting several views, can I have the subplots arranged in a horizontal strip (rather than 2x2 tiles)?
+
+There is no 'view' setting for that yet (like 't4' for 4 tiles), but you can set the 'grid_like' to false to get a horizontal strip of images. Here is an example:
+
+```{r, eval = FALSE}
+subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+
+view_angles = get.view.angle.names(angle_set = "t4");
+
+coloredmeshes = vis.subject.morph.native(subjects_dir, "subject1", "thickness", views=NULL);
+vislayout.from.coloredmeshes(coloredmeshes, view_angles = view_angles, grid_like=FALSE, output_img="~/fsbrain_horizontal.png");
+```
+
+If you want a colorbar, you can use `vis.export.from.coloredmeshes` instead of `vislayout.from.coloredmeshes`.
+
 ## Various topics
 
 ### Can I integrate the plots produced by *fsbrain* into an R Markdown document (the R equivalent of a Python Jupyter notebook)?
