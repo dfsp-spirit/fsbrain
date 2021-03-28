@@ -7,7 +7,6 @@ Maintainer: Tim Schäfer <ts+code@rcmd.org>
 Description: Provides high-level access to neuroimaging data from standard software packages like 'FreeSurfer' <http://freesurfer.net/> on the level of subjects and groups. Load morphometry data, surfaces and brain parcellations based on atlases. Mask data using labels, load data for specific atlas regions only, and visualize data and statistical results directly in 'R'.
 License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: true
 URL: https://github.com/dfsp-spirit/fsbrain
 BugReports: https://github.com/dfsp-spirit/fsbrain/issues
 Imports:
