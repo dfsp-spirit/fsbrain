@@ -15,6 +15,7 @@ The plots produced by *fsbrain* can be integrated into R notebooks or written to
 
 ## News
 
+* 2021-03-28: New fsbrain version 0.4.2 released on CRAN.
 * 2020-09-20: The preprint of our paper [T. Schaefer, C. Ecker: fsbrain: an R package for the visualization of structural neuroimaging data](https://doi.org/10.1101/2020.09.18.302935)' is now available on biorxiv.
 
 ## Installation
