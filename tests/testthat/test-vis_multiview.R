@@ -388,3 +388,22 @@ test_that("We can shift hemis apart", {
     cm_hl_shifted = shift.hemis.apart(cm_hemilist);
     expect_true(is.hemilist(cm_hl_shifted));
 })
+
+
+test_that("We can export a PNG with background transparency from a tight layout view", {
+    testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
+    testthat::skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+    testthat::skip_if_not(box.can.run.all.tests(), "This test requires X11 and imagemagick.");
+
+    fsbrain::download_optional_data();
+    fsbrain::download_fsaverage(accept_freesurfer_license = TRUE)
+
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+    rgloptions=list("windowRect"=c(80,80,800,800));
+
+    coloredmeshes = vis.subject.morph.standard(subjects_dir, "subject1", "sulc", cortex_only=TRUE, views=NULL);
+    vis.export.from.coloredmeshes(coloredmeshes, colorbar_legend = "sulcal depth [mm]", transparency_color = "white")
+
+    expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
+    close.all.rgl.windows();
+})
