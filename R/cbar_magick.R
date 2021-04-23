@@ -26,13 +26,17 @@
 #'
 #' @family colorbar functions
 #' @export
-combine.colorbar.with.brainview.image <- function(brainview_img = "fsbrain_arranged.png", colorbar_img = "fsbrain_cbar.png", output_img = "fsbrain_merged.png", offset="+0+0", extend_brainview_img_height_by=NULL, silent=FALSE, allow_colorbar_shrink=TRUE, horizontal=FALSE, background_color = "#FFFFFFFF") {
+combine.colorbar.with.brainview.image <- function(brainview_img = "fsbrain_arranged.png", colorbar_img = "fsbrain_cbar.png", output_img = "fsbrain_merged.png", offset="+0+0", extend_brainview_img_height_by=NULL, silent=FALSE, allow_colorbar_shrink=TRUE, horizontal=FALSE, background_color = "#FFFFFF", transparency_color = NULL) {
 
     if(! horizontal) {
-        return(invisible(combine.colorbar.with.brainview.image.vertical(brainview_img, colorbar_img, output_img, offset=offset, extend_brainview_img_width_by=extend_brainview_img_height_by, silent=silent, allow_colorbar_shrink=allow_colorbar_shrink, background_color = background_color)));
+        return(invisible(combine.colorbar.with.brainview.image.vertical(brainview_img, colorbar_img, output_img, offset=offset, extend_brainview_img_width_by=extend_brainview_img_height_by, silent=silent, allow_colorbar_shrink=allow_colorbar_shrink, background_color = background_color, transparency_color = transparency_color)));
     }
 
     if (requireNamespace("magick", quietly = TRUE)) {
+
+        if(! is.null(transparency_color)) {
+            background_color = transparency_color;
+        }
 
         #background_color = "white"; # Background color to use when extending images.
 
@@ -88,6 +92,12 @@ combine.colorbar.with.brainview.image <- function(brainview_img = "fsbrain_arran
 
         # Overlay the colorbar over the bottom part of the main image.
         combined_img = magick::image_composite(main_img, cbar_img_trimmed, gravity="south", offset=offset);
+
+        if(! is.null(transparency_color)) {
+            combined_img = image.remap.color(combined_img, source_color=background_color, source_point = "+1+1");
+        }
+
+
         magick::image_write(combined_img, path = output_img);
         if(! silent) {
             message(sprintf("Combined image with horizontal colorbar written to '%s'.\n", output_img));
@@ -109,11 +119,15 @@ combine.colorbar.with.brainview.image <- function(brainview_img = "fsbrain_arran
 #' @param extend_brainview_img_width_by integer value in pixels, the size of the right border to add to the brainview_img. Increase this if the right part of the colorbar is off the image canvas.
 #'
 #' @keywords internal
-combine.colorbar.with.brainview.image.vertical <- function(brainview_img, colorbar_img, output_img, offset="+0+0", extend_brainview_img_width_by=NULL, silent=FALSE, allow_colorbar_shrink=TRUE, background_color = "#FFFFFFFF") {
+combine.colorbar.with.brainview.image.vertical <- function(brainview_img, colorbar_img, output_img, offset="+0+0", extend_brainview_img_width_by=NULL, silent=FALSE, allow_colorbar_shrink=TRUE, background_color = "#FFFFFF", transparency_color = NULL) {
 
     if (requireNamespace("magick", quietly = TRUE)) {
 
         #background_color = "white"; # Background color to use when extending images.
+
+        if(! is.null(transparency_color)) {
+            background_color = transparency_color;
+        }
 
         main_img = magick::image_read(brainview_img);
         cbar_img = magick::image_read(colorbar_img);
@@ -170,6 +184,12 @@ combine.colorbar.with.brainview.image.vertical <- function(brainview_img, colorb
 
         # Overlay the colorbar over the right side of the main image.
         combined_img = magick::image_composite(main_img, cbar_img_trimmed, gravity="east", offset=offset);
+
+        # Apply transparency if requested
+        if(! is.null(transparency_color)) {
+            combined_img = image.remap.color(combined_img, source_color=background_color, source_point = "+1+1");
+        }
+
         magick::image_write(combined_img, path = output_img);
         if(! silent) {
             message(sprintf("Combined image with vertical colorbar written to '%s'.\n", output_img));

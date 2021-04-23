@@ -214,6 +214,8 @@ vis.data.on.group.standard <- function(subjects_dir, vis_subject_id, morph_data_
 #'
 #' @param coloredmeshes a list of coloredmeshes lists, each entry in the outer list contains the hemilist of coloredmeshes (lefgt and right hemisphere mesh) for one subject.
 #'
+#' @param background_color color for image background (transparency is not supported).
+#'
 #' @note This is a mid-level function, end users may want to call high-level functions like \code{\link{vis.group.annot}} instead.
 #'
 #' @return named list, see the return value of \code{\link{arrange.brainview.images.grid}} for details.
@@ -221,16 +223,16 @@ vis.data.on.group.standard <- function(subjects_dir, vis_subject_id, morph_data_
 #' @family group visualization functions
 #'
 #' @export
-vis.group.coloredmeshes <- function(coloredmeshes, view_angles = 'sd_dorsal', output_img='fsbrain_group_annot.png', num_per_row = 5L, captions = NULL) {
+vis.group.coloredmeshes <- function(coloredmeshes, view_angles = 'sd_dorsal', output_img='fsbrain_group_annot.png', num_per_row = 5L, captions = NULL, background_color = "white") {
     num_subjects = length(coloredmeshes);
-    rglactions = list('no_vis'=TRUE);
     tdir = tempdir();
     all_output_images = rep(NA, num_subjects);
     for(subject_idx in seq.int(num_subjects)) {
         cm = coloredmeshes[[subject_idx]];
         subject_output_img = file.path(tdir, sprintf("coloredmesh_num_%d.png", subject_idx));
-        vislayout.from.coloredmeshes(cm, view_angles=view_angles, output_img=subject_output_img, silent=TRUE, grid_like=TRUE);
+        vislayout.from.coloredmeshes(cm, view_angles=view_angles, output_img=subject_output_img, silent=TRUE, grid_like=TRUE, background_color = background_color);
         all_output_images[subject_idx] = subject_output_img;
     }
-    return(invisible(arrange.brainview.images.grid(all_output_images, output_img=output_img, num_per_row = num_per_row, captions = captions)));
+    return(invisible(arrange.brainview.images.grid(all_output_images, output_img=output_img, num_per_row = num_per_row, captions = captions, background_color = background_color)));
 }
+

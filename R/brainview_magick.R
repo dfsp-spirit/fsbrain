@@ -20,10 +20,12 @@
 #'
 #' @param background_color string, a valid ImageMagick color string such as "white" or "#000080". The color to use when extending images (e.g., when creating the border).
 #'
+#' @param map_bg_to_transparency logical, whether to map the background_color to transparency for the final PNG export.
+#'
 #' @return named list with entries: 'brainview_images': vector of character strings, the paths to the input images. 'output_img_path': character string, path to the output image. 'merged_img': the magick image instance.
 #'
 #' @export
-arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=NULL, silent=TRUE, grid_like=TRUE, border_geometry="5x5", background_color = "white") {
+arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=NULL, silent=TRUE, grid_like=TRUE, border_geometry="5x5", background_color = "white", map_bg_to_transparency = FALSE) {
 
     if (requireNamespace("magick", quietly = TRUE)) {
 
@@ -97,6 +99,10 @@ arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=
             merged_img = magick::image_append(images);
         }
 
+        if(map_bg_to_transparency) {
+            merged_img = image.remap.color(merged_img, source_color=background_color, source_point = "+1+1");
+        }
+
         magick::image_write(merged_img, path = output_img);
         if(! silent) {
             message(sprintf("Merged image written to '%s' (current working dir is '%s').\n", output_img, getwd()));
@@ -107,6 +113,12 @@ arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=
         warning("The 'magick' package must be installed to use this functionality. Merged image NOT written.");
         return(invisible(NULL));
     }
+}
+
+
+image.remap.color <- function(source_img, source_color=NULL, source_point="+1+1", target_color="none") {
+    remapped_img = magick::image_fill(source_img, target_color, point = source_point, fuzz = 0);
+    return(remapped_img);
 }
 
 
@@ -305,10 +317,19 @@ images.annotate <- function(images, annotations, do_extend = TRUE, background = 
 #'
 #' @family visualization functions
 #' @export
-vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.angle.names(angle_set = "t4"), rgloptions = rglo(), rglactions=list(), style="default", output_img="fsbrain_arranged.png", silent=FALSE, grid_like=TRUE, background_color = "white") {
+vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.angle.names(angle_set = "t4"), rgloptions = rglo(), rglactions=list(), style="default", output_img="fsbrain_arranged.png", silent=FALSE, grid_like=TRUE, background_color = "white", transparency_color=NULL) {
 
     if (requireNamespace("magick", quietly = TRUE)) {
         view_images = tempfile(view_angles, fileext = ".png");   # generate one temporary file name for each image
+
+        map_bg_to_transparency = FALSE;
+        if(! is.null(transparency_color)) {
+            map_bg_to_transparency = TRUE;
+            if(background_color != "white") {
+                warning("Parameter 'transparency_color' is set, ignoring custom value for parameter 'background_color'.");
+            }
+            background_color = transparency_color;
+        }
 
         # Create the temporary images at the temp paths
         for(view_idx in seq_len(length(view_angles))) {
@@ -326,7 +347,7 @@ vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.ang
         }
 
         # Now merge them into one
-        return(invisible(arrange.brainview.images(view_images, output_img, silent=silent, grid_like=grid_like, background_color = background_color)));
+        return(invisible(arrange.brainview.images(view_images, output_img, silent=silent, grid_like=grid_like, background_color = background_color, map_bg_to_transparency = map_bg_to_transparency)));
     } else {
         warning("The 'magick' package must be installed to use this functionality. Image with manual layout NOT written.");
         return(invisible(NULL));
@@ -334,9 +355,9 @@ vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.ang
 }
 
 
-#' @title Export high-quality brainview image with horizontal colorbar.
+#' @title Export high-quality brainview image with a colorbar.
 #'
-#' @description This function serves as an easy (but slightly inflexible) way to export a high-quality, tight-layout, horizontal colorbar figure to disk.
+#' @description This function serves as an easy (but slightly inflexible) way to export a high-quality, tight-layout, colorbar figure to disk. If no colorbar is required, one can use \code{vislayout.from.coloredmeshes} instead.
 #'
 #' @inheritParams vislayout.from.coloredmeshes
 #'
@@ -372,7 +393,7 @@ vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.ang
 #' }
 #'
 #' @export
-vis.export.from.coloredmeshes <- function(coloredmeshes, colorbar_legend=NULL, img_only=TRUE, horizontal=TRUE, silent = TRUE, quality=1L, output_img="fsbrain_arranged.png", image.plot_extra_options=NULL, large_legend=TRUE, view_angles = get.view.angle.names(angle_set = "t4"), style = 'default', grid_like = TRUE, background_color = "#FFFFFFFF") {
+vis.export.from.coloredmeshes <- function(coloredmeshes, colorbar_legend=NULL, img_only=TRUE, horizontal=TRUE, silent = TRUE, quality=1L, output_img="fsbrain_arranged.png", image.plot_extra_options=NULL, large_legend=TRUE, view_angles = get.view.angle.names(angle_set = "t4"), style = 'default', grid_like = TRUE, background_color = "white", transparency_color=NULL) {
 
     if (requireNamespace("magick", quietly = TRUE)) {
         quality = as.integer(quality);
@@ -406,12 +427,12 @@ vis.export.from.coloredmeshes <- function(coloredmeshes, colorbar_legend=NULL, i
             res_vl = vislayout.from.coloredmeshes(coloredmeshes, rgloptions = rgloptions, view_angles = view_angles, silent = silent, output_img = tmp_img, style = style, grid_like = grid_like, background_color = background_color);
             png_options=list('filename'='fsbrain_cbar.png', 'width'=1400, 'height'=1400, 'bg'=background_color);
             res_cb = coloredmesh.plot.colorbar.separate(coloredmeshes, image.plot_extra_options=image.plot_extra_options, silent = silent, png_options=png_options);
-            res_ex = combine.colorbar.with.brainview.image(horizontal = horizontal, silent = silent, brainview_img = tmp_img, output_img = output_img, background_color = background_color);
+            res_ex = combine.colorbar.with.brainview.image(horizontal = horizontal, silent = silent, brainview_img = tmp_img, output_img = output_img, background_color = background_color, transparency_color = transparency_color);
             if(img_only) {
                 return(res_ex$merged_img);
             }
         } else {
-            res_vl = vislayout.from.coloredmeshes(coloredmeshes, rgloptions = rgloptions, view_angles = view_angles, silent = silent, output_img = output_img, style = style, grid_like = grid_like, background_color = background_color);
+            res_vl = vislayout.from.coloredmeshes(coloredmeshes, rgloptions = rgloptions, view_angles = view_angles, silent = silent, output_img = output_img, style = style, grid_like = grid_like, background_color = background_color, transparency_color = transparency_color);
             res_cb = NULL;
             rex_ex = NULL;
             if(img_only) {
