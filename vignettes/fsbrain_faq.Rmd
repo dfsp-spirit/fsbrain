@@ -110,6 +110,13 @@ vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', rglactions
 This opens the plot in a window as usual and also saves it in PNG format to the file *subject1_thickness.png* in your home directory.
 
 
+###  Can I save fsbrain figures as vector images (like PDF, EPS, SVG)?
+
+While one could convert the PNGs to these formats, doing so makes little sense. The images produced by fsbrain are **bitmap** images, not vector graphics. I would recommend to export the figures in high resolution as PNG images instead. 
+
+The default settings used by the the *vis.export.from.coloredmeshes()* function should be fine to reach the 300 DPI typically required for publications, unless you want the image to fill the entire page. In that case, you can further increase the output resolution.
+
+
 ### When visualizing data with outliers and long tails, the colors are not helpful. What to do?
 
 If you have data with very few but extreme outliers, almost all of your plot will have a single color. This happens for example when plotting curvature data. You can of course first load the data using `subject.morph.native`, adjust it (transform it, remove outliers), and then plot it using `vis.data.on.subject`.
