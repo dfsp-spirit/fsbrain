@@ -100,7 +100,7 @@ arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=
         }
 
         if(map_bg_to_transparency) {
-            merged_img = image.remap.color(merged_img, source_color=background_color, source_point = "+1+1");
+            merged_img = image.remap.color(merged_img, source_color=background_color, source_point = NULL);
         }
 
         magick::image_write(merged_img, path = output_img);
@@ -116,8 +116,24 @@ arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=
 }
 
 
+#' @title Remap a color in an image, typically used to set the background color to transparent.
+#'
+#' @description Offers 2 algorithm: remamp color at a given pixel, or remap a hardcoded color. Provide one of 'source_color' or 'source_point' by setting the other to NULL. If both are given, source_color takes precedence and source_point is silently ignored.
+#'
+#' @param target_color an image magick color string, use 'none' for transparency.
+#'
+#' @keywords internal
 image.remap.color <- function(source_img, source_color=NULL, source_point="+1+1", target_color="none") {
-    remapped_img = magick::image_fill(source_img, target_color, point = source_point, fuzz = 0);
+    if(is.null(source_color)) {
+        if(is.null(source_point)) {
+            stop("One of 'source_color' or 'source_point' must be provided.");
+        } else {
+            remapped_img = magick::image_fill(source_img, target_color, point = source_point, fuzz = 0);
+        }
+    } else {
+        remapped_img = magick::image_transparent(source_img, source_color, fuzz = 0);
+    }
+
     return(remapped_img);
 }
 
