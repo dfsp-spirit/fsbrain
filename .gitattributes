@@ -2,6 +2,10 @@
 
 # Prevent github from claiming the project language was HTML because of the docs ><
 web/* linguist-vendored
+man/* linguist-vendored
+vignettes/* linguist-vendored
+*.html linguist-vendored
+*.R linguist-vendored=false
 
 # Source files
 # ============
