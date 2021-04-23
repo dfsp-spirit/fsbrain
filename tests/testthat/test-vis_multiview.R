@@ -403,7 +403,7 @@ test_that("We can export a PNG with background transparency from a tight layout 
 
     mkc = list('col.na'="#FEFEFE", 'colFn'=viridis::viridis, 'n'=200);
     coloredmeshes = vis.subject.morph.standard(subjects_dir, "subject1", "sulc", cortex_only=TRUE, views=NULL, makecmap_options = mkc);
-    vis.export.from.coloredmeshes(coloredmeshes, colorbar_legend = "sulcal depth [mm]", transparency_color = "white")
+    vis.export.from.coloredmeshes(coloredmeshes, colorbar_legend = "sulcal depth [mm]", transparency_color = "white");
 
     expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
     close.all.rgl.windows();

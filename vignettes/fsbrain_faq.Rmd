@@ -11,7 +11,7 @@ vignette: >
 
 ### **Q**: What kind of input data do I need for fsbrain?
 
-The *fsbrain* software is designed to be used with the output of [FreeSurfer](http://freesurfer.net/).  Running *recon-all* on your T1w MRI scan results in a directory structure full of different files and file types for each subject. The *fsbrain* library uses knowledge on this directory layout to load the proper data.
+The *fsbrain* software is designed to be used with the output of [FreeSurfer](http://freesurfer.net/) and similar neuroimaging software packages. Running FreeSurfer's *recon-all* on your T1w MRI scan results in a directory structure full of different files and file types for each subject. The *fsbrain* library uses knowledge on this directory layout to load the proper data.
 
 However, while designed primarily with FreeSurfer in mind, fsbrain is not limited to FreeSurfer output, see below.
 
@@ -95,6 +95,8 @@ Alternatively, you can control the size when calling an *fsbrain* visualization 
 rgloptions = list('windowRect'=c(20, 20, 1800, 1200));
 vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', rgloptions=rgloptions);
 ```
+
+The 4 values in the 'windowRect' vector are the x and y screen positions (in pixels) where to position the upper left corner of the rendering window on your desktop, and the width and height of the plot/window.
 
 ###  How can I save high quality figures to PNG images?
 
@@ -237,7 +239,7 @@ The impression that the numbers of colors in the colorbar is lower than in the r
 You can set the parameter *n* in the *makecmap_options* (see above) to request more colors, which will lead to a smooth colorbar.
 
 ```{r, eval = FALSE}
-mkc = list('n'=200L);
+mkc = list('n'=200L, 'colFn'=viridis::viridis);
 vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', makecmap_options=mkc);
 ```
 
@@ -248,7 +250,7 @@ This also means that more colors are used in the rendered image, but the effect 
 By default, NA values are rendered in white. You can change this using col.na in makecmap_options:
 
 ```{r, eval = FALSE}
-mkc = list('n'=200L, 'col.na'='orange');
+mkc = list('n'=200L, 'col.na'='orange', 'colFn'=viridis::viridis);
 vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', cortex_only = TRUE, makecmap_options=mkc);
 ```
 
@@ -296,7 +298,31 @@ combine.colorbar.with.brainview.image(output_brain_img, output_cbar_img, output_
 
 You may have to play a bit with the resolution settings of your brain images and the colorbar to get this right (the background cropping makes it hard to compute the exact values in advance).
 
-You should also have a look at the new `vis.export.from.coloredmeshes` function.
+You should also have a look at the new `vis.export.from.coloredmeshes` function, which produces an image with colorbar and provides sane defaults for the resolution and suitable text sizes, etc.
+
+### Can I export PNG images with transparent (instead of white) background?
+
+To the best of my knowledge, RGL cannot produce transparent images (though you can of course render semi-transparent surfaces in the scene). However, since exporting PNGs with a transparent background is very
+useful for usage in presentations, we provide a hacked solution based on post-processing the output images
+with the magick package in R.
+
+This required fsbrain version >= 0.4.3 and is implemented in the `vis.export.from.coloredmeshes` function via the `transparency_color` parameter. 
+
+Here is how it works: the `transparency_color` is used as a background color for rendering in RGL. During the fsbrain post-processing, all pixels with this color in the image will be replaced with transparency.
+
+This means that:
+* The `transparency_color` has to be an RGB color, i.e., it cannot have an alpha value (if it is an RGBA color, the alpha part is silently ignored by RGL it seems).
+* The `transparency_color` can be almost any RGB color, but (1) it should not occur in the brain surface visualization to prevent transparent parts in the brain after post-processing. And (2) because of anti-aliasing, the color may slightly affect the border pixels of the rendered brain surfaces, so a neutral color like 'white', 'black' or some gray value like '#EFEFEF' is maybe more suitable than 'hot pink' or 'magenta'.
+
+I prefer to use white ('#FFFFFF') as the transparency color, therefore I reset the NA color to a very bright gray ('#FEFEFE' in this example): 
+
+```{r, eval = FALSE}
+mkc = list('col.na'="#FEFEFE", 'colFn'=viridis::viridis, 'n'=200);
+coloredmeshes = vis.subject.morph.standard(subjects_dir, "subject1", "sulc", cortex_only=TRUE, views=NULL, makecmap_options = mkc);
+vis.export.from.coloredmeshes(coloredmeshes, colorbar_legend = "sulcal depth [mm]", transparency_color = "white");
+```
+
+Resetting the `col.na` is needed/recommended in this case because it is 'white' by default.
 
 ### When visualizing data on the inflated surface, the left and right hemisphere overlap and look garbled. How to fix that?
 
