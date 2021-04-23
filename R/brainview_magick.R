@@ -344,7 +344,7 @@ vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.ang
 #'
 #' @param img_only logical, whether to return only the resulting image
 #'
-#' @param horizontal logical, whether to plot the colorbar horizontally
+#' @param horizontal logical, whether to plot the colorbar horizontally (TRUE) or vertically (FALSE). Pass 'NULL' to force no colorbar at all.
 #'
 #' @param silent logical, whether to suppress messages
 #'
@@ -401,7 +401,7 @@ vis.export.from.coloredmeshes <- function(coloredmeshes, colorbar_legend=NULL, i
         }
         rgloptions = list('windowRect'=c(50, 50, 1000 * quality, 1000 * quality));
 
-        if(can.plot.colorbar.from.coloredmeshes(coloredmeshes)) {
+        if(can.plot.colorbar.from.coloredmeshes(coloredmeshes) && !(is.null(horizontal))) {
             tmp_img = tempfile(fileext = ".png");
             res_vl = vislayout.from.coloredmeshes(coloredmeshes, rgloptions = rgloptions, view_angles = view_angles, silent = silent, output_img = tmp_img, style = style, grid_like = grid_like, background_color = background_color);
             png_options=list('filename'='fsbrain_cbar.png', 'width'=1400, 'height'=1400, 'bg'=background_color);
