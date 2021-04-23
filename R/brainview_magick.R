@@ -305,7 +305,7 @@ images.annotate <- function(images, annotations, do_extend = TRUE, background = 
 #'
 #' @family visualization functions
 #' @export
-vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.angle.names(angle_set = "t4"), rgloptions = rglo(), rglactions=list(), style="default", output_img="fsbrain_arranged.png", silent=FALSE, grid_like=TRUE) {
+vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.angle.names(angle_set = "t4"), rgloptions = rglo(), rglactions=list(), style="default", output_img="fsbrain_arranged.png", silent=FALSE, grid_like=TRUE, background_color = background_color) {
 
     if (requireNamespace("magick", quietly = TRUE)) {
         view_images = tempfile(view_angles, fileext = ".png");   # generate one temporary file name for each image
@@ -326,7 +326,7 @@ vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.ang
         }
 
         # Now merge them into one
-        return(invisible(arrange.brainview.images(view_images, output_img, silent=silent, grid_like=grid_like)));
+        return(invisible(arrange.brainview.images(view_images, output_img, silent=silent, grid_like=grid_like, background_color = background_color)));
     } else {
         warning("The 'magick' package must be installed to use this functionality. Image with manual layout NOT written.");
         return(invisible(NULL));
@@ -358,6 +358,8 @@ vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.ang
 #'
 #' @param grid_like logical, passed to \code{vislayout.from.coloredmeshes}.
 #'
+#' @param background_color color string, the background color for the output image
+#'
 #' @return magick image instance or named list, depending on the value of 'img_only'. If the latter, the list contains the fields 'rev_vl', 'rev_cb', and 'rev_ex', which are the return values of the functions \code{vislayout.from.coloredmeshes}, \code{coloredmesh.plot.colorbar.separate}, and {combine.colorbar.with.brainview.image}, respectively.
 #'
 #' @note This function also exports the resulting image to disk in PNG format, in the current working directory, named 'fsbrain_merged.png'. Note that your screen resolution has to be high enough to generate the final image.
@@ -370,7 +372,7 @@ vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.ang
 #' }
 #'
 #' @export
-vis.export.from.coloredmeshes <- function(coloredmeshes, colorbar_legend=NULL, img_only=TRUE, horizontal=TRUE, silent = TRUE, quality=1L, output_img="fsbrain_arranged.png", image.plot_extra_options=NULL, large_legend=TRUE, view_angles = get.view.angle.names(angle_set = "t4"), style = 'default', grid_like = TRUE) {
+vis.export.from.coloredmeshes <- function(coloredmeshes, colorbar_legend=NULL, img_only=TRUE, horizontal=TRUE, silent = TRUE, quality=1L, output_img="fsbrain_arranged.png", image.plot_extra_options=NULL, large_legend=TRUE, view_angles = get.view.angle.names(angle_set = "t4"), style = 'default', grid_like = TRUE, background_color = "#FFFFFFFF") {
 
     if (requireNamespace("magick", quietly = TRUE)) {
         quality = as.integer(quality);
@@ -401,14 +403,15 @@ vis.export.from.coloredmeshes <- function(coloredmeshes, colorbar_legend=NULL, i
 
         if(can.plot.colorbar.from.coloredmeshes(coloredmeshes)) {
             tmp_img = tempfile(fileext = ".png");
-            res_vl = vislayout.from.coloredmeshes(coloredmeshes, rgloptions = rgloptions, view_angles = view_angles, silent = silent, output_img = tmp_img, style = style, grid_like = grid_like);
-            res_cb = coloredmesh.plot.colorbar.separate(coloredmeshes, image.plot_extra_options=image.plot_extra_options, silent = silent);
-            res_ex = combine.colorbar.with.brainview.image(horizontal = horizontal, silent = silent, brainview_img = tmp_img, output_img = output_img);
+            res_vl = vislayout.from.coloredmeshes(coloredmeshes, rgloptions = rgloptions, view_angles = view_angles, silent = silent, output_img = tmp_img, style = style, grid_like = grid_like, background_color = background_color);
+            png_options=list('filename'='fsbrain_cbar.png', 'width'=1400, 'height'=1400, 'bg'=background_color);
+            res_cb = coloredmesh.plot.colorbar.separate(coloredmeshes, image.plot_extra_options=image.plot_extra_options, silent = silent, png_options=png_options);
+            res_ex = combine.colorbar.with.brainview.image(horizontal = horizontal, silent = silent, brainview_img = tmp_img, output_img = output_img, background_color = background_color);
             if(img_only) {
                 return(res_ex$merged_img);
             }
         } else {
-            res_vl = vislayout.from.coloredmeshes(coloredmeshes, rgloptions = rgloptions, view_angles = view_angles, silent = silent, output_img = output_img, style = style, grid_like = grid_like);
+            res_vl = vislayout.from.coloredmeshes(coloredmeshes, rgloptions = rgloptions, view_angles = view_angles, silent = silent, output_img = output_img, style = style, grid_like = grid_like, background_color = background_color);
             res_cb = NULL;
             rex_ex = NULL;
             if(img_only) {

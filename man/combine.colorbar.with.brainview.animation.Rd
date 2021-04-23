@@ -11,7 +11,8 @@ combine.colorbar.with.brainview.animation(
   offset = "+0+0",
   extend_brainview_img_height_by = 0L,
   silent = FALSE,
-  allow_colorbar_shrink = TRUE
+  allow_colorbar_shrink = TRUE,
+  background_color = "white"
 )
 }
 \arguments{

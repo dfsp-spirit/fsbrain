@@ -12,7 +12,8 @@ combine.colorbar.with.brainview.image(
   extend_brainview_img_height_by = NULL,
   silent = FALSE,
   allow_colorbar_shrink = TRUE,
-  horizontal = FALSE
+  horizontal = FALSE,
+  background_color = "#FFFFFFFF"
 )
 }
 \arguments{

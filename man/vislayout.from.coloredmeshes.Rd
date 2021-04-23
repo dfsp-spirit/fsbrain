@@ -12,7 +12,8 @@ vislayout.from.coloredmeshes(
   style = "default",
   output_img = "fsbrain_arranged.png",
   silent = FALSE,
-  grid_like = TRUE
+  grid_like = TRUE,
+  background_color = background_color
 )
 }
 \arguments{

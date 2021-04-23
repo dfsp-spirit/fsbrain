@@ -20,19 +20,21 @@
 #'
 #' @param horizontal logical, whether the colorbar is horizontal. If so, it will be added below the 'brainview_img'. If it is vertical, it will be added to the right of the 'brainview_img'.
 #'
+#' @param background_color color string, the background color to use.
+#'
 #' @return named list with entries 'output_img_path': character string, path to saved image. 'merged_img': magick image instance, the merged image
 #'
 #' @family colorbar functions
 #' @export
-combine.colorbar.with.brainview.image <- function(brainview_img = "fsbrain_arranged.png", colorbar_img = "fsbrain_cbar.png", output_img = "fsbrain_merged.png", offset="+0+0", extend_brainview_img_height_by=NULL, silent=FALSE, allow_colorbar_shrink=TRUE, horizontal=FALSE) {
+combine.colorbar.with.brainview.image <- function(brainview_img = "fsbrain_arranged.png", colorbar_img = "fsbrain_cbar.png", output_img = "fsbrain_merged.png", offset="+0+0", extend_brainview_img_height_by=NULL, silent=FALSE, allow_colorbar_shrink=TRUE, horizontal=FALSE, background_color = "#FFFFFFFF") {
 
     if(! horizontal) {
-        return(invisible(combine.colorbar.with.brainview.image.vertical(brainview_img, colorbar_img, output_img, offset=offset, extend_brainview_img_width_by=extend_brainview_img_height_by, silent=silent, allow_colorbar_shrink=allow_colorbar_shrink)));
+        return(invisible(combine.colorbar.with.brainview.image.vertical(brainview_img, colorbar_img, output_img, offset=offset, extend_brainview_img_width_by=extend_brainview_img_height_by, silent=silent, allow_colorbar_shrink=allow_colorbar_shrink, background_color = background_color)));
     }
 
     if (requireNamespace("magick", quietly = TRUE)) {
 
-        background_color = "white"; # Background color to use when extending images.
+        #background_color = "white"; # Background color to use when extending images.
 
         main_img = magick::image_read(brainview_img);
         cbar_img = magick::image_read(colorbar_img);
@@ -107,11 +109,11 @@ combine.colorbar.with.brainview.image <- function(brainview_img = "fsbrain_arran
 #' @param extend_brainview_img_width_by integer value in pixels, the size of the right border to add to the brainview_img. Increase this if the right part of the colorbar is off the image canvas.
 #'
 #' @keywords internal
-combine.colorbar.with.brainview.image.vertical <- function(brainview_img, colorbar_img, output_img, offset="+0+0", extend_brainview_img_width_by=NULL, silent=FALSE, allow_colorbar_shrink=TRUE) {
+combine.colorbar.with.brainview.image.vertical <- function(brainview_img, colorbar_img, output_img, offset="+0+0", extend_brainview_img_width_by=NULL, silent=FALSE, allow_colorbar_shrink=TRUE, background_color = "#FFFFFFFF") {
 
     if (requireNamespace("magick", quietly = TRUE)) {
 
-        background_color = "white"; # Background color to use when extending images.
+        #background_color = "white"; # Background color to use when extending images.
 
         main_img = magick::image_read(brainview_img);
         cbar_img = magick::image_read(colorbar_img);
@@ -200,11 +202,9 @@ combine.colorbar.with.brainview.image.vertical <- function(brainview_img, colorb
 #'
 #' @family colorbar functions
 #' @export
-combine.colorbar.with.brainview.animation <- function(brain_animation, colorbar_img, output_animation, offset="+0+0", extend_brainview_img_height_by=0L, silent=FALSE, allow_colorbar_shrink=TRUE) {
+combine.colorbar.with.brainview.animation <- function(brain_animation, colorbar_img, output_animation, offset="+0+0", extend_brainview_img_height_by=0L, silent=FALSE, allow_colorbar_shrink=TRUE, background_color = "white") {
     if (requireNamespace("magick", quietly = TRUE)) {
         # brain_animation = "~/fsbrain_mov_main.gif"; colorbar_img = "~/fsbrain_img_cbar.gif"; extend_brainview_img_height_by = 20; offset="+0+0"; extend_brainview_img_height_by = 20;
-
-        background_color = "white"; # Background color to use, e.g., when extending images.
 
         main_mov = magick::image_read(brain_animation);
         cbar_img = magick::image_read(colorbar_img);

@@ -16,7 +16,8 @@ vis.export.from.coloredmeshes(
   large_legend = TRUE,
   view_angles = get.view.angle.names(angle_set = "t4"),
   style = "default",
-  grid_like = TRUE
+  grid_like = TRUE,
+  background_color = "#FFFFFFFF"
 )
 }
 \arguments{
@@ -43,6 +44,8 @@ vis.export.from.coloredmeshes(
 \item{style}{the rendering style, see \code{material3d} or use a predefined style like 'default' or 'shiny'.}
 
 \item{grid_like}{logical, passed to \code{vislayout.from.coloredmeshes}.}
+
+\item{background_color}{color string, the background color for the output image}
 }
 \value{
 magick image instance or named list, depending on the value of 'img_only'. If the latter, the list contains the fields 'rev_vl', 'rev_cb', and 'rev_ex', which are the return values of the functions \code{vislayout.from.coloredmeshes}, \code{coloredmesh.plot.colorbar.separate}, and {combine.colorbar.with.brainview.image}, respectively.
