@@ -118,9 +118,13 @@ arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=
 
 #' @title Remap a color in an image, typically used to set the background color to transparent.
 #'
-#' @description Offers 2 algorithm: remamp color at a given pixel, or remap a hardcoded color. Provide one of 'source_color' or 'source_point' by setting the other to NULL. If both are given, source_color takes precedence and source_point is silently ignored.
+#' @description Offers 2 algorithm: remap color by flood-filling from a given pixel, or remap a hardcoded color throughout the entire image. Provide one of 'source_color' or 'source_point' by setting the other to NULL. If both are given, source_color takes precedence and source_point is silently ignored.
 #'
-#' @param target_color an image magick color string, use 'none' for transparency.
+#' @param source_color the source color that should be replaced in the whole image. Set to NULL to disable.
+#'
+#' @param source_point the source pixel in which to start the flood filling. Set to NULL to disable.
+#'
+#' @param target_color an image magick color string, use 'none' for transparency. Only used with flood fill.
 #'
 #' @keywords internal
 image.remap.color <- function(source_img, source_color=NULL, source_point="+1+1", target_color="none") {
