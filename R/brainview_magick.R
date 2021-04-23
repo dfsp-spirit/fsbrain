@@ -140,10 +140,10 @@ arrange.brainview.images.grid <- function(brainview_images, output_img, colorbar
         images = magick::image_border(images, background_color, border_geometry);
         num_img = length(images);
 
-        images = images.rescale.to.max.canvas(images);
+        images = images.rescale.to.max.canvas(images, background = background_color);
 
         # annotate if requested
-        images = images.annotate(images, captions);
+        images = images.annotate(images, captions, background = background_color);
 
 
 
@@ -305,7 +305,7 @@ images.annotate <- function(images, annotations, do_extend = TRUE, background = 
 #'
 #' @family visualization functions
 #' @export
-vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.angle.names(angle_set = "t4"), rgloptions = rglo(), rglactions=list(), style="default", output_img="fsbrain_arranged.png", silent=FALSE, grid_like=TRUE, background_color = background_color) {
+vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.angle.names(angle_set = "t4"), rgloptions = rglo(), rglactions=list(), style="default", output_img="fsbrain_arranged.png", silent=FALSE, grid_like=TRUE, background_color = "white") {
 
     if (requireNamespace("magick", quietly = TRUE)) {
         view_images = tempfile(view_angles, fileext = ".png");   # generate one temporary file name for each image
@@ -322,7 +322,7 @@ vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.ang
             }
             final_rglactions = modifyList(rglactions, internal_rglactions);
 
-            brainviews(c(view), coloredmeshes, rgloptions = rgloptions, rglactions = final_rglactions, style = style);
+            brainviews(c(view), coloredmeshes, rgloptions = rgloptions, rglactions = final_rglactions, style = style, background = background_color);
         }
 
         # Now merge them into one
