@@ -3,6 +3,8 @@ A GNU R library for structural neuroimaging. Provides high-level functions to ac
 
 ![Vis](https://github.com/dfsp-spirit/fsbrain_gallery/blob/master/surface/fsbrain_sulcal_depth_cbar_web.jpg?raw=true "Sulcal depth visualization, created with fsbrain")
 
+**Fig.1**: *Visualization of sulcal depth for a subject in FreeSurfer standard space (fsaverage). See the [source code to reproduce this image](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples_adv.html) in an R notebook.*
+
 [About](#about) | [Installation](#installation) | [Documentation](#documentation) | [Unit tests](#unit-tests-and-continuous-integration) | [License](#license) | [Citation](#citation) | [Visualization examples](#visualization-examples) | [Contributing](#contributing)
 
 
@@ -15,6 +17,7 @@ The plots produced by *fsbrain* can be integrated into R notebooks or written to
 
 ## News
 
+* 2021-03-28: New fsbrain version 0.4.2 released on CRAN.
 * 2020-09-20: The preprint of our paper [T. Schaefer, C. Ecker: fsbrain: an R package for the visualization of structural neuroimaging data](https://doi.org/10.1101/2020.09.18.302935)' is now available on biorxiv.
 
 ## Installation
@@ -149,6 +152,7 @@ Other materials related to fsbrain:
 The *fsbrain* package support visualizations of different data, and all data can be displayed in one or more views. The figure below shows some examples for surface-based data:
 
 ![Visoverview](./web/fsbrain_vis_overview.jpg?raw=true "Some visualization options from fsbrain")
+**Fig.2**: *Example output for the fsbrain interactive visualization functions*.
 
 * **Subfigure A** shows the visualization of raw morphometry data (cortical thickness) from native space on the white surface of a subject. The view shows the data in tiles from 8 different angles.
 * **Subfigure B** illustrates arbitrary data (p-values in this case) visualized on the regions of the Desikan atlas, using the surface of the fsaverage (standard space template) subject from FreeSurfer. The view shows the data in tiles from 4 different angles.
