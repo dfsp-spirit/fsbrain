@@ -13,7 +13,8 @@ combine.colorbar.with.brainview.image(
   silent = FALSE,
   allow_colorbar_shrink = TRUE,
   horizontal = FALSE,
-  background_color = "#FFFFFFFF"
+  background_color = "#FFFFFF",
+  transparency_color = NULL
 )
 }
 \arguments{
@@ -32,6 +33,10 @@ combine.colorbar.with.brainview.image(
 \item{allow_colorbar_shrink}{logical, whether to shrink the colorbar to the width of the animation in case it is considerably wider (more than 20 percent). Defaults to TRUE.}
 
 \item{horizontal}{logical, whether the colorbar is horizontal. If so, it will be added below the 'brainview_img'. If it is vertical, it will be added to the right of the 'brainview_img'.}
+
+\item{background_color}{color string, the background color to use. Use 'transparency_color' if you want a transparent background.}
+
+\item{transparency_color}{the temporary background color that will get mapped to transparency, or NULL if you do not want a transparent background. If used, it can be any color that does not occur in the foreground. Try 'white' or 'black' if in doubt.}
 }
 \value{
 named list with entries 'output_img_path': character string, path to saved image. 'merged_img': magick image instance, the merged image

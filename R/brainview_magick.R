@@ -295,6 +295,10 @@ images.annotate <- function(images, annotations, do_extend = TRUE, background = 
 #'
 #' @param grid_like logical, whether to arrange the images in a grid-like fashion. If FALSE, they will all be merged horizontally. Passed to \code{\link[fsbrain]{arrange.brainview.images}}.
 #'
+#' @param background_color the color to use for the background. Ignored if 'transparency_color' is not NULL. To get a transparent background, use 'transparency_color' instead of this parameter.
+#'
+#' @param transparency_color the temporary background color that will get mapped to transparency, or NULL if you do not want a transparent background. If used, it can be any color that does not occur in the foreground. Try 'white' or 'black' if in doubt.
+#'
 #' @return named list, see \code{\link{arrange.brainview.images}} for details
 #'
 #' @examples
@@ -378,8 +382,6 @@ vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.ang
 #' @param style the rendering style, see \code{material3d} or use a predefined style like 'default' or 'shiny'.
 #'
 #' @param grid_like logical, passed to \code{vislayout.from.coloredmeshes}.
-#'
-#' @param background_color color string, the background color for the output image
 #'
 #' @return magick image instance or named list, depending on the value of 'img_only'. If the latter, the list contains the fields 'rev_vl', 'rev_cb', and 'rev_ex', which are the return values of the functions \code{vislayout.from.coloredmeshes}, \code{coloredmesh.plot.colorbar.separate}, and {combine.colorbar.with.brainview.image}, respectively.
 #'

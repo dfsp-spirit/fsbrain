@@ -10,7 +10,8 @@ brainviews(
   rgloptions = rglo(),
   rglactions = list(),
   style = "default",
-  draw_colorbar = FALSE
+  draw_colorbar = FALSE,
+  background = "white"
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ brainviews(
 \item{style}{character string, a rendering style, e.g., 'default', 'shiny' or 'semitransparent'.}
 
 \item{draw_colorbar}{logical, whether to draw a colorbar. WARNING: The colorbar is drawn to a subplot, and this only works if there is enough space for it. You will have to increase the plot size using the 'rlgoptions' parameter for the colorbar to show up. Defaults to FALSE. See \code{\link[fsbrain]{coloredmesh.plot.colorbar.separate}} for an alternative.}
+
+\item{background}{the background color for the visualization, e.g., 'white' or '#FF0000'. Note that alpha/transparency is not supported by rgl.}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.

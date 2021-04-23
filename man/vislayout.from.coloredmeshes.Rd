@@ -13,7 +13,8 @@ vislayout.from.coloredmeshes(
   output_img = "fsbrain_arranged.png",
   silent = FALSE,
   grid_like = TRUE,
-  background_color = background_color
+  background_color = "white",
+  transparency_color = NULL
 )
 }
 \arguments{
@@ -32,6 +33,10 @@ vislayout.from.coloredmeshes(
 \item{silent}{logical, whether to suppress all messages}
 
 \item{grid_like}{logical, whether to arrange the images in a grid-like fashion. If FALSE, they will all be merged horizontally. Passed to \code{\link[fsbrain]{arrange.brainview.images}}.}
+
+\item{background_color}{the color to use for the background. Ignored if 'transparency_color' is not NULL. To get a transparent background, use 'transparency_color' instead of this parameter.}
+
+\item{transparency_color}{the temporary background color that will get mapped to transparency, or NULL if you do not want a transparent background. If used, it can be any color that does not occur in the foreground. Try 'white' or 'black' if in doubt.}
 }
 \value{
 named list, see \code{\link{arrange.brainview.images}} for details

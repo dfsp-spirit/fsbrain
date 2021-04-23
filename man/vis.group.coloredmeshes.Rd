@@ -9,7 +9,8 @@ vis.group.coloredmeshes(
   view_angles = "sd_dorsal",
   output_img = "fsbrain_group_annot.png",
   num_per_row = 5L,
-  captions = NULL
+  captions = NULL,
+  background_color = "white"
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ vis.group.coloredmeshes(
 \item{num_per_row}{positive integer, the number of tiles per row.}
 
 \item{captions}{optional vector of character strings, the short text annotations for the individual tiles. Typically used to plot the subject identifier.}
+
+\item{background_color}{color for image background (transparency is not supported).}
 }
 \value{
 named list, see the return value of \code{\link{arrange.brainview.images.grid}} for details.

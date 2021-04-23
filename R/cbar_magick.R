@@ -20,7 +20,9 @@
 #'
 #' @param horizontal logical, whether the colorbar is horizontal. If so, it will be added below the 'brainview_img'. If it is vertical, it will be added to the right of the 'brainview_img'.
 #'
-#' @param background_color color string, the background color to use.
+#' @param background_color color string, the background color to use. Use 'transparency_color' if you want a transparent background.
+#'
+#' @param transparency_color the temporary background color that will get mapped to transparency, or NULL if you do not want a transparent background. If used, it can be any color that does not occur in the foreground. Try 'white' or 'black' if in doubt.
 #'
 #' @return named list with entries 'output_img_path': character string, path to saved image. 'merged_img': magick image instance, the merged image
 #'
@@ -206,7 +208,9 @@ combine.colorbar.with.brainview.image.vertical <- function(brainview_img, colorb
 
 #' @title Combine a colorbar and a brain animation in gif format into a new animation.
 #'
-#' @param brain_animation path to the brain animation in gif format
+#' @inheritParams combine.colorbar.with.brainview.image
+#'
+#' @param brain_animation path to the brain animation in GIF format
 #'
 #' @param colorbar_img path to the main image containing the separate colorbar, usually an image in PNG format
 #'

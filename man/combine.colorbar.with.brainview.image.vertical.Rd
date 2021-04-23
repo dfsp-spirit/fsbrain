@@ -12,7 +12,8 @@ combine.colorbar.with.brainview.image.vertical(
   extend_brainview_img_width_by = NULL,
   silent = FALSE,
   allow_colorbar_shrink = TRUE,
-  background_color = "#FFFFFFFF"
+  background_color = "#FFFFFF",
+  transparency_color = NULL
 )
 }
 \arguments{
@@ -29,6 +30,10 @@ combine.colorbar.with.brainview.image.vertical(
 \item{silent}{logical, whether to silence all messages}
 
 \item{allow_colorbar_shrink}{logical, whether to shrink the colorbar to the width of the animation in case it is considerably wider (more than 20 percent). Defaults to TRUE.}
+
+\item{background_color}{color string, the background color to use. Use 'transparency_color' if you want a transparent background.}
+
+\item{transparency_color}{the temporary background color that will get mapped to transparency, or NULL if you do not want a transparent background. If used, it can be any color that does not occur in the foreground. Try 'white' or 'black' if in doubt.}
 }
 \description{
 Combine a vertical colorbar and a brainview image into a new figure.

@@ -16,7 +16,7 @@ combine.colorbar.with.brainview.animation(
 )
 }
 \arguments{
-\item{brain_animation}{path to the brain animation in gif format}
+\item{brain_animation}{path to the brain animation in GIF format}
 
 \item{colorbar_img}{path to the main image containing the separate colorbar, usually an image in PNG format}
 
@@ -29,6 +29,8 @@ combine.colorbar.with.brainview.animation(
 \item{silent}{logical, whether to silence all messages}
 
 \item{allow_colorbar_shrink}{logical, whether to shrink the colorbar to the width of the animation in case it is considerably wider (more than 20 percent). Defaults to TRUE.}
+
+\item{background_color}{color string, the background color to use. Use 'transparency_color' if you want a transparent background.}
 }
 \description{
 Combine a colorbar and a brain animation in gif format into a new animation.

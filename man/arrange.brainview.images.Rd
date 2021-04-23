@@ -11,7 +11,8 @@ arrange.brainview.images(
   silent = TRUE,
   grid_like = TRUE,
   border_geometry = "5x5",
-  background_color = "white"
+  background_color = "white",
+  map_bg_to_transparency = FALSE
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ arrange.brainview.images(
 \item{border_geometry}{string, a geometry string passed to \code{magick::image_border} to define the borders to add to each image tile. The default value adds 5 pixels, both horizontally and vertically.}
 
 \item{background_color}{string, a valid ImageMagick color string such as "white" or "#000080". The color to use when extending images (e.g., when creating the border).}
+
+\item{map_bg_to_transparency}{logical, whether to map the background_color to transparency for the final PNG export.}
 }
 \value{
 named list with entries: 'brainview_images': vector of character strings, the paths to the input images. 'output_img_path': character string, path to the output image. 'merged_img': the magick image instance.
