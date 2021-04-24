@@ -470,7 +470,7 @@ cm.qual <- function(report=FALSE) {
 #'
 #' @export
 mkco.seq <- function() {
-    return(list('colFn'=cm.seq(), 'n'=100L));
+    return(list('colFn'=cm.seq(), 'n'=100L, 'col.na'='#FEFEFE'));
 }
 
 
@@ -482,7 +482,7 @@ mkco.seq <- function() {
 #'
 #' @export
 mkco.heat <- function() {
-    return(list('colFn'=cm.heat(), 'n'=100L));
+    return(list('colFn'=cm.heat(), 'n'=100L, 'col.na'='#FEFEFE'));
 }
 
 
@@ -494,7 +494,7 @@ mkco.heat <- function() {
 #'
 #' @export
 mkco.div <- function() {
-    return(list('colFn'=cm.div(), 'n'=100L, 'symm'=TRUE));
+    return(list('colFn'=cm.div(), 'n'=100L, 'symm'=TRUE, 'col.na'='#FEFEFE'));
 }
 
 
@@ -508,5 +508,5 @@ mkco.div <- function() {
 #'
 #' @export
 mkco.cluster <- function() {
-    return(list('colFn'=cm.cbry(), 'n'=100L, 'symm'=TRUE));
+    return(list('colFn'=cm.cbry(), 'n'=100L, 'symm'=TRUE, 'col.na'='#FEFEFE'));
 }

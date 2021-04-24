@@ -312,17 +312,14 @@ Here is how it works: the `transparency_color` is used as a background color for
 
 This means that:
 * The `transparency_color` has to be an RGB color, i.e., it cannot have an alpha value (if it is an RGBA color, the alpha part is silently ignored by RGL it seems).
-* The `transparency_color` can be almost any RGB color, but (1) it should not occur in the brain surface visualization to prevent transparent parts in the brain after post-processing. And (2) because of anti-aliasing, the color may slightly affect the border pixels of the rendered brain surfaces, so a neutral color like 'white', 'black' or some gray value like '#EFEFEF' is maybe more suitable than 'hot pink' or 'magenta'.
+* The `transparency_color` can be almost any RGB color, but (1) it should not occur in the brain surface visualization to prevent transparent parts in the brain after post-processing. And (2) because of anti-aliasing, the color may slightly affect the border pixels of the rendered brain surfaces, so a neutral color like 'white' or some gray value like '#DDDDDD' is maybe more suitable than 'hot pink' or 'magenta'. At high resolution, this is hardly noticable though.
 
-I prefer to use white ('#FFFFFF') as the transparency color, therefore I reset the NA color to a very bright gray ('#FEFEFE' in this example): 
 
 ```{r, eval = FALSE}
-mkc = list('col.na'="#FEFEFE", 'colFn'=viridis::viridis, 'n'=200);
-coloredmeshes = vis.subject.morph.standard(subjects_dir, "subject1", "sulc", cortex_only=TRUE, views=NULL, makecmap_options = mkc);
+coloredmeshes = vis.subject.morph.standard(subjects_dir, "subject1", "sulc", cortex_only=TRUE, views=NULL);
 vis.export.from.coloredmeshes(coloredmeshes, colorbar_legend = "sulcal depth [mm]", transparency_color = "white");
 ```
 
-Resetting the `col.na` is needed/recommended in this case because it is 'white' by default.
 
 ### When visualizing data on the inflated surface, the left and right hemisphere overlap and look garbled. How to fix that?
 
