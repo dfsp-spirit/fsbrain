@@ -1,6 +1,14 @@
 fsbrain Changes
 ===============
 
+Version 0.4.3
+-------------
+- Add support for exporting figures with transparent background in vis.export.from.coloredmeshes function, see parameter 'transparency_color'. A usage example is in the fsbrain FAQ vignette.
+- Change default value for the NA-color in 'mkco.*' functions from white (#FFFFFF) to very light gray (#FEFEFE).
+- Support custom background color in various visualization functions.
+- One can now suppress rendering of a colorbar with the vis.export.from.coloredmeshes function by passing 'NULL' for the colorbar orientation parameter 'horizontal'.
+
+
 Version 0.4.2
 -------------
 - Fix bug in makecmap_options 'range' handling, see #19 and #20
@@ -10,8 +18,8 @@ Version 0.4.2
 
 Version 0.4.1
 -------------
-- Support for visualizing TRK and TCK files (Fiber track files from Diffusion Tensor Imaging) created in Diffusion Toolkit and MRtrix3
-- Delete all unit test data after tests have been run if on CRAN
+- Support for visualizing TRK and TCK files (Fiber track files from Diffusion Tensor Imaging) created in Diffusion Toolkit and MRtrix3, see function 'vis.dti.trk'.
+- Delete all unit test data after tests have been run if on CRAN.
 
 
 Version 0.4.0
