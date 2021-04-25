@@ -41,36 +41,36 @@ arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=
 
         if(grid_like) {
             if(num_img == 3 || num_img == 4) {
-                top_row = magick::image_append(images[1:2]);
-                bottom_row = magick::image_append(images[3:num_img]);
-                merged_img = magick::image_append(c(top_row, bottom_row), stack = TRUE);
+                top_row = wrapped.image.append(images[1:2], background_color = background_color);
+                bottom_row = wrapped.image.append(images[3:num_img], background_color = background_color);
+                merged_img = wrapped.image.append(c(top_row, bottom_row), stack = TRUE, background_color = background_color);
             } else if(num_img == 8 || num_img == 9) {
-                top_row = magick::image_append(images[1:3]);
-                mid_row = magick::image_append(images[4:6]);
-                top_and_mid = magick::image_append(c(top_row, mid_row), stack = TRUE);
+                top_row = wrapped.image.append(images[1:3], background_color = background_color);
+                mid_row = wrapped.image.append(images[4:6], background_color = background_color);
+                top_and_mid = wrapped.image.append(c(top_row, mid_row), stack = TRUE, background_color = background_color);
 
                 if(num_img == 9) {
-                    bottom_row = magick::image_append(images[7:num_img]);
+                    bottom_row = wrapped.image.append(images[7:num_img], background_color = background_color);
                 } else {
                     # For 8 images, it gets a bit trickier. It looks very bad if the two
                     # images are on the left and the right is empty, so we add an empty
                     # image of appropriate size between them.
                     width_top_and_mid = magick::image_info(top_and_mid)$width;
-                    bottom_row_so_far = magick::image_append(images[7:num_img]);
+                    bottom_row_so_far = wrapped.image.append(images[7:num_img], background_color = background_color);
                     width_bottom_so_far = magick::image_info(images[7])$width + magick::image_info(images[8])$width;
                     width_missing = width_top_and_mid - width_bottom_so_far;
                     if(width_missing > 0L) {
                         mid = magick::image_blank(width_missing, magick::image_info(bottom_row_so_far)$height, background_color);
-                        bottom_row = magick::image_append(c(images[7], mid, images[8]));
+                        bottom_row = wrapped.image.append(c(images[7], mid, images[8]), background_color = background_color);
                     } else {
                         bottom_row = bottom_row_so_far;
                     }
                 }
 
-                merged_img = magick::image_append(c(top_and_mid, bottom_row), stack = TRUE);
+                merged_img = wrapped.image.append(c(top_and_mid, bottom_row), stack = TRUE, background_color = background_color);
             } else {
                 if(num_img <= 10L) {
-                    merged_img = magick::image_append(images);
+                    merged_img = wrapped.image.append(images, background_color = background_color);
                 } else {
                     # For more than 10 images, plot 10 per row.
                     num_per_row = 10L;
@@ -78,7 +78,7 @@ arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=
                     num_in_last_row = (num_rows * num_per_row) %% num_img;
                     start_img_idx = 1L;
                     for(row_idx in seq.int(num_rows)) {
-                        img_row = magick::image_append(images[start_img_idx:min((start_img_idx+num_per_row-1L),num_img)]);
+                        img_row = wrapped.image.append(images[start_img_idx:min((start_img_idx+num_per_row-1L),num_img)], background_color = background_color);
                         if(row_idx == 1L) {
                             merged_img = img_row;
                         } else {
@@ -87,16 +87,16 @@ arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=
                             width_missing = width_so_far - width_img_row;
                             if(width_missing > 0L) {
                                 blank_right_img = magick::image_blank(width_missing, magick::image_info(img_row)$height, background_color);
-                                img_row = magick::image_append(c(img_row, blank_right_img));
+                                img_row = wrapped.image.append(c(img_row, blank_right_img), background_color = background_color);
                             }
-                            merged_img = magick::image_append(c(merged_img, img_row), stack = TRUE);
+                            merged_img = wrapped.image.append(c(merged_img, img_row), stack = TRUE, background_color = background_color);
                         }
                         start_img_idx = start_img_idx + num_per_row;
                     }
                 }
             }
         } else {
-            merged_img = magick::image_append(images);
+            merged_img = wrapped.image.append(images, background_color = background_color);
         }
 
         if(map_bg_to_transparency) {
@@ -185,7 +185,7 @@ arrange.brainview.images.grid <- function(brainview_images, output_img, colorbar
         for(row_idx in seq.int(num_rows)) {
             row_start_idx = start_img_idx;
             row_end_idx = min((start_img_idx+num_per_row-1L),num_img);
-            img_row = magick::image_append(images[row_start_idx:row_end_idx]);
+            img_row = wrapped.image.append(images[row_start_idx:row_end_idx], background_color = background_color);
 
             if(row_idx == 1L) {
                 merged_img = img_row;
@@ -195,9 +195,9 @@ arrange.brainview.images.grid <- function(brainview_images, output_img, colorbar
                 width_missing = width_so_far - width_img_row;
                 if(width_missing > 0L) {
                     blank_right_img = magick::image_blank(width_missing, magick::image_info(img_row)$height, background_color);
-                    img_row = magick::image_append(c(img_row, blank_right_img));
+                    img_row = wrapped.image.append(c(img_row, blank_right_img), background_color = background_color);
                 }
-                merged_img = magick::image_append(c(merged_img, img_row), stack = TRUE);
+                merged_img = wrapped.image.append(c(merged_img, img_row), stack = TRUE, background_color = background_color);
             }
             start_img_idx = start_img_idx + num_per_row;
         }
@@ -280,7 +280,7 @@ images.annotate <- function(images, annotations, do_extend = TRUE, background = 
             if(do_extend) {
                 extend_height_by = font_size * 2L;
                 lower_extension_img = magick::image_blank(magick::image_info(images[img_idx])$width, extend_height_by, background);
-                merged_img = magick::image_append(c(images[img_idx], lower_extension_img), stack = TRUE);
+                merged_img = wrapped.image.append(c(images[img_idx], lower_extension_img), stack = TRUE, background_color = background);
             } else {
                 merged_img = images[img_idx];
             }
