@@ -9,7 +9,11 @@ wrapped.image.append <- function(images, stack = FALSE, background_color = "whit
         stop("Parameter 'images' must not be empty.");
     }
 
-    if(stack == TRUE) {
+    if(is.logical(stack)) {
+        stop("Parameter 'stack' must be logical.");
+    }
+
+    if(stack) {
         # The width of the images must match.
         images = images.same.width(images, background_color = background_color);
     } else {
