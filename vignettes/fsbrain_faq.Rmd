@@ -312,12 +312,12 @@ Here is how it works: the `transparency_color` is used as a background color for
 
 This means that:
 * The `transparency_color` has to be an RGB color, i.e., it cannot have an alpha value (if it is an RGBA color, the alpha part is silently ignored by RGL it seems).
-* The `transparency_color` can be almost any RGB color, but (1) it should not occur in the brain surface visualization to prevent transparent parts in the brain after post-processing. And (2) because of anti-aliasing, the color may slightly affect the border pixels of the rendered brain surfaces, so a neutral color like 'white' or some gray value like '#DDDDDD' is maybe more suitable than 'hot pink' or 'magenta'. At high resolution, this is hardly noticable though.
+* The `transparency_color` can be almost any RGB color, but (1) it should not occur in the brain surface visualization to prevent transparent parts in the brain after post-processing. And (2) because of anti-aliasing, the color may slightly affect the border pixels of the rendered brain surfaces, so a neutral color like '#FFFFFF' (for white) or some gray value like '#DDDDDD' is maybe more suitable than a hot pink. At high resolution, this is hardly noticable though.
 
 
 ```{r, eval = FALSE}
 coloredmeshes = vis.subject.morph.standard(subjects_dir, "subject1", "sulc", cortex_only=TRUE, views=NULL);
-vis.export.from.coloredmeshes(coloredmeshes, colorbar_legend = "sulcal depth [mm]", transparency_color = "white");
+vis.export.from.coloredmeshes(coloredmeshes, colorbar_legend = "sulcal depth [mm]", transparency_color = "#FFFFFF");
 ```
 
 

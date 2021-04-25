@@ -28,7 +28,7 @@ arrange.brainview.images.grid(
 
 \item{border_geometry}{string, a geometry string passed to \code{magick::image_border} to define the borders to add to each image tile. The default value adds 5 pixels, both horizontally and vertically.}
 
-\item{background_color}{string, a valid ImageMagick color string such as "white" or "#000080". The color to use when extending images (e.g., when creating the border).}
+\item{background_color}{hex color string, such as "#DDDDDD" or "#FFFFFF". The color to use when extending images (e.g., when creating the border). WARNING: Do not use color names (like 'gray'), as their interpretation differs between rgl and image magick!}
 
 \item{captions}{vector of character strings or NULL, the (optional) text annotations for the images. Useful to print the subject identifier onto the individual tiles. Length must match number of image tiles in 'brainview_images'.}
 }

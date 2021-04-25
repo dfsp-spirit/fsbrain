@@ -18,7 +18,7 @@
 #'
 #' @param border_geometry string, a geometry string passed to \code{magick::image_border} to define the borders to add to each image tile. The default value adds 5 pixels, both horizontally and vertically.
 #'
-#' @param background_color string, a valid ImageMagick color string such as "white" or "#000080". The color to use when extending images (e.g., when creating the border).
+#' @param background_color hex color string, such as "#DDDDDD" or "#FFFFFF". The color to use when extending images (e.g., when creating the border). WARNING: Do not use color names (like 'gray'), as their interpretation differs between rgl and image magick!
 #'
 #' @param map_bg_to_transparency logical, whether to map the background_color to transparency for the final PNG export.
 #'
@@ -285,7 +285,11 @@ images.annotate <- function(images, annotations, do_extend = TRUE, background = 
                 merged_img = images[img_idx];
             }
 
-            imgs_annotated[img_idx] = magick::image_annotate(merged_img, annotations[img_idx], size = font_size, gravity = "south", color = "black");
+            font_color = "black";
+            if(background == "black" || background == "#000000") {
+                font_color = "white";
+            }
+            imgs_annotated[img_idx] = magick::image_annotate(merged_img, annotations[img_idx], size = font_size, gravity = "south", color = font_color);
         }
         return(imgs_annotated);
     } else {
@@ -315,9 +319,9 @@ images.annotate <- function(images, annotations, do_extend = TRUE, background = 
 #'
 #' @param grid_like logical, whether to arrange the images in a grid-like fashion. If FALSE, they will all be merged horizontally. Passed to \code{\link[fsbrain]{arrange.brainview.images}}.
 #'
-#' @param background_color the color to use for the background. Ignored if 'transparency_color' is not NULL. To get a transparent background, use 'transparency_color' instead of this parameter.
+#' @param background_color hex color string (like '#FFFFFF'), the color to use for the background. Ignored if 'transparency_color' is not NULL. To get a transparent background, use 'transparency_color' instead of this parameter. WARNING: Do not use color names (like 'gray'), as their interpretation differs between rgl and image magick!
 #'
-#' @param transparency_color the temporary background color that will get mapped to transparency, or NULL if you do not want a transparent background. If used, it can be any color that does not occur in the foreground. Try 'white' or 'black' if in doubt.
+#' @param transparency_color hex color string (like '#FFFFFF'), the temporary background color that will get mapped to transparency, or NULL if you do not want a transparent background. If used, it can be any color that does not occur in the foreground. Try '#FFFFFF' (white) or '#000000' (black) if in doubt. WARNING: Do not use color names (like 'gray'), as their interpretation differs between rgl and image magick!
 #'
 #' @return named list, see \code{\link{arrange.brainview.images}} for details
 #'

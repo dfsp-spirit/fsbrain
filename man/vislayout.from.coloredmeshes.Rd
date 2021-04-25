@@ -34,9 +34,9 @@ vislayout.from.coloredmeshes(
 
 \item{grid_like}{logical, whether to arrange the images in a grid-like fashion. If FALSE, they will all be merged horizontally. Passed to \code{\link[fsbrain]{arrange.brainview.images}}.}
 
-\item{background_color}{the color to use for the background. Ignored if 'transparency_color' is not NULL. To get a transparent background, use 'transparency_color' instead of this parameter.}
+\item{background_color}{hex color string (like '#FFFFFF'), the color to use for the background. Ignored if 'transparency_color' is not NULL. To get a transparent background, use 'transparency_color' instead of this parameter. WARNING: Do not use color names (like 'gray'), as their interpretation differs between rgl and image magick!}
 
-\item{transparency_color}{the temporary background color that will get mapped to transparency, or NULL if you do not want a transparent background. If used, it can be any color that does not occur in the foreground. Try 'white' or 'black' if in doubt.}
+\item{transparency_color}{hex color string (like '#FFFFFF'), the temporary background color that will get mapped to transparency, or NULL if you do not want a transparent background. If used, it can be any color that does not occur in the foreground. Try '#FFFFFF' (white) or '#000000' (black) if in doubt. WARNING: Do not use color names (like 'gray'), as their interpretation differs between rgl and image magick!}
 }
 \value{
 named list, see \code{\link{arrange.brainview.images}} for details
