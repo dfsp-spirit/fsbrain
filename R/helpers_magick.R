@@ -5,11 +5,10 @@
 #' @keywords internal
 wrapped.image.append <- function(images, stack = FALSE, background_color = "white") {
 
-    if(length(images) == 0) {
-        stop("Parameter 'images' must not be empty.");
-    }
+    if(is.null(images)) { stop("Parameter 'images' must not be NULL."); }
+    if(length(images) == 0) { stop("Parameter 'images' must not be empty."); }
 
-    if(is.logical(stack)) {
+    if(! is.logical(stack)) {
         stop("Parameter 'stack' must be logical.");
     }
 
@@ -25,13 +24,15 @@ wrapped.image.append <- function(images, stack = FALSE, background_color = "whit
     return(img_appended);
 }
 
+
 #' @title Extent all images to the width of the image with maximal width.
 #' @keywords internal
 images.same.width <- function(images, background_color = "white") {
     max_width = images.dimmax(images)$width;
-    extended_images = c();
+    extended_images = NULL;
     for (img_idx in seq(length(images))) {
         img = images[img_idx];
+        magick:::assert_image(img);
         img_width = magick::image_info(img)$width;
 
         if(img_width < max_width) {
@@ -40,7 +41,12 @@ images.same.width <- function(images, background_color = "white") {
             extent_dims = sprintf("%dx%d", img_target_width, img_height);
             img = magick::image_extent(img, extent_dims, gravity = "east", color = background_color);
         }
-        extended_images = c(extended_images, img);
+        if(is.null(extended_images)) {
+            extended_images = img;
+        } else {
+            extended_images = c(extended_images, img);
+        }
+
     }
     return(extended_images);
 }
@@ -53,6 +59,7 @@ images.same.height <- function(images, background_color = "white") {
     extended_images = c();
     for (img_idx in seq(length(images))) {
         img = images[img_idx];
+        magick:::assert_image(img);
         img_height = magick::image_info(img)$height;
 
         if(img_height < max_height) {
@@ -61,7 +68,11 @@ images.same.height <- function(images, background_color = "white") {
             extent_dims = sprintf("%dx%d", img_width, img_target_height);
             img = magick::image_extent(img, extent_dims, gravity = "south", color = background_color);
         }
-        extended_images = c(extended_images, img);
+        if(is.null(extended_images)) {
+            extended_images = img;
+        } else {
+            extended_images = c(extended_images, img);
+        }
     }
     return(extended_images);
 }
@@ -70,10 +81,13 @@ images.same.height <- function(images, background_color = "white") {
 #' @title Compute max width and height of magick images.
 #' @keywords internals
 images.dimmax <- function(images) {
+    if(is.null(images)) { stop("Parameter 'images' must not be NULL."); }
+    if(length(images) == 0) { stop("Parameter 'images' must not be empty."); }
     max_width = 0L;
     max_height = 0L;
     for (img_idx in seq(length(images))) {
-        img_info = magick::image_info(images[img_idx]);
+        img = images[img_idx];
+        img_info = magick::image_info(img);
         if(img_info$width > max_width) {
             max_width = img_info$width;
         }
@@ -83,3 +97,4 @@ images.dimmax <- function(images) {
     }
     return(list("width" = max_width, "height" = max_height));
 }
+
