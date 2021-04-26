@@ -32,7 +32,6 @@ images.same.width <- function(images, background_color = "white") {
     extended_images = NULL;
     for (img_idx in seq(length(images))) {
         img = images[img_idx];
-        magick:::assert_image(img);
         img_width = magick::image_info(img)$width;
 
         if(img_width < max_width) {
@@ -59,7 +58,6 @@ images.same.height <- function(images, background_color = "white") {
     extended_images = c();
     for (img_idx in seq(length(images))) {
         img = images[img_idx];
-        magick:::assert_image(img);
         img_height = magick::image_info(img)$height;
 
         if(img_height < max_height) {
