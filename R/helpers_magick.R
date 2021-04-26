@@ -2,8 +2,17 @@
 
 
 #' @title Wrapper around magick::image_append that allows specifying the background color when working with images of different width/height.
+#'
+#' @param images a vector/stack of magick images. See \code{magick::image_blank} or other methods to get one.
+#'
+#' @param stack whether to append vertically, default is FALSE / horizontally.
+#'
+#' @param background_color hex color string, the background color to use if the images have different sizes and one needs to be extended. Do not use color names like 'gray', which differ between R and magick.
+#'
+#' @return a single magick image, the stacked version.
+#'
 #' @keywords internal
-wrapped.image.append <- function(images, stack = FALSE, background_color = "white") {
+wrapped.image.append <- function(images, stack = FALSE, background_color = "#FFFFFF") {
 
     if(is.null(images)) { stop("Parameter 'images' must not be NULL."); }
     if(length(images) == 0) { stop("Parameter 'images' must not be empty."); }
@@ -26,6 +35,11 @@ wrapped.image.append <- function(images, stack = FALSE, background_color = "whit
 
 
 #' @title Extent all images to the width of the image with maximal width.
+#'
+#' @inheritParams wrapped.image.append
+#'
+#' @return a vector/stack of magick images, all with the same width.
+#'
 #' @keywords internal
 images.same.width <- function(images, background_color = "white") {
     max_width = images.dimmax(images)$width;
@@ -52,6 +66,11 @@ images.same.width <- function(images, background_color = "white") {
 
 
 #' @title Extent all images to the height of the image with maximal height.
+#'
+#' @inheritParams wrapped.image.append
+#'
+#' @return a vector/stack of magick images, all with the same height.
+#'
 #' @keywords internal
 images.same.height <- function(images, background_color = "white") {
     max_height = images.dimmax(images)$height;
@@ -77,6 +96,11 @@ images.same.height <- function(images, background_color = "white") {
 
 
 #' @title Compute max width and height of magick images.
+#'
+#' @inheritParams wrapped.image.append
+#'
+#' @return named list with entries 'width' and 'height'
+#'
 #' @keywords internals
 images.dimmax <- function(images) {
     if(is.null(images)) { stop("Parameter 'images' must not be NULL."); }

@@ -4,7 +4,17 @@
 \alias{wrapped.image.append}
 \title{Wrapper around magick::image_append that allows specifying the background color when working with images of different width/height.}
 \usage{
-wrapped.image.append(images, stack = FALSE, background_color = "white")
+wrapped.image.append(images, stack = FALSE, background_color = "#FFFFFF")
+}
+\arguments{
+\item{images}{a vector/stack of magick images. See \code{magick::image_blank} or other methods to get one.}
+
+\item{stack}{whether to append vertically, default is FALSE / horizontally.}
+
+\item{background_color}{hex color string, the background color to use if the images have different sizes and one needs to be extended. Do not use color names like 'gray', which differ between R and magick.}
+}
+\value{
+a single magick image, the stacked version.
 }
 \description{
 Wrapper around magick::image_append that allows specifying the background color when working with images of different width/height.

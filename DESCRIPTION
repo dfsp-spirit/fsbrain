@@ -17,7 +17,7 @@ Imports:
     squash,
     fields,
     data.table,
-    magick
+    magick,
 Suggests:
     knitr,
     rmarkdown,

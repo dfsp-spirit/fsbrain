@@ -6,6 +6,12 @@
 \usage{
 images.dimmax(images)
 }
+\arguments{
+\item{images}{a vector/stack of magick images. See \code{magick::image_blank} or other methods to get one.}
+}
+\value{
+named list with entries 'width' and 'height'
+}
 \description{
 Compute max width and height of magick images.
 }
