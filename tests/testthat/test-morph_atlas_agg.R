@@ -120,6 +120,7 @@ test_that("Region-based aggregation on group level works in native space", {
 
 test_that("Spreading a single value over an atlas region works from agg.res result", {
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+    testthat::skip_on_travis(); # Reduce test time on travis to prevent the build from being killed.
 
     annot_file = system.file("extdata", "lh.aparc.annot.gz", package = "freesurferformats", mustWork = TRUE);
     annot = freesurferformats::read.fs.annot(annot_file);
