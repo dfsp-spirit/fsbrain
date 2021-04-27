@@ -7,6 +7,7 @@ Version 0.4.3
 - Change default value for the NA-color in 'mkco.*' functions from white (#FFFFFF) to very light gray (#FEFEFE).
 - Support custom background color in various visualization functions, including `vis.export.from.coloredmeshes`. See the docs for the new parameter 'background_color'.
 - One can now suppress rendering of a colorbar with the `vis.export.from.coloredmeshes` function by passing 'NULL' for the colorbar orientation parameter 'horizontal'.
+- Add new R live notebook that illustrates how to use the Export API to produce publication-ready plots. It is linked on the GitHub page, see the Documentation section.
 
 
 Version 0.4.2
