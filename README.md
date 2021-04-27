@@ -78,8 +78,9 @@ Recent MacOS versions do not ship with an X11 environment. You will have to inst
 The documentation can be accessed from within an R session after you have loaded the *fsbrain* package:
 
 * There are two online R Markdown notebooks (like Jupyter Notebook in Python) that show various example plots in combination with the code used to produce them:
-  * [basic fsbrain example notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples.html): plotting subject data
-  * [advanced fsbrain example notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples_adv.html): plotting group data
+  * [basic fsbrain example notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples.html): Live visualization of subject data
+  * [advanced fsbrain example notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples_adv.html): Plotting group data
+  * [export API fsbrain example notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples_export.html): Exporting publication-ready plots
 * A detailed vignette with explanations and examples for the functions of the package is included, run `browseVignettes("fsbrain")` to see the vignettes. You can also open the vignette directly:
   * learn how to load and visualize surface-based neuroimaging data and results: `vignette("fsbrain")` [read online at CRAN](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain.html)
   * learn how to load and visualize volume-based neuroimaging data and results: `vignette("fsbrain_vol")` [read online at CRAN](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain_vol.html)
