@@ -14,5 +14,9 @@ before_install:
 r_packages:
   - covr
 
+script:
+- travis_wait 15 R CMD build .
+- travis_wait 30 R CMD check *tar.gz
+
 after_success:
   - Rscript -e 'library(covr); codecov(type = "all")'
