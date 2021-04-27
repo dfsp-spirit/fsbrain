@@ -416,7 +416,15 @@ This happens if you do not have X11, or no window can be opened. Possible reason
 
 ### I am trying to plot a very large image with fsbrain, but the output is not as large as expected. Why?
 
-The output dimensions are limited by your screen resolution.
+The output dimensions are limited by your screen resolution, so to be able to do something like this:
+
+```{r, eval = FALSE}
+fsbrain::fsbrain.set.default.figsize(3000, 3000, 0, 0);
+```
+
+you would need to have a screen with a resolution larger than 3000x3000 pixels.
+
+A technical note: This limitation exists due to the fact that rgl renders to an OpenGL window produced by your display server, and fsbrain basically takes a screenshot of that window. One can circumvent this limitation by using a virtual display server, e.g. by running R/fsbrain via [xvfb](https://en.wikipedia.org/wiki/Xvfb) under Linux. An example script that illustrates how to do this for fsbrain can be found in the  [fsbrain_xvfb_demo directory](https://github.com/dfsp-spirit/fsbrain/tree/master/web/fsbrain_xvfb_demo) of the fsbrain repo on GitHub.
 
 
 ### What to do about the error 'lazy-load database is corrupt' when loading fsbrain?
