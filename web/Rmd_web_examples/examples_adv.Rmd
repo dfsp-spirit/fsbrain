@@ -21,6 +21,7 @@ sjd = '~/data/subject1_only'
 sj = 'subject1'
 ```
 
+
 Now increase the figure size.
 
 ```{r}
@@ -28,9 +29,9 @@ fsbrain.set.default.figsize(1000, 1000);
 ```
 
 
-## Eporting (almost) publication-ready plots
+## Eporting publication-ready plots
 
-The `vis.export.*` functions provide a high-level interface to export plots. They require the `magick` package.
+The `vis.export.*` functions provide a high-level interface to export plots.
 
 ```{r rgl=TRUE, fig.show = 'hide'}
 cm = vis.subject.morph.standard(sjd, sj, 'sulc', rglactions=list('no_vis'=T));
@@ -43,6 +44,7 @@ The image gets exported as a PNG file into the current working directory by defa
 img;
 ```
 
+Many more examples and details on the export API are available in the 'Fsbrain export API' notebook (the files `examples_export.Rmd` and `examples_export.html` in this directory).
 
 ## Group visualization: atlas annotations
 
