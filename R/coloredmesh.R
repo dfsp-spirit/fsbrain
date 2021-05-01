@@ -1,5 +1,9 @@
 # Functions for generating coloredmeshes from data.
 
+#' @title Check if an object is an fs.surface instance or not.
+#'
+#' @param x string. The object to be checked.
+is.fs.surface <- function(x) inherits(x, "fs.surface")
 
 #' @title Create a coloredmesh from native space morphometry data.
 #'
@@ -33,9 +37,9 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
-
+    
     makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
-
+    
     if(is.null(measure)) {
         morph_data = NULL;
     } else {
@@ -45,33 +49,33 @@ coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hem
             morph_data = subject.morph.native(subjects_dir, subject_id, measure, hemi, cortex_only=cortex_only);
         }
     }
-
+    
     if(! is.null(clip)) {
         morph_data = clip.data(morph_data, lower=clip[1], upper=clip[2]);
     }
-
-    if(freesurferformats::is.fs.surface(surface)) {
+    
+    if(is.fs.surface(surface)) {
         surface_mesh = surface;
     } else if(is.hemilist(surface)) {
         surface_mesh = surface[[hemi]];
-        if(! freesurferformats::is.fs.surface(surface_mesh)) {
+        if(! is.fs.surface(surface_mesh)) {
             stop(sprintf("Hemilist in parameter 'surface' does not contain an fs.surface instance for hemi '%s'.\n", hemi));
         }
     } else {
         surface_mesh = subject.surface(subjects_dir, subject_id, surface, hemi);
     }
-
+    
     if(nrow(surface_mesh$vertices) != length(morph_data)) {
         warning(sprintf("Data mismatch: surface has %d vertices, but %d color values passed in argument 'measure'.\n", nrow(surface_mesh$vertices), length(morph_data)));
     }
-
+    
     mesh = rgl::tmesh3d(c(t(surface_mesh$vertices)), c(t(surface_mesh$faces)), homogeneous=FALSE);
-
+    
     morph_data_hl = hemilist.wrap(morph_data, hemi);
     cmr = common.makecmap.range(makecmap_options, lh_data = morph_data_hl$lh, rh_data = morph_data_hl$rh, return_metadata = TRUE);
     map = cmr$map;
     col = cmr$collayer[[hemi]];
-
+    
     return(fs.coloredmesh(mesh, col, hemi, metadata=list("src_data"=morph_data, "fs_mesh"=surface_mesh, "map"=map, "data_range"=range(morph_data, finite=TRUE), "makecmap_options"=makecmap_options)));
 }
 
@@ -93,19 +97,19 @@ coloredmesh.from.color <- function(subjects_dir, subject_id, color_data, hemi, s
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
-
-    if(freesurferformats::is.fs.surface(surface)) {
+    
+    if(is.fs.surface(surface)) {
         surface_mesh = surface;
     } else if(is.hemilist(surface)) {
         surface_mesh = surface[[hemi]];
-        if(! freesurferformats::is.fs.surface(surface_mesh)) {
+        if(! is.fs.surface(surface_mesh)) {
             stop(sprintf("Hemilist in parameter 'surface' does not contain an fs.surface instance for hemi '%s'.\n", hemi));
         }
     } else {
         surface_mesh = subject.surface(subjects_dir, subject_id, surface, hemi);
     }
     mesh = rgl::tmesh3d(c(t(surface_mesh$vertices)), c(t(surface_mesh$faces)), homogeneous=FALSE);
-
+    
     if(nrow(surface_mesh$vertices) != length(color_data)) {
         if(length(color_data) == 1L) {
             color_data = rep(color_data, nrow(surface_mesh$vertices));
@@ -113,9 +117,9 @@ coloredmesh.from.color <- function(subjects_dir, subject_id, color_data, hemi, s
             warning(sprintf("Data mismatch: surface has %d vertices, but %d color values passed in argument 'color_data'.\n", nrow(surface_mesh$vertices), length(color_data)));
         }
     }
-
+    
     metadata$fs_mesh = surface_mesh;
-
+    
     return(fs.coloredmesh(mesh, color_data, hemi, metadata=metadata));
 }
 
@@ -177,13 +181,13 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
-
+    
     makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
-
+    
     if(is.null(template_subjects_dir)) {
         template_subjects_dir = subjects_dir;
     }
-
+    
     if(is.null(measure)) {
         morph_data = NULL;
     } else {
@@ -193,28 +197,28 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
             morph_data = subject.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm = fwhm, cortex_only = cortex_only, template_subject = template_subject);
         }
     }
-
+    
     if(! is.null(clip)) {
         morph_data = clip.data(morph_data, lower=clip[1], upper=clip[2]);
     }
-
-    if(freesurferformats::is.fs.surface(surface)) {
+    
+    if(is.fs.surface(surface)) {
         surface_mesh = surface;
     } else if(is.hemilist(surface)) {
         surface_mesh = surface[[hemi]];
-        if(! freesurferformats::is.fs.surface(surface_mesh)) {
+        if(! is.fs.surface(surface_mesh)) {
             stop(sprintf("Hemilist in parameter 'surface' does not contain an fs.surface instance for hemi '%s'.\n", hemi));
         }
     } else {
         surface_mesh = subject.surface(template_subjects_dir, template_subject, surface, hemi);
     }
-
+    
     if(nrow(surface_mesh$vertices) != length(morph_data)) {
         warning(sprintf("Data mismatch: template surface has %d vertices, but %d morphometry values passed in argument 'measure'. Is the template subject '%s' correct?\n", nrow(surface_mesh$vertices), length(morph_data), template_subject));
     }
-
+    
     mesh = rgl::tmesh3d(c(t(surface_mesh$vertices)), c(t(surface_mesh$faces)), homogeneous=FALSE);
-
+    
     if(is.null(morph_data)) {
         map = NULL;
         col = 'white';
@@ -249,27 +253,27 @@ coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data,
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
-
+    
     makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
-
-    if(freesurferformats::is.fs.surface(surface)) {
+    
+    if(is.fs.surface(surface)) {
         surface_mesh = surface;
     } else {
         surface_mesh = subject.surface(subjects_dir, vis_subject_id, surface, hemi);
     }
-
+    
     num_verts = nrow(surface_mesh$vertices);
     if(length(morph_data) != num_verts) {
         warning(sprintf("Received %d data values, but the hemi '%s' '%s' surface of visualization subject '%s' in dir '%s' has %d vertices. Counts must match.\n", length(morph_data), hemi, surface, vis_subject_id, subjects_dir, num_verts));
     }
-
+    
     mesh = rgl::tmesh3d(c(t(surface_mesh$vertices)), c(t(surface_mesh$faces)), homogeneous=FALSE);
-
+    
     morph_data_hl = hemilist.wrap(morph_data, hemi);
     cmr = common.makecmap.range(makecmap_options, lh_data = morph_data_hl$lh, rh_data = morph_data_hl$rh);
     map = cmr$map;
     col = cmr$collayer[[hemi]];
-
+    
     return(fs.coloredmesh(mesh, col, hemi, metadata=list("src_data"=morph_data, "fs_mesh"=surface_mesh, "map"=map, "data_range"=range(morph_data, finite=TRUE), "cmap_fun"=makecmap_options$colFn, "makecmap_options"=makecmap_options)));
 }
 
@@ -294,21 +298,21 @@ coloredmesh.from.preloaded.data <- function(fs_surface, morph_data=NULL, col=NUL
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
 
-    if( ! freesurferformats::is.fs.surface(fs_surface)) {
+    if( ! is.fs.surface(fs_surface)) {
         if(is.character(fs_surface)) {
             fs_surface = freesurferformats::read.fs.surface(fs_surface);
         } else {
             stop("Parameter 'fs_surface' must be an fs.surface instance or filepath.");
         }
     }
-
+    
     mesh = rgl::tmesh3d(c(t(fs_surface$vertices)), c(t(fs_surface$faces)), homogeneous=FALSE);
     if(! is.null(morph_data)) {
         if(! hasIn(makecmap_options, c('colFn'))) {
             makecmap_options$colFn = mkco.seq()$colFn;
         }
         data_range = range(morph_data, finite=TRUE);
-
+    
         morph_data_hl = hemilist.wrap(morph_data, hemi);
         cmr = common.makecmap.range(makecmap_options, lh_data = morph_data_hl$lh, rh_data = morph_data_hl$rh);
         map = cmr$map;
@@ -349,13 +353,13 @@ coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surfac
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
-
-    if(freesurferformats::is.fs.surface(surface)) {
+    
+    if(is.fs.surface(surface)) {
         surface_mesh = surface;
     } else {
         surface_mesh = subject.surface(subjects_dir, subject_id, surface, hemi);
     }
-
+    
     if(is.character(atlas)) {
         annot = subject.annot(subjects_dir, subject_id, hemi, atlas);
     } else if (freesurferformats::is.fs.annot(atlas)) {
@@ -366,7 +370,7 @@ coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surfac
         stop("Parameter 'atlas' has invalid type.");
     }
     mesh = rgl::tmesh3d(c(t(surface_mesh$vertices)), c(t(surface_mesh$faces)), homogeneous=FALSE);
-
+    
     if(is.list(outline)) {
         annot_outline_extra_options = outline;
         annot_outline_full_options = utils::modifyList(list(annot, surface_mesh), annot_outline_extra_options);
@@ -376,11 +380,11 @@ coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surfac
     } else {
         col = annot$hex_colors_rgb;
     }
-
+    
     if(nrow(surface_mesh$vertices) != length(col)) {
         warning(sprintf("Data mismatch: surface has %d vertices, but %d color values received from annotation.\n", nrow(surface_mesh$vertices), length(col)));
     }
-
+    
     return(fs.coloredmesh(mesh, col, hemi, metadata = list('fs_mesh'=surface_mesh)));
 }
 
@@ -405,15 +409,15 @@ coloredmesh.from.label <- function(subjects_dir, subject_id, label, hemi, surfac
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
-
+    
     makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
-
-    if(freesurferformats::is.fs.surface(surface)) {
+    
+    if(is.fs.surface(surface)) {
         surface_mesh = surface;
     } else {
         surface_mesh = subject.surface(subjects_dir, subject_id, surface, hemi);
     }
-
+    
     if(is.character(label)) {
         if(binary) {
             label_data = subject.label(subjects_dir, subject_id, label, hemi);
@@ -423,7 +427,7 @@ coloredmesh.from.label <- function(subjects_dir, subject_id, label, hemi, surfac
     } else {
         label_data = label;
     }
-
+    
     if(binary) {
         mask = mask.from.labeldata.for.hemi(list(label_data), nrow(surface_mesh$vertices));
         return(coloredmesh.from.mask(subjects_dir, subject_id, mask, hemi, surface=surface, makecmap_options=makecmap_options, surface_data=surface_mesh));
@@ -458,36 +462,36 @@ coloredmesh.from.mask <- function(subjects_dir, subject_id, mask, hemi, surface=
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
-
+    
     makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
-
+    
     if(is.null(surface_data)) {
-        if(freesurferformats::is.fs.surface(surface)) {
+        if(is.fs.surface(surface)) {
             surface_data = surface;
         } else {
             surface_data = subject.surface(subjects_dir, subject_id, surface, hemi);
         }
     }
-
+    
     morph_like_data = as.integer(mask);
-
+    
     if(min(mask) < 0L | max(mask) > 1L) {
         warning(sprintf("The data range of the supplied mask is outside of the expected range [0L, 1L]. Is this really a mask?\n", length(mask), nrow(surface_data$vertices)));
     }
-
+    
     morph_like_data[mask == 1L] = NA;     # set positive values to NA so they get rendered as background.
-
+    
     if(length(mask) != nrow(surface_data$vertices)) {
         warning(sprintf("The length of the supplied mask (%d) does not match the number of vertices in the surface (%d).\n", length(mask), nrow(surface_data$vertices)));
     }
-
+    
     mesh = rgl::tmesh3d(c(t(surface_data$vertices)), c(t(surface_data$faces)), homogeneous=FALSE);
-
+    
     morph_data_hl = hemilist.wrap(morph_like_data, hemi);
     cmr = common.makecmap.range(makecmap_options, lh_data = morph_data_hl$lh, rh_data = morph_data_hl$rh);
     map = cmr$map;
     col = cmr$collayer[[hemi]];
-
+    
     return(fs.coloredmesh(mesh, col, hemi, metadata=list("src_data"=morph_like_data, "fs_mesh"=surface_data, "map"=map, "data_range"=range(morph_like_data, finite=TRUE), "makecmap_options"=makecmap_options)));
 }
 
@@ -533,11 +537,10 @@ is.fs.coloredmesh <- function(x) inherits(x, "fs.coloredmesh")
 #'
 #' @return an `fs.coloredmesh` instance. The only fields one should use in client code are 'mesh', 'hemi' and 'col', all others are considered internal and may change without notice.
 #'
-#' @importFrom freesurferformats is.fs.surface
 #' @importFrom rgl tmesh3d addNormals
 #' @export
 fs.coloredmesh <- function(mesh, col, hemi, render=TRUE, metadata=NULL, add_normals=FALSE) {
-    if(freesurferformats::is.fs.surface(mesh)) {
+    if(is.fs.surface(mesh)) {
         mesh = rgl::tmesh3d(c(t(mesh$vertices)), c(t(mesh$faces)), homogeneous=FALSE);
     }
     if(!inherits(mesh, "mesh3d")) {
@@ -562,18 +565,18 @@ fs.coloredmesh <- function(mesh, col, hemi, render=TRUE, metadata=NULL, add_norm
     if(! is.logical(render)) {
         stop("Parameter 'render' must be of type logical.");      # nocov
     }
-
+    
     if(is.null(metadata)) {
         metadata=list();        # nocov
     }
-
+    
     md_entries = names(metadata);
     for (mde in md_entries) {
         if(! mde %in% c("src_data", "fs_mesh", "data_range", "makecmap_options", "map", "cmap_fun")) {
             warning(sprintf("Untypical metadata entry '%s' found in colormesh metadata.\n", mde));
         }
     }
-
+    
     cm = list("mesh"=mesh, "col"=col, "render"=render, "hemi"=hemi, "metadata"=metadata);
     class(cm) = c("fs.coloredmesh", class(cm));
     return(cm);
