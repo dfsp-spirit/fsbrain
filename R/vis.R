@@ -805,6 +805,8 @@ vis.fs.surface <- function(fs_surface, col="white", per_vertex_data=NULL, hemi="
 #'
 #' @inheritParams vis.color.on.subject
 #'
+#' @inheritParams mesh.vertex.neighbors
+#'
 #' @param verts_lh integer vector, the indices of left hemisphere vertices.
 #'
 #' @param verts_rh integer vector, the indices of right hemisphere vertices.
@@ -823,7 +825,7 @@ vis.fs.surface <- function(fs_surface, col="white", per_vertex_data=NULL, hemi="
 #' @family surface visualization functions
 #'
 #' @export
-highlight.vertices.on.subject <- function(subjects_dir, vis_subject_id, verts_lh=NULL, verts_rh=NULL, surface="white", views=c('t4'), rgloptions=rglo(), rglactions = list(), color_bg="#FEFEFE", color_verts_lh="#FF0000", color_verts_rh="#FF4500", extend=5L) {
+highlight.vertices.on.subject <- function(subjects_dir, vis_subject_id, verts_lh=NULL, verts_rh=NULL, surface="inflated", views=c('t4'), rgloptions=rglo(), rglactions = list(), color_bg="#FEFEFE", color_verts_lh="#FF0000", color_verts_rh="#FF4500", k=3L) {
 
     coloredmeshes = list();
     nv = subject.num.verts(subjects_dir, vis_subject_id);
@@ -838,6 +840,14 @@ highlight.vertices.on.subject <- function(subjects_dir, vis_subject_id, verts_lh
             }
         }
         color_lh[verts_lh] = color_verts_lh;
+        if(k > 1L) {
+            # Grow neighborhood and color it in the color of the central vertex.
+            for(vertex_seq_idx in seq(verts_lh)) {
+                vertex_mesh_idx = verts_lh[vertex_seq_idx];
+                neighborhood = mesh.vertex.neighbors(subject.surface(subjects_dir, vis_subject_id, surface = surface, hemi = "lh"), source_vertices = vertex_mesh_idx, k = k)$vertices;
+                color_lh[neighborhood] = color_verts_lh[vertex_seq_idx];
+            }
+        }
     }
     cmesh_lh = coloredmesh.from.color(subjects_dir, vis_subject_id, color_lh, 'lh', surface=surface);
     coloredmeshes$lh = cmesh_lh;
@@ -853,6 +863,14 @@ highlight.vertices.on.subject <- function(subjects_dir, vis_subject_id, verts_lh
             }
         }
         color_rh[verts_rh] = color_verts_rh;
+        if(k > 1L) {
+            # Grow neighborhood and color it in the color of the central vertex.
+            for(vertex_seq_idx in seq(verts_rh)) {
+                vertex_mesh_idx = verts_rh[vertex_seq_idx];
+                neighborhood = mesh.vertex.neighbors(subject.surface(subjects_dir, vis_subject_id, surface = surface, hemi = "rh"), source_vertices = vertex_mesh_idx, k = k)$vertices;
+                color_rh[neighborhood] = color_verts_rh[vertex_seq_idx];
+            }
+        }
     }
     cmesh_rh = coloredmesh.from.color(subjects_dir, vis_subject_id, color_rh, 'rh', surface=surface);
     coloredmeshes$rh = cmesh_rh;
