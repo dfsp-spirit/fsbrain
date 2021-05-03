@@ -826,11 +826,34 @@ vis.fs.surface <- function(fs_surface, col="white", per_vertex_data=NULL, hemi="
 highlight.vertices.on.subject <- function(subjects_dir, vis_subject_id, verts_lh=NULL, verts_rh=NULL, surface="white", views=c('t4'), rgloptions=rglo(), rglactions = list(), color_bg="#FEFEFE", color_verts_lh="#FF0000", color_verts_rh="#FF4500", extend=5L) {
 
     coloredmeshes = list();
+    nv = subject.num.verts(subjects_dir, vis_subject_id);
 
-    subject.num.verts()
+    color_lh = rep(color_bg, nv$lh);
+    if(length(verts_lh) > 0L) {
+        if(length(color_verts_lh) != length(verts_lh)) {
+            if(length(color_verts_lh) == 1L) {
+                color_verts_lh = rep(color_verts_lh, length(verts_lh));
+            } else {
+                stop(sprintf("Parameter 'color_verts_lh' has length %d, must have length 1 or same length as 'verts_lh', which is %d.", length(color_verts_lh), length(verts_lh)));
+            }
+        }
+        color_lh[verts_lh] = color_verts_lh;
+    }
     cmesh_lh = coloredmesh.from.color(subjects_dir, vis_subject_id, color_lh, 'lh', surface=surface);
     coloredmeshes$lh = cmesh_lh;
 
+
+    color_rh = rep(color_bg, nv$rh);
+    if(length(verts_rh) > 0L) {
+        if(length(color_verts_rh) != length(verts_rh)) {
+            if(length(color_verts_rh) == 1L) {
+                color_verts_rh = rep(color_verts_rh, length(verts_rh));
+            } else {
+                stop(sprintf("Parameter 'color_verts_rh' has length %d, must have length 1 or same length as 'verts_rh', which is %d.", length(color_verts_rh), length(verts_rh)));
+            }
+        }
+        color_rh[verts_rh] = color_verts_rh;
+    }
     cmesh_rh = coloredmesh.from.color(subjects_dir, vis_subject_id, color_rh, 'rh', surface=surface);
     coloredmeshes$rh = cmesh_rh;
 
