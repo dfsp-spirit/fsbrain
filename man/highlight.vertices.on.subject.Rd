@@ -9,7 +9,7 @@ highlight.vertices.on.subject(
   vis_subject_id,
   verts_lh = NULL,
   verts_rh = NULL,
-  surface = "inflated",
+  surface = "white",
   views = c("t4"),
   rgloptions = rglo(),
   rglactions = list(),

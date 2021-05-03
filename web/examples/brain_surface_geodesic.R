@@ -1,8 +1,8 @@
 #!/usr/bin/env Rscript
 
-install.packages("fsbrain");
-devtools::install_github("dfsp-spirit/freesurferformats");
-devtools::install_github("zarquon42b/Rvcg");
+devtools::install_github("dfsp-spirit/fsbrain"); # > 0.4.3
+devtools::install_github("dfsp-spirit/freesurferformats"); # > 0.1.14
+devtools::install_github("zarquon42b/Rvcg"); # > 0.19.2
 
 library("fsbrain");
 library("freesurferformats");
@@ -26,7 +26,7 @@ lh_source_point = brain_hemispheres$lh$vertices[lh_source_vertex_idx, ];
 lh_destination_point = brain_hemispheres$lh$vertices[lh_destination_vertex_idx, ];
 
 # Optional: show source and dest points on brain surface.
-
+highlight.vertices.on.subject(subjects_dir, subject_id, verts_lh = c(lh_source_vertex_idx, lh_destination_vertex_sulc_idx, lh_destination_vertex_idx), verts_rh = NULL, views = "si", color_verts_lh = c("#FF0000", "#00FF00", "#0000FF"));
 
 # Compute geodesic distance along mesh (through the central sulcus)
 Rvcg::vcgGeodist(lh_tmesh3d, lh_source_point, lh_destination_point);

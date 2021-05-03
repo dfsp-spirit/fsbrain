@@ -825,7 +825,7 @@ vis.fs.surface <- function(fs_surface, col="white", per_vertex_data=NULL, hemi="
 #' @family surface visualization functions
 #'
 #' @export
-highlight.vertices.on.subject <- function(subjects_dir, vis_subject_id, verts_lh=NULL, verts_rh=NULL, surface="inflated", views=c('t4'), rgloptions=rglo(), rglactions = list(), color_bg="#FEFEFE", color_verts_lh="#FF0000", color_verts_rh="#FF4500", k=3L) {
+highlight.vertices.on.subject <- function(subjects_dir, vis_subject_id, verts_lh=NULL, verts_rh=NULL, surface="white", views=c('t4'), rgloptions=rglo(), rglactions = list(), color_bg="#FEFEFE", color_verts_lh="#FF0000", color_verts_rh="#FF4500", k=3L) {
 
     coloredmeshes = list();
     nv = subject.num.verts(subjects_dir, vis_subject_id);
