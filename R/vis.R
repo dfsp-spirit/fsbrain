@@ -799,3 +799,45 @@ vis.fs.surface <- function(fs_surface, col="white", per_vertex_data=NULL, hemi="
     }
     return(invisible(vis.coloredmeshes(cm_list, ...)));
 }
+
+
+#' @title Highlight vertices given by index on a subject's meshes.
+#'
+#' @inheritParams vis.color.on.subject
+#'
+#' @param verts_lh integer vector, the indices of left hemisphere vertices.
+#'
+#' @param verts_rh integer vector, the indices of right hemisphere vertices.
+#'
+#' @param color_verts_lh vector of colors to visualize on the left hemisphere surface. Length must match number of vertices in 'verts_lh', or be a single color.
+#'
+#' @param color_verts_rh vector of colors to visualize on the right hemisphere surface. Length must match number of vertices in 'verts_rh', or be a single color.
+#'
+#' @param color_bg Background color.
+#'
+#' @param extend integer, radius to extend neighborhood (for better visibility).
+#'
+#' @return list of coloredmeshes. The coloredmeshes used for the visualization.
+#'
+#' @family visualization functions
+#' @family surface visualization functions
+#'
+#' @export
+highlight.vertices.on.subject <- function(subjects_dir, vis_subject_id, verts_lh=NULL, verts_rh=NULL, surface="white", views=c('t4'), rgloptions=rglo(), rglactions = list(), color_bg="#FEFEFE", color_verts_lh="#FF0000", color_verts_rh="#FF4500", extend=5L) {
+
+    coloredmeshes = list();
+
+    subject.num.verts()
+    cmesh_lh = coloredmesh.from.color(subjects_dir, vis_subject_id, color_lh, 'lh', surface=surface);
+    coloredmeshes$lh = cmesh_lh;
+
+    cmesh_rh = coloredmesh.from.color(subjects_dir, vis_subject_id, color_rh, 'rh', surface=surface);
+    coloredmeshes$rh = cmesh_rh;
+
+
+    if(hasIn(rglactions, c('no_vis'))) {
+        return(coloredmeshes);
+    }
+
+    return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions)));
+}
