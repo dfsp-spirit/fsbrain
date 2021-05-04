@@ -65,16 +65,26 @@ if(do_run_full_hemi) {
     # First compute Euclidian distance for comparison.
     euclid_dists_to_source = apply(verts, 1, euclidian.dist, source_coord);
     if(do_vis) {
-        fsbrain::vis.data.on.subject(subjects_dir, subject_id, morph_data_lh = euclid_dists_to_source);
+        cm_euclid = fsbrain::vis.data.on.subject(subjects_dir, subject_id, morph_data_lh = euclid_dists_to_source);
     }
     freesurferformats::write.fs.morph("lh.disteuclid", euclid_dists_to_source, format = "curv");
 
     geodesic_dists_to_source = Rvcg::vcgDijkstra(lh_tmesh3d, source_vert_idx);
     if(do_vis) {
-        cm = fsbrain::vis.data.on.subject(subjects_dir, subject_id, morph_data_lh = geodesic_dists_to_source);
-        fsbrain::vis.export.from.coloredmeshes(cm, colorbar_legend = sprintf("Geodesic distance to vertex %d", source_vert_idx), view_angles = c("sd_medial_lh", "sd_lateral_lh"));
+        cm_geod = fsbrain::vis.data.on.subject(subjects_dir, subject_id, morph_data_lh = geodesic_dists_to_source);
+        fsbrain::vis.export.from.coloredmeshes(cm_geod, colorbar_legend = sprintf("Geodesic distance to vertex %d [mm]", source_vert_idx), view_angles = c("sd_medial_lh", "sd_lateral_lh"));
     }
     freesurferformats::write.fs.morph("lh.distgeod", geodesic_dists_to_source, format = "curv");
+
+    ## We can illustrate the difference between Euclidian and geodesic distance by
+    ## plotting both (computed on the white surface) on the inflated mesh:
+    if(do_vis) {
+        cm_euclid_infl = fsbrain::vis.data.on.subject(subjects_dir, subject_id, morph_data_lh = euclid_dists_to_source, surface = "inflated", views = NULL);
+        fsbrain::vis.export.from.coloredmeshes(cm_euclid_infl, colorbar_legend = sprintf("Euclidian distance to vertex %d [mm]", source_vert_idx), view_angles = c("sd_medial_lh", "sd_lateral_lh"), output_img = "dist_inflated_euclid.png");
+
+        cm_geod_infl = fsbrain::vis.data.on.subject(subjects_dir, subject_id, morph_data_lh = geodesic_dists_to_source, surface = "inflated", views = NULL);
+        fsbrain::vis.export.from.coloredmeshes(cm_geod_infl, colorbar_legend = sprintf("Geodesic distance to vertex %d [mm]", source_vert_idx), view_angles = c("sd_medial_lh", "sd_lateral_lh"), output_img = "dist_inflated_geodesic.png");
+    }
 }
 
 
