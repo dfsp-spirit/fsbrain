@@ -11,7 +11,10 @@ library("fsbrain");
 library("freesurferformats");
 library("Rvcg");
 
+do_vis = FALSE; # whether to try opening an OpengL window and plot. Turn off on headless machines.
+
 euclidian.dist <- function(x1, x2) sqrt(sum((x1 - x2) ^ 2));
+vertex.euclid.dist <- function(surf, v1, v2) { euclidian.dist(surf$vertices[v1, ], surf$vertices[v2, ]) };
 
 fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
 subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -32,9 +35,11 @@ lh_destination_point = brain_hemispheres$lh$vertices[lh_vertex_idx_postcentral_g
 #freesurferformats::closest.vert.to.point(brain_hemispheres$lh, lh_source_point);
 
 # Optional: show source and dest points on brain surface.
-highlight.vertices.on.subject(subjects_dir, subject_id, verts_lh = c(lh_vertex_idx_precentral_gyrus, lh_vertex_idx_central_sulcus, lh_vertex_idx_postcentral_gyrus), verts_rh = NULL, views = "si", color_verts_lh = c("#FF0000", "#00FF00", "#0000FF"));
+if(do_vis) {
+    highlight.vertices.on.subject(subjects_dir, subject_id, verts_lh = c(lh_vertex_idx_precentral_gyrus, lh_vertex_idx_central_sulcus, lh_vertex_idx_postcentral_gyrus), verts_rh = NULL, views = "si", color_verts_lh = c("#FF0000", "#00FF00", "#0000FF"));
+}
 
-########## Test one: from point red to blue. ##########
+########## Test one: from point red to blue. ##########ö
 
 # Compute geodesic distance along mesh (through the central sulcus: from red down along the gyral wall to green, then back up to blue)
 Rvcg::vcgGeodist(lh_tmesh3d, lh_source_point, lh_destination_point); # 36.40924
@@ -48,7 +53,35 @@ Rvcg::vcgGeodist(lh_tmesh3d, lh_mid_point, lh_destination_point); # 21.62851
 # Compute Euclidian distance (air distance over the central sulcus), should be way shorter.
 euclidian.dist(lh_mid_point, lh_destination_point); # 18.59061
 
+do_run_full_hemi = TRUE; # takes a bit
+if(do_run_full_hemi) {
+    verts = brain_hemispheres$lh$vertices;
+    source_vert_idx = 32258;
+    source_coord = verts[source_vert_idx, ];
 
+    # First compute Euclidian distance for comparison.
+    euclid_dists_to_source = apply(verts, 1, euclidian.dist, source_coord);
+    if(do_vis) {
+        fsbrain::vis.data.on.subject(subjects_dir, subject_id, morph_data_lh = euclid_dists_to_source);
+    }
+    freesurferformats::write.fs.morph("lh.disteuclid", euclid_dists_to_source, format = "curv");
+
+    # Now Geodesic. May take a while.
+    library(foreach);
+    library(doParallel);
+    cl = parallel::makeCluster(parallel::detectCores()[1] - 1L);
+    registerDoParallel(cl);
+
+    nv = fsbrain::subject.num.verts(subjects_dir, subject_id, surface = 'white', hemi = 'lh');
+    geodesic_dists_to_source = foreach(vidx=1:nv) %dopar% {
+        Rvcg::vcgGeodist(lh_tmesh3d, source_coord, verts[vidx, ]);
+    }
+    parallel::stopCluster(cl);
+    if(do_vis) {
+        fsbrain::vis.data.on.subject(subjects_dir, subject_id, morph_data_lh = geodesic_dists_to_source);
+    }
+    freesurferformats::write.fs.morph("lh.distgeod", geodesic_dists_to_source, format = "curv");
+}
 
 
 
