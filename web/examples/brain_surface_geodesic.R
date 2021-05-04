@@ -11,6 +11,8 @@ library("fsbrain");
 library("freesurferformats");
 library("Rvcg");
 
+do_vis = FALSE; # whether to try opening an OpengL window and plot. Turn off on headless machines.
+
 euclidian.dist <- function(x1, x2) sqrt(sum((x1 - x2) ^ 2));
 vertex.euclid.dist <- function(surf, v1, v2) { euclidian.dist(surf$vertices[v1, ], surf$vertices[v2, ]) };
 
@@ -33,7 +35,9 @@ lh_destination_point = brain_hemispheres$lh$vertices[lh_vertex_idx_postcentral_g
 #freesurferformats::closest.vert.to.point(brain_hemispheres$lh, lh_source_point);
 
 # Optional: show source and dest points on brain surface.
-highlight.vertices.on.subject(subjects_dir, subject_id, verts_lh = c(lh_vertex_idx_precentral_gyrus, lh_vertex_idx_central_sulcus, lh_vertex_idx_postcentral_gyrus), verts_rh = NULL, views = "si", color_verts_lh = c("#FF0000", "#00FF00", "#0000FF"));
+if(do_vis) {
+    highlight.vertices.on.subject(subjects_dir, subject_id, verts_lh = c(lh_vertex_idx_precentral_gyrus, lh_vertex_idx_central_sulcus, lh_vertex_idx_postcentral_gyrus), verts_rh = NULL, views = "si", color_verts_lh = c("#FF0000", "#00FF00", "#0000FF"));
+}
 
 ########## Test one: from point red to blue. ##########ö
 
@@ -57,7 +61,10 @@ if(do_run_full_hemi) {
 
     # First compute Euclidian distance for comparison.
     euclid_dists_to_source = apply(verts, 1, euclidian.dist, source_coord);
-    fsbrain::vis.data.on.subject(subjects_dir, subject_id, morph_data_lh = euclid_dists_to_source);
+    if(do_vis) {
+        fsbrain::vis.data.on.subject(subjects_dir, subject_id, morph_data_lh = euclid_dists_to_source);
+    }
+    freesurferformats::write.fs.morph("lh.disteuclid", euclid_dists_to_source, format = "curv");
 
     # Now Geodesic. May take a while.
     library(foreach);
@@ -70,7 +77,10 @@ if(do_run_full_hemi) {
         Rvcg::vcgGeodist(lh_tmesh3d, source_coord, verts[vidx, ]);
     }
     parallel::stopCluster(cl);
-    fsbrain::vis.data.on.subject(subjects_dir, subject_id, morph_data_lh = geodesic_dists_to_source);
+    if(do_vis) {
+        fsbrain::vis.data.on.subject(subjects_dir, subject_id, morph_data_lh = geodesic_dists_to_source);
+    }
+    freesurferformats::write.fs.morph("lh.distgeod", geodesic_dists_to_source, format = "curv");
 }
 
 
