@@ -39,7 +39,7 @@ if(do_vis) {
     highlight.vertices.on.subject(subjects_dir, subject_id, verts_lh = c(lh_vertex_idx_precentral_gyrus, lh_vertex_idx_central_sulcus, lh_vertex_idx_postcentral_gyrus), verts_rh = NULL, views = "si", color_verts_lh = c("#FF0000", "#00FF00", "#0000FF"));
 }
 
-########## Test one: from point red to blue. ##########ö
+########## Test 1: from point red to blue. ##########ö
 
 # Compute geodesic distance along mesh (through the central sulcus: from red down along the gyral wall to green, then back up to blue)
 Rvcg::vcgGeodist(lh_tmesh3d, lh_source_point, lh_destination_point); # 36.40924
@@ -47,13 +47,16 @@ Rvcg::vcgGeodist(lh_tmesh3d, lh_source_point, lh_destination_point); # 36.40924
 euclidian.dist(lh_source_point, lh_destination_point); # 10.54589
 
 
-########## Test two: from point green to blue. The difference should be small.  ##########
+########## Test 2: from point green to blue. The difference should be small.  ##########
 Rvcg::vcgGeodist(lh_tmesh3d, lh_mid_point, lh_destination_point); # 21.62851
 
 # Compute Euclidian distance (air distance over the central sulcus), should be way shorter.
 euclidian.dist(lh_mid_point, lh_destination_point); # 18.59061
 
-do_run_full_hemi = TRUE; # takes a bit
+
+########## Test 3: Full hemi distance map ##########
+
+do_run_full_hemi = TRUE;
 if(do_run_full_hemi) {
     verts = brain_hemispheres$lh$vertices;
     source_vert_idx = 32258;
@@ -68,7 +71,8 @@ if(do_run_full_hemi) {
 
     geodesic_dists_to_source = Rvcg::vcgDijkstra(lh_tmesh3d, source_vert_idx);
     if(do_vis) {
-        fsbrain::vis.data.on.subject(subjects_dir, subject_id, morph_data_lh = geodesic_dists_to_source);
+        cm = fsbrain::vis.data.on.subject(subjects_dir, subject_id, morph_data_lh = geodesic_dists_to_source);
+        fsbrain::vis.export.from.coloredmeshes(cm, colorbar_legend = sprintf("Geodesic distance to vertex %d", source_vert_idx), view_angles = c("sd_medial_lh", "sd_lateral_lh"));
     }
     freesurferformats::write.fs.morph("lh.distgeod", geodesic_dists_to_source, format = "curv");
 }
