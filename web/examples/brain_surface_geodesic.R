@@ -67,16 +67,19 @@ if(do_run_full_hemi) {
     freesurferformats::write.fs.morph("lh.disteuclid", euclid_dists_to_source, format = "curv");
 
     # Now Geodesic. May take a while.
-    library(foreach);
-    library(doParallel);
-    cl = parallel::makeCluster(parallel::detectCores()[1] - 1L);
-    registerDoParallel(cl);
+    #library(foreach);
+    #library(doParallel);
+    #cl = parallel::makeCluster(parallel::detectCores()[1] - 1L);
+    #registerDoParallel(cl);
+    #
+    #nv = fsbrain::subject.num.verts(subjects_dir, subject_id, surface = 'white', hemi = 'lh');
+    #geodesic_dists_to_source = foreach(vidx=1:nv) %dopar% {
+    #    Rvcg::vcgGeodist(lh_tmesh3d, source_coord, verts[vidx, ]);
+    #}
+    #geodesic_dists_to_source = unlist(geodesic_dists_to_source);
+    #parallel::stopCluster(cl);
+    geodesic_dists_to_source = Rvcg::vcgDijkstra(lh_tmesh3d, source_vert_idx);
 
-    nv = fsbrain::subject.num.verts(subjects_dir, subject_id, surface = 'white', hemi = 'lh');
-    geodesic_dists_to_source = foreach(vidx=1:nv) %dopar% {
-        Rvcg::vcgGeodist(lh_tmesh3d, source_coord, verts[vidx, ]);
-    }
-    parallel::stopCluster(cl);
     if(do_vis) {
         fsbrain::vis.data.on.subject(subjects_dir, subject_id, morph_data_lh = geodesic_dists_to_source);
     }
