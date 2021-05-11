@@ -29,6 +29,7 @@ test_that("A brain volume for a single subject can be loaded", {
 
 
 test_that("Brain volume CRS voxels are rendered at the correct surface space RAS coordinates", {
+    testthat::skip_on_cran();
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     # This test shows that the vol.vox.from.crs() function and the vox2ras_tkr() functions work correctly.
     # In combination, they allow to plot the voxels from a brain volume (which have no coorindates associated with them,

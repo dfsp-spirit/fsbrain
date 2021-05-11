@@ -98,6 +98,7 @@ test_that("We can visualize arbitrary data on the fsaverage surfaces if availabl
 
 
 test_that("We can visualize one value per atlas region on a subject.", {
+    testthat::skip_on_cran();
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires X11.");
 
@@ -253,6 +254,7 @@ test_that("We can visualize clusters on fsaverage with a background and use a ra
 
 
 test_that("We can visualize arbitrary data on a subjects surface using a single data vector for both hemispheres.", {
+    testthat::skip_on_cran();
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires X11.");
 
@@ -275,6 +277,7 @@ test_that("We can visualize arbitrary data on a subjects surface using a single 
 
 
 test_that("We can retrieve vertex counts for a subject.", {
+    testthat::skip_on_cran();
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
 
     fsbrain::download_optional_data();
@@ -340,6 +343,7 @@ test_that("We can visualize meshes using vis.fs.surface as expected.", {
 
 
 test_that("We can shift hemis apart, e.g. for inflated where lh and rh intersect.", {
+    testthat::skip_on_cran();
     cm = get.demo.coloredmeshes.hemilist();
     cm_shifted = shift.hemis.apart(cm);
     cm_shifted2 = shift.hemis.apart(cm, hemi_order_on_axis = 'auto');

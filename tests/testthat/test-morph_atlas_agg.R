@@ -6,7 +6,7 @@ test_that("Aggregation on subject level works", {
   annot = freesurferformats::read.fs.annot(annot_file);
   expect_equal(length(ct), length(annot$label_names));  # ensure the data fits together.
 
-  # Test without explicitely requesting all possible atlas regions: regions which have no verts assigned in subject will not occur
+  # Test without explicitly requesting all possible atlas regions: regions which have no verts assigned in subject will not occur
   agg = subject.atlas.agg(ct, annot$label_names);
   expect_equal(nrow(agg), 35);
   expect_false("unknown" %in% agg$region);
@@ -57,6 +57,7 @@ test_that("Aggregation on subject level works", {
 
 
 test_that("Region-based aggregation on group level works in native space", {
+    testthat::skip_on_cran();
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -119,6 +120,7 @@ test_that("Region-based aggregation on group level works in native space", {
 
 
 test_that("Spreading a single value over an atlas region works from agg.res result", {
+    testthat::skip_on_cran();
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     testthat::skip_on_travis(); # Reduce test time on travis to prevent the build from being killed.
 
@@ -187,7 +189,7 @@ test_that("Writing MGH data spread over regions works", {
 })
 
 test_that("Writing faverage region values works", {
-  testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
+    testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     hemi = "lh";
     atlas = "aparc";
@@ -216,6 +218,7 @@ test_that("Writing faverage region values works", {
 })
 
 test_that("Atlas region names can be retrieved", {
+  testthat::skip_on_cran();
   skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
   fsbrain::download_optional_data();
   fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
@@ -240,6 +243,7 @@ test_that("Atlas region names can be retrieved", {
 
 
 test_that("Region-based aggregation on group level works in native space", {
+  testthat::skip_on_cran();
   skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
   fsbrain::download_optional_data();
   subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -319,6 +323,7 @@ test_that("Suggested regions to be ignored can be retrieved for an atlas", {
 
 
 test_that("Subject annotation works", {
+    testthat::skip_on_cran();
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -340,7 +345,7 @@ test_that("Subject annotation works", {
 
 
 test_that("Merging annotations works", {
-  testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
+    testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
