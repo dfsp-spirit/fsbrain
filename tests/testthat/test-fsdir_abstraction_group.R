@@ -1,5 +1,5 @@
 test_that("Loading of native space whole brain morph data on group level works", {
-
+    testthat::skip_on_cran();
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
 
     fsbrain::download_optional_data();
@@ -28,7 +28,7 @@ test_that("Loading of native space whole brain morph data on group level works",
 
 
 test_that("Loading of native space whole brain morph data restricted to the cortex on group level works", {
-
+    testthat::skip_on_cran();
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
 
     fsbrain::download_optional_data();
@@ -59,7 +59,7 @@ test_that("Loading of native space whole brain morph data restricted to the cort
 
 
 test_that("Loading of standard space whole brain morph data on group level works", {
-
+    testthat::skip_on_cran();
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
 
     fsbrain::download_optional_data();
@@ -84,7 +84,7 @@ test_that("Loading of standard space whole brain morph data on group level works
 
 
 test_that("Label data can be read on group level", {
-
+    testthat::skip_on_cran();
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
 
     fsbrain::download_optional_data();
@@ -105,7 +105,7 @@ test_that("Label data can be read on group level", {
 })
 
 test_that("Annotation data can be read on group level", {
-
+    testthat::skip_on_cran();
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
 
     fsbrain::download_optional_data();
