@@ -19,7 +19,7 @@ List of all available rglactions: (1) `snapshot_png=filepath` takes a screenshot
    rgla_screenie = list('snapshot_png'='fsbain_out.png');
    rgla_screenie = rglactions();   # same as above
    rgla_vec_scr = list('snapshot_vec'="~/fsbrain.pdf",
-     "snapshot_vec_format"="pdf"));
+     "snapshot_vec_format"="pdf");
    rgla_clamp = list('trans_fun'=clip.data);
    rgla_limit = list('trans_fun'=limit_fun(2,5));
    rgla_ls = list('trans_fun'=limit_fun_na(2,5), 'snapshot_png'='~/fig1.png');
