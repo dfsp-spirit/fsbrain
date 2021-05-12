@@ -1,6 +1,7 @@
 
 
 test_that("A coloredmesh can be created from native space morph data", {
+    testthat::skip_on_cran();
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -14,6 +15,7 @@ test_that("A coloredmesh can be created from native space morph data", {
 
 
 test_that("A coloredmesh can be created from color data", {
+    testthat::skip_on_cran();
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -28,6 +30,7 @@ test_that("A coloredmesh can be created from color data", {
 
 
 test_that("A coloredmesh can be created from standard space morph data", {
+    testthat::skip_on_cran();
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     fsbrain::download_optional_data();
     fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
@@ -46,6 +49,7 @@ test_that("A coloredmesh can be created from standard space morph data", {
 
 
 test_that("A coloredmesh can be created from arbitrary pre-loaded data", {
+    testthat::skip_on_cran();
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -63,6 +67,7 @@ test_that("A coloredmesh can be created from arbitrary pre-loaded data", {
 
 
 test_that("A coloredmesh can be created from a label", {
+    testthat::skip_on_cran();
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");

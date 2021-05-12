@@ -1,5 +1,5 @@
 test_that("A label can be extracted from a region of a loaded annotation", {
-
+    testthat::skip_on_cran();
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
 
     fsbrain::download_optional_data();
@@ -30,7 +30,7 @@ test_that("A label can be extracted from a region of a loaded annotation", {
 
 
 test_that("A label can be extracted from a region of an annotation file", {
-
+    testthat::skip_on_cran();
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
 
     fsbrain::download_optional_data();
@@ -45,7 +45,7 @@ test_that("A label can be extracted from a region of an annotation file", {
 
 
 test_that("Labels can be extracted from a region of an annotation file for a group of subjects", {
-
+    testthat::skip_on_cran();
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
 
     fsbrain::download_optional_data();

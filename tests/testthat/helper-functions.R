@@ -55,7 +55,8 @@ box.has.fsaverage <- function() {
 
 
 box.has.x11display <- function() {
-  # I'm not really sure whether this is a great way to check for an X11 display
+  # I'm not really sure whether this is a great way to check for an X11 display.
+  # UPDATE: This seems to work under MacOS with XQuartz, but not Ubuntu Linux with their Xorg.
   return(nchar(Sys.getenv("DISPLAY")) > 0L);
 }
 

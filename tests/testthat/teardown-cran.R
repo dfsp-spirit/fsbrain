@@ -4,6 +4,9 @@
 # We have 2 options: 1) do not run any unit tests requiring data on CRAN (almost all of our tests require data).
 #                    2) download the data and delete everything afterwards, on CRAN (users will want to keep the data, as they only have it if they decided to download it).
 # So we delete all data ONLY if we are on CRAN in this teardown file.
+#
+# Starting in May 2021, they also complain about downloading anything to userdir, so we disabled all unit tests on CRAN.
+# This function should no longer be required.
 
 if(!identical(Sys.getenv("NOT_CRAN"), "true")) {
   fsbrain::delete_all_optional_data();

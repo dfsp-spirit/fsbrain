@@ -1,6 +1,7 @@
 # tests for shape descriptor computation
 
 test_that("Shape descriptors can be computed", {
+    testthat::skip_on_cran();
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
 
     fsbrain::download_optional_data();
