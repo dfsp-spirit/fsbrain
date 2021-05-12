@@ -3,7 +3,7 @@ A GNU R library for structural neuroimaging. Provides high-level functions to ac
 
 ![Vis](https://github.com/dfsp-spirit/fsbrain_gallery/blob/master/surface/fsbrain_sulcal_depth_cbar_web.jpg?raw=true "Sulcal depth visualization, created with fsbrain")
 
-**Fig.1**: *Visualization of sulcal depth for a subject in FreeSurfer standard space (fsaverage). See the [source code to reproduce this image](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples_adv.html) in an R notebook.*
+**Fig.1**: *Visualization of sulcal depth for a subject in FreeSurfer standard space (fsaverage). See the [source code to reproduce this image](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples_export.html) in an R notebook.*
 
 [About](#about) | [Installation](#installation) | [Documentation](#documentation) | [Unit tests](#unit-tests-and-continuous-integration) | [License](#license) | [Citation](#citation) | [Visualization examples](#visualization-examples) | [Contributing](#contributing)
 
@@ -202,3 +202,4 @@ Packages used by fsbrain:
 * [oro.nifti](https://github.com/muschellij2/oro.nifti) by Brandon Witcher et al. : Loading and manipulation of brain volumes from NIFTI v1 files.
 * [freesurferformats](https://github.com/dfsp-spirit/freesurferformats) by Tim Schäfer (me): Loading and writing various neuroimaging file formats and general mesh file formats, with a focus on FreeSurfer formats.
 * [gifti](https://github.com/muschellij2/gifti/) and [cifti](https://github.com/muschellij2/cifti/) by John Muschelli: Read GIFTI and CIFTI format files.
+* [Rvcg](https://github.com/zarquon42b/Rvcg) by Stefan Schlager: Rcpp interface for the [VCG Library](http://vcg.isti.cnr.it/vcglib/).

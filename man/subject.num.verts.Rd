@@ -24,7 +24,7 @@ subject.num.verts(
 \item{do_sum}{logical, whether to return the sum of the vertex counts for lh and rh. Ignored unless 'hemi' is 'both'. If set, a single scalar will be returned.}
 }
 \value{
-integer of hemilist of integers, the vertex count. If hemi is 'both' and 'do_sum' is `FALSE`, a hemilist of integers is returned. Otherwise, a single integer.
+hemilist of integers, the vertex count. If hemi is 'both' and 'do_sum' is `FALSE`, a hemilist of integers is returned. Otherwise, a single integer.
 }
 \description{
 Determine vertex counts for the brain meshes of a subject.
