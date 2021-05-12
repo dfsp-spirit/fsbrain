@@ -204,8 +204,9 @@ rglactions.has.key <- function(rglactions, key) {
 #' @param silent logical, whether to suppress messages
 #'
 #' @keywords internal
-#' @importFrom rgl rgl.snapshot
+#' @importFrom rgl rgl.snapshot rgl.postscript
 perform.rglactions <- function(rglactions, at_index=NULL, silent=TRUE) {
+    print(rglactions)
     if(is.list(rglactions)) {
         if("text" %in% names(rglactions)) {
             do.call(rgl::text3d, rglactions$text);
@@ -221,7 +222,31 @@ perform.rglactions <- function(rglactions, at_index=NULL, silent=TRUE) {
             }
             rgl::rgl.snapshot(output_image, fmt="png");
             if(! silent) {
-                message(sprintf("Screenshot written to '%s' (current working dir is '%s').\n", output_image, getwd()));
+                message(sprintf("Bitmap screenshot written to '%s' (current working dir is '%s').\n", output_image, getwd()));
+            }
+        }
+        if("snapshot_vec" %in% names(rglactions)) {
+            snapshot_vec_format = "eps";
+            if("snapshot_vec_format" %in% names(rglactions)) {
+                supported_formats = c("ps", "eps", "tex", "pdf", "svg", "pgf");
+                if(rglactions$snapshot_vec_format %in% supported_formats) {
+                    snapshot_vec_format = rglactions$snapshot_vec_format;
+                } else {
+                    stop(sprintf("rglactions: invalid snapshot_vec_format '%s'. Must be one of ''.", rglactions$snapshot_vec_format, paste(supported_formats, collapse = ", ")));
+                }
+            }
+
+            if(length(rglactions$snapshot_vec) == 1 || is.null(at_index)) {
+                output_image = path.expand(rglactions$snapshot_vec);
+            } else {
+                if(length(rglactions$snapshot_vec) < at_index) {
+                    warning(sprintf("Requested rglaction at_index '%d' but only %d entries exist for action 'snapshot_vec'.\n", at_index, length(rglactions$snapshot_vec)));
+                }
+                output_image = path.expand(rglactions$snapshot_vec[[at_index]]);
+            }
+            rgl::rgl.postscript(output_image, fmt = snapshot_vec_format);
+            if(! silent) {
+                message(sprintf("Vector graphics screenshot written to '%s' in format '%s' (current working dir is '%s').\n", output_image, snapshot_vec_format, getwd()));
             }
         }
     }
@@ -230,13 +255,15 @@ perform.rglactions <- function(rglactions, at_index=NULL, silent=TRUE) {
 
 #' @title Create rglactions list, suitable to be passed as parameter to vis functions.
 #'
-#' @note List of all available rglactions: (1) `snapshot_png=filepath` takes a screenshot in PNG format and saves it in at `filepath`. (2) `trans_fun=function` uses the transformation function trans_fun to the data before mapping data values to colors and plotting. Popular transformation functions are \code{\link{limit_fun}}, \code{\link{limit_fun_na}}, and \code{\link{clip.data}}. (3) `text=arglist` calls \code{\link{text3d}} with the given args after plotting.
+#' @note List of all available rglactions: (1) `snapshot_png=filepath` takes a screenshot in PNG format and saves it in at `filepath`. (2) `trans_fun=function` uses the transformation function trans_fun to the data before mapping data values to colors and plotting. Popular transformation functions are \code{\link{limit_fun}}, \code{\link{limit_fun_na}}, and \code{\link{clip.data}}. (3) `text=arglist` calls \code{\link{text3d}} with the given args after plotting. (4) `snapshot_vec=filepath` takes a screenshot in vector format and saves it in at `filepath`. You also need to set the format via `snapshot_vec_format`, valid entries are one of "ps", "eps", "tex", "pdf", "svg", "pgf" (default is 'eps'). This is experimental and may take a while.
 #'
 #' @return named list, an example `rlgactions` instance that will save a screenshot of the plot produced by the vis function in the current working directory (see \code{getwd}), under the name 'fsbrain_out.png'.
 #'
 #' @examples
 #'    rgla_screenie = list('snapshot_png'='fsbain_out.png');
 #'    rgla_screenie = rglactions();   # same as above
+#'    rgla_vec_scr = list('snapshot_vec'="~/fsbrain.pdf",
+#'      "snapshot_vec_format"="pdf"));
 #'    rgla_clamp = list('trans_fun'=clip.data);
 #'    rgla_limit = list('trans_fun'=limit_fun(2,5));
 #'    rgla_ls = list('trans_fun'=limit_fun_na(2,5), 'snapshot_png'='~/fig1.png');

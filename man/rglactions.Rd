@@ -13,11 +13,13 @@ named list, an example `rlgactions` instance that will save a screenshot of the 
 Create rglactions list, suitable to be passed as parameter to vis functions.
 }
 \note{
-List of all available rglactions: (1) `snapshot_png=filepath` takes a screenshot in PNG format and saves it in at `filepath`. (2) `trans_fun=function` uses the transformation function trans_fun to the data before mapping data values to colors and plotting. Popular transformation functions are \code{\link{limit_fun}}, \code{\link{limit_fun_na}}, and \code{\link{clip.data}}. (3) `text=arglist` calls \code{\link{text3d}} with the given args after plotting.
+List of all available rglactions: (1) `snapshot_png=filepath` takes a screenshot in PNG format and saves it in at `filepath`. (2) `trans_fun=function` uses the transformation function trans_fun to the data before mapping data values to colors and plotting. Popular transformation functions are \code{\link{limit_fun}}, \code{\link{limit_fun_na}}, and \code{\link{clip.data}}. (3) `text=arglist` calls \code{\link{text3d}} with the given args after plotting. (4) `snapshot_vec=filepath` takes a screenshot in vector format and saves it in at `filepath`. You also need to set the format via `snapshot_vec_format`, valid entries are one of "ps", "eps", "tex", "pdf", "svg", "pgf" (default is 'eps'). This is experimental and may take a while.
 }
 \examples{
    rgla_screenie = list('snapshot_png'='fsbain_out.png');
    rgla_screenie = rglactions();   # same as above
+   rgla_vec_scr = list('snapshot_vec'="~/fsbrain.pdf",
+     "snapshot_vec_format"="pdf"));
    rgla_clamp = list('trans_fun'=clip.data);
    rgla_limit = list('trans_fun'=limit_fun(2,5));
    rgla_ls = list('trans_fun'=limit_fun_na(2,5), 'snapshot_png'='~/fig1.png');
