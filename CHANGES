@@ -1,6 +1,13 @@
 fsbrain Changes
 ===============
 
+Version 0.4.4
+-------------
+- Fix accidental printing of rglactions to console when calling vis functions.
+- Add new 'export' function, an alias for 'vis.export.from.coloredmeshes' so you have to type less.
+- Add new entry on vector graphics conversion to the 'fsbrain FAQ' vignette.
+
+
 Version 0.4.3
 -------------
 - Add support for exporting figures with transparent background in `vis.export.from.coloredmeshes` function, see parameter 'transparency_color' and docs. A usage example is in the fsbrain FAQ vignette.
