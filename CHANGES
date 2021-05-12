@@ -8,6 +8,8 @@ Version 0.4.3
 - Support custom background color in various visualization functions, including `vis.export.from.coloredmeshes`. See the docs for the new parameter 'background_color'.
 - One can now suppress rendering of a colorbar with the `vis.export.from.coloredmeshes` function by passing 'NULL' for the colorbar orientation parameter 'horizontal'.
 - Add new R live notebook that illustrates how to use the Export API to produce publication-ready plots. It is linked on the GitHub page, see the Documentation section.
+- Disable all unit tests that require extra data on CRAN, downloading them is not possible anymore. We still test on Travis CI and Appveyor CI so that should not make much of a difference.
+- Add new 'highlight.vertices.on.subject' function, it does what the name says. Very handy for debugging stuff like coordinate transformations and illustrating things in presentations and bug reports.
 
 
 Version 0.4.2
