@@ -817,7 +817,7 @@ vis.fs.surface <- function(fs_surface, col="white", per_vertex_data=NULL, hemi="
 #'
 #' @param color_bg Background color.
 #'
-#' @param extend integer, radius to extend neighborhood (for better visibility).
+#' @param k integer, radius to extend neighborhood (for better visibility).
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'

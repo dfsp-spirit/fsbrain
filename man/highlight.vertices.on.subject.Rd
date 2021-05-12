@@ -42,9 +42,7 @@ highlight.vertices.on.subject(
 
 \item{color_verts_rh}{vector of colors to visualize on the right hemisphere surface. Length must match number of vertices in 'verts_rh', or be a single color.}
 
-\item{k}{positive integer, how often to repeat the procedure and grow the neighborhood, using the output `vertices` as the `source_vertices` for the next iteration. Warning: settings this to high values will be very slow for large meshes.}
-
-\item{extend}{integer, radius to extend neighborhood (for better visibility).}
+\item{k}{integer, radius to extend neighborhood (for better visibility).}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.
