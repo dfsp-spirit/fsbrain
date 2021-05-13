@@ -1,6 +1,12 @@
 fsbrain Changes
 ===============
 
+
+Version 0.5.0
+-------------
+- Breaking change: remove long deprecated parameter 'colormap' from all vis functions. Use the 'makecmap_options' parameter instead.
+
+
 Version 0.4.4
 -------------
 - Fix accidental printing of rglactions to console when calling vis functions.
