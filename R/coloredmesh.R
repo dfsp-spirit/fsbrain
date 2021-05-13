@@ -13,8 +13,6 @@
 #'
 #' @param surface character string or `fs.surface` instance. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".
 #'
-#' @param colormap a colormap function. See the squash package for some colormaps. Defaults to \code{\link{jet}}.
-#'
 #' @param clip numeric vector of length 2 or NULL. If given, the 2 values are interpreted as lower and upper percentiles, and the morph data is clipped at the given lower and upper percentile (see \code{\link[fsbrain]{clip.data}}). Defaults to NULL (no data clipping).
 #'
 #' @param cortex_only logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the subject. Defaults to FALSE.
@@ -28,13 +26,11 @@
 #' @export
 #' @importFrom squash cmap makecmap jet
 #' @importFrom rgl tmesh3d rgl.open wire3d
-coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hemi, surface="white", colormap=NULL, clip=NULL, cortex_only=FALSE, makecmap_options=mkco.seq()) {
+coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hemi, surface="white", clip=NULL, cortex_only=FALSE, makecmap_options=mkco.seq()) {
 
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
-
-    makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
 
     if(is.null(measure)) {
         morph_data = NULL;
@@ -172,13 +168,11 @@ coloredmeshes.from.color <- function(subjects_dir, subject_id, color_data, hemi,
 #' @export
 #' @importFrom squash cmap makecmap jet
 #' @importFrom rgl tmesh3d rgl.open wire3d
-coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm, surface="white", template_subject='fsaverage', template_subjects_dir=NULL, colormap=NULL, clip = NULL, cortex_only=FALSE, makecmap_options=mkco.seq()) {
+coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm, surface="white", template_subject='fsaverage', template_subjects_dir=NULL, clip = NULL, cortex_only=FALSE, makecmap_options=mkco.seq()) {
 
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
-
-    makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
 
     if(is.null(template_subjects_dir)) {
         template_subjects_dir = subjects_dir;
@@ -244,13 +238,11 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
 #' @importFrom squash cmap makecmap
 #' @importFrom rgl tmesh3d rgl.open wire3d
 #' @importFrom utils modifyList
-coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data, hemi, surface="white", colormap=NULL, makecmap_options=mkco.seq()) {
+coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data, hemi, surface="white", makecmap_options=mkco.seq()) {
 
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
-
-    makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
 
     if(freesurferformats::is.fs.surface(surface)) {
         surface_mesh = surface;
@@ -400,13 +392,11 @@ coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surfac
 #' @export
 #' @importFrom squash cmap makecmap rainbow2
 #' @importFrom rgl tmesh3d rgl.open wire3d
-coloredmesh.from.label <- function(subjects_dir, subject_id, label, hemi, surface="white", colormap=NULL, makecmap_options=list('colFn'=squash::rainbow2), binary = TRUE) {
+coloredmesh.from.label <- function(subjects_dir, subject_id, label, hemi, surface="white", makecmap_options=list('colFn'=squash::rainbow2), binary = TRUE) {
 
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
-
-    makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
 
     if(freesurferformats::is.fs.surface(surface)) {
         surface_mesh = surface;
@@ -453,13 +443,11 @@ coloredmesh.from.label <- function(subjects_dir, subject_id, label, hemi, surfac
 #' @family mask functions
 #' @family coloredmesh functions
 #' @export
-coloredmesh.from.mask <- function(subjects_dir, subject_id, mask, hemi, surface="white", colormap=NULL, surface_data=NULL, makecmap_options=list('colFn'=squash::rainbow2)) {
+coloredmesh.from.mask <- function(subjects_dir, subject_id, mask, hemi, surface="white", surface_data=NULL, makecmap_options=list('colFn'=squash::rainbow2)) {
 
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
     }
-
-    makecmap_options = makecmakeopts.merge(makecmap_options, colormap);
 
     if(is.null(surface_data)) {
         if(freesurferformats::is.fs.surface(surface)) {
