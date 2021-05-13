@@ -13,7 +13,6 @@ coloredmesh.from.morph.standard(
   surface = "white",
   template_subject = "fsaverage",
   template_subjects_dir = NULL,
-  colormap = NULL,
   clip = NULL,
   cortex_only = FALSE,
   makecmap_options = mkco.seq()
@@ -35,8 +34,6 @@ coloredmesh.from.morph.standard(
 \item{template_subject}{The template subject used. This will be used as part of the filename, and its surfaces are loaded for data visualization. Defaults to 'fsaverage'.}
 
 \item{template_subjects_dir}{The template subjects dir. If `NULL`, the value of the parameter 'subjects_dir' is used. Defaults to NULL. If you have FreeSurfer installed and configured, and are using the standard fsaverage subject, try passing the result of calling 'file.path(Sys.getenv('FREESURFER_HOME'), 'subjects')'.}
-
-\item{colormap}{a colormap function. See the squash package for some colormaps. Defaults to \code{\link{jet}}.}
 
 \item{clip}{numeric vector of length 2 or NULL. If given, the 2 values are interpreted as lower and upper percentiles, and the morph data is clipped at the given lower and upper percentile (see \code{\link[fsbrain]{clip.data}}). Defaults to NULL (no data clipping).}
 

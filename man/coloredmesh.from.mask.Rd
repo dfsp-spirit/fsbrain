@@ -10,7 +10,6 @@ coloredmesh.from.mask(
   mask,
   hemi,
   surface = "white",
-  colormap = NULL,
   surface_data = NULL,
   makecmap_options = list(colFn = squash::rainbow2)
 )
@@ -25,8 +24,6 @@ coloredmesh.from.mask(
 \item{hemi}{string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.}
 
 \item{surface}{character string or `fs.surface` instance. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
-
-\item{colormap}{a colormap function. See the squash package for some colormaps. Defaults to \code{\link{jet}}.}
 
 \item{surface_data}{optional surface mesh object, as returned by \code{\link[fsbrain]{subject.surface}}. If given, used instead of loading the surface data from disk (which users of this function may already have done). Defaults to NULL.}
 

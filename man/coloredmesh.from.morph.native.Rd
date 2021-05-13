@@ -10,7 +10,6 @@ coloredmesh.from.morph.native(
   measure,
   hemi,
   surface = "white",
-  colormap = NULL,
   clip = NULL,
   cortex_only = FALSE,
   makecmap_options = mkco.seq()
@@ -26,8 +25,6 @@ coloredmesh.from.morph.native(
 \item{hemi}{string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.}
 
 \item{surface}{character string or `fs.surface` instance. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
-
-\item{colormap}{a colormap function. See the squash package for some colormaps. Defaults to \code{\link{jet}}.}
 
 \item{clip}{numeric vector of length 2 or NULL. If given, the 2 values are interpreted as lower and upper percentiles, and the morph data is clipped at the given lower and upper percentile (see \code{\link[fsbrain]{clip.data}}). Defaults to NULL (no data clipping).}
 
