@@ -104,7 +104,12 @@ devtools::check()
 
 Continuous integration results:
 
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/dfsp-spirit/fsbrain/workflows/R-CMD-check/badge.svg)](https://github.com/dfsp-spirit/fsbrain/actions)
+
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/dfsp-spirit/fsbrain?branch=master&svg=true)](https://ci.appveyor.com/project/dfsp-spirit/fsbrain) AppVeyor CI under Windows
+<!-- badges: end -->
+
 
 The displayed status represents the development version. Don't worry if you are using the stable version from CRAN and CI is currently failing, development happens on master.
 
