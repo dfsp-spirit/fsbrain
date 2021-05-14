@@ -104,8 +104,6 @@ devtools::check()
 
 Continuous integration results:
 
-[![Build Status](https://travis-ci.org/dfsp-spirit/fsbrain.svg?branch=master)](https://travis-ci.org/dfsp-spirit/fsbrain) Travis CI under Linux
-
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/dfsp-spirit/fsbrain?branch=master&svg=true)](https://ci.appveyor.com/project/dfsp-spirit/fsbrain) AppVeyor CI under Windows
 
 The displayed status represents the development version. Don't worry if you are using the stable version from CRAN and CI is currently failing, development happens on master.
