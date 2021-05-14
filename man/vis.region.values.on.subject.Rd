@@ -11,7 +11,6 @@ vis.region.values.on.subject(
   lh_region_value_list,
   rh_region_value_list,
   surface = "white",
-  colormap = NULL,
   views = c("t4"),
   rgloptions = rglo(),
   rglactions = list(),
@@ -34,8 +33,6 @@ vis.region.values.on.subject(
 \item{rh_region_value_list}{named list. A list for the right hemisphere in which the names are atlas regions, and the values are the value to write to all vertices of that region.}
 
 \item{surface}{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
-
-\item{colormap}{a colormap function. **DEPRECATED**: use parameter 'makecmap_options' instead, like this: \code{makecmap_options=list('colFn'=terrain.colors)}.}
 
 \item{views}{list of strings. Valid entries include: 'si': single interactive view. 't4': tiled view showing the brain from 4 angles. 't9': tiled view showing the brain from 9 angles.}
 

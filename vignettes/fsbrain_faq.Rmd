@@ -118,6 +118,17 @@ While one could convert the PNGs to these formats, doing so makes little sense. 
 
 The default settings used by the the *vis.export.from.coloredmeshes()* function should be fine to reach the 300 DPI typically required for publications, unless you want the image to fill the entire page. In that case, you can further increase the output resolution.
 
+### A journal requires me to submit a vector graphics file, what to do?
+
+If a journal requires you to submit vector graphics files (PDF, SVG, EPS, ...), you should simply embed the bitmap in a vector format container and submit that. E.g., in the free vector graphics software Inkscape, you could do this with the following steps (takes less than a minute from the 2nd time you do it):
+
+1) Start Inkscape, open the menu and select `File --> New` if needed.
+2) Embed your PNG image exported from fsbrain: `File --> Import...` and select the PNG image. In the new `png bitmap image import` window, the default settings should be fine (`Image Import Type: Embed`, `Image DPI: From File`, `Image Rendering Mode: None (Auto)`), just click `OK`.
+3) Make the embedded image fill the entire page. Go to `File --> Document Properties`, and on the `Page` tab under `Custom Size`, click on `Fit page to content` to expand it, then make sure the margins are all set to 0 (the default), and click the button `Resize page to drawing or selection`.
+
+You can now save the image as SVG, PDF, EPS or whatever by clicking `File --> Save as...`. I would recommend EPS format if you are using LateX, and PDF if you just need to upload the image in any vector format to the publisher's website. Make sure to check the result in a standard vector graphics viewer like Adobe Acrobat before submitting it.
+
+This will of course not lead to a true vector graphics file that can be scaled/zoomed in without losing quality, but that is not what they are asking you to submit. They just want a vector container. I would not recommend to try to vectorize (or `trace`) the output of fsbrain to generate a true vector image as the quality will usually be bad, but you are of course free to try.
 
 ### When visualizing data with outliers and long tails, the colors are not helpful. What to do?
 

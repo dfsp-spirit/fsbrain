@@ -206,7 +206,6 @@ rglactions.has.key <- function(rglactions, key) {
 #' @keywords internal
 #' @importFrom rgl rgl.snapshot rgl.postscript
 perform.rglactions <- function(rglactions, at_index=NULL, silent=TRUE) {
-    print(rglactions)
     if(is.list(rglactions)) {
         if("text" %in% names(rglactions)) {
             do.call(rgl::text3d, rglactions$text);
