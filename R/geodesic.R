@@ -16,6 +16,8 @@
 #' @return integer vector, the indices of all vertices in the neigborhood.
 #'
 #' @note This function uses the pseudo-geodesic distance along the mesh edges.
+#'
+#' @export
 geod.vert.neighborhood <- function(mesh, vertex, max_distance=5.0, include_max = TRUE) {
     mesh = ensure.tmesh3d(mesh);
     if(requireNamespace("Rvcg", quietly = TRUE)) {
