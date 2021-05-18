@@ -25,6 +25,7 @@ Suggests:
     sphereplot (>= 1.5),
     misc3d,
     viridis,
-    RColorBrewer
+    RColorBrewer,
+    Rvcg
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1
