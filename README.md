@@ -12,7 +12,7 @@ A GNU R library for structural neuroimaging. Provides high-level functions to ac
 
 The *fsbrain* R package provides a well-tested and consistent interface to neuroimaging data in [R](https://www.r-project.org/). It supports reading, writing, and visualizing various kinds of raw data and statistical results on brain surfaces and volumes. While the package provides a very convenient interface for working with data arranged in the standard [FreeSurfer](http://freesurfer.net/) directory structure (SUBJECTS_DIR), *fsbrain* is not limited to this layout or FreeSurfer file formats. You can load brain meshes, volumes, and data from a range of other neuroimaging software packages and visualize them.
 
-The plots produced by *fsbrain* can be integrated into R notebooks or written to high-quality image files, ready for publication. The [rgl](https://CRAN.R-project.org/package=rgl) renderer used by *fsbrain* provides fast, hardware-accelerated rendering based on the OpenGL standard.
+The plots produced by *fsbrain* can be integrated into R notebooks or written to high-quality bitmap image files, ready for publication. The [rgl](https://CRAN.R-project.org/package=rgl) renderer used by *fsbrain* provides fast, hardware-accelerated rendering based on the OpenGL standard.
 
 
 ## News
