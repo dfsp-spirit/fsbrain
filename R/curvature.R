@@ -5,7 +5,7 @@
 
 # One could also compute the curvatures directly in R using Rvcg:
 # sf = freesurferformats::read.fs.surface("~/data/tim_only/tim/surf/lh.white")
-# m3 = rgl::tmesh3d(c(t(sf$vertices)), c(t(sf$faces)), homogeneous=FALSE);
+# m3 = fs.surface.to.tmesh3d(sf);
 # cr = Rvcg::vcgCurve(m3);
 # k1 = cr$K1;
 # k2 = cr$K2;

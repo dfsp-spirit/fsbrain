@@ -640,13 +640,13 @@ shift.hemis.apart <- function(coloredmeshes_hl, shift_by=NULL, axis=1L, hemi_ord
         }
 
         lh_src_mesh$vertices[,axis] = lh_src_mesh$vertices[,axis] + shift_by[1];
-        lh_new_tmesh = rgl::tmesh3d(c(t(lh_src_mesh$vertices)), c(t(lh_src_mesh$faces)), homogeneous=FALSE);
+        lh_new_tmesh = fs.surface.to.tmesh3d(lh_src_mesh);
         coloredmeshes_hl$lh$mesh$vb = lh_new_tmesh$vb;
         coloredmeshes_hl$lh$mesh$it = lh_new_tmesh$it;
 
 
         rh_src_mesh$vertices[,axis] = rh_src_mesh$vertices[,axis] + shift_by[2];
-        rh_new_tmesh = rgl::tmesh3d(c(t(rh_src_mesh$vertices)), c(t(rh_src_mesh$faces)), homogeneous=FALSE);
+        rh_new_tmesh = fs.surface.to.tmesh3d(rh_src_mesh);
         coloredmeshes_hl$rh$mesh$vb = rh_new_tmesh$vb;
         coloredmeshes_hl$rh$mesh$it = rh_new_tmesh$it;
     } else {
