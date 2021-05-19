@@ -24,7 +24,7 @@ geod.vert.neighborhood <- function(mesh, vertex, max_distance=5.0, include_max =
         if(! exists('vcgDijkstra', where=asNamespace('Rvcg'), mode='function')) {
             stop("Your Rvcg version does not export the vcgDijkstra function, which means it is too old. You need to install Rvcg from GitHub for this this functionality to be available. Try 'devtools::install_github('zarquon42b/Rvcg')'.");
         }
-        geodesic_dists_to_vertex = Rvcg::vcgDijkstra(lh_tmesh3d, vertex);
+        geodesic_dists_to_vertex = Rvcg::vcgDijkstra(mesh, vertex);
         if(include_max) {
             return(which(geodesic_dists_to_vertex <= max_distance));
         } else {

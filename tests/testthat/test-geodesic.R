@@ -11,5 +11,8 @@ test_that("The geodesic neighborhood of a vertex can be computed", {
     source_vertex = 32258;  # on precentral gyrus
     neighbors = geod.vert.neighborhood(lh_surf, source_vertex);
 
-    testthat::expect_equal(length(neighbors), 10L);
+    testthat::expect_equal(length(neighbors), 130L);
+
+    # Visualize neighborhood (red area at precentral gyrus / central sulcus, left hemi).
+    highlight.vertices.on.subject(subjects_dir, subject_id, verts_lh = neighbors, views = "si");
 })
