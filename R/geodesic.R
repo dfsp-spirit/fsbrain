@@ -98,11 +98,18 @@ geod.patches.color.overlay <- function(mesh, vertex, color = "#FF0000", bg_color
     }
 }
 
-
+#' @title Generate color overlay from geodesic patches around several vertices for a single hemi.
+#'
+#' @inheritParams geod.patches.color.overlay
+#'
+#' @param mesh a single \code{fs.surface} instance.
+#'
+#' @seealso geod.patches.color.overlay
+#'
 #' @keywords internal
 geod.patches.color.overlay.singlehemi <- function(mesh, vertex, color = "#FF0000", bg_color = "#FEFEFE", ...) {
     if(! is.fs.surface(mesh)) {
-        stop("Paramter 'mesh' must be an fs.surface instance (or hemilist of such).");
+        stop("Paramter 'mesh' must be an fs.surface instance.");
     }
     color = recycle(color, length(vertex));
     nv = nrow(mesh$vertices);
