@@ -16,7 +16,7 @@ highlight.vertices.on.subject(
   color_bg = "#FEFEFE",
   color_verts_lh = "#FF0000",
   color_verts_rh = "#FF4500",
-  k = 3L
+  k = 0L
 )
 }
 \arguments{

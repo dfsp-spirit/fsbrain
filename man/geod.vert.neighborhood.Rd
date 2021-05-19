@@ -9,7 +9,7 @@ geod.vert.neighborhood(mesh, vertex, max_distance = 5, include_max = TRUE)
 \arguments{
 \item{mesh}{an instance of \code{rgl::tmesh3d} or \code{freesurferformats::fs.surface}.}
 
-\item{vertex}{positive integer, the index of the source vertex in the mesh.}
+\item{vertex}{positive integer (or vector of the latter), the index of the source vertex in the mesh. If a vector, the neighborhoods for all vertices will be computed separately.}
 
 \item{max_distance}{double, the neighborhood size. All mesh vertices in geodesic distance smaller than / up to this distance will be returned.}
 

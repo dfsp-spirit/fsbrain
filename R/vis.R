@@ -390,7 +390,7 @@ perform.na.mapping <- function(data, map_to_NA) {
 #'
 #' @param color_rh vector of colors to visualize on the right hemisphere surface. Length must match number of vertices in hemi surface, or be a single color.
 #'
-#' @param color_both vector of colors to visualize on the left and right hemispheres. Alternative to 'color_lh' and 'color_rh'. Length must match sum of vertices in both hemis.
+#' @param color_both vector of colors to visualize on the left and right hemispheres. Alternative to 'color_lh' and 'color_rh'. Length must match sum of vertices in both hemis. Can also be a hemilist.
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
@@ -806,7 +806,7 @@ vis.fs.surface <- function(fs_surface, col="white", per_vertex_data=NULL, hemi="
 #' @family surface visualization functions
 #'
 #' @export
-highlight.vertices.on.subject <- function(subjects_dir, vis_subject_id, verts_lh=NULL, verts_rh=NULL, surface="white", views=c('t4'), rgloptions=rglo(), rglactions = list(), color_bg="#FEFEFE", color_verts_lh="#FF0000", color_verts_rh="#FF4500", k=3L) {
+highlight.vertices.on.subject <- function(subjects_dir, vis_subject_id, verts_lh=NULL, verts_rh=NULL, surface="white", views=c('t4'), rgloptions=rglo(), rglactions = list(), color_bg="#FEFEFE", color_verts_lh="#FF0000", color_verts_rh="#FF4500", k=0L) {
 
     coloredmeshes = list();
     nv = subject.num.verts(subjects_dir, vis_subject_id);
