@@ -18,6 +18,7 @@ Draw small 3D spheres at given points.
 }
 \seealso{
 Other 3d utility functions: 
-\code{\link{highlight.vertices.spheres}()}
+\code{\link{highlight.vertices.spheres}()},
+\code{\link{vertex.coords}()}
 }
 \concept{3d utility functions}

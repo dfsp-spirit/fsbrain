@@ -95,6 +95,16 @@ highlight.vertices.on.subject <- function(subjects_dir, vis_subject_id, verts_lh
 #'
 #' @export
 highlight.points.spheres <- function(coords, color = "#FF0000", radius = 1.0) {
+    if(is.null(coords)) {
+        warning("No point coordinates passed in 'coords' parameter, not highlighting anything.");
+        return(invisible(NULL));
+    }
+    if(is.null(color)) {
+        color = "#FF0000"; # for rglactions usage
+    }
+    if(is.null(radius)) {
+        radius = 1.0; # for rglactions usage
+    }
     if(is.vector(coords)) {
         coords = matrix(coords, ncol = 3, byrow = TRUE);
     }
@@ -126,12 +136,26 @@ highlight.points.spheres <- function(coords, color = "#FF0000", radius = 1.0) {
 #'
 #' @export
 highlight.vertices.spheres <- function(surface, vertices, ...) {
+    coords = vertex.coords(surface, vertices);
+    highlight.points.spheres(coords, ...);
+}
+
+
+#' @title Return coordinates for vertices, supporting entire brain via hemilist.
+#'
+#' @param surface an fs.surface instance, see \code{\link[fsbrain]{subject.surface}} function. Can also be a hemilist of surfaces, in which case the vertices can be indices over both meshes (in range \code{1..(nv(lh)+nv(rh))}).
+#'
+#' @param vertices vector of positive integers, the vertex indices. Values which are outside of the valid indices for the surface will be silently ignored, making it easier to work with the two hemispheres.
+#'
+#' @family 3d utility functions
+#'
+#' @export
+vertex.coords <- function(surface, vertices) {
     if(is.hemilist(surface)) {
         per_surface = per.hemi.vertex.indices(surface, vertices);
         lh_coords = surface$lh$vertices[per_surface$vertices$lh, ];
         rh_coords = surface$rh$vertices[per_surface$vertices$rh, ];
         coords = rbind(lh_coords, rh_coords);
-        print(coords);
     } else {
         if(! freesurferformats::is.fs.surface(surface)) {
             stop("Parameter 'surface' must be an fs.surface instance.");
@@ -140,6 +164,6 @@ highlight.vertices.spheres <- function(surface, vertices, ...) {
         vertices = vertices[which(vertices > 0L & vertices <= nrow(surface$vertices))];
         coords = surface$vertices[vertices, ];
     }
-    highlight.points.spheres(coords, ...);
+    return(coords);
 }
 

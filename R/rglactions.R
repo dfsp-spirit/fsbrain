@@ -207,6 +207,14 @@ rglactions.has.key <- function(rglactions, key) {
 #' @importFrom rgl rgl.snapshot rgl.postscript
 perform.rglactions <- function(rglactions, at_index=NULL, silent=TRUE) {
     if(is.list(rglactions)) {
+
+        #valid_rglactions = c("text", "snapshot_png", "snapshot_vec", "highlight_points", "shift_hemis_apart", "no_vis");
+        #for(action in names(rglactions)) {
+        #    if(! (action %in% valid_rglactions)) {
+        #        warning(sprintf("Ignoring unsupported rglaction '%s'.\n", action));
+        #    }
+        #}
+
         if("text" %in% names(rglactions)) {
             do.call(rgl::text3d, rglactions$text);
         }
@@ -248,6 +256,11 @@ perform.rglactions <- function(rglactions, at_index=NULL, silent=TRUE) {
                 message(sprintf("Vector graphics screenshot written to '%s' in format '%s' (current working dir is '%s').\n", output_image, snapshot_vec_format, getwd()));
             }
         }
+        if("highlight_points" %in% names(rglactions)) {
+            hp = rglactions$highlight_points;
+            highlight.points.spheres(hp$coords, color = hp$color, radius = hp$radius);
+        }
+        # rglactions = list('highlight_points'=list('coords'=coords, 'color'=color, 'radius'=1));
     }
 }
 
