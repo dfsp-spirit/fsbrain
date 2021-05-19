@@ -9,7 +9,7 @@ highlight.vertices.spheres(surface, vertices, ...)
 \arguments{
 \item{surface}{an fs.surface instance, see \code{subject.surface} function.}
 
-\item{vertices}{vector of positive integers, the vertex indices.}
+\item{vertices}{vector of positive integers, the vertex indices. Values which are outside of the valid indices for the surface will be silently ignored, making it easier to work with the two hemispheres.}
 
 \item{...}{Parameters passed to \code{highlight.points.spheres}.}
 }

@@ -888,7 +888,7 @@ highlight.points.spheres <- function(coords, color = "#FF0000", radius = 1.0) {
 #'
 #' @param surface an fs.surface instance, see \code{subject.surface} function.
 #'
-#' @param vertices vector of positive integers, the vertex indices.
+#' @param vertices vector of positive integers, the vertex indices. Values which are outside of the valid indices for the surface will be silently ignored, making it easier to work with the two hemispheres.
 #'
 #' @param ... Parameters passed to \code{highlight.points.spheres}.
 #'
@@ -911,6 +911,10 @@ highlight.vertices.spheres <- function(surface, vertices, ...) {
     if(! freesurferformats::is.fs.surface(surface)) {
         stop("Parameter 'surface' must be an fs.surface instance.");
     }
+
+    # Filter invalid vertex indices. Makes it easier to work per hemisphere, as
+    vertices = vertices[which(vertices > 0L & vertices <= nrow(lh_surf$vertices))];
+
     coords = surface$vertices[vertices, ];
     highlight.points.spheres(coords, ...);
 }
