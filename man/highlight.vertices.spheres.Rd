@@ -7,11 +7,11 @@
 highlight.vertices.spheres(surface, vertices, ...)
 }
 \arguments{
-\item{surface}{an fs.surface instance, see \code{subject.surface} function. Can also be a hemilist of surfaces, in which case the vertices can be indices over both meshes (in range \code{1..(nv(lh)+nv(rh))}).}
+\item{surface}{an fs.surface instance, see \code{\link[fsbrain]{subject.surface}} function. Can also be a hemilist of surfaces, in which case the vertices can be indices over both meshes (in range \code{1..(nv(lh)+nv(rh))}).}
 
 \item{vertices}{vector of positive integers, the vertex indices. Values which are outside of the valid indices for the surface will be silently ignored, making it easier to work with the two hemispheres.}
 
-\item{...}{Parameters passed to \code{highlight.points.spheres}.}
+\item{...}{Parameters passed to \code{\link[fsbrain]{highlight.points.spheres}}.}
 }
 \description{
 Draw small 3D spheres at given brain mesh vertices. Supports full brain (2 meshes) as well.

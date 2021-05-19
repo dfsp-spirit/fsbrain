@@ -392,6 +392,8 @@ perform.na.mapping <- function(data, map_to_NA) {
 #'
 #' @param color_both vector of colors to visualize on the left and right hemispheres. Alternative to 'color_lh' and 'color_rh'. Length must match sum of vertices in both hemis. Can also be a hemilist.
 #'
+#' @param style character string or rgl rendering style, see \code{\link[fsbrain]{get.rglstyle}}.
+#'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
 #' @examples
@@ -413,7 +415,7 @@ perform.na.mapping <- function(data, map_to_NA) {
 #' @family surface visualization functions
 #'
 #' @export
-vis.color.on.subject <- function(subjects_dir, vis_subject_id, color_lh=NULL, color_rh=NULL, surface="white", views=c('t4'), rgloptions=rglo(), rglactions = list(), color_both=NULL) {
+vis.color.on.subject <- function(subjects_dir, vis_subject_id, color_lh=NULL, color_rh=NULL, surface="white", views=c('t4'), rgloptions=rglo(), rglactions = list(), color_both=NULL, style = "default") {
 
     coloredmeshes = list();
 
@@ -450,7 +452,7 @@ vis.color.on.subject <- function(subjects_dir, vis_subject_id, color_lh=NULL, co
         return(coloredmeshes);
     }
 
-    return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions)));
+    return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, style = style)));
 }
 
 

@@ -36,7 +36,7 @@ highlight.vertices.on.subject(
 
 \item{rglactions}{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action. The following example clips outliers in the data before plotting and writes a screenshot in PNG format: \code{rglactions = list("snapshot_png"="~/fsbrain.png", "clip_data"=c(0.05, 0.95))}. See \code{\link{rglactions}}.}
 
-\item{color_bg}{Background color.}
+\item{color_bg}{background color.}
 
 \item{color_verts_lh}{vector of colors to visualize on the left hemisphere surface. Length must match number of vertices in 'verts_lh', or be a single color.}
 

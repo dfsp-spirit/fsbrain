@@ -14,7 +14,7 @@
 #'
 #' @param color_verts_rh vector of colors to visualize on the right hemisphere surface. Length must match number of vertices in 'verts_rh', or be a single color.
 #'
-#' @param color_bg Background color.
+#' @param color_bg background color.
 #'
 #' @param k integer, radius to extend neighborhood (for better visibility).
 #'
@@ -104,11 +104,11 @@ highlight.points.spheres <- function(coords, color = "#FF0000", radius = 1.0) {
 
 #' @title Draw small 3D spheres at given brain mesh vertices. Supports full brain (2 meshes) as well.
 #'
-#' @param surface an fs.surface instance, see \code{subject.surface} function. Can also be a hemilist of surfaces, in which case the vertices can be indices over both meshes (in range \code{1..(nv(lh)+nv(rh))}).
+#' @param surface an fs.surface instance, see \code{\link[fsbrain]{subject.surface}} function. Can also be a hemilist of surfaces, in which case the vertices can be indices over both meshes (in range \code{1..(nv(lh)+nv(rh))}).
 #'
 #' @param vertices vector of positive integers, the vertex indices. Values which are outside of the valid indices for the surface will be silently ignored, making it easier to work with the two hemispheres.
 #'
-#' @param ... Parameters passed to \code{highlight.points.spheres}.
+#' @param ... Parameters passed to \code{\link[fsbrain]{highlight.points.spheres}}.
 #'
 #' @note This function will draw into the current window and add to the scene, so it can be called after visualizing a mesh. See the example.
 #'
