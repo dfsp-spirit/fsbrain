@@ -863,3 +863,55 @@ highlight.vertices.on.subject <- function(subjects_dir, vis_subject_id, verts_lh
 
     return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions)));
 }
+
+
+#' @title Draw small 3D spheres at given points.
+#'
+#' @param coords double vector or nx3 double matrix, the xyz point coordinates.
+#'
+#' @param color the sphere color, like \code{'#FF0000'} or \code{"red"}.
+#'
+#' @param radius double, the sphere radius
+#'
+#' @family 3d utility functions
+#'
+#' @export
+highlight.points.spheres <- function(coords, color = "#FF0000", radius = 1.0) {
+    if(is.vector(coords)) {
+        coords = matrix(coords, ncol = 3, byrow = TRUE);
+    }
+    rgl::rgl.spheres(coords[,1], coords[,2], coords[,3], radius = radius, col = color);
+}
+
+
+#' @title Draw small 3D spheres at given brain mesh vertices.
+#'
+#' @param surface an fs.surface instance, see \code{subject.surface} function.
+#'
+#' @param vertices vector of positive integers, the vertex indices.
+#'
+#' @param ... Parameters passed to \code{highlight.points.spheres}.
+#'
+#' @note This function will draw into the current window and add to the scene, so it can be called after visualizing a mesh. See the example.
+#'
+#' @family 3d utility functions
+#'
+#' @examples
+#' \dontrun{
+#' lh_surf = subject.surface('~/data/study1', 'subject1',
+#'  surface = "white", hemi = "lh");
+#' vis.fs.surface(lh_surf, style="semitransparent");
+#' highlight.vertices.spheres(lh_surf,
+#'   vertices = c(3225L, 4300L, 5500L),
+#'   color = c("green", "blue", "red"));
+#' }
+#'
+#' @export
+highlight.vertices.spheres <- function(surface, vertices, ...) {
+    if(! freesurferformats::is.fs.surface(surface)) {
+        stop("Parameter 'surface' must be an fs.surface instance.");
+    }
+    coords = surface$vertices[vertices, ];
+    highlight.points.spheres(coords, ...);
+}
+
