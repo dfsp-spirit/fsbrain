@@ -884,9 +884,9 @@ highlight.points.spheres <- function(coords, color = "#FF0000", radius = 1.0) {
 }
 
 
-#' @title Draw small 3D spheres at given brain mesh vertices.
+#' @title Draw small 3D spheres at given brain mesh vertices. Supports full brain (2 meshes) as well.
 #'
-#' @param surface an fs.surface instance, see \code{subject.surface} function.
+#' @param surface an fs.surface instance, see \code{subject.surface} function. Can also be a hemilist of surfaces, in which case the vertices can be indices over both meshes (in range \code{1..(nv(lh)+nv(rh))}).
 #'
 #' @param vertices vector of positive integers, the vertex indices. Values which are outside of the valid indices for the surface will be silently ignored, making it easier to work with the two hemispheres.
 #'
@@ -908,14 +908,59 @@ highlight.points.spheres <- function(coords, color = "#FF0000", radius = 1.0) {
 #'
 #' @export
 highlight.vertices.spheres <- function(surface, vertices, ...) {
-    if(! freesurferformats::is.fs.surface(surface)) {
-        stop("Parameter 'surface' must be an fs.surface instance.");
+    if(is.hemilist(surface)) {
+        per_surface = per.hemi.vertex.indices(surface, vertices);
+        lh_coords = surface$lh$vertices[per_surface$vertices$lh, ];
+        rh_coords = surface$rh$vertices[per_surface$vertices$rh, ];
+        coords = rbind(lh_coords, rh_coords);
+    } else {
+        if(! freesurferformats::is.fs.surface(surface)) {
+            stop("Parameter 'surface' must be an fs.surface instance.");
+        }
+        # Filter invalid vertex indices. Makes it easier to work per hemisphere.
+        vertices = vertices[which(vertices > 0L & vertices <= nrow(surface$vertices))];
+        coords = surface$vertices[vertices, ];
     }
 
-    # Filter invalid vertex indices. Makes it easier to work per hemisphere, as
-    vertices = vertices[which(vertices > 0L & vertices <= nrow(lh_surf$vertices))];
-
-    coords = surface$vertices[vertices, ];
     highlight.points.spheres(coords, ...);
 }
 
+
+#' @title Transform surfaces indices which go over two surfaces to per-hemi indices.
+#'
+#' @param surfaces hemilist of surfaces, or a single integer, which will be interpreted as the number of vertices of the left hemisphere surface.
+#'
+#' @param vertices positive integer vector, the query vertex indices. Must be in range 1 to (num_verts_lh + num_verts_rh).
+#'
+#' @return list of hemilists, the outer lists are: 'vertices', hemilist of indices for the hemispheres. 'query_indices', hemilist of the indices of the respective vertices in the vector that was passed as parameter 'vertices'.
+#'
+#' @keywords internal
+per.hemi.vertex.indices <- function(surfaces, vertices) {
+    lh_nv = NULL; # vertex count of left hemi
+    if(is.hemilist(surfaces)) {
+        if(freesurferformats::is.fs.surface(surfaces$lh)) {
+            lh_nv = nrow(surfaces$lh$vertices);
+        }
+    } else if(is.integer(surfaces)) {
+        if(length(surfaces) == 1L) {
+            lh_nv = surfaces;
+        }
+    } else {
+        stop("Invalid 'surfaces' parameter.");
+    }
+
+    if(is.null(lh_nv)) {
+        stop("Cannot determine vertex count of left hemi, invalid 'surfaces' parameter.");
+    }
+
+    lh_vertices_idx = which(vertices <= lh_nv);
+    lh_vertices = vertices[lh_vertices_idx];
+
+    rh_vertices_idx = vertices[which(vertices > lh_nv)];
+    rh_vertices_idx = rh_vertices_idx;
+    rh_vertices = vertices[rh_vertices_idx];
+    rh_vertices = rh_vertices - lh_nv;
+    vertices = list('lh' = lh_vertices, 'rh' = rh_vertices);
+    source_indices = list('lh' = lh_vertices_idx, 'rh' = rh_vertices_idx);
+    return(list('vertices' = vertices, 'query_indices' = source_indices));
+}

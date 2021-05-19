@@ -26,16 +26,15 @@ test_that("The geodesic color overlay for several vertices over a full brain can
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     subject_id = 'fsaverage';
 
-    lh_surf = subject.surface(subjects_dir, subject_id, surface = "white", hemi = "lh");
-    rh_surf = subject.surface(subjects_dir, subject_id, surface = "white", hemi = "rh");
-    surf_hemilist = list('lh'=lh_surf, 'rh'=rh_surf);
+    surfaces = subject.surface(subjects_dir, subject_id, surface = "white", hemi = "both");
     source_verts = c(500, 32258, 150000, 250000, 320000);
     patch_colors = c("#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF");
 
-    overlay_hemilist = geod.patches.color.overlay(surf_hemilist, vertex = source_verts, color = patch_colors);
+    overlay_hemilist = geod.patches.color.overlay(surfaces, vertex = source_verts, color = patch_colors);
 
     # Visualize
     vis.color.on.subject(subjects_dir, subject_id, color_both = overlay_hemilist, views = "si", surface = "white");
+    highlight.vertices.spheres(surfaces, source_verts);
 
     testthat::expect_equal(1L, 1L); # only prevent test skipping for now.
 })
