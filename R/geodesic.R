@@ -84,6 +84,7 @@ geod.patches.color.overlay.singlehemi <- function(mesh, vertex, color = "#FF0000
     if(! is.fs.surface(mesh)) {
         stop("Paramter 'mesh' must be an fs.surface instance (or hemilist of such).");
     }
+    color = recycle(color, length(vertex));
     nv = nrow(mesh$vertices);
     color_overlay = rep(bg_color, nv);
 
