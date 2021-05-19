@@ -39,3 +39,24 @@ test_that("The geodesic color overlay for several vertices over a full brain can
     testthat::expect_equal(1L, 1L); # only prevent test skipping for now.
 })
 
+
+test_that("The geodesic per-vertex distance data for several vertices over a full brain can be computed", {
+    testthat::skip_on_cran();
+
+    fsbrain::download_optional_data();
+    fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+    subject_id = 'fsaverage';
+
+    surfaces = subject.surface(subjects_dir, subject_id, surface = "white", hemi = "both");
+    source_verts = c(500, 32258, 150000, 250000, 320000);
+
+    morphdata_hemilist = geod.patches.pervertexdata(surfaces, vertex = source_verts);
+
+    # Visualize
+    vis.data.on.subject(subjects_dir, subject_id, morph_data_lh = morphdata_hemilist$lh, morph_data_rh = morphdata_hemilist$rh, views = "si", surface = "white");
+    highlight.vertices.spheres(surfaces, source_verts);
+
+    testthat::expect_equal(1L, 1L); # only prevent test skipping for now.
+})
+

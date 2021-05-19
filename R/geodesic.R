@@ -124,6 +124,65 @@ geod.patches.color.overlay.singlehemi <- function(mesh, vertex, color = "#FF0000
     return(color_overlay);
 }
 
+#' @title Generate per-vertex distance data from geodesic patches around several vertices.
+#'
+#' @description Works across hemispheres (for a whole brain) if you pass a hemilist of meshes as parameter 'mesh', see below.
+#'
+#' @inheritParams geod.patches.color.overlay
+#''
+#' @return vector of doubles (or a hemilist of 2 such vectors if 'mesh' is a hemilist), the per-vertex distance data. Data for vertices outside neighborhoods will be NA.
+#'
+#' @export
+geod.patches.pervertexdata <- function(mesh, vertex, ...) {
+    if(is.hemilist(mesh)) {
+        if(! is.fs.surface(mesh$lh)) {
+            stop("Paramter 'mesh$lh' must be an fs.surface instance if a hemilist is passed.");
+        }
+        if(! is.fs.surface(mesh$rh)) {
+            stop("Paramter 'mesh$rh' must be an fs.surface instance if a hemilist is passed.");
+        }
+        lh_nv = nrow(mesh$lh$vertices);
+        rh_nv = nrow(mesh$rh$vertices);
+        lh_vertex = vertex[which(vertex <= lh_nv)];
+        rh_vertex = vertex[which(vertex > lh_nv)];
+        rh_vertex = rh_vertex - lh_nv;
+
+        lh_overlay = geod.patches.pervertexdata.singlehemi(mesh$lh, lh_vertex, ...);
+        rh_overlay = geod.patches.pervertexdata.singlehemi(mesh$rh, rh_vertex, ...);
+        res = list('lh'=lh_overlay, 'rh'=rh_overlay);
+        return(res);
+    } else {
+        return(geod.patches.pervertexdata.singlehemi(mesh, vertex, ...));
+    }
+}
+
+
+#' @title Generate per-vertex distance data from geodesic patches around several vertices for a single hemi.
+#'
+#' @inheritParams geod.patches.pervertexdata
+#'
+#' @param mesh a single \code{fs.surface} instance.
+#'
+#' @seealso geod.patches.pervertexdata
+#'
+#' @keywords internal
+geod.patches.pervertexdata.singlehemi <- function(mesh, vertex, ...) {
+    if(! is.fs.surface(mesh)) {
+        stop("Paramter 'mesh' must be an fs.surface instance.");
+    }
+    nv = nrow(mesh$vertices);
+    data_overlay = rep(NA, nv);
+
+    query_v_idx = 1L;
+    for (v in vertex) {
+        neighborhood = geod.vert.neighborhood(mesh, v, ...);
+        data_overlay[neighborhood$vertices] = neighborhood$distances;
+        query_v_idx = query_v_idx + 1L;
+    }
+    return(data_overlay);
+}
+
+
 
 #' @title Simple internal wrapper around \code{Rvcg::vcgDijkstra} with function check.
 #'
