@@ -1,5 +1,6 @@
 
-test_that("The geodesic neighborhood of a vertex can be computed", {
+
+test_that("We can highlight vertices using 3D spheres using a single surface.", {
     testthat::skip_on_cran();
 
     fsbrain::download_optional_data();
@@ -7,18 +8,18 @@ test_that("The geodesic neighborhood of a vertex can be computed", {
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     subject_id = 'fsaverage';
 
-    lh_surf = subject.surface(subjects_dir, subject_id, surface = "white", hemi = "lh");
-    source_vertex = 32258;  # on precentral gyrus / central sulcus wall
-    neighbors = geod.vert.neighborhood(lh_surf, source_vertex, max_distance = 5.0)$vertices;
+    surface = subject.surface(subjects_dir, subject_id, surface = "white", hemi = "lh");
+    source_verts = c(500, 32258, 150000);
+    vertex_colors = c("#FF0000", "#00FF00", "#0000FF");
 
-    testthat::expect_equal(length(neighbors), 130L);
+    vis.color.on.subject(subjects_dir, subject_id, color_both = "#FFFFFF", views = "si");
+    highlight.vertices.spheres(surface, source_verts, color = vertex_colors, radius = 5);
 
-    # Visualize neighborhood (red area at precentral gyrus / central sulcus, left hemi).
-    highlight.vertices.on.subject(subjects_dir, subject_id, verts_lh = neighbors, views = "si");
+    testthat::expect_equal(1L, 1L); # only prevent test skipping for now.
 })
 
 
-test_that("The geodesic color overlay for several vertices over a full brain can be computed", {
+test_that("We can highlight vertices using 3D spheres using a hemilist of surfaces.", {
     testthat::skip_on_cran();
 
     fsbrain::download_optional_data();
@@ -34,7 +35,7 @@ test_that("The geodesic color overlay for several vertices over a full brain can
 
     # Visualize
     vis.color.on.subject(subjects_dir, subject_id, color_both = overlay_hemilist, views = "si", surface = "white");
-    highlight.vertices.spheres(surfaces, source_verts);
+    highlight.vertices.spheres(surfaces, source_verts, color = patch_colors, radius = 4);
 
     testthat::expect_equal(1L, 1L); # only prevent test skipping for now.
 })
