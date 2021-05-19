@@ -34,7 +34,7 @@ test_that("We can highlight vertices using 3D spheres using a hemilist of surfac
     overlay_hemilist = geod.patches.color.overlay(surfaces, vertex = source_verts, color = patch_colors);
 
     # Visualize
-    vis.color.on.subject(subjects_dir, subject_id, color_both = overlay_hemilist, views = "si", surface = "white", style = "semitransparent");
+    vis.color.on.subject(subjects_dir, subject_id, color_both = overlay_hemilist, views = "si", surface = "white", style = "default");
     highlight.vertices.spheres(surfaces, source_verts, color = patch_colors, radius = 4);
 
     testthat::expect_equal(1L, 1L); # only prevent test skipping for now.

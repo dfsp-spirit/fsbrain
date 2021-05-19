@@ -815,8 +815,7 @@ per.hemi.vertex.indices <- function(surfaces, vertices) {
     lh_vertices_idx = which(vertices <= lh_nv);
     lh_vertices = vertices[lh_vertices_idx];
 
-    rh_vertices_idx = vertices[which(vertices > lh_nv)];
-    rh_vertices_idx = rh_vertices_idx;
+    rh_vertices_idx = which(vertices > lh_nv);
     rh_vertices = vertices[rh_vertices_idx];
     rh_vertices = rh_vertices - lh_nv;
     vertices = list('lh' = lh_vertices, 'rh' = rh_vertices);

@@ -131,6 +131,7 @@ highlight.vertices.spheres <- function(surface, vertices, ...) {
         lh_coords = surface$lh$vertices[per_surface$vertices$lh, ];
         rh_coords = surface$rh$vertices[per_surface$vertices$rh, ];
         coords = rbind(lh_coords, rh_coords);
+        print(coords);
     } else {
         if(! freesurferformats::is.fs.surface(surface)) {
             stop("Parameter 'surface' must be an fs.surface instance.");
