@@ -4,7 +4,13 @@
 \alias{geod.vert.neighborhood}
 \title{Compute all vertices within given geodesic distance on the mesh.}
 \usage{
-geod.vert.neighborhood(mesh, vertex, max_distance = 5, include_max = TRUE)
+geod.vert.neighborhood(
+  mesh,
+  vertex,
+  max_distance = 5,
+  include_max = TRUE,
+  return_distances = TRUE
+)
 }
 \arguments{
 \item{mesh}{an instance of \code{rgl::tmesh3d} or \code{freesurferformats::fs.surface}.}
@@ -14,9 +20,11 @@ geod.vert.neighborhood(mesh, vertex, max_distance = 5, include_max = TRUE)
 \item{max_distance}{double, the neighborhood size. All mesh vertices in geodesic distance smaller than / up to this distance will be returned.}
 
 \item{include_max}{logical, whether the max_distance value is inclusive.}
+
+\item{return_distances}{logical, whether to compute the 'distances' entry in the returned list. Doing so is a little bit slower, so it can be turned off if not needed.}
 }
 \value{
-integer vector, the indices of all vertices in the neigborhood.
+named list with the following entries: 'vertices': integer vector, the indices of all vertices in the neigborhood. 'distances': double vector, the distances to the respective vertices (unless 'return_distances' is FALSE).
 }
 \description{
 Compute all vertices within given geodesic distance on the mesh.

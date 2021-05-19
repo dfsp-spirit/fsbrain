@@ -13,24 +13,44 @@
 #'
 #' @param include_max logical, whether the max_distance value is inclusive.
 #'
-#' @return integer vector, the indices of all vertices in the neigborhood.
+#' @param return_distances logical, whether to compute the 'distances' entry in the returned list. Doing so is a little bit slower, so it can be turned off if not needed.
+#'
+#' @return named list with the following entries: 'vertices': integer vector, the indices of all vertices in the neigborhood. 'distances': double vector, the distances to the respective vertices (unless 'return_distances' is FALSE).
 #'
 #' @note This function uses the pseudo-geodesic distance along the mesh edges.
 #'
 #' @export
-geod.vert.neighborhood <- function(mesh, vertex, max_distance=5.0, include_max = TRUE) {
+geod.vert.neighborhood <- function(mesh, vertex, max_distance=5.0, include_max = TRUE, return_distances = TRUE) {
     mesh = ensure.tmesh3d(mesh);
     if(requireNamespace("Rvcg", quietly = TRUE)) {
         neighborhood = vertex;
+        neighborhood_distances = rep(0.0, length(vertex));
         for (v in vertex) {
             geodesic_dists_to_vertex = geodesic.dists.to.vertex(mesh, v);
             if(include_max) {
-                neighborhood = c(neighborhood, which(geodesic_dists_to_vertex <= max_distance));
+                this_neighborhood_indices = which(geodesic_dists_to_vertex <= max_distance);
             } else {
-                neighborhood = c(neighborhood, which(geodesic_dists_to_vertex < max_distance));
+                this_neighborhood_indices = which(geodesic_dists_to_vertex < max_distance);
             }
+            neighborhood = c(neighborhood, this_neighborhood_indices);
+            neighborhood_distances = c(neighborhood_distances, geodesic_dists_to_vertex[this_neighborhood_indices]);
         }
-        return(unique(neighborhood));
+
+        if(! return_distances) {
+            return(list("vertices" = unique(neighborhood)));
+        } else {
+            # Make neighborhood unique, and also remove the corresponding duplicated distances (so we cannot simply use base::unique).
+            verts_unique = c();
+            dists_unique = c();
+            for(neigh_idx in seq_len(length(neighborhood))) {
+                vert_idx = neighborhood[neigh_idx];
+                if(! (vert_idx %in% verts_unique)) {
+                    verts_unique = c(verts_unique, vert_idx);
+                    dists_unique = c(dists_unique, neighborhood_distances[neigh_idx]);
+                }
+            }
+            return(list('vertices' = verts_unique, 'distances' = dists_unique));
+        }
     } else {
         stop("The 'Rvcg' package must be installed to use this functionality.");
     }
@@ -90,7 +110,7 @@ geod.patches.color.overlay.singlehemi <- function(mesh, vertex, color = "#FF0000
 
     query_v_idx = 1L;
     for (v in vertex) {
-        neighborhood = geod.vert.neighborhood(mesh, vertex, ...);
+        neighborhood = geod.vert.neighborhood(mesh, v, ...)$vertices;
         color_overlay[neighborhood] = color[query_v_idx];
         query_v_idx = query_v_idx + 1L;
     }
