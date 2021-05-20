@@ -185,6 +185,16 @@ get.sorted.cmeshes <- function(coloredmeshes) {
 }
 
 
+#' @title Highlight requested points (if any), but apply given view rotation before doing so.
+#'
+#' @keywords internal
+handle.rglactions.highlight.points <- function(rglactions, angle_rad, x, y, z) {
+    if('highlight_points' %in% names(rglactions)) {
+        coords = rgl::rotate3d(rglactions$highlight_points$coords, angle_rad, x, y, z);
+        highlight.points.spheres(coords, color = rglactions$highlight_points$color, radius = rglactions$highlight_points$radius);
+    }
+}
+
 #' @title Visualize a list of colored meshes from four angles.
 #'
 #' @param coloredmeshes, list of coloredmesh. A coloredmesh is a named list as returned by the coloredmesh.from.* functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh.
@@ -250,6 +260,7 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     # Create the upper left view: draw only the left hemi, from the left
     rgl::next3d(reuse=TRUE);
     vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style);
+    handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0);
     rgl::rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
         rgl::text3d(0,label_shift_y,0,"lateral lh");
