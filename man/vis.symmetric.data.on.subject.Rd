@@ -18,7 +18,8 @@ vis.symmetric.data.on.subject(
     200),
   map_to_NA = c(0),
   bg = NULL,
-  morph_data_both = NULL
+  morph_data_both = NULL,
+  style = "default"
 )
 }
 \arguments{
@@ -47,6 +48,8 @@ vis.symmetric.data.on.subject(
 \item{bg}{a background definition. Can be a surface color layer or a character string like 'curv_light' to select a pre-defined layer, see \code{\link[fsbrain]{collayer.bg}} for valid strings.}
 
 \item{morph_data_both}{numeric vector or NULL, the data to visualize on both hemispheres. This must be a single vector with length equal to the sum of the vertex counts of the left and the right hemisphere. The data for the left hemisphere must come first. If this is given, 'morph_data_lh' and 'morph_data_rh' must be NULL.}
+
+\item{style}{character string, a rendering style, e.g., 'default', 'shiny' or 'semitransparent'.}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.

@@ -18,7 +18,8 @@ vis.region.values.on.subject(
   draw_colorbar = FALSE,
   makecmap_options = mkco.heat(),
   bg = NULL,
-  silent = FALSE
+  silent = FALSE,
+  style = "default"
 )
 }
 \arguments{
@@ -49,6 +50,8 @@ vis.region.values.on.subject(
 \item{bg}{a background definition. Can be a surface color layer or a character string like 'curv_light' to select a pre-defined layer, see \code{\link[fsbrain]{collayer.bg}} for valid strings.}
 
 \item{silent}{logical, whether to suppress mapping info in case of unnamed region value lists (see 'lh_region_value_list' description).}
+
+\item{style}{character string, a rendering style, e.g., 'default', 'shiny' or 'semitransparent'.}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.
