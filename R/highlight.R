@@ -147,6 +147,8 @@ highlight.vertices.spheres <- function(surface, vertices, ...) {
 #'
 #' @param vertices vector of positive integers, the vertex indices. Values which are outside of the valid indices for the surface will be silently ignored, making it easier to work with the two hemispheres.
 #'
+#' @return double nx3 matrix of vertex coordinates.
+#'
 #' @family 3d utility functions
 #'
 #' @export
@@ -165,5 +167,22 @@ vertex.coords <- function(surface, vertices) {
         coords = surface$vertices[vertices, ];
     }
     return(coords);
+}
+
+
+#' @title Return the proper hemi string ('lh' or 'rh') for each vertex.
+#'
+#' @param surfaces hemilist of surfaces or a single integer which will be interpreted as the vertex count of the left hemisphere.
+#'
+#' @param vertices vector of positive integers, the query vertex indices. Can be in range \code{1..(nv(lh)+nv(rh))}, i.e., across the whole brain.
+#'
+#' @return vector of character strings, each string is 'lh' or 'rh'.
+#'
+#' @export
+vertex.hemis <- function(surface, vertices) {
+    lh_nv = numverts.lh(surface);
+    vertices_hemi = rep("lh", length(vertices));
+    vertices_hemi[which(vertices > lh_nv)] = "rh";
+    return(vertices_hemi);
 }
 

@@ -783,18 +783,14 @@ vis.fs.surface <- function(fs_surface, col="white", per_vertex_data=NULL, hemi="
     return(invisible(vis.coloredmeshes(cm_list, ...)));
 }
 
-
-
-#' @title Transform surfaces indices which go over two surfaces to per-hemi indices.
+#' @title Determine vertex count of left hemi from hemilist of surfaces or the count itself.
 #'
 #' @param surfaces hemilist of surfaces, or a single integer, which will be interpreted as the number of vertices of the left hemisphere surface.
 #'
-#' @param vertices positive integer vector, the query vertex indices. Must be in range 1 to (num_verts_lh + num_verts_rh).
-#'
-#' @return list of hemilists, the outer lists are: 'vertices', hemilist of indices for the hemispheres. 'query_indices', hemilist of the indices of the respective vertices in the vector that was passed as parameter 'vertices'.
+#' @return integer, the number of vertices.
 #'
 #' @keywords internal
-per.hemi.vertex.indices <- function(surfaces, vertices) {
+numverts.lh <- function(surfaces) {
     lh_nv = NULL; # vertex count of left hemi
     if(is.hemilist(surfaces)) {
         if(freesurferformats::is.fs.surface(surfaces$lh)) {
@@ -811,14 +807,32 @@ per.hemi.vertex.indices <- function(surfaces, vertices) {
     if(is.null(lh_nv)) {
         stop("Cannot determine vertex count of left hemi, invalid 'surfaces' parameter.");
     }
+    return(lh_nv);
+}
+
+
+#' @title Transform surfaces indices which go over two surfaces to per-hemi indices.
+#'
+#' @param surfaces hemilist of surfaces, or a single integer, which will be interpreted as the number of vertices of the left hemisphere surface.
+#'
+#' @param vertices positive integer vector, the query vertex indices. Must be in range 1 to (num_verts_lh + num_verts_rh).
+#'
+#' @return named list with the following entries: 'vertices', hemilist of indices for the hemispheres. 'query_indices', hemilist of the indices of the respective vertices in the vector that was passed as parameter vertices. 'vertices_hemi': vector of character strings containing the hemi value (lh or rh) for the query vertices.
+#'
+#' @keywords internal
+per.hemi.vertex.indices <- function(surfaces, vertices) {
+    lh_nv = numverts.lh(surfaces);
 
     lh_vertices_idx = which(vertices <= lh_nv);
     lh_vertices = vertices[lh_vertices_idx];
+
+    # Save which hemi each vertex belongs to.
+    vertices_hemi = vertex.hemis(surfaces, vertices);
 
     rh_vertices_idx = which(vertices > lh_nv);
     rh_vertices = vertices[rh_vertices_idx];
     rh_vertices = rh_vertices - lh_nv;
     vertices = list('lh' = lh_vertices, 'rh' = rh_vertices);
     source_indices = list('lh' = lh_vertices_idx, 'rh' = rh_vertices_idx);
-    return(list('vertices' = vertices, 'query_indices' = source_indices));
+    return(list('vertices' = vertices, 'query_indices' = source_indices, 'vertices_hemi' = vertices_hemi));
 }

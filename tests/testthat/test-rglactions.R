@@ -26,8 +26,7 @@ test_that("Points can be highlighted with 3D spheres.", {
     lh_nv = subject.num.verts(subjects_dir, subject_id, surface = "white", hemi = "lh");
     vertices = c(50L, 70000L, 150000L, 300000L);
     coords = vertex.coords(surfaces, vertices);
-    point_hemi = rep("lh", nrow(coords));
-    point_hemi[which(vertices > lh_nv)] = "rh";
+    point_hemi = vertex.hemis(surfaces, vertices);
     colors = c('#FFFF00', '#FFFF00', '#FFFF00', '#FF0000');
     rglactions = list('highlight_points'=list('coords'=coords, 'color'=colors, 'radius'=5, 'hemi'=point_hemi));
     vis.subject.morph.native(subjects_dir, subject_id, 'curv', rglactions = rglactions, views = "si");

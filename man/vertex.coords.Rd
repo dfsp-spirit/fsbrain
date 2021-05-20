@@ -11,6 +11,9 @@ vertex.coords(surface, vertices)
 
 \item{vertices}{vector of positive integers, the vertex indices. Values which are outside of the valid indices for the surface will be silently ignored, making it easier to work with the two hemispheres.}
 }
+\value{
+double nx3 matrix of vertex coordinates.
+}
 \description{
 Return coordinates for vertices, supporting entire brain via hemilist.
 }

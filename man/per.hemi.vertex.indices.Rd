@@ -12,7 +12,7 @@ per.hemi.vertex.indices(surfaces, vertices)
 \item{vertices}{positive integer vector, the query vertex indices. Must be in range 1 to (num_verts_lh + num_verts_rh).}
 }
 \value{
-list of hemilists, the outer lists are: 'vertices', hemilist of indices for the hemispheres. 'query_indices', hemilist of the indices of the respective vertices in the vector that was passed as parameter 'vertices'.
+named list with the following entries: 'vertices', hemilist of indices for the hemispheres. 'query_indices', hemilist of the indices of the respective vertices in the vector that was passed as parameter vertices. 'vertices_hemi': vector of character strings containing the hemi value (lh or rh) for the query vertices.
 }
 \description{
 Transform surfaces indices which go over two surfaces to per-hemi indices.
