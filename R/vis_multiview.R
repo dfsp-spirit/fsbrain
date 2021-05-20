@@ -187,11 +187,21 @@ get.sorted.cmeshes <- function(coloredmeshes) {
 
 #' @title Highlight requested points (if any), but apply given view rotation before doing so.
 #'
+#' @param hemi character string, one of 'lh', 'rh' or 'both'. If lh or rh, plots only points from that hemi (if hemi info is available for the points).
+#'
 #' @keywords internal
-handle.rglactions.highlight.points <- function(rglactions, angle_rad, x, y, z) {
+handle.rglactions.highlight.points <- function(rglactions, angle_rad, x, y, z, hemi = "both") {
     if('highlight_points' %in% names(rglactions)) {
-        coords = rgl::rotate3d(rglactions$highlight_points$coords, angle_rad, x, y, z);
-        highlight.points.spheres(coords, color = rglactions$highlight_points$color, radius = rglactions$highlight_points$radius);
+        coords = rglactions$highlight_points$coords;
+        color = rglactions$highlight_points$color;
+        if(hemi != "both") { # limit to current hemi if hemi annotation is available in rglactions.
+            if( ! is.null(rglactions$highlight_points$hemi)) {
+                coords = coords[which(rglactions$highlight_points$hemi == hemi), ];
+                color = color[which(rglactions$highlight_points$hemi == hemi)];
+            }
+        }
+        coords = rgl::rotate3d(coords, angle_rad, x, y, z);
+        highlight.points.spheres(coords, color = color, radius = rglactions$highlight_points$radius);
     }
 }
 
@@ -260,7 +270,7 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     # Create the upper left view: draw only the left hemi, from the left
     rgl::next3d(reuse=TRUE);
     vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style);
-    handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0);
+    handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "lh");
     rgl::rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
         rgl::text3d(0,label_shift_y,0,"lateral lh");
@@ -269,6 +279,7 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     # Create the upper right view
     rgl::next3d(reuse=FALSE);
     vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style);
+    handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "rh");
     rgl::rgl.viewpoint(90, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
         rgl::text3d(0,label_shift_y,0,"lateral rh");
@@ -278,6 +289,7 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     # Create the lower left view
     rgl::next3d(reuse=FALSE);
     vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style);
+    handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "lh");
     rgl::rgl.viewpoint(90, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
         rgl::text3d(0,label_shift_y,0,"medial lh");
@@ -287,6 +299,7 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     # Create the lower right view
     rgl::next3d(reuse=FALSE);
     vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style);
+    handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "rh");
     rgl::rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
         rgl::text3d(0,label_shift_y,0,"medial rh");
@@ -300,7 +313,7 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     }
 
 
-    perform.rglactions(rglactions);
+    perform.rglactions(rglactions, ignore = c("highlight_points"));
     return(invisible(coloredmeshes));
 }
 

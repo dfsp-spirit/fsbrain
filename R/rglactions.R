@@ -203,9 +203,11 @@ rglactions.has.key <- function(rglactions, key) {
 #'
 #' @param silent logical, whether to suppress messages
 #'
+#' @param ignore vector of character strings, actions to ignore
+#'
 #' @keywords internal
 #' @importFrom rgl rgl.snapshot rgl.postscript
-perform.rglactions <- function(rglactions, at_index=NULL, silent=TRUE) {
+perform.rglactions <- function(rglactions, at_index=NULL, silent=TRUE, ignore = c()) {
     if(is.list(rglactions)) {
 
         #valid_rglactions = c("text", "snapshot_png", "snapshot_vec", "highlight_points", "shift_hemis_apart", "no_vis");
@@ -216,7 +218,9 @@ perform.rglactions <- function(rglactions, at_index=NULL, silent=TRUE) {
         #}
 
         if("text" %in% names(rglactions)) {
-            do.call(rgl::text3d, rglactions$text);
+            if(!("text" %in% ignore)) {
+                do.call(rgl::text3d, rglactions$text);
+            }
         }
         if("snapshot_png" %in% names(rglactions)) {
             if(length(rglactions$snapshot_png) == 1 || is.null(at_index)) {
@@ -257,10 +261,11 @@ perform.rglactions <- function(rglactions, at_index=NULL, silent=TRUE) {
             }
         }
         if("highlight_points" %in% names(rglactions)) {
-            hp = rglactions$highlight_points;
-            highlight.points.spheres(hp$coords, color = hp$color, radius = hp$radius);
+            if(!("highlight_points" %in% ignore)) {
+                hp = rglactions$highlight_points;
+                highlight.points.spheres(hp$coords, color = hp$color, radius = hp$radius);
+            }
         }
-        # rglactions = list('highlight_points'=list('coords'=coords, 'color'=color, 'radius'=1));
     }
 }
 
