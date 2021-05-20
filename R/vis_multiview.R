@@ -531,7 +531,6 @@ brainview.sd <- function(coloredmeshes, view_angle, background="white", skip_all
         rgl::next3d(reuse=TRUE);
     }
 
-
     if(view_angle == "lateral_lh") {
         vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style);
         rgl::rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
