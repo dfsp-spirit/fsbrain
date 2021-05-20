@@ -8,6 +8,10 @@ geod.patches.pervertexdata.singlehemi(mesh, vertex, ...)
 }
 \arguments{
 \item{mesh}{a single \code{fs.surface} instance.}
+
+\item{vertex}{positive integer (or vector of the latter), the index of the source vertex in the mesh. If a vector, the neighborhoods for all vertices will be computed separately.}
+
+\item{...}{extra arguments passed to \code{geod.vert.neighborhood}.}
 }
 \description{
 Generate per-vertex distance data from geodesic patches around several vertices for a single hemi.

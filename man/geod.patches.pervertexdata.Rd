@@ -6,6 +6,13 @@
 \usage{
 geod.patches.pervertexdata(mesh, vertex, ...)
 }
+\arguments{
+\item{mesh}{a single \code{fs.surface} instance, or a hemilist of two such meshes. If a hemilist, the vertex indices can go from 1 to the sum of vertices in both meshes, and the proper hemisphere will be used automatically.}
+
+\item{vertex}{positive integer (or vector of the latter), the index of the source vertex in the mesh. If a vector, the neighborhoods for all vertices will be computed separately.}
+
+\item{...}{extra arguments passed to \code{geod.vert.neighborhood}.}
+}
 \value{
 vector of doubles (or a hemilist of 2 such vectors if 'mesh' is a hemilist), the per-vertex distance data. Data for vertices outside neighborhoods will be NA.
 }

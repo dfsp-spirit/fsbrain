@@ -24,7 +24,4 @@ geod.patches.color.overlay.singlehemi(
 \description{
 Generate color overlay from geodesic patches around several vertices for a single hemi.
 }
-\seealso{
-geod.patches.color.overlay
-}
 \keyword{internal}

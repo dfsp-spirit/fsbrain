@@ -104,8 +104,6 @@ geod.patches.color.overlay <- function(mesh, vertex, color = "#FF0000", bg_color
 #'
 #' @param mesh a single \code{fs.surface} instance.
 #'
-#' @seealso geod.patches.color.overlay
-#'
 #' @keywords internal
 geod.patches.color.overlay.singlehemi <- function(mesh, vertex, color = "#FF0000", bg_color = "#FEFEFE", ...) {
     if(! is.fs.surface(mesh)) {
@@ -129,7 +127,7 @@ geod.patches.color.overlay.singlehemi <- function(mesh, vertex, color = "#FF0000
 #' @description Works across hemispheres (for a whole brain) if you pass a hemilist of meshes as parameter 'mesh', see below.
 #'
 #' @inheritParams geod.patches.color.overlay
-#''
+#'
 #' @return vector of doubles (or a hemilist of 2 such vectors if 'mesh' is a hemilist), the per-vertex distance data. Data for vertices outside neighborhoods will be NA.
 #'
 #' @export
