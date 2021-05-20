@@ -107,7 +107,7 @@ geod.patches.color.overlay <- function(mesh, vertex, color = "#FF0000", bg_color
 #' @keywords internal
 geod.patches.color.overlay.singlehemi <- function(mesh, vertex, color = "#FF0000", bg_color = "#FEFEFE", ...) {
     if(! is.fs.surface(mesh)) {
-        stop("Paramter 'mesh' must be an fs.surface instance.");
+        stop("Parameter 'mesh' must be an fs.surface instance.");
     }
     color = recycle(color, length(vertex));
     nv = nrow(mesh$vertices);

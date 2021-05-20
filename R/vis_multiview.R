@@ -294,38 +294,7 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 }
 
 
-#https://www.euclideanspace.com/maths/algebra/matrix/orthogonal/rotation/index.htm
 
-#point = c(1.5, 3, 4.5);
-#freesurferformats::doapply.transform.mtx(point, rotation.matrix.for.axis.rot(90, 1, 0, 0))
-#rgl::rotate3d(point, 90, 1, 1, 0);
-
-#' @title Get rotation matrix for a 3D rotation around an axis.
-#' @keywords internal
-rotation.matrix.for.axis.rot <- function(angle, x, y, z, with_trans=TRUE) {
-    x = as.integer(x);
-    y = as.integer(y);
-    z = as.integer(z);
-    if(sum(c(x,y,z)) != 1L) {
-        stop("Parameters x,y,z must sum to 1 (multi-axis rotations not supported).");
-    }
-    a = angle;
-    if(x == 1L) {
-        m = matrix(c(1, 0, 0, 0, cos(a), -sin(a), 0, sin(a), cos(a)), ncol = 3, byrow = TRUE);
-    } else if(y == 1) {
-        m = matrix(c(cos(a), 0, sin(a), 0, 1, 0, -sin(a), 0, cos(a)), ncol = 3, byrow = TRUE);
-    } else {
-        m = matrix(c(cos(a), -sin(a), 0, sin(a), cos(a), 0, 0, 0, 1), ncol = 3, byrow = TRUE);
-    }
-    if(with_trans) {
-        m2 = matrix(rep(0, 16), ncol = 4);
-        m2[4,4] = 1;
-        m2[1:3,1:3] = m;
-        return(m2);
-    } else {
-        return(m);
-    }
-}
 
 
 #' @title Visualize a list of colored meshes from nine angles.
