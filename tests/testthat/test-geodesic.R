@@ -51,10 +51,11 @@ test_that("The geodesic per-vertex distance data for several vertices over a ful
     surfaces = subject.surface(subjects_dir, subject_id, surface = "white", hemi = "both");
     source_verts = c(500, 32258, 150000, 250000, 320000);
 
-    morphdata_hemilist = geod.patches.pervertexdata(surfaces, vertex = source_verts);
+    morph_data = geod.patches.pervertexdata(surfaces, source_verts, max_distance = 25.0);
+
 
     # Visualize
-    vis.data.on.subject(subjects_dir, subject_id, morph_data_lh = morphdata_hemilist$lh, morph_data_rh = morphdata_hemilist$rh, views = "si", surface = "white");
+    vis.data.on.subject(subjects_dir, subject_id, morph_data_lh = morph_data$lh, morph_data_rh = morph_data$rh);
     highlight.vertices.spheres(surfaces, source_verts);
 
     testthat::expect_equal(1L, 1L); # only prevent test skipping for now.
