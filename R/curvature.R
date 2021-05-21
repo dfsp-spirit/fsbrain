@@ -12,11 +12,30 @@
 # fsbrain::vis.data.on.subject("~/data/tim_only", "tim", morph_data_lh=(k1+k2), rglactions = list('trans_fun'=fsbrain::clip.data));
 
 
+#' @title Compute the k1 and k2 principal curvatures of a mesh.
+#'
+#' @param surface an fs.surface instance, as returned by \code{\link[fsbrain]{subject.surface}}
+#'
+#' @return named list, the entries 'K1' and 'K2' contain the principal curvatures.
+#'
+#' @export
+surface.curvatures <- function(surface) {
+    if(requireNamespace("Rvcg", quietly = TRUE)) {
+        tmesh = fs.surface.to.tmesh3d(surface);
+        return(Rvcg::vcgCurve(tmesh));
+    } else {
+        stop("The 'Rvcg' package must be installed for this feature.");
+    }
+}
+
+
 #' @title Computes principal curvatures according to 2 definitions from raw k1 and k2 values.
 #'
 #' @param k1_raw numerical vector, one of the two principal curvatures, one value per vertex
 #'
 #' @param k2_raw numerical vector, the other one of the two principal curvatures, one value per vertex
+#'
+#' @note To obtain k1_raw and k2_raw, use \code{\link[fsbrain]{surface.curvature}} to compute it from a mesh, or load the FreeSurfer files \code{surf/?h.white.max} and \code{surf/?h.white.min}.
 #'
 #' @return a named 'principal_curvatures' list, with entries 'principal_curvature_k1': larger value of k1_raw, k2_raw. 'principal_curvature_k2': smaller value of k1_raw, k2_raw. 'principal_curvature_k_major': larger value of abs(k1_raw), abs(k2_raw). 'principal_curvature_k_minor': smaller value of abs(k1_raw), abs(k2_raw).
 #' @export
@@ -43,6 +62,9 @@ shape.descriptor.names <- function() {
     all_measures = c('principal_curvature_k1', 'principal_curvature_k2', 'principal_curvature_k_major', 'principal_curvature_k_minor', 'mean_curvature', 'gaussian_curvature', 'intrinsic_curvature_index', 'negative_intrinsic_curvature_index', 'gaussian_l2_norm', 'absolute_intrinsic_curvature_index', 'mean_curvature_index', 'negative_mean_curvature_index' ,'mean_l2_norm', 'absolute_mean_curvature_index', 'folding_index', 'curvedness_index', 'shape_index', 'shape_type', 'area_fraction_of_intrinsic_curvature_index', 'area_fraction_of_negative_intrinsic_curvature_index', 'area_fraction_of_mean_curvature_index', 'area_fraction_of_negative_mean_curvature_index', 'sh2sh', 'sk2sk');
     return(all_measures);
 }
+
+
+
 
 
 #' @title Computes geometric curvature-based descriptors.

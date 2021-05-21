@@ -9,7 +9,7 @@ highlight.vertices.on.subject.spheres(
   vis_subject_id,
   vertices,
   surface = "white",
-  patch_size = 5,
+  patch_size = 25,
   style = "glass2",
   export_img = NULL,
   sphere_colors = c("#FF0000"),
