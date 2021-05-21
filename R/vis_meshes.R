@@ -403,7 +403,7 @@ get.rglstyle.edges <- function() {
 #'
 #' @keywords internal
 get.rglstyle.glass <- function() {
-    return(list("shininess"=50, specular="black", alpha=0.6, front="filled", back="culled"));
+    return(list("shininess"=50, specular="black", alpha=0.3, front="filled", back="culled"));
 }
 
 
