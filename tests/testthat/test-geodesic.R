@@ -75,9 +75,8 @@ test_that("We can render publication-ready vertex highlight figures with geodesi
 
     morph_data = geod.patches.pervertexdata(surfaces, source_verts, max_distance = 25.0);
 
-    lh_nv = numverts.lh(surfaces);
     coords = vertex.coords(surfaces, source_verts);
-    point_hemi = vertex.hemis(surfaces, source_verts);
+    point_hemi = vertex.hemis(surfaces, source_verts); # compute the hemispheres for the vertices/points.
     colors = c('#FF0000'); # One can also pass a vector with one color per source_vert if different colors are needed.
     rglactions = list('highlight_points'=list('coords'=coords, 'color'=colors, 'radius'=3, 'hemi'=point_hemi));
 
