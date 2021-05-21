@@ -15,3 +15,6 @@ named list, the entries 'K1' and 'K2' contain the principal curvatures.
 \description{
 Compute the k1 and k2 principal curvatures of a mesh.
 }
+\note{
+Require the optional dependency package 'Rvcg'.
+}
