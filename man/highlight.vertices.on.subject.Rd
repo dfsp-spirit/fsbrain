@@ -2,7 +2,7 @@
 % Please edit documentation in R/highlight.R
 \name{highlight.vertices.on.subject}
 \alias{highlight.vertices.on.subject}
-\title{Highlight vertices given by index on a subject's meshes.}
+\title{Highlight vertices given by index on a subject's meshes by coloring faces.}
 \usage{
 highlight.vertices.on.subject(
   subjects_dir,
@@ -48,10 +48,11 @@ highlight.vertices.on.subject(
 list of coloredmeshes. The coloredmeshes used for the visualization.
 }
 \description{
-Highlight vertices given by index on a subject's meshes.
+Highlight vertices given by index on a subject's meshes by coloring faces.
 }
 \seealso{
 Other visualization functions: 
+\code{\link{highlight.vertices.on.subject.spheres}()},
 \code{\link{vis.color.on.subject}()},
 \code{\link{vis.data.on.fsaverage}()},
 \code{\link{vis.data.on.subject}()},
@@ -66,6 +67,7 @@ Other visualization functions:
 \code{\link{vislayout.from.coloredmeshes}()}
 
 Other surface visualization functions: 
+\code{\link{highlight.vertices.on.subject.spheres}()},
 \code{\link{vis.color.on.subject}()}
 }
 \concept{surface visualization functions}

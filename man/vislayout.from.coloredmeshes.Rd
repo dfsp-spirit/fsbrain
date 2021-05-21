@@ -65,6 +65,7 @@ Create a tight layout view of coloredmeshes from several angles. Creates separat
 }
 \seealso{
 Other visualization functions: 
+\code{\link{highlight.vertices.on.subject.spheres}()},
 \code{\link{highlight.vertices.on.subject}()},
 \code{\link{vis.color.on.subject}()},
 \code{\link{vis.data.on.fsaverage}()},

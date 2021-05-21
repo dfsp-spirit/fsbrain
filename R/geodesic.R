@@ -155,6 +155,31 @@ geod.patches.pervertexdata <- function(mesh, vertex, ...) {
 }
 
 
+#' @title Get vertex data for a single fs.surface or a hemilist of surfaces.
+#' @keywords internal
+constant.pervertexdata <- function(surfaces, value = NA) {
+    mesh = surfaces;
+    if(is.hemilist(mesh)) {
+        if(! is.fs.surface(mesh$lh)) {
+            stop("Paramter 'mesh$lh' must be an fs.surface instance if a hemilist is passed.");
+        }
+        if(! is.fs.surface(mesh$rh)) {
+            stop("Paramter 'mesh$rh' must be an fs.surface instance if a hemilist is passed.");
+        }
+        lh_nv = nrow(mesh$lh$vertices);
+        rh_nv = nrow(mesh$rh$vertices);
+        return(list('lh'=rep(value, lh_nv), 'rh'=rep(value, rh_nv)));
+    } else {
+        if(! is.fs.surface(mesh)) {
+            stop("Paramter 'mesh' must be an fs.surface instance (unless a hemilist is passed).");
+        } else {
+            return(rep(value, nrow(mesh$vertices)));
+        }
+    }
+}
+
+
+
 #' @title Generate per-vertex distance data from geodesic patches around several vertices for a single hemi.
 #'
 #' @inheritParams geod.patches.pervertexdata

@@ -62,6 +62,7 @@ Visualize pre-defined vertex colors on a subject.
 }
 \seealso{
 Other visualization functions: 
+\code{\link{highlight.vertices.on.subject.spheres}()},
 \code{\link{highlight.vertices.on.subject}()},
 \code{\link{vis.data.on.fsaverage}()},
 \code{\link{vis.data.on.subject}()},
@@ -76,6 +77,7 @@ Other visualization functions:
 \code{\link{vislayout.from.coloredmeshes}()}
 
 Other surface visualization functions: 
+\code{\link{highlight.vertices.on.subject.spheres}()},
 \code{\link{highlight.vertices.on.subject}()}
 }
 \concept{surface visualization functions}
