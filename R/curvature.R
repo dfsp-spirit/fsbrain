@@ -30,32 +30,6 @@ surface.curvatures <- function(surface) {
     }
 }
 
-#' @title Compute 1-ring mesh neighbors of given vertices.
-#'
-#' @param surface an fs.surface instance
-#'
-#' @param vertices positive integer vector, the query vertices for which to compute neighbor vertices.
-#'
-#' @return list of integer vectors with length \code{max(vertices)}. All entries which are not in \code{vertices} are 'NULL'.
-#'
-#' @keywords internal
-surface.onering.neighbors <- function(surface, vertices) {
-    if(requireNamespace("Rvcg", quietly = TRUE)) {
-        if(is.null(vertices)) {
-            vertices = seq.int(1L, nrow(surface$vertices));
-        }
-        edge_info = Rvcg::vcgGetEdge(fs.surface.to.tmesh3d(surface));
-        neighbors = list();
-        for(v in vertices) {
-            incident_edge_indices = which(edge_info$vert1 == v | edge_info$vert2 == v);
-            neighbors[[v]] = unique(c(edge_info$vert2[incident_edge_indices], edge_info$vert1[incident_edge_indices]));
-        }
-        return(neighbors);
-    } else {
-        stop("The 'Rvcg' package must be installed for this feature.");
-    }
-}
-
 
 #' @title Computes principal curvatures according to 2 definitions from raw k1 and k2 values.
 #'
