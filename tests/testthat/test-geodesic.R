@@ -61,3 +61,31 @@ test_that("The geodesic per-vertex distance data for several vertices over a ful
     testthat::expect_equal(1L, 1L); # only prevent test skipping for now.
 })
 
+
+test_that("We can render publication-ready vertex highlight figures with geodesic per-vertex distance morph data.", {
+    testthat::skip_on_cran();
+
+    fsbrain::download_optional_data();
+    fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+    subject_id = 'fsaverage';
+
+    surfaces = subject.surface(subjects_dir, subject_id, surface = "white", hemi = "both");
+    source_verts = c(500, 32258, 150000, 250000, 320000);
+
+    morph_data = geod.patches.pervertexdata(surfaces, source_verts, max_distance = 25.0);
+
+    lh_nv = numverts.lh(surfaces);
+    coords = vertex.coords(surfaces, source_verts);
+    point_hemi = vertex.hemis(surfaces, source_verts);
+    colors = c('#FF0000'); # One can also pass a vector with one color per source_vert if different colors are needed.
+    rglactions = list('highlight_points'=list('coords'=coords, 'color'=colors, 'radius'=3, 'hemi'=point_hemi));
+
+    # Visualize
+    cm = vis.data.on.subject(subjects_dir, subject_id, morph_data_lh = morph_data$lh, morph_data_rh = morph_data$rh, rglactions = rglactions, style = "glass2");
+    export(cm, rglactions = rglactions, style = "glass2", horizontal = NULL);
+
+    testthat::expect_equal(1L, 1L); # only prevent test skipping for now.
+})
+
+

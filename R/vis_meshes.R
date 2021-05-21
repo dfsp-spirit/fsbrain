@@ -353,6 +353,8 @@ get.rglstyle <- function(style) {
         return(get.rglstyle.semitransparent());
     } else if (style == "glass") {
         return(get.rglstyle.glass());
+    } else if (style == "glass2") {
+        return(get.rglstyle.glass2());
     } else {
         stop(sprintf("No such rendering style: '%s'. Try something like 'default', 'shiny', 'edges' or 'semitransparent'.\n", style));
     }
@@ -397,13 +399,25 @@ get.rglstyle.edges <- function() {
 
 #' @title Get the glass visualization style parameters as a named list.
 #'
-#' @description Glass-brain rendering style. This style has a very negative impact on rendering performance (in interactive mode). Hint: Run \code{\link{material3d}} without arguments to see valid style keywords to create new styles.
+#' @description Glass-brain rendering style. This style has a very negative impact on rendering performance (especially in interactive mode). Hint: Run \code{\link{material3d}} without arguments to see valid style keywords to create new styles.
 #'
 #' @return named list, style parameters that can be passed to \code{\link{shade3d}} via \code{\link{do.call}}.
 #'
 #' @keywords internal
 get.rglstyle.glass <- function() {
-    return(list("shininess"=50, specular="black", alpha=0.3, front="filled", back="culled"));
+    return(list("shininess"=50, specular="black", alpha=0.4, front="filled", back="culled"));
+}
+
+
+#' @title Get the glass2 visualization style parameters as a named list.
+#'
+#' @description Glass-brain rendering style. This style has a very negative impact on rendering performance (especially in interactive mode). Hint: Run \code{\link{material3d}} without arguments to see valid style keywords to create new styles.
+#'
+#' @return named list, style parameters that can be passed to \code{\link{shade3d}} via \code{\link{do.call}}.
+#'
+#' @keywords internal
+get.rglstyle.glass2 <- function() {
+    return(list("shininess"=80, specular="white", alpha=0.4, front="filled", back="culled"));
 }
 
 

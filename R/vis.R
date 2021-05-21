@@ -789,7 +789,7 @@ vis.fs.surface <- function(fs_surface, col="white", per_vertex_data=NULL, hemi="
 #'
 #' @return integer, the number of vertices.
 #'
-#' @keywords internal
+#' @export
 numverts.lh <- function(surfaces) {
     lh_nv = NULL; # vertex count of left hemi
     if(is.hemilist(surfaces)) {

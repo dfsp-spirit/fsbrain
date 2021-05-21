@@ -194,6 +194,7 @@ handle.rglactions.highlight.points <- function(rglactions, angle_rad, x, y, z, h
     if('highlight_points' %in% names(rglactions)) {
         coords = rglactions$highlight_points$coords;
         color = rglactions$highlight_points$color;
+        color = recycle(color, length(coords));
         if(hemi != "both") { # limit to current hemi if hemi annotation is available in rglactions.
             if( ! is.null(rglactions$highlight_points$hemi)) {
                 coords = coords[which(rglactions$highlight_points$hemi == hemi), ];
