@@ -69,8 +69,9 @@ jobs:
         run: |
           brew install --cask xquartz
           export DISPLAY=:99
-          export RGL_USE_NULL=true
 
+      - name: Stop rgl from breaking CI with its warnings
+        run: export RGL_USE_NULL=true
 
       - name: Install dependencies
         run: |
