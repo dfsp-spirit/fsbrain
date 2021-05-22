@@ -62,8 +62,10 @@ Note that your screen resolution has to be high enough to generate the final ima
 \examples{
 \dontrun{
     rand_data = rnorm(327684, 5, 1.5);
-    cm = vis.data.on.fsaverage(morph_data_both=rand_data, rglactions=list('no_vis'=T));
-    export(cm, colorbar_legend='Random data', output_img="~/fsbrain_arranged.png");
+    cm = vis.data.on.fsaverage(morph_data_both=rand_data,
+      rglactions=list('no_vis'=T));
+    export(cm, colorbar_legend='Random data',
+      output_img="~/fsbrain_arranged.png");
 }
 
 }

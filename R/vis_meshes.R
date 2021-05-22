@@ -214,7 +214,7 @@ vis.coloredmeshes.rotating <- function(coloredmeshes, background="white", skip_a
             rgl::play3d(rgl::spin3d(axis = c(x, y, z), rpm = rpm), duration = duration);
         }
     } else {
-        warning("Cannot show rotating scene with NULL device.");    # nocov
+        message("Cannot show rotating scene with NULL device.");    # nocov
     }
 
     perform.rglactions(rglactions);
