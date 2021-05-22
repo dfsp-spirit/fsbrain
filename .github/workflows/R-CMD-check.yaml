@@ -69,6 +69,7 @@ jobs:
         run: |
           brew cask install xquartz
           export DISPLAY=:99
+          export RGL_USE_NULL=true
 
 
       - name: Install dependencies
