@@ -67,7 +67,7 @@ jobs:
       - name: Install xquartz on macOS
         if: runner.os == 'macOS'
         run: |
-          brew cask install xquartz
+          brew install --cask xquartz
           export DISPLAY=:99
           export RGL_USE_NULL=true
 
