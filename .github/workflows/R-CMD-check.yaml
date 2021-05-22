@@ -64,6 +64,15 @@ jobs:
             eval sudo $cmd
           done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04"))')
 
+      - name: Install xquartz on macOS
+        if: runner.os == 'macOS'
+        run: |
+          brew install --cask xquartz
+          export DISPLAY=:99
+
+      - name: Stop rgl from breaking CI with its warnings
+        run: export RGL_USE_NULL=true
+
       - name: Install dependencies
         run: |
           remotes::install_deps(dependencies = TRUE)
