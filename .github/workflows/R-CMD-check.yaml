@@ -71,6 +71,7 @@ jobs:
           export DISPLAY=:99
 
       - name: Stop rgl from breaking CI with its warnings
+        if: runner.os != 'Windows'
         run: export RGL_USE_NULL=true
 
       - name: Install dependencies
