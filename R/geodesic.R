@@ -67,6 +67,8 @@ geod.vert.neighborhood <- function(mesh, vertex, max_distance=5.0, include_max =
 #'
 #' @param color single color string like \code{'#FF0000'} or vector of such strings. If a vector, the length should match the number of vertices in parameter 'vertex'.
 #'
+#' @param bg_color character string, the background color.
+#'
 #' @param ... extra arguments passed to \code{geod.vert.neighborhood}.
 #'
 #' @return vector of color strings (or a hemilist of 2 such vectors if 'mesh' is a hemilist), an overlay suitable for visualization using \code{vis.color.on.subject}.
