@@ -95,6 +95,10 @@ highlight.vertices.on.subject <- function(subjects_dir, vis_subject_id, verts_lh
 #'
 #' @param export_img character string, the path to the output image if you want to export a high-quality image, NULL if you want live visualization instead.
 #'
+#' @param sphere_colors the sphere colors like '#FF0000', can be a single one for all or one per sphere
+#'
+#' @param sphere_radius double, a single radius for all spheres
+#'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization. If export_img is set, the export return value is returned instead.
 #'
 #'
@@ -117,11 +121,11 @@ highlight.vertices.on.subject.spheres <- function(subjects_dir, vis_subject_id, 
 
     # Visualize
     if(is.null(export_img)) {
-        return(vis.data.on.subject(subjects_dir, subject_id, morph_data_lh = morph_data$lh, morph_data_rh = morph_data$rh, rglactions = rglactions, style = style));
+        return(vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh = morph_data$lh, morph_data_rh = morph_data$rh, rglactions = rglactions, style = style));
     } else {
         rglactions_export = rglactions;
         rglactions$no_vis = TRUE;
-        cm = vis.data.on.subject(subjects_dir, subject_id, morph_data_lh = morph_data$lh, morph_data_rh = morph_data$rh, rglactions = rglactions, style = style);
+        cm = vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh = morph_data$lh, morph_data_rh = morph_data$rh, rglactions = rglactions, style = style);
         return(export(cm, rglactions = rglactions_export, style = style, horizontal = NULL, output_img = export_img));
     }
 }
@@ -216,7 +220,7 @@ vertex.coords <- function(surface, vertices) {
 
 #' @title Return the proper hemi string ('lh' or 'rh') for each vertex.
 #'
-#' @param surfaces hemilist of surfaces or a single integer which will be interpreted as the vertex count of the left hemisphere.
+#' @param surface hemilist of surfaces or a single integer which will be interpreted as the vertex count of the left hemisphere.
 #'
 #' @param vertices vector of positive integers, the query vertex indices. Can be in range \code{1..(nv(lh)+nv(rh))}, i.e., across the whole brain.
 #'

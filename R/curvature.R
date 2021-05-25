@@ -14,7 +14,7 @@
 
 #' @title Compute the k1 and k2 principal curvatures of a mesh.
 #'
-#' @param surface an fs.surface instance, as returned by \code{\link[fsbrain]{subject.surface}}
+#' @param surface an fs.surface instance, as returned by \code{subject.surface}.
 #'
 #' @return named list, the entries 'K1' and 'K2' contain the principal curvatures.
 #'
@@ -37,7 +37,7 @@ surface.curvatures <- function(surface) {
 #'
 #' @param k2_raw numerical vector, the other one of the two principal curvatures, one value per vertex
 #'
-#' @note To obtain k1_raw and k2_raw, use \code{\link[fsbrain]{surface.curvature}} to compute it from a mesh, or load the FreeSurfer files \code{surf/?h.white.max} and \code{surf/?h.white.min}.
+#' @note To obtain k1_raw and k2_raw, use \code{surface.curvatures} to compute it from a mesh, or load the FreeSurfer files \code{'surf/?h.white.max'} and \code{'surf/?h.white.min'}.
 #'
 #' @return a named 'principal_curvatures' list, with entries 'principal_curvature_k1': larger value of k1_raw, k2_raw. 'principal_curvature_k2': smaller value of k1_raw, k2_raw. 'principal_curvature_k_major': larger value of abs(k1_raw), abs(k2_raw). 'principal_curvature_k_minor': smaller value of abs(k1_raw), abs(k2_raw).
 #' @export

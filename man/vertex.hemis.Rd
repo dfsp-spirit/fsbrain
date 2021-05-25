@@ -7,9 +7,9 @@
 vertex.hemis(surface, vertices)
 }
 \arguments{
-\item{vertices}{vector of positive integers, the query vertex indices. Can be in range \code{1..(nv(lh)+nv(rh))}, i.e., across the whole brain.}
+\item{surface}{hemilist of surfaces or a single integer which will be interpreted as the vertex count of the left hemisphere.}
 
-\item{surfaces}{hemilist of surfaces or a single integer which will be interpreted as the vertex count of the left hemisphere.}
+\item{vertices}{vector of positive integers, the query vertex indices. Can be in range \code{1..(nv(lh)+nv(rh))}, i.e., across the whole brain.}
 }
 \value{
 vector of character strings, each string is 'lh' or 'rh'.

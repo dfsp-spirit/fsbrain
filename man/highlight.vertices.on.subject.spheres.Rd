@@ -30,6 +30,10 @@ highlight.vertices.on.subject.spheres(
 \item{style}{character string or rgl rendering style, see \code{\link[fsbrain]{get.rglstyle}}.}
 
 \item{export_img}{character string, the path to the output image if you want to export a high-quality image, NULL if you want live visualization instead.}
+
+\item{sphere_colors}{the sphere colors like '#FF0000', can be a single one for all or one per sphere}
+
+\item{sphere_radius}{double, a single radius for all spheres}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization. If export_img is set, the export return value is returned instead.

@@ -7,7 +7,7 @@
 surface.curvatures(surface)
 }
 \arguments{
-\item{surface}{an fs.surface instance, as returned by \code{\link[fsbrain]{subject.surface}}}
+\item{surface}{an fs.surface instance, as returned by \code{subject.surface}.}
 }
 \value{
 named list, the entries 'K1' and 'K2' contain the principal curvatures.
