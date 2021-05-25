@@ -70,9 +70,9 @@ jobs:
           brew install --cask xquartz
           export DISPLAY=:99
 
-      - name: Install mesa under Linux
-        if: runner.os == 'Linux'
-        run: sudo apt-get build-dep mesa
+#      - name: Install mesa under Linux
+#        if: runner.os == 'Linux'
+#        run: sudo apt-get build-dep mesa
 
       - name: Stop rgl from breaking CI with its warnings
         if: runner.os != 'Windows'
