@@ -43,7 +43,7 @@ To change or adapt the colorbar, you should use the makecmap_options parameter w
    fsbrain::download_optional_data();
    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
    cm = vis.subject.morph.native(subjects_dir, 'subject1', 'thickness',
-    makecmap_options=list('n'=100));
+    makecmap_options=list('n'=100, 'colFn'=squash::jet));
    # You could mess with the meshes here.
    vis.coloredmeshes(cm);
 }

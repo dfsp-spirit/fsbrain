@@ -223,41 +223,45 @@ perform.rglactions <- function(rglactions, at_index=NULL, silent=TRUE, ignore = 
             }
         }
         if("snapshot_png" %in% names(rglactions)) {
-            if(length(rglactions$snapshot_png) == 1 || is.null(at_index)) {
-                output_image = path.expand(rglactions$snapshot_png);
-            } else {
-                if(length(rglactions$snapshot_png) < at_index) {
-                    warning(sprintf("Requested rglaction at_index '%d' but only %d entries exist for action 'snapshot_png'.\n", at_index, length(rglactions$snapshot_png)));
+            if(!("snapshot_png" %in% ignore)) {
+                if(length(rglactions$snapshot_png) == 1 || is.null(at_index)) {
+                    output_image = path.expand(rglactions$snapshot_png);
+                } else {
+                    if(length(rglactions$snapshot_png) < at_index) {
+                        warning(sprintf("Requested rglaction at_index '%d' but only %d entries exist for action 'snapshot_png'.\n", at_index, length(rglactions$snapshot_png)));
+                    }
+                    output_image = path.expand(rglactions$snapshot_png[[at_index]]);
                 }
-                output_image = path.expand(rglactions$snapshot_png[[at_index]]);
-            }
-            rgl::rgl.snapshot(output_image, fmt="png");
-            if(! silent) {
-                message(sprintf("Bitmap screenshot written to '%s' (current working dir is '%s').\n", output_image, getwd()));
+                rgl::rgl.snapshot(output_image, fmt="png");
+                if(! silent) {
+                    message(sprintf("Bitmap screenshot written to '%s' (current working dir is '%s').\n", output_image, getwd()));
+                }
             }
         }
         if("snapshot_vec" %in% names(rglactions)) {
-            snapshot_vec_format = "eps";
-            if("snapshot_vec_format" %in% names(rglactions)) {
-                supported_formats = c("ps", "eps", "tex", "pdf", "svg", "pgf");
-                if(rglactions$snapshot_vec_format %in% supported_formats) {
-                    snapshot_vec_format = rglactions$snapshot_vec_format;
-                } else {
-                    stop(sprintf("rglactions: invalid snapshot_vec_format '%s'. Must be one of ''.", rglactions$snapshot_vec_format, paste(supported_formats, collapse = ", ")));
+            if(!("snapshot_vec" %in% ignore)) {
+                snapshot_vec_format = "eps";
+                if("snapshot_vec_format" %in% names(rglactions)) {
+                    supported_formats = c("ps", "eps", "tex", "pdf", "svg", "pgf");
+                    if(rglactions$snapshot_vec_format %in% supported_formats) {
+                        snapshot_vec_format = rglactions$snapshot_vec_format;
+                    } else {
+                        stop(sprintf("rglactions: invalid snapshot_vec_format '%s'. Must be one of ''.", rglactions$snapshot_vec_format, paste(supported_formats, collapse = ", ")));
+                    }
                 }
-            }
 
-            if(length(rglactions$snapshot_vec) == 1 || is.null(at_index)) {
-                output_image = path.expand(rglactions$snapshot_vec);
-            } else {
-                if(length(rglactions$snapshot_vec) < at_index) {
-                    warning(sprintf("Requested rglaction at_index '%d' but only %d entries exist for action 'snapshot_vec'.\n", at_index, length(rglactions$snapshot_vec)));
+                if(length(rglactions$snapshot_vec) == 1 || is.null(at_index)) {
+                    output_image = path.expand(rglactions$snapshot_vec);
+                } else {
+                    if(length(rglactions$snapshot_vec) < at_index) {
+                        warning(sprintf("Requested rglaction at_index '%d' but only %d entries exist for action 'snapshot_vec'.\n", at_index, length(rglactions$snapshot_vec)));
+                    }
+                    output_image = path.expand(rglactions$snapshot_vec[[at_index]]);
                 }
-                output_image = path.expand(rglactions$snapshot_vec[[at_index]]);
-            }
-            rgl::rgl.postscript(output_image, fmt = snapshot_vec_format);
-            if(! silent) {
-                message(sprintf("Vector graphics screenshot written to '%s' in format '%s' (current working dir is '%s').\n", output_image, snapshot_vec_format, getwd()));
+                rgl::rgl.postscript(output_image, fmt = snapshot_vec_format);
+                if(! silent) {
+                    message(sprintf("Vector graphics screenshot written to '%s' in format '%s' (current working dir is '%s').\n", output_image, snapshot_vec_format, getwd()));
+                }
             }
         }
         if("highlight_points" %in% names(rglactions)) {

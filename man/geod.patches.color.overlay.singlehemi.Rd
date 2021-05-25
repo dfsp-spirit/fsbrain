@@ -19,6 +19,8 @@ geod.patches.color.overlay.singlehemi(
 
 \item{color}{single color string like \code{'#FF0000'} or vector of such strings. If a vector, the length should match the number of vertices in parameter 'vertex'.}
 
+\item{bg_color}{character string, the background color.}
+
 \item{...}{extra arguments passed to \code{geod.vert.neighborhood}.}
 }
 \description{

@@ -17,3 +17,6 @@ a named 'principal_curvatures' list, with entries 'principal_curvature_k1': larg
 \description{
 Computes principal curvatures according to 2 definitions from raw k1 and k2 values.
 }
+\note{
+To obtain k1_raw and k2_raw, use \code{surface.curvatures} to compute it from a mesh, or load the FreeSurfer files \code{'surf/?h.white.max'} and \code{'surf/?h.white.min'}.
+}

@@ -10,6 +10,7 @@ Version 0.5.0
 - Fix accidental printing of rglactions to console when calling vis functions.
 - Add new 'export' function, an alias for 'vis.export.from.coloredmeshes' so you have to type less.
 - Add new entry on vector graphics conversion to the 'fsbrain FAQ' vignette.
+- Add surface.curvatures function that can compute k1 and k2 (requires optional dependency package 'Rvcg').
 
 
 Version 0.4.3

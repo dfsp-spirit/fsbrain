@@ -7,7 +7,7 @@
 get.rglstyle(style)
 }
 \arguments{
-\item{style}{string. A style name. Available styles are one of: "default", "shiny", "semitransparent", "edges".}
+\item{style}{string. A style name. Available styles are one of: "default", "shiny", "semitransparent", "glass", "edges".}
 }
 \value{
 a style, resolved to a parameter list compatible with \code{\link{material3d}}.

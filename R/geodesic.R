@@ -67,6 +67,8 @@ geod.vert.neighborhood <- function(mesh, vertex, max_distance=5.0, include_max =
 #'
 #' @param color single color string like \code{'#FF0000'} or vector of such strings. If a vector, the length should match the number of vertices in parameter 'vertex'.
 #'
+#' @param bg_color character string, the background color.
+#'
 #' @param ... extra arguments passed to \code{geod.vert.neighborhood}.
 #'
 #' @return vector of color strings (or a hemilist of 2 such vectors if 'mesh' is a hemilist), an overlay suitable for visualization using \code{vis.color.on.subject}.
@@ -153,6 +155,31 @@ geod.patches.pervertexdata <- function(mesh, vertex, ...) {
         return(geod.patches.pervertexdata.singlehemi(mesh, vertex, ...));
     }
 }
+
+
+#' @title Get vertex data for a single fs.surface or a hemilist of surfaces.
+#' @keywords internal
+constant.pervertexdata <- function(surfaces, value = NA) {
+    mesh = surfaces;
+    if(is.hemilist(mesh)) {
+        if(! is.fs.surface(mesh$lh)) {
+            stop("Paramter 'mesh$lh' must be an fs.surface instance if a hemilist is passed.");
+        }
+        if(! is.fs.surface(mesh$rh)) {
+            stop("Paramter 'mesh$rh' must be an fs.surface instance if a hemilist is passed.");
+        }
+        lh_nv = nrow(mesh$lh$vertices);
+        rh_nv = nrow(mesh$rh$vertices);
+        return(list('lh'=rep(value, lh_nv), 'rh'=rep(value, rh_nv)));
+    } else {
+        if(! is.fs.surface(mesh)) {
+            stop("Paramter 'mesh' must be an fs.surface instance (unless a hemilist is passed).");
+        } else {
+            return(rep(value, nrow(mesh$vertices)));
+        }
+    }
+}
+
 
 
 #' @title Generate per-vertex distance data from geodesic patches around several vertices for a single hemi.

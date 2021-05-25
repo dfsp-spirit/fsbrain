@@ -15,4 +15,3 @@ integer, the number of vertices.
 \description{
 Determine vertex count of left hemi from hemilist of surfaces or the count itself.
 }
-\keyword{internal}

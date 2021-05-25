@@ -193,7 +193,7 @@ vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi="
 #'
 #' @importFrom squash rainbow2
 #' @export
-vis.subject.label <- function(subjects_dir, subject_id, label, hemi, surface="white", views=c("t4"), rgloptions = rglo(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=label.colFn.inv, 'col.na'='#FFFFFF00'), map_to_NA=0L, bg=NULL) {
+vis.subject.label <- function(subjects_dir, subject_id, label, hemi, surface="white", views=c("t4"), rgloptions = rglo(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=label.colFn.inv, 'col.na'='#FFFFFF00'), map_to_NA=0L, bg=NULL, style = "default") {
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
@@ -235,7 +235,7 @@ vis.subject.label <- function(subjects_dir, subject_id, label, hemi, surface="wh
         return(coloredmeshes);
     }
 
-    return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar)));
+    return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, style = style)));
 }
 
 
@@ -270,7 +270,7 @@ vis.subject.label <- function(subjects_dir, subject_id, label, hemi, surface="wh
 #'
 #' @importFrom squash jet
 #' @export
-vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh=NULL, morph_data_rh=NULL, surface="white", views=c('t4'), rgloptions=rglo(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=mkco.seq(), bg=NULL, morph_data_both=NULL) {
+vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh=NULL, morph_data_rh=NULL, surface="white", views=c('t4'), rgloptions=rglo(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=mkco.seq(), bg=NULL, morph_data_both=NULL, style = "default") {
 
     if(is.null(morph_data_lh) && is.null(morph_data_rh)) {
         if(is.null(morph_data_both)) {
@@ -293,7 +293,7 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh=NULL
         measure = hemilist.wrap(morph_data_rh, 'rh', measure);
     }
 
-    return(vis.subject.morph.native(subjects_dir, vis_subject_id, measure, surface=surface, views=views, rgloptions=rgloptions, rglactions=rglactions, draw_colorbar=draw_colorbar, makecmap_options=makecmap_options, bg=bg));
+    return(vis.subject.morph.native(subjects_dir, vis_subject_id, measure, surface=surface, views=views, rgloptions=rgloptions, rglactions=rglactions, draw_colorbar=draw_colorbar, makecmap_options=makecmap_options, bg=bg, style = style));
 }
 
 
@@ -321,7 +321,7 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh=NULL
 #'
 #' @importFrom squash jet
 #' @export
-vis.symmetric.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh=NULL, morph_data_rh=NULL, surface="white", views=c('t4'), rgloptions=rglo(), rglactions = list(), draw_colorbar = TRUE, makecmap_options=list('colFn'=cm.cbry(), symm=TRUE, col.na='#FFFFFF00', 'n'=200), map_to_NA=c(0), bg=NULL, morph_data_both=NULL) {
+vis.symmetric.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh=NULL, morph_data_rh=NULL, surface="white", views=c('t4'), rgloptions=rglo(), rglactions = list(), draw_colorbar = TRUE, makecmap_options=list('colFn'=cm.cbry(), symm=TRUE, col.na='#FFFFFF00', 'n'=200), map_to_NA=c(0), bg=NULL, morph_data_both=NULL, style = "default") {
 
     if(is.null(morph_data_lh) && is.null(morph_data_rh)) {
         if(is.null(morph_data_both)) {
@@ -347,7 +347,7 @@ vis.symmetric.data.on.subject <- function(subjects_dir, vis_subject_id, morph_da
     morph_data_lh = perform.na.mapping(morph_data_lh, map_to_NA);
     morph_data_rh = perform.na.mapping(morph_data_rh, map_to_NA);
 
-    return(vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface=surface, views=views, rgloptions=rgloptions, rglactions=rglactions, draw_colorbar=draw_colorbar, makecmap_options=makecmap_options, bg=bg));
+    return(vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface=surface, views=views, rgloptions=rgloptions, rglactions=rglactions, draw_colorbar=draw_colorbar, makecmap_options=makecmap_options, bg=bg, style = style));
 }
 
 
@@ -506,7 +506,7 @@ vis.color.on.subject <- function(subjects_dir, vis_subject_id, color_lh=NULL, co
 #' @family visualization functions
 #'
 #' @export
-vis.mask.on.subject <- function(subjects_dir, vis_subject_id, mask_lh, mask_rh, surface="white", views=c('t4'), rgloptions=rglo(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=label.colFn.inv)) {
+vis.mask.on.subject <- function(subjects_dir, vis_subject_id, mask_lh, mask_rh, surface="white", views=c('t4'), rgloptions=rglo(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=label.colFn.inv), style = "default") {
 
     if(is.null(mask_lh) && is.null(mask_rh)) {
         stop(sprintf("Only one of mask_lh or mask_rh can be NULL.\n"));
@@ -526,7 +526,7 @@ vis.mask.on.subject <- function(subjects_dir, vis_subject_id, mask_lh, mask_rh, 
         return(coloredmeshes);
     }
 
-    return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar)));
+    return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, style = style)));
 }
 
 
@@ -570,7 +570,7 @@ vis.mask.on.subject <- function(subjects_dir, vis_subject_id, mask_lh, mask_rh, 
 #'
 #' @importFrom squash rainbow2
 #' @export
-vis.labeldata.on.subject <- function(subjects_dir, vis_subject_id, lh_labeldata, rh_labeldata, surface="white", views=c('t4'), rgloptions=rglo(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=label.colFn.inv), ...) {
+vis.labeldata.on.subject <- function(subjects_dir, vis_subject_id, lh_labeldata, rh_labeldata, surface="white", views=c('t4'), rgloptions=rglo(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=list('colFn'=label.colFn.inv), style = "default", ...) {
 
     if(is.null(lh_labeldata) && is.null(rh_labeldata)) {
         stop(sprintf("Only one of lh_labeldata or rh_labeldata can be NULL.\n"));
@@ -590,7 +590,7 @@ vis.labeldata.on.subject <- function(subjects_dir, vis_subject_id, lh_labeldata,
         return(coloredmeshes);
     }
 
-    return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar)));
+    return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, style = style)));
 }
 
 
@@ -608,13 +608,13 @@ vis.labeldata.on.subject <- function(subjects_dir, vis_subject_id, lh_labeldata,
 #' @family morphometry visualization functions
 #'
 #' @export
-vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage", morph_data_lh=NULL, morph_data_rh=NULL, surface="white", views=c('t4'), rgloptions = rglo(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=mkco.seq(), bg=NULL, morph_data_both=NULL) {
+vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage", morph_data_lh=NULL, morph_data_rh=NULL, surface="white", views=c('t4'), rgloptions = rglo(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=mkco.seq(), bg=NULL, morph_data_both=NULL, style = "default") {
 
     if(is.null(subjects_dir)) {
         subjects_dir = find.subjectsdir.of(subject_id=vis_subject_id, mustWork = TRUE);
     }
 
-    return(invisible(vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface=surface, views=views, rgloptions=rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, makecmap_options=makecmap_options, bg=bg, morph_data_both=morph_data_both)));
+    return(invisible(vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh, morph_data_rh, surface=surface, views=views, rgloptions=rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, makecmap_options=makecmap_options, bg=bg, morph_data_both=morph_data_both, style = style)));
 }
 
 
@@ -641,7 +641,7 @@ vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage",
 #' @family region-based visualization functions
 #'
 #' @export
-vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi='both', surface="white", views=c('t4'), rgloptions=rglo(), rglactions = list(), outline=FALSE) {
+vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi='both', surface="white", views=c('t4'), rgloptions=rglo(), rglactions = list(), outline=FALSE, style = "default") {
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
@@ -660,7 +660,7 @@ vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi='both', surf
         return(coloredmeshes);
     }
 
-    return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions)));
+    return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, style = style)));
 }
 
 
@@ -706,9 +706,9 @@ vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi='both', surf
 #'
 #' @importFrom grDevices heat.colors
 #' @export
-vis.region.values.on.subject <- function(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, surface="white", views=c('t4'), rgloptions=rglo(), rglactions = list(), value_for_unlisted_regions = NA, draw_colorbar = FALSE, makecmap_options=mkco.heat(), bg=NULL, silent=FALSE) {
+vis.region.values.on.subject <- function(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, surface="white", views=c('t4'), rgloptions=rglo(), rglactions = list(), value_for_unlisted_regions = NA, draw_colorbar = FALSE, makecmap_options=mkco.heat(), bg=NULL, silent=FALSE, style = "default") {
     morph_like_data = spread.values.over.subject(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, value_for_unlisted_regions = value_for_unlisted_regions, silent=silent);
-    return(invisible(vis.data.on.subject(subjects_dir, subject_id, morph_like_data$lh, morph_like_data$rh, surface=surface, views=views, rgloptions=rgloptions, rglactions=rglactions, draw_colorbar = draw_colorbar, makecmap_options=makecmap_options, bg=bg)));
+    return(invisible(vis.data.on.subject(subjects_dir, subject_id, morph_like_data$lh, morph_like_data$rh, surface=surface, views=views, rgloptions=rgloptions, rglactions=rglactions, draw_colorbar = draw_colorbar, makecmap_options=makecmap_options, bg=bg, style = style)));
 }
 
 
@@ -789,7 +789,7 @@ vis.fs.surface <- function(fs_surface, col="white", per_vertex_data=NULL, hemi="
 #'
 #' @return integer, the number of vertices.
 #'
-#' @keywords internal
+#' @export
 numverts.lh <- function(surfaces) {
     lh_nv = NULL; # vertex count of left hemi
     if(is.hemilist(surfaces)) {

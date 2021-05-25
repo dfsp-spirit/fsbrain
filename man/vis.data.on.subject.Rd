@@ -16,7 +16,8 @@ vis.data.on.subject(
   draw_colorbar = FALSE,
   makecmap_options = mkco.seq(),
   bg = NULL,
-  morph_data_both = NULL
+  morph_data_both = NULL,
+  style = "default"
 )
 }
 \arguments{
@@ -43,6 +44,8 @@ vis.data.on.subject(
 \item{bg}{a background definition. Can be a surface color layer or a character string like 'curv_light' to select a pre-defined layer, see \code{\link[fsbrain]{collayer.bg}} for valid strings.}
 
 \item{morph_data_both}{numeric vector or NULL, the data to visualize on both hemispheres. This must be a single vector with length equal to the sum of the vertex counts of the left and the right hemisphere. The data for the left hemisphere must come first. If this is given, 'morph_data_lh' and 'morph_data_rh' must be NULL.}
+
+\item{style}{character string, a rendering style, e.g., 'default', 'shiny' or 'semitransparent'.}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.
@@ -62,6 +65,7 @@ Creates a surface mesh, applies a colormap transform the morphometry data values
 }
 \seealso{
 Other visualization functions: 
+\code{\link{highlight.vertices.on.subject.spheres}()},
 \code{\link{highlight.vertices.on.subject}()},
 \code{\link{vis.color.on.subject}()},
 \code{\link{vis.data.on.fsaverage}()},

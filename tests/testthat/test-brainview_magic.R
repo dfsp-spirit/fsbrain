@@ -1,7 +1,7 @@
 
 test_that("Creating pub-ready figure export from coloredmeshes works.", {
     testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
-    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+    testthat::skip_if_not(box.has.x11display(), "This test requires X11.");
     fsbrain::download_optional_data();
     fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");

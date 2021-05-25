@@ -194,6 +194,7 @@ handle.rglactions.highlight.points <- function(rglactions, angle_rad, x, y, z, h
     if('highlight_points' %in% names(rglactions)) {
         coords = rglactions$highlight_points$coords;
         color = rglactions$highlight_points$color;
+        color = recycle(color, length(coords));
         if(hemi != "both") { # limit to current hemi if hemi annotation is available in rglactions.
             if( ! is.null(rglactions$highlight_points$hemi)) {
                 coords = coords[which(rglactions$highlight_points$hemi == hemi), ];
@@ -557,27 +558,35 @@ brainview.sd <- function(coloredmeshes, view_angle, background="white", skip_all
 
     if(view_angle == "lateral_lh") {
         vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style);
+        handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "lh");
         rgl::rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
     } else if (view_angle == "dorsal") {
         vis.rotated.coloredmeshes(coloredmeshes, 0, 1, 0, 0, style=style);
+        handle.rglactions.highlight.points(rglactions, 0, 1, 0, 0, hemi = "both");
         rgl::rgl.viewpoint(0, 0, fov=0, interactive=FALSE);
     } else if(view_angle == "lateral_rh") {
         vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style);
+        handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "rh");
         rgl::rgl.viewpoint(90, 0, fov=0, interactive=FALSE);
     } else if(view_angle == "medial_lh") {
         vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style);
+        handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "lh");
         rgl::rgl.viewpoint(90, 0, fov=0, interactive=FALSE);
     } else if(view_angle == "ventral") {
         vis.rotated.coloredmeshes(coloredmeshes, pi, 1, 0, 0, style=style);
+        handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "both");
         rgl::rgl.viewpoint(0, 0, fov=0, interactive=FALSE);
     } else if(view_angle == "medial_rh") {
         vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style);
+        handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "rh");
         rgl::rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
     } else if(view_angle == "rostral") {
         vis.rotated.coloredmeshes(coloredmeshes, pi/2, 1, 0, 0, style=style);
+        handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "both");
         rgl.viewpoint(0, 0, fov=0, interactive=FALSE);
     } else if(view_angle == "caudal") {
         vis.rotated.coloredmeshes(coloredmeshes, pi/2, 1, 0, 0, style=style);
+        handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "both");
         rgl::rgl.viewpoint(180, 0, fov=0, interactive=FALSE);
     } else {
         stop(sprintf("Invalid view_angle '%s'. Must be one of 'lateral_lh', 'dorsal', 'lateral_rh', 'medial_lh', 'ventral', 'medial_rh', 'rostral' or 'caudal'.\n", view_angle));
@@ -588,7 +597,7 @@ brainview.sd <- function(coloredmeshes, view_angle, background="white", skip_all
         draw.colorbar(coloredmeshes, horizontal=horizontal);
     }
 
-    perform.rglactions(rglactions);
+    perform.rglactions(rglactions, ignore = c('highlight_points'));
 
     return(invisible(coloredmeshes));
 }

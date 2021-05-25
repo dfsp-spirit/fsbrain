@@ -1,6 +1,6 @@
 
 
-#' @title Highlight vertices given by index on a subject's meshes.
+#' @title Highlight vertices given by index on a subject's meshes by coloring faces.
 #'
 #' @inheritParams vis.color.on.subject
 #'
@@ -80,6 +80,54 @@ highlight.vertices.on.subject <- function(subjects_dir, vis_subject_id, verts_lh
     }
 
     return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions)));
+}
+
+
+#' @title Highlight vertices given by index on a subject's meshes by coloring faces.
+#'
+#' @inheritParams vis.color.on.subject
+#'
+#' @inheritParams mesh.vertex.neighbors
+#'
+#' @param vertices positive integer vector, the vertex indices over both hemispheres. Alternative to using verts_lh and verts_rh parameters, only one of them must be used at once.
+#'
+#' @param patch_size double, geodesic radius in which to draw a patch on the mesh around the verts. Pass \code{NULL} to disable.
+#'
+#' @param export_img character string, the path to the output image if you want to export a high-quality image, NULL if you want live visualization instead.
+#'
+#' @param sphere_colors the sphere colors like '#FF0000', can be a single one for all or one per sphere
+#'
+#' @param sphere_radius double, a single radius for all spheres
+#'
+#' @return list of coloredmeshes. The coloredmeshes used for the visualization. If export_img is set, the export return value is returned instead.
+#'
+#'
+#' @family visualization functions
+#' @family surface visualization functions
+#'
+#' @export
+highlight.vertices.on.subject.spheres <- function(subjects_dir, vis_subject_id, vertices, surface="white", patch_size=25.0, style = "glass2", export_img=NULL, sphere_colors = c('#FF0000'), sphere_radius = 3) {
+    surfaces = subject.surface(subjects_dir, vis_subject_id, surface = surface, hemi = "both");
+
+    if(is.null(patch_size) | (length(vertices) < 1L)) {
+        morph_data = constant.pervertexdata(surfaces, value = NA);
+        rglactions = list();
+    } else {
+        morph_data = geod.patches.pervertexdata(surfaces, vertices, max_distance = patch_size);
+        coords = vertex.coords(surfaces, vertices);
+        point_hemi = vertex.hemis(surfaces, vertices); # compute the hemispheres for the vertices/points.
+        rglactions = list('highlight_points'=list('coords'=coords, 'color'=sphere_colors, 'radius'=sphere_radius, 'hemi'=point_hemi));
+    }
+
+    # Visualize
+    if(is.null(export_img)) {
+        return(vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh = morph_data$lh, morph_data_rh = morph_data$rh, rglactions = rglactions, style = style));
+    } else {
+        rglactions_export = rglactions;
+        rglactions$no_vis = TRUE;
+        cm = vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh = morph_data$lh, morph_data_rh = morph_data$rh, rglactions = rglactions, style = style);
+        return(export(cm, rglactions = rglactions_export, style = style, horizontal = NULL, output_img = export_img));
+    }
 }
 
 
@@ -172,7 +220,7 @@ vertex.coords <- function(surface, vertices) {
 
 #' @title Return the proper hemi string ('lh' or 'rh') for each vertex.
 #'
-#' @param surfaces hemilist of surfaces or a single integer which will be interpreted as the vertex count of the left hemisphere.
+#' @param surface hemilist of surfaces or a single integer which will be interpreted as the vertex count of the left hemisphere.
 #'
 #' @param vertices vector of positive integers, the query vertex indices. Can be in range \code{1..(nv(lh)+nv(rh))}, i.e., across the whole brain.
 #'
@@ -185,4 +233,5 @@ vertex.hemis <- function(surface, vertices) {
     vertices_hemi[which(vertices > lh_nv)] = "rh";
     return(vertices_hemi);
 }
+
 
