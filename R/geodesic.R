@@ -312,6 +312,8 @@ geodesic.average.distance <- function(surface) {
 #'
 #' @return a \code{\link[fsbrain]{hemilist}} containing vectors with the descriptor data for the requested hemisphere(s).
 #'
+#' @references C. Ecker et al., Intrinsic gray-matter connectivity of the brain in adults with autism spectrum disorder, PNAS August 6, 2013 110 (32) 13222-13227; https://doi.org/10.1073/pnas.1221880110
+#'
 #' @note This may take a while.
 #'
 #' @export
