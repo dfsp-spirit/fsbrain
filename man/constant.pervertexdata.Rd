@@ -6,6 +6,14 @@
 \usage{
 constant.pervertexdata(surfaces, value = NA)
 }
+\arguments{
+\item{surfaces}{an fs.surface instance or a \code{\link[fsbrain]{hemilist}} of the latter}
+
+\item{value}{the morphometry data value you want.}
+}
+\value{
+a vector or hemilist of vectors of values
+}
 \description{
 Get vertex data for a single fs.surface or a hemilist of surfaces.
 }

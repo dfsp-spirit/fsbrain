@@ -7,7 +7,7 @@
 geodesic.average.distance(surface)
 }
 \arguments{
-\item{surface}{fs.surface instance or hemilist of the latter.}
+\item{surface}{fs.surface instance or a \code{\link[fsbrain]{hemilist}} of the latter.}
 }
 \description{
 Compute the average (pseudo-) geodesic distance on the mesh from each vertex to all other vertices.

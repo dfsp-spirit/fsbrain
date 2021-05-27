@@ -637,13 +637,24 @@ find.subjectsdir.of <- function(subject_id='fsaverage', mustWork=FALSE) {
 
 #' @title Return path to fsaverage dir.
 #'
+#' @param allow_fetch logical, whether to allow trying to download it.
+#'
 #' @return the path to the fsaverage directory (NOT including the 'fsaverage' dir itself).
 #'
-#' @note This function will stop (i.e., raise an error) if the directory cannot be found.
+#' @note This function will stop (i.e., raise an error) if the directory cannot be found. The fsaverage template is part of FreeSurfer, and distributed under the FreeSurfer software license.
 #'
 #' @export
-fsaverage.path <- function() {
-    return(find.subjectsdir.of(subject_id='fsaverage', mustWork=TRUE));
+fsaverage.path <- function(allow_fetch = FALSE) {
+
+  search_res = find.subjectsdir.of(subject_id='fsaverage', mustWork=FALSE);
+  if(search_res$found) {
+    return(search_res$found_at);
+  }
+
+  if(allow_fetch) {
+    fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
+  }
+  return(find.subjectsdir.of(subject_id='fsaverage', mustWork=TRUE));
 }
 
 

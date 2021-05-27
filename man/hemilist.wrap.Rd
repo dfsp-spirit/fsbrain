@@ -19,3 +19,12 @@ named list, with the 'data' in the name given by parameter 'hemi'
 \description{
 Wrap data into a named hemi list.
 }
+\seealso{
+Other hemilist functions: 
+\code{\link{hemilist.derive.hemi}()},
+\code{\link{hemilist.get.combined.data}()},
+\code{\link{hemilist.unwrap}()},
+\code{\link{hemilist}()},
+\code{\link{is.hemilist}()}
+}
+\concept{hemilist functions}

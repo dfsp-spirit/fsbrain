@@ -6,6 +6,11 @@
 \usage{
 geodesic.dists.to.vertex(mesh, v)
 }
+\arguments{
+\item{mesh}{a tmesh3d instance.}
+
+\item{v}{positive integer, a vertex index in the mesh.}
+}
 \description{
 Simple internal wrapper around \code{Rvcg::vcgDijkstra} with function check.
 }

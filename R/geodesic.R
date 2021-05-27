@@ -19,6 +19,14 @@
 #'
 #' @note This function uses the pseudo-geodesic distance along the mesh edges.
 #'
+#' @examples
+#' \dontrun{
+#'   sjd = fsaverage.path(TRUE);
+#'   surface = subject.surface(sjd, 'fsaverage', surface = "white", hemi = "lh");
+#'   res = geod.vert.neighborhood(surface, 12345L, max_distance = 10.0);
+#'   res$vertices;
+#' }
+#'
 #' @export
 geod.vert.neighborhood <- function(mesh, vertex, max_distance=5.0, include_max = TRUE, return_distances = TRUE) {
     mesh = ensure.tmesh3d(mesh);
@@ -59,11 +67,11 @@ geod.vert.neighborhood <- function(mesh, vertex, max_distance=5.0, include_max =
 
 #' @title Generate color overlay from geodesic patches around several vertices.
 #'
-#' @description Works across hemispheres (for a whole brain) if you pass a hemilist of meshes as parameter 'mesh', see below.
+#' @description Works across hemispheres (for a whole brain) if you pass a \code{\link[fsbrain]{hemilist}} of meshes as parameter 'mesh', see below.
 #'
 #' @inheritParams geod.vert.neighborhood
 #'
-#' @param mesh a single \code{fs.surface} instance, or a hemilist of two such meshes. If a hemilist, the vertex indices can go from 1 to the sum of vertices in both meshes, and the proper hemisphere will be used automatically.
+#' @param mesh a single \code{fs.surface} instance, or a \code{\link[fsbrain]{hemilist}} of two such meshes. If a hemilist, the vertex indices can go from 1 to the sum of vertices in both meshes, and the proper hemisphere will be used automatically.
 #'
 #' @param color single color string like \code{'#FF0000'} or vector of such strings. If a vector, the length should match the number of vertices in parameter 'vertex'.
 #'
@@ -71,7 +79,16 @@ geod.vert.neighborhood <- function(mesh, vertex, max_distance=5.0, include_max =
 #'
 #' @param ... extra arguments passed to \code{geod.vert.neighborhood}.
 #'
-#' @return vector of color strings (or a hemilist of 2 such vectors if 'mesh' is a hemilist), an overlay suitable for visualization using \code{vis.color.on.subject}.
+#' @return vector of color strings (or a \code{\link[fsbrain]{hemilist}} of 2 such vectors if 'mesh' is a hemilist), an overlay suitable for visualization using \code{vis.color.on.subject}.
+#'
+#' @examples
+#' \dontrun{
+#'   sjd = fsaverage.path(TRUE);
+#'   surfaces = subject.surface(sjd, 'fsaverage', surface = "white", hemi = "both");
+#'   colors = geod.patches.color.overlay(surfaces, vertex = c(12345L, 45L),
+#'     color = c("#FF0000", "#00FF00"), max_distance = 45.0);
+#'   vis.color.on.subject(sjd, 'fsaverage', color_lh=colors$lh, color_rh=colors$rh);
+#' }
 #'
 #' @export
 geod.patches.color.overlay <- function(mesh, vertex, color = "#FF0000", bg_color = "#FEFEFE", ...) {
@@ -126,11 +143,20 @@ geod.patches.color.overlay.singlehemi <- function(mesh, vertex, color = "#FF0000
 
 #' @title Generate per-vertex distance data from geodesic patches around several vertices.
 #'
-#' @description Works across hemispheres (for a whole brain) if you pass a hemilist of meshes as parameter 'mesh', see below.
+#' @description Works across hemispheres (for a whole brain) if you pass a \code{\link[fsbrain]{hemilist}} of meshes as parameter 'mesh', see below.
 #'
 #' @inheritParams geod.patches.color.overlay
 #'
-#' @return vector of doubles (or a hemilist of 2 such vectors if 'mesh' is a hemilist), the per-vertex distance data. Data for vertices outside neighborhoods will be NA.
+#' @return vector of doubles (or a \code{\link[fsbrain]{hemilist}} of 2 such vectors if 'mesh' is a hemilist), the per-vertex distance data. Data for vertices outside neighborhoods will be NA.
+#'
+#' @examples
+#' \dontrun{
+#'   sjd = fsaverage.path(TRUE);
+#'   surfaces = subject.surface(sjd, 'fsaverage', surface = "white", hemi = "both");
+#'   res = geod.patches.pervertexdata(surfaces, vertex = c(12345L, 45L),
+#'     max_distance = 25.0);
+#'   # res$lh and res$rh now hold the per-vertex data.
+#' }
 #'
 #' @export
 geod.patches.pervertexdata <- function(mesh, vertex, ...) {
@@ -158,6 +184,13 @@ geod.patches.pervertexdata <- function(mesh, vertex, ...) {
 
 
 #' @title Get vertex data for a single fs.surface or a hemilist of surfaces.
+#'
+#' @param surfaces an fs.surface instance or a \code{\link[fsbrain]{hemilist}} of the latter
+#'
+#' @param value the morphometry data value you want.
+#'
+#' @return a vector or hemilist of vectors of values
+#'
 #' @keywords internal
 constant.pervertexdata <- function(surfaces, value = NA) {
     mesh = surfaces;
@@ -211,6 +244,10 @@ geod.patches.pervertexdata.singlehemi <- function(mesh, vertex, ...) {
 
 #' @title Simple internal wrapper around \code{Rvcg::vcgDijkstra} with function check.
 #'
+#' @param mesh a tmesh3d instance.
+#'
+#' @param v positive integer, a vertex index in the mesh.
+#'
 #' @note This can be remove once the required Rvcg version is on CRAN and properly listed in the DESCRIPTION file.
 #'
 #' @keywords internal
@@ -242,3 +279,44 @@ ensure.tmesh3d <- function(mesh) {
         stop("Cannot convert value in parameter 'mesh' to tmesh3d instance, invalid mesh.");
     }
 }
+
+
+#' @title Compute the average (pseudo-) geodesic distance on the mesh from each vertex to all other vertices.
+#'
+#' @param surface fs.surface instance or a \code{\link[fsbrain]{hemilist}} of the latter.
+#'
+#' @note This may take a while.
+#'
+#' @keywords internal
+geodesic.average.distance <- function(surface) {
+    if(! exists('vcgDijkstra', where=asNamespace('Rvcg'), mode='function')) {
+        stop("Your Rvcg version does not export the vcgDijkstra function, which means it is too old. You need to install Rvcg from GitHub for this this functionality to be available. Try 'devtools::install_github('zarquon42b/Rvcg')'.");
+    }
+
+    if(is.hemilist(surface)) {
+        return(lapply(surface, geodesic.average.distance));
+    } else {
+        num_verts = nrow(surface$vertices);
+        mesh = ensure.tmesh3d(surface);
+        geodesic_mean_distances = rep(NA, num_verts);
+        for(vert_idx in seq_len(num_verts)) {
+            geodesic_mean_distances[vert_idx] = Rvcg::vcgDijkstra(mesh, vert_idx);
+        }
+        return(geodesic_mean_distances);
+    }
+}
+
+#' @title Compute mean geodesic distance descriptor for a subject.
+#'
+#' @inheritParams vis.subject.morph.native
+#'
+#' @return a \code{\link[fsbrain]{hemilist}} containing vectors with the descriptor data for the requested hemisphere(s).
+#'
+#' @note This may take a while.
+#'
+#' @export
+subject.descriptor.geodesic.average.distance <- function(subjects_dir, subject_id, surface = "white", hemi = "both") {
+    surfaces = subject.surface(subjects_dir, subject_id, surface = surface, hemi = hemi, force_hemilist = TRUE);
+    return(geodesic.average.distance(surfaces));
+}
+

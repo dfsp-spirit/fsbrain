@@ -15,3 +15,12 @@ character string, one of 'lh', 'rh' or 'both'
 \description{
 Derive 'hemi' string from the data in a hemilist
 }
+\seealso{
+Other hemilist functions: 
+\code{\link{hemilist.get.combined.data}()},
+\code{\link{hemilist.unwrap}()},
+\code{\link{hemilist.wrap}()},
+\code{\link{hemilist}()},
+\code{\link{is.hemilist}()}
+}
+\concept{hemilist functions}

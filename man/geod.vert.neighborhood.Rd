@@ -32,3 +32,12 @@ Compute all vertices within given geodesic distance on the mesh.
 \note{
 This function uses the pseudo-geodesic distance along the mesh edges.
 }
+\examples{
+\dontrun{
+  sjd = fsaverage.path(TRUE);
+  surface = subject.surface(sjd, 'fsaverage', surface = "white", hemi = "lh");
+  res = geod.vert.neighborhood(surface, 12345L, max_distance = 10.0);
+  res$vertices;
+}
+
+}

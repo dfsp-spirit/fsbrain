@@ -7,15 +7,25 @@
 geod.patches.pervertexdata(mesh, vertex, ...)
 }
 \arguments{
-\item{mesh}{a single \code{fs.surface} instance, or a hemilist of two such meshes. If a hemilist, the vertex indices can go from 1 to the sum of vertices in both meshes, and the proper hemisphere will be used automatically.}
+\item{mesh}{a single \code{fs.surface} instance, or a \code{\link[fsbrain]{hemilist}} of two such meshes. If a hemilist, the vertex indices can go from 1 to the sum of vertices in both meshes, and the proper hemisphere will be used automatically.}
 
 \item{vertex}{positive integer (or vector of the latter), the index of the source vertex in the mesh. If a vector, the neighborhoods for all vertices will be computed separately.}
 
 \item{...}{extra arguments passed to \code{geod.vert.neighborhood}.}
 }
 \value{
-vector of doubles (or a hemilist of 2 such vectors if 'mesh' is a hemilist), the per-vertex distance data. Data for vertices outside neighborhoods will be NA.
+vector of doubles (or a \code{\link[fsbrain]{hemilist}} of 2 such vectors if 'mesh' is a hemilist), the per-vertex distance data. Data for vertices outside neighborhoods will be NA.
 }
 \description{
-Works across hemispheres (for a whole brain) if you pass a hemilist of meshes as parameter 'mesh', see below.
+Works across hemispheres (for a whole brain) if you pass a \code{\link[fsbrain]{hemilist}} of meshes as parameter 'mesh', see below.
+}
+\examples{
+\dontrun{
+  sjd = fsaverage.path(TRUE);
+  surfaces = subject.surface(sjd, 'fsaverage', surface = "white", hemi = "both");
+  res = geod.patches.pervertexdata(surfaces, vertex = c(12345L, 45L),
+    max_distance = 25.0);
+  # res$lh and res$rh now hold the per-vertex data.
+}
+
 }
