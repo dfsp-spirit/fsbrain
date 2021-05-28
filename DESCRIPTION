@@ -26,6 +26,7 @@ Suggests:
     misc3d,
     viridis,
     RColorBrewer,
-    Rvcg
+    Rvcg,
+    igraph
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1
