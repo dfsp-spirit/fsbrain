@@ -2,7 +2,7 @@
 
 #' @title Create igraph undirected graph from a brain surface mesh.
 #'
-#' @param surface an fs.surface instance, as returned by \code{subject.surface}.
+#' @param surface an fs.surface instance as returned by \code{subject.surface}, or a string which is interpreted as a path to a surface file.
 #'
 #' @return igraph::graph instance
 #'
@@ -20,6 +20,35 @@ fs.surface.to.igraph <- function(surface) {
     if(requireNamespace("igraph", quietly = TRUE)) {
         el = rbind(surface$faces[,1:2], surface$faces[,2:3])
         return(igraph::graph_from_edgelist(el, directed = FALSE));
+    } else {
+        stop("This functionality requires the 'igraph' package to be installed.");
+    }
+}
+
+#' @title Compute vertex neighborhood for a mesh using the igraph library.
+#'
+#' @inheritParams fs.surface.to.igraph
+#'
+#' @description This is a faster replacement for \code{mesh.vertex.neighbors} that requires the optional dependency package 'igraph'.
+#'
+#' @param nodes the source vertex. Passed on to \code{igraph::neighborhood}
+#'
+#' @param order integer, the max graph distance of vertices to consider neighbors (number of neighborhood rings). Passed on to \code{igraph::neighborhood}
+#'
+#' @param simplify logical, whether to return only an integer vector if the 'nodes' parameter has length 1.s
+#'
+#' @note If you intend to call several functions on the igraph, it is faster to construct it with \code{fs.surface.to.igraph} and keep it.
+#'
+#' @return named list of integer vectors (see \code{igraph::neighborhood}), unless 'simplify' is TRUE, see there for details.
+#'
+fs.surface.vertex.neighbors <- function(surface, nodes, order = 1L, simplify = TRUE) {
+    if(requireNamespace("igraph", quietly = TRUE)) {
+        g = fs.surface.to.igraph(surface);
+        res = igraph::neighborhood(g, order = order, nodes = nodes, mode = "all");
+        if(simplify & length(nodes) == 1L) {
+            return(as.integer(unlist(res)));
+        }
+        return(res);
     } else {
         stop("This functionality requires the 'igraph' package to be installed.");
     }

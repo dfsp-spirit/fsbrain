@@ -7,7 +7,7 @@
 fs.surface.to.igraph(surface)
 }
 \arguments{
-\item{surface}{an fs.surface instance, as returned by \code{subject.surface}.}
+\item{surface}{an fs.surface instance as returned by \code{subject.surface}, or a string which is interpreted as a path to a surface file.}
 }
 \value{
 igraph::graph instance
