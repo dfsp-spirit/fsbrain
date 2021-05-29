@@ -308,13 +308,13 @@ geodesic.average.distance <- function(surface) {
 
 #' @title Compute mean geodesic distance descriptor for a subject.
 #'
+#' @description For all vertices: compute the mean pseudo-geodesic distance from this vertex to all others. Computes |V|^2 geodesic distances.
+#'
 #' @inheritParams vis.subject.morph.native
 #'
-#' @return a \code{\link[fsbrain]{hemilist}} containing vectors with the descriptor data for the requested hemisphere(s).
+#' @return a \code{\link[fsbrain]{hemilist}} containing vectors with the descriptor data for the requested hemisphere(s). The length of the vectors is the number of vertices in the surface, and the value for a vertex is the mean geodesic distance to all other vertices for this vertex.
 #'
-#' @references C. Ecker et al., Intrinsic gray-matter connectivity of the brain in adults with autism spectrum disorder, PNAS August 6, 2013 110 (32) 13222-13227; https://doi.org/10.1073/pnas.1221880110
-#'
-#' @note This may take a while.
+#' @note This may take quite a while.
 #'
 #' @export
 subject.descriptor.geodesic.average.distance <- function(subjects_dir, subject_id, surface = "white", hemi = "both") {
