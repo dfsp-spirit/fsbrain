@@ -4,15 +4,17 @@
 \alias{geodesic.average.distance}
 \title{Compute the average (pseudo-) geodesic distance on the mesh from each vertex to all other vertices.}
 \usage{
-geodesic.average.distance(surface)
+geodesic.average.distance(surfaces, method = "auto")
 }
 \arguments{
-\item{surface}{fs.surface instance or a \code{\link[fsbrain]{hemilist}} of the latter.}
+\item{surfaces}{fs.surface instance or a \code{\link[fsbrain]{hemilist}} of the latter.}
+
+\item{method}{character string, one of 'auto', 'vcgGeodesicNeigh' or 'vcgDijkstra'. Auto will select the fastest available one, depending on the installed Rvcg version.}
 }
 \description{
 Compute the average (pseudo-) geodesic distance on the mesh from each vertex to all other vertices.
 }
 \note{
-This may take a while.
+This may take a while. It requires the 'Rvcg' package.
 }
 \keyword{internal}

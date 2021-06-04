@@ -152,8 +152,10 @@ geod.patches.color.overlay.singlehemi <- function(mesh, vertex, color = "#FF0000
 #' @examples
 #' \dontrun{
 #'   sjd = fsaverage.path(TRUE);
-#'   surfaces = subject.surface(sjd, 'fsaverage', surface = "white", hemi = "both");
-#'   res = geod.patches.pervertexdata(surfaces, vertex = c(12345L, 45L),
+#'   surfaces = subject.surface(sjd, 'fsaverage',
+#'     surface = "white", hemi = "both");
+#'   res = geod.patches.pervertexdata(surfaces,
+#'     vertex = c(12345L, 45L),
 #'     max_distance = 25.0);
 #'   # res$lh and res$rh now hold the per-vertex data.
 #' }
@@ -248,8 +250,6 @@ geod.patches.pervertexdata.singlehemi <- function(mesh, vertex, ...) {
 #'
 #' @param v positive integer, a vertex index in the mesh.
 #'
-#' @note This can be remove once the required Rvcg version is on CRAN and properly listed in the DESCRIPTION file.
-#'
 #' @keywords internal
 geodesic.dists.to.vertex <- function(mesh, v) {
     if(! exists('vcgDijkstra', where=asNamespace('Rvcg'), mode='function')) {
@@ -280,29 +280,51 @@ ensure.tmesh3d <- function(mesh) {
     }
 }
 
+#bm = microbenchmark::microbenchmark(subject.descriptor.geodesic.average.distance(sjd, "fsaverage3", surface = "white", hemi = "both", method = "vcgDijkstra"), subject.descriptor.geodesic.average.distance(sjd, "fsaverage3", surface = "white", hemi = "both", method = "vcgGeodesicNeigh"))
 
 #' @title Compute the average (pseudo-) geodesic distance on the mesh from each vertex to all other vertices.
 #'
-#' @param surface fs.surface instance or a \code{\link[fsbrain]{hemilist}} of the latter.
+#' @param surfaces fs.surface instance or a \code{\link[fsbrain]{hemilist}} of the latter.
 #'
-#' @note This may take a while.
+#' @param method character string, one of 'auto', 'vcgGeodesicNeigh' or 'vcgDijkstra'. Auto will select the fastest available one, depending on the installed Rvcg version.
+#'
+#' @note This may take a while. It requires the 'Rvcg' package.
 #'
 #' @keywords internal
-geodesic.average.distance <- function(surface) {
+geodesic.average.distance <- function(surfaces, method = "auto") {
     if(! exists('vcgDijkstra', where=asNamespace('Rvcg'), mode='function')) {
-        stop("Your Rvcg version does not export the vcgDijkstra function, which means it is too old. You need to install Rvcg from GitHub for this this functionality to be available. Try 'devtools::install_github('zarquon42b/Rvcg')'.");
+        stop("Your Rvcg version does not export the vcgDijkstra function. You need to install Rvcg from GitHub for this this functionality to be available. Try 'devtools::install_github('zarquon42b/Rvcg')'.");
     }
 
-    if(is.hemilist(surface)) {
-        return(lapply(surface, geodesic.average.distance));
+    if(is.hemilist(surfaces)) {
+        return(lapply(surfaces, geodesic.average.distance));
     } else {
-        num_verts = nrow(surface$vertices);
-        mesh = ensure.tmesh3d(surface);
-        geodesic_mean_distances = rep(NA, num_verts);
-        for(vert_idx in seq_len(num_verts)) {
-            geodesic_mean_distances[vert_idx] = Rvcg::vcgDijkstra(mesh, vert_idx);
+        num_verts = nrow(surfaces$vertices);
+        mesh = ensure.tmesh3d(surfaces);
+
+        if(method == "auto") {
+            if(exists('vcgGeodesicNeigh', where=asNamespace('Rvcg'), mode='function')) {
+                method = "vcgGeodesicNeigh";
+            } else {
+                method = "vcgDijkstra";
+            }
         }
-        return(geodesic_mean_distances);
+
+        if(method == "vcgDijkstra") {
+            geodesic_mean_distances = rep(NA, num_verts);
+            for(vert_idx in seq_len(num_verts)) {
+                geodesic_mean_distances[vert_idx] = mean(Rvcg::vcgDijkstra(mesh, vert_idx));
+            }
+            return(geodesic_mean_distances);
+        } else if (method == "vcgGeodesicNeigh") {
+            if(! exists('vcgGeodesicNeigh', where=asNamespace('Rvcg'), mode='function')) {
+                stop("Your Rvcg version does not export the required 'vcgGeodesicNeigh' function. You need to install Rvcg from GitHub for this this functionality to be available. Try 'devtools::install_github('dfsp-spirit/Rvcg', ref='geodesic_extra_functions')'.");
+            } else {
+                return(Rvcg::vcgGeodesicMeanDist(mesh));
+            }
+        } else {
+            stop("Invalid 'method' parameter.")
+        }
     }
 }
 
@@ -312,13 +334,24 @@ geodesic.average.distance <- function(surface) {
 #'
 #' @inheritParams vis.subject.morph.native
 #'
+#' @param ... extra parameters passed on to \code{geodesic.average.distance}.
+#'
 #' @return a \code{\link[fsbrain]{hemilist}} containing vectors with the descriptor data for the requested hemisphere(s). The length of the vectors is the number of vertices in the surface, and the value for a vertex is the mean geodesic distance to all other vertices for this vertex.
 #'
 #' @note This may take quite a while.
 #'
+#' @examples
+#' \dontrun{
+#'   download_fsaverage3(TRUE);
+#'   sjd = fsaverage.path();
+#'   dist = subject.descriptor.geodesic.average.distance(sjd,
+#'     "fsaverage3", surface = "white", hemi = "both");
+#'   vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = dist$lh);
+#' }
+#'
 #' @export
-subject.descriptor.geodesic.average.distance <- function(subjects_dir, subject_id, surface = "white", hemi = "both") {
+subject.descriptor.geodesic.average.distance <- function(subjects_dir, subject_id, surface = "white", hemi = "both", ...) {
     surfaces = subject.surface(subjects_dir, subject_id, surface = surface, hemi = hemi, force_hemilist = TRUE);
-    return(geodesic.average.distance(surfaces));
+    return(geodesic.average.distance(surfaces, ...));
 }
 

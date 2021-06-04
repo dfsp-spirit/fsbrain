@@ -22,8 +22,10 @@ Works across hemispheres (for a whole brain) if you pass a \code{\link[fsbrain]{
 \examples{
 \dontrun{
   sjd = fsaverage.path(TRUE);
-  surfaces = subject.surface(sjd, 'fsaverage', surface = "white", hemi = "both");
-  res = geod.patches.pervertexdata(surfaces, vertex = c(12345L, 45L),
+  surfaces = subject.surface(sjd, 'fsaverage',
+    surface = "white", hemi = "both");
+  res = geod.patches.pervertexdata(surfaces,
+    vertex = c(12345L, 45L),
     max_distance = 25.0);
   # res$lh and res$rh now hold the per-vertex data.
 }

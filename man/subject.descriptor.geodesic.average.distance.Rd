@@ -8,7 +8,8 @@ subject.descriptor.geodesic.average.distance(
   subjects_dir,
   subject_id,
   surface = "white",
-  hemi = "both"
+  hemi = "both",
+  ...
 )
 }
 \arguments{
@@ -19,16 +20,15 @@ subject.descriptor.geodesic.average.distance(
 \item{surface}{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 
 \item{hemi}{string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the label data files to be loaded.}
+
+\item{...}{extra parameters passed on to \code{geodesic.average.distance}.}
 }
 \value{
-a \code{\link[fsbrain]{hemilist}} containing vectors with the descriptor data for the requested hemisphere(s).
+a \code{\link[fsbrain]{hemilist}} containing vectors with the descriptor data for the requested hemisphere(s). The length of the vectors is the number of vertices in the surface, and the value for a vertex is the mean geodesic distance to all other vertices for this vertex.
 }
 \description{
-Compute mean geodesic distance descriptor for a subject.
+For all vertices: compute the mean pseudo-geodesic distance from this vertex to all others. Computes |V|^2 geodesic distances.
 }
 \note{
-This may take a while.
-}
-\references{
-C. Ecker et al., Intrinsic gray-matter connectivity of the brain in adults with autism spectrum disorder, PNAS August 6, 2013 110 (32) 13222-13227; https://doi.org/10.1073/pnas.1221880110
+This may take quite a while.
 }

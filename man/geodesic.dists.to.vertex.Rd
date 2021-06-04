@@ -14,7 +14,4 @@ geodesic.dists.to.vertex(mesh, v)
 \description{
 Simple internal wrapper around \code{Rvcg::vcgDijkstra} with function check.
 }
-\note{
-This can be remove once the required Rvcg version is on CRAN and properly listed in the DESCRIPTION file.
-}
 \keyword{internal}
