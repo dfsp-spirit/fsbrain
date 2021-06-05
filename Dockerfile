@@ -1,5 +1,7 @@
 # Docker build for distributing an fsbrain container.
 # This file is part of fsbrain, https://github.com/dfsp-spirit/fsbrain
+#
+# See the very bottom of this script for info on how to run it.
 
 FROM rocker/r-ver:4.1.0
 
@@ -46,12 +48,26 @@ RUN R -e "devtools::install_github('dfsp-spirit/fsbrain', ref='geodesic')"
 ##### Prepare for plotting ######
 
 ## Download fsaverage using fsbrain, this is needed for standard space visualizations of FreeSurfer data.
+# We could also remove this here and leave it to the script that will be executed below.
 RUN R -e "fsbrain::download_optional_data(); fsbrain::download_fsaverage(TRUE);"
 
 
-##### Run a demo R script #####
+##### Copy a demo R script over and run it using xvfb #####
+# This is for testing and demonstration purposes only, it will be removed later.
 
+RUN mkdir /home/analysis
 
+COPY myscript.R /home/analysis/myscript.R
+
+# We assume here that myscript.R produces output in the current working directory.
+CMD cd /home/analysis \
+  && R -e "source('myscript.R')"
+
+##### Usage information #####
+## To run the script inside the container and get the output on the host machine,
+## run the following commands in your system shell on the host:
+#    mkdir ~/fsbrain_docker_results
+#    docker run -v ~/fsbrain_docker_results:/home/analysis
 
 
 
