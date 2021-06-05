@@ -60,6 +60,7 @@ RUN mkdir /home/analysis
 COPY myscript.R /home/analysis/myscript.R
 
 # We assume here that myscript.R produces output in the current working directory.
+# TODO: We want to xvfb_run here (also see https://stackoverflow.com/questions/32151043/xvfb-docker-cannot-open-display)
 CMD cd /home/analysis \
   && R -e "source('myscript.R')"
 
