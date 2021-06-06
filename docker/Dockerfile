@@ -62,14 +62,20 @@ COPY myscript.R /home/analysis/myscript.R
 # We assume here that myscript.R produces output in the current working directory.
 # TODO: We want to xvfb_run here (also see https://stackoverflow.com/questions/32151043/xvfb-docker-cannot-open-display)
 CMD cd /home/analysis \
-  && R -e "source('myscript.R')"
+  && R -e "source('/home/analysis/myscript.R')"
 
 ##### Usage information #####
+## To build this container
+#
+#    cd <fsbrain>/docker/
+#    sudo docker build -t fsbrain .
+#
 ## To run the script inside the container and get the output on the host machine,
 ## run the following commands in your system shell on the host:
+#
 #    mkdir ~/fsbrain_docker_results
-#    docker run -v ~/fsbrain_docker_results:/home/analysis
-
+#    sudo docker run -v ~/fsbrain_docker_results:/home/analysis fsbrain
+#
 
 
 
