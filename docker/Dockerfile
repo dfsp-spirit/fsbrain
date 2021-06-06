@@ -55,14 +55,16 @@ RUN R -e "fsbrain::download_optional_data(); fsbrain::download_fsaverage(TRUE);"
 ##### Copy a demo R script over and run it using xvfb #####
 # This is for testing and demonstration purposes only, it will be removed later.
 
-RUN mkdir /home/analysis
+RUN mkdir /home/input
+RUN mkdir /home/output
 
-COPY myscript.R /home/analysis/myscript.R
+COPY myscript.R /home/input/myscript.R
 
 # We assume here that myscript.R produces output in the current working directory.
 # TODO: We want to xvfb_run here (also see https://stackoverflow.com/questions/32151043/xvfb-docker-cannot-open-display)
-CMD cd /home/analysis \
-  && R -e "source('/home/analysis/myscript.R')"
+CMD cd /home/input \
+  && R -e "source('myscript.R')" \
+  && cp lh.distgeod lh.disteuclid /home/output/
 
 ##### Usage information #####
 ## To build this container
@@ -74,7 +76,7 @@ CMD cd /home/analysis \
 ## run the following commands in your system shell on the host:
 #
 #    mkdir ~/fsbrain_docker_results
-#    sudo docker run -v ~/fsbrain_docker_results:/home/analysis fsbrain
+#    sudo docker run -v ~/fsbrain_docker_results:/home/output fsbrain
 #
 
 
