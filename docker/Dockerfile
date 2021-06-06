@@ -58,13 +58,18 @@ RUN R -e "fsbrain::download_optional_data(); fsbrain::download_fsaverage(TRUE);"
 RUN mkdir /home/input
 RUN mkdir /home/output
 
-COPY myscript.R /home/input/myscript.R
-
+#COPY myscript.R /home/input/myscript.R
 # We assume here that myscript.R produces output in the current working directory.
 # TODO: We want to xvfb_run here (also see https://stackoverflow.com/questions/32151043/xvfb-docker-cannot-open-display)
+#CMD cd /home/input \
+#  && R -e "source('myscript.R')" \
+#  && cp lh.distgeod lh.disteuclid /home/output/
+
+COPY myscript_plot.R /home/input/myscript_plot.R
 CMD cd /home/input \
-  && R -e "source('myscript.R')" \
-  && cp lh.distgeod lh.disteuclid /home/output/
+  && xvfb-run --server-args="-screen 0, 1920x1080x24" ./myscript_plot.R \
+  && cp lh.distgeod lh.disteuclid fsbrain_arranged.png /home/output/
+
 
 ##### Usage information #####
 ## To build this container
