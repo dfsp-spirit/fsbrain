@@ -74,7 +74,7 @@ Recent MacOS versions do not ship with an X11 environment. You will have to inst
 
 ### Installation via Docker
 
-We are currently working on Docker images for different fsbrain versions. Starting with the next release, a Docker image will be available on Dockerhub for each fsbrain release. You can already try the dev version for fsbrain 0.5.0 (not released yet and unsupported) at the [fsbrain Dockerhub repo](https://hub.docker.com/repository/docker/dfspspirit/fsbrain).
+We are currently working on Docker images for different fsbrain versions. Starting with the next release, a Docker image will be available on Dockerhub for each fsbrain release. You can already try the dev version for fsbrain 0.5.0 (not released yet and unsupported) at the [fsbrain Dockerhub repo](https://hub.docker.com/r/dfspspirit/fsbrain).
 
 
 ## Documentation
