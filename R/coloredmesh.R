@@ -121,7 +121,6 @@ coloredmesh.from.color <- function(subjects_dir, subject_id, color_data, hemi, s
         if(length(color_data) == 1L) {
             color_data = rep(color_data, nrow(surface_mesh$vertices));
         } else if(length(color_data) == 0L) {
-            warning(sprintf("Data mismatch: surface has %d vertices, but no (%d) color values passed in argument 'color_data'. Setting all vertex colors to white.\n", nrow(surface_mesh$vertices), length(color_data)));
             color_data = rep('#FEFEFE', nrow(surface_mesh$vertices));
         } else {
             warning(sprintf("Data mismatch: surface has %d vertices, but %d color values passed in argument 'color_data'.\n", nrow(surface_mesh$vertices), length(color_data)));
