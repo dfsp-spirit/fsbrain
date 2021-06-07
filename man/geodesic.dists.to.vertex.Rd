@@ -11,6 +11,9 @@ geodesic.dists.to.vertex(mesh, v)
 
 \item{v}{positive integer, a vertex index in the mesh.}
 }
+\value{
+double vector with length equal to num vertices in the mesh, the geodesic distances from all other vertices to the query vertex \code{v}.
+}
 \description{
 Simple internal wrapper around \code{Rvcg::vcgDijkstra} with function check.
 }

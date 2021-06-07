@@ -4,10 +4,12 @@
 \alias{geodesic.average.distance}
 \title{Compute the average (pseudo-) geodesic distance on the mesh from each vertex to all other vertices.}
 \usage{
-geodesic.average.distance(surfaces, method = "auto")
+geodesic.average.distance(surfaces, ignore_mask = NULL, method = "auto")
 }
 \arguments{
 \item{surfaces}{fs.surface instance or a \code{\link[fsbrain]{hemilist}} of the latter.}
+
+\item{ignore_mask}{logical vector with length equal to the number of vertices in the mesh (or hemilist of the latter if 'surfaces' is a hemilist). Each position must indicate whether the vertex should be ignored. If a hemilist, the indices must start at 1 for both hemispheres.}
 
 \item{method}{character string, one of 'auto', 'vcgGeodesicNeigh' or 'vcgDijkstra'. Auto will select the fastest available one, depending on the installed Rvcg version.}
 }

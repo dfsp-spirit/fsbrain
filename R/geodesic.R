@@ -250,6 +250,8 @@ geod.patches.pervertexdata.singlehemi <- function(mesh, vertex, ...) {
 #'
 #' @param v positive integer, a vertex index in the mesh.
 #'
+#' @return double vector with length equal to num vertices in the mesh, the geodesic distances from all other vertices to the query vertex \code{v}.
+#'
 #' @keywords internal
 geodesic.dists.to.vertex <- function(mesh, v) {
     if(! exists('vcgDijkstra', where=asNamespace('Rvcg'), mode='function')) {
@@ -286,19 +288,31 @@ ensure.tmesh3d <- function(mesh) {
 #'
 #' @param surfaces fs.surface instance or a \code{\link[fsbrain]{hemilist}} of the latter.
 #'
+#' @param ignore_mask logical vector with length equal to the number of vertices in the mesh (or hemilist of the latter if 'surfaces' is a hemilist). Each position must indicate whether the vertex should be ignored. If a hemilist, the indices must start at 1 for both hemispheres.
+#'
 #' @param method character string, one of 'auto', 'vcgGeodesicNeigh' or 'vcgDijkstra'. Auto will select the fastest available one, depending on the installed Rvcg version.
 #'
 #' @note This may take a while. It requires the 'Rvcg' package.
 #'
 #' @keywords internal
-geodesic.average.distance <- function(surfaces, method = "auto") {
+geodesic.average.distance <- function(surfaces, ignore_mask = NULL, method = "auto") {
     if(! exists('vcgDijkstra', where=asNamespace('Rvcg'), mode='function')) {
         stop("Your Rvcg version does not export the vcgDijkstra function. You need to install Rvcg from GitHub for this this functionality to be available. Try 'devtools::install_github('zarquon42b/Rvcg')'.");
     }
 
     if(is.hemilist(surfaces)) {
-        return(lapply(surfaces, geodesic.average.distance));
+        if(is.null(ignore_mask)) {
+            return(lapply(surfaces, geodesic.average.distance));
+        } else {
+            lh_res = geodesic.average.distance(surfaces$lh, ignore_mask$lh, method = method);
+            rh_res = geodesic.average.distance(surfaces$rh, ignore_mask$rh, method = method);
+            return(hemilist(lh_res, rh_res));
+        }
+
     } else {
+        if(is.null(surfaces)) {  # hemilist with empty entry
+            return(NULL);
+        }
         num_verts = nrow(surfaces$vertices);
         mesh = ensure.tmesh3d(surfaces);
 
@@ -311,6 +325,9 @@ geodesic.average.distance <- function(surfaces, method = "auto") {
         }
 
         if(method == "vcgDijkstra") {
+            if( ! is.null(ignore_mask)) {
+                stop("The 'ignore_mask' parameter is only supported if 'method' is 'vcgGeodesicNeigh'.");
+            }
             geodesic_mean_distances = rep(NA, num_verts);
             for(vert_idx in seq_len(num_verts)) {
                 geodesic_mean_distances[vert_idx] = mean(Rvcg::vcgDijkstra(mesh, vert_idx));
@@ -320,7 +337,7 @@ geodesic.average.distance <- function(surfaces, method = "auto") {
             if(! exists('vcgGeodesicNeigh', where=asNamespace('Rvcg'), mode='function')) {
                 stop("Your Rvcg version does not export the required 'vcgGeodesicNeigh' function. You need to install Rvcg from GitHub for this this functionality to be available. Try 'devtools::install_github('dfsp-spirit/Rvcg', ref='geodesic_extra_functions')'.");
             } else {
-                return(Rvcg::vcgGeodesicMeanDist(mesh));
+                return(Rvcg::vcgGeodesicMeanDist(mesh, ignore_mask = ignore_mask));
             }
         } else {
             stop("Invalid 'method' parameter.")
@@ -328,13 +345,14 @@ geodesic.average.distance <- function(surfaces, method = "auto") {
     }
 }
 
+
 #' @title Compute mean geodesic distance descriptor for a subject.
 #'
 #' @description For all vertices: compute the mean pseudo-geodesic distance from this vertex to all others. Computes |V|^2 geodesic distances.
 #'
 #' @inheritParams vis.subject.morph.native
 #'
-#' @param ... extra parameters passed on to \code{geodesic.average.distance}.
+#' @param ... extra parameters passed on to \code{geodesic.average.distance}. Ignored if 'cortex_only' is TRUE.
 #'
 #' @return a \code{\link[fsbrain]{hemilist}} containing vectors with the descriptor data for the requested hemisphere(s). The length of the vectors is the number of vertices in the surface, and the value for a vertex is the mean geodesic distance to all other vertices for this vertex.
 #'
@@ -350,8 +368,12 @@ geodesic.average.distance <- function(surfaces, method = "auto") {
 #' }
 #'
 #' @export
-subject.descriptor.geodesic.average.distance <- function(subjects_dir, subject_id, surface = "white", hemi = "both", ...) {
+subject.descriptor.geodesic.average.distance <- function(subjects_dir, subject_id, surface = "white", hemi = "both", cortex_only = FALSE, ...) {
     surfaces = subject.surface(subjects_dir, subject_id, surface = surface, hemi = hemi, force_hemilist = TRUE);
+    if(cortex_only) {
+        masks = subject.mask(subjects_dir, subject_id, hemi = hemi, invert_mask = FALSE);
+        return(geodesic.average.distance(surfaces, ignore_mask = masks));
+    }
     return(geodesic.average.distance(surfaces, ...));
 }
 
