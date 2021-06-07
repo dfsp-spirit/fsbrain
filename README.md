@@ -59,7 +59,7 @@ R packages are compiled from source by default under Linux, so you need some dev
 
 * for deb-based Linux distributions (Debian, Ubuntu, ...):
 ```shell
-sudo apt-get install libmagick++-dev libx11-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libfreetype6-dev libxml2-dev libssh-dev libcurl4-openssl-dev
+sudo apt-get install libmagick++-dev libx11-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libfreetype6-dev libxml2-dev libssh-dev libcurl4-openssl-dev libgfortran4
 ```
 * for rpm-based Linux distributions (Fedora, CentOS, RHEL, ...):
 ```shell
