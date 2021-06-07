@@ -194,12 +194,16 @@ handle.rglactions.highlight.points <- function(rglactions, angle_rad, x, y, z, h
     if('highlight_points' %in% names(rglactions)) {
         coords = rglactions$highlight_points$coords;
         color = rglactions$highlight_points$color;
-        color = recycle(color, length(coords));
+        color = recycle(color, nrow(coords));
         if(hemi != "both") { # limit to current hemi if hemi annotation is available in rglactions.
             if( ! is.null(rglactions$highlight_points$hemi)) {
                 coords = coords[which(rglactions$highlight_points$hemi == hemi), ];
                 color = color[which(rglactions$highlight_points$hemi == hemi)];
             }
+        }
+        if(length(color) == 0L | length(coords) == 0L) {
+            # Can happen if the hemi filtering removes all coords (i.e., no points to highlight on this hemi).
+            return(invisible(NULL));
         }
         coords = rgl::rotate3d(coords, angle_rad, x, y, z);
         highlight.points.spheres(coords, color = color, radius = rglactions$highlight_points$radius);

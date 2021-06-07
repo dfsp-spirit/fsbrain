@@ -32,3 +32,13 @@ For all vertices: compute the mean pseudo-geodesic distance from this vertex to 
 \note{
 This may take quite a while.
 }
+\examples{
+\dontrun{
+  download_fsaverage3(TRUE);
+  sjd = fsaverage.path();
+  dist = subject.descriptor.geodesic.average.distance(sjd,
+    "fsaverage3", surface = "white", hemi = "both");
+  vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = dist$lh);
+}
+
+}

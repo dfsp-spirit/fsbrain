@@ -87,3 +87,21 @@ test_that("We can highlight vertices using the high-level function for spheres a
     testthat::expect_equal(1L, 1L); # only prevent test skipping for now.
 })
 
+
+test_that("We can highlight directly adjacent vertices using the high-level function for spheres and patches.", {
+
+    testthat::skip_on_cran();
+
+    fsbrain::download_optional_data();
+    fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
+
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+    subject_id = 'fsaverage';
+
+    vertices = c(32258, 171); # These are directly adjacent
+    highlight.vertices.on.subject.spheres(subjects_dir, subject_id, vertices = vertices);
+
+    testthat::expect_equal(1L, 1L); # only prevent test skipping for now.
+})
+
+

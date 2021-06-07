@@ -91,11 +91,11 @@ fs.surface.to.tmesh3d <- function(surface) {
 #'
 #' @inheritParams coloredmeshes.from.color
 #'
-#' @param color_data vector of hex color strings
+#' @param color_data vector of hex color strings, a single one or one per vertex.
 #'
 #' @return coloredmesh. A named list with entries: "mesh" the \code{\link{tmesh3d}} mesh object. "col": the mesh colors. "render", logical, whether to render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
-#' @note Do not call this, use \code{\link[fsbrain]{coloredmeshes.from.color}} instead.
+#' @note Do not call this directly, use \code{\link[fsbrain]{coloredmeshes.from.color}} instead.
 #'
 #' @keywords internal
 #' @importFrom rgl tmesh3d rgl.open wire3d
@@ -120,6 +120,9 @@ coloredmesh.from.color <- function(subjects_dir, subject_id, color_data, hemi, s
     if(nrow(surface_mesh$vertices) != length(color_data)) {
         if(length(color_data) == 1L) {
             color_data = rep(color_data, nrow(surface_mesh$vertices));
+        } else if(length(color_data) == 0L) {
+            warning(sprintf("Data mismatch: surface has %d vertices, but no (%d) color values passed in argument 'color_data'. Setting all vertex colors to white.\n", nrow(surface_mesh$vertices), length(color_data)));
+            color_data = rep('#FEFEFE', nrow(surface_mesh$vertices));
         } else {
             warning(sprintf("Data mismatch: surface has %d vertices, but %d color values passed in argument 'color_data'.\n", nrow(surface_mesh$vertices), length(color_data)));
         }
