@@ -22,7 +22,7 @@ subject.descriptor.geodesic.average.distance(
 
 \item{hemi}{string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the label data files to be loaded.}
 
-\item{cortex_only}{logical, whether to limit computations to the cortex. If set, results for medial wall vertices will be NA, and they will be ignored when computing the mean distance from a vertex to all others.}
+\item{cortex_only}{logical, whether to limit computations to the cortex. If set, results for medial wall vertices will be \code{NA}, and they will be ignored when computing the mean distance from a vertex to all others.}
 
 \item{...}{extra parameters passed on to \code{geodesic.average.distance}. Ignored if 'cortex_only' is TRUE.}
 }
@@ -30,10 +30,10 @@ subject.descriptor.geodesic.average.distance(
 a \code{\link[fsbrain]{hemilist}} containing vectors with the descriptor data for the requested hemisphere(s). The length of the vectors is the number of vertices in the surface, and the value for a vertex is the mean geodesic distance to all other vertices for this vertex.
 }
 \description{
-For all vertices: compute the mean pseudo-geodesic distance from this vertex to all others. Computes |V|^2 geodesic distances.
+For all vertices: compute the mean pseudo-geodesic distance from this vertex to all others in the same hemisphere. Computes \code{|V|^2} geodesic distances.
 }
 \note{
-This may take quite a while.
+This takes quite a while for full-resolution meshes. Use down-sampled versions to quickly try it (see example).
 }
 \examples{
 \dontrun{

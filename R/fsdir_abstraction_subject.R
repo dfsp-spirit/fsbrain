@@ -673,6 +673,8 @@ subject.annot <- function(subjects_dir, subject_id, hemi, atlas) {
 #'
 #' @param force_hemilist logical, whether to return a hemilist even if the 'hemi' parameter is not set to 'both'
 #'
+#' @param as_tm logical, whether to return an \code{rgl::tmesh3d} instead of an \code{fs.surface} instance by applying the \code{fs.surface.to.tmesh3d} function.
+#'
 #' @return the `fs.surface` instance, as returned by \code{\link[freesurferformats]{read.fs.surface}}. If parameter `hemi` is set to `both`, a named list with entries `lh` and `rh` is returned, and the values of are the respective surfaces. The mesh data structure used in `fs.surface` is a *face index set*.
 #'
 #' @examples
@@ -685,7 +687,7 @@ subject.annot <- function(subjects_dir, subject_id, hemi, atlas) {
 #' @family surface mesh functions
 #'
 #' @export
-subject.surface <- function(subjects_dir, subject_id, surface, hemi, force_hemilist = FALSE) {
+subject.surface <- function(subjects_dir, subject_id, surface = "white", hemi = "both", force_hemilist = FALSE, as_tm = FALSE) {
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
@@ -695,6 +697,10 @@ subject.surface <- function(subjects_dir, subject_id, surface, hemi, force_hemil
         ret_list = list();
         ret_list$lh = subject.surface(subjects_dir, subject_id, surface, 'lh');
         ret_list$rh = subject.surface(subjects_dir, subject_id, surface, 'rh');
+        if(as_tm) {
+            ret_list$lh = fs.surface.to.tmesh3d(ret_list$lh);
+            ret_list$rh = fs.surface.to.tmesh3d(ret_list$rh);
+        }
         return(ret_list);
     }
 
@@ -702,10 +708,14 @@ subject.surface <- function(subjects_dir, subject_id, surface, hemi, force_hemil
     if(!file.exists(surface_file)) {
         stop(sprintf("Surface file '%s' for subject '%s' surface '%s' hemi '%s' cannot be accessed.\n", surface_file, subject_id, surface, hemi));
     }
+    sf = freesurferformats::read.fs.surface(surface_file);
+    if(as_tm) {
+        sf = fs.surface.to.tmesh3d(sf);
+    }
     if(force_hemilist) {
-        return(hemilist.wrap(freesurferformats::read.fs.surface(surface_file), hemi));
+        return(hemilist.wrap(sf, hemi));
     } else {
-        return(freesurferformats::read.fs.surface(surface_file));
+        return(sf);
     }
 }
 
