@@ -348,15 +348,17 @@ geodesic.average.distance <- function(surfaces, ignore_mask = NULL, method = "au
 
 #' @title Compute mean geodesic distance descriptor for a subject.
 #'
-#' @description For all vertices: compute the mean pseudo-geodesic distance from this vertex to all others. Computes |V|^2 geodesic distances.
+#' @description For all vertices: compute the mean pseudo-geodesic distance from this vertex to all others in the same hemisphere. Computes \code{|V|^2} geodesic distances.
 #'
 #' @inheritParams vis.subject.morph.native
+#'
+#' @param cortex_only logical, whether to limit computations to the cortex. If set, results for medial wall vertices will be \code{NA}, and they will be ignored when computing the mean distance from a vertex to all others.
 #'
 #' @param ... extra parameters passed on to \code{geodesic.average.distance}. Ignored if 'cortex_only' is TRUE.
 #'
 #' @return a \code{\link[fsbrain]{hemilist}} containing vectors with the descriptor data for the requested hemisphere(s). The length of the vectors is the number of vertices in the surface, and the value for a vertex is the mean geodesic distance to all other vertices for this vertex.
 #'
-#' @note This may take quite a while.
+#' @note This takes quite a while for full-resolution meshes. Use down-sampled versions to quickly try it (see example).
 #'
 #' @examples
 #' \dontrun{

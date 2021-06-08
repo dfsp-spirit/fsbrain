@@ -22,7 +22,7 @@ subject.descriptor.geodesic.average.distance(
 
 \item{hemi}{string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the label data files to be loaded.}
 
-\item{cortex_only}{logical, whether to mask the medial wall, i.e., whether the morphometry data for all vertices which are *not* part of the cortex (as defined by the label file `label/?h.cortex.label`) should be replaced with NA values. In other words, setting this to TRUE will ignore the values of the medial wall between the two hemispheres. If set to true, the mentioned label file needs to exist for the subject. Defaults to FALSE.}
+\item{cortex_only}{logical, whether to limit computations to the cortex. If set, results for medial wall vertices will be NA, and they will be ignored when computing the mean distance from a vertex to all others.}
 
 \item{...}{extra parameters passed on to \code{geodesic.average.distance}. Ignored if 'cortex_only' is TRUE.}
 }
