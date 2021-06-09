@@ -99,6 +99,8 @@ highlight.vertices.on.subject <- function(subjects_dir, vis_subject_id, verts_lh
 #'
 #' @param sphere_radius double, a single radius for all spheres
 #'
+#' @param ... extra parameters passed on to \code{\link[fsbrain]{vis.data.on.subject}}. Use this to set a custom colormap etc.
+#'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization. If export_img is set, the export return value is returned instead.
 #'
 #'
@@ -106,7 +108,7 @@ highlight.vertices.on.subject <- function(subjects_dir, vis_subject_id, verts_lh
 #' @family surface visualization functions
 #'
 #' @export
-highlight.vertices.on.subject.spheres <- function(subjects_dir, vis_subject_id, vertices, surface="white", patch_size=25.0, style = "glass2", export_img=NULL, sphere_colors = c('#FF0000'), sphere_radius = 3) {
+highlight.vertices.on.subject.spheres <- function(subjects_dir, vis_subject_id, vertices, surface="white", patch_size=25.0, style = "glass2", export_img=NULL, sphere_colors = c('#FF0000'), sphere_radius = 3, ...) {
     surfaces = subject.surface(subjects_dir, vis_subject_id, surface = surface, hemi = "both");
 
     if(is.null(patch_size) | (length(vertices) < 1L)) {
@@ -121,11 +123,11 @@ highlight.vertices.on.subject.spheres <- function(subjects_dir, vis_subject_id, 
 
     # Visualize
     if(is.null(export_img)) {
-        return(vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh = morph_data$lh, morph_data_rh = morph_data$rh, rglactions = rglactions, style = style));
+        return(vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh = morph_data$lh, morph_data_rh = morph_data$rh, rglactions = rglactions, style = style, ...));
     } else {
         rglactions_export = rglactions;
         rglactions$no_vis = TRUE;
-        cm = vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh = morph_data$lh, morph_data_rh = morph_data$rh, rglactions = rglactions, style = style);
+        cm = vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh = morph_data$lh, morph_data_rh = morph_data$rh, rglactions = rglactions, style = style, ...);
         return(export(cm, rglactions = rglactions_export, style = style, horizontal = NULL, output_img = export_img));
     }
 }
