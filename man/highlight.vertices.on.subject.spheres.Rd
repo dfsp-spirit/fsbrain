@@ -10,6 +10,7 @@ highlight.vertices.on.subject.spheres(
   vertices,
   surface = "white",
   patch_size = 25,
+  show_patch = true,
   style = "glass2",
   export_img = NULL,
   sphere_colors = c("#FF0000"),
@@ -27,6 +28,8 @@ highlight.vertices.on.subject.spheres(
 \item{surface}{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 
 \item{patch_size}{double, geodesic radius in which to draw a patch on the mesh around the verts. Pass \code{NULL} to disable.}
+
+\item{show_patch}{logical (or a vector with one logical value per entry in 'vertices'), whether to show colored geodesic patches at the highlighted vertices.}
 
 \item{style}{character string or rgl rendering style, see \code{\link[fsbrain]{get.rglstyle}}.}
 
@@ -49,8 +52,13 @@ Highlight vertices given by index on a subject's meshes by coloring faces.
    fsbrain::download_fsaverage(T);
    subjects_dir = fsaverage.path();
    mkco = list('colFn'=squash::jet, 'n'=300);
+   # Ex.1: highlight with patches and custom colormap:
    highlight.vertices.on.subject.spheres(subjects_dir, 'fsaverage',
      vertices=c(300, 5000, 100000), makecmap_options = mkco);
+   # Ex.2: show patches on some (red) vertices, not on blue ones:
+   highlight.vertices.on.subject.spheres(subjects_dir, 'fsaverage',
+     vertices=c(300, 5000, 100000, 300000), show_patch = c(T,F,T,F),
+     sphere_colors = c("red", "blue", "red", "blue"));
 }
 
 }

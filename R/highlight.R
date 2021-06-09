@@ -101,6 +101,8 @@ highlight.vertices.on.subject <- function(subjects_dir, vis_subject_id, verts_lh
 #'
 #' @param patch_size double, geodesic radius in which to draw a patch on the mesh around the verts. Pass \code{NULL} to disable.
 #'
+#' @param show_patch logical (or a vector with one logical value per entry in 'vertices'), whether to show colored geodesic patches at the highlighted vertices.
+#'
 #' @param export_img character string, the path to the output image if you want to export a high-quality image, NULL if you want live visualization instead.
 #'
 #' @param sphere_colors the sphere colors like '#FF0000', can be a single one for all or one per sphere
@@ -119,20 +121,35 @@ highlight.vertices.on.subject <- function(subjects_dir, vis_subject_id, verts_lh
 #'    fsbrain::download_fsaverage(T);
 #'    subjects_dir = fsaverage.path();
 #'    mkco = list('colFn'=squash::jet, 'n'=300);
+#'    # Ex.1: highlight with patches and custom colormap:
 #'    highlight.vertices.on.subject.spheres(subjects_dir, 'fsaverage',
 #'      vertices=c(300, 5000, 100000), makecmap_options = mkco);
+#'    # Ex.2: show patches on some (red) vertices, not on blue ones:
+#'    highlight.vertices.on.subject.spheres(subjects_dir, 'fsaverage',
+#'      vertices=c(300, 5000, 100000, 300000), show_patch = c(T,F,T,F),
+#'      sphere_colors = c("red", "blue", "red", "blue"));
 #' }
 
 #'
 #' @export
-highlight.vertices.on.subject.spheres <- function(subjects_dir, vis_subject_id, vertices, surface="white", patch_size=25.0, style = "glass2", export_img=NULL, sphere_colors = c('#FF0000'), sphere_radius = 3, ...) {
+highlight.vertices.on.subject.spheres <- function(subjects_dir, vis_subject_id, vertices, surface="white", patch_size=25.0, show_patch=true, style = "glass2", export_img=NULL, sphere_colors = c('#FF0000'), sphere_radius = 3, ...) {
     surfaces = subject.surface(subjects_dir, vis_subject_id, surface = surface, hemi = "both");
 
     if(is.null(patch_size) | (length(vertices) < 1L)) {
-        morph_data = constant.pervertexdata(surfaces, value = NA);
+        morph_data = constant.pervertexdata(surfaces, value = 0.0);
         rglactions = list();
     } else {
-        morph_data = geod.patches.pervertexdata(surfaces, vertices, max_distance = patch_size);
+
+        if(length(show_patch) != length(vertices)) {
+            show_patch = recycle(show_patch, length(vertices));
+        }
+        patch_vertices = vertices[show_patch];
+        if(length(patch_vertices) < 1L) {
+            morph_data = constant.pervertexdata(surfaces, value = 0.0);
+        } else {
+            morph_data = geod.patches.pervertexdata(surfaces, patch_vertices, max_distance = patch_size);
+        }
+
         coords = vertex.coords(surfaces, vertices);
         point_hemi = vertex.hemis(surfaces, vertices); # compute the hemispheres for the vertices/points.
         rglactions = list('highlight_points'=list('coords'=coords, 'color'=sphere_colors, 'radius'=sphere_radius, 'hemi'=point_hemi));
