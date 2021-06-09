@@ -379,3 +379,38 @@ subject.descriptor.geodesic.average.distance <- function(subjects_dir, subject_i
     return(geodesic.average.distance(surfaces, ...));
 }
 
+
+#' #' @title Testing stuff, ignore this.
+#' #'
+#' #' @param direction 1 or -1, direction along axis for normals/rays
+#' #'
+#' #' @examples
+#' #' \dontrun{
+#' #' surface.outline.2d(fsaverage.path(TRUE), "fsaverage");
+#' #' }
+#' #'
+#' #' @keywords internal
+#' surface.outline.2d <- function(subjects_dir, subject_id, coord_x = 10.0, direction=1L) {
+#'     tm = subject.surface(subjects_dir, subject_id, hemi = "lh", as_tm = T);
+#'     lf = coord_x; # look from
+#'     search_points = matrix(c(lf, 1.0, 1.0, lf, 1, 0, lf, 1, 1, lf, -1, -1, lf, -1, 0), ncol=3, byrow = T);
+#'     search_point_normals = search_points;
+#'     search_point_normals[,1] = search_points[,1] + direction;
+#'
+#'     grid = Rvcg::setRays(search_points, search_point_normals);
+#'     matches = Rvcg::vcgRaySearch(grid, tm);
+#'
+#'     # Visualize and mark hit points with small red spheres.
+#'     rgl::open3d();
+#'     rgl::shade3d(tm, col="white");
+#'     rgl::spheres3d(t(matches$vb[1:3,]), color = "red");
+#'
+#'     # Mark source grid
+#'     rgl::spheres3d(search_points, color = "green");
+#'     rgl::spheres3d(search_point_normals, color = "blue");
+#' }
+
+
+
+
+
