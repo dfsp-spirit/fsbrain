@@ -23,6 +23,14 @@
 #' @family visualization functions
 #' @family surface visualization functions
 #'
+#' @examples
+#' \dontrun{
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+#'    highlight.vertices.on.subject(subjects_dir, 'subject1',
+#'      verts_lh=c(5000, 100000), verts_rh=c(300, 66666), views="si");
+#' }
+#'
 #' @export
 highlight.vertices.on.subject <- function(subjects_dir, vis_subject_id, verts_lh=NULL, verts_rh=NULL, surface="white", views=c('t4'), rgloptions=rglo(), rglactions = list(), color_bg="#FEFEFE", color_verts_lh="#FF0000", color_verts_rh="#FF4500", k=0L) {
 
@@ -103,9 +111,18 @@ highlight.vertices.on.subject <- function(subjects_dir, vis_subject_id, verts_lh
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization. If export_img is set, the export return value is returned instead.
 #'
-#'
 #' @family visualization functions
 #' @family surface visualization functions
+#'
+#' @examples
+#' \dontrun{
+#'    fsbrain::download_fsaverage(T);
+#'    subjects_dir = fsaverage.path();
+#'    mkco = list('colFn'=squash::jet, 'n'=300);
+#'    highlight.vertices.on.subject.spheres(subjects_dir, 'fsaverage',
+#'      vertices=c(300, 5000, 100000), makecmap_options = mkco);
+#' }
+
 #'
 #' @export
 highlight.vertices.on.subject.spheres <- function(subjects_dir, vis_subject_id, vertices, surface="white", patch_size=25.0, style = "glass2", export_img=NULL, sphere_colors = c('#FF0000'), sphere_radius = 3, ...) {

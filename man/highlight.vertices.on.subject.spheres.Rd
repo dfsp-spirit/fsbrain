@@ -13,7 +13,8 @@ highlight.vertices.on.subject.spheres(
   style = "glass2",
   export_img = NULL,
   sphere_colors = c("#FF0000"),
-  sphere_radius = 3
+  sphere_radius = 3,
+  ...
 )
 }
 \arguments{
@@ -34,12 +35,24 @@ highlight.vertices.on.subject.spheres(
 \item{sphere_colors}{the sphere colors like '#FF0000', can be a single one for all or one per sphere}
 
 \item{sphere_radius}{double, a single radius for all spheres}
+
+\item{...}{extra parameters passed on to \code{\link[fsbrain]{vis.data.on.subject}}. Use this to set a custom colormap etc.}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization. If export_img is set, the export return value is returned instead.
 }
 \description{
 Highlight vertices given by index on a subject's meshes by coloring faces.
+}
+\examples{
+\dontrun{
+   fsbrain::download_fsaverage(T);
+   subjects_dir = fsaverage.path();
+   mkco = list('colFn'=squash::jet, 'n'=300);
+   highlight.vertices.on.subject.spheres(subjects_dir, 'fsaverage',
+     vertices=c(300, 5000, 100000), makecmap_options = mkco);
+}
+
 }
 \seealso{
 Other visualization functions: 

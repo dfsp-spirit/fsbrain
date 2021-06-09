@@ -50,6 +50,15 @@ list of coloredmeshes. The coloredmeshes used for the visualization.
 \description{
 Highlight vertices given by index on a subject's meshes by coloring faces.
 }
+\examples{
+\dontrun{
+   fsbrain::download_optional_data();
+   subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+   highlight.vertices.on.subject(subjects_dir, 'subject1',
+     verts_lh=c(5000, 100000), verts_rh=c(300, 66666), views="si");
+}
+
+}
 \seealso{
 Other visualization functions: 
 \code{\link{highlight.vertices.on.subject.spheres}()},
