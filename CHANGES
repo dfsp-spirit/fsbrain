@@ -11,6 +11,7 @@ Version 0.5.0
 - Add new 'export' function, an alias for 'vis.export.from.coloredmeshes' so you have to type less.
 - Add new entry on vector graphics conversion to the 'fsbrain FAQ' vignette.
 - Add surface.curvatures function that can compute k1 and k2 (requires optional dependency package 'Rvcg').
+- Add functions to write group standard space per-vertex data: write.group.morph.standard and write.group.morph.standard.mf
 
 
 Version 0.4.3
