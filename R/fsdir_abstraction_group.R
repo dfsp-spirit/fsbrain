@@ -139,6 +139,8 @@ groupmorph.split.hemilist <- function(data, numverts_lh) {
 #'
 #' @inheritParams write.group.morph.standard.mf
 #'
+#' @param data the data matrix
+#'
 #' @param measure_name character string, the data part of the generated file names, e.g., 'thickness' or 'area'.
 #'
 #' @seealso \code{\link[fsbrain]{write.group.morph.standard.sf}} and \code{\link[fsbrain]{write.group.morph.standard.mf}}
@@ -149,7 +151,8 @@ groupmorph.split.hemilist <- function(data, numverts_lh) {
 #' \dontrun{
 #' dm = matrix(rnorm(325684 * 6, 5.0, 1.2), ncol = 6);
 #' subjects = paste("subject", seq(6), sep="");
-#' write.group.morph.standard("/tmp/groupdata", subjects, dm, "rand", template_lh_numverts = 325684 / 2);
+#' write.group.morph.standard("/tmp/groupdata", subjects, dm,
+#'   "rand", template_lh_numverts = 325684 / 2);
 #' }
 #'
 #' @export
