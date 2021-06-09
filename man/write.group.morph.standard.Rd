@@ -22,6 +22,8 @@ write.group.morph.standard(
 
 \item{subjects_list}{vector of strings. The subject identifiers.}
 
+\item{data}{the data matrix}
+
 \item{measure_name}{character string, the data part of the generated file names, e.g., 'thickness' or 'area'.}
 
 \item{hemi}{string, one of 'lh', 'rh' or 'both'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.}
@@ -43,7 +45,8 @@ Write standard space group data to a standard FreeSurfer directory stucture.
 \dontrun{
 dm = matrix(rnorm(325684 * 6, 5.0, 1.2), ncol = 6);
 subjects = paste("subject", seq(6), sep="");
-write.group.morph.standard("/tmp/groupdata", subjects, dm, "rand", template_lh_numverts = 325684 / 2);
+write.group.morph.standard("/tmp/groupdata", subjects, dm,
+  "rand", template_lh_numverts = 325684 / 2);
 }
 
 }
