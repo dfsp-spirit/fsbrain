@@ -234,6 +234,10 @@ collayer.from.morphlike.data <- function(lh_morph_data=NULL, rh_morph_data=NULL,
         stop("No 'colFn' present in parameter 'makecmap_options': a colormap function is required.");
     }
 
+    if((all(is.na(lh_morph_data)) & all(is.na(rh_morph_data))) || (is.null(lh_morph_data) && is.null(rh_morph_data))) {
+        return(list("lh"="#FEFEFE", "rh"="#FEFEFE"));
+    }
+
     cmr = common.makecmap.range(makecmap_options, lh_data=lh_morph_data, rh_data=rh_morph_data, return_metadata = return_metadata);
     return(cmr$collayer);
 }
@@ -365,8 +369,8 @@ force.to.range <- function(x, data_range, allow_append = FALSE) {
 collayer.from.mask.data <- function(lh_data=NULL, rh_data=NULL, makecmap_options=list('colFn'=label.colFn)) {
 
     if(is.null(lh_data) & is.null(rh_data)) {
-        warning("Both 'lh_data' and 'rh_data' are NULL, returning a single white color value for each hemi.");
-        return(list("lh"="#FFFFFF", "rh"="#FFFFFF"));
+        message("Both 'lh_data' and 'rh_data' are NULL, returning a single white color value for each hemi.");
+        return(list("lh"="#FEFEFE", "rh"="#FEFEFE"));
     }
 
     if(is.logical(lh_data)) {

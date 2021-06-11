@@ -136,7 +136,7 @@ highlight.vertices.on.subject.spheres <- function(subjects_dir, vis_subject_id, 
     surfaces = subject.surface(subjects_dir, vis_subject_id, surface = surface, hemi = "both");
 
     if(is.null(patch_size) | (length(vertices) < 1L)) {
-        morph_data = constant.pervertexdata(surfaces, value = 0.0);
+        morph_data = constant.pervertexdata(surfaces, value = NA);
         rglactions = list();
     } else {
 
@@ -145,7 +145,7 @@ highlight.vertices.on.subject.spheres <- function(subjects_dir, vis_subject_id, 
         }
         patch_vertices = vertices[show_patch];
         if(length(patch_vertices) < 1L) {
-            morph_data = constant.pervertexdata(surfaces, value = 0.0);
+            morph_data = constant.pervertexdata(surfaces, value = NA);
         } else {
             morph_data = geod.patches.pervertexdata(surfaces, patch_vertices, max_distance = patch_size);
         }
