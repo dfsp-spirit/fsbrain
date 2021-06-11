@@ -113,6 +113,8 @@ highlight.vertices.on.subject <- function(subjects_dir, vis_subject_id, verts_lh
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization. If export_img is set, the export return value is returned instead.
 #'
+#' @note If no patches are visualized, the color used for the brain can be set with \code{options("fsbrain.brain_na_color"="#FF0000")}.
+#'
 #' @family visualization functions
 #' @family surface visualization functions
 #'

@@ -234,8 +234,9 @@ collayer.from.morphlike.data <- function(lh_morph_data=NULL, rh_morph_data=NULL,
         stop("No 'colFn' present in parameter 'makecmap_options': a colormap function is required.");
     }
 
+    bg_color = getOption('fsbrain.brain_na_color', default="#FEFEFE");
     if((all(is.na(lh_morph_data)) & all(is.na(rh_morph_data))) || (is.null(lh_morph_data) && is.null(rh_morph_data))) {
-        return(list("lh"="#FEFEFE", "rh"="#FEFEFE"));
+        return(list("lh"=bg_color, "rh"=bg_color));
     }
 
     cmr = common.makecmap.range(makecmap_options, lh_data=lh_morph_data, rh_data=rh_morph_data, return_metadata = return_metadata);
@@ -369,8 +370,9 @@ force.to.range <- function(x, data_range, allow_append = FALSE) {
 collayer.from.mask.data <- function(lh_data=NULL, rh_data=NULL, makecmap_options=list('colFn'=label.colFn)) {
 
     if(is.null(lh_data) & is.null(rh_data)) {
+        bg_color = getOption('fsbrain.brain_na_color', default="#FEFEFE");
         message("Both 'lh_data' and 'rh_data' are NULL, returning a single white color value for each hemi.");
-        return(list("lh"="#FEFEFE", "rh"="#FEFEFE"));
+        return(list("lh"=bg_color, "rh"=bg_color));
     }
 
     if(is.logical(lh_data)) {

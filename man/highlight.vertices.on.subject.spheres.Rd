@@ -47,6 +47,9 @@ list of coloredmeshes. The coloredmeshes used for the visualization. If export_i
 \description{
 Highlight vertices given by index on a subject's meshes by coloring faces.
 }
+\note{
+If no patches are visualized, the color used for the brain can be set with \code{options("fsbrain.brain_na_color"="#FF0000")}.
+}
 \examples{
 \dontrun{
    fsbrain::download_fsaverage(T);
