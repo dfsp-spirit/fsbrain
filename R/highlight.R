@@ -35,7 +35,7 @@
 highlight.vertices.on.subject <- function(subjects_dir, vis_subject_id, verts_lh=NULL, verts_rh=NULL, surface="white", views=c('t4'), rgloptions=rglo(), rglactions = list(), color_bg="#FEFEFE", color_verts_lh="#FF0000", color_verts_rh="#FF4500", k=0L) {
 
     coloredmeshes = list();
-    nv = subject.num.verts(subjects_dir, vis_subject_id);
+    nv = subject.num.verts(subjects_dir, vis_subject_id, surface = surface);
 
     color_lh = rep(color_bg, nv$lh);
     if(length(verts_lh) > 0L) {
@@ -159,14 +159,16 @@ highlight.vertices.on.subject.spheres <- function(subjects_dir, vis_subject_id, 
 
     # Visualize
     if(is.null(export_img)) {
-        return(vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh = morph_data$lh, morph_data_rh = morph_data$rh, rglactions = rglactions, style = style, ...));
+        return(vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh = morph_data$lh, morph_data_rh = morph_data$rh, surface = surface, rglactions = rglactions, style = style, ...));
     } else {
         rglactions_export = rglactions;
         rglactions$no_vis = TRUE;
-        cm = vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh = morph_data$lh, morph_data_rh = morph_data$rh, rglactions = rglactions, style = style, ...);
+        cm = vis.data.on.subject(subjects_dir, vis_subject_id, morph_data_lh = morph_data$lh, morph_data_rh = morph_data$rh, surface = surface, rglactions = rglactions, style = style, ...);
         return(export(cm, rglactions = rglactions_export, style = style, horizontal = NULL, output_img = export_img));
     }
 }
+
+# highlight.vertices.on.subject.spheres(fsaverage.path(), "fsaverage", vertices = sort(c(200, 300000, 122000)), show_patch = F, sphere_radius = 3, surface = "inflated", sphere_colors = c("red", "yellow", "green"));
 
 
 #' @title Draw small 3D spheres at given points.
