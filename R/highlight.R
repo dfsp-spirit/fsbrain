@@ -254,7 +254,7 @@ vertex.coords <- function(surface, vertices) {
         # Error on invalid vertex indices.
         vertices_filtered = vertices[which(vertices > 0L & vertices <= nrow(surface$vertices))];
         if(length(vertices_filtered) != length(vertices)) {
-            message(sprintf("Found %d out of bounds vertex indices.\n", (length(vertices) - length(vertices_filtered))));
+            stop(sprintf("Found %d out of bounds vertex indices.\n", (length(vertices) - length(vertices_filtered))));
         }
         coords = surface$vertices[vertices_filtered, ];
     }
