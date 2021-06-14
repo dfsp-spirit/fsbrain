@@ -24,7 +24,7 @@ vdata.split.by.hemi(
 \item{expand}{logical, whether to allow input of length 1, and expand (repeat) it to the length of the hemispheres.}
 }
 \value{
-a hemilist, each entry contains the data part of the respective hemi.
+a hemilist, each entry contains the data part of the respective hemisphere.
 }
 \description{
 Given a single vector of per-vertex data for a mesh, split it at the hemi boundary. This is achieved by loading the respective surface and checking the number of vertices for the 2 hemispheres.

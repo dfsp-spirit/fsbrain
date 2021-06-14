@@ -249,8 +249,14 @@ vertex.coords <- function(surface, vertices) {
             stop("Parameter 'surface' must be an fs.surface instance.");
         }
         # Filter invalid vertex indices. Makes it easier to work per hemisphere.
-        vertices = vertices[which(vertices > 0L & vertices <= nrow(surface$vertices))];
-        coords = surface$vertices[vertices, ];
+        vertices_filtered = vertices[which(vertices > 0L & vertices <= nrow(surface$vertices))];
+        if(length(vertices_filtered) != length(vertices)) {
+            warning(sprintf("Ignoring %d out of bounds vertex indices.\n", (length(vertices) - length(vertices_filtered))));
+        }
+        coords = surface$vertices[vertices_filtered, ];
+    }
+    if(is.vector(coords)) {
+        coords = matrix(coords, ncol = 3, byrow = TRUE);
     }
     return(coords);
 }

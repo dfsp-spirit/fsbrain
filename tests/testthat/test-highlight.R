@@ -130,3 +130,29 @@ test_that("We can compute the hemisphere string for vertices given the surfaces.
     testthat::expect_equal(hemi_strings, expected);
 })
 
+
+test_that("We can compute vertex coordinates over a single hemisphere.", {
+    testthat::skip_on_cran();
+    fsbrain::download_optional_data();
+    fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
+
+    surfaces = subject.surface(fsaverage.path(), "fsaverage");
+
+    # Check that return value is always matrix, even for single coords.
+    testthat::expect_true(is.matrix(vertex.coords(surfaces, vertices = 1L)));
+    testthat::expect_true(is.matrix(vertex.coords(surfaces, vertices = c(1L, 3L))));
+
+    # Check correct coord values for single hemi: lh
+    testthat::expect_equal(vertex.coords(surfaces$lh, vertices = 1L), matrix(surfaces$lh$vertices[1L, ], ncol = 3, byrow = TRUE));
+    testthat::expect_equal(vertex.coords(surfaces$lh, vertices = c(1L, 50L)), surfaces$lh$vertices[c(1L,50L), ]);
+
+    # Check correct coord values for single hemi: rh
+    testthat::expect_equal(vertex.coords(surfaces$rh, vertices = 1L), matrix(surfaces$rh$vertices[1L, ], ncol = 3, byrow = TRUE));
+    testthat::expect_equal(vertex.coords(surfaces$rh, vertices = c(1L, 50L)), surfaces$rh$vertices[c(1L,50L), ]);
+
+    # Check correct coord values for single hemi: rh, but unordered
+    testthat::expect_equal(vertex.coords(surfaces$rh, vertices = c(50L, 1L)), surfaces$rh$vertices[c(50L, 1L), ]);
+
+    # Out of bounds indices lead to warning (and filtering)
+    testthat::expect_warning(vertex.coords(surfaces$rh, vertices = c(50L, 500000L)));
+})

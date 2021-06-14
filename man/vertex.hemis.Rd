@@ -17,3 +17,10 @@ vector of character strings, each string is 'lh' or 'rh'.
 \description{
 Return the proper hemi string ('lh' or 'rh') for each vertex.
 }
+\note{
+It is not checked in any way whether the vertex indices are out of bounds on the upper side (higher than the highest rh vertex index).
+}
+\examples{
+  vertex.hemis(100L, vertices=c(99L, 100L, 101L));
+
+}
