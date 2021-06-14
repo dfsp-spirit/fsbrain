@@ -264,6 +264,11 @@ vertex.coords <- function(surface, vertices) {
 #'
 #' @return vector of character strings, each string is 'lh' or 'rh'.
 #'
+#' @note It is not checked in any way whether the vertex indices are out of bounds on the upper side (higher than the highest rh vertex index).
+#'
+#' @examples
+#'   vertex.hemis(100L, vertices=c(99L, 100L, 101L));
+#'
 #' @export
 vertex.hemis <- function(surface, vertices) {
     lh_nv = numverts.lh(surface);

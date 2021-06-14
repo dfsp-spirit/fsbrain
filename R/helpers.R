@@ -790,7 +790,7 @@ fsbrain.set.default.figsize <- function(width, height, xstart=50L, ystart=50L) {
 #'
 #' @note Instead of calling this function to split the data, you could use the 'split_by_hemi' parameter of \code{\link[fsbrain]{subject.morph.native}}.
 #'
-#' @return a hemilist, each entry contains the data part of the respective hemi.
+#' @return a hemilist, each entry contains the data part of the respective hemisphere.
 #' @export
 vdata.split.by.hemi <- function(subjects_dir, subject_id, vdata, surface='white', expand=TRUE) {
   nv = subject.num.verts(subjects_dir, subject_id, surface=surface);

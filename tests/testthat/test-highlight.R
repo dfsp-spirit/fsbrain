@@ -105,3 +105,28 @@ test_that("We can highlight directly adjacent vertices using the high-level func
 })
 
 
+test_that("We can compute the hemisphere string for vertices given an integer.", {
+    # test in order with integer
+    hemi_strings = vertex.hemis(100L, vertices = c(50, 1, 99, 100, 101, 300));
+    expected = c("lh", "lh", "lh", "lh", "rh", "rh");
+    testthat::expect_equal(hemi_strings, expected);
+
+    # test unordered with integer
+    hemi_strings = vertex.hemis(100L, vertices = c(300, 50, 101, 99, 100, 1, 1000));
+    expected = c("rh", "lh", "rh", "lh", "lh", "lh", "rh");
+    testthat::expect_equal(hemi_strings, expected);
+})
+
+
+test_that("We can compute the hemisphere string for vertices given the surfaces.", {
+    testthat::skip_on_cran();
+    fsbrain::download_optional_data();
+    fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
+
+    surfaces = subject.surface(fsaverage.path(), "fsaverage");
+
+    hemi_strings = vertex.hemis(surfaces, vertices = c(50, 1, 300000, 163842, 163843));
+    expected = c("lh", "lh", "rh", "lh", "rh");
+    testthat::expect_equal(hemi_strings, expected);
+})
+

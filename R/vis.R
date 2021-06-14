@@ -811,6 +811,34 @@ numverts.lh <- function(surfaces) {
 }
 
 
+#' @title Determine vertex count of right hemi from hemilist of surfaces or the count itself.
+#'
+#' @param surfaces hemilist of surfaces, or a single integer, which will be interpreted as the number of vertices of the right hemisphere surface.
+#'
+#' @return integer, the number of vertices.
+#'
+#' @export
+numverts.rh <- function(surfaces) {
+    rh_nv = NULL; # vertex count of right hemi
+    if(is.hemilist(surfaces)) {
+        if(freesurferformats::is.fs.surface(surfaces$rh)) {
+            rh_nv = nrow(surfaces$rh$vertices);
+        }
+    } else if(is.integer(surfaces)) {
+        if(length(surfaces) == 1L) {
+            rh_nv = surfaces;
+        }
+    } else {
+        stop("Invalid 'surfaces' parameter.");
+    }
+
+    if(is.null(rh_nv)) {
+        stop("Cannot determine vertex count of right hemi, invalid 'surfaces' parameter.");
+    }
+    return(rh_nv);
+}
+
+
 #' @title Transform surfaces indices which go over two surfaces to per-hemi indices.
 #'
 #' @param surfaces hemilist of surfaces, or a single integer, which will be interpreted as the number of vertices of the left hemisphere surface.
