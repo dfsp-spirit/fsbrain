@@ -135,6 +135,7 @@ highlight.vertices.on.subject <- function(subjects_dir, vis_subject_id, verts_lh
 #'
 #' @export
 highlight.vertices.on.subject.spheres <- function(subjects_dir, vis_subject_id, vertices, surface="white", patch_size=25.0, show_patch=TRUE, style = "glass2", export_img=NULL, sphere_colors = c('#FF0000'), sphere_radius = 3, ...) {
+    vertices = sort(vertices);
     surfaces = subject.surface(subjects_dir, vis_subject_id, surface = surface, hemi = "both");
 
     if(is.null(patch_size) | (length(vertices) < 1L)) {
