@@ -135,7 +135,6 @@ highlight.vertices.on.subject <- function(subjects_dir, vis_subject_id, verts_lh
 #'
 #' @export
 highlight.vertices.on.subject.spheres <- function(subjects_dir, vis_subject_id, vertices, surface="white", patch_size=25.0, show_patch=TRUE, style = "glass2", export_img=NULL, sphere_colors = c('#FF0000'), sphere_radius = 3, ...) {
-    vertices = sort(vertices);
     surfaces = subject.surface(subjects_dir, vis_subject_id, surface = surface, hemi = "both");
 
     if(is.null(patch_size) | (length(vertices) < 1L)) {
@@ -248,12 +247,10 @@ vertex.coords <- function(surface, vertices) {
             stop("Parameter 'surface' hemilist entry 'rh' must be an fs.surface instance.");
         }
         per_surface = per.hemi.vertex.indices(surface, vertices);
-        lh_coords = surface$lh$vertices[per_surface$vertices$lh, ];
-        rh_coords = surface$rh$vertices[per_surface$vertices$rh, ];
-        coords = rbind(lh_coords, rh_coords);
-        if(is.vector(coords)) {
-            coords = matrix(coords, ncol = 3, byrow = TRUE);
-        }
+
+        coords = matrix(rep(NA, (length(vertices)*3L)), ncol = 3L);
+        coords[which(per_surface$vertices_hemi == "lh"),] = surface$lh$vertices[per_surface$vertices$lh, ];
+        coords[which(per_surface$vertices_hemi == "rh"),] = surface$rh$vertices[per_surface$vertices$rh, ];
     } else {
         if(! freesurferformats::is.fs.surface(surface)) {
             stop("Parameter 'surface' must be an fs.surface instance.");

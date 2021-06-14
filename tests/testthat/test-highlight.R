@@ -199,8 +199,9 @@ testthat::test_that("Vertex coordinate computation returns the results in the in
     vertices_ordered = sort(vertices); # c(1L, 50L, 500L, 300000L);
 
     # The coords must be in the input order, i.e., they should differ if passed in different orders.
-    testthat::expect_false(all.equal(vertex.coords(surfaces, vertices), vertex.coords(surfaces, vertices_ordered)));
-
+    testthat::expect_equal(vertex.coords(surfaces, vertices)[1,], vertex.coords(surfaces, vertices_ordered)[1,]);
+    testthat::expect_equal(vertex.coords(surfaces, vertices)[2,], vertex.coords(surfaces, vertices_ordered)[2,]);
+    testthat::expect_equal(vertex.coords(surfaces, vertices)[3,], vertex.coords(surfaces, vertices_ordered)[4,]);
 })
 
 

@@ -7,7 +7,7 @@
 vertex.coords(surface, vertices)
 }
 \arguments{
-\item{surface}{an fs.surface instance, see \code{\link[fsbrain]{subject.surface}} function. Can also be a hemilist of surfaces, in which case the vertices can be indices over both meshes (in range \code{1..(nv(lh)+nv(rh))}).}
+\item{surface}{an fs.surface instance, see \code{\link[fsbrain]{subject.surface}} function. Can also be a hemilist of surfaces, in which case the vertices must be indices over both meshes (in range \code{1..(nv(lh)+nv(rh))}). If a hemilist, both entries must be surfaces (non-NULL).}
 
 \item{vertices}{vector of positive integers, the vertex indices. Values which are outside of the valid indices for the surface will be silently ignored, making it easier to work with the two hemispheres.}
 }
