@@ -188,3 +188,16 @@ test_that("We can compute vertex coordinates over both hemispheres.", {
     testthat::expect_error(vertex.coords(surfaces, vertices = c(50L, 500000L)));
 })
 
+
+testthat::test_that("Vertex coordinate computation returns the results in the input order", {
+    testthat::skip_on_cran();
+    fsbrain::download_optional_data();
+    fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
+    surfaces = subject.surface(fsaverage.path(), "fsaverage");
+
+    vertices = c(1L, 50L, 300000L, 500L);
+    vertices_ordered = sort(vertices); # c(1L, 50L, 500L, 300000L);
+    testthat::expect_false(all.equal(vertex.coords(surfaces, vertices), vertex.coords(surfaces, vertices_ordered)));
+
+})
+
