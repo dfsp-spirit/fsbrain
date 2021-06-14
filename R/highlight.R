@@ -230,7 +230,7 @@ highlight.vertices.spheres <- function(surface, vertices, ...) {
 
 #' @title Return coordinates for vertices, supporting entire brain via hemilist.
 #'
-#' @param surface an fs.surface instance, see \code{\link[fsbrain]{subject.surface}} function. Can also be a hemilist of surfaces, in which case the vertices can be indices over both meshes (in range \code{1..(nv(lh)+nv(rh))}).
+#' @param surface an fs.surface instance, see \code{\link[fsbrain]{subject.surface}} function. Can also be a hemilist of surfaces, in which case the vertices must be indices over both meshes (in range \code{1..(nv(lh)+nv(rh))}). If a hemilist, both entries must be surfaces (non-NULL).
 #'
 #' @param vertices vector of positive integers, the vertex indices. Values which are outside of the valid indices for the surface will be silently ignored, making it easier to work with the two hemispheres.
 #'
@@ -241,6 +241,12 @@ highlight.vertices.spheres <- function(surface, vertices, ...) {
 #' @export
 vertex.coords <- function(surface, vertices) {
     if(is.hemilist(surface)) {
+        if(! freesurferformats::is.fs.surface(surface$lh)) {
+            stop("Parameter 'surface' hemilist entry 'lh' must be an fs.surface instance.");
+        }
+        if(! freesurferformats::is.fs.surface(surface$rh)) {
+            stop("Parameter 'surface' hemilist entry 'rh' must be an fs.surface instance.");
+        }
         per_surface = per.hemi.vertex.indices(surface, vertices);
         lh_coords = surface$lh$vertices[per_surface$vertices$lh, ];
         rh_coords = surface$rh$vertices[per_surface$vertices$rh, ];

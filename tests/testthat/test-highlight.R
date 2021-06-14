@@ -197,7 +197,38 @@ testthat::test_that("Vertex coordinate computation returns the results in the in
 
     vertices = c(1L, 50L, 300000L, 500L);
     vertices_ordered = sort(vertices); # c(1L, 50L, 500L, 300000L);
+
+    # The coords must be in the input order, i.e., they should differ if passed in different orders.
     testthat::expect_false(all.equal(vertex.coords(surfaces, vertices), vertex.coords(surfaces, vertices_ordered)));
 
 })
+
+
+testthat::test_that("Per hemi vertex indices can be computed using a hemilist of surfaces", {
+    testthat::skip_on_cran();
+    fsbrain::download_optional_data();
+    fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
+    surfaces = subject.surface(fsaverage.path(), "fsaverage");
+
+    vertices = c(1L, 50L, 300000L, 500L, 163843L, 163842L);
+    per_hemi = fsbrain:::per.hemi.vertex.indices(surfaces, vertices);
+
+    # Check proper length of the return values: the lh and rh entries must sum to the query vertex count.
+    testthat::expect_equal(sum(length(per_hemi$vertices$lh), length(per_hemi$vertices$rh)), length(vertices));
+    testthat::expect_equal(sum(length(per_hemi$query_indices$lh), length(per_hemi$query_indices$rh)), length(vertices));
+
+    testthat::expect_equal(per_hemi$query_indices$lh, c(1, 2, 4, 6));
+    testthat::expect_equal(per_hemi$query_indices$rh, c(3, 5));
+
+    nv_lh = 163842L;
+
+    testthat::expect_equal(per_hemi$vertices$lh, c(1, 50, 500, 163842));
+    testthat::expect_equal(per_hemi$vertices$rh, (c(300000, 163843)-nv_lh));
+
+    testthat::expect_equal(per_hemi$vertices_hemi, c("lh", "lh", "rh", "lh", "rh", "lh"));
+
+})
+
+
+
 
