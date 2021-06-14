@@ -139,8 +139,8 @@ test_that("We can compute vertex coordinates over a single hemisphere.", {
     surfaces = subject.surface(fsaverage.path(), "fsaverage");
 
     # Check that return value is always matrix, even for single coords.
-    testthat::expect_true(is.matrix(vertex.coords(surfaces, vertices = 1L)));
-    testthat::expect_true(is.matrix(vertex.coords(surfaces, vertices = c(1L, 3L))));
+    testthat::expect_true(is.matrix(vertex.coords(surfaces$lh, vertices = 1L)));
+    testthat::expect_true(is.matrix(vertex.coords(surfaces$rh, vertices = c(1L, 3L))));
 
     # Check correct coord values for single hemi: lh
     testthat::expect_equal(vertex.coords(surfaces$lh, vertices = 1L), matrix(surfaces$lh$vertices[1L, ], ncol = 3, byrow = TRUE));
@@ -154,5 +154,37 @@ test_that("We can compute vertex coordinates over a single hemisphere.", {
     testthat::expect_equal(vertex.coords(surfaces$rh, vertices = c(50L, 1L)), surfaces$rh$vertices[c(50L, 1L), ]);
 
     # Out of bounds indices lead to warning (and filtering)
-    testthat::expect_warning(vertex.coords(surfaces$rh, vertices = c(50L, 500000L)));
+    testthat::expect_error(vertex.coords(surfaces$rh, vertices = c(50L, 500000L)));
 })
+
+
+test_that("We can compute vertex coordinates over both hemispheres.", {
+    testthat::skip_on_cran();
+    fsbrain::download_optional_data();
+    fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
+
+    surfaces = subject.surface(fsaverage.path(), "fsaverage");
+    nv_lh = 163842L;
+
+    # Check that return value is always matrix, even for single coords.
+    testthat::expect_true(is.matrix(vertex.coords(surfaces, vertices = 1L)));
+    testthat::expect_true(is.matrix(vertex.coords(surfaces, vertices = c(1L, 3L))));
+
+    # Check correct coord values for single hemi: lh
+    testthat::expect_equal(vertex.coords(surfaces$lh, vertices = 1L), matrix(surfaces$lh$vertices[1L, ], ncol = 3, byrow = TRUE));
+    testthat::expect_equal(vertex.coords(surfaces$lh, vertices = c(1L, 50L)), surfaces$lh$vertices[c(1L,50L), ]);
+    # ... and that these are the same when passing a hemilist:
+    testthat::expect_equal(vertex.coords(surfaces, vertices = 1L), matrix(surfaces$lh$vertices[1L, ], ncol = 3, byrow = TRUE));
+    testthat::expect_equal(vertex.coords(surfaces, vertices = c(1L, 50L)), surfaces$lh$vertices[c(1L,50L), ]);
+
+    # Check correct coord values for the right hemi when passing a hemilist
+    testthat::expect_equal(vertex.coords(surfaces, vertices = (1L+nv_lh)), matrix(surfaces$rh$vertices[1L, ], ncol = 3, byrow = TRUE));
+    testthat::expect_equal(vertex.coords(surfaces, vertices = c((1L+nv_lh), (50L+nv_lh))), surfaces$rh$vertices[c(1L,50L), ]);
+
+    # Check correct coord values for single hemi: rh, but unordered
+    testthat::expect_equal(vertex.coords(surfaces, vertices = c((50L+nv_lh), (1L+nv_lh))), surfaces$rh$vertices[c(50L, 1L), ]);
+
+    # Out of bounds indices lead to error
+    testthat::expect_error(vertex.coords(surfaces, vertices = c(50L, 500000L)));
+})
+

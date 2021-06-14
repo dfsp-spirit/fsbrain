@@ -244,21 +244,24 @@ vertex.coords <- function(surface, vertices) {
         lh_coords = surface$lh$vertices[per_surface$vertices$lh, ];
         rh_coords = surface$rh$vertices[per_surface$vertices$rh, ];
         coords = rbind(lh_coords, rh_coords);
+        if(is.vector(coords)) {
+            coords = matrix(coords, ncol = 3, byrow = TRUE);
+        }
     } else {
         if(! freesurferformats::is.fs.surface(surface)) {
             stop("Parameter 'surface' must be an fs.surface instance.");
         }
-        # Filter invalid vertex indices. Makes it easier to work per hemisphere.
+        # Error on invalid vertex indices.
         vertices_filtered = vertices[which(vertices > 0L & vertices <= nrow(surface$vertices))];
         if(length(vertices_filtered) != length(vertices)) {
-            warning(sprintf("Ignoring %d out of bounds vertex indices.\n", (length(vertices) - length(vertices_filtered))));
+            message(sprintf("Found %d out of bounds vertex indices.\n", (length(vertices) - length(vertices_filtered))));
         }
         coords = surface$vertices[vertices_filtered, ];
     }
     if(is.vector(coords)) {
         coords = matrix(coords, ncol = 3, byrow = TRUE);
     }
-    return(coords);
+    return(unname(coords));
 }
 
 
