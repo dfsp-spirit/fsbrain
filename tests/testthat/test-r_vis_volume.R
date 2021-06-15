@@ -123,12 +123,12 @@ test_that("Axes are derived from a plane definition as expected", {
 test_that("A brain volume and an overlay can be merged", {
     testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
     testthat::skip_on_travis(); # Reduce test time on travis to prevent the build from being killed.
-    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
-    skip_if_not(box.can.run.all.tests(), "This test requires X11 and the 'magick' package (ImageMagick for R).");
+    testthat::skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+    testthat::skip_if_not(box.can.run.all.tests(), "This test requires X11 and the 'magick' package (ImageMagick for R).");
 
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
-    skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
+    testthat::skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
 
     subject_id = "subject1";
     brain = subject.volume(subjects_dir, subject_id, 'brain') / 255;

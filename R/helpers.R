@@ -297,6 +297,18 @@ path.colors.from.orientation <- function(coords_list, use_three_colors_only = FA
 scale.to.range.zero.one <- function(x, ...){(x - min(x, ...)) / (max(x, ...) - min(x, ...))}
 
 
+#' @title Scale given values to range 0..1.
+#'
+#' @param x the numeric data
+#'
+#' @param ... the numeric data
+#'
+#' @return the scaled data
+#'
+#' @export
+scale01 <- function(x, ...) { scale.to.range.zero.one(x, ...) }
+
+
 #' @title Given a list of path coordinates, create matrix containing only the first and last point of each path.
 #'
 #' @inheritParams vis.paths

@@ -896,3 +896,44 @@ vol.overlay.colors.from.colortable <- function(volume, colortable, ignored_struc
 }
 
 
+
+#' @title Show 3D voxel stats overlay as a lightbox, optionally with a background brain volume.
+#'
+#' @param stats numerical 3D array, the activation data or stats to show
+#'
+#' @param background numerical 3D array or 3D array of color strings, the background brain volume. Dimensions must match those of 'stats' array if given.
+#'
+#' @param colFn a colormap function, passed to vol.overlay.colors.from.activation
+#'
+#' @param no_act_source_value numerical value, passed to vol.overlay.colors.from.activation
+#'
+#' @param ... extra parameters to be passed to \code{volvis.lightbox}.
+#'
+#' @export
+volvis.stats <- function(stats, background=NULL, colFn=squash::blueorange, no_act_source_value = 0, ...) {
+
+    if(! is.array(stats) && length(dim(stats)) == 3L) {
+        stop("Parameter 'stats' must be a 3D array.");
+    }
+
+    overlay_colors = vol.overlay.colors.from.activation(stats, colormap_fn = colFn, no_act_source_value = no_act_source_value);
+
+    if(! is.null(background)) {
+        if(! is.array(background) && length(dim(background)) == 3L) {
+            stop("Parameter 'background' must be a 3D array (or NULL if you do not want any background).");
+        }
+        if(dim(stats) != dim(background)) {
+            stop(sprintf("The dimensions of the stats and background parameters must be identical, but they are %s versus %s.", paste(dim(stats), collapse = ", "), paste(dim(background), collapse = ", ")));
+        }
+        if(is.numeric(background)) {
+            background = scale01(background);
+        }
+    } else {
+        # use black background
+        bg_col = #000000"; # should get this from function parameters to allow customization.
+        background = array(rep(bg_col, sum(dim(stats))), dim = dim(stats));
+    }
+
+    color_vol = vol.merge(background, overlay_colors, bbox_threshold = NULL);
+    return(volvis.lightbox(color_vol));
+}
