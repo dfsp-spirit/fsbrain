@@ -227,7 +227,7 @@ test_that("A brain volume can be visualized as a lightbox colored from the aseg"
 
     colortable = freesurferformats::read.fs.colortable(file.path(fsaverage_subject_dir, 'fsaverage', 'ext', 'FreeSurferColorLUT.txt'));
     overlay_colors = vol.overlay.colors.from.colortable(aseg, colortable);
-    colored_brain = vol.merge(brain/255, overlay_colors); # will also apply bounding box by default
+    colored_brain = vol.merge(scale01(brain), overlay_colors); # will also apply bounding box by default
 
 
     # Now test that the merged image can be visualized as a lightbox:

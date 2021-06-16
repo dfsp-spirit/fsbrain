@@ -4,10 +4,12 @@
 \alias{extract.volume.3D}
 \title{Try to extract a 3D volume from the input argument.}
 \usage{
-extract.volume.3D(stats)
+extract.volume.3D(stats, silent = getOption("fsbrain.silent", default = FALSE))
 }
 \arguments{
 \item{stats}{a 3D array, 4D array or a string that can be treated as a filename to a volume image containing such an array.}
+
+\item{silent}{logical, whether to suppress file reading messages.}
 }
 \value{
 the obtained 3D array
