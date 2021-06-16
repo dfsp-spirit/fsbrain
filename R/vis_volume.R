@@ -326,7 +326,7 @@ vol.imagestack <- function(volume, axis=1L, intensity_scale=255) {
 #'
 #' @param colormap_fn function, a colormap function
 #'
-#' @param no_act_source_value numerical scalar, the value from the data in 'volume' that means no activation. The output colors for this value will be set to `NA`.
+#' @param no_act_source_value numerical scalar, the value from the data in 'volume' that means no activation. The output colors for this value will be set to `NA`. Set to NULL to not change anything.
 #'
 #' @return a 3D matrix of color strings, with the same dimensions as the input volume
 #'
@@ -338,8 +338,10 @@ vol.imagestack <- function(volume, axis=1L, intensity_scale=255) {
 #' @export
 vol.overlay.colors.from.activation <- function(volume, colormap_fn=squash::blueorange, no_act_source_value=0) {
     col = squash::cmap(volume, map = squash::makecmap(volume, colFn = colormap_fn));
-    no_act_indices = which(volume == no_act_source_value, arr.ind = TRUE);
-    col[no_act_indices] = NA;
+    if( ! is.null(no_act_source_value)) {
+        no_act_indices = which(volume == no_act_source_value, arr.ind = TRUE);
+        col[no_act_indices] = NA;
+    }
     return(col);
 }
 
@@ -614,7 +616,7 @@ vol.merge <- function(volume, overlay_colors, bbox_threshold=0L, forced_overlay_
 
     # Same for the overlay
     if(is.numeric(overlay_colors)) {
-        warning("Overlay is numerical and will be gray-scale. It may be hard to discern from the background volume.");
+        message("Overlay is numerical and will be gray-scale. It may be hard to discern from the background volume.");
         overlay_colors = vol.intensity.to.color(overlay_colors);
     }
 
@@ -896,44 +898,109 @@ vol.overlay.colors.from.colortable <- function(volume, colortable, ignored_struc
 }
 
 
+#' @title Try to extract a 3D volume from the input argument.
+#'
+#' @description Check whether it already is such an array, whether it is a filename that can be loaded with \code{freesurferformats::read.fs.volume} into such an array, etc.
+#'
+#' @param stats a 3D array, 4D array or a string that can be treated as a filename to a volume image containing such an array.
+#'
+#' @note This function stops with an error if the input cannot be returned as a 3D array.
+#'
+#' @return the obtained 3D array
+#'
+#' @keywords internal
+extract.volume.3D <- function(stats) {
+    if(! (is.array(stats) && length(dim(stats)) == 3L)) {
+        if(is.character(stats) && is.vector(stats) && length(stats) == 1L) {
+            if(! file.exists(stats)) {
+                stop(sprintf("Received single character vector '%s', but no such file exists.", stats));
+            }
+            message(sprintf("Reading stats file '%s'...\n", stats));
+            stats = freesurferformats::read.fs.volume(stats, drop_empty_dims = TRUE);
+            if((is.array(stats) && length(dim(stats)) == 4L)) {
+                message("Using first frame of loaded 4D image (assuming time is the 4th dimension in the volume).");
+                stats = stats[,,,1]; # select first frame
+            }
+            if(! ((is.array(stats) && length(dim(stats)) == 3L))) {
+                stop(sprintf("Volume data loaded from file '%s' does not have 3 non-empty dimensions, not a 3D volume.", stats));
+            }
+        } else {
+            stop("Parameter 'stats' must be a 3D array.");
+        }
+    }
+    if((is.array(stats) && length(dim(stats)) == 4L)) {
+        message("Using first frame of input 4D image (assuming time is the 4th dimension in the volume).");
+        stats = stats[,,,1]; # select first frame
+    }
+    if(! (is.array(stats) && length(dim(stats)) == 3L)) {
+        stop("Could not extract 3D volume from input.");
+    } else {
+        return(stats);
+    }
+}
 
-#' @title Show 3D voxel stats overlay as a lightbox, optionally with a background brain volume.
+
+#' @title Show continuous 3D voxel data as a lightbox, optionally with a background brain volume and colormap.
 #'
 #' @param stats numerical 3D array, the activation data or stats to show
 #'
-#' @param background numerical 3D array or 3D array of color strings, the background brain volume. Dimensions must match those of 'stats' array if given.
+#' @param background numerical 3D array or 3D array of color strings, the background brain volume. Dimensions must match those of 'stats' array if given. Can also be a single color name, like '#FEFEFE' but the string then must start with '#' (color names like 'red' are not allowed, they would be treated as file names).
 #'
-#' @param colFn a colormap function, passed to vol.overlay.colors.from.activation
+#' @param colFn a colormap function, passed to \code{vol.overlay.colors.from.activation} and used as colormap for the 'stats' data. Pass NULL to derive gray-scale values from the raw data (only recommended with single-color backgrounds). Note that the colormap is not used for the the background data (if any), which will be shown in grayscale (unless it is a 3D array of color strings).
 #'
-#' @param no_act_source_value numerical value, passed to vol.overlay.colors.from.activation
+#' @param no_act_source_value numerical value, passed to \code{vol.overlay.colors.from.activation}. Specifies the value which is treated as tansparent in the stats parameter data (where you will see the background).
 #'
 #' @param ... extra parameters to be passed to \code{volvis.lightbox}.
 #'
+#' @note This function is not well suited for displaying categorical data like segmentations.
+#'
+#' @examples
+#' \dontrun{
+#' volvis.stats("~/data/study1/subject1/mri/brain.mgz", background = "~/data/study1/subject1/mri/T1.mgz");
+#' volvis.stats("~/data/study1/subject1/mri/brain.mgz", background = "#FEFEFE", background_color="#FEFEFE");
+#' }
+#'
 #' @export
-volvis.stats <- function(stats, background=NULL, colFn=squash::blueorange, no_act_source_value = 0, ...) {
+volvis.stats <- function(stats, background=NULL, colFn=viridis::viridis, no_act_source_value = 0, ...) {
 
-    if(! is.array(stats) && length(dim(stats)) == 3L) {
-        stop("Parameter 'stats' must be a 3D array.");
+    stats = extract.volume.3D(stats);
+
+    #stats = clip.data(stats);
+    #cat(sprintf("stats dim: %s\n", paste(dim(stats), collapse = ", ")));
+
+    if(! is.null(colFn)) {
+        overlay_colors = vol.overlay.colors.from.activation(stats, colormap_fn = colFn, no_act_source_value = no_act_source_value);
+    } else {
+        overlay_colors = scale01(stats);
     }
 
-    overlay_colors = vol.overlay.colors.from.activation(stats, colormap_fn = colFn, no_act_source_value = no_act_source_value);
-
     if(! is.null(background)) {
-        if(! is.array(background) && length(dim(background)) == 3L) {
-            stop("Parameter 'background' must be a 3D array (or NULL if you do not want any background).");
+        if(is.vector(background) && is.character(background) && length(background) == 1L) {
+            if(startsWith(background, "#")) {
+                bg_col = background;
+                background = array(rep(bg_col, sum(dim(stats))), dim = dim(stats));
+            }
         }
-        if(dim(stats) != dim(background)) {
+
+        background = extract.volume.3D(background);
+
+        if(length(dim(stats)) != length(dim(background))) {
             stop(sprintf("The dimensions of the stats and background parameters must be identical, but they are %s versus %s.", paste(dim(stats), collapse = ", "), paste(dim(background), collapse = ", ")));
+        }
+        for(dim_idx in seq_along(dim(stats))) {
+            if(dim(stats)[dim_idx] != dim(background)[dim_idx]) {
+                stop(sprintf("The dimensions of the stats and background parameters must be identical, but they are %s versus %s.", paste(dim(stats), collapse = ", "), paste(dim(background), collapse = ", ")));
+            }
         }
         if(is.numeric(background)) {
             background = scale01(background);
         }
     } else {
         # use black background
-        bg_col = #000000"; # should get this from function parameters to allow customization.
+        bg_col = "#000000"; # should get this from function parameters to allow customization.
         background = array(rep(bg_col, sum(dim(stats))), dim = dim(stats));
     }
 
     color_vol = vol.merge(background, overlay_colors, bbox_threshold = NULL);
-    return(volvis.lightbox(color_vol));
+    return(volvis.lightbox(color_vol, ...));
 }

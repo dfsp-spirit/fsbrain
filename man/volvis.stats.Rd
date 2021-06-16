@@ -15,9 +15,9 @@ volvis.stats(
 \arguments{
 \item{stats}{numerical 3D array, the activation data or stats to show}
 
-\item{background}{numerical 3D array or 3D array of color strings, the background brain volume. Dimensions must match those of 'stats' array if given.}
+\item{background}{numerical 3D array or 3D array of color strings, the background brain volume. Dimensions must match those of 'stats' array if given. Can also be a single color name, like '#FEFEFE' but the string then must start with '#' (color names like 'red' are not allowed, they would be treated as file names).}
 
-\item{colFn}{a colormap function, passed to vol.overlay.colors.from.activation}
+\item{colFn}{a colormap function, passed to vol.overlay.colors.from.activation and used as colormap for the 'stats' data. The background will be shown in grayscale (unless it is a 3D array of color strings).}
 
 \item{no_act_source_value}{numerical value, passed to vol.overlay.colors.from.activation}
 
@@ -25,4 +25,11 @@ volvis.stats(
 }
 \description{
 Show 3D voxel stats overlay as a lightbox, optionally with a background brain volume.
+}
+\examples{
+\dontrun{
+volvis.stats("~/data/study1/subject1/mri/aseg.mgz", background = "~/data/study1/subject1/mri/T1.mgz");
+volvis.stats("~/data/study1/subject1/mri/brain.mgz", background = "#FEFEFE", background_color="#FEFEFE");
+}
+
 }
