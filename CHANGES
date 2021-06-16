@@ -12,6 +12,7 @@ Version 0.5.0
 - Add new entry on vector graphics conversion to the 'fsbrain FAQ' vignette.
 - Add surface.curvatures function that can compute k1 and k2 (requires optional dependency package 'Rvcg').
 - Add functions to write group standard space per-vertex data: write.group.morph.standard and write.group.morph.standard.mf
+- Add new and more convenient volume visualization function: volvis.lb is a convenient wrapper around volvis.lightbox.
 
 
 Version 0.4.3
