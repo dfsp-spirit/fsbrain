@@ -863,7 +863,7 @@ cubes3D.tris <- function(centers, edge_length=1) {
 #'
 #' @param volume numeric 3D array, the values should be integers present in the `struct_index` column of the colortable. All other values will be assigned `NA` as a color.
 #'
-#' @param colortable a colortable, as returned by \code{\link[freesurferformats]{read.fs.colortable}}.
+#' @param colortable a colortable, as returned by \code{\link[freesurferformats]{read.fs.colortable}}, or a character string representing a path to a colortable file.
 #'
 #' @param ignored_struct_indices integer vector, `struct_index` entries in the colortable that should be ignored
 #'
@@ -878,6 +878,14 @@ vol.overlay.colors.from.colortable <- function(volume, colortable, ignored_struc
     }
 
     overlay_colors = array(rep(NA, length(volume)), dim(volume));
+
+    if(is.character(colortable) && length(colortable) == 1L) {
+        if(file.exists(colortable)) {
+            colortable = freesurferformats::read.fs.colortable(colortable);
+        } else {
+            stop(sprintf("Received character string  '%s' for parameter 'colortable', but no such file exists.", colortable));
+        }
+    }
 
     occuring_color_rows = which(colortable$struct_index %in% volume);
 
@@ -942,26 +950,29 @@ extract.volume.3D <- function(stats) {
 
 #' @title Show continuous 3D voxel data as a lightbox, optionally with a background brain volume and colormap.
 #'
+#' @description This function is the main way to visualize 3D volume images that contain raw MRI scans or statistical results.
+#'
 #' @param stats numerical 3D array, the activation data or stats to show
 #'
-#' @param background numerical 3D array or 3D array of color strings, the background brain volume. Dimensions must match those of 'stats' array if given. Can also be a single color name, like '#FEFEFE' but the string then must start with '#' (color names like 'red' are not allowed, they would be treated as file names).
+#' @param background numerical 3D array or 3D array of color strings, the background brain volume. Dimensions must match those of 'stats' array if given. Can also be a single file name as a character string. Can also be a single color name, like '#FEFEFE' but the string then must start with '#' (color names like 'red' are not allowed, they would be treated as file names).
 #'
 #' @param colFn a colormap function, passed to \code{vol.overlay.colors.from.activation} and used as colormap for the 'stats' data. Pass NULL to derive gray-scale values from the raw data (only recommended with single-color backgrounds). Note that the colormap is not used for the the background data (if any), which will be shown in grayscale (unless it is a 3D array of color strings).
 #'
-#' @param no_act_source_value numerical value, passed to \code{vol.overlay.colors.from.activation}. Specifies the value which is treated as tansparent in the stats parameter data (where you will see the background).
+#' @param colortable optional, only makes sense for categorical data. If not NULL, a colortable as returned by \code{\link[freesurferformats]{read.fs.colortable}}, or a character string representing a path to a colortable file.
 #'
-#' @param ... extra parameters to be passed to \code{volvis.lightbox}.
+#' @param no_act_source_value numerical value, passed to \code{vol.overlay.colors.from.activation}. Specifies the value which is treated as transparent in the stats parameter data (where you will see the background). If you need more control, e.g., you want to treat one or morge ranges of values as NA, you should load the stats volume first, modify it as needed, as pass it to this function afterwards. Set this parameter to \code{NULL} to disable it. Ignored if a colortable is used.
 #'
-#' @note This function is not well suited for displaying categorical data like segmentations.
+#' @param ... extra parameters to be passed to \code{\link[fsbrain]{volvis.lightbox}}.
 #'
 #' @examples
 #' \dontrun{
 #' volvis.stats("~/data/study1/subject1/mri/brain.mgz", background = "~/data/study1/subject1/mri/T1.mgz");
 #' volvis.stats("~/data/study1/subject1/mri/brain.mgz", background = "#FEFEFE", background_color="#FEFEFE");
+#' volvis.stats("~/data/study1/subject1/mri/aseg.mgz", background = "~/data/study1/subject1/mri/T1.mgz", colortable = "/opt/freesurfer6/FreeSurferColorLUT.txt", colFn=NULL, axis=2L);
 #' }
 #'
 #' @export
-volvis.stats <- function(stats, background=NULL, colFn=viridis::viridis, no_act_source_value = 0, ...) {
+volvis.stats <- function(stats, background=NULL, colFn=viridis::viridis, colortable=NULL, no_act_source_value = 0, ...) {
 
     stats = extract.volume.3D(stats);
 
@@ -969,9 +980,16 @@ volvis.stats <- function(stats, background=NULL, colFn=viridis::viridis, no_act_
     #cat(sprintf("stats dim: %s\n", paste(dim(stats), collapse = ", ")));
 
     if(! is.null(colFn)) {
+        if(!is.null(colortable)) {
+            stop("Both parameters 'colFn' and 'colortable' are given, only one supported. Set 'colFn' to NULL to use a colortable.");
+        }
         overlay_colors = vol.overlay.colors.from.activation(stats, colormap_fn = colFn, no_act_source_value = no_act_source_value);
     } else {
-        overlay_colors = scale01(stats);
+        if(! is.null(colortable)) {
+            overlay_colors = vol.overlay.colors.from.colortable(stats, colortable);
+        } else {
+            overlay_colors = scale01(stats);
+        }
     }
 
     if(! is.null(background)) {

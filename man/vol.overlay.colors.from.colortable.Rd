@@ -14,7 +14,7 @@ vol.overlay.colors.from.colortable(
 \arguments{
 \item{volume}{numeric 3D array, the values should be integers present in the `struct_index` column of the colortable. All other values will be assigned `NA` as a color.}
 
-\item{colortable}{a colortable, as returned by \code{\link[freesurferformats]{read.fs.colortable}}.}
+\item{colortable}{a colortable, as returned by \code{\link[freesurferformats]{read.fs.colortable}}, or a character string representing a path to a colortable file.}
 
 \item{ignored_struct_indices}{integer vector, `struct_index` entries in the colortable that should be ignored}
 
