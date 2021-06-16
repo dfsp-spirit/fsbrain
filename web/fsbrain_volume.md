@@ -12,6 +12,7 @@ The same can be done for the [axial](https://github.com/dfsp-spirit/fsbrain_gall
 
 You can also add activation data, p-values, [colors from a segmenation like aseg](https://github.com/dfsp-spirit/fsbrain_gallery/raw/master/volume/lightbox_aseg.png) or [aparc+aseg](https://github.com/dfsp-spirit/fsbrain_gallery/raw/master/volume/lightbox_aparc_plus_aseg.png), or whatever, as an overlay from a second volume file. Of course there is no need to plot all slices or every *n*th slice, you can select arbitrary combinations of slice indices to plot.
 
+The function to achieve this is `volvis.lightbox`, or the more convenient replacement `volvis.lb` in newer fsbrain versions (>=0.5.0).
 
 ## Voxel-based 3D renderings
 
