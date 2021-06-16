@@ -51,7 +51,8 @@ download_optional_data <- function() {
                            c(base_path_subject1, 'surf', 'lh.jacobian_white'),
                            c(base_path_subject1, 'surf', 'rh.jacobian_white'),
                            c(base_path_subject1, 'surf', 'lh.sulc.fwhm10.fsaverage.mgh'),
-                           c(base_path_subject1, 'surf', 'rh.sulc.fwhm10.fsaverage.mgh')
+                           c(base_path_subject1, 'surf', 'rh.sulc.fwhm10.fsaverage.mgh'),
+                           c(base_path_subject1, 'mri', 'T1.mgz')
                            );
     base_path_subject2 = c('subjects_dir', 'subject2');
     local_filenames_subject2 = list(c(base_path_subject2, 'label', 'lh.aparc.a2009s.annot'),
@@ -91,11 +92,12 @@ download_optional_data <- function() {
                                     c(base_path_subject2, 'surf', 'lh.pial.max'),
                                     c(base_path_subject2, 'surf', 'rh.pial.max'),
                                     c(base_path_subject1, 'surf', 'lh.volume'),
-                                    c(base_path_subject1, 'surf', 'rh.volume'),
-                                    c(base_path_subject1, 'surf', 'lh.jacobian_white'),
-                                    c(base_path_subject1, 'surf', 'rh.jacobian_white'),
-                                    c(base_path_subject1, 'surf', 'lh.sulc.fwhm10.fsaverage.mgh'),
-                                    c(base_path_subject1, 'surf', 'rh.sulc.fwhm10.fsaverage.mgh')
+                                    c(base_path_subject2, 'surf', 'rh.volume'),
+                                    c(base_path_subject2, 'surf', 'lh.jacobian_white'),
+                                    c(base_path_subject2, 'surf', 'rh.jacobian_white'),
+                                    c(base_path_subject2, 'surf', 'lh.sulc.fwhm10.fsaverage.mgh'),
+                                    c(base_path_subject2, 'surf', 'rh.sulc.fwhm10.fsaverage.mgh'),
+                                    c(base_path_subject2, 'mri', 'T1.mgz')
                                     );
     local_filenames = c(local_filenames_subject1, local_filenames_subject2);
 
@@ -141,7 +143,8 @@ download_optional_data <- function() {
                 '85ad831974e9f5d86d8b000df98a277b', # jacobian
                 '6258b08da232576dd25a05d8359364c2',
                 '42ab1b2e251a3ed84bb586079146e037', # lh.sulc.fwhm10.fsaverage.mgh
-                '089dab3337de5cd6f9fe345908af9707'
+                '089dab3337de5cd6f9fe345908af9707',
+                '24bb590cad3e091c13741b5edce2ea7d'
                 );
 
     md5sums_subject2 = md5sums_subject1; # In our example data, subject2 is actually just a copy of subject1, so the md5 hashes are identical.
@@ -190,7 +193,8 @@ download_optional_data <- function() {
                  'surf/lh.jacobian_white',
                  'surf/rh.jacobian_white',
                  'surf/lh.sulc.fwhm10.fsaverage.mgh',
-                 'surf/rh.sulc.fwhm10.fsaverage.mgh'
+                 'surf/rh.sulc.fwhm10.fsaverage.mgh',
+                 'mri/T1.mgz'
                  );
     ext_urls_subject1 = paste(ext_url_subject_part_subject1, ext_url_parts_each_subject, sep='');
     ext_urls_subject2 = paste(ext_url_subject_part_subject2, ext_url_parts_each_subject, sep='');
