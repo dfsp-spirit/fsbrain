@@ -111,7 +111,7 @@ Continuous integration results:
 <!-- badges: start -->
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/dfsp-spirit/fsbrain?branch=master&svg=true)](https://ci.appveyor.com/project/dfsp-spirit/fsbrain) AppVeyor CI under Windows
 
-[![R-CMD-check](https://github.com/dfsp-spirit/fsbrain/workflows/R-CMD-check/badge.svg)](https://github.com/dfsp-spirit/fsbrain/actions) Note: This always fails because of a warning caused by rgl when running headless.
+[![R-CMD-check](https://github.com/dfsp-spirit/fsbrain/workflows/R-CMD-check/badge.svg)](https://github.com/dfsp-spirit/fsbrain/actions) GitHub Actions, Linux (Note: This always fails because of a warning caused by rgl when running headless.)
 <!-- badges: end -->
 
 ## License
