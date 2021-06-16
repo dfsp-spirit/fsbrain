@@ -109,9 +109,9 @@ devtools::check()
 Continuous integration results:
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/dfsp-spirit/fsbrain/workflows/R-CMD-check/badge.svg)](https://github.com/dfsp-spirit/fsbrain/actions)
-
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/dfsp-spirit/fsbrain?branch=master&svg=true)](https://ci.appveyor.com/project/dfsp-spirit/fsbrain) AppVeyor CI under Windows
+
+[![R-CMD-check](https://github.com/dfsp-spirit/fsbrain/workflows/R-CMD-check/badge.svg)](https://github.com/dfsp-spirit/fsbrain/actions) GitHub Actions, Ubuntu Linux and MacOS (Note: Currently this always fails because of a warning caused by rgl when running headless, so the badge is rather useless atm and one needs to follow the link to see the relevant CI results.)
 <!-- badges: end -->
 
 ## License
