@@ -40,6 +40,8 @@ This function should be preferred over manually calling \code{\link[fsbrain]{vol
 }
 \examples{
 \dontrun{
+volume = subject.volume(subjects_dir, subject_id, 'brain');
+volvis.lb(volume);
 volvis.lb("~/data/study1/subject1/mri/brain.mgz");
 volvis.lb("~/data/study1/subject1/mri/brain.mgz", bbox_threshold = 1L);
 volvis.lb("~/data/study1/subject1/mri/brain.mgz", background = "~/data/study1/subject1/mri/T1.mgz");
