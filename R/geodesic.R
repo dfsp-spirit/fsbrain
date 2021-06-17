@@ -273,6 +273,12 @@ geodesic.dists.to.vertex <- function(mesh, v) {
 #'
 #' @keywords internal
 ensure.tmesh3d <- function(mesh) {
+    if(is.character(mesh) && length(mesh) == 1L) { # treat as filename}
+        if(file.exists(mesh)) {
+            mesh = freesurferformats::read.fs.surface(mesh);
+        }
+    }
+
     if(freesurferformats::is.fs.surface(mesh)) {
         return(fs.surface.to.tmesh3d(mesh));
     } else if ("mesh3d" %in% class(mesh)) {
