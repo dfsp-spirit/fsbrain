@@ -265,7 +265,7 @@ geodesic.dists.to.vertex <- function(mesh, v) {
 
 #' @title Ensure the mesh is a tmesh3d instance. Will convert fs.surfaces to one automatically.
 #'
-#' @param mesh whatever, but hopefully an \code{rgl::tmesh3d} or \code{freesurferformats::fs.surface} instance.
+#' @param mesh whatever, but hopefully an \code{rgl::tmesh3d} or \code{freesurferformats::fs.surface} instance. Can be a character string, which will be loaded as a surface file if it exists.
 #'
 #' @return tmesh3d instance, the input or converted from the input.
 #'
@@ -386,37 +386,86 @@ subject.descriptor.geodesic.average.distance <- function(subjects_dir, subject_i
 }
 
 
-#' #' @title Testing stuff, ignore this.
-#' #'
-#' #' @param direction 1 or -1, direction along axis for normals/rays
-#' #'
-#' #' @examples
-#' #' \dontrun{
-#' #' surface.outline.2d(fsaverage.path(TRUE), "fsaverage");
-#' #' }
-#' #'
-#' #' @keywords internal
-#' surface.outline.2d <- function(subjects_dir, subject_id, coord_x = 10.0, direction=1L) {
-#'     tm = subject.surface(subjects_dir, subject_id, hemi = "lh", as_tm = T);
-#'     lf = coord_x; # look from
-#'     search_points = matrix(c(lf, 1.0, 1.0, lf, 1, 0, lf, 1, 1, lf, -1, -1, lf, -1, 0), ncol=3, byrow = T);
-#'     search_point_normals = search_points;
-#'     search_point_normals[,1] = search_points[,1] + direction;
+# #' @title Testing stuff, ignore this.
+# #'
+# #' @param direction 1 or -1, direction along axis for normals/rays
+# #'
+# #' @examples
+# #' \dontrun{
+# #' surface.outline.2d(fsaverage.path(TRUE), "fsaverage");
+# #' }
+# #'
+# #' @keywords internal
+# surface.outline.2d <- function(subjects_dir, subject_id, coord_x = 10.0, direction=1L) {
+#     tm = subject.surface(subjects_dir, subject_id, hemi = "lh", as_tm = T);
+#     lf = coord_x; # look from
+#     search_points = matrix(c(lf, 1.0, 1.0, lf, 1, 0, lf, 1, 1, lf, -1, -1, lf, -1, 0), ncol=3, byrow = T);
+#     search_point_normals = search_points;
+#     search_point_normals[,1] = search_points[,1] + direction;
+#
+#     grid = Rvcg::setRays(search_points, search_point_normals);
+#     matches = Rvcg::vcgRaySearch(grid, tm);
+#
+#     # Visualize and mark hit points with small red spheres.
+#     rgl::open3d();
+#     rgl::shade3d(tm, col="white");
+#     rgl::spheres3d(t(matches$vb[1:3,]), color = "red");
+#
+#     # Mark source grid
+#     rgl::spheres3d(search_points, color = "green");
+#     rgl::spheres3d(search_point_normals, color = "blue");
+# }
+
+
+#' @title Compute geodesic path from a source vertex to one or more target vertices.
 #'
-#'     grid = Rvcg::setRays(search_points, search_point_normals);
-#'     matches = Rvcg::vcgRaySearch(grid, tm);
+#' @param surface an \code{rgl::tmesh3d} or \code{freesurferformats::fs.surface} instance. Can be a character string, which will be loaded as a surface file if it exists.
 #'
-#'     # Visualize and mark hit points with small red spheres.
-#'     rgl::open3d();
-#'     rgl::shade3d(tm, col="white");
-#'     rgl::spheres3d(t(matches$vb[1:3,]), color = "red");
+#' @param source_vertex a scalar positive integer, the source vertex index in the mesh
 #'
-#'     # Mark source grid
-#'     rgl::spheres3d(search_points, color = "green");
-#'     rgl::spheres3d(search_point_normals, color = "blue");
+#' @param target_vertices single integer or vector of integers, the target vertices to which to compute the paths from the source_vertex.
+#'
+#' @note This can take a while for large graphs. This requires the optional dependency packages 'Rvcg' and 'igraph'. The backtracking is currently done in R, which is not optimal from a performance perspective.
+#'
+#' @examples
+#' \dontrun{
+#'   sjd = fsaverage.path(TRUE);
+#'   surface = subject.surface(sjd, 'fsaverage3',
+#'     surface = "white", hemi = "lh");
+#'   p = geodesic.path(surface, 5, c(10, 20));
 #' }
-
-
+#'
+#' @return list of integer vectors, the paths
+geodesic.path <- function(surface, source_vertex, target_vertices) {
+    g = fs.surface.to.igraph(surface);
+    surface = fsbrain:::ensure.tmesh3d(surface);
+    if(length(source_vertex) != 1L) {
+        stop("Must give exactly 1 vertex index as parameter 'source_vertex'.");
+    }
+    dists = fsbrain:::geodesic.dists.to.vertex(surface, source_vertex);
+    paths = list();
+    surface_adj = fs.surface.as.adjacencylist(g); # we may be better of computing neighbors only for the very few path vertices.
+    num_verts = igraph::vcount(g);
+    for(target_idx in seq_along(target_vertices)) {
+        target_vertex = target_vertices[target_idx];
+        current_vertex = target_vertex;
+        path = current_vertex;
+        #visited = rep(FALSE, num_verts);
+        visited = c();
+        while(current_vertex != source_vertex) {
+            #visited[current_vertex] = TRUE;
+            visited = c(visited, current_vertex);
+            neigh = surface_adj[[current_vertex]]; # graph 1-node neighborhood
+            neigh_unvisited = neigh[which(!(neigh %in% visited))];
+            neigh_source_dists = dists[neigh_unvisited];     # geodesic distance of neighbors to source vertex
+            closest_to_source = neigh_unvisited[which.min(neigh_source_dists)]; # greedily jump to closest one
+            path = c(path, closest_to_source);
+            current_vertex = closest_to_source;
+        }
+        paths[[target_idx]] = rev(path);
+    }
+    return(paths);
+}
 
 
 

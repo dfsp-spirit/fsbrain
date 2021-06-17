@@ -7,7 +7,7 @@
 ensure.tmesh3d(mesh)
 }
 \arguments{
-\item{mesh}{whatever, but hopefully an \code{rgl::tmesh3d} or \code{freesurferformats::fs.surface} instance.}
+\item{mesh}{whatever, but hopefully an \code{rgl::tmesh3d} or \code{freesurferformats::fs.surface} instance. Can be a character string, which will be loaded as a surface file if it exists.}
 }
 \value{
 tmesh3d instance, the input or converted from the input.
