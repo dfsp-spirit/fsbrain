@@ -2,7 +2,7 @@
 
 #' @title Create igraph undirected graph from a brain surface mesh.
 #'
-#' @param surface an fs.surface instance as returned by \code{subject.surface}, or a string which is interpreted as a path to a surface file.
+#' @param surface an fs.surface instance as returned by \code{subject.surface}, an existing igraph (which will be returned as-is) or a string which is interpreted as a path to a surface file.
 #'
 #' @return igraph::graph instance
 #'
@@ -16,8 +16,11 @@
 #'
 #' @export
 fs.surface.to.igraph <- function(surface) {
-    surface = ensure.fs.surface(surface);
     if(requireNamespace("igraph", quietly = TRUE)) {
+        if(igraph::is.igraph(surface)) {
+            return(surface);
+        }
+        surface = ensure.fs.surface(surface);
         el = rbind(surface$faces[,1:2], surface$faces[,2:3])
         return(igraph::graph_from_edgelist(el, directed = FALSE));
     } else {
@@ -35,9 +38,11 @@ fs.surface.to.igraph <- function(surface) {
 #'
 #' @param order integer, the max graph distance of vertices to consider neighbors (number of neighborhood rings). Passed on to \code{igraph::neighborhood}
 #'
-#' @param simplify logical, whether to return only an integer vector if the 'nodes' parameter has length 1.s
+#' @param simplify logical, whether to return only an integer vector if the 'nodes' parameter has length 1 (instead of a list where the first element is such a vector).
 #'
 #' @note If you intend to call several functions on the igraph, it is faster to construct it with \code{fs.surface.to.igraph} and keep it.
+#'
+#' @seealso The \code{igraph::as_adj_list} function computes the 1-ring neighborhood for the whole graph.
 #'
 #' @return named list of integer vectors (see \code{igraph::neighborhood}), unless 'simplify' is TRUE, see there for details.
 #'
@@ -45,7 +50,7 @@ fs.surface.vertex.neighbors <- function(surface, nodes, order = 1L, simplify = T
     if(requireNamespace("igraph", quietly = TRUE)) {
         g = fs.surface.to.igraph(surface);
         res = igraph::neighborhood(g, order = order, nodes = nodes, mode = "all");
-        if(simplify & length(nodes) == 1L) {
+        if(simplify && length(nodes) == 1L) {
             return(as.integer(unlist(res)));
         }
         return(res);

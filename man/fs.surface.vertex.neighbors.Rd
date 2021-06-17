@@ -7,13 +7,13 @@
 fs.surface.vertex.neighbors(surface, nodes, order = 1L, simplify = TRUE)
 }
 \arguments{
-\item{surface}{an fs.surface instance as returned by \code{subject.surface}, or a string which is interpreted as a path to a surface file.}
+\item{surface}{an fs.surface instance as returned by \code{subject.surface}, an existing igraph (which will be returned as-is) or a string which is interpreted as a path to a surface file.}
 
 \item{nodes}{the source vertex. Passed on to \code{igraph::neighborhood}}
 
 \item{order}{integer, the max graph distance of vertices to consider neighbors (number of neighborhood rings). Passed on to \code{igraph::neighborhood}}
 
-\item{simplify}{logical, whether to return only an integer vector if the 'nodes' parameter has length 1.s}
+\item{simplify}{logical, whether to return only an integer vector if the 'nodes' parameter has length 1 (instead of a list where the first element is such a vector).}
 }
 \value{
 named list of integer vectors (see \code{igraph::neighborhood}), unless 'simplify' is TRUE, see there for details.
@@ -23,4 +23,7 @@ This is a faster replacement for \code{mesh.vertex.neighbors} that requires the 
 }
 \note{
 If you intend to call several functions on the igraph, it is faster to construct it with \code{fs.surface.to.igraph} and keep it.
+}
+\seealso{
+The \code{igraph::as_adj_list} function computes the 1-ring neighborhood for the whole graph.
 }
