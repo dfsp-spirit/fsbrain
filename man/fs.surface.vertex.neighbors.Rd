@@ -25,5 +25,5 @@ This is a faster replacement for \code{mesh.vertex.neighbors} that requires the 
 If you intend to call several functions on the igraph, it is faster to construct it with \code{fs.surface.to.igraph} and keep it.
 }
 \seealso{
-The \code{igraph::as_adj_list} function computes the 1-ring neighborhood for the whole graph.
+The \code{fs.surface.as.adjacencylist} function computes the 1-ring neighborhood for the whole graph.
 }

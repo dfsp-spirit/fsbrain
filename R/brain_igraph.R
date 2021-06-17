@@ -42,10 +42,11 @@ fs.surface.to.igraph <- function(surface) {
 #'
 #' @note If you intend to call several functions on the igraph, it is faster to construct it with \code{fs.surface.to.igraph} and keep it.
 #'
-#' @seealso The \code{igraph::as_adj_list} function computes the 1-ring neighborhood for the whole graph.
+#' @seealso The \code{fs.surface.as.adjacencylist} function computes the 1-ring neighborhood for the whole graph.
 #'
 #' @return named list of integer vectors (see \code{igraph::neighborhood}), unless 'simplify' is TRUE, see there for details.
 #'
+#' @export
 fs.surface.vertex.neighbors <- function(surface, nodes, order = 1L, simplify = TRUE) {
     if(requireNamespace("igraph", quietly = TRUE)) {
         g = fs.surface.to.igraph(surface);
@@ -54,6 +55,23 @@ fs.surface.vertex.neighbors <- function(surface, nodes, order = 1L, simplify = T
             return(as.integer(unlist(res)));
         }
         return(res);
+    } else {
+        stop("This functionality requires the 'igraph' package to be installed.");
+    }
+}
+
+
+#' @title Turn surface mesh into a igraph and return its adjacency list representation.
+#'
+#' @inheritParams fs.surface.to.igraph
+#'
+#' @return list of integer vectors, the adjacency list.
+#'
+#' @export
+fs.surface.as.adjacencylist <- function(surface) {
+    if(requireNamespace("igraph", quietly = TRUE)) {
+        g = fs.surface.to.igraph(surface);
+        return(igraph::as_adj_list(g));
     } else {
         stop("This functionality requires the 'igraph' package to be installed.");
     }
