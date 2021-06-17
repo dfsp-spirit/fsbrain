@@ -177,7 +177,17 @@ annot.outline <- function(annotdata, surface_mesh, background="white", silent=TR
 #'
 #' @family surface mesh functions
 #'
-#' @seealso \code{vis.paths} if you need to draw many paths.
+#' @seealso \code{\link[fsbrain]{vis.paths}} if you need to draw many paths, \code{\link[fsbrain]{geodesic.path}} to compute a geodesic path.
+#'
+#' @examples
+#' \dontrun{
+#'   sjd = fsaverage.path(TRUE);
+#'   surface = subject.surface(sjd, 'fsaverage3',
+#'     surface = "white", hemi = "lh");
+#'   p = geodesic.path(surface, 5, c(10, 20));
+#'   vis.subject.morph.native(sjd, 'fsaverage3', views='si');
+#'   vis.path.along.verts(surface$vertices, p[[1]]);
+#' }
 #'
 #' @export
 #' @importFrom rgl segments3d material3d

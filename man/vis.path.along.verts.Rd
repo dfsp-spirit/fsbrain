@@ -23,8 +23,19 @@ n x 3 matrix, the coordinates of the path, with appropriate ones duplicated for 
 \description{
 To get a nice path along the surface, pass the vertex indices along a geodesic path. Note: You can first open an interactive brain view (`view='si'`) with a vis* function like \code{\link[fsbrain]{vis.subject.morph.native}}, then run this function to draw into the active plot.
 }
+\examples{
+\dontrun{
+  sjd = fsaverage.path(TRUE);
+  surface = subject.surface(sjd, 'fsaverage3',
+    surface = "white", hemi = "lh");
+  p = geodesic.path(surface, 5, c(10, 20));
+  vis.subject.morph.native(sjd, 'fsaverage3', views='si');
+  vis.path.along.verts(surface$vertices, p[[1]]);
+}
+
+}
 \seealso{
-\code{vis.paths} if you need to draw many paths.
+\code{\link[fsbrain]{vis.paths}} if you need to draw many paths, \code{\link[fsbrain]{geodesic.path}} to compute a geodesic path.
 
 Other surface mesh functions: 
 \code{\link{face.edges}()},

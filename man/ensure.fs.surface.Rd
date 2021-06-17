@@ -7,7 +7,7 @@
 ensure.fs.surface(surface)
 }
 \arguments{
-\item{surface}{an fs.surface instance which will be returned as-is, or a character string which will be interpreted as a file system path and loaded with \code{freesurferformats::read.fs.surface}. Anything else will stop with an error.}
+\item{surface}{an fs.surface instance which will be returned as-is, a tmesh3d which will be converted to a surface using \code{\link[fsbrain]{tmesh3d.to.fs.surface}}, or a character string which will be interpreted as a file system path and loaded with \code{freesurferformats::read.fs.surface}. Anything else will stop with an error.}
 }
 \value{
 an fs.surface instance, unless an error occurs.

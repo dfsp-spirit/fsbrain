@@ -80,7 +80,7 @@ fs.surface.as.adjacencylist <- function(surface) {
 
 #' @title Check whether parameter is an fs.surface instance.
 #'
-#' @param surface an fs.surface instance which will be returned as-is, or a character string which will be interpreted as a file system path and loaded with \code{freesurferformats::read.fs.surface}. Anything else will stop with an error.
+#' @param surface an fs.surface instance which will be returned as-is, a tmesh3d which will be converted to a surface using \code{\link[fsbrain]{tmesh3d.to.fs.surface}}, or a character string which will be interpreted as a file system path and loaded with \code{freesurferformats::read.fs.surface}. Anything else will stop with an error.
 #'
 #' @return an fs.surface instance, unless an error occurs.
 #'
@@ -90,6 +90,8 @@ ensure.fs.surface <- function(surface) {
         return(surface);
     } else if(is.character(surface)) {
         return(freesurferformats::read.fs.surface(surface));
+    } else if('mesh3d' %in% class(surface)) {
+        return(tmesh3d.to.fs.surface(surface));
     } else {
         stop("Parameter 'surface' must be an fs.surface instance or a character string.");
     }

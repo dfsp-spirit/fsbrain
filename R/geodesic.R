@@ -433,6 +433,8 @@ subject.descriptor.geodesic.average.distance <- function(subjects_dir, subject_i
 #'   surface = subject.surface(sjd, 'fsaverage3',
 #'     surface = "white", hemi = "lh");
 #'   p = geodesic.path(surface, 5, c(10, 20));
+#'   vis.subject.morph.native(sjd, 'fsaverage3', views='si');
+#'   vis.path.along.verts(surface$vertices, p[[1]]);
 #' }
 #'
 #' @return list of integer vectors, the paths

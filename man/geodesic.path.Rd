@@ -26,8 +26,10 @@ This can take a while for large graphs. This requires the optional dependency pa
 \dontrun{
   sjd = fsaverage.path(TRUE);
   surface = subject.surface(sjd, 'fsaverage3',
-    surface = "white", hemi = "lh", as_tm = TRUE);
+    surface = "white", hemi = "lh");
   p = geodesic.path(surface, 5, c(10, 20));
+  vis.subject.morph.native(sjd, 'fsaverage3', views='si');
+  vis.path.along.verts(surface$vertices, p[[1]]);
 }
 
 }

@@ -86,6 +86,21 @@ fs.surface.to.tmesh3d <- function(surface) {
     return(rgl::tmesh3d(c(t(surface$vertices)), c(t(surface$faces)), homogeneous=FALSE));
 }
 
+#' @title Get an fs.surface brain mesh from an rgl tmesh3d instance.
+#'
+#' @param tmesh a tmesh3d instance, see \code{rgl::tmesh3d} for details.
+#'
+#' @return an fs.surface instance, as returned by \code{subject.surface} or \code{freesurferformats::read.fs.surface}.
+#'
+#' @export
+tmesh3d.to.fs.surface <- function(tmesh) {
+    vertices = t(tmesh$vb[1:3,]);
+    faces = t(tmesh$it);
+    surface = list('vertices'=vertices, 'faces'=faces);
+    class(surface) <- c(class(surface), 'fs.surface');
+    return(surface);
+}
+
 
 #' @title Create a coloredmesh from a mesh and pre-defined colors.
 #'
