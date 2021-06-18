@@ -165,13 +165,17 @@ annot.outline <- function(annotdata, surface_mesh, background="white", silent=TR
 
 #' @title Draw a 3D line from vertex to vertex
 #'
-#' @description To get a nice path along the surface, pass the vertex indices along a geodesic path. Note: You can first open an interactive brain view (`view='si'`) with a vis* function like \code{\link[fsbrain]{vis.subject.morph.native}}, then run this function to draw into the active plot.
+#' @description To get a nice path along the surface, pass the vertex indices along a geodesic path. Note: You can first open an interactive brain view (`views='si'`) with a vis* function like \code{\link[fsbrain]{vis.subject.morph.native}}, then run this function to draw into the active plot.
 #'
 #' @param surface_vertices float matrix of size (n, 3), the surface vertex coordinates, as returned as part of \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}, in the member "vertices".
 #'
-#' @param path_vertex_indices vector of vertex indices, the path. You will need to have it computed already. (This function does **not** compute geodesic paths. You can use it to visualize such a path though.) If omitted, the vertex coordinates will be traversed in their given order to create the path.
+#' @param path_vertex_indices vector of vertex indices, the path. You will need to have it computed already. (This function does **not** compute geodesic paths, see \code{\link[fsbrain]{geodesic.path}} for that. You can use it to visualize such a path though.) If omitted, the vertex coordinates will be traversed in their given order to create the path.
 #'
 #' @param do_vis logical, whether to actually draw the path.
+#'
+#' @param color a color string, like '#FF0000' to color the path. Ignored of 'no_material' is TRUE.
+#'
+#' @param no_material logical, whether to use set the custom rendering material properties for path visualization using \code{rgl::material3d} before plotting. If you set this to FALSE, no material will be set and you should set it yourself before calling this function, otherwise the looks of the path are undefined (dependent on the default material on your system, or the last material call). Setting this to TRUE also means that the 'color' argument is ignored of course, as the color is part of the material.
 #'
 #' @return n x 3 matrix, the coordinates of the path, with appropriate ones duplicated for rgl pair-wise segments3d rendering.
 #'
@@ -191,7 +195,7 @@ annot.outline <- function(annotdata, surface_mesh, background="white", silent=TR
 #'
 #' @export
 #' @importFrom rgl segments3d material3d
-vis.path.along.verts <- function(surface_vertices, path_vertex_indices = seq(1L, nrow(surface_vertices)), do_vis = TRUE) {
+vis.path.along.verts <- function(surface_vertices, path_vertex_indices = seq(1L, nrow(surface_vertices)), do_vis = TRUE, color='#FF0000', no_material=FALSE) {
   path_vertex_coords = surface_vertices[path_vertex_indices,];
 
   num_path_points = nrow(path_vertex_coords);
@@ -215,7 +219,9 @@ vis.path.along.verts <- function(surface_vertices, path_vertex_indices = seq(1L,
   }
 
   if(do_vis) {
-      rgl::material3d(size=2.0, lwd=2.0, color=c("red"), point_antialias=TRUE, line_antialias=TRUE);
+      if(! no_material) {
+        rgl::material3d(size=2.0, lwd=2.0, color=color, point_antialias=TRUE, line_antialias=TRUE);
+      }
       rgl::segments3d(path[,1], path[,2], path[,3]);
   }
 
