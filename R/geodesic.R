@@ -425,7 +425,7 @@ subject.descriptor.geodesic.average.distance <- function(subjects_dir, subject_i
 #'
 #' @param target_vertices single integer or vector of integers, the target vertices to which to compute the paths from the source_vertex.
 #'
-#' @note This can take a while for large graphs. This requires the optional dependency packages 'Rvcg' and 'igraph'. The backtracking is currently done in R, which is not optimal from a performance perspective.
+#' @note This can take a bit for very large graphs. This requires the optional dependency packages 'Rvcg' and 'igraph'. The backtracking is currently done in R, which is not optimal from a performance perspective.
 #'
 #' @examples
 #' \dontrun{
@@ -438,6 +438,8 @@ subject.descriptor.geodesic.average.distance <- function(subjects_dir, subject_i
 #' }
 #'
 #' @return list of integer vectors, the paths
+#'
+#' @export
 geodesic.path <- function(surface, source_vertex, target_vertices) {
     g = fs.surface.to.igraph(surface);
     surface = fsbrain:::ensure.tmesh3d(surface);
@@ -449,13 +451,11 @@ geodesic.path <- function(surface, source_vertex, target_vertices) {
     surface_adj = fs.surface.as.adjacencylist(g); # we may be better of computing neighbors only for the very few path vertices.
     num_verts = igraph::vcount(g);
     for(target_idx in seq_along(target_vertices)) {
-        target_vertex = target_vertices[target_idx];
+        target_vertex = target_vertices[target_idx]; # Backtracking part of Dijkstra algo to obtain the path from the dist map.
         current_vertex = target_vertex;
         path = current_vertex;
-        #visited = rep(FALSE, num_verts);
         visited = c();
         while(current_vertex != source_vertex) {
-            #visited[current_vertex] = TRUE;
             visited = c(visited, current_vertex);
             neigh = surface_adj[[current_vertex]]; # graph 1-node neighborhood
             neigh_unvisited = neigh[which(!(neigh %in% visited))];
