@@ -34,8 +34,14 @@ fup <- function(word) {
 #'
 #' @export
 mesh.vertex.neighbors <- function(surface, source_vertices, k=1L, restrict_to_vertices=NULL) {
+    if(! freesurferformats::is.fs.surface(surface)) {
+      stop("Parameter 'surface' must be an fs.surface instance.");
+    }
     if(k < 1L) {
       stop("Parameter k must be a positive integer.");
+    }
+    if(length(source_vertices) < 1L) {
+      stop("Parameter 'source_vertices' must not be empty.");
     }
     vertex_indices = source_vertices;
     if(is.null(restrict_to_vertices)) {
@@ -56,7 +62,7 @@ mesh.vertex.neighbors <- function(surface, source_vertices, k=1L, restrict_to_ve
           break; # Neighborhood is already covering the whole mesh / allowed area.
       }
     }
-    return(list("vertices"=vertex_indices, "faces"=face_indices))
+    return(list("vertices"=vertex_indices, "faces"=face_indices));
 }
 
 

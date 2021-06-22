@@ -442,11 +442,64 @@ subject.descriptor.geodesic.average.distance <- function(subjects_dir, subject_i
 #' @export
 geodesic.path <- function(surface, source_vertex, target_vertices) {
     g = fs.surface.to.igraph(surface);
-    surface = fsbrain:::ensure.tmesh3d(surface);
+    tmesh = fsbrain:::ensure.tmesh3d(surface);
     if(length(source_vertex) != 1L) {
         stop("Must give exactly 1 vertex index as parameter 'source_vertex'.");
     }
-    dists = fsbrain:::geodesic.dists.to.vertex(surface, source_vertex);
+    dists = fsbrain:::geodesic.dists.to.vertex(tmesh, source_vertex);
+    paths = list();
+    #surface_adj = fs.surface.as.adjacencylist(g); # we may be better of computing neighbors only for the very few path vertices.
+    num_verts = igraph::vcount(g);
+    for(target_idx in seq_along(target_vertices)) {
+        target_vertex = target_vertices[target_idx]; # Backtracking part of Dijkstra algo to obtain the path from the dist map.
+        current_vertex = target_vertex;
+        path = current_vertex;
+        visited = c();
+        while(current_vertex != source_vertex) {
+            visited = c(visited, current_vertex);
+            #neigh = surface_adj[[current_vertex]]; # graph 1-node neighborhood
+            neigh = mesh.vertex.neighbors(surface, source_vertices = current_vertex)$vertices;
+            neigh_unvisited = neigh[which(!(neigh %in% visited))];
+            neigh_source_dists = dists[neigh_unvisited];     # geodesic distance of neighbors to source vertex
+            closest_to_source = neigh_unvisited[which.min(neigh_source_dists)]; # greedily jump to closest one
+            path = c(path, closest_to_source);
+            current_vertex = closest_to_source;
+        }
+        paths[[target_idx]] = rev(path);
+    }
+    return(paths);
+}
+
+#' @title Compute geodesic path from a source vertex to one or more target vertices.
+#'
+#' @param surface an \code{rgl::tmesh3d} or \code{freesurferformats::fs.surface} instance. Can be a character string, which will be loaded as a surface file if it exists.
+#'
+#' @param source_vertex a scalar positive integer, the source vertex index in the mesh
+#'
+#' @param target_vertices single integer or vector of integers, the target vertices to which to compute the paths from the source_vertex.
+#'
+#' @note This can take a bit for very large graphs. This requires the optional dependency packages 'Rvcg' and 'igraph'. The backtracking is currently done in R, which is not optimal from a performance perspective.
+#'
+#' @examples
+#' \dontrun{
+#'   sjd = fsaverage.path(TRUE);
+#'   surface = subject.surface(sjd, 'fsaverage3',
+#'     surface = "white", hemi = "lh");
+#'   p = geodesic.path(surface, 5, c(10, 20));
+#'   vis.subject.morph.native(sjd, 'fsaverage3', views='si');
+#'   vis.path.along.verts(surface$vertices, p[[1]]);
+#' }
+#'
+#' @return list of integer vectors, the paths
+#'
+#' @export
+geodesic.path2 <- function(surface, source_vertex, target_vertices) {
+    g = fs.surface.to.igraph(surface);
+    tmesh = fsbrain:::ensure.tmesh3d(surface);
+    if(length(source_vertex) != 1L) {
+        stop("Must give exactly 1 vertex index as parameter 'source_vertex'.");
+    }
+    dists = fsbrain:::geodesic.dists.to.vertex(tmesh, source_vertex);
     paths = list();
     surface_adj = fs.surface.as.adjacencylist(g); # we may be better of computing neighbors only for the very few path vertices.
     num_verts = igraph::vcount(g);
