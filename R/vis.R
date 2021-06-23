@@ -716,7 +716,7 @@ vis.region.values.on.subject <- function(subjects_dir, subject_id, atlas, lh_reg
 #'
 #' @description Render a mesh. All mesh formats supported by the *freesurferformats* package are supported, including OFF, PLY, OBJ, STL, and many more.
 #'
-#' @param fs_surface an fs.surface instance, as returned by function like \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}. If a character string, it is assumed to be the full path of a surface file, and the respective file is loaded with \code{\link[freesurferformats]{read.fs.surface}}. If parameter 'hemi' is 'both', this must be a hemilist.
+#' @param fs_surface an fs.surface instance, as returned by function like \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}. If a character string, it is assumed to be the full path of a surface file, and the respective file is loaded with \code{\link[freesurferformats]{read.fs.surface}}. If parameter 'hemi' is 'both', this must be a hemilist. A single \code{rgl::tmesh} is also fine.
 #'
 #' @param col vector of colors, the per-vertex-colors. Defaults to white. Must be a single color or one color per vertex. If parameter 'hemi' is 'both', this must be a hemilist.
 #'
@@ -768,6 +768,8 @@ vis.fs.surface <- function(fs_surface, col="white", per_vertex_data=NULL, hemi="
     } else {
         if(is.character(fs_surface)) {
             fs_surface = freesurferformats::read.fs.surface(fs_surface);
+        } else if("mesh3d" in class(fs_surface)) {
+            fs_surface = tmesh3d.to.fs.surface(fs_surface);
         }
     }
     cm_list = list();
