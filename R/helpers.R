@@ -173,7 +173,7 @@ annot.outline <- function(annotdata, surface_mesh, background="white", silent=TR
 #'
 #' @description To get a nice path along the surface, pass the vertex indices along a geodesic path. Note: You can first open an interactive brain view (`views='si'`) with a vis* function like \code{\link[fsbrain]{vis.subject.morph.native}}, then run this function to draw into the active plot.
 #'
-#' @param surface_vertices float matrix of size (n, 3), the surface vertex coordinates, as returned as part of \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}, in the member "vertices".
+#' @param surface_vertices float matrix of size (n, 3), the surface vertex coordinates, as returned as part of \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}, in the member "vertices". Can also be a \code{freesurferformats::fs.surface} or \code{rgl::tmesh3d} instance, in which case the coordinates are extracted automatically.
 #'
 #' @param path_vertex_indices vector of vertex indices, the path. You will need to have it computed already. (This function does **not** compute geodesic paths, see \code{\link[fsbrain]{geodesic.path}} for that. You can use it to visualize such a path though.) If omitted, the vertex coordinates will be traversed in their given order to create the path.
 #'
@@ -247,6 +247,26 @@ vis.path.along.verts <- function(surface_vertices, path_vertex_indices = NULL, d
 
   return(invisible(path));
 }
+
+
+#' @title Visualize several paths in different colors.
+#'
+#' @inheritParams vis.paths.along.verts
+#'
+#' @param paths list of positive integer vectors, the vertex indices of the paths
+#'
+#' @export
+vis.paths.along.verts <- function(surface_vertices, paths, color=viridis::viridis(length(paths))) {
+    if(! is.list(paths)) {
+        stop("Parameter 'paths' must be a list of integer vectors.");
+    }
+    color = recycle(color, length(paths));
+    for(p_idx in seq_along(length(paths))) {
+        p = paths[[p_idx]];
+        vis.path.along.verts(surface_vertices, p, color = color[p_idx]);
+    }
+}
+
 
 
 #' @title Compute slopes of paths relative to axes.
