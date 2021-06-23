@@ -261,7 +261,7 @@ vis.paths.along.verts <- function(surface_vertices, paths, color=viridis::viridi
         stop("Parameter 'paths' must be a list of integer vectors.");
     }
     color = recycle(color, length(paths));
-    for(p_idx in seq_along(length(paths))) {
+    for(p_idx in seq_along(paths)) {
         p = paths[[p_idx]];
         vis.path.along.verts(surface_vertices, p, color = color[p_idx]);
     }
