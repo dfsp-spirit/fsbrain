@@ -433,7 +433,7 @@ subject.descriptor.geodesic.average.distance <- function(subjects_dir, subject_i
 #'   surface = subject.surface(sjd, 'fsaverage3',
 #'     surface = "white", hemi = "lh");
 #'   p = geodesic.path(surface, 5, c(10, 20));
-#'   vis.subject.morph.native(sjd, 'fsaverage3', views='si');
+#'   vis.subject.morph.native(sjd, 'fsaverage3', 'thickness', views='si');
 #'   vis.path.along.verts(surface$vertices, p[[1]]);
 #' }
 #'
@@ -449,7 +449,7 @@ geodesic.path <- function(surface, source_vertex, target_vertices) {
     dists = fsbrain:::geodesic.dists.to.vertex(tmesh, source_vertex);
     paths = list();
     #surface_adj = fs.surface.as.adjacencylist(g); # we may be better of computing neighbors only for the very few path vertices.
-    num_verts = igraph::vcount(g);
+    #num_verts = igraph::vcount(g);
     for(target_idx in seq_along(target_vertices)) {
         target_vertex = target_vertices[target_idx]; # Backtracking part of Dijkstra algo to obtain the path from the dist map.
         current_vertex = target_vertex;
@@ -485,7 +485,7 @@ geodesic.path <- function(surface, source_vertex, target_vertices) {
 #'   sjd = fsaverage.path(TRUE);
 #'   surface = subject.surface(sjd, 'fsaverage3',
 #'     surface = "white", hemi = "lh");
-#'   p = geodesic.path(surface, 5, c(10, 20));
+#'   p = geodesic.path2(surface, 5, c(10, 20));
 #'   vis.subject.morph.native(sjd, 'fsaverage3', views='si');
 #'   vis.path.along.verts(surface$vertices, p[[1]]);
 #' }
@@ -502,7 +502,7 @@ geodesic.path2 <- function(surface, source_vertex, target_vertices) {
     dists = fsbrain:::geodesic.dists.to.vertex(tmesh, source_vertex);
     paths = list();
     surface_adj = fs.surface.as.adjacencylist(g); # we may be better of computing neighbors only for the very few path vertices.
-    num_verts = igraph::vcount(g);
+    #num_verts = igraph::vcount(g);
     for(target_idx in seq_along(target_vertices)) {
         target_vertex = target_vertices[target_idx]; # Backtracking part of Dijkstra algo to obtain the path from the dist map.
         current_vertex = target_vertex;
