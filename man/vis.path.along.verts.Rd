@@ -6,14 +6,14 @@
 \usage{
 vis.path.along.verts(
   surface_vertices,
-  path_vertex_indices = seq(1L, nrow(surface_vertices)),
+  path_vertex_indices = NULL,
   do_vis = TRUE,
   color = "#FF0000",
   no_material = FALSE
 )
 }
 \arguments{
-\item{surface_vertices}{float matrix of size (n, 3), the surface vertex coordinates, as returned as part of \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}, in the member "vertices".}
+\item{surface_vertices}{float matrix of size (n, 3), the surface vertex coordinates, as returned as part of \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}, in the member "vertices". Can also be a \code{freesurferformats::fs.surface} or \code{rgl::tmesh3d} instance, in which case the coordinates are extracted automatically.}
 
 \item{path_vertex_indices}{vector of vertex indices, the path. You will need to have it computed already. (This function does **not** compute geodesic paths, see \code{\link[fsbrain]{geodesic.path}} for that. You can use it to visualize such a path though.) If omitted, the vertex coordinates will be traversed in their given order to create the path.}
 
