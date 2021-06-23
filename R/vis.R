@@ -768,7 +768,7 @@ vis.fs.surface <- function(fs_surface, col="white", per_vertex_data=NULL, hemi="
     } else {
         if(is.character(fs_surface)) {
             fs_surface = freesurferformats::read.fs.surface(fs_surface);
-        } else if("mesh3d" in class(fs_surface)) {
+        } else if("mesh3d" %in% class(fs_surface)) {
             fs_surface = tmesh3d.to.fs.surface(fs_surface);
         }
     }
