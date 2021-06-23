@@ -201,7 +201,21 @@ annot.outline <- function(annotdata, surface_mesh, background="white", silent=TR
 #'
 #' @export
 #' @importFrom rgl segments3d material3d
-vis.path.along.verts <- function(surface_vertices, path_vertex_indices = seq(1L, nrow(surface_vertices)), do_vis = TRUE, color='#FF0000', no_material=FALSE) {
+vis.path.along.verts <- function(surface_vertices, path_vertex_indices = NULL, do_vis = TRUE, color='#FF0000', no_material=FALSE) {
+    if(freesurferformats::is.fs.surface(surface_vertices)) {
+        surface_vertices = surface_vertices$vertices;
+    } else if("mesh3d" %in% class(surface_vertices)) {
+        surface_vertices = t(surface_vertices$vb[1:3,]);
+    } else {
+        if(! is.matrix(surface_vertices)) {
+            stop("Parameter 'surface_vertices' must be an fs.surface, an rgl::tmesh3d, or an nx3 numeric matrix");
+        }
+    }
+
+    if(is.null(path_vertex_indices)) {
+        path_vertex_indices = seq(1L, nrow(surface_vertices));
+    }
+
   path_vertex_coords = surface_vertices[path_vertex_indices,];
 
   num_path_points = nrow(path_vertex_coords);
