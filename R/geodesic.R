@@ -484,13 +484,17 @@ geodesic.path <- function(surface, source_vertex, target_vertices) {
 #' }
 #'
 #' @export
- geodesic.circles<- function(surface, vertices, scale=5.0) {
+ geodesic.circles<- function(surface, vertices=NULL, scale=5.0) {
     if(scale <= 0.0 | scale > 100) {
         stop("Parameter 'scale' must be in range ]0..100].");
     }
     mesh = ensure.tmesh3d(surface);
-    if(any(vertices < 1L) | any(vertices > ncol(mesh$vb))) {
-        stop(sprintf("Parameter 'vertices' must be an integer vector containing values from 1 to %d.\n", ncol(mesh$vb)));
+    num_verts = ncol(mesh$vb);
+    if(any(vertices < 1L) | any(vertices > num_verts)) {
+        stop(sprintf("Parameter 'vertices' must be an integer vector containing values from 1 to %d.\n", num_verts));
+    }
+    if(is.null(vertices)) {
+        vertices = seq(1L, num_verts);
     }
     total_area = Rvcg::vcgArea(mesh);
     area_scale = (scale * total_area) / 100.0;
@@ -522,8 +526,9 @@ geodesic.path <- function(surface, source_vertex, target_vertices) {
         res$radius[vertex_idx] = RR[index];
         res$perimeter[vertex_idx] = PP[index];
     }
-
+    return(res);
 }
+
 
 #' @keywords internal
 geodesic.ballstats <- function(surface, geodist, sample_at_radii) {
