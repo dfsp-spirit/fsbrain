@@ -480,29 +480,52 @@ geodesic.path <- function(surface, source_vertex, target_vertices) {
 #' \dontrun{
 #'   sjd = fsaverage.path(TRUE);
 #'   surface = subject.surface(sjd, 'fsaverage', hemi='lh');
-#'   geodesic.ballstats(surface, 100L);
+#'   geodesic.circles(surface, 100L);
 #' }
 #'
 #' @export
-geodesic.ballstats <- function(surface, vertex, scale=5.0) {
+ geodesic.circles<- function(surface, vertices, scale=5.0) {
     if(scale <= 0.0 | scale > 100) {
         stop("Parameter 'scale' must be in range ]0..100].");
     }
     mesh = ensure.tmesh3d(surface);
-    if(vertex < 1L | vertex > ncol(mesh$vb)) {
-        stop(sprintf("Parameter vertex must be integer from 1 to %d.\n", ncol(mesh$vb)));
+    if(any(vertices < 1L) | any(vertices > ncol(mesh$vb))) {
+        stop(sprintf("Parameter 'vertices' must be an integer vector containing values from 1 to %d.\n", ncol(mesh$vb)));
     }
     total_area = Rvcg::vcgArea(mesh);
     area_scale = (scale * total_area) / 100.0;
     ball_radius = sqrt(area_scale/pi);
-    cat(sprintf("Ball with radius %f at vertex %d convering area %f (%f percent of total %f).\n", ball_radius, vertex, area_scale, scale, total_area));
 
     sampling = 10.0;
     max_dist_extra = 15.0; # Arbitrary setting, the value depends on the mesh scale. The default should depend on the radius value, or be a parameter that can be set by the user.
     maxdist = ball_radius + max_dist_extra;
 
-    dists = geodesic.dists.to.vertex(mesh, vertex);
-    rr = seq(ball_radius-10, ball_radius+10, length.out=sampling);
+    res = list('radius'=rep(NA, length(vertices)), 'perimeter'=rep(NA, length(vertices)));
+    for(vertex_idx in seq_along(vertices)) {
+        vertex = vertices[vertex_idx];
+        geodists = geodesic.dists.to.vertex(mesh, vertex);
+        sample_at_radii = seq(ball_radius-10, ball_radius+10, length.out=sampling);
+        bs = geodesic.ballstats(surface, geodists, sample_at_radii);
+        ba = bs$ball_area;         # ball area at each sample radius
+        bp = bs$ball_perimeter;    # ball perimeter at each sample radius
+
+        ## Perform spline interpolation.
+        ## See https://www.rdocumentation.org/packages/pracma/versions/1.9.9/topics/interp1, especially the
+        ## section at the bottom named '## Difference between spline (Matlab) and spline (R).'
+        x = seq(1,10);
+        xx = seq(q,10, by=0.1);
+        AA = pracma::interp1(x, bs$ball_area, xx, method = "spline");
+        RR = pracma::interp1(x, sample_at_radii, xx, method = "spline");
+        PP = pracma::interp1(x, bs$ball_perimeter, xx, method = "spline");
+
+        index = which.min(abs(area_scale - AA));
+        res$radius[vertex_idx] = RR[index];
+        res$perimeter[vertex_idx] = PP[index];
+    }
 
 }
 
+#' @keywords internal
+geodesic.ballstats <- function(surface, geodist, sample_at_radii) {
+
+}
