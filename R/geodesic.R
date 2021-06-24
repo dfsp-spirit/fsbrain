@@ -497,5 +497,12 @@ geodesic.ballstats <- function(surface, vertex, scale=5.0) {
     ball_radius = sqrt(area_scale/pi);
     cat(sprintf("Ball with radius %f at vertex %d convering area %f (%f percent of total %f).\n", ball_radius, vertex, area_scale, scale, total_area));
 
+    sampling = 10.0;
+    max_dist_extra = 15.0; # Arbitrary setting, the value depends on the mesh scale. The default should depend on the radius value, or be a parameter that can be set by the user.
+    maxdist = ball_radius + max_dist_extra;
+
+    dists = geodesic.dists.to.vertex(mesh, vertex);
+    rr = seq(ball_radius-10, ball_radius+10, length.out=sampling);
+
 }
 
