@@ -466,3 +466,36 @@ geodesic.path <- function(surface, source_vertex, target_vertices) {
     }
     return(paths);
 }
+
+
+#' @title Comput geodesic ball stats for given vertex.
+#'
+#' @inheritParams geodesic.path
+#'
+#' @param vertex positive integer, the vertex index for which to compute the stats.
+#'
+#' @param scale double, surface area to be covered by patch in percent
+#'
+#' @examples
+#' \dontrun{
+#'   sjd = fsaverage.path(TRUE);
+#'   surface = subject.surface(sjd, 'fsaverage', hemi='lh');
+#'   geodesic.ballstats(surface, 100L);
+#' }
+#'
+#' @export
+geodesic.ballstats <- function(surface, vertex, scale=5.0) {
+    if(scale <= 0.0 | scale > 100) {
+        stop("Parameter 'scale' must be in range ]0..100].");
+    }
+    mesh = ensure.tmesh3d(surface);
+    if(vertex < 1L | vertex > ncol(mesh$vb)) {
+        stop(sprintf("Parameter vertex must be integer from 1 to %d.\n", ncol(mesh$vb)));
+    }
+    total_area = Rvcg::vcgArea(mesh);
+    area_scale = (scale * total_area) / 100.0;
+    ball_radius = sqrt(area_scale/pi);
+    cat(sprintf("Ball with radius %f at vertex %d convering area %f (%f percent of total %f).\n", ball_radius, vertex, area_scale, scale, total_area));
+
+}
+
