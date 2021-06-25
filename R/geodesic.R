@@ -511,13 +511,13 @@ geodesic.circles <- function(surface, vertices=NULL, scale=5.0) {
         vertex = vertices[vertex_idx];
         geodists = geodesic.dists.to.vertex(mesh, vertex);
         sample_at_radii = seq(ball_radius-10, ball_radius+10, length.out=sampling);
-        bs = geodesic.ballstats(mesh, vertex, geodists, sample_at_radii);
+        bs = geodesic.ballstats(mesh, geodists, sample_at_radii);
 
         ## Perform spline interpolation.
         ## See https://www.rdocumentation.org/packages/pracma/versions/1.9.9/topics/interp1, especially the
         ## section at the bottom named '## Difference between spline (Matlab) and spline (R).'
         x = seq(1, 10);
-        xx = seq(q, 10, by = 0.1);
+        xx = seq(1, 10, by = 0.1);
         AA = pracma::interp1(x, bs$ball_area, xx, method = "spline");
         RR = pracma::interp1(x, sample_at_radii, xx, method = "spline");
         PP = pracma::interp1(x, bs$ball_perimeter, xx, method = "spline");
