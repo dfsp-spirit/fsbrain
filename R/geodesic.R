@@ -509,7 +509,7 @@ geodesic.path <- function(surface, source_vertex, target_vertices) {
         vertex = vertices[vertex_idx];
         geodists = geodesic.dists.to.vertex(mesh, vertex);
         sample_at_radii = seq(ball_radius-10, ball_radius+10, length.out=sampling);
-        bs = geodesic.ballstats(surface, geodists, sample_at_radii);
+        bs = geodesic.ballstats(mesh, vertex, geodists, sample_at_radii);
         ba = bs$ball_area;         # ball area at each sample radius
         bp = bs$ball_perimeter;    # ball perimeter at each sample radius
 
@@ -531,6 +531,18 @@ geodesic.path <- function(surface, source_vertex, target_vertices) {
 
 
 #' @keywords internal
-geodesic.ballstats <- function(surface, geodist, sample_at_radii) {
+geodesic.ballstats <- function(mesh, vertex, geodist, sample_at_radii) {
+    face_area = Rvcg::vcgArea(mesh, perface = TRUE);
+    vertex_faces = Rvcg::vcgVFadj(mesh);
+    for(radius_idx in seq_along(sample_at_radii)) {
+        radius = sample_at_radii[radius_idx];
+
+
+        in_radius = geodist[geodist < radius];        # I, whether vertex is in radius.
+
+        count_in_radius = sum(as.integer(in_radius)); # C
+    }
+
+
 
 }
