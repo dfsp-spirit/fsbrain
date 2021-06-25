@@ -22,8 +22,10 @@ This takes a while for large meshes, try it with single vertices or with a surfa
 \examples{
 \dontrun{
   sjd = fsaverage.path(TRUE);
-  surface = subject.surface(sjd, 'fsaverage', hemi='lh');
-  geodesic.circles(surface, 100L);
+  surface = subject.surface(sjd, 'fsaverage3', hemi='lh');
+  gc = geodesic.circles(surface);
+  vis.data.on.subject(sjd, 'fsaverage3', morph_data_lh = gc$radius);
+  vis.data.on.subject(sjd, 'fsaverage3', morph_data_lh = gc$perimeter);
 }
 
 }
