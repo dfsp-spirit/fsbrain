@@ -468,13 +468,15 @@ geodesic.path <- function(surface, source_vertex, target_vertices) {
 }
 
 
-#' @title Comput geodesic ball stats for given vertex.
+#' @title Compute geodesic circles and ball stats for given vertices.
 #'
 #' @inheritParams geodesic.path
 #'
-#' @param vertex positive integer, the vertex index for which to compute the stats.
+#' @param vertices positive integer vector, the vertex indices for which to compute the stats. If NULL, it is computed for all vertices.
 #'
 #' @param scale double, surface area to be covered by patch in percent
+#'
+#' @note This takes a while for large meshes, try it with single vertices or with a surface like fsaverage3 if you want it for all vertices.
 #'
 #' @examples
 #' \dontrun{
@@ -501,7 +503,7 @@ geodesic.circles <- function(surface, vertices=NULL, scale=5.0) {
     ball_radius = sqrt(area_scale/pi);
 
     sampling = 10.0;
-    max_dist_extra = 15.0; # Arbitrary setting, the value depends on the mesh scale. The default should depend on the radius value, or be a parameter that can be set by the user.
+    max_dist_extra = 10.0; # Arbitrary setting, the value depends on the mesh scale. The default should depend on the radius value, or be a parameter that can be set by the user.
     maxdist = ball_radius + max_dist_extra;
 
     res = list('radius'=rep(NA, length(vertices)), 'perimeter'=rep(NA, length(vertices)));
@@ -510,8 +512,6 @@ geodesic.circles <- function(surface, vertices=NULL, scale=5.0) {
         geodists = geodesic.dists.to.vertex(mesh, vertex);
         sample_at_radii = seq(ball_radius-10, ball_radius+10, length.out=sampling);
         bs = geodesic.ballstats(mesh, vertex, geodists, sample_at_radii);
-        ba = bs$ball_area;         # ball area at each sample radius
-        bp = bs$ball_perimeter;    # ball perimeter at each sample radius
 
         ## Perform spline interpolation.
         ## See https://www.rdocumentation.org/packages/pracma/versions/1.9.9/topics/interp1, especially the

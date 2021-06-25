@@ -2,19 +2,22 @@
 % Please edit documentation in R/geodesic.R
 \name{geodesic.circles}
 \alias{geodesic.circles}
-\title{Comput geodesic ball stats for given vertex.}
+\title{Compute geodesic circles and ball stats for given vertices.}
 \usage{
-geodesic.circles(surface, vertices, scale = 5)
+geodesic.circles(surface, vertices = NULL, scale = 5)
 }
 \arguments{
 \item{surface}{an \code{rgl::tmesh3d} or \code{freesurferformats::fs.surface} instance. Can be a character string, which will be loaded as a surface file if it exists.}
 
-\item{scale}{double, surface area to be covered by patch in percent}
+\item{vertices}{positive integer vector, the vertex indices for which to compute the stats. If NULL, it is computed for all vertices.}
 
-\item{vertex}{positive integer, the vertex index for which to compute the stats.}
+\item{scale}{double, surface area to be covered by patch in percent}
 }
 \description{
-Comput geodesic ball stats for given vertex.
+Compute geodesic circles and ball stats for given vertices.
+}
+\note{
+This takes a while for large meshes, try it with single vertices or with a surface like fsaverage3 if you want it for all vertices.
 }
 \examples{
 \dontrun{
