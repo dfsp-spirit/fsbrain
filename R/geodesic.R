@@ -490,6 +490,8 @@ geodesic.path <- function(surface, source_vertex, target_vertices) {
 #' @export
 geodesic.circles <- function(surface, vertices=NULL, scale=5.0) {
 
+    warning("This function has not been tested yet, do not use.");
+
     if(requireNamespace("pracma", quietly = TRUE)) {
 
         if(scale <= 0.0 | scale > 100) {
@@ -548,6 +550,8 @@ geodesic.circles <- function(surface, vertices=NULL, scale=5.0) {
 #'
 #' @keywords internal
 #'
+#' @note This is called from \code{geodesic.circles}, there should be no need to call it directly.
+#'
 #' @return named list with entries: 'ball_area': vector of double, ball area at each sample radius. 'ball_perimeter': vector of double, ball perimeter at each sample radius.
 geodesic.ballstats <- function(mesh, geodist, sample_at_radii) {
     face_area = Rvcg::vcgArea(mesh, perface = TRUE)$pertriangle; # a
@@ -599,5 +603,29 @@ geodesic.ballstats <- function(mesh, geodist, sample_at_radii) {
         res$ball_perimeter[radius_idx] = total_perimeter;
     }
     return(res);
+}
+
+
+#' @keywords internal
+test_ballstats <- function() {
+    # Load expected data from running fastmarching matlab toolbox
+    lh_perim = freesurferformats::read.fs.curv("~/develop/neuroimaging/stuff_by_others/toolbox_geodesic/output_fsaverage3/lh.PerimeterFunction.5.w")
+    rh_perim = freesurferformats::read.fs.curv("~/develop/neuroimaging/stuff_by_others/toolbox_geodesic/output_fsaverage3/rh.PerimeterFunction.5.w")
+    lh_rad = freesurferformats::read.fs.curv("~/develop/neuroimaging/stuff_by_others/toolbox_geodesic/output_fsaverage3/lh.RadiusFunction.5.w")
+    rh_rad = freesurferformats::read.fs.curv("~/develop/neuroimaging/stuff_by_others/toolbox_geodesic/output_fsaverage3/rh.RadiusFunction.5.w")
+    expected = list("lh_perim"=lh_perim, "rh_perim"=rh_perim, "lh_rad"=lh_rad, "rh_rad"=rh_rad);
+
+    # Compute data in R
+    sjd = fsaverage.path(TRUE);
+    surfaces = subject.surface(sjd, 'fsaverage3', hemi='both');
+    lh_gc = geodesic.circles(surfaces$lh);
+    rh_gc = geodesic.circles(surfaces$rh);
+    found = list("lh_perim"=lh_gc$perimeter, "rh_perim"=rh_gc$perimeter, "lh_rad"=lh_gc$radius, "rh_rad"=rh_gc$radius);
+
+    # Check similarity
+    cor(expected$lh_perim, found$lh_perim);
+    cor(expected$rh_perim, found$rh_perim);
+    cor(expected$lh_rad, found$lh_rad);
+    cor(expected$rh_rad, found$rh_rad);
 }
 
