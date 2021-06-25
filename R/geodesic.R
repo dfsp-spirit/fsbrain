@@ -487,46 +487,52 @@ geodesic.path <- function(surface, source_vertex, target_vertices) {
 #'
 #' @export
 geodesic.circles <- function(surface, vertices=NULL, scale=5.0) {
-    if(scale <= 0.0 | scale > 100) {
-        stop("Parameter 'scale' must be in range ]0..100].");
-    }
-    mesh = fsbrain:::ensure.tmesh3d(surface);
-    num_verts = ncol(mesh$vb);
-    if(any(vertices < 1L) | any(vertices > num_verts)) {
-        stop(sprintf("Parameter 'vertices' must be an integer vector containing values from 1 to %d.\n", num_verts));
-    }
-    if(is.null(vertices)) {
-        vertices = seq(1L, num_verts);
-    }
-    total_area = Rvcg::vcgArea(mesh);
-    area_scale = (scale * total_area) / 100.0;
-    ball_radius = sqrt(area_scale/pi);
 
-    sampling = 10.0;
-    max_dist_extra = 10.0; # Arbitrary setting, the value depends on the mesh scale. The default should depend on the radius value, or be a parameter that can be set by the user.
-    maxdist = ball_radius + max_dist_extra;
+    if(requireNamespace("pracma", quietly = TRUE)) {
 
-    res = list('radius'=rep(NA, length(vertices)), 'perimeter'=rep(NA, length(vertices)));
-    for(vertex_idx in seq_along(vertices)) {
-        vertex = vertices[vertex_idx];
-        geodists = geodesic.dists.to.vertex(mesh, vertex);
-        sample_at_radii = seq(ball_radius-10, ball_radius+10, length.out=sampling);
-        bs = geodesic.ballstats(mesh, geodists, sample_at_radii);
+        if(scale <= 0.0 | scale > 100) {
+            stop("Parameter 'scale' must be in range ]0..100].");
+        }
+        mesh = fsbrain:::ensure.tmesh3d(surface);
+        num_verts = ncol(mesh$vb);
+        if(any(vertices < 1L) | any(vertices > num_verts)) {
+            stop(sprintf("Parameter 'vertices' must be an integer vector containing values from 1 to %d.\n", num_verts));
+        }
+        if(is.null(vertices)) {
+            vertices = seq(1L, num_verts);
+        }
+        total_area = Rvcg::vcgArea(mesh);
+        area_scale = (scale * total_area) / 100.0;
+        ball_radius = sqrt(area_scale/pi);
 
-        ## Perform spline interpolation.
-        ## See https://www.rdocumentation.org/packages/pracma/versions/1.9.9/topics/interp1, especially the
-        ## section at the bottom named '## Difference between spline (Matlab) and spline (R).'
-        x = seq(1, 10);
-        xx = seq(1, 10, by = 0.1);
-        AA = pracma::interp1(x, bs$ball_area, xx, method = "spline");
-        RR = pracma::interp1(x, sample_at_radii, xx, method = "spline");
-        PP = pracma::interp1(x, bs$ball_perimeter, xx, method = "spline");
+        sampling = 10.0;
+        max_dist_extra = 10.0; # Arbitrary setting, the value depends on the mesh scale. The default should depend on the radius value, or be a parameter that can be set by the user.
+        maxdist = ball_radius + max_dist_extra;
 
-        index = which.min(abs(area_scale - AA));
-        res$radius[vertex_idx] = RR[index];
-        res$perimeter[vertex_idx] = PP[index];
+        res = list('radius'=rep(NA, length(vertices)), 'perimeter'=rep(NA, length(vertices)));
+        for(vertex_idx in seq_along(vertices)) {
+            vertex = vertices[vertex_idx];
+            geodists = geodesic.dists.to.vertex(mesh, vertex);
+            sample_at_radii = seq(ball_radius-10, ball_radius+10, length.out=sampling);
+            bs = geodesic.ballstats(mesh, geodists, sample_at_radii);
+
+            ## Perform spline interpolation.
+            ## See https://www.rdocumentation.org/packages/pracma/versions/1.9.9/topics/interp1, especially the
+            ## section at the bottom named '## Difference between spline (Matlab) and spline (R).'
+            x = seq(1, 10);
+            xx = seq(1, 10, by = 0.1);
+            AA = pracma::interp1(x, bs$ball_area, xx, method = "spline");
+            RR = pracma::interp1(x, sample_at_radii, xx, method = "spline");
+            PP = pracma::interp1(x, bs$ball_perimeter, xx, method = "spline");
+
+            index = which.min(abs(area_scale - AA));
+            res$radius[vertex_idx] = RR[index];
+            res$perimeter[vertex_idx] = PP[index];
+        }
+        return(res);
+    } else {
+        stop("The 'pracma' package must be installed to use this functionality.");
     }
-    return(res);
 }
 
 
