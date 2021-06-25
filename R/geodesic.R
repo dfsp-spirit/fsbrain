@@ -484,11 +484,11 @@ geodesic.path <- function(surface, source_vertex, target_vertices) {
 #' }
 #'
 #' @export
- geodesic.circles<- function(surface, vertices=NULL, scale=5.0) {
+geodesic.circles <- function(surface, vertices=NULL, scale=5.0) {
     if(scale <= 0.0 | scale > 100) {
         stop("Parameter 'scale' must be in range ]0..100].");
     }
-    mesh = ensure.tmesh3d(surface);
+    mesh = fsbrain:::ensure.tmesh3d(surface);
     num_verts = ncol(mesh$vb);
     if(any(vertices < 1L) | any(vertices > num_verts)) {
         stop(sprintf("Parameter 'vertices' must be an integer vector containing values from 1 to %d.\n", num_verts));
@@ -516,8 +516,8 @@ geodesic.path <- function(surface, source_vertex, target_vertices) {
         ## Perform spline interpolation.
         ## See https://www.rdocumentation.org/packages/pracma/versions/1.9.9/topics/interp1, especially the
         ## section at the bottom named '## Difference between spline (Matlab) and spline (R).'
-        x = seq(1,10);
-        xx = seq(q,10, by=0.1);
+        x = seq(1, 10);
+        xx = seq(q, 10, by = 0.1);
         AA = pracma::interp1(x, bs$ball_area, xx, method = "spline");
         RR = pracma::interp1(x, sample_at_radii, xx, method = "spline");
         PP = pracma::interp1(x, bs$ball_perimeter, xx, method = "spline");
@@ -532,17 +532,29 @@ geodesic.path <- function(surface, source_vertex, target_vertices) {
 
 #' @keywords internal
 geodesic.ballstats <- function(mesh, vertex, geodist, sample_at_radii) {
-    face_area = Rvcg::vcgArea(mesh, perface = TRUE);
+    face_area = Rvcg::vcgArea(mesh, perface = TRUE)$pertriangle;
     vertex_faces = Rvcg::vcgVFadj(mesh);
     for(radius_idx in seq_along(sample_at_radii)) {
         radius = sample_at_radii[radius_idx];
 
+        # Find all faces which are in radius.
+        in_radius = as.integer(geodist < radius);           # I: whether vertex is in radius (logical)
+        face_in_radius_vertices = rowSums(matrix(in_radius[mesh$it], ncol=3, byrow=T)); # C: count how many vertices per face are in radius
 
-        in_radius = geodist[geodist < radius];        # I, whether vertex is in radius.
+        total_area_in_radius = sum(face_area[face_in_radius_vertices==3]);   # A: total area in radius. Currently it is the area of all faces which are fully (all 3 verts) in radius.
+        P = 0;
 
-        count_in_radius = sum(as.integer(in_radius)); # C
+        # Now compute partial area for faces which are only partly in range.
+        partial_face_indices = which(face_in_radius_vertices == 1 | face_in_radius_vertices == 2);
+        for(pf_idx in partial_face_indices) {
+            face_verts = mesh$it[,pf_idx]; # int vector of length 3
+
+            if(face_in_radius_vertices[pf_idx] == 2L) { # 2 verts in
+
+            } else { # one vert in
+
+            }
+        }
     }
-
-
-
 }
+
