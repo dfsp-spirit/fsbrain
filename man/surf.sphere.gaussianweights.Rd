@@ -4,7 +4,10 @@
 \alias{surf.sphere.gaussianweights}
 \title{Compute Gaussian weights}
 \usage{
-surf.sphere.gaussianweights(spherical_surface, sphere_dists, gstd = 1)
+surf.sphere.gaussianweights(spherical_surface, sphere_dists, gstd)
+}
+\arguments{
+\item{gstd}{double, can be computed from the FWHM as \code{gstd = fwhm / sqrt(log(256.0))}.}
 }
 \value{
 vector of Gaussian weights for vertices

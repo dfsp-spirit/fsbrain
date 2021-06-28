@@ -130,7 +130,7 @@ pervertexdata.smoothnn.compute.fwhm <- function(surface, niters) {
 #'
 #' @examples
 #' \dontrun{
-#' spherical_surface = subject.surface(fsaverage.path(), "fsaverage3", surface="sphere", hemi="lh")
+#' spherical_surface = subject.surface(fsaverage.path(), "fsaverage3", surface="sphere", hemi="lh");
 #' data = subject.morph.native(fsaverage.path(), "fsaverage3", "thickness", hemi="lh");
 #' data_smoothed = pervertexdata.smoothgaussian(spherical_surface, data);
 #' }
@@ -138,7 +138,7 @@ pervertexdata.smoothnn.compute.fwhm <- function(surface, niters) {
 #' @export
 pervertexdata.smoothgaussian <- function(spherical_surface, data, maxdist = 5.0, fwhm = 5.0) {
     sphere_dists = surf.sphere.dist(spherical_surface, maxdist = maxdist);
-    gstd = fwhm / 2.355;
+    gstd = fwhm / sqrt(log(256.0));
     gaussian_weights = surf.sphere.gaussianweights(spherical_surface, sphere_dists, gstd);
     smoothed_data = surf.sphere.spatialfilter(data, sphere_dists, gaussian_weights);
     return(smoothed_data);
@@ -198,25 +198,52 @@ surf.sphere.dist <- function(spherical_surface, maxdist = 5.0) {
     return(list('neigh'=neigh, 'neigh_dist_dotproduct' = neigh_dist_dotproduct, 'neigh_dist_surface' = neigh_dist_surface));
 }
 
+
 #' @title Compute Gaussian weights
+#'
+#' @param gstd double, can be computed from the FWHM as \code{gstd = fwhm / sqrt(log(256.0))}.
+#'
 #' @return vector of Gaussian weights for vertices
 #'  see int MRISgaussianWeights(MRIS *surf, MRI *dist, double GStd) in util/mrisurf_mri.cpp
-surf.sphere.gaussianweights <- function(spherical_surface, sphere_dists, gstd = 1.0) {
-    warning("nnot implemented yet");
-    return(rep(1.0, nrow(spherical_surface$vertices)));
+surf.sphere.gaussianweights <- function(spherical_surface, sphere_dists, gstd) {
+
+    gvar2 = 2 * (gstd * gstd); # twice the variance
+    f = 1.0 / (sqrt(2 * pi) * gstd);
+
+    num_neighbors = unlist(lapply(sphere_dists$neigh, length));
+    nv = nrow(spherical_surface$vertices);
+    weights = list();
+    for(vidx in seq(nv)) {
+        gsum = 0.0;
+        vert_weights = rep(NA, num_neighbors[vidx]);
+        local_idx = 1L;
+        for(neigh_vidx in sphere_dists$neigh[[vidx]]) {
+            d = sphere_dists$neigh[[neigh_vidx]];
+            g = f * exp(-(d * d) / (gvar2));
+            vert_weights[local_idx] = g;
+            gsum = gsum + g;
+            local_idx = local_idx + 1L;
+        }
+        vert_weights = vert_weights / gsum; # Normalize
+        weights[[vidx]] = vert_weights;
+    }
+    return(weights);
 }
+
 
 
 #' @title Apply spatial filter to surface data.
 # see MRISspatialFilter
 surf.sphere.spatialfilter <- function(source_data, sphere_dists, gaussian_weights) {
     smoothed_data = rep(NA, length(source_data));
+    if(! is.list(sphere_dists$neigh)) {
+        stop("Parameter 'sphere_dists' member 'neigh' must be a list.");
+    }
     for(vidx in seq_along(source_data)) {
-        smoothed_data[vidx] = source_data[sphere_dists$neigh[[vidx]]] * gaussian_weights[sphere_dists$neigh[[vidx]]];
+        num_neigh = length(sphere_dists$neigh[[vidx]]);
+        smoothed_data[vidx] = sum(source_data[sphere_dists$neigh[[vidx]]] * gaussian_weights[sphere_dists$neigh[[vidx]]]) / num_neigh;
     }
     return(smoothed_data);
 }
-
-
 
 
