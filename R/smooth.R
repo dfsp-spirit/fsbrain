@@ -128,14 +128,12 @@ pervertexdata.smoothnn.compute.fwhm <- function(surface, niters) {
 #'
 #' @note This function has been adapted from FreeSurfer and it is subject to the FreeSurfer software license.
 #'
-#' see MRI *MRISspatialFilter in utils/mrisurf_mri.cpp
-#'     RISgaussianWeights()
-#'     and MRISdistSphere() -> utils/mrisurf_MetricProperties.cpp -> MRISextendedNeighbors
-#' ------see utils/mrifilter.cpp @2643 # NO, this is for volumes
-#'
+#' @examples
+#' \dontrun{
 #' spherical_surface = subject.surface(fsaverage.path(), "fsaverage3", surface="sphere", hemi="lh")
 #' data = subject.morph.native(fsaverage.path(), "fsaverage3", "thickness", hemi="lh");
 #' data_smoothed = pervertexdata.smoothgaussian(spherical_surface, data);
+#' }
 #'
 #' @export
 pervertexdata.smoothgaussian <- function(spherical_surface, data, maxdist = 5.0, fwhm = 5.0) {
@@ -169,7 +167,7 @@ surf.avg.vertexradius <- function(surface) {
 #' highlight.vertices.on.subject(fsaverage.path(), "fsaverage3", verts_lh = dist$neigh[[500]], surface="sphere")
 #' }
 #'
-#' see MRISgaussianWeights to get Gaussian weights for the vertex neighborhoods
+#' @note see MRISgaussianWeights to get Gaussian weights for the vertex neighborhoods
 #'
 #' @export
 surf.sphere.dist <- function(spherical_surface, maxdist = 5.0) {
@@ -214,7 +212,7 @@ surf.sphere.gaussianweights <- function(spherical_surface, sphere_dists, gstd = 
 surf.sphere.spatialfilter <- function(source_data, sphere_dists, gaussian_weights) {
     smoothed_data = rep(NA, length(source_data));
     for(vidx in seq_along(source_data)) {
-        smoothed_data[vidx] = source_data[sphere_dists$neigh] * gaussian_weights[sphere_dists$neigh];
+        smoothed_data[vidx] = source_data[sphere_dists$neigh[[vidx]]] * gaussian_weights[sphere_dists$neigh[[vidx]]];
     }
     return(smoothed_data);
 }

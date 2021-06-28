@@ -14,13 +14,14 @@ surf.sphere.dist(spherical_surface, maxdist = 5)
 \description{
 Compute all vertices in given distance on a sphere and their distances.
 }
+\note{
+see MRISgaussianWeights to get Gaussian weights for the vertex neighborhoods
+}
 \examples{
 \dontrun{
 spherical_surface = subject.surface(fsaverage.path(), "fsaverage3", surface="sphere", hemi="lh");
 dist = surf.sphere.dist(spherical_surface, 5.0);
 highlight.vertices.on.subject(fsaverage.path(), "fsaverage3", verts_lh = dist$neigh[[500]], surface="sphere")
 }
-
-see MRISgaussianWeights to get Gaussian weights for the vertex neighborhoods
 
 }

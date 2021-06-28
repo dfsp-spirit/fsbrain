@@ -11,13 +11,12 @@ Perform Gaussian smoothing
 }
 \note{
 This function has been adapted from FreeSurfer and it is subject to the FreeSurfer software license.
-
-see MRI *MRISspatialFilter in utils/mrisurf_mri.cpp
-    RISgaussianWeights()
-    and MRISdistSphere() -> utils/mrisurf_MetricProperties.cpp -> MRISextendedNeighbors
-------see utils/mrifilter.cpp @2643 # NO, this is for volumes
-
+}
+\examples{
+\dontrun{
 spherical_surface = subject.surface(fsaverage.path(), "fsaverage3", surface="sphere", hemi="lh")
 data = subject.morph.native(fsaverage.path(), "fsaverage3", "thickness", hemi="lh");
 data_smoothed = pervertexdata.smoothgaussian(spherical_surface, data);
+}
+
 }
