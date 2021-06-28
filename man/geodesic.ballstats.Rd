@@ -19,4 +19,7 @@ named list with entries: 'ball_area': vector of double, ball area at each sample
 \description{
 Compute geodesic ball area and perimeter at location defined by geodists for all radii.
 }
+\note{
+This is called from \code{geodesic.circles}, there should be no need to call it directly.
+}
 \keyword{internal}

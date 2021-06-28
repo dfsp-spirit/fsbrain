@@ -54,7 +54,7 @@ fs.surface.vertex.neighbors <- function(surface, nodes, order = 1L, simplify = T
         if(simplify && length(nodes) == 1L) {
             return(as.integer(unlist(res)));
         }
-        return(res);
+        return(lapply(res, as.integer));
     } else {
         stop("This functionality requires the 'igraph' package to be installed.");
     }
@@ -71,7 +71,7 @@ fs.surface.vertex.neighbors <- function(surface, nodes, order = 1L, simplify = T
 fs.surface.as.adjacencylist <- function(surface) {
     if(requireNamespace("igraph", quietly = TRUE)) {
         g = fs.surface.to.igraph(surface);
-        return(igraph::as_adj_list(g));
+        return(lapply(igraph::as_adj_list(g), as.integer));
     } else {
         stop("This functionality requires the 'igraph' package to be installed.");
     }

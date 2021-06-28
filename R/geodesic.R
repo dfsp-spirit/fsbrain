@@ -636,26 +636,3 @@ test_ballstats <- function() {
     cor(expected$rh_rad, found$rh_rad);
 }
 
-
-#' @title Ignore, not part of fsbrain, only here temporarily.
-#' @keywords internal
-#' @description Uses nearest neighbor smoothing with n iterations as approximation. FS license applies.
-#'  see MRI *MRISsmoothMRI(MRIS *Surf, MRI *Src, int nSmoothSteps, MRI *BinMask, MRI *Targ)
-#'  in utils/mrisurf_mri.cpp
-surf.data.smooth <- function(surface, data, num_iter=10L) {
-    surface = ensure.fs.surface(surface);
-    adj = fs.surface.as.adjacencylist(surface); # Slow, should replace in Rvcg with a yet-to-write function.
-    nv = nrow(surface$vertices);
-    if(length(data) != nv) {
-        stop("Data and vertex count mismatch");
-    }
-
-    for(iteration in seq(num_iter)) {
-        for(vidx in seq(nv)) {
-
-        }
-    }
-
-}
-
-
