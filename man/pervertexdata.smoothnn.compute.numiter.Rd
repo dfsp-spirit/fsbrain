@@ -17,4 +17,7 @@ integer, the iteration count
 \description{
 Compute number of neighborhood smoothing iterations to reach requested fwhm.
 }
+\note{
+This function has been adapted from FreeSurfer and it is subject to the FreeSurfer software license.
+}
 \keyword{internal}

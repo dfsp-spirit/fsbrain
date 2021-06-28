@@ -4,7 +4,7 @@
 \alias{pervertexdata.smoothnn}
 \title{Ignore, not part of fsbrain, only here temporarily.}
 \usage{
-pervertexdata.smoothnn(surface, data, fwhm = 5, num_iter = NULL)
+pervertexdata.smoothnn(surface, data, fwhm = NULL, num_iter = NULL)
 }
 \arguments{
 \item{surface}{an \code{fs.surface} instance}
@@ -21,11 +21,15 @@ Approximate Gaussian smoothing of surface data by iterative mesh neighborhood av
 \note{
 The iteration is currently done in R, which means the performance is not great.
 
+This function has been adapted from FreeSurfer and it is subject to the FreeSurfer software license.
+
  @examples
  \dontrun{
  sjd = fsaverage.path(T);
  surface = subject.surface(sjd, "fsaverage3", hemi = "lh");
  th = subject.morph.native(sjd, "fsaverage3", "thickness", hemi="lh")
  th_smooth = pervertexdata.smoothnn(surface, th, fwhm = 10.0);
+ vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = th)
+ vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = th_smooth)
  }
 }

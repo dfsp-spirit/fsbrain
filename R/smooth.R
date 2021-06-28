@@ -15,6 +15,7 @@
 #' @param num_iter positive scalar integer, the number of times to perform the averaging. Only use this if you know what you are doing, prefer specifying the target fwhm instead. The fwhm parameter must be NULL if this is used instead.
 #'
 #' @note The iteration is currently done in R, which means the performance is not great.
+#' @note This function has been adapted from FreeSurfer and it is subject to the FreeSurfer software license.
 #'
 #'  @examples
 #'  \dontrun{
@@ -78,6 +79,8 @@ pervertexdata.smoothnn <- function(surface, data, fwhm = NULL, num_iter = NULL) 
 #'
 #' @return integer, the iteration count
 #'
+#' @note This function has been adapted from FreeSurfer and it is subject to the FreeSurfer software license.
+#'
 #' @keywords internal
 pervertexdata.smoothnn.compute.numiter<- function(surface, fwhm=5.0) {
 
@@ -102,6 +105,8 @@ pervertexdata.smoothnn.compute.numiter<- function(surface, fwhm=5.0) {
 #'
 #' @return double, the expected FWHM
 #'
+#' @note This function has been adapted from FreeSurfer and it is subject to the FreeSurfer software license.
+#'
 #' @keywords internal
 pervertexdata.smoothnn.compute.fwhm <- function(surface, niters) {
 
@@ -116,6 +121,73 @@ pervertexdata.smoothnn.compute.fwhm <- function(surface, niters) {
     fwhm = gstd * sqrt(log(256.0));
     return(fwhm);
 }
+
+
+
+#' @title Perform Gaussian smoothing
+#'
+#' @note This function has been adapted from FreeSurfer and it is subject to the FreeSurfer software license.
+#'
+#' see MRI *MRISspatialFilter in utils/mrisurf_mri.cpp
+#'     RISgaussianWeights()
+#'     and MRISdistSphere() -> utils/mrisurf_MetricProperties.cpp -> MRISextendedNeighbors
+#' ------see utils/mrifilter.cpp @2643 # NO, this is for volumes
+pervertexdata.smoothgaussian <- function(surface, data) {
+
+}
+
+
+#' @keywords internal
+surf.avg.vertexradius <- function(surface) {
+    surface = fsbrain:::ensure.fs.surface(surface);
+    nv = nrow(surface$vertices);
+    return(sum(freesurferformats:::vertexdists.to.point(surface, c(0,0,0))) / nv);
+}
+
+
+
+#' @title Compute all vertices in given distance on a sphere and their distances.
+#'
+#' @param spherical_surface an fs.surface instance representing the spherical version (\code{lh.sphere} or \code{rh.sphere} of the subject).
+#'
+#' @param maxdist double, the neighborhood size
+#'
+#' @examples
+#' \dontrun{
+#' spherical_surface = subject.surface(fsaverage.path(), "fsaverage3", surface="sphere", hemi="lh");
+#' dist = surf.sphere.dist(spherical_surface, 5.0);
+#' highlight.vertices.on.subject(fsaverage.path(), "fsaverage3", verts_lh = dist$neigh[[500]], surface="sphere")
+#' }
+#'
+#' @export
+surf.sphere.dist <- function(spherical_surface, maxdist = 5.0) {
+
+    warning("This does not work yet");
+
+    spherical_surface = fsbrain:::ensure.fs.surface(spherical_surface);
+    nv = nrow(spherical_surface$vertices);
+
+    radius = surf.avg.vertexradius(spherical_surface);
+    radius2 = radius * radius;
+    min_dotp_thresh = radius2 * cos(maxdist / radius) * (1.0001);
+
+    neigh = list();
+    neigh_dist_dotproduct = list();
+    neigh_dist_surface = list();
+    for(vidx in seq(nv)) {
+        pd_dists = rowSums((spherical_surface$vertices[vidx,] * spherical_surface$vertices));
+        neigh[[vidx]] = which(pd_dists < min_dotp_thresh);
+        neigh_dist_dotproduct[[vidx]] = pd_dists[neigh[[vidx]]];
+
+        costheta = neigh_dist_dotproduct[[vidx]] / radius2;
+        costheta[costheta > 1.0] = 1.0;
+        costheta[costheta < -1.0] = -1.0;
+        theta = acos(costheta);
+        neigh_dist_surface[[vidx]] = radius * theta;
+    }
+    return(list('neigh'=neigh, 'neigh_dist_dotproduct' = neigh_dist_dotproduct, 'neigh_dist_surface' = neigh_dist_surface));
+}
+
 
 
 

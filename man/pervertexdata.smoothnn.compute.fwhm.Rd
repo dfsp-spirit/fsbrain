@@ -17,4 +17,7 @@ double, the expected FWHM
 \description{
 Compute expected FWHM from given number of neighborhood smoothing iterations.
 }
+\note{
+This function has been adapted from FreeSurfer and it is subject to the FreeSurfer software license.
+}
 \keyword{internal}
