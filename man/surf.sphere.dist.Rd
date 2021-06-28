@@ -21,4 +21,6 @@ dist = surf.sphere.dist(spherical_surface, 5.0);
 highlight.vertices.on.subject(fsaverage.path(), "fsaverage3", verts_lh = dist$neigh[[500]], surface="sphere")
 }
 
+see MRISgaussianWeights to get Gaussian weights for the vertex neighborhoods
+
 }

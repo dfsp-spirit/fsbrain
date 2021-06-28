@@ -132,8 +132,18 @@ pervertexdata.smoothnn.compute.fwhm <- function(surface, niters) {
 #'     RISgaussianWeights()
 #'     and MRISdistSphere() -> utils/mrisurf_MetricProperties.cpp -> MRISextendedNeighbors
 #' ------see utils/mrifilter.cpp @2643 # NO, this is for volumes
-pervertexdata.smoothgaussian <- function(surface, data) {
-
+#'
+#' spherical_surface = subject.surface(fsaverage.path(), "fsaverage3", surface="sphere", hemi="lh")
+#' data = subject.morph.native(fsaverage.path(), "fsaverage3", "thickness", hemi="lh");
+#' data_smoothed = pervertexdata.smoothgaussian(spherical_surface, data);
+#'
+#' @export
+pervertexdata.smoothgaussian <- function(spherical_surface, data, maxdist = 5.0, fwhm = 5.0) {
+    sphere_dists = surf.sphere.dist(spherical_surface, maxdist = maxdist);
+    gstd = fwhm / 2.355;
+    gaussian_weights = surf.sphere.gaussianweights(spherical_surface, sphere_dists, gstd);
+    smoothed_data = surf.sphere.spatialfilter(data, sphere_dists, gaussian_weights);
+    return(smoothed_data);
 }
 
 
@@ -158,6 +168,8 @@ surf.avg.vertexradius <- function(surface) {
 #' dist = surf.sphere.dist(spherical_surface, 5.0);
 #' highlight.vertices.on.subject(fsaverage.path(), "fsaverage3", verts_lh = dist$neigh[[500]], surface="sphere")
 #' }
+#'
+#' see MRISgaussianWeights to get Gaussian weights for the vertex neighborhoods
 #'
 #' @export
 surf.sphere.dist <- function(spherical_surface, maxdist = 5.0) {
@@ -188,8 +200,24 @@ surf.sphere.dist <- function(spherical_surface, maxdist = 5.0) {
     return(list('neigh'=neigh, 'neigh_dist_dotproduct' = neigh_dist_dotproduct, 'neigh_dist_surface' = neigh_dist_surface));
 }
 
+#' @title Compute Gaussian weights
+#' @return vector of Gaussian weights for vertices
+#'  see int MRISgaussianWeights(MRIS *surf, MRI *dist, double GStd) in util/mrisurf_mri.cpp
+surf.sphere.gaussianweights <- function(spherical_surface, sphere_dists, gstd = 1.0) {
+    warning("nnot implemented yet");
+    return(rep(1.0, nrow(spherical_surface$vertices)));
+}
 
 
+#' @title Apply spatial filter to surface data.
+# see MRISspatialFilter
+surf.sphere.spatialfilter <- function(source_data, sphere_dists, gaussian_weights) {
+    smoothed_data = rep(NA, length(source_data));
+    for(vidx in seq_along(source_data)) {
+        smoothed_data[vidx] = source_data[sphere_dists$neigh] * gaussian_weights[sphere_dists$neigh];
+    }
+    return(smoothed_data);
+}
 
 
 

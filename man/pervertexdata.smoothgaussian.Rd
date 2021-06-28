@@ -4,7 +4,7 @@
 \alias{pervertexdata.smoothgaussian}
 \title{Perform Gaussian smoothing}
 \usage{
-pervertexdata.smoothgaussian(surface, data)
+pervertexdata.smoothgaussian(spherical_surface, data, maxdist = 5, fwhm = 5)
 }
 \description{
 Perform Gaussian smoothing
@@ -16,4 +16,8 @@ see MRI *MRISspatialFilter in utils/mrisurf_mri.cpp
     RISgaussianWeights()
     and MRISdistSphere() -> utils/mrisurf_MetricProperties.cpp -> MRISextendedNeighbors
 ------see utils/mrifilter.cpp @2643 # NO, this is for volumes
+
+spherical_surface = subject.surface(fsaverage.path(), "fsaverage3", surface="sphere", hemi="lh")
+data = subject.morph.native(fsaverage.path(), "fsaverage3", "thickness", hemi="lh");
+data_smoothed = pervertexdata.smoothgaussian(spherical_surface, data);
 }
