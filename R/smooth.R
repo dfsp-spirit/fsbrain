@@ -27,7 +27,7 @@
 #'  }
 #'
 #' @export
-pervertexdata.smoothnn <- function(surface, data, fwhm = 5.0, num_iter=NULL) {
+pervertexdata.smoothnn <- function(surface, data, fwhm = NULL, num_iter = NULL) {
     if(! freesurferformats::is.fs.surface(surface)) {
         stop("Parameter 'surface' must be an fs.surface instance.");
     }
@@ -36,6 +36,9 @@ pervertexdata.smoothnn <- function(surface, data, fwhm = 5.0, num_iter=NULL) {
     }
 
     if(is.null(num_iter)) {
+        if(is.null(fwhm)) {
+            stop("One of 'num_iter' or 'fwhm' must be given and non-NULL.");
+        }
         num_iter = pervertexdata.smoothnn.compute.numiter(surface, fwhm);
         cat(sprintf("Smoothing to reach FWHM %f, using %d iterations of nearest neighbor smoothing.\n", fwhm, num_iter));
     } else {
@@ -55,9 +58,14 @@ pervertexdata.smoothnn <- function(surface, data, fwhm = 5.0, num_iter=NULL) {
 
     data_smoothed = rep(NA, nv);
     for(iteration in seq(num_iter)) {
+        if(iteration == 1L) {
+            source_data = data;
+        } else {
+            source_data = data_smoothed;
+        }
         for(vidx in seq(nv)) {
             neigh = c(adj[[vidx]], vidx);
-            data_smoothed[vidx] = mean(data[neigh]);
+            data_smoothed[vidx] = mean(source_data[neigh]);
         }
     }
     return(data_smoothed);
@@ -72,6 +80,9 @@ pervertexdata.smoothnn <- function(surface, data, fwhm = 5.0, num_iter=NULL) {
 #'
 #' @keywords internal
 pervertexdata.smoothnn.compute.numiter<- function(surface, fwhm=5.0) {
+
+    message("Something is wrong with this, FS seems to use a different computation for the mesh area.");
+
     if(! freesurferformats::is.fs.surface(surface)) {
         stop("Parameter 'surface' must be an fs.surface instance.");
     }
@@ -93,6 +104,9 @@ pervertexdata.smoothnn.compute.numiter<- function(surface, fwhm=5.0) {
 #'
 #' @keywords internal
 pervertexdata.smoothnn.compute.fwhm <- function(surface, niters) {
+
+    message("Something is wrong with this, FS seems to use a different computation for the mesh area.");
+
     if(! freesurferformats::is.fs.surface(surface)) {
         stop("Parameter 'surface' must be an fs.surface instance.");
     }
