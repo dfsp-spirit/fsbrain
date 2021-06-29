@@ -172,7 +172,7 @@ surf.avg.vertexradius <- function(surface) {
 #'
 #' @param spherical_surface an fs.surface instance representing the spherical version (\code{lh.sphere} or \code{rh.sphere} of the subject).
 #'
-#' @param maxdist double, the neighborhood size
+#' @param maxdist double, the neighborhood size. TODO: find out proper value for this.
 #'
 #' @examples
 #' \dontrun{
@@ -200,7 +200,7 @@ surf.sphere.dist <- function(spherical_surface, maxdist = 5.0) {
     neigh_dist_surface = list();
     for(vidx in seq(nv)) {
         pd_dists = rowSums((spherical_surface$vertices[vidx,] * spherical_surface$vertices));
-        neigh[[vidx]] = which(pd_dists < min_dotp_thresh);
+        neigh[[vidx]] = which(pd_dists > min_dotp_thresh);
         neigh_dist_dotproduct[[vidx]] = pd_dists[neigh[[vidx]]];
 
         costheta = neigh_dist_dotproduct[[vidx]] / radius2;
