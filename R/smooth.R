@@ -177,7 +177,7 @@ surf.sphere.dist <- function(spherical_surface, maxdist = 5.0) {
     spherical_surface = fsbrain:::ensure.fs.surface(spherical_surface);
     nv = nrow(spherical_surface$vertices);
 
-    radius = surf.avg.vertexradius(spherical_surface);
+    radius = fsbrain:::surf.avg.vertexradius(spherical_surface);
     radius2 = radius * radius;
     min_dotp_thresh = radius2 * cos(maxdist / radius) * (1.0001);
 
@@ -201,7 +201,7 @@ surf.sphere.dist <- function(spherical_surface, maxdist = 5.0) {
 
 #' @title Compute Gaussian weights
 #'
-#' @param gstd double, can be computed from the FWHM as \code{gstd = fwhm / sqrt(log(256.0))}.
+#' @param gstd double, Gaussian standard deviation, can be computed from the FWHM as \code{gstd = fwhm / sqrt(log(256.0))}.
 #'
 #' @return vector of Gaussian weights for vertices
 #'  see int MRISgaussianWeights(MRIS *surf, MRI *dist, double GStd) in util/mrisurf_mri.cpp
@@ -217,6 +217,7 @@ surf.sphere.gaussianweights <- function(spherical_surface, sphere_dists, gstd) {
         gsum = 0.0;
         vert_weights = rep(NA, num_neighbors[vidx]);
         local_idx = 1L;
+        #cat(sprintf("Vertex %d has %d neighbors: %s\n", vidx, num_neighbors[vidx], paste(sphere_dists$neigh[[vidx]], collapse = " ")));
         for(neigh_vidx in sphere_dists$neigh[[vidx]]) {
             d = sphere_dists$neigh[[neigh_vidx]];
             g = f * exp(-(d * d) / (gvar2));
@@ -241,7 +242,8 @@ surf.sphere.spatialfilter <- function(source_data, sphere_dists, gaussian_weight
     }
     for(vidx in seq_along(source_data)) {
         num_neigh = length(sphere_dists$neigh[[vidx]]);
-        smoothed_data[vidx] = sum(source_data[sphere_dists$neigh[[vidx]]] * gaussian_weights[sphere_dists$neigh[[vidx]]]) / num_neigh;
+        # smoothed_data[vidx] = sum(source_data[sphere_dists$neigh[[vidx]]] * gaussian_weights[sphere_dists$neigh[[vidx]]]) / num_neigh;
+        smoothed_data[vidx] = sum(source_data[sphere_dists$neigh[[vidx]]] * gaussian_weights[[vidx]]) / num_neigh;
     }
     return(smoothed_data);
 }
