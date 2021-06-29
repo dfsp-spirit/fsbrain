@@ -4,12 +4,12 @@
 \alias{surf.sphere.dist}
 \title{Compute all vertices in given distance on a sphere and their distances.}
 \usage{
-surf.sphere.dist(spherical_surface, maxdist = 5)
+surf.sphere.dist(spherical_surface, maxdist)
 }
 \arguments{
 \item{spherical_surface}{an fs.surface instance representing the spherical version (\code{lh.sphere} or \code{rh.sphere} of the subject).}
 
-\item{maxdist}{double, the neighborhood size}
+\item{maxdist}{double, the neighborhood size (or maximal distance to travel along the sphere when searching for neighbors). TODO: find out proper value for this.}
 }
 \description{
 Compute all vertices in given distance on a sphere and their distances.

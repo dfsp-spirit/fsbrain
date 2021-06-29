@@ -4,7 +4,22 @@
 \alias{pervertexdata.smoothgaussian}
 \title{Perform Gaussian smoothing}
 \usage{
-pervertexdata.smoothgaussian(spherical_surface, data, maxdist = 5, fwhm = 5)
+pervertexdata.smoothgaussian(
+  spherical_surface,
+  data,
+  fwhm = 5,
+  truncfactor = 3.5
+)
+}
+\arguments{
+\item{data}{numerical vector of per-vertex data for the surface}
+
+\item{fwhm}{double, the full width at half maximum for the Gaussian kernel}
+
+\item{truncfactor}{the factor after how many stddevs to truncate the Gaussian kernel}
+}
+\value{
+the smoothed data
 }
 \description{
 Perform Gaussian smoothing
@@ -14,7 +29,7 @@ This function has been adapted from FreeSurfer and it is subject to the FreeSurf
 }
 \examples{
 \dontrun{
-spherical_surface = subject.surface(fsaverage.path(), "fsaverage3", surface="sphere", hemi="lh")
+spherical_surface = subject.surface(fsaverage.path(), "fsaverage3", surface="sphere", hemi="lh");
 data = subject.morph.native(fsaverage.path(), "fsaverage3", "thickness", hemi="lh");
 data_smoothed = pervertexdata.smoothgaussian(spherical_surface, data);
 }
