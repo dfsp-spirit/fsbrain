@@ -72,9 +72,10 @@ If you want to compile the package under any other operating system, you will ne
 
 Recent MacOS versions do not ship with an X11 environment. You will have to install the [xquartz X11 system](https://www.xquartz.org/) if you do not have it already. If you want to create GIF movies, make sure you have imagemagick installed (easiest via [homebrew](https://brew.sh/): `brew install imagemagick@6`).
 
+
 ### Installation via Docker
 
-We are currently working on Docker images for different fsbrain versions. Starting with the next release, a Docker image will be available on Dockerhub for each fsbrain release. You can already try the dev version for fsbrain 0.5.0 (not released yet and unsupported) at the [fsbrain Dockerhub repo](https://hub.docker.com/r/dfspspirit/fsbrain).
+The official Docker image for fsbrain 0.4.3 is now available at the [fsbrain Dockerhub repo](https://hub.docker.com/r/dfspspirit/fsbrain). Usage instructions can be found there as well.
 
 
 ## Documentation
