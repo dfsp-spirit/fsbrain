@@ -172,7 +172,7 @@ surf.avg.vertexradius <- function(surface) {
 #'
 #' @param spherical_surface an fs.surface instance representing the spherical version (\code{lh.sphere} or \code{rh.sphere} of the subject).
 #'
-#' @param maxdist double, the neighborhood size. TODO: find out proper value for this.
+#' @param maxdist double, the neighborhood size (or maximal distance to travel along the sphere when searching for neighbors). TODO: find out proper value for this.
 #'
 #' @examples
 #' \dontrun{
@@ -182,6 +182,8 @@ surf.avg.vertexradius <- function(surface) {
 #' }
 #'
 #' @note see MRISgaussianWeights to get Gaussian weights for the vertex neighborhoods
+## see MRI *MRISgaussianSmooth(MRIS *Surf, MRI *Src, double GStd, MRI *Targ, double TruncFactor)
+## at mrisurf_deform.cpp lines 3810ff for maxdist setting (dmax = TruncFactor * GStd;  // truncate after TruncFactor stddevs)
 #'
 #' @export
 surf.sphere.dist <- function(spherical_surface, maxdist = 5.0) {
