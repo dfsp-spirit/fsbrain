@@ -126,7 +126,17 @@ pervertexdata.smoothnn.compute.fwhm <- function(surface, niters) {
 
 #' @title Perform Gaussian smoothing
 #'
+#' @inheritParams surf.sphere.gaussianweights
+#'
+#' @param data numerical vector of per-vertex data for the surface
+#'
+#' @param fwhm double, the full width at half maximum for the Gaussian kernel
+#'
+#' @param truncfactor the factor after how many stddevs to truncate the Gaussian kernel
+#'
 #' @note This function has been adapted from FreeSurfer and it is subject to the FreeSurfer software license.
+#'
+#' @return the smoothed data
 #'
 #' @examples
 #' \dontrun{
@@ -136,9 +146,11 @@ pervertexdata.smoothnn.compute.fwhm <- function(surface, niters) {
 #' }
 #'
 #' @export
-pervertexdata.smoothgaussian <- function(spherical_surface, data, maxdist = 5.0, fwhm = 5.0) {
-    sphere_dists = surf.sphere.dist(spherical_surface, maxdist = maxdist);
+pervertexdata.smoothgaussian <- function(spherical_surface, data, fwhm = 5.0, truncfactor = 3.5) {
     gstd = fwhm / sqrt(log(256.0));
+    maxdist = truncfactor * gstd;
+    sphere_dists = surf.sphere.dist(spherical_surface, maxdist = maxdist);
+
     gaussian_weights = surf.sphere.gaussianweights(spherical_surface, sphere_dists, gstd);
     smoothed_data = surf.sphere.spatialfilter(data, sphere_dists, gaussian_weights);
     return(smoothed_data);
@@ -186,7 +198,7 @@ surf.avg.vertexradius <- function(surface) {
 ## at mrisurf_deform.cpp lines 3810ff for maxdist setting (dmax = TruncFactor * GStd;  // truncate after TruncFactor stddevs)
 #'
 #' @export
-surf.sphere.dist <- function(spherical_surface, maxdist = 5.0) {
+surf.sphere.dist <- function(spherical_surface, maxdist) {
 
     warning("This does not work yet");
 
