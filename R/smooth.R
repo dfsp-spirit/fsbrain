@@ -151,6 +151,14 @@ pervertexdata.smoothgaussian <- function(spherical_surface, data, maxdist = 5.0,
 #'
 #' @return scalar double, the average distance.
 #'
+#' @examples
+#' \dontrun{
+#' spherical_surface = subject.surface(fsaverage.path(), "fsaverage3", surface="sphere", hemi="lh");
+#' vr = fsbrain:::surf.avg.vertexradius(spherical_surface);
+#' # Show histogram to verify that the surface is a sphere centered at 0,0,0:
+#' hist(freesurferformats:::vertexdists.to.point(spherical_surface, c(0,0,0)));
+#' }
+#'
 #' @keywords internal
 surf.avg.vertexradius <- function(surface) {
     surface = fsbrain:::ensure.fs.surface(surface);
