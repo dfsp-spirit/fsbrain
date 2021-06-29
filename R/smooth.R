@@ -145,6 +145,12 @@ pervertexdata.smoothgaussian <- function(spherical_surface, data, maxdist = 5.0,
 }
 
 
+#' @title Compute average distance from the origin to each vertex.
+#'
+#' @param surface an fs.surface instance, and for the typical use case of this function, a spherical surface.
+#'
+#' @return scalar double, the average distance.
+#'
 #' @keywords internal
 surf.avg.vertexradius <- function(surface) {
     surface = fsbrain:::ensure.fs.surface(surface);
