@@ -220,6 +220,7 @@ surf.sphere.dist <- function(spherical_surface, maxdist) {
     ## The following implementation only considers the dotproduct distance, but it does not follow the
     ## mesh edges. The FreeSurfer implementation follows the k-ring neighborhoods for increasing k and
     ## adds vertices while they are still under the dotproduct threshold.
+    ## See utils/mrisurf_metricProperties.cpp l 12747, MRISextendedNeighbors
     min_global_costheta = 1e6;
     max_global_costheta = -1e6;
     vertices = spherical_surface$vertices;
