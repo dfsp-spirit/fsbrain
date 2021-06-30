@@ -85,10 +85,7 @@ pervertexdata.smoothnn <- function(surface, data, fwhm = NULL, num_iter = NULL) 
 pervertexdata.smoothnn.compute.numiter<- function(surface, fwhm=5.0) {
 
     message("Something is wrong with this, FS seems to use a different computation for the mesh area.");
-
-    if(! freesurferformats::is.fs.surface(surface)) {
-        stop("Parameter 'surface' must be an fs.surface instance.");
-    }
+    surface = ensure.fs.surface(surface);
     mesh = fsbrain:::ensure.tmesh3d(surface);
     avgvtxarea = Rvcg::vcgArea(mesh) / nrow(surface$vertices);
     gstd = fwhm / sqrt(log(256.0));
@@ -224,14 +221,34 @@ surf.sphere.dist <- function(spherical_surface, maxdist) {
     min_global_costheta = 1e6;
     max_global_costheta = -1e6;
     vertices = spherical_surface$vertices;
-    warning("We are still ARBITRARILY substracting -1 below"); # most likely cause we ignore the mesh
+
     for(vidx in seq(nv)) { # TODO: fix this, see MRISextendedNeighbors
         dotproduct_dists = abs(rowSums((vertices[vidx,] * vertices)));
-        neigh[[vidx]] = which(dotproduct_dists > min_dotp_thresh); # This is too simple, we need to follow sphere mesh connectivity.
-        neigh_dist_dotproduct[[vidx]] = dotproduct_dists[neigh[[vidx]]];
+
+        setRefClass("IntVecReference",
+                    fields=list(
+                        vec="integer"
+                    )
+        );
+        setRefClass("DoubleVecReference",
+                    fields=list(
+                        vec="numeric"
+                    )
+        );
+
+        ref_visited <- new("IntVecReference", vec=rep(0L, nv));
+        ref_neighbors <- new("IntVecReference", vec=integer(0));
+        ref_neighbor_dpdists <- new("DoubleVecReference", vec=double(0.0));
+        extend_neighbors(spherical_surface, vidx, vidx, ref_visited, ref_neighbors, ref_neighbor_dpdists);
+
+        neigh[[vidx]] = ref_neighbors$vec;
+        neigh_dist_dotproduct[[vidx]] = ref_neighbor_dpdists$vec;
+
+        #neigh[[vidx]] = which(dotproduct_dists > min_dotp_thresh); # This is too simple, we need to follow sphere mesh connectivity.
+        #neigh_dist_dotproduct[[vidx]] = dotproduct_dists[neigh[[vidx]]];
 
         # We do this in a vectorized R fashion instead of looping over the neighbors C++-style.
-        costheta = (neigh_dist_dotproduct[[vidx]] / radius2) - 1.0; # TODO: Why do we need to substract 1.0 here to get to the proper range?
+        costheta = (neigh_dist_dotproduct[[vidx]] / radius2);
         range_costheta = range(costheta);
         if(range_costheta[1] < min_global_costheta) {
             min_global_costheta = range_costheta[1];
@@ -250,6 +267,13 @@ surf.sphere.dist <- function(spherical_surface, maxdist) {
     return(list('neigh'=neigh, 'neigh_dist_dotproduct' = neigh_dist_dotproduct, 'neigh_dist_surface' = neigh_dist_surface));
 }
 
+
+#' @title Recursive computation of neighborhoods
+#'
+#' @keywords internal
+extend_neighbors <- function(spherical_surface, targetvidx, currentvidx, ref_visited, ref_neighbors, ref_neighbor_dpdists) {
+
+}
 
 #' @title Compute Gaussian weights
 #'
