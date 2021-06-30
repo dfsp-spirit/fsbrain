@@ -21,10 +21,10 @@
 #'  \dontrun{
 #'  sjd = fsaverage.path(T);
 #'  surface = subject.surface(sjd, "fsaverage3", hemi = "lh");
-#'  th = subject.morph.native(sjd, "fsaverage3", "thickness", hemi="lh")
+#'  th = subject.morph.native(sjd, "fsaverage3", "thickness", hemi="lh");
 #'  th_smooth = pervertexdata.smoothnn(surface, th, fwhm = 10.0);
-#'  vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = th)
-#'  vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = th_smooth)
+#'  vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = th);
+#'  vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = th_smooth);
 #'  }
 #'
 #' @export
@@ -140,6 +140,8 @@ pervertexdata.smoothnn.compute.fwhm <- function(surface, niters) {
 #' spherical_surface = subject.surface(fsaverage.path(), "fsaverage3", surface="sphere", hemi="lh");
 #' data = subject.morph.native(fsaverage.path(), "fsaverage3", "thickness", hemi="lh");
 #' data_smoothed = pervertexdata.smoothgaussian(spherical_surface, data);
+#' vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = data);
+#' vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = data_smoothed);
 #' }
 #'
 #' @export
@@ -210,7 +212,6 @@ setRefClass("DoubleVecReference",
 #' @export
 surf.sphere.dist <- function(spherical_surface, maxdist) {
 
-    warning("This does not work yet, see comment below. It needs to travel along edges.");
 
     spherical_surface = fsbrain:::ensure.fs.surface(spherical_surface);
     nv = nrow(spherical_surface$vertices);
@@ -263,7 +264,7 @@ surf.sphere.dist <- function(spherical_surface, maxdist) {
         neigh_dist_surface[[vidx]] = radius * theta;
     }
     # Costheta mst be in range -1.0 to +1.0.
-    cat(sprintf("Global costheta range is %f to %f (expected -1.0 to 1.0).\n", min_global_costheta, max_global_costheta));
+    #cat(sprintf("Global costheta range is %f to %f (expected -1.0 to 1.0).\n", min_global_costheta, max_global_costheta));
     return(list('neigh'=neigh, 'neigh_dist_dotproduct' = neigh_dist_dotproduct, 'neigh_dist_surface' = neigh_dist_surface));
 }
 
@@ -273,7 +274,7 @@ surf.sphere.dist <- function(spherical_surface, maxdist) {
 #' @keywords internal
 extend_neighbors <- function(spherical_surface, targetvidx, currentvidx, min_dotp_thresh, ref_visited, ref_neighbors, ref_neighbor_dpdists) {
 
-    do_checks = TRUE;
+    do_checks = FALSE;
     if(do_checks) {
         if(length(targetvidx) != 1L) {
             stop(sprintf("Parameter 'targetvidx' must be a scalar integer but has length %d.\n", length(targetvidx)));
@@ -290,7 +291,7 @@ extend_neighbors <- function(spherical_surface, targetvidx, currentvidx, min_dot
     }
 
     num_verts = nrow(spherical_surface$vertices);
-    cat(sprintf("Running for targetvidx=%d, currentvidx=%d, found %d neighbors so far (got %d dists for them).\n", targetvidx, currentvidx, length(which(ref_neighbors$vec == 1L)), length(which(ref_neighbor_dpdists$vec >= 0))));
+    #cat(sprintf("Running for targetvidx=%d, currentvidx=%d, found %d neighbors so far (got %d dists for them).\n", targetvidx, currentvidx, length(which(ref_neighbors$vec == 1L)), length(which(ref_neighbor_dpdists$vec >= 0))));
     #cat(sprintf("* Surface with %d vertices, length(ref_visited$vec)=%d.\n", num_verts, length(ref_visited$vec)));
 
     if(ref_visited$vec[currentvidx] == targetvidx) {
@@ -313,7 +314,7 @@ extend_neighbors <- function(spherical_surface, targetvidx, currentvidx, min_dot
 
     # Iterate over structural neighbors
     mesh_neighbors = fs.surface.vertex.neighbors(spherical_surface, currentvidx);
-    cat(sprintf("Vertex currentvidx=%d has %d neighbors.\n", currentvidx, length(mesh_neighbors)));
+    #cat(sprintf("Vertex currentvidx=%d has %d neighbors.\n", currentvidx, length(mesh_neighbors)));
     for(mesh_neigh_idx in mesh_neighbors) {
         res = extend_neighbors(spherical_surface, targetvidx, mesh_neigh_idx, min_dotp_thresh, ref_visited, ref_neighbors, ref_neighbor_dpdists);
         if(res == 1L) {
