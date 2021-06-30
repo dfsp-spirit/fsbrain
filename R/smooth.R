@@ -169,6 +169,8 @@ pervertexdata.smoothgaussian <- function(spherical_surface, data, fwhm = 5.0, tr
 #' vr = fsbrain:::surf.avg.vertexradius(spherical_surface);
 #' # Show histogram to verify that the surface is a sphere centered at 0,0,0:
 #' hist(freesurferformats:::vertexdists.to.point(spherical_surface, c(0,0,0)));
+#' # Plot the coords and a point at the origin:
+#' fsbrain::highlight.points.spheres(rbind(spherical_surface$vertices, c(0,0,0)));
 #' }
 #'
 #' @keywords internal
@@ -184,12 +186,12 @@ surf.avg.vertexradius <- function(surface) {
 #'
 #' @param spherical_surface an fs.surface instance representing the spherical version (\code{lh.sphere} or \code{rh.sphere} of the subject).
 #'
-#' @param maxdist double, the neighborhood size (or maximal distance to travel along the sphere when searching for neighbors). TODO: find out proper value for this.
+#' @param maxdist double, the neighborhood size along the sphere, or to be more precise the maximal distance to travel along the sphere (using mesh edges) when searching for neighbors. The maxdist value can be computed from the definition of the Gaussian kernel parameters, i.e., its FWHM and truncation factor. See \code{pervertexdata.smoothgaussian} for an example of how to do that. For a kernel with FWHM of 5 and a truncation factor of 3.5, the resulting maxdist setting is 20.
 #'
 #' @examples
 #' \dontrun{
 #' spherical_surface = subject.surface(fsaverage.path(), "fsaverage3", surface="sphere", hemi="lh");
-#' dist = surf.sphere.dist(spherical_surface, 5.0);
+#' dist = surf.sphere.dist(spherical_surface, 20.0);
 #' highlight.vertices.on.subject(fsaverage.path(), "fsaverage3", verts_lh = dist$neigh[[500]], surface="sphere")
 #' }
 #'
@@ -200,7 +202,7 @@ surf.avg.vertexradius <- function(surface) {
 #' @export
 surf.sphere.dist <- function(spherical_surface, maxdist) {
 
-    warning("This does not work yet");
+    warning("This does not work yet, see comment below. It needs to travel along edges.");
 
     spherical_surface = fsbrain:::ensure.fs.surface(spherical_surface);
     nv = nrow(spherical_surface$vertices);
@@ -216,17 +218,32 @@ surf.sphere.dist <- function(spherical_surface, maxdist) {
     ## The following implementation only considers the dotproduct distance, but it does not follow the
     ## mesh edges. The FreeSurfer implementation follows the k-ring neighborhoods for increasing k and
     ## adds vertices while they are still under the dotproduct threshold.
+    min_global_costheta = 1e6;
+    max_global_costheta = -1e6;
+    vertices = spherical_surface$vertices;
+    warning("We are still ARBITRARILY substracting -1 below"); # most likely cause we ignore the mesh
     for(vidx in seq(nv)) { # TODO: fix this, see MRISextendedNeighbors
-        dotproduct_dists = abs(rowSums((spherical_surface$vertices[vidx,] * spherical_surface$vertices)));
-        neigh[[vidx]] = which(dotproduct_dists > min_dotp_thresh);
+        dotproduct_dists = abs(rowSums((vertices[vidx,] * vertices)));
+        neigh[[vidx]] = which(dotproduct_dists > min_dotp_thresh); # This is too simple, we need to follow sphere mesh connectivity.
         neigh_dist_dotproduct[[vidx]] = dotproduct_dists[neigh[[vidx]]];
 
-        costheta = neigh_dist_dotproduct[[vidx]] / radius2;
+        # We do this in a vectorized R fashion instead of looping over the neighbors C++-style.
+        costheta = (neigh_dist_dotproduct[[vidx]] / radius2) - 1.0; # TODO: Why do we need to substract 1.0 here to get to the proper range?
+        range_costheta = range(costheta);
+        if(range_costheta[1] < min_global_costheta) {
+            min_global_costheta = range_costheta[1];
+        }
+        if(range_costheta[2] > max_global_costheta) {
+            max_global_costheta = range_costheta[2];
+        }
+        #cat(sprintf("Costheta range is %f to %f.\n", range_costheta[1], range_costheta[2]));
         costheta[costheta > 1.0] = 1.0;
         costheta[costheta < -1.0] = -1.0;
         theta = acos(costheta);
         neigh_dist_surface[[vidx]] = radius * theta;
     }
+    # Costheta mst be in range -1.0 to +1.0.
+    cat(sprintf("Global costheta range is %f to %f (expected -1.0 to 1.0).\n", min_global_costheta, max_global_costheta));
     return(list('neigh'=neigh, 'neigh_dist_dotproduct' = neigh_dist_dotproduct, 'neigh_dist_surface' = neigh_dist_surface));
 }
 
