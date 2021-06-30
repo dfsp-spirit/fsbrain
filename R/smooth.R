@@ -150,7 +150,7 @@ pervertexdata.smoothgaussian <- function(spherical_surface, data, fwhm = 5.0, tr
     maxdist = truncfactor * gstd;
     sphere_dists = surf.sphere.dist(spherical_surface, maxdist = maxdist);
 
-    gaussian_weights = surf.sphere.gaussianweights(spherical_surface, sphere_dists, gstd);
+    gaussian_weights = fsbrain:::surf.sphere.gaussianweights(spherical_surface, sphere_dists, gstd);
     smoothed_data = surf.sphere.spatialfilter(data, sphere_dists, gaussian_weights);
     return(smoothed_data);
 }
@@ -335,8 +335,11 @@ surf.sphere.gaussianweights <- function(spherical_surface, sphere_dists, gstd) {
     gvar2 = 2 * (gstd * gstd); # twice the variance
     f = 1.0 / (sqrt(2 * pi) * gstd);
 
-    num_neighbors = unlist(lapply(sphere_dists$neigh, length));
+    num_neighbors = unlist(lapply(sphere_dists$neigh, length)) + 1L;
     nv = nrow(spherical_surface$vertices);
+    if(length(num_neighbors) != nv) {
+        stop("Data from parameter 'sphere_dists' does not match 'spherical_surface' vertex count");
+    }
     weights = list();
     for(vidx in seq(nv)) {
         gsum = 0.0;
@@ -344,7 +347,7 @@ surf.sphere.gaussianweights <- function(spherical_surface, sphere_dists, gstd) {
         local_idx = 1L;
         #cat(sprintf("Vertex %d has %d neighbors: %s\n", vidx, num_neighbors[vidx], paste(sphere_dists$neigh[[vidx]], collapse = " ")));
         for(neigh_vidx in sphere_dists$neigh[[vidx]]) {
-            d = sphere_dists$neigh[[neigh_vidx]];
+            d = sphere_dists$neigh_dist_surface[[vidx]][local_idx];
             g = f * exp(-(d * d) / (gvar2));
             vert_weights[local_idx] = g;
             gsum = gsum + g;
