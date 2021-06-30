@@ -237,12 +237,12 @@ surf.sphere.dist <- function(spherical_surface, maxdist) {
 
 
         ref_visited <- new("IntVecReference", vec=rep(0L, nv));
-        ref_neighbors <- new("IntVecReference", vec=integer(0));
-        ref_neighbor_dpdists <- new("DoubleVecReference", vec=double(0.0));
-        extend_neighbors(spherical_surface, vidx, vidx, min_dotp_thresh, ref_visited, ref_neighbors, ref_neighbor_dpdists);
+        ref_neighbors <- new("IntVecReference", vec=rep(0L, nv));
+        ref_neighbor_dpdists <- new("DoubleVecReference", vec=rep(-1.0, nv));
+        fsbrain:::extend_neighbors(spherical_surface, vidx, vidx, min_dotp_thresh, ref_visited, ref_neighbors, ref_neighbor_dpdists);
 
-        neigh[[vidx]] = ref_neighbors$vec;
-        neigh_dist_dotproduct[[vidx]] = ref_neighbor_dpdists$vec;
+        neigh[[vidx]] = which(ref_neighbors$vec == 1L);
+        neigh_dist_dotproduct[[vidx]] = ref_neighbor_dpdists$vec[neigh[[vidx]]];
 
         #neigh[[vidx]] = which(dotproduct_dists > min_dotp_thresh); # This is too simple, we need to follow sphere mesh connectivity.
         #neigh_dist_dotproduct[[vidx]] = dotproduct_dists[neigh[[vidx]]];
@@ -272,8 +272,25 @@ surf.sphere.dist <- function(spherical_surface, maxdist) {
 #'
 #' @keywords internal
 extend_neighbors <- function(spherical_surface, targetvidx, currentvidx, min_dotp_thresh, ref_visited, ref_neighbors, ref_neighbor_dpdists) {
+
+    do_checks = TRUE;
+    if(do_checks) {
+        if(length(targetvidx) != 1L) {
+            stop(sprintf("Parameter 'targetvidx' must be a scalar integer but has length %d.\n", length(targetvidx)));
+        }
+        if(! is.integer(targetvidx)) {
+            stop("Parameter 'targetvidx' must be a scalar integer, but is not an integer.");
+        }
+        if(length(currentvidx) != 1L) {
+            stop(sprintf("Parameter 'currentvidx' must be a scalar integer but has length %d.\n", length(currentvidx)));
+        }
+        if(! is.integer(currentvidx)) {
+            stop("Parameter 'currentvidx' must be a scalar integer, but is not an integer.");
+        }
+    }
+
     num_verts = nrow(spherical_surface$vertices);
-    cat(sprintf("Running for targetvidx=%d, currentvidx=%d, found %d neighbors so far (got %d dists for them).\n", targetvidx, currentvidx, length(ref_neighbors$vec), length(ref_neighbor_dpdists$vec)));
+    cat(sprintf("Running for targetvidx=%d, currentvidx=%d, found %d neighbors so far (got %d dists for them).\n", targetvidx, currentvidx, length(which(ref_neighbors$vec == 1L)), length(which(ref_neighbor_dpdists$vec >= 0))));
     #cat(sprintf("* Surface with %d vertices, length(ref_visited$vec)=%d.\n", num_verts, length(ref_visited$vec)));
 
     if(ref_visited$vec[currentvidx] == targetvidx) {
@@ -285,10 +302,10 @@ extend_neighbors <- function(spherical_surface, targetvidx, currentvidx, min_dot
     }
 
     # Add current vertex to neighborhood with distance.
-    ref_neighbors$vec = c(ref_neighbors$vec, currentvidx);
-    ref_neighbor_dpdists$vec = c(ref_neighbor_dpdists$vec, dotprod);
+    ref_neighbors$vec[currentvidx] = 1L;
+    ref_neighbor_dpdists$vec[currentvidx] = dotprod;
 
-    if(length(ref_neighbors$vec) == num_verts) {
+    if(length(which(ref_neighbors$vec == 1L)) == num_verts) {
         return(invisible(1L));
     }
 
