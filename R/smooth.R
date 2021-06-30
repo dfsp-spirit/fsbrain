@@ -178,6 +178,17 @@ surf.avg.vertexradius <- function(surface) {
 }
 
 
+setRefClass("IntVecReference",
+            fields=list(
+                vec="integer"
+            )
+);
+setRefClass("DoubleVecReference",
+            fields=list(
+                vec="numeric"
+            )
+);
+
 
 #' @title Compute all vertices in given distance on a sphere and their distances.
 #'
@@ -212,7 +223,6 @@ surf.sphere.dist <- function(spherical_surface, maxdist) {
     neigh_dist_dotproduct = list();
     neigh_dist_surface = list();
 
-    mesh_adj_list = fs.surface.vertex.neighbors(spherical_surface);
 
     ## The following implementation only considers the dotproduct distance, but it does not follow the
     ## mesh edges. The FreeSurfer implementation follows the k-ring neighborhoods for increasing k and
@@ -220,26 +230,16 @@ surf.sphere.dist <- function(spherical_surface, maxdist) {
     ## See utils/mrisurf_metricProperties.cpp l 12747, MRISextendedNeighbors
     min_global_costheta = 1e6;
     max_global_costheta = -1e6;
-    vertices = spherical_surface$vertices;
 
     for(vidx in seq(nv)) { # TODO: fix this, see MRISextendedNeighbors
-        dotproduct_dists = abs(rowSums((vertices[vidx,] * vertices)));
+        #dotproduct_dists = abs(rowSums((vertices[vidx,] * vertices)));
 
-        setRefClass("IntVecReference",
-                    fields=list(
-                        vec="integer"
-                    )
-        );
-        setRefClass("DoubleVecReference",
-                    fields=list(
-                        vec="numeric"
-                    )
-        );
+
 
         ref_visited <- new("IntVecReference", vec=rep(0L, nv));
         ref_neighbors <- new("IntVecReference", vec=integer(0));
         ref_neighbor_dpdists <- new("DoubleVecReference", vec=double(0.0));
-        extend_neighbors(spherical_surface, vidx, vidx, ref_visited, ref_neighbors, ref_neighbor_dpdists);
+        extend_neighbors(spherical_surface, vidx, vidx, min_dotp_thresh, ref_visited, ref_neighbors, ref_neighbor_dpdists);
 
         neigh[[vidx]] = ref_neighbors$vec;
         neigh_dist_dotproduct[[vidx]] = ref_neighbor_dpdists$vec;
@@ -271,8 +271,38 @@ surf.sphere.dist <- function(spherical_surface, maxdist) {
 #' @title Recursive computation of neighborhoods
 #'
 #' @keywords internal
-extend_neighbors <- function(spherical_surface, targetvidx, currentvidx, ref_visited, ref_neighbors, ref_neighbor_dpdists) {
+extend_neighbors <- function(spherical_surface, targetvidx, currentvidx, min_dotp_thresh, ref_visited, ref_neighbors, ref_neighbor_dpdists) {
+    num_verts = nrow(spherical_surface$vertices);
+    cat(sprintf("Running for targetvidx=%d, currentvidx=%d, found %d neighbors so far (got %d dists for them).\n", targetvidx, currentvidx, length(ref_neighbors$vec), length(ref_neighbor_dpdists$vec)));
+    #cat(sprintf("* Surface with %d vertices, length(ref_visited$vec)=%d.\n", num_verts, length(ref_visited$vec)));
 
+    if(ref_visited$vec[currentvidx] == targetvidx) {
+        return(invisible(0L)); # Abort recursion.
+    }
+    dotprod = abs(sum(spherical_surface$vertices[targetvidx,] * spherical_surface$vertices[currentvidx,]));
+    if(dotprod < min_dotp_thresh) {
+        return(invisible(0L)); # Abort recursion.
+    }
+
+    # Add current vertex to neighborhood with distance.
+    ref_neighbors$vec = c(ref_neighbors$vec, currentvidx);
+    ref_neighbor_dpdists$vec = c(ref_neighbor_dpdists$vec, dotprod);
+
+    if(length(ref_neighbors$vec) == num_verts) {
+        return(invisible(1L));
+    }
+
+    ref_visited$vec[currentvidx] = targetvidx; # Record hit.
+
+    # Iterate over structural neighbors
+    mesh_neighbors = fs.surface.vertex.neighbors(spherical_surface, currentvidx);
+    for(mesh_neigh_idx in mesh_neighbors) {
+        res = extend_neighbors(spherical_surface, targetvidx, mesh_neigh_idx, min_dotp_thresh, ref_visited, ref_neighbors, ref_neighbor_dpdists);
+        if(res == 1L) {
+            return(res);
+        }
+    }
+    return(invisible(0L));
 }
 
 #' @title Compute Gaussian weights
