@@ -40,6 +40,8 @@ fs.surface.to.igraph <- function(surface) {
 #'
 #' @param simplify logical, whether to return only an integer vector if the 'nodes' parameter has length 1 (instead of a list where the first element is such a vector).
 #'
+#' @param include_self logical, whether to include vertices in their own neighborhood
+#'
 #' @note If you intend to call several functions on the igraph, it is faster to construct it with \code{fs.surface.to.igraph} and keep it.
 #'
 #' @seealso The \code{fs.surface.as.adjacencylist} function computes the 1-ring neighborhood for the whole graph.
@@ -47,7 +49,7 @@ fs.surface.to.igraph <- function(surface) {
 #' @return named list of integer vectors (see \code{igraph::neighborhood}), unless 'simplify' is TRUE, see there for details.
 #'
 #' @export
-fs.surface.vertex.neighbors <- function(surface, nodes = NULL, order = 1L, simplify = TRUE) {
+fs.surface.vertex.neighbors <- function(surface, nodes = NULL, order = 1L, simplify = TRUE, include_self = FALSE) {
 
     surface = ensure.fs.surface(surface);
     if(is.null(nodes)) {
@@ -57,7 +59,7 @@ fs.surface.vertex.neighbors <- function(surface, nodes = NULL, order = 1L, simpl
     if(requireNamespace("Rvcg", quietly = TRUE)) {
         if(exists('vcgVertexNeighbors', where=asNamespace('Rvcg'), mode='function')) {
             tmesh = ensure.tmesh3d(surface);
-            neigh = Rvcg::vcgVertexNeighbors(tmesh, vi = nodes, numstep = order, include_self = FALSE);
+            neigh = Rvcg::vcgVertexNeighbors(tmesh, vi = nodes, numstep = order, include_self = include_self);
             if(simplify && length(nodes) == 1L) {
                 return(unlist(neigh));
             } else {
@@ -69,9 +71,19 @@ fs.surface.vertex.neighbors <- function(surface, nodes = NULL, order = 1L, simpl
         g = fs.surface.to.igraph(surface);
         res = igraph::neighborhood(g, order = order, nodes = nodes, mode = "all");
         if(simplify && length(nodes) == 1L) {
-            return(as.integer(unlist(res)));
+            res = as.integer(unlist(res));
+            if(include_self) {
+                res = c(res, nodes);
+            }
+            return(res);
         }
-        return(lapply(res, as.integer));
+        res = lapply(res, as.integer);
+        if(include_self) {
+            for(nodeidx in seq_along(nodes)) {
+                res[[nodeidx]] = c(res[[nodeidx]], nodes[nodeidx]);
+            }
+        }
+        return(res);
     } else {
         stop("This functionality requires the 'igraph' package to be installed.");
     }

@@ -4,7 +4,13 @@
 \alias{fs.surface.vertex.neighbors}
 \title{Compute vertex neighborhoods or the full adjacency list for a mesh using the Rvcg or igraph library.}
 \usage{
-fs.surface.vertex.neighbors(surface, nodes = NULL, order = 1L, simplify = TRUE)
+fs.surface.vertex.neighbors(
+  surface,
+  nodes = NULL,
+  order = 1L,
+  simplify = TRUE,
+  include_self = FALSE
+)
 }
 \arguments{
 \item{surface}{an fs.surface instance as returned by \code{subject.surface}, an existing igraph (which will be returned as-is) or a string which is interpreted as a path to a surface file.}
@@ -14,6 +20,8 @@ fs.surface.vertex.neighbors(surface, nodes = NULL, order = 1L, simplify = TRUE)
 \item{order}{integer, the max graph distance of vertices to consider neighbors (number of neighborhood rings). Passed on to \code{igraph::neighborhood}}
 
 \item{simplify}{logical, whether to return only an integer vector if the 'nodes' parameter has length 1 (instead of a list where the first element is such a vector).}
+
+\item{include_self}{logical, whether to include vertices in their own neighborhood}
 }
 \value{
 named list of integer vectors (see \code{igraph::neighborhood}), unless 'simplify' is TRUE, see there for details.

@@ -335,7 +335,7 @@ surf.sphere.gaussianweights <- function(spherical_surface, sphere_dists, gstd) {
     gvar2 = 2 * (gstd * gstd); # twice the variance
     f = 1.0 / (sqrt(2 * pi) * gstd);
 
-    num_neighbors = unlist(lapply(sphere_dists$neigh, length)) + 1L;
+    num_neighbors = unlist(lapply(sphere_dists$neigh, length));
     nv = nrow(spherical_surface$vertices);
     if(length(num_neighbors) != nv) {
         stop("Data from parameter 'sphere_dists' does not match 'spherical_surface' vertex count");
