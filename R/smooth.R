@@ -296,6 +296,7 @@ extend_neighbors <- function(spherical_surface, targetvidx, currentvidx, min_dot
 
     # Iterate over structural neighbors
     mesh_neighbors = fs.surface.vertex.neighbors(spherical_surface, currentvidx);
+    cat(sprintf("Vertex currentvidx=%d has %d neighbors.\n", currentvidx, length(mesh_neighbors)));
     for(mesh_neigh_idx in mesh_neighbors) {
         res = extend_neighbors(spherical_surface, targetvidx, mesh_neigh_idx, min_dotp_thresh, ref_visited, ref_neighbors, ref_neighbor_dpdists);
         if(res == 1L) {
