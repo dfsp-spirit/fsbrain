@@ -9,7 +9,7 @@ surf.sphere.dist(spherical_surface, maxdist)
 \arguments{
 \item{spherical_surface}{an fs.surface instance representing the spherical version (\code{lh.sphere} or \code{rh.sphere} of the subject).}
 
-\item{maxdist}{double, the neighborhood size (or maximal distance to travel along the sphere when searching for neighbors). TODO: find out proper value for this.}
+\item{maxdist}{double, the neighborhood size along the sphere, or to be more precise the maximal distance to travel along the sphere (using mesh edges) when searching for neighbors. The maxdist value can be computed from the definition of the Gaussian kernel parameters, i.e., its FWHM and truncation factor. See \code{pervertexdata.smoothgaussian} for an example of how to do that. For a kernel with FWHM of 5 and a truncation factor of 3.5, the resulting maxdist setting is 20.}
 }
 \description{
 Compute all vertices in given distance on a sphere and their distances.
@@ -20,7 +20,7 @@ see MRISgaussianWeights to get Gaussian weights for the vertex neighborhoods
 \examples{
 \dontrun{
 spherical_surface = subject.surface(fsaverage.path(), "fsaverage3", surface="sphere", hemi="lh");
-dist = surf.sphere.dist(spherical_surface, 5.0);
+dist = surf.sphere.dist(spherical_surface, 20.0);
 highlight.vertices.on.subject(fsaverage.path(), "fsaverage3", verts_lh = dist$neigh[[500]], surface="sphere")
 }
 

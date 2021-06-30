@@ -425,7 +425,7 @@ subject.descriptor.geodesic.average.distance <- function(subjects_dir, subject_i
 #'
 #' @param target_vertices single integer or vector of integers, the target vertices to which to compute the paths from the source_vertex.
 #'
-#' @note This can take a bit for very large graphs. This requires the optional dependency package 'Rvcg'. The backtracking is currently done in R, which is not optimal from a performance perspective.
+#' @note This can take a bit for very large graphs. This requires the optional dependency package 'Rvcg'. The backtracking is currently done in R, which is not optimal from a performance perspective. If you have a recent Rvcg version with the Rvcg::vcgGeodesicPath function, that one will be used instead, and the performance will be better.
 #'
 #' @examples
 #' \dontrun{
@@ -441,11 +441,16 @@ subject.descriptor.geodesic.average.distance <- function(subjects_dir, subject_i
 #'
 #' @export
 geodesic.path <- function(surface, source_vertex, target_vertices) {
-    g = fs.surface.to.igraph(surface);
     tmesh = ensure.tmesh3d(surface);
+
     if(length(source_vertex) != 1L) {
         stop("Must give exactly 1 vertex index as parameter 'source_vertex'.");
     }
+
+    if(exists('vcgGeodesicPath', where=asNamespace('Rvcg'), mode='function')) {
+        return(Rvcg::vcgGeodesicPath(tmesh, source_vertex, target_vertices));
+    }
+
     dists = geodesic.dists.to.vertex(tmesh, source_vertex);
     paths = list();
     for(target_idx in seq_along(target_vertices)) {
@@ -476,7 +481,7 @@ geodesic.path <- function(surface, source_vertex, target_vertices) {
 #'
 #' @param scale double, surface area to be covered by patch in percent
 #'
-#' @note This takes a while for large meshes, try it with single vertices or with a surface like fsaverage3 if you want it for all vertices.
+#' @note This takes a while for large meshes, try it with single vertices or with a surface like fsaverage3 if you want it for all vertices. This requires the optional dependency package 'pracma'.
 #'
 #' @examples
 #' \dontrun{
@@ -561,55 +566,59 @@ geodesic.circles <- function(surface, vertices=NULL, scale=5.0) {
 #'
 #' @return named list with entries: 'ball_area': vector of double, ball area at each sample radius. 'ball_perimeter': vector of double, ball perimeter at each sample radius.
 geodesic.ballstats <- function(mesh, geodist, sample_at_radii) {
-    face_area = Rvcg::vcgArea(mesh, perface = TRUE)$pertriangle; # a
-    vertex_faces = Rvcg::vcgVFadj(mesh);
-    num_radii = length(sample_at_radii);
-    res = list('ball_area'=rep(NA, num_radii), 'ball_perimeter'=rep(NA, num_radii));
-    for(radius_idx in seq_along(sample_at_radii)) {
-        radius = sample_at_radii[radius_idx];
+    if(requireNamespace("Rvcg", quietly = TRUE)) {
+        face_area = Rvcg::vcgArea(mesh, perface = TRUE)$pertriangle; # a
+        vertex_faces = Rvcg::vcgVFadj(mesh);
+        num_radii = length(sample_at_radii);
+        res = list('ball_area'=rep(NA, num_radii), 'ball_perimeter'=rep(NA, num_radii));
+        for(radius_idx in seq_along(sample_at_radii)) {
+            radius = sample_at_radii[radius_idx];
 
-        # Find all faces which are in radius.
-        in_radius = as.integer(geodist < radius);           # I: whether vertex is in radius (logical)
-        face_in_radius_vertices = rowSums(matrix(in_radius[mesh$it], ncol=3, byrow=T)); # C: count how many vertices per face are in radius
+            # Find all faces which are in radius.
+            in_radius = as.integer(geodist < radius);           # I: whether vertex is in radius (logical)
+            face_in_radius_vertices = rowSums(matrix(in_radius[mesh$it], ncol=3, byrow=T)); # C: count how many vertices per face are in radius
 
-        total_area_in_radius = sum(face_area[face_in_radius_vertices==3]);   # A: total area in radius. Currently it is the area of all faces which are fully (all 3 verts) in radius.
-        total_perimeter = 0; # P
+            total_area_in_radius = sum(face_area[face_in_radius_vertices==3]);   # A: total area in radius. Currently it is the area of all faces which are fully (all 3 verts) in radius.
+            total_perimeter = 0; # P
 
-        # Now compute partial area for faces which are only partly in range.
-        partial_face_indices = which(face_in_radius_vertices == 1 | face_in_radius_vertices == 2);
-        for(pf_idx in partial_face_indices) {
-            face_verts = mesh$it[,pf_idx]; # int vector of length 3
+            # Now compute partial area for faces which are only partly in range.
+            partial_face_indices = which(face_in_radius_vertices == 1 | face_in_radius_vertices == 2);
+            for(pf_idx in partial_face_indices) {
+                face_verts = mesh$it[,pf_idx]; # int vector of length 3
 
-            if(face_in_radius_vertices[pf_idx] == 2L) { # 2 verts in, 1 out
-                k = which(in_radius[face_verts] == FALSE);
-            } else { # one vert in, 2 out
-                k = which(in_radius[face_verts] == TRUE);
+                if(face_in_radius_vertices[pf_idx] == 2L) { # 2 verts in, 1 out
+                    k = which(in_radius[face_verts] == FALSE);
+                } else { # one vert in, 2 out
+                    k = which(in_radius[face_verts] == TRUE);
+                }
+                reorder_indices = (c(k-1, k, k+1) %% 3) + 1L; # Reorder verts (k=1: reorder to 0,1,2     k=2: to 1,2,0   k=3: 2,0,1)
+                face_verts = face_verts[reorder_indices];
+                face_vert_dists = geodist[face_verts] - radius; # d, double vec of length 3
+                face_vert_coords = mesh$vb[1:3, face_verts]; # v, the 3x3 matrix if vertex coords for the 3 verts of the face.
+                v = face_vert_coords;
+                # Compute the crossing positions along [f(1) f(2)] using linear interpolation.
+                alpha1 = face_vert_dists[2]/(face_vert_dists[2]-face_vert_dists[1]); # scalar double
+                v1 = alpha1*v[,1] + (1-alpha1)*v[,2];  # TODO: MAY NEED row-column inversion: v[2,] instead of v[,2]
+                alpha2 = face_vert_dists[3]/(face_vert_dists[3]-face_vert_dists[1]); # scalar double
+                v2 = alpha2*v[,1] + (1-alpha2)*v[,3];  # TODO: MAY NEED row-column inversion
+                # Compute triangle area
+                b = norm( pracma::cross(v[,1]-v1,v[,1]-v2) , type="2")/2;
+                # add it positively or negatively to the area
+                if(face_in_radius_vertices[pf_idx] == 2L) { # 2 verts in, 1 out
+                    total_area_in_radius = total_area_in_radius + face_area[pf_idx] - b;
+                } else { # one vert in, 2 out
+                    total_area_in_radius = total_area_in_radius + b;
+                }
+                # add to the perimeter
+                total_perimeter = total_perimeter + norm(v1-v2, type = "2");
             }
-            reorder_indices = (c(k-1, k, k+1) %% 3) + 1L; # Reorder verts (k=1: reorder to 0,1,2     k=2: to 1,2,0   k=3: 2,0,1)
-            face_verts = face_verts[reorder_indices];
-            face_vert_dists = geodist[face_verts] - radius; # d, double vec of length 3
-            face_vert_coords = mesh$vb[1:3, face_verts]; # v, the 3x3 matrix if vertex coords for the 3 verts of the face.
-            v = face_vert_coords;
-            # Compute the crossing positions along [f(1) f(2)] using linear interpolation.
-            alpha1 = face_vert_dists[2]/(face_vert_dists[2]-face_vert_dists[1]); # scalar double
-            v1 = alpha1*v[,1] + (1-alpha1)*v[,2];  # TODO: MAY NEED row-column inversion: v[2,] instead of v[,2]
-            alpha2 = face_vert_dists[3]/(face_vert_dists[3]-face_vert_dists[1]); # scalar double
-            v2 = alpha2*v[,1] + (1-alpha2)*v[,3];  # TODO: MAY NEED row-column inversion
-            # Compute triangle area
-            b = norm( pracma::cross(v[,1]-v1,v[,1]-v2) , type="2")/2;
-            # add it positively or negatively to the area
-            if(face_in_radius_vertices[pf_idx] == 2L) { # 2 verts in, 1 out
-                total_area_in_radius = total_area_in_radius + face_area[pf_idx] - b;
-            } else { # one vert in, 2 out
-                total_area_in_radius = total_area_in_radius + b;
-            }
-            # add to the perimeter
-            total_perimeter = total_perimeter + norm(v1-v2, type = "2");
+            res$ball_area[radius_idx] = total_area_in_radius;
+            res$ball_perimeter[radius_idx] = total_perimeter;
         }
-        res$ball_area[radius_idx] = total_area_in_radius;
-        res$ball_perimeter[radius_idx] = total_perimeter;
+        return(res);
+    } else {
+        stop("The 'Rvcg' package must be installed to use this functionality.");
     }
-    return(res);
 }
 
 

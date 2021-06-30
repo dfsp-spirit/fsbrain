@@ -28,13 +28,13 @@ fs.surface.to.igraph <- function(surface) {
     }
 }
 
-#' @title Compute vertex neighborhood for a mesh using the igraph library.
+#' @title Compute vertex neighborhoods or the full adjacency list for a mesh using the Rvcg or igraph library.
 #'
 #' @inheritParams fs.surface.to.igraph
 #'
 #' @description This is a faster replacement for \code{mesh.vertex.neighbors} that requires the optional dependency package 'igraph'.
 #'
-#' @param nodes the source vertex. Passed on to \code{igraph::neighborhood}
+#' @param nodes the source vertex. Passed on to \code{igraph::neighborhood}. Can be a vector, in which case the neighborhoods for all these vertices are computed separately. If NULL, all graph vertices are used.
 #'
 #' @param order integer, the max graph distance of vertices to consider neighbors (number of neighborhood rings). Passed on to \code{igraph::neighborhood}
 #'
@@ -47,7 +47,24 @@ fs.surface.to.igraph <- function(surface) {
 #' @return named list of integer vectors (see \code{igraph::neighborhood}), unless 'simplify' is TRUE, see there for details.
 #'
 #' @export
-fs.surface.vertex.neighbors <- function(surface, nodes, order = 1L, simplify = TRUE) {
+fs.surface.vertex.neighbors <- function(surface, nodes = NULL, order = 1L, simplify = TRUE) {
+
+    surface = ensure.fs.surface(surface);
+    if(is.null(nodes)) {
+        nodes = seq(nrow(surface$vertices));
+    }
+
+    if(requireNamespace("Rvcg", quietly = TRUE)) {
+        if(exists('vcgVertexNeighbors', where=asNamespace('Rvcg'), mode='function')) {
+            tmesh = ensure.tmesh3d(surface);
+            neigh = return(Rvcg::vcgVertexNeighbors(tmesh, vi = nodes, numstep = order, include_self = FALSE));
+            if(simplify && length(nodes) == 1L) {
+                return(unlist(neigh));
+            } else {
+                return(neigh);
+            }
+        }
+    }
     if(requireNamespace("igraph", quietly = TRUE)) {
         g = fs.surface.to.igraph(surface);
         res = igraph::neighborhood(g, order = order, nodes = nodes, mode = "all");

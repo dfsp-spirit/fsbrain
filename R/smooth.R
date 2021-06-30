@@ -215,6 +215,8 @@ surf.sphere.dist <- function(spherical_surface, maxdist) {
     neigh_dist_dotproduct = list();
     neigh_dist_surface = list();
 
+    mesh_adj_list = fs.surface.vertex.neighbors(spherical_surface);
+
     ## The following implementation only considers the dotproduct distance, but it does not follow the
     ## mesh edges. The FreeSurfer implementation follows the k-ring neighborhoods for increasing k and
     ## adds vertices while they are still under the dotproduct threshold.

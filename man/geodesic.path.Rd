@@ -20,7 +20,7 @@ list of integer vectors, the paths
 Compute geodesic path from a source vertex to one or more target vertices.
 }
 \note{
-This can take a bit for very large graphs. This requires the optional dependency package 'Rvcg'. The backtracking is currently done in R, which is not optimal from a performance perspective.
+This can take a bit for very large graphs. This requires the optional dependency package 'Rvcg'. The backtracking is currently done in R, which is not optimal from a performance perspective. If you have a recent Rvcg version with the Rvcg::vcgGeodesicPath function, that one will be used instead, and the performance will be better.
 }
 \examples{
 \dontrun{

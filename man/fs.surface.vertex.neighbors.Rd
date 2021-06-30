@@ -2,14 +2,14 @@
 % Please edit documentation in R/brain_igraph.R
 \name{fs.surface.vertex.neighbors}
 \alias{fs.surface.vertex.neighbors}
-\title{Compute vertex neighborhood for a mesh using the igraph library.}
+\title{Compute vertex neighborhoods or the full adjacency list for a mesh using the Rvcg or igraph library.}
 \usage{
-fs.surface.vertex.neighbors(surface, nodes, order = 1L, simplify = TRUE)
+fs.surface.vertex.neighbors(surface, nodes = NULL, order = 1L, simplify = TRUE)
 }
 \arguments{
 \item{surface}{an fs.surface instance as returned by \code{subject.surface}, an existing igraph (which will be returned as-is) or a string which is interpreted as a path to a surface file.}
 
-\item{nodes}{the source vertex. Passed on to \code{igraph::neighborhood}}
+\item{nodes}{the source vertex. Passed on to \code{igraph::neighborhood}. Can be a vector, in which case the neighborhoods for all these vertices are computed separately. If NULL, all graph vertices are used.}
 
 \item{order}{integer, the max graph distance of vertices to consider neighbors (number of neighborhood rings). Passed on to \code{igraph::neighborhood}}
 

@@ -21,6 +21,8 @@ spherical_surface = subject.surface(fsaverage.path(), "fsaverage3", surface="sph
 vr = fsbrain:::surf.avg.vertexradius(spherical_surface);
 # Show histogram to verify that the surface is a sphere centered at 0,0,0:
 hist(freesurferformats:::vertexdists.to.point(spherical_surface, c(0,0,0)));
+# Plot the coords and a point at the origin:
+fsbrain::highlight.points.spheres(rbind(spherical_surface$vertices, c(0,0,0)));
 }
 
 }

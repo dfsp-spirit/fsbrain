@@ -17,7 +17,7 @@ geodesic.circles(surface, vertices = NULL, scale = 5)
 Compute geodesic circles and ball stats for given vertices.
 }
 \note{
-This takes a while for large meshes, try it with single vertices or with a surface like fsaverage3 if you want it for all vertices.
+This takes a while for large meshes, try it with single vertices or with a surface like fsaverage3 if you want it for all vertices. This requires the optional dependency package 'pracma'.
 }
 \examples{
 \dontrun{
