@@ -212,10 +212,14 @@ surf.sphere.dist <- function(spherical_surface, maxdist) {
     neigh = list();
     neigh_dist_dotproduct = list();
     neigh_dist_surface = list();
-    for(vidx in seq(nv)) {
-        pd_dists = rowSums((spherical_surface$vertices[vidx,] * spherical_surface$vertices));
-        neigh[[vidx]] = which(pd_dists > min_dotp_thresh);
-        neigh_dist_dotproduct[[vidx]] = pd_dists[neigh[[vidx]]];
+
+    ## The following implementation only considers the dotproduct distance, but it does not follow the
+    ## mesh edges. The FreeSurfer implementation follows the k-ring neighborhoods for increasing k and
+    ## adds vertices while they are still under the dotproduct threshold.
+    for(vidx in seq(nv)) { # TODO: fix this, see MRISextendedNeighbors
+        dotproduct_dists = abs(rowSums((spherical_surface$vertices[vidx,] * spherical_surface$vertices)));
+        neigh[[vidx]] = which(dotproduct_dists > min_dotp_thresh);
+        neigh_dist_dotproduct[[vidx]] = dotproduct_dists[neigh[[vidx]]];
 
         costheta = neigh_dist_dotproduct[[vidx]] / radius2;
         costheta[costheta > 1.0] = 1.0;
