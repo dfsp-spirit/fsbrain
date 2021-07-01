@@ -49,3 +49,22 @@ test_that("We can compute Gaussian weights based on a spherical surface.", {
 
     testthat::expect_equal(1L, 1L); # only prevent test skipping for now.
 })
+
+
+test_that("Computing fwhm from niters and vice versa is consistent.", {
+    testthat::skip_on_cran();
+    fsbrain::download_optional_data();
+    sphere_surf_file = get_optional_data_filepath("subjects_dir/subject1/surf/lh.sphere", mustWork = F);
+    if(! file.exists(sphere_surf_file)) {
+        testthat::skip("The sphere file is available");
+    }
+
+    fwhm = 5.0;
+    spherical_surface = freesurferformats::read.fs.surface(sphere_surf_file);
+
+    niter = fsbrain:::pervertexdata.smoothnn.compute.numiter(spherical_surface, fwhm = fwhm);
+    fwhm2 = fsbrain:::pervertexdata.smoothnn.compute.fwhm(spherical_surface, niter);
+    testthat::expect_equal(fwhm, fwhm2, tolerance = 1e-2);
+})
+
+
