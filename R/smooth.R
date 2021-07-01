@@ -139,7 +139,7 @@ pervertexdata.smoothnn.compute.fwhm <- function(surface, niters) {
 #' \dontrun{
 #' spherical_surface = subject.surface(fsaverage.path(), "fsaverage3", surface="sphere", hemi="lh");
 #' data = subject.morph.native(fsaverage.path(), "fsaverage3", "thickness", hemi="lh");
-#' data_smoothed = pervertexdata.smoothgaussian(spherical_surface, data);
+#' data_smoothed = pervertexdata.smoothgaussian(spherical_surface, data, fwhm = 10);
 #' vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = data);
 #' vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = data_smoothed);
 #' }
@@ -326,7 +326,20 @@ extend_neighbors <- function(spherical_surface, targetvidx, currentvidx, min_dot
 
 #' @title Compute Gaussian weights
 #'
+#' @inheritParams surf.sphere.dist
+#'
+#' @param sphere_dists list of vectors, as returned by surf.sphere.dist
+#'
 #' @param gstd double, Gaussian standard deviation, can be computed from the FWHM as \code{gstd = fwhm / sqrt(log(256.0))}.
+#'
+#' @examples
+#' \dontrun{
+#' fwhm = 5.0; truncfactor = 3.5;
+#' gstd = fwhm / sqrt(log(256.0));
+#' maxdist = truncfactor * gstd;
+#' sphere_dists = surf.sphere.dist(spherical_surface, maxdist = maxdist);
+#' gaussian_weights = fsbrain:::surf.sphere.gaussianweights(spherical_surface, sphere_dists, gstd);
+#' }
 #'
 #' @return vector of Gaussian weights for vertices
 #'  see int MRISgaussianWeights(MRIS *surf, MRI *dist, double GStd) in util/mrisurf_mri.cpp
