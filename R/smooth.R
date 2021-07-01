@@ -337,8 +337,7 @@ extend_neighbors <- function(spherical_surface, targetvidx, currentvidx, min_dot
 #' @examples
 #' \dontrun{
 #' fwhm = 5.0; truncfactor = 3.5;
-#' gstd = fwhm / sqrt(log(256.0));
-#' maxdist = truncfactor * gstd;
+#' gstd = fwhm / sqrt(log(256.0)); maxdist = truncfactor * gstd;
 #' sphere_dists = surf.sphere.dist(spherical_surface, maxdist = maxdist);
 #' gaussian_weights = fsbrain:::surf.sphere.gaussianweights(spherical_surface, sphere_dists, gstd);
 #' }

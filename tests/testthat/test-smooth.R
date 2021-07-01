@@ -43,11 +43,13 @@ test_that("We can compute Gaussian weights based on a spherical surface.", {
     fwhm = 5.0;
     spherical_surface = freesurferformats::read.fs.surface(sphere_surf_file);
 
+    nv = nrow(spherical_surface$vertices);
+
     sphere_dists = surf.sphere.dist(spherical_surface, maxdist = 5.0);
     gstd = fwhm / sqrt(log(256.0));
     gaussian_weights = fsbrain:::surf.sphere.gaussianweights(spherical_surface, sphere_dists, gstd);
 
-    testthat::expect_equal(1L, 1L); # only prevent test skipping for now.
+    testthat::expect_equal(length(sphere_dists), nv);
 })
 
 
