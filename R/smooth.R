@@ -84,7 +84,7 @@ pervertexdata.smoothnn <- function(surface, data, fwhm = NULL, num_iter = NULL) 
 #' @keywords internal
 pervertexdata.smoothnn.compute.numiter<- function(surface, fwhm=5.0) {
 
-    message("Something is wrong with this, FS seems to use a different computation for the mesh area.");
+    message("Something is wrong with this, FS seems to use a different computation for the mesh area. Maybe the issue is specific to group template surfaces like fsaverage (because of group scaling).");
     surface = ensure.fs.surface(surface);
     mesh = fsbrain:::ensure.tmesh3d(surface);
     avgvtxarea = Rvcg::vcgArea(mesh) / nrow(surface$vertices);
@@ -169,6 +169,8 @@ pervertexdata.smoothgaussian <- function(spherical_surface, data, fwhm = 5.0, tr
 #'
 #' @return scalar double, the average distance.
 #'
+#' @note This is used to determine the sphere radius for spherical surfaces. It is assumed that the sphere is centered at the origin \code{(0,0,0)}.
+#'
 #' @examples
 #' \dontrun{
 #' spherical_surface = subject.surface(fsaverage.path(), "fsaverage3", surface="sphere", hemi="lh");
@@ -199,7 +201,7 @@ setRefClass("DoubleVecReference",
 );
 
 
-#' @title Compute all vertices in given distance on a sphere and their distances.
+#' @title Compute vertex neighborhoods on a sphere based on the given max distance along the sphere.
 #'
 #' @param spherical_surface an fs.surface instance representing the spherical version (\code{lh.sphere} or \code{rh.sphere} of the subject).
 #'
@@ -212,9 +214,7 @@ setRefClass("DoubleVecReference",
 #' highlight.vertices.on.subject(fsaverage.path(), "fsaverage3", verts_lh = dist$neigh[[500]], surface="sphere")
 #' }
 #'
-#' @note see MRISgaussianWeights to get Gaussian weights for the vertex neighborhoods
-## see MRI *MRISgaussianSmooth(MRIS *Surf, MRI *Src, double GStd, MRI *Targ, double TruncFactor)
-## at mrisurf_deform.cpp lines 3810ff for maxdist setting (dmax = TruncFactor * GStd;  // truncate after TruncFactor stddevs)
+#' @return named list with 3 entries. Each is a vector with neighborhood information: 'neigh' is an int vector of the neighbor vertices, 'neigh_dist_dotproduct' a numerical vector of dp distances for these neighbors, and 'neigh_dist_surface' the same for along-the-surface-distances instead of dp distances.
 #'
 #' @export
 surf.sphere.dist <- function(spherical_surface, maxdist) {
@@ -239,10 +239,7 @@ surf.sphere.dist <- function(spherical_surface, maxdist) {
     min_global_costheta = 1e6;
     max_global_costheta = -1e6;
 
-    for(vidx in seq(nv)) { # TODO: fix this, see MRISextendedNeighbors
-        #dotproduct_dists = abs(rowSums((vertices[vidx,] * vertices)));
-
-
+    for(vidx in seq(nv)) {
 
         ref_visited <- new("IntVecReference", vec=rep(0L, nv));
         ref_neighbors <- new("IntVecReference", vec=rep(0L, nv));
@@ -251,9 +248,6 @@ surf.sphere.dist <- function(spherical_surface, maxdist) {
 
         neigh[[vidx]] = which(ref_neighbors$vec == 1L);
         neigh_dist_dotproduct[[vidx]] = ref_neighbor_dpdists$vec[neigh[[vidx]]];
-
-        #neigh[[vidx]] = which(dotproduct_dists > min_dotp_thresh); # This is too simple, we need to follow sphere mesh connectivity.
-        #neigh_dist_dotproduct[[vidx]] = dotproduct_dists[neigh[[vidx]]];
 
         # We do this in a vectorized R fashion instead of looping over the neighbors C++-style.
         costheta = (neigh_dist_dotproduct[[vidx]] / radius2);
@@ -265,7 +259,8 @@ surf.sphere.dist <- function(spherical_surface, maxdist) {
             max_global_costheta = range_costheta[2];
         }
         #cat(sprintf("Costheta range is %f to %f.\n", range_costheta[1], range_costheta[2]));
-        costheta[costheta > 1.0] = 1.0;
+
+                costheta[costheta > 1.0] = 1.0;
         costheta[costheta < -1.0] = -1.0;
         theta = acos(costheta);
         neigh_dist_surface[[vidx]] = radius * theta;
