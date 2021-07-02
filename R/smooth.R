@@ -185,10 +185,18 @@ pervertexdata.smoothgaussian <- function(spherical_surface, data, fwhm = 15.0, t
 #' }
 #'
 #' @keywords internal
-surf.avg.vertexradius <- function(surface) {
+surf.avg.vertexradius <- function(surface, with_stddev=FALSE) {
     surface = fsbrain:::ensure.fs.surface(surface);
     nv = nrow(surface$vertices);
-    return(sum(freesurferformats:::vertexdists.to.point(surface, c(0,0,0))) / nv);
+
+    dists = freesurferformats:::vertexdists.to.point(surface, c(0,0,0));
+    avg = sum(dists) / nv;
+    if(with_stddev) {
+        ds = sum(dists * dists);
+        stddev = sqrt(nv * (ds / nv - avg * avg) / (nv - 1));
+        return(list("avg"=avg, "stddev"=stddev));
+    }
+    return(avg);
 }
 
 

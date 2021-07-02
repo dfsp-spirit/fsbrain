@@ -20,8 +20,8 @@ Compute vertex neighborhoods on a sphere based on the given max distance along t
 \examples{
 \dontrun{
 spherical_surface = subject.surface(fsaverage.path(), "fsaverage3", surface="sphere", hemi="lh");
-dist = surf.sphere.dist(spherical_surface, 20.0);
-highlight.vertices.on.subject(fsaverage.path(), "fsaverage3", verts_lh = dist$neigh[[500]], surface="sphere")
+sphere_dist = surf.sphere.dist(spherical_surface, 20.0);
+highlight.vertices.on.subject(fsaverage.path(), "fsaverage3", verts_lh = sphere_dist$neigh[[500]], surface="sphere");
 }
 
 }

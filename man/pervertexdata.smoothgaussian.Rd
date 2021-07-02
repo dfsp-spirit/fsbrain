@@ -7,7 +7,7 @@
 pervertexdata.smoothgaussian(
   spherical_surface,
   data,
-  fwhm = 5,
+  fwhm = 15,
   truncfactor = 3.5
 )
 }
@@ -31,11 +31,12 @@ This function has been adapted from FreeSurfer and it is subject to the FreeSurf
 }
 \examples{
 \dontrun{
-spherical_surface = subject.surface(fsaverage.path(), "fsaverage3", surface="sphere", hemi="lh");
-data = subject.morph.native(fsaverage.path(), "fsaverage3", "thickness", hemi="lh");
-data_smoothed = pervertexdata.smoothgaussian(spherical_surface, data, fwhm = 10);
-vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = data);
-vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = data_smoothed);
+sjd = fsaverage.path();
+spherical_surface = subject.surface(sjd, "fsaverage3", surface="sphere", hemi="lh");
+vdata = subject.morph.native(fsaverage.path(), "fsaverage3", "thickness", hemi="lh");
+vdata_smoothed = pervertexdata.smoothgaussian(spherical_surface, vdata, fwhm = 15);
+vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = vdata);
+vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = vdata_smoothed);
 }
 
 }

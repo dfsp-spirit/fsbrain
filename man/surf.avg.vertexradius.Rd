@@ -4,7 +4,7 @@
 \alias{surf.avg.vertexradius}
 \title{Compute average distance from the origin to each vertex.}
 \usage{
-surf.avg.vertexradius(surface)
+surf.avg.vertexradius(surface, with_stddev = FALSE)
 }
 \arguments{
 \item{surface}{an fs.surface instance, and for the typical use case of this function, a spherical surface.}
