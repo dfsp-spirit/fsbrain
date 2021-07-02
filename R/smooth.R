@@ -372,7 +372,7 @@ surf.sphere.gaussianweights <- function(spherical_surface, sphere_dists, gstd) {
         }
         vert_weights = vert_weights / gsum; # Normalize
         weights[[vidx]] = vert_weights;
-        cat(sprintf("Vertex %d has %d neighbors: %s. weights=%s\n", vidx, num_neighbors[vidx], paste(sphere_dists$neigh[[vidx]], collapse = " "), paste(weights[[vidx]], collapse = " ")));
+        #cat(sprintf("Vertex %d has %d neighbors: %s. weights=%s\n", vidx, num_neighbors[vidx], paste(sphere_dists$neigh[[vidx]], collapse = " "), paste(weights[[vidx]], collapse = " ")));
     }
     return(weights);
 }
