@@ -116,13 +116,15 @@ pervertexdata.smoothnn.compute.numiter<- function(surface, fwhm=5.0) {
 #' @keywords internal
 pervertexdata.smoothnn.compute.fwhm <- function(surface, niters) {
 
-    message("Something is wrong with this, FS seems to use a different computation for the mesh area.");
+    message("Something is wrong with this, FS seems to use a different computation for the mesh area. It works for non-template brain it seems.");
 
     if(! freesurferformats::is.fs.surface(surface)) {
         stop("Parameter 'surface' must be an fs.surface instance.");
     }
     mesh = fsbrain:::ensure.tmesh3d(surface);
-    avgvtxarea = Rvcg::vcgArea(mesh) / nrow(surface$vertices);
+    #avgvtxarea = Rvcg::vcgArea(mesh) / nrow(surface$vertices);
+    total_area = surf.metric.properties(surface)$mesh_total_area;
+    avgvtxarea = total_area / nrow(surface$vertices);
     gstd = sqrt(7 * avgvtxarea * niters / (1.14 * 4 * pi));
     fwhm = gstd * sqrt(log(256.0));
     return(fwhm);
@@ -419,6 +421,10 @@ surf.metric.properties <- function(surface) {
     face_areas = unlist(Rvcg::vcgArea(mesh, perface = TRUE)$pertriangle);
     mp$face_areas = face_areas;
 
+    # The scale factor exists to make the mesh area of the surface equal to the average mesh area of the surfaces used to crteate the template. It should be save in the surface file in a tag at the end?
+    warning("This function does not work for template surfaces: we currently do not know about a way to obtain the scale factor that must be applied to surface areas.");
+
+
     mp$mesh_total_area = sum(face_areas[!is_negative]);
     mp$mesh_neg_area = -sum(face_areas[is_negative]);
     return(mp);
@@ -427,15 +433,25 @@ surf.metric.properties <- function(surface) {
 
 
 #' @title Apply spatial filter to surface data.
-# see MRISspatialFilter
+#'
+#' @param source_data numerical vector, per-vertex data for a surface.
+#'
+#' @param sphere_dists named list with 3 entries, as returned by \code{surf.sphere.dist}
+#'
+#' @param gaussian_weight list of double vectors, the Gaussian weights for all neighbors of the respective vertex. As returned by \code{surf.sphere.gaussianweights}.
+#'
+#' @return numerical vector, the spatially filtered per-vertex data.
+#'
+#' @keywords internal
 surf.sphere.spatialfilter <- function(source_data, sphere_dists, gaussian_weights) {
     smoothed_data = rep(NA, length(source_data));
     if(! is.list(sphere_dists$neigh)) {
         stop("Parameter 'sphere_dists' member 'neigh' must be a list.");
     }
+    if(! is.list(gaussian_weights)) {
+        stop("Parameter 'gaussian_weights' must be a list.");
+    }
     for(vidx in seq_along(source_data)) {
-        #num_neigh = length(sphere_dists$neigh[[vidx]]);
-        # smoothed_data[vidx] = sum(source_data[sphere_dists$neigh[[vidx]]] * gaussian_weights[sphere_dists$neigh[[vidx]]]) / num_neigh;
         smoothed_data[vidx] = sum(source_data[sphere_dists$neigh[[vidx]]] * gaussian_weights[[vidx]]);
     }
     return(smoothed_data);
