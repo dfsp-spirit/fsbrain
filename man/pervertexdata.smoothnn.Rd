@@ -4,12 +4,20 @@
 \alias{pervertexdata.smoothnn}
 \title{Ignore, not part of fsbrain, only here temporarily.}
 \usage{
-pervertexdata.smoothnn(surface, data, fwhm = NULL, num_iter = NULL)
+pervertexdata.smoothnn(
+  surface,
+  data,
+  is_template,
+  fwhm = NULL,
+  num_iter = NULL
+)
 }
 \arguments{
 \item{surface}{an \code{fs.surface} instance}
 
 \item{data}{numerical vector, the per-vertex data for the surface}
+
+\item{is_template}{logical, whether the surface belongs to a template subject}
 
 \item{fwhm}{double the target fwhm value. If given, num_iter must be NULL and will be computed to match this fwhm value.}
 

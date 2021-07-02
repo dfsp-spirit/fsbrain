@@ -4,10 +4,14 @@
 \alias{surf.metric.properties}
 \title{Compute metric surface properties.}
 \usage{
-surf.metric.properties(surface)
+surf.metric.properties(surface, is_template, template_scale_factor = 1.56)
 }
 \arguments{
 \item{surface}{an fs.surface instance, and for the typical use case of this function, a spherical surface.}
+
+\item{is_template}{logical, whether the surface comes from a template subject.}
+
+\item{template_scale_factor}{double, the template scale factor}
 }
 \value{
 named list of metric surface properties.
@@ -18,7 +22,7 @@ Compute metric surface properties.
 \examples{
 \dontrun{
 surface = subject.surface(fsaverage.path(), "fsaverage3", hemi="lh");
-mp = surf.metric.properties(surface);
+mp = surf.metric.properties(surface, is_template = TRUE);
 }
 
 }

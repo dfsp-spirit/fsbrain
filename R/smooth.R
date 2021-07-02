@@ -10,6 +10,8 @@
 #'
 #' @param data numerical vector, the per-vertex data for the surface
 #'
+#' @param is_template logical, whether the surface belongs to a template subject
+#'
 #' @param fwhm double the target fwhm value. If given, num_iter must be NULL and will be computed to match this fwhm value.
 #'
 #' @param num_iter positive scalar integer, the number of times to perform the averaging. Only use this if you know what you are doing, prefer specifying the target fwhm instead. The fwhm parameter must be NULL if this is used instead.
@@ -28,7 +30,7 @@
 #'  }
 #'
 #' @export
-pervertexdata.smoothnn <- function(surface, data, fwhm = NULL, num_iter = NULL) {
+pervertexdata.smoothnn <- function(surface, data, is_template, fwhm = NULL, num_iter = NULL) {
     if(! freesurferformats::is.fs.surface(surface)) {
         stop("Parameter 'surface' must be an fs.surface instance.");
     }
@@ -36,17 +38,21 @@ pervertexdata.smoothnn <- function(surface, data, fwhm = NULL, num_iter = NULL) 
         stop("Number of surface vertices must match data length.");
     }
 
+    if(! is.logical(is_template)) {
+        stop("Parameter 'is_template' must be logical");
+    }
+
     if(is.null(num_iter)) {
         if(is.null(fwhm)) {
             stop("One of 'num_iter' or 'fwhm' must be given and non-NULL.");
         }
-        num_iter = pervertexdata.smoothnn.compute.numiter(surface, fwhm);
-        cat(sprintf("Smoothing to reach FWHM %f, using %d iterations of nearest neighbor smoothing.\n", fwhm, num_iter));
+        num_iter = pervertexdata.smoothnn.compute.numiter(surface, is_template, fwhm);
+        cat(sprintf("Smoothing like with FWHM %f Gaussian, using %d iterations of nearest neighbor smoothing.\n", fwhm, num_iter));
     } else {
         if(!is.null(fwhm)) {
             stop("If 'num_iter' is given, the parameter fwhm will be ignored and must be set to NULL.");
         } else {
-            cat(sprintf("Smoothing with %d nn iterations, expecting FWHM of about %f.\n", num_iter, pervertexdata.smoothnn.compute.fwhm(surface, num_iter)));
+            cat(sprintf("Smoothing with %d nn iterations, expecting FWHM of about %f.\n", num_iter, pervertexdata.smoothnn.compute.fwhm(surface, is_template, num_iter)));
         }
     }
 
@@ -77,18 +83,22 @@ pervertexdata.smoothnn <- function(surface, data, fwhm = NULL, num_iter = NULL) 
 #'
 #' @inheritParams pervertexdata.smoothnn
 #'
+#' @param is_template logical, whether the surface belongs to a template subject
+#'
 #' @return integer, the iteration count
 #'
 #' @note This function has been adapted from FreeSurfer and it is subject to the FreeSurfer software license.
 #'
 #' @keywords internal
-pervertexdata.smoothnn.compute.numiter<- function(surface, fwhm=5.0) {
+pervertexdata.smoothnn.compute.numiter<- function(surface, fwhm, is_template) {
+
+    if(! is.logical(is_template)) {
+        stop("Parameter 'is_template' must be logical");
+    }
 
     message("Something is wrong with this, FS seems to use a different computation for the mesh area. Maybe the issue is specific to group template surfaces like fsaverage (because of group scaling).");
     surface = ensure.fs.surface(surface);
-    #mesh = fsbrain:::ensure.tmesh3d(surface);
-    #total_area = Rvcg::vcgArea(mesh);
-    total_area = surf.metric.properties(surface)$mesh_total_area;
+    total_area = surf.metric.properties(surface, is_template = is_template)$mesh_total_area;
     avgvtxarea = total_area / nrow(surface$vertices);
     gstd = fwhm / sqrt(log(256.0));
     niters = floor((1.14 * (4 * pi * (gstd * gstd)) / (7 * avgvtxarea)) + 0.5);
@@ -102,6 +112,8 @@ pervertexdata.smoothnn.compute.numiter<- function(surface, fwhm=5.0) {
 #'
 #' @param niters positive integer, the nn iteration count
 #'
+#' @param is_template logical, whether the surface belongs to a template subject
+#'
 #' @return double, the expected FWHM
 #'
 #' @note This function has been adapted from FreeSurfer and it is subject to the FreeSurfer software license.
@@ -114,16 +126,24 @@ pervertexdata.smoothnn.compute.numiter<- function(surface, fwhm=5.0) {
 #'
 #'
 #' @keywords internal
-pervertexdata.smoothnn.compute.fwhm <- function(surface, niters) {
+pervertexdata.smoothnn.compute.fwhm <- function(surface, niters, is_template) {
 
     message("Something is wrong with this, FS seems to use a different computation for the mesh area. It works for non-template brain it seems.");
+
+    if(! is.integer(niters)) {
+        warning("Parameter 'niters' must be an integer, trying conversion.");
+        niters = as.integer(niters);
+    }
+
+    if(! is.logical(is_template)) {
+        stop("Parameter 'is_template' must be logical");
+    }
 
     if(! freesurferformats::is.fs.surface(surface)) {
         stop("Parameter 'surface' must be an fs.surface instance.");
     }
-    mesh = fsbrain:::ensure.tmesh3d(surface);
-    #avgvtxarea = Rvcg::vcgArea(mesh) / nrow(surface$vertices);
-    total_area = surf.metric.properties(surface)$mesh_total_area;
+    mesh = ensure.tmesh3d(surface);
+    total_area = surf.metric.properties(surface, is_template = is_template)$mesh_total_area;
     avgvtxarea = total_area / nrow(surface$vertices);
     gstd = sqrt(7 * avgvtxarea * niters / (1.14 * 4 * pi));
     fwhm = gstd * sqrt(log(256.0));
@@ -162,7 +182,7 @@ pervertexdata.smoothgaussian <- function(spherical_surface, data, fwhm = 15.0, t
     maxdist = truncfactor * gstd;
     sphere_dists = surf.sphere.dist(spherical_surface, maxdist = maxdist);
 
-    gaussian_weights = fsbrain:::surf.sphere.gaussianweights(spherical_surface, sphere_dists, gstd);
+    gaussian_weights = surf.sphere.gaussianweights(spherical_surface, sphere_dists, gstd);
     smoothed_data = surf.sphere.spatialfilter(data, sphere_dists, gaussian_weights);
     return(smoothed_data);
 }
@@ -190,7 +210,7 @@ pervertexdata.smoothgaussian <- function(spherical_surface, data, fwhm = 15.0, t
 #'
 #' @keywords internal
 surf.avg.vertexradius <- function(surface, with_stddev=FALSE) {
-    surface = fsbrain:::ensure.fs.surface(surface);
+    surface = ensure.fs.surface(surface);
     nv = nrow(surface$vertices);
 
     dists = freesurferformats:::vertexdists.to.point(surface, c(0,0,0));
@@ -235,10 +255,10 @@ setRefClass("DoubleVecReference",
 surf.sphere.dist <- function(spherical_surface, maxdist) {
 
 
-    spherical_surface = fsbrain:::ensure.fs.surface(spherical_surface);
+    spherical_surface = ensure.fs.surface(spherical_surface);
     nv = nrow(spherical_surface$vertices);
 
-    radius = fsbrain:::surf.avg.vertexradius(spherical_surface);
+    radius = surf.avg.vertexradius(spherical_surface);
     radius2 = radius * radius;
     min_dotp_thresh = radius2 * cos(maxdist / radius) * (1.0001);
 
@@ -259,7 +279,7 @@ surf.sphere.dist <- function(spherical_surface, maxdist) {
         ref_visited <- new("IntVecReference", vec=rep(0L, nv));
         ref_neighbors <- new("IntVecReference", vec=rep(0L, nv));
         ref_neighbor_dpdists <- new("DoubleVecReference", vec=rep(-1.0, nv));
-        fsbrain:::extend_neighbors(spherical_surface, vidx, vidx, min_dotp_thresh, ref_visited, ref_neighbors, ref_neighbor_dpdists);
+        extend_neighbors(spherical_surface, vidx, vidx, min_dotp_thresh, ref_visited, ref_neighbors, ref_neighbor_dpdists);
 
         neigh[[vidx]] = which(ref_neighbors$vec == 1L);
         neigh_dist_dotproduct[[vidx]] = ref_neighbor_dpdists$vec[neigh[[vidx]]];
@@ -398,18 +418,26 @@ surf.sphere.gaussianweights <- function(spherical_surface, sphere_dists, gstd) {
 #'
 #' @inheritParams surf.avg.vertexradius
 #'
+#' @param is_template logical, whether the surface comes from a template subject.
+#'
+#' @param template_scale_factor double, the template scale factor
+#'
 #' @examples
 #' \dontrun{
 #' surface = subject.surface(fsaverage.path(), "fsaverage3", hemi="lh");
-#' mp = surf.metric.properties(surface);
+#' mp = surf.metric.properties(surface, is_template = TRUE);
 #' }
 #'
 #' @return named list of metric surface properties.
 #'
 #' @keywords internal
-surf.metric.properties <- function(surface) {
+surf.metric.properties <- function(surface, is_template, template_scale_factor=1.56) {
     mp = list();
-    mesh = fsbrain:::ensure.tmesh3d(surface);
+    mesh = ensure.tmesh3d(surface);
+    if(! is.logical(is_template)) {
+        stop("Parameter 'is_template' must be logical.");
+    }
+
 
     mesh = rgl::addNormals(mesh); # Adds per-vertex normals.
     mp$vertex_normals = t(mesh$normals)[,1:3];
@@ -421,12 +449,17 @@ surf.metric.properties <- function(surface) {
     face_areas = unlist(Rvcg::vcgArea(mesh, perface = TRUE)$pertriangle);
     mp$face_areas = face_areas;
 
-    # The scale factor exists to make the mesh area of the surface equal to the average mesh area of the surfaces used to crteate the template. It should be save in the surface file in a tag at the end?
-    warning("This function does not work for template surfaces: we currently do not know about a way to obtain the scale factor that must be applied to surface areas.");
-
-
     mp$mesh_total_area = sum(face_areas[!is_negative]);
     mp$mesh_neg_area = -sum(face_areas[is_negative]);
+
+    if(is_template) {
+        # The scale factor exists to make the mesh area of the surface equal to the average mesh area of the surfaces used to crteate the template. It should be save in the surface file in a tag at the end?
+        warning("This function does not work for template surfaces: we currently do not know about a way to obtain the scale factor that must be applied to surface areas.");
+
+        mp$mesh_total_area = mp$mesh_total_area * template_scale_factor;
+        mp$mesh_neg_area = mp$mesh_neg_area * template_scale_factor;
+    }
+
     return(mp);
 }
 

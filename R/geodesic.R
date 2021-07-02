@@ -504,7 +504,7 @@ geodesic.circles <- function(surface, vertices=NULL, scale=5.0) {
         if(scale <= 0.0 | scale > 100) {
             stop("Parameter 'scale' must be in range ]0..100].");
         }
-        mesh = fsbrain:::ensure.tmesh3d(surface);
+        mesh = ensure.tmesh3d(surface);
         num_verts = ncol(mesh$vb);
         if(any(vertices < 1L) | any(vertices > num_verts)) {
             stop(sprintf("Parameter 'vertices' must be an integer vector containing values from 1 to %d.\n", num_verts));

@@ -4,12 +4,14 @@
 \alias{pervertexdata.smoothnn.compute.fwhm}
 \title{Compute expected FWHM from given number of neighborhood smoothing iterations.}
 \usage{
-pervertexdata.smoothnn.compute.fwhm(surface, niters)
+pervertexdata.smoothnn.compute.fwhm(surface, niters, is_template)
 }
 \arguments{
 \item{surface}{an \code{fs.surface} instance}
 
 \item{niters}{positive integer, the nn iteration count}
+
+\item{is_template}{logical, whether the surface belongs to a template subject}
 }
 \value{
 double, the expected FWHM
