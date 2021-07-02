@@ -338,6 +338,7 @@ extend_neighbors <- function(spherical_surface, targetvidx, currentvidx, min_dot
 #' \dontrun{
 #' fwhm = 5.0; truncfactor = 3.5;
 #' gstd = fwhm / sqrt(log(256.0)); maxdist = truncfactor * gstd;
+#' spherical_surface = subject.surface(fsaverage.path(), "fsaverage3", surface="sphere", hemi="lh");
 #' sphere_dists = surf.sphere.dist(spherical_surface, maxdist = maxdist);
 #' gaussian_weights = fsbrain:::surf.sphere.gaussianweights(spherical_surface, sphere_dists, gstd);
 #' }
@@ -371,6 +372,11 @@ surf.sphere.gaussianweights <- function(spherical_surface, sphere_dists, gstd) {
         weights[[vidx]] = vert_weights;
     }
     return(weights);
+}
+
+surf.metric.properties <- function(surface) {
+    mesh = fsbrain:::ensure.tmesh3d(surface);
+    mesh = rgl::addNormals(mesh); # Adds per-vertex normals, but we need the per-face normals as well. Need a new Rvcg function for that.
 }
 
 
