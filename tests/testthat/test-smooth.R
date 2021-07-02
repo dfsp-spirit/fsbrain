@@ -45,11 +45,21 @@ test_that("We can compute Gaussian weights based on a spherical surface.", {
 
     nv = nrow(spherical_surface$vertices);
 
-    sphere_dists = surf.sphere.dist(spherical_surface, maxdist = 15.0);
+    sphere_dists = surf.sphere.dist(spherical_surface, maxdist = 20.0);
     gstd = fwhm / sqrt(log(256.0));
     gaussian_weights = fsbrain:::surf.sphere.gaussianweights(spherical_surface, sphere_dists, gstd);
 
     testthat::expect_equal(length(sphere_dists$neigh), nv);
+    testthat::expect_equal(length(sphere_dists$neigh_dist_dotproduct), nv);
+    testthat::expect_equal(length(sphere_dists$neigh_dist_surface), nv);
+
+    # Check neighborhood of a single vertex
+    testthat::expect_equal(length(sphere_dists$neigh[[500]]), 7L);
+    testthat::expect_equal(length(sphere_dists$neigh_dist_dotproduct[[500]]), 7L);
+    testthat::expect_equal(length(sphere_dists$neigh_dist_surface[[500]]), 7L);
+
+    testthat::expect_equal(length(gaussian_weights), nv);
+    testthat::expect_equal(length(gaussian_weights[[500]]), 7L);
 })
 
 
