@@ -19,15 +19,15 @@
 #' @note The iteration is currently done in R, which means the performance is not great.
 #' @note This function has been adapted from FreeSurfer and it is subject to the FreeSurfer software license.
 #'
-#'  @examples
-#'  \dontrun{
-#'  sjd = fsaverage.path(T);
-#'  surface = subject.surface(sjd, "fsaverage3", hemi = "lh");
-#'  th = subject.morph.native(sjd, "fsaverage3", "thickness", hemi="lh");
-#'  th_smooth = pervertexdata.smoothnn(surface, th, fwhm = 10.0);
-#'  vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = th);
-#'  vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = th_smooth);
-#'  }
+#' @examples
+#' \dontrun{
+#' sjd = fsaverage.path(T);
+#' surface = subject.surface(sjd, "fsaverage3", hemi = "lh");
+#' th = subject.morph.native(sjd, "fsaverage3", "thickness", hemi="lh");
+#' th_smooth = pervertexdata.smoothnn(surface, th, fwhm = 10.0);
+#' vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = th);
+#' vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = th_smooth);
+#' }
 #'
 #' @export
 pervertexdata.smoothnn <- function(surface, data, is_template, fwhm = NULL, num_iter = NULL) {
@@ -252,6 +252,8 @@ setRefClass("DoubleVecReference",
 #' @return named list with 3 entries. Each is a vector with neighborhood information: 'neigh' is an int vector of the neighbor vertices, 'neigh_dist_dotproduct' a numerical vector of dp distances for these neighbors, and 'neigh_dist_surface' the same for along-the-surface-distances instead of dp distances.
 #'
 #' @export
+#'
+#' @importFrom methods new
 surf.sphere.dist <- function(spherical_surface, maxdist) {
 
 
@@ -276,9 +278,9 @@ surf.sphere.dist <- function(spherical_surface, maxdist) {
 
     for(vidx in seq(nv)) {
 
-        ref_visited <- new("IntVecReference", vec=rep(0L, nv));
-        ref_neighbors <- new("IntVecReference", vec=rep(0L, nv));
-        ref_neighbor_dpdists <- new("DoubleVecReference", vec=rep(-1.0, nv));
+        ref_visited <- methods::new("IntVecReference", vec=rep(0L, nv));
+        ref_neighbors <- methods::new("IntVecReference", vec=rep(0L, nv));
+        ref_neighbor_dpdists <- methods::new("DoubleVecReference", vec=rep(-1.0, nv));
         extend_neighbors(spherical_surface, vidx, vidx, min_dotp_thresh, ref_visited, ref_neighbors, ref_neighbor_dpdists);
 
         neigh[[vidx]] = which(ref_neighbors$vec == 1L);

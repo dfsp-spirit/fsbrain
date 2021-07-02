@@ -11,7 +11,11 @@ vis.paths.along.verts(
 )
 }
 \arguments{
+\item{surface_vertices}{float matrix of size (n, 3), the surface vertex coordinates, as returned as part of \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}, in the member "vertices". Can also be a \code{freesurferformats::fs.surface} or \code{rgl::tmesh3d} instance, in which case the coordinates are extracted automatically.}
+
 \item{paths}{list of positive integer vectors, the vertex indices of the paths}
+
+\item{color}{a color string, like '#FF0000' to color the path. Ignored of 'no_material' is TRUE.}
 }
 \description{
 Visualize several paths in different colors.

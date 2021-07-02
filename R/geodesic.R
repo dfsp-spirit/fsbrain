@@ -302,52 +302,58 @@ ensure.tmesh3d <- function(mesh) {
 #'
 #' @keywords internal
 geodesic.average.distance <- function(surfaces, ignore_mask = NULL, method = "auto") {
-    if(! exists('vcgDijkstra', where=asNamespace('Rvcg'), mode='function')) {
-        stop("Your Rvcg version does not export the vcgDijkstra function. You need to install Rvcg from GitHub for this this functionality to be available. Try 'devtools::install_github('zarquon42b/Rvcg')'.");
-    }
 
-    if(is.hemilist(surfaces)) {
-        if(is.null(ignore_mask)) {
-            return(lapply(surfaces, geodesic.average.distance));
-        } else {
-            lh_res = geodesic.average.distance(surfaces$lh, ignore_mask$lh, method = method);
-            rh_res = geodesic.average.distance(surfaces$rh, ignore_mask$rh, method = method);
-            return(hemilist(lh_res, rh_res));
+    if(!requireNamespace("Rvcg", quietly = TRUE)) {
+
+        if(! exists('vcgDijkstra', where=asNamespace('Rvcg'), mode='function')) {
+            stop("Your Rvcg version does not export the vcgDijkstra function. You need to install Rvcg from GitHub for this this functionality to be available. Try 'devtools::install_github('zarquon42b/Rvcg')'.");
         }
 
+        if(is.hemilist(surfaces)) {
+            if(is.null(ignore_mask)) {
+                return(lapply(surfaces, geodesic.average.distance));
+            } else {
+                lh_res = geodesic.average.distance(surfaces$lh, ignore_mask$lh, method = method);
+                rh_res = geodesic.average.distance(surfaces$rh, ignore_mask$rh, method = method);
+                return(hemilist(lh_res, rh_res));
+            }
+
+        } else {
+            if(is.null(surfaces)) {  # hemilist with empty entry
+                return(NULL);
+            }
+            num_verts = nrow(surfaces$vertices);
+            mesh = ensure.tmesh3d(surfaces);
+
+            if(method == "auto") {
+                if(exists('vcgGeodesicNeigh', where=asNamespace('Rvcg'), mode='function')) {
+                    method = "vcgGeodesicNeigh";
+                } else {
+                    method = "vcgDijkstra";
+                }
+            }
+
+            if(method == "vcgDijkstra") {
+                if( ! is.null(ignore_mask)) {
+                    stop("The 'ignore_mask' parameter is only supported if 'method' is 'vcgGeodesicNeigh'.");
+                }
+                geodesic_mean_distances = rep(NA, num_verts);
+                for(vert_idx in seq_len(num_verts)) {
+                    geodesic_mean_distances[vert_idx] = mean(Rvcg::vcgDijkstra(mesh, vert_idx));
+                }
+                return(geodesic_mean_distances);
+            } else if (method == "vcgGeodesicNeigh") {
+                if(! exists('vcgGeodesicNeigh', where=asNamespace('Rvcg'), mode='function')) {
+                    stop("Your Rvcg version does not export the required 'vcgGeodesicNeigh' function. You need to install Rvcg from GitHub for this this functionality to be available. Try 'devtools::install_github('dfsp-spirit/Rvcg', ref='geodesic_extra_functions')'.");
+                } else {
+                    return(Rvcg::vcgGeodesicMeanDist(mesh, ignore_mask = ignore_mask));
+                }
+            } else {
+                stop("Invalid 'method' parameter.")
+            }
+        }
     } else {
-        if(is.null(surfaces)) {  # hemilist with empty entry
-            return(NULL);
-        }
-        num_verts = nrow(surfaces$vertices);
-        mesh = ensure.tmesh3d(surfaces);
-
-        if(method == "auto") {
-            if(exists('vcgGeodesicNeigh', where=asNamespace('Rvcg'), mode='function')) {
-                method = "vcgGeodesicNeigh";
-            } else {
-                method = "vcgDijkstra";
-            }
-        }
-
-        if(method == "vcgDijkstra") {
-            if( ! is.null(ignore_mask)) {
-                stop("The 'ignore_mask' parameter is only supported if 'method' is 'vcgGeodesicNeigh'.");
-            }
-            geodesic_mean_distances = rep(NA, num_verts);
-            for(vert_idx in seq_len(num_verts)) {
-                geodesic_mean_distances[vert_idx] = mean(Rvcg::vcgDijkstra(mesh, vert_idx));
-            }
-            return(geodesic_mean_distances);
-        } else if (method == "vcgGeodesicNeigh") {
-            if(! exists('vcgGeodesicNeigh', where=asNamespace('Rvcg'), mode='function')) {
-                stop("Your Rvcg version does not export the required 'vcgGeodesicNeigh' function. You need to install Rvcg from GitHub for this this functionality to be available. Try 'devtools::install_github('dfsp-spirit/Rvcg', ref='geodesic_extra_functions')'.");
-            } else {
-                return(Rvcg::vcgGeodesicMeanDist(mesh, ignore_mask = ignore_mask));
-            }
-        } else {
-            stop("Invalid 'method' parameter.")
-        }
+        stop("The 'Rvcg' package must be installed to use this functionality.");
     }
 }
 
@@ -441,35 +447,39 @@ subject.descriptor.geodesic.average.distance <- function(subjects_dir, subject_i
 #'
 #' @export
 geodesic.path <- function(surface, source_vertex, target_vertices) {
-    tmesh = ensure.tmesh3d(surface);
+    if(! requireNamespace("Rvcg", quietly = TRUE)) {
+        tmesh = ensure.tmesh3d(surface);
 
-    if(length(source_vertex) != 1L) {
-        stop("Must give exactly 1 vertex index as parameter 'source_vertex'.");
-    }
-
-    if(exists('vcgGeodesicPath', where=asNamespace('Rvcg'), mode='function')) {
-        return(Rvcg::vcgGeodesicPath(tmesh, source_vertex, target_vertices));
-    }
-
-    dists = geodesic.dists.to.vertex(tmesh, source_vertex);
-    paths = list();
-    for(target_idx in seq_along(target_vertices)) {
-        target_vertex = target_vertices[target_idx]; # Backtracking part of Dijkstra algo to obtain the path from the dist map.
-        current_vertex = target_vertex;
-        path = current_vertex;
-        visited = c();
-        while(current_vertex != source_vertex) {
-            visited = c(visited, current_vertex);
-            neigh = mesh.vertex.neighbors(surface, source_vertices = current_vertex)$vertices;
-            neigh_unvisited = neigh[which(!(neigh %in% visited))];
-            neigh_source_dists = dists[neigh_unvisited];     # geodesic distance of neighbors to source vertex
-            closest_to_source = neigh_unvisited[which.min(neigh_source_dists)]; # greedily jump to closest one
-            path = c(path, closest_to_source);
-            current_vertex = closest_to_source;
+        if(length(source_vertex) != 1L) {
+            stop("Must give exactly 1 vertex index as parameter 'source_vertex'.");
         }
-        paths[[target_idx]] = rev(path);
+
+        if(exists('vcgGeodesicPath', where=asNamespace('Rvcg'), mode='function')) {
+            return(Rvcg::vcgGeodesicPath(tmesh, source_vertex, target_vertices));
+        }
+
+        dists = geodesic.dists.to.vertex(tmesh, source_vertex);
+        paths = list();
+        for(target_idx in seq_along(target_vertices)) {
+            target_vertex = target_vertices[target_idx]; # Backtracking part of Dijkstra algo to obtain the path from the dist map.
+            current_vertex = target_vertex;
+            path = current_vertex;
+            visited = c();
+            while(current_vertex != source_vertex) {
+                visited = c(visited, current_vertex);
+                neigh = mesh.vertex.neighbors(surface, source_vertices = current_vertex)$vertices;
+                neigh_unvisited = neigh[which(!(neigh %in% visited))];
+                neigh_source_dists = dists[neigh_unvisited];     # geodesic distance of neighbors to source vertex
+                closest_to_source = neigh_unvisited[which.min(neigh_source_dists)]; # greedily jump to closest one
+                path = c(path, closest_to_source);
+                current_vertex = closest_to_source;
+            }
+            paths[[target_idx]] = rev(path);
+        }
+        return(paths);
+    } else {
+        stop("The 'Rvcg' pcakge must be installed to use this.");
     }
-    return(paths);
 }
 
 
@@ -567,7 +577,7 @@ geodesic.circles <- function(surface, vertices=NULL, scale=5.0) {
 #' @return named list with entries: 'ball_area': vector of double, ball area at each sample radius. 'ball_perimeter': vector of double, ball perimeter at each sample radius.
 geodesic.ballstats <- function(mesh, geodist, sample_at_radii) {
     if(requireNamespace("Rvcg", quietly = TRUE)) {
-        face_area = Rvcg::vcgArea(mesh, perface = TRUE)$pertriangle; # a
+        face_area = Rvcg::vcgArea(mesh, perface = TRUE)$pertriangle;
         vertex_faces = Rvcg::vcgVFadj(mesh);
         num_radii = length(sample_at_radii);
         res = list('ball_area'=rep(NA, num_radii), 'ball_perimeter'=rep(NA, num_radii));
@@ -623,6 +633,8 @@ geodesic.ballstats <- function(mesh, geodist, sample_at_radii) {
 
 
 #' @keywords internal
+#'
+#' @importFrom stats cor
 test_ballstats <- function() {
     # Load expected data from running fastmarching matlab toolbox
     lh_perim = freesurferformats::read.fs.curv("~/develop/neuroimaging/stuff_by_others/toolbox_geodesic/output_fsaverage3/lh.PerimeterFunction.5.w")
@@ -639,9 +651,9 @@ test_ballstats <- function() {
     found = list("lh_perim"=lh_gc$perimeter, "rh_perim"=rh_gc$perimeter, "lh_rad"=lh_gc$radius, "rh_rad"=rh_gc$radius);
 
     # Check similarity
-    cor(expected$lh_perim, found$lh_perim);
-    cor(expected$rh_perim, found$rh_perim);
-    cor(expected$lh_rad, found$lh_rad);
-    cor(expected$rh_rad, found$rh_rad);
+    stats::cor(expected$lh_perim, found$lh_perim);
+    stats::cor(expected$rh_perim, found$rh_perim);
+    stats::cor(expected$lh_rad, found$lh_rad);
+    stats::cor(expected$rh_rad, found$rh_rad);
 }
 
