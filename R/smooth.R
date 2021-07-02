@@ -432,35 +432,39 @@ surf.sphere.gaussianweights <- function(spherical_surface, sphere_dists, gstd) {
 #'
 #' @keywords internal
 surf.metric.properties <- function(surface, is_template, template_scale_factor=1.56) {
-    mp = list();
-    mesh = ensure.tmesh3d(surface);
-    if(! is.logical(is_template)) {
-        stop("Parameter 'is_template' must be logical.");
+    if(requireNamespace("Rvcg", quietly = TRUE)) {
+        mp = list();
+        mesh = ensure.tmesh3d(surface);
+        if(! is.logical(is_template)) {
+            stop("Parameter 'is_template' must be logical.");
+        }
+
+
+        mesh = rgl::addNormals(mesh); # Adds per-vertex normals.
+        mp$vertex_normals = t(mesh$normals)[,1:3];
+
+        face_normals = t(Rvcg::vcgFaceNormals(mesh));
+        mp$face_normals = face_normals;
+
+        is_negative = face_normals[,2] < 0.0;
+        face_areas = unlist(Rvcg::vcgArea(mesh, perface = TRUE)$pertriangle);
+        mp$face_areas = face_areas;
+
+        mp$mesh_total_area = sum(face_areas[!is_negative]);
+        mp$mesh_neg_area = -sum(face_areas[is_negative]);
+
+        if(is_template) {
+            # The scale factor exists to make the mesh area of the surface equal to the average mesh area of the surfaces used to crteate the template. It should be save in the surface file in a tag at the end?
+            warning("This function does not work for template surfaces: we currently do not know about a way to obtain the scale factor that must be applied to surface areas.");
+
+            mp$mesh_total_area = mp$mesh_total_area * template_scale_factor;
+            mp$mesh_neg_area = mp$mesh_neg_area * template_scale_factor;
+        }
+
+        return(mp);
+    } else {
+        stop("This functionality requires the 'Rvcg' package to be installed.");
     }
-
-
-    mesh = rgl::addNormals(mesh); # Adds per-vertex normals.
-    mp$vertex_normals = t(mesh$normals)[,1:3];
-
-    face_normals = t(Rvcg::vcgFaceNormals(mesh));
-    mp$face_normals = face_normals;
-
-    is_negative = face_normals[,2] < 0.0;
-    face_areas = unlist(Rvcg::vcgArea(mesh, perface = TRUE)$pertriangle);
-    mp$face_areas = face_areas;
-
-    mp$mesh_total_area = sum(face_areas[!is_negative]);
-    mp$mesh_neg_area = -sum(face_areas[is_negative]);
-
-    if(is_template) {
-        # The scale factor exists to make the mesh area of the surface equal to the average mesh area of the surfaces used to crteate the template. It should be save in the surface file in a tag at the end?
-        warning("This function does not work for template surfaces: we currently do not know about a way to obtain the scale factor that must be applied to surface areas.");
-
-        mp$mesh_total_area = mp$mesh_total_area * template_scale_factor;
-        mp$mesh_neg_area = mp$mesh_neg_area * template_scale_factor;
-    }
-
-    return(mp);
 }
 
 
