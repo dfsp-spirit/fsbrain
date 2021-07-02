@@ -12,7 +12,7 @@ test_that("We can compute vertex distances on a sphere based on a spherical surf
     num_verts = nrow(spherical_surface$vertices);
     testthat::expect_equal(num_verts, 642L);
 
-    sphere_dists = surf.sphere.dist(spherical_surface, maxdist = 5.0);
+    sphere_dists = surf.sphere.dist(spherical_surface, maxdist = 15.0);
 
     testthat::expect_true(is.list(sphere_dists));
     testthat::expect_true(all(names(sphere_dists) == c("neigh", "neigh_dist_dotproduct", "neigh_dist_surface")));
@@ -36,7 +36,7 @@ test_that("We can compute Gaussian weights based on a spherical surface.", {
     testthat::skip_on_cran();
 
     fsbrain::download_optional_data();
-    sphere_surf_file = get_optional_data_filepath("subjects_dir/subject1/surf/lh.sphere", mustWork = F);
+    sphere_surf_file = get_optional_data_filepath("subjects_dir/fsaverage3/surf/lh.sphere", mustWork = F);
     if(! file.exists(sphere_surf_file)) {
         testthat::skip("The sphere file is available");
     }
@@ -56,7 +56,7 @@ test_that("We can compute Gaussian weights based on a spherical surface.", {
 test_that("Computing fwhm from niters and vice versa is consistent.", {
     testthat::skip_on_cran();
     fsbrain::download_optional_data();
-    sphere_surf_file = get_optional_data_filepath("subjects_dir/subject1/surf/lh.sphere", mustWork = F);
+    sphere_surf_file = get_optional_data_filepath("subjects_dir/fsaverage3/surf/lh.sphere", mustWork = F);
     if(! file.exists(sphere_surf_file)) {
         testthat::skip("The sphere file is available");
     }

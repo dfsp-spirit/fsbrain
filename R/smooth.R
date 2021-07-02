@@ -362,7 +362,7 @@ surf.sphere.gaussianweights <- function(spherical_surface, sphere_dists, gstd) {
         gsum = 0.0;
         vert_weights = rep(NA, num_neighbors[vidx]);
         local_idx = 1L;
-        #cat(sprintf("Vertex %d has %d neighbors: %s\n", vidx, num_neighbors[vidx], paste(sphere_dists$neigh[[vidx]], collapse = " ")));
+
         for(neigh_vidx in sphere_dists$neigh[[vidx]]) {
             d = sphere_dists$neigh_dist_surface[[vidx]][local_idx];
             g = f * exp(-(d * d) / (gvar2));
@@ -372,6 +372,7 @@ surf.sphere.gaussianweights <- function(spherical_surface, sphere_dists, gstd) {
         }
         vert_weights = vert_weights / gsum; # Normalize
         weights[[vidx]] = vert_weights;
+        cat(sprintf("Vertex %d has %d neighbors: %s. weights=%s\n", vidx, num_neighbors[vidx], paste(sphere_dists$neigh[[vidx]], collapse = " "), paste(weights[[vidx]], collapse = " ")));
     }
     return(weights);
 }
@@ -394,14 +395,15 @@ surf.metric.properties <- function(surface) {
     mp = list();
     mesh = fsbrain:::ensure.tmesh3d(surface);
 
-    mesh = rgl::addNormals(mesh); # Adds per-vertex normals, but we need the per-face normals as well. Need a new Rvcg function for that.
+    mesh = rgl::addNormals(mesh); # Adds per-vertex normals.
     mp$vertex_normals = t(mesh$normals)[,1:3];
 
-    face_normals = t(Rvcg::vcgFaceNormals(mesh)); # face_normals
+    face_normals = t(Rvcg::vcgFaceNormals(mesh));
     mp$face_normals = face_normals;
 
     is_negative = face_normals[,2] < 0.0;
     face_areas = unlist(Rvcg::vcgArea(mesh, perface = TRUE)$pertriangle);
+    mp$face_areas = face_areas;
 
     mp$mesh_total_area = sum(face_areas[!is_negative]);
     mp$mesh_neg_area = -sum(face_areas[is_negative]);
