@@ -238,9 +238,11 @@ setRefClass("DoubleVecReference",
 
 #' @title Compute vertex neighborhoods on a sphere based on the given max distance along the sphere.
 #'
+#' @description Compute neighborhood of the current vertex (=target vertex). The computation follows the mesh edges while there are still vertices which fullfil the dotproduct distance threshold.
+#'
 #' @param spherical_surface an fs.surface instance representing the spherical version (\code{lh.sphere} or \code{rh.sphere} of the subject).
 #'
-#' @param maxdist double, the neighborhood size along the sphere, or to be more precise the maximal distance to travel along the sphere (using mesh edges) when searching for neighbors. The maxdist value can be computed from the definition of the Gaussian kernel parameters, i.e., its FWHM and truncation factor. See \code{pervertexdata.smoothgaussian} for an example of how to do that. For a kernel with FWHM of 5 and a truncation factor of 3.5, the resulting maxdist setting is 20.
+#' @param maxdist double, the neighborhood size along the sphere, or to be more precise the maximal distance to travel along the sphere (using mesh edges) when searching for neighbors. The maxdist value can be computed from the definition of the Gaussian kernel parameters, i.e., its FWHM and truncation factor. See \code{pervertexdata.smoothgaussian} for an example of how to do that. Note that if the distance is smaller than the edge length, the neighborhoods for the vertices will only contain the vertex itself.
 #'
 #' @examples
 #' \dontrun{
@@ -310,7 +312,7 @@ surf.sphere.dist <- function(spherical_surface, maxdist) {
 
 #' @title Recursive computation of neighborhoods, see surf.sphere.dist
 #'
-#' @description Compute neighborhood of the current vertex (=target vertex),
+#' @description Compute neighborhood of the current vertex (=target vertex). The computation follows the mesh edges while there are still vertices which fullfil the dotproduct distance threshold.
 #'
 #' @inheritParams surf.sphere.dist
 #'
