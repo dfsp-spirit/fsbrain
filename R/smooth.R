@@ -238,7 +238,7 @@ setRefClass("DoubleVecReference",
 
 #' @title Compute vertex neighborhoods on a sphere based on the given max distance along the sphere.
 #'
-#' @description Compute neighborhood of the current vertex (=target vertex). The computation follows the mesh edges while there are still vertices which fullfil the dotproduct distance threshold.
+#' @description Compute neighborhood of the current vertex (=target vertex). The computation follows the mesh edges while there are still vertices which fullfil the dotproduct distance threshold. Alternatively, one could compute geodesic neighborhoods on the original mesh, but that is a lot slower. If no spherical surface is available, it has to be done though.
 #'
 #' @param spherical_surface an fs.surface instance representing the spherical version (\code{lh.sphere} or \code{rh.sphere} of the subject).
 #'
