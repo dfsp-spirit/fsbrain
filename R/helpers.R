@@ -251,7 +251,7 @@ vis.path.along.verts <- function(surface_vertices, path_vertex_indices = NULL, d
 
 #' @title Visualize several paths in different colors.
 #'
-#' @inheritParams vis.paths.along.verts
+#' @inheritParams vis.path.along.verts
 #'
 #' @param paths list of positive integer vectors, the vertex indices of the paths
 #'
