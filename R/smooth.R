@@ -349,14 +349,14 @@ extend_neighbors <- function(spherical_surface, targetvidx, currentvidx, min_dot
 #'
 #' @examples
 #' \dontrun{
-#' fwhm = 20.0; truncfactor = 3.5;
+#' fwhm = 20.0; truncfactor = 3.5; sjd = fsaverage.path();
 #' gstd = fwhm / sqrt(log(256.0)); maxdist = truncfactor * gstd;
-#' spherical_surface = subject.surface(fsaverage.path(), "fsaverage3", surface="sphere", hemi="lh");
+#' spherical_surface = subject.surface(sjd, "fsaverage3", surface="sphere", hemi="lh");
 #' sphere_dists = surf.sphere.dist(spherical_surface, maxdist = maxdist);
 #' gaussian_weights = fsbrain:::surf.sphere.gaussianweights(spherical_surface, sphere_dists, gstd);
 #' morph_data = rep(NA, nrow(spherical_surface$vertices));
 #' morph_data[sphere_dists$neigh[[500]]] = gaussian_weights[[500]];
-#' vis.data.on.subject(fsaverage.path(), "fsaverage3", morph_data_lh=morph_data);
+#' vis.data.on.subject(sjd, "fsaverage3", morph_data_lh=morph_data);
 #' }
 #'
 #' @return vector of Gaussian weights for vertices
