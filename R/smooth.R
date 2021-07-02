@@ -170,6 +170,8 @@ pervertexdata.smoothgaussian <- function(spherical_surface, data, fwhm = 15.0, t
 #'
 #' @param surface an fs.surface instance, and for the typical use case of this function, a spherical surface.
 #'
+#' @param with_stddev logical, whether to compute the standard deviation as well and return a named list with the 'avg' and the 'stddev' instead.
+#'
 #' @return scalar double, the average distance.
 #'
 #' @note This is used to determine the sphere radius for spherical surfaces. It is assumed that the sphere is centered at the origin \code{(0,0,0)}.

@@ -8,6 +8,8 @@ surf.avg.vertexradius(surface, with_stddev = FALSE)
 }
 \arguments{
 \item{surface}{an fs.surface instance, and for the typical use case of this function, a spherical surface.}
+
+\item{with_stddev}{logical, whether to compute the standard deviation as well and return a named list with the 'avg' and the 'stddev' instead.}
 }
 \value{
 scalar double, the average distance.
