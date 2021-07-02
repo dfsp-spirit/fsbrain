@@ -148,10 +148,10 @@ pervertexdata.smoothnn.compute.fwhm <- function(surface, niters) {
 #' \dontrun{
 #' sjd = fsaverage.path();
 #' spherical_surface = subject.surface(sjd, "fsaverage3", surface="sphere", hemi="lh");
-#' data = subject.morph.native(fsaverage.path(), "fsaverage3", "thickness", hemi="lh");
-#' data_smoothed = pervertexdata.smoothgaussian(spherical_surface, data, fwhm = 15);
-#' vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = data);
-#' vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = data_smoothed);
+#' vdata = subject.morph.native(fsaverage.path(), "fsaverage3", "thickness", hemi="lh");
+#' vdata_smoothed = pervertexdata.smoothgaussian(spherical_surface, vdata, fwhm = 15);
+#' vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = vdata);
+#' vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = vdata_smoothed);
 #' }
 #'
 #' @export
@@ -213,8 +213,8 @@ setRefClass("DoubleVecReference",
 #' @examples
 #' \dontrun{
 #' spherical_surface = subject.surface(fsaverage.path(), "fsaverage3", surface="sphere", hemi="lh");
-#' dist = surf.sphere.dist(spherical_surface, 20.0);
-#' highlight.vertices.on.subject(fsaverage.path(), "fsaverage3", verts_lh = dist$neigh[[500]], surface="sphere");
+#' sphere_dist = surf.sphere.dist(spherical_surface, 20.0);
+#' highlight.vertices.on.subject(fsaverage.path(), "fsaverage3", verts_lh = sphere_dist$neigh[[500]], surface="sphere");
 #' }
 #'
 #' @return named list with 3 entries. Each is a vector with neighborhood information: 'neigh' is an int vector of the neighbor vertices, 'neigh_dist_dotproduct' a numerical vector of dp distances for these neighbors, and 'neigh_dist_surface' the same for along-the-surface-distances instead of dp distances.
@@ -263,7 +263,7 @@ surf.sphere.dist <- function(spherical_surface, maxdist) {
         }
         #cat(sprintf("Costheta range is %f to %f.\n", range_costheta[1], range_costheta[2]));
 
-                costheta[costheta > 1.0] = 1.0;
+        costheta[costheta > 1.0] = 1.0;
         costheta[costheta < -1.0] = -1.0;
         theta = acos(costheta);
         neigh_dist_surface[[vidx]] = radius * theta;
