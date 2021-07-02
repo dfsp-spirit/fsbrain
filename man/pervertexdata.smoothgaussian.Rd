@@ -12,6 +12,8 @@ pervertexdata.smoothgaussian(
 )
 }
 \arguments{
+\item{spherical_surface}{an fs.surface instance representing the spherical version (\code{lh.sphere} or \code{rh.sphere} of the subject).}
+
 \item{data}{numerical vector of per-vertex data for the surface}
 
 \item{fwhm}{double, the full width at half maximum for the Gaussian kernel}
@@ -31,7 +33,7 @@ This function has been adapted from FreeSurfer and it is subject to the FreeSurf
 \dontrun{
 spherical_surface = subject.surface(fsaverage.path(), "fsaverage3", surface="sphere", hemi="lh");
 data = subject.morph.native(fsaverage.path(), "fsaverage3", "thickness", hemi="lh");
-data_smoothed = pervertexdata.smoothgaussian(spherical_surface, data);
+data_smoothed = pervertexdata.smoothgaussian(spherical_surface, data, fwhm = 10);
 vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = data);
 vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = data_smoothed);
 }

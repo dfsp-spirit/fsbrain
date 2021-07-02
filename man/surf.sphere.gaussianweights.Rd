@@ -7,6 +7,10 @@
 surf.sphere.gaussianweights(spherical_surface, sphere_dists, gstd)
 }
 \arguments{
+\item{spherical_surface}{an fs.surface instance representing the spherical version (\code{lh.sphere} or \code{rh.sphere} of the subject).}
+
+\item{sphere_dists}{list of vectors, as returned by surf.sphere.dist}
+
 \item{gstd}{double, Gaussian standard deviation, can be computed from the FWHM as \code{gstd = fwhm / sqrt(log(256.0))}.}
 }
 \value{
@@ -15,4 +19,14 @@ vector of Gaussian weights for vertices
 }
 \description{
 Compute Gaussian weights
+}
+\examples{
+\dontrun{
+fwhm = 5.0; truncfactor = 3.5;
+gstd = fwhm / sqrt(log(256.0)); maxdist = truncfactor * gstd;
+spherical_surface = subject.surface(fsaverage.path(), "fsaverage3", surface="sphere", hemi="lh");
+sphere_dists = surf.sphere.dist(spherical_surface, maxdist = maxdist);
+gaussian_weights = fsbrain:::surf.sphere.gaussianweights(spherical_surface, sphere_dists, gstd);
+}
+
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/smooth.R
 \name{surf.sphere.dist}
 \alias{surf.sphere.dist}
-\title{Compute all vertices in given distance on a sphere and their distances.}
+\title{Compute vertex neighborhoods on a sphere based on the given max distance along the sphere.}
 \usage{
 surf.sphere.dist(spherical_surface, maxdist)
 }
@@ -11,11 +11,11 @@ surf.sphere.dist(spherical_surface, maxdist)
 
 \item{maxdist}{double, the neighborhood size along the sphere, or to be more precise the maximal distance to travel along the sphere (using mesh edges) when searching for neighbors. The maxdist value can be computed from the definition of the Gaussian kernel parameters, i.e., its FWHM and truncation factor. See \code{pervertexdata.smoothgaussian} for an example of how to do that. For a kernel with FWHM of 5 and a truncation factor of 3.5, the resulting maxdist setting is 20.}
 }
-\description{
-Compute all vertices in given distance on a sphere and their distances.
+\value{
+named list with 3 entries. Each is a vector with neighborhood information: 'neigh' is an int vector of the neighbor vertices, 'neigh_dist_dotproduct' a numerical vector of dp distances for these neighbors, and 'neigh_dist_surface' the same for along-the-surface-distances instead of dp distances.
 }
-\note{
-see MRISgaussianWeights to get Gaussian weights for the vertex neighborhoods
+\description{
+Compute vertex neighborhoods on a sphere based on the given max distance along the sphere.
 }
 \examples{
 \dontrun{

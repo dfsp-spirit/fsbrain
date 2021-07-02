@@ -86,10 +86,12 @@ pervertexdata.smoothnn.compute.numiter<- function(surface, fwhm=5.0) {
 
     message("Something is wrong with this, FS seems to use a different computation for the mesh area. Maybe the issue is specific to group template surfaces like fsaverage (because of group scaling).");
     surface = ensure.fs.surface(surface);
-    mesh = fsbrain:::ensure.tmesh3d(surface);
-    avgvtxarea = Rvcg::vcgArea(mesh) / nrow(surface$vertices);
+    #mesh = fsbrain:::ensure.tmesh3d(surface);
+    #total_area = Rvcg::vcgArea(mesh);
+    total_area = surf.metric.properties(surface)$mesh_total_area;
+    avgvtxarea = total_area / nrow(surface$vertices);
     gstd = fwhm / sqrt(log(256.0));
-    niters = floor(1.14 * (4 * pi * (gstd * gstd)) / (7 * avgvtxarea) + 0.5);
+    niters = floor((1.14 * (4 * pi * (gstd * gstd)) / (7 * avgvtxarea)) + 0.5);
     return(as.integer(niters));
 }
 
@@ -374,9 +376,36 @@ surf.sphere.gaussianweights <- function(spherical_surface, sphere_dists, gstd) {
     return(weights);
 }
 
+
+#' @title Compute metric surface properties.
+#'
+#' @inheritParams surf.avg.vertexradius
+#'
+#' @examples
+#' \dontrun{
+#' surface = subject.surface(fsaverage.path(), "fsaverage3", hemi="lh");
+#' mp = surf.metric.properties(surface);
+#' }
+#'
+#' @return named list of metric surface properties.
+#'
+#' @keywords internal
 surf.metric.properties <- function(surface) {
+    mp = list();
     mesh = fsbrain:::ensure.tmesh3d(surface);
+
     mesh = rgl::addNormals(mesh); # Adds per-vertex normals, but we need the per-face normals as well. Need a new Rvcg function for that.
+    mp$vertex_normals = t(mesh$normals)[,1:3];
+
+    face_normals = t(Rvcg::vcgFaceNormals(mesh)); # face_normals
+    mp$face_normals = face_normals;
+
+    is_negative = face_normals[,2] < 0.0;
+    face_areas = unlist(Rvcg::vcgArea(mesh, perface = TRUE)$pertriangle);
+
+    mp$mesh_total_area = sum(face_areas[!is_negative]);
+    mp$mesh_neg_area = -sum(face_areas[is_negative]);
+    return(mp);
 }
 
 

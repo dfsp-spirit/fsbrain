@@ -15,6 +15,9 @@ scalar double, the average distance.
 \description{
 Compute average distance from the origin to each vertex.
 }
+\note{
+This is used to determine the sphere radius for spherical surfaces. It is assumed that the sphere is centered at the origin \code{(0,0,0)}.
+}
 \examples{
 \dontrun{
 spherical_surface = subject.surface(fsaverage.path(), "fsaverage3", surface="sphere", hemi="lh");

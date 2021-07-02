@@ -20,4 +20,12 @@ Compute expected FWHM from given number of neighborhood smoothing iterations.
 \note{
 This function has been adapted from FreeSurfer and it is subject to the FreeSurfer software license.
 }
+\examples{
+\dontrun{
+spherical_surface = subject.surface(fsaverage.path(), "fsaverage3", surface="sphere", hemi="lh");
+fsbrain:::pervertexdata.smoothnn.compute.fwhm(spherical_surface, 5L);
+}
+
+
+}
 \keyword{internal}
