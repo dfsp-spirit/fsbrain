@@ -308,7 +308,25 @@ surf.sphere.dist <- function(spherical_surface, maxdist) {
 }
 
 
-#' @title Recursive computation of neighborhoods
+#' @title Recursive computation of neighborhoods, see surf.sphere.dist
+#'
+#' @description Compute neighborhood of the current vertex (=target vertex),
+#'
+#' @inheritParams surf.sphere.dist
+#'
+#' @param targetvidx positive integer, initial target vertex. The vertex for which to compute the neighborhood.
+#'
+#' @param currentvidx positive integer, initial current vertex. Pass identical value as in targetvidx, this is changed later in the recursion.
+#'
+#' @param min_dotp_threshold double, the minimal dotproduct distance threshold to use. Only vertices along the structural mesh neighborhood with values greater this will be included in the neighborhood. Yes, greater.
+#'
+#' @param ref_visited pass-by-reference (via RefClasses) integer vector of length \code{num_mesh_vertices}: whether the respective vertex has been visited already.
+#'
+#' @param ref_neighbors pass-by-reference (via RefClasses) integer vector of length \code{num_mesh_vertices}: whether the respective vertex is part of the current neighborhood.
+#'
+#' @param ref_neighbor_dpdists pass-by-reference (via RefClasses) double vector of length \code{num_mesh_vertices}: the dotproduct distance to the respective vertex (if it is part of the neighborhood).
+#'
+#' @return integer, invisible. Either \code{0L} or \code{1L}. Used in the recursion only, ignore. The return values of interest are in the 3 \code{ref_*} parameters.
 #'
 #' @keywords internal
 extend_neighbors <- function(spherical_surface, targetvidx, currentvidx, min_dotp_thresh, ref_visited, ref_neighbors, ref_neighbor_dpdists) {
