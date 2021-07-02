@@ -71,9 +71,10 @@ test_that("Computing fwhm from niters and vice versa is consistent.", {
         testthat::skip("The sphere file is available");
     }
 
-    fwhm = 5.0;
+    fwhm = 15.0;
     spherical_surface = freesurferformats::read.fs.surface(sphere_surf_file);
 
+    # This is not gonna work because the value gets transformed to an integer before returning it.
     niter = fsbrain:::pervertexdata.smoothnn.compute.numiter(spherical_surface, fwhm = fwhm);
     fwhm2 = fsbrain:::pervertexdata.smoothnn.compute.fwhm(spherical_surface, niter);
     testthat::expect_equal(fwhm, fwhm2, tolerance = 1e-2);
