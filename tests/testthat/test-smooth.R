@@ -60,6 +60,7 @@ test_that("We can compute Gaussian weights based on a spherical surface.", {
 
     testthat::expect_equal(length(gaussian_weights), nv);
     testthat::expect_equal(length(gaussian_weights[[500]]), 7L);
+    testthat::expect_equal(sum(gaussian_weights[[500]]), 1.0); # Test that weights sum to 1.0
 })
 
 

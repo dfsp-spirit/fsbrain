@@ -146,15 +146,16 @@ pervertexdata.smoothnn.compute.fwhm <- function(surface, niters) {
 #'
 #' @examples
 #' \dontrun{
-#' spherical_surface = subject.surface(fsaverage.path(), "fsaverage3", surface="sphere", hemi="lh");
+#' sjd = fsaverage.path();
+#' spherical_surface = subject.surface(sjd, "fsaverage3", surface="sphere", hemi="lh");
 #' data = subject.morph.native(fsaverage.path(), "fsaverage3", "thickness", hemi="lh");
-#' data_smoothed = pervertexdata.smoothgaussian(spherical_surface, data, fwhm = 10);
+#' data_smoothed = pervertexdata.smoothgaussian(spherical_surface, data, fwhm = 15);
 #' vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = data);
 #' vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = data_smoothed);
 #' }
 #'
 #' @export
-pervertexdata.smoothgaussian <- function(spherical_surface, data, fwhm = 5.0, truncfactor = 3.5) {
+pervertexdata.smoothgaussian <- function(spherical_surface, data, fwhm = 15.0, truncfactor = 3.5) {
     gstd = fwhm / sqrt(log(256.0));
     maxdist = truncfactor * gstd;
     sphere_dists = surf.sphere.dist(spherical_surface, maxdist = maxdist);
