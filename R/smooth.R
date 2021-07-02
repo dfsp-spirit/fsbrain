@@ -421,9 +421,9 @@ surf.sphere.spatialfilter <- function(source_data, sphere_dists, gaussian_weight
         stop("Parameter 'sphere_dists' member 'neigh' must be a list.");
     }
     for(vidx in seq_along(source_data)) {
-        num_neigh = length(sphere_dists$neigh[[vidx]]);
+        #num_neigh = length(sphere_dists$neigh[[vidx]]);
         # smoothed_data[vidx] = sum(source_data[sphere_dists$neigh[[vidx]]] * gaussian_weights[sphere_dists$neigh[[vidx]]]) / num_neigh;
-        smoothed_data[vidx] = sum(source_data[sphere_dists$neigh[[vidx]]] * gaussian_weights[[vidx]]) / num_neigh;
+        smoothed_data[vidx] = sum(source_data[sphere_dists$neigh[[vidx]]] * gaussian_weights[[vidx]]);
     }
     return(smoothed_data);
 }
