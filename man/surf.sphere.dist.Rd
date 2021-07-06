@@ -9,13 +9,13 @@ surf.sphere.dist(spherical_surface, maxdist)
 \arguments{
 \item{spherical_surface}{an fs.surface instance representing the spherical version (\code{lh.sphere} or \code{rh.sphere} of the subject).}
 
-\item{maxdist}{double, the neighborhood size along the sphere, or to be more precise the maximal distance to travel along the sphere (using mesh edges) when searching for neighbors. The maxdist value can be computed from the definition of the Gaussian kernel parameters, i.e., its FWHM and truncation factor. See \code{pervertexdata.smoothgaussian} for an example of how to do that. For a kernel with FWHM of 5 and a truncation factor of 3.5, the resulting maxdist setting is 20.}
+\item{maxdist}{double, the neighborhood size along the sphere, or to be more precise the maximal distance to travel along the sphere (using mesh edges) when searching for neighbors. The maxdist value can be computed from the definition of the Gaussian kernel parameters, i.e., its FWHM and truncation factor. See \code{pervertexdata.smoothgaussian} for an example of how to do that. Note that if the distance is smaller than the edge length, the neighborhoods for the vertices will only contain the vertex itself.}
 }
 \value{
 named list with 3 entries. Each is a vector with neighborhood information: 'neigh' is an int vector of the neighbor vertices, 'neigh_dist_dotproduct' a numerical vector of dp distances for these neighbors, and 'neigh_dist_surface' the same for along-the-surface-distances instead of dp distances.
 }
 \description{
-Compute vertex neighborhoods on a sphere based on the given max distance along the sphere.
+Compute neighborhood of the current vertex (=target vertex). The computation follows the mesh edges while there are still vertices which fullfil the dotproduct distance threshold. Alternatively, one could compute geodesic neighborhoods on the original mesh, but that is a lot slower. If no spherical surface is available, it has to be done though.
 }
 \examples{
 \dontrun{
