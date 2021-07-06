@@ -57,6 +57,7 @@ fs.surface.vertex.neighbors <- function(surface, nodes = NULL, order = 1L, simpl
     }
 
     if(requireNamespace("Rvcg", quietly = TRUE)) {
+        cat(sprintf("using Rvcg\n"));
         if(exists('vcgVertexNeighbors', where=asNamespace('Rvcg'), mode='function')) {
             tmesh = ensure.tmesh3d(surface);
             neigh = Rvcg::vcgVertexNeighbors(tmesh, vi = nodes, numstep = order, include_self = include_self);
