@@ -22,7 +22,8 @@ This is used to determine the sphere radius for spherical surfaces. It is assume
 }
 \examples{
 \dontrun{
-spherical_surface = subject.surface(fsaverage.path(), "fsaverage3", surface="sphere", hemi="lh");
+spherical_surface = subject.surface(fsaverage.path(), "fsaverage3",
+  surface="sphere", hemi="lh");
 vr = fsbrain:::surf.avg.vertexradius(spherical_surface);
 # Show histogram to verify that the surface is a sphere centered at 0,0,0:
 hist(freesurferformats:::vertexdists.to.point(spherical_surface, c(0,0,0)));

@@ -169,9 +169,11 @@ pervertexdata.smoothnn.compute.fwhm <- function(surface, niters, is_template) {
 #' @examples
 #' \dontrun{
 #' sjd = fsaverage.path();
-#' spherical_surface = subject.surface(sjd, "fsaverage3", surface="sphere", hemi="lh");
-#' vdata = subject.morph.native(fsaverage.path(), "fsaverage3", "thickness", hemi="lh");
-#' vdata_smoothed = pervertexdata.smoothgaussian(spherical_surface, vdata, fwhm = 15);
+#' spherical_surface = subject.surface(sjd, "fsaverage3",
+#'   surface="sphere", hemi="lh");
+#' vdata = subject.morph.native(sjd, "fsaverage3", "thickness", hemi="lh");
+#' vdata_smoothed = pervertexdata.smoothgaussian(spherical_surface,
+#'  vdata, fwhm = 15);
 #' vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = vdata);
 #' vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = vdata_smoothed);
 #' }
@@ -200,7 +202,8 @@ pervertexdata.smoothgaussian <- function(spherical_surface, data, fwhm = 15.0, t
 #'
 #' @examples
 #' \dontrun{
-#' spherical_surface = subject.surface(fsaverage.path(), "fsaverage3", surface="sphere", hemi="lh");
+#' spherical_surface = subject.surface(fsaverage.path(), "fsaverage3",
+#'   surface="sphere", hemi="lh");
 #' vr = fsbrain:::surf.avg.vertexradius(spherical_surface);
 #' # Show histogram to verify that the surface is a sphere centered at 0,0,0:
 #' hist(freesurferformats:::vertexdists.to.point(spherical_surface, c(0,0,0)));
@@ -246,9 +249,11 @@ setRefClass("DoubleVecReference",
 #'
 #' @examples
 #' \dontrun{
-#' spherical_surface = subject.surface(fsaverage.path(), "fsaverage3", surface="sphere", hemi="lh");
+#' spherical_surface = subject.surface(fsaverage.path(), "fsaverage3",
+#'   surface="sphere", hemi="lh");
 #' sphere_dist = surf.sphere.dist(spherical_surface, 20.0);
-#' highlight.vertices.on.subject(fsaverage.path(), "fsaverage3", verts_lh = sphere_dist$neigh[[500]], surface="sphere");
+#' highlight.vertices.on.subject(fsaverage.path(), "fsaverage3",
+#'   verts_lh = sphere_dist$neigh[[500]], surface="sphere");
 #' }
 #'
 #' @return named list with 3 entries. Each is a vector with neighborhood information: 'neigh' is an int vector of the neighbor vertices, 'neigh_dist_dotproduct' a numerical vector of dp distances for these neighbors, and 'neigh_dist_surface' the same for along-the-surface-distances instead of dp distances.
@@ -397,7 +402,8 @@ extend_neighbors <- function(spherical_surface, targetvidx, currentvidx, min_dot
 #' gstd = fwhm / sqrt(log(256.0)); maxdist = truncfactor * gstd;
 #' spherical_surface = subject.surface(sjd, "fsaverage3", surface="sphere", hemi="lh");
 #' sphere_dists = surf.sphere.dist(spherical_surface, maxdist = maxdist);
-#' gaussian_weights = fsbrain:::surf.sphere.gaussianweights(spherical_surface, sphere_dists, gstd);
+#' gaussian_weights = fsbrain:::surf.sphere.gaussianweights(spherical_surface,
+#'  sphere_dists, gstd);
 #' morph_data = rep(NA, nrow(spherical_surface$vertices));
 #' morph_data[sphere_dists$neigh[[500]]] = gaussian_weights[[500]];
 #' vis.data.on.subject(sjd, "fsaverage3", morph_data_lh=morph_data);

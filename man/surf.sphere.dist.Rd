@@ -19,9 +19,11 @@ Compute neighborhood of the current vertex (=target vertex). The computation fol
 }
 \examples{
 \dontrun{
-spherical_surface = subject.surface(fsaverage.path(), "fsaverage3", surface="sphere", hemi="lh");
+spherical_surface = subject.surface(fsaverage.path(), "fsaverage3",
+  surface="sphere", hemi="lh");
 sphere_dist = surf.sphere.dist(spherical_surface, 20.0);
-highlight.vertices.on.subject(fsaverage.path(), "fsaverage3", verts_lh = sphere_dist$neigh[[500]], surface="sphere");
+highlight.vertices.on.subject(fsaverage.path(), "fsaverage3",
+  verts_lh = sphere_dist$neigh[[500]], surface="sphere");
 }
 
 }
