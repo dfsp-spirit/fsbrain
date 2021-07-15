@@ -12,16 +12,20 @@
 #'
 #' @references See the Brainder.org blog article downsampling-decimating-a-brain-surface by AM Winkler. Also see Winkler AM, Sabuncu MR, Yeo BT, Fischl B, Greve DN, Kochunov P, Nichols TE, Blangero J, Glahn DC. Measuring and comparing brain cortical surface area and other areal quantities. Neuroimage. 2012 Jul 16;61(4):1428-43.
 #'
-#' @note This function is publishes under the GPL-2.0 license. It has been translated from MATLAB code which is part of Anderson Winkler's  Areal Toolbox.
+#' @note This function is published under the GPL-2.0 license. It has been translated from MATLAB code which is part of Anderson Winkler's  Areal Toolbox that is published under the GPL-2.0 license.
 #'
 #' @examples
 #' \dontrun{
 #'   sjd=fsaverage.path(T);
-#'   sf = subject.surface(sjd, "fsaverage", hemi="lh");
+#'   sf_ico7 = subject.surface(sjd, "fsaverage", hemi="lh");
+#'   sf_ico6 = downsample.fs.surface(sf_ico7, 6L);
 #' }
 #'
 #' @export
-downsample.fs.surface <- function(surface, ntarget, outfile) {
+downsample.fs.surface <- function(surface, ntarget=6L) {
+
+    warning(sprintf("This is WIP and currently broken.\n"));
+
     if(! is.fs.surface(surface)) {
         stop("Parameter 'surface' must be an fs.surface instance representing a mesh created with FreeSurfer.");
     }
