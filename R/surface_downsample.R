@@ -1,10 +1,10 @@
 
 
-#' @title Downsample a FreeSurfer mesh, e.g. from ico7 to ico6 resolution.
+#' @title Downsample a FreeSurfer template mesh, e.g. from ico7 to ico6 resolution.
 #'
-#' @description Reduce the number of vertices and faces in a mesh. Only works if the mesh has been created in the special way FreeSurfer does it. This will NOT work for arbitrary meshes.
+#' @description Reduce the number of vertices and faces in a mesh. Only works if the mesh has been created in the special way FreeSurfer does it for templates like fsaverage. This will NOT work for arbitrary meshes.
 #'
-#' @param surface an fs.surface instance, must originate from a FreeSurfer brain mesh.
+#' @param surface an fs.surface instance, must originate from a FreeSurfer template brain mesh.
 #'
 #' @param ntarget scalar integer in range 2..6, the ico order. Must be smaller than the ico order of the input 'surface'.
 #'
@@ -56,7 +56,7 @@ downsample.fs.surface <- function(surface, ntarget=6L) {
         fout = which(rowSums(fac > nVj) == 3); # get faces which contain only vertices which are not in the new vertices
         for (f in fout) {
             vidx = fac[fout[f,]];
-            ftomerge = fac[rowSum(which(fac == vidx[1] | fac == vidx[2] | fac == vidx[3])) == 2, ];
+            ftomerge = fac[rowSums(which(fac == vidx[1] | fac == vidx[2] | fac == vidx[3])) == 2, ];
             facnew[f,] = colSums(ftomerge * (ftomerge <= nVj));
         }
         fac = facnew;
