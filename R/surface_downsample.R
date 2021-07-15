@@ -51,10 +51,10 @@ downsample.fs.surface <- function(surface, ntarget=6L) {
     fac = surface$faces;
     for(current_ico in seq.int(n-1L,ntarget,by=-1)) {
         nVj = 4^current_ico*(V0-2)+2;
-        num_val = 4^current_ico*F0 * 3; # new number of faces
-        facnew = matrix(rep(0, num_val), ncol=3);
-        fout = which(all(fac > nVj,2));
-        for (f in seq_along(fout)) {
+        num_val = 4^current_ico*F0 * 3; # number of entries in new faces matrix (new num_faces x 3)
+        facnew = matrix(rep(0, num_val), ncol=3); # the new faces matrix, num_faces x 3
+        fout = which(rowSums(fac > nVj) == 3); # get faces which contain only vertices which are not in the new vertices
+        for (f in fout) {
             vidx = fac[fout[f,]];
             ftomerge = fac[rowSum(which(fac == vidx[1] | fac == vidx[2] | fac == vidx[3])) == 2, ];
             facnew[f,] = colSums(ftomerge * (ftomerge <= nVj));
