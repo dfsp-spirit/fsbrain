@@ -8,26 +8,57 @@
 #'
 #' @param ntarget scalar integer in range 2..6, the ico order. Must be smaller than the ico order of the input 'surface'.
 #'
-#' @references See the Brainder.org blog article downsampling-decimating-a-brain-surface by AM Winkler.
+#' @return the downsampled surface
 #'
-#' @note This does NOT downsample per-vertex data for a mesh, but the mesh itself.
-downsample.fs.surface <- function(surface, ntarget=6L) {
+#' @references See the Brainder.org blog article downsampling-decimating-a-brain-surface by AM Winkler. Also see Winkler AM, Sabuncu MR, Yeo BT, Fischl B, Greve DN, Kochunov P, Nichols TE, Blangero J, Glahn DC. Measuring and comparing brain cortical surface area and other areal quantities. Neuroimage. 2012 Jul 16;61(4):1428-43.
+#'
+#' @note This function is publishes under the GPL-2.0 license. It has been translated from MATLAB code which is part of Anderson Winkler's  Areal Toolbox.
+#'
+#' @examples
+#' \dontrun{
+#'   sjd=fsaverage.path(T);
+#'   sf = subject.surface(sjd, "fsaverage", hemi="lh");
+#' }
+#'
+#' @export
+downsample.fs.surface <- function(surface, ntarget, outfile) {
     if(! is.fs.surface(surface)) {
         stop("Parameter 'surface' must be an fs.surface instance representing a mesh created with FreeSurfer.");
     }
     V0 = 12;
     F0 = 20;
-    n = round(log((nV-2)/(V0-2))/log(4));
+    nv = nrow(surface$vertices);
+    n = round(log((nv-2)/(V0-2))/log(4));
 
-    if (nV != 4^n*(V0-2)+2) {
+    if (nv != 4^n*(V0-2)+2) {
         stop("The source mesh is not from icosahedron.");
     }
     if(ntarget > n) {
         stop("Upsampling not possible: parameter 'ntarget' is %d must be smaller then '%d' for the current input mesh with ico order '%d'.\n", ntarget, n, n);
     }
-    if(ntarget = n) {
+    if(ntarget == n) {
         message(sprintf("Parameter 'ntarget' equal to determined input mesh ico order, returning unchanged input mesh.\n"));
         return(surface);
     }
 
+    # Select the subset of vertices for downsampled mesh
+    ds_vertices = surface$vertices[1:(4^ntarget*(V0-2)+2),];
+
+    fac = surface$faces;
+    for(current_ico in seq.int(n-1L,ntarget,by=-1)) {
+        nVj = 4^current_ico*(V0-2)+2;
+        num_val = 4^current_ico*F0 * 3; # new number of faces
+        facnew = matrix(rep(0, num_val), ncol=3);
+        fout = which(all(fac > nVj,2));
+        for (f in seq_along(fout)) {
+            vidx = fac[fout[f,]];
+            ftomerge = fac[rowSum(which(fac == vidx[1] | fac == vidx[2] | fac == vidx[3])) == 2, ];
+            facnew[f,] = colSums(ftomerge * (ftomerge <= nVj));
+        }
+        fac = facnew;
+    }
+
+    surf_ds = list('vertices'=ds_vertices, 'faces'=fac);
+    class(surf_ds) <- c(class(surf_ds), 'fs.surface');
+    return(surf_ds);
 }
