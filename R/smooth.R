@@ -24,7 +24,7 @@
 #' sj = "fsaverage3";
 #' surface = subject.surface(sjd, sj, hemi = "lh");
 #' th = subject.morph.native(sjd, sj, "thickness", hemi="lh", cortex_only=T);
-#' th_smooth = pervertexdata.smoothnn(surface, th, 15L);
+#' th_smooth = pervertexdata.smoothnn(surface, th, num_iter=15L);
 #' vis.data.on.subject(sjd, sj, morph_data_lh = th);
 #' vis.data.on.subject(sjd, sj, morph_data_lh = th_smooth);
 #' }
