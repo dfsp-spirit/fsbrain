@@ -340,8 +340,6 @@ path.colors.from.orientation <- function(coords_list, use_three_colors_only = FA
         }
     } else {
         angles = path.slopes(coords_list, return_angles = TRUE); # in degrees, -90..+90
-        cat(sprintf("Found %d different angles between %f and %f.\n", length(unique(angles)), min(angles), max(angles)));
-        print(angles);
         path_colors = cbind(as.integer(scale.to.range.zero.one(angles[,1])*255), as.integer(scale.to.range.zero.one(angles[,2])*255), as.integer(scale.to.range.zero.one(angles[,3])*255));
     }
 
@@ -469,12 +467,10 @@ label.border <- function(surface_mesh, label, inner_only=TRUE, expand_inwards=0L
     }
 
     label_edges_sorted = as.data.frame(t(apply(label_edges, 1, sort)));    # Sort start and target vertex within edge to count edges (u,v) and (v,u) as 2 occurrences of same edge later.
-    #print(head(label_edges_sorted));
     edge_dt = data.table::as.data.table(label_edges_sorted);
     edgecount_dt = edge_dt[, .N, by = names(edge_dt)]; # add column 'N' which contains the counts (i.e., how often each edge occurs over all faces).
     border_edges = edgecount_dt[edgecount_dt$N==1][,1:2]; # Border edges occur only once, as the other face they touch is not part of the label.
 
-    #cat(sprintf("Counted %d unique edges, out of those there were %d border edges which occured only once.\n", nrow(edgecount_dt), nrow(border_edges)));
     border_vertices = unique(as.vector(t(border_edges)));
 
     if(expand_inwards > 0L) {
@@ -496,6 +492,31 @@ label.border <- function(surface_mesh, label, inner_only=TRUE, expand_inwards=0L
     }
 
     return(list("vertices"=border_vertices, "edges"=border_edges, "faces"=border_faces));
+}
+
+
+#' @title Check for the given color strings whether they represent gray scale colors.
+#'
+#' @param col_string vector of RGB(A) color strings, like \code{c("#FFFFFF", ("#FF00FF"))}.
+#'
+#' @return logical vector
+#'
+#' @examples
+#' colors.are.grayscale(c("#FFFFFF", "#FF00FF"));
+#' all((colors.are.grayscale(c("#FFFFFF", "#FF00FF"))));
+#'
+#' @export
+#' @importFrom grDevices col2rgb
+colors.are.grayscale <- function(col_strings) {
+
+  if(all(nchar(col_strings) == 9)) {
+    has_alpha = TRUE;
+  } else if(all(nchar(col_strings) == 7)) {
+    has_alpha = FALSE;
+  } else {
+    stop("Invalid input: parameter 'colstring' must contain RBG or RGBA color strings with 7 chars each for RGB or 9 chars each for RGBA.");
+  }
+  return(unname(unlist(apply(grDevices::col2rgb(col_strings, alpha = has_alpha), 2, function(x){length(unique(x)) == 1}))));
 }
 
 

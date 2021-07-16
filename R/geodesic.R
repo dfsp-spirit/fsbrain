@@ -553,7 +553,6 @@ geodesic.circles <- function(surface, vertices=NULL, scale=5.0) {
 
         tend = Sys.time();
         tdiff = tend - tstart;
-        print(tdiff);
 
         return(res);
     } else {

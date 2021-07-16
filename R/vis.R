@@ -65,7 +65,7 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi="bo
     both_hemi_colors$metadata = NULL;
     if(!is.null(bg)) {
         background = collayer.bg(subjects_dir, subject_id, bg, hemi=hemi);
-        both_hemi_colors = collayers.merge(list("fg"=both_hemi_colors, "bg"=background));
+        both_hemi_colors = collayers.merge(collayers = list("fg"=both_hemi_colors, "bg"=background), opaque_background = FALSE);
     }
 
     if(! is.hemilist(both_hemi_colors)) {

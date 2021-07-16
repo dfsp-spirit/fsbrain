@@ -7,7 +7,7 @@
 collayers.merge(collayers, opaque_background = "#FFFFFF")
 }
 \arguments{
-\item{collayers}{named list, the values must be vectors, matrices or arrays of color strings (as produced by \code{\link[grDevices]{rgb}}. The names are freeform and do not really matter. All values must have the same length.}
+\item{collayers}{named list, the values must be vectors, matrices or arrays of color strings (as produced by \code{\link[grDevices]{rgb}}. The names are free form and do not really matter. All values must have the same length.}
 
 \item{opaque_background}{a single color string or `NULL`. If a color string, this color will be used as a final opaque background layer to ensure that the returned colors are all opaque. Pass `NULL` to skip this, which may result in a return value that contains non-opaque color values.}
 }
