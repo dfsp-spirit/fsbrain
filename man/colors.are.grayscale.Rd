@@ -17,5 +17,6 @@ Check for the given color strings whether they represent gray scale colors.
 }
 \examples{
 colors.are.grayscale(c("#FFFFFF", "#FF00FF"));
+all((colors.are.grayscale(c("#FFFFFF00", "#ABABABAB"))));
 
 }

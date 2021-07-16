@@ -503,7 +503,7 @@ label.border <- function(surface_mesh, label, inner_only=TRUE, expand_inwards=0L
 #'
 #' @examples
 #' colors.are.grayscale(c("#FFFFFF", "#FF00FF"));
-#' all((colors.are.grayscale(c("#FFFFFF", "#FF00FF"))));
+#' all((colors.are.grayscale(c("#FFFFFF00", "#ABABABAB"))));
 #'
 #' @export
 #' @importFrom grDevices col2rgb
@@ -516,7 +516,12 @@ colors.are.grayscale <- function(col_strings) {
   } else {
     stop("Invalid input: parameter 'colstring' must contain RBG or RGBA color strings with 7 chars each for RGB or 9 chars each for RGBA.");
   }
-  return(unname(unlist(apply(grDevices::col2rgb(col_strings, alpha = has_alpha), 2, function(x){length(unique(x)) == 1}))));
+
+  if(has_alpha) {
+    col_strings = substr(col_strings, 1, 7); # The alpha is irrelevant for determining whether the color is grayscale, strip it.
+  }
+
+  return(unname(unlist(apply(grDevices::col2rgb(col_strings), 2, function(x){length(unique(x)) == 1}))));
 }
 
 
