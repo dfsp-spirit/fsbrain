@@ -10,10 +10,13 @@
 #'
 #' @param data numerical vector, the per-vertex data for the surface. Values set to \code{NA} will be ignore, so you can apply a mask before this operation (e.g., by setting the values for all vertices of the medial mask to \code{NA}).
 #'
-#' @param num_iter positive scalar integer, the number of times to perform the averaging.
+#' @param num_iter positive scalar integer, the number of times to perform the averaging. Depends on the mesh resolution and desired smoothing, higher resolution meshes will need more passes. Typical values are in range 20 to 150, but also depend on the setting of parameter 'k', of course.
+#'
+#' @param k positive scalar integer, the neighborhood size in hops along the mesh edges (the k for the k-ring neighborhood). For higher resolution meshes it makes sense to increase this, typical values are roughly in range 1 to 10.
 #'
 #' @note The iteration is currently done in R, which means the performance is not great.
 #' @note This does NOT smooth the mesh, it smoothes per-vertex values assigned to mesh vertices.
+#' @note To see relevant smoothing for full-resolution FreeSurfer meshes, try setting \code{num_iter=50, k=8} for a start.
 #'
 #' @examples
 #' \dontrun{
@@ -27,7 +30,7 @@
 #' }
 #'
 #' @export
-pervertexdata.smoothnn <- function(surface, data, num_iter) {
+pervertexdata.smoothnn <- function(surface, data, num_iter, k=1L) {
     if(! freesurferformats::is.fs.surface(surface)) {
         stop("Parameter 'surface' must be an fs.surface instance.");
     }
@@ -36,7 +39,20 @@ pervertexdata.smoothnn <- function(surface, data, num_iter) {
     }
 
     surface = ensure.fs.surface(surface);
-    adj = fs.surface.as.adjacencylist(surface);
+    if(k==1) {
+        adj = fs.surface.as.adjacencylist(surface);
+    } else {
+        if(requireNamespace("Rvcg", quietly = TRUE)) {
+            if(exists('vcgVertexNeighbors', where=asNamespace('Rvcg'), mode='function')) {
+                tmesh = ensure.tmesh3d(surface);
+                adj = Rvcg::vcgVertexNeighbors(tmesh, vi = NULL, numstep = k, include_self = FALSE);
+            } else {
+                stop("The installed version of the  'Rvcg' package is too old, please re-install it from Github.");
+            }
+        } else {
+            stop("The 'Rvcg' package must be installed to use this functionality.");
+        }
+    }
     nv = nrow(surface$vertices);
     if(length(data) != nv) {
         stop("Data and vertex count mismatch");

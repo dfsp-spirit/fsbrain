@@ -27,7 +27,7 @@ fs.surface.vertex.neighbors(
 named list of integer vectors (see \code{igraph::neighborhood}), unless 'simplify' is TRUE, see there for details.
 }
 \description{
-This is a faster replacement for \code{mesh.vertex.neighbors} that requires the optional dependency package 'igraph'.
+This is a faster replacement for \code{mesh.vertex.neighbors} that requires the optional dependency package 'igraph' or 'Rvcg'.
 }
 \note{
 If you intend to call several functions on the igraph, it is faster to construct it with \code{fs.surface.to.igraph} and keep it.
