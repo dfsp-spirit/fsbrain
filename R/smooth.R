@@ -2,35 +2,32 @@
 ## (These functions do NOT smooth the mesh topology!)
 
 
-#' @title Ignore, not part of fsbrain, only here temporarily.
+#' @title Perform iterative nearest-neighbor smoothing of per-vertex data.
 #'
-#' @description Approximate Gaussian smoothing of surface data by iterative mesh neighborhood averaging.
+#' @description Smoothing of surface data by iterative mesh neighborhood averaging. Assigns to each vertex the average of the values in its 1-ring neighborhood (based on the mesh edges).
 #'
 #' @param surface an \code{fs.surface} instance
 #'
-#' @param data numerical vector, the per-vertex data for the surface
+#' @param data numerical vector, the per-vertex data for the surface. Values set to \code{NA} will be ignore, so you can apply a mask before this operation (e.g., by setting the values for all vertices of the medial mask to \code{NA}).
 #'
-#' @param is_template logical, whether the surface belongs to a template subject
-#'
-#' @param fwhm double the target fwhm value. If given, num_iter must be NULL and will be computed to match this fwhm value.
-#'
-#' @param num_iter positive scalar integer, the number of times to perform the averaging. Only use this if you know what you are doing, prefer specifying the target fwhm instead. The fwhm parameter must be NULL if this is used instead.
+#' @param num_iter positive scalar integer, the number of times to perform the averaging.
 #'
 #' @note The iteration is currently done in R, which means the performance is not great.
-#' @note This function has been adapted from FreeSurfer and it is subject to the FreeSurfer software license.
+#' @note This does NOT smooth the mesh, it smoothes per-vertex values assigned to mesh vertices.
 #'
 #' @examples
 #' \dontrun{
 #' sjd = fsaverage.path(T);
-#' surface = subject.surface(sjd, "fsaverage3", hemi = "lh");
-#' th = subject.morph.native(sjd, "fsaverage3", "thickness", hemi="lh");
-#' th_smooth = pervertexdata.smoothnn(surface, th, fwhm = 10.0);
-#' vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = th);
-#' vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = th_smooth);
+#' sj = "fsaverage3";
+#' surface = subject.surface(sjd, sj, hemi = "lh");
+#' th = subject.morph.native(sjd, sj, "thickness", hemi="lh", cortex_only=T);
+#' th_smooth = pervertexdata.smoothnn(surface, th, 15L);
+#' vis.data.on.subject(sjd, sj, morph_data_lh = th);
+#' vis.data.on.subject(sjd, sj, morph_data_lh = th_smooth);
 #' }
 #'
 #' @export
-pervertexdata.smoothnn <- function(surface, data, is_template, fwhm = NULL, num_iter = NULL) {
+pervertexdata.smoothnn <- function(surface, data, num_iter) {
     if(! freesurferformats::is.fs.surface(surface)) {
         stop("Parameter 'surface' must be an fs.surface instance.");
     }
@@ -38,32 +35,15 @@ pervertexdata.smoothnn <- function(surface, data, is_template, fwhm = NULL, num_
         stop("Number of surface vertices must match data length.");
     }
 
-    if(! is.logical(is_template)) {
-        stop("Parameter 'is_template' must be logical");
-    }
-
-    if(is.null(num_iter)) {
-        if(is.null(fwhm)) {
-            stop("One of 'num_iter' or 'fwhm' must be given and non-NULL.");
-        }
-        num_iter = pervertexdata.smoothnn.compute.numiter(surface, is_template, fwhm);
-        cat(sprintf("Smoothing like with FWHM %f Gaussian, using %d iterations of nearest neighbor smoothing.\n", fwhm, num_iter));
-    } else {
-        if(!is.null(fwhm)) {
-            stop("If 'num_iter' is given, the parameter fwhm will be ignored and must be set to NULL.");
-        } else {
-            cat(sprintf("Smoothing with %d nn iterations, expecting FWHM of about %f.\n", num_iter, pervertexdata.smoothnn.compute.fwhm(surface, is_template, num_iter)));
-        }
-    }
-
     surface = ensure.fs.surface(surface);
-    adj = fs.surface.as.adjacencylist(surface); # Slow, should replace in Rvcg with a yet-to-write function.
+    adj = fs.surface.as.adjacencylist(surface);
     nv = nrow(surface$vertices);
     if(length(data) != nv) {
         stop("Data and vertex count mismatch");
     }
 
     data_smoothed = rep(NA, nv);
+
     for(iteration in seq(num_iter)) {
         if(iteration == 1L) {
             source_data = data;
@@ -71,8 +51,9 @@ pervertexdata.smoothnn <- function(surface, data, is_template, fwhm = NULL, num_
             source_data = data_smoothed;
         }
         for(vidx in seq(nv)) {
+            if(is.na(data[vidx])) { next; }
             neigh = c(adj[[vidx]], vidx);
-            data_smoothed[vidx] = mean(source_data[neigh]);
+            data_smoothed[vidx] = mean(source_data[neigh], na.rm = TRUE);
         }
     }
     return(data_smoothed);

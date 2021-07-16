@@ -9,8 +9,6 @@ pervertexdata.smoothnn.compute.numiter(surface, fwhm, is_template)
 \arguments{
 \item{surface}{an \code{fs.surface} instance}
 
-\item{fwhm}{double the target fwhm value. If given, num_iter must be NULL and will be computed to match this fwhm value.}
-
 \item{is_template}{logical, whether the surface belongs to a template subject}
 }
 \value{

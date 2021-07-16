@@ -2,43 +2,36 @@
 % Please edit documentation in R/smooth.R
 \name{pervertexdata.smoothnn}
 \alias{pervertexdata.smoothnn}
-\title{Ignore, not part of fsbrain, only here temporarily.}
+\title{Perform iterative nearest-neighbor smoothing of per-vertex data.}
 \usage{
-pervertexdata.smoothnn(
-  surface,
-  data,
-  is_template,
-  fwhm = NULL,
-  num_iter = NULL
-)
+pervertexdata.smoothnn(surface, data, num_iter, silent = TRUE)
 }
 \arguments{
 \item{surface}{an \code{fs.surface} instance}
 
-\item{data}{numerical vector, the per-vertex data for the surface}
+\item{data}{numerical vector, the per-vertex data for the surface. Values set to \code{NA} will be ignore, so you can apply a mask before this operation (e.g., by setting the values for all vertices of the medial mask to \code{NA}).}
 
-\item{is_template}{logical, whether the surface belongs to a template subject}
+\item{num_iter}{positive scalar integer, the number of times to perform the averaging.}
 
-\item{fwhm}{double the target fwhm value. If given, num_iter must be NULL and will be computed to match this fwhm value.}
-
-\item{num_iter}{positive scalar integer, the number of times to perform the averaging. Only use this if you know what you are doing, prefer specifying the target fwhm instead. The fwhm parameter must be NULL if this is used instead.}
+\item{silent}{whether to print status}
 }
 \description{
-Approximate Gaussian smoothing of surface data by iterative mesh neighborhood averaging.
+Smoothing of surface data by iterative mesh neighborhood averaging. Assigns to each vertex the average of the values in its 1-ring neighborhood (based on the mesh edges).
 }
 \note{
 The iteration is currently done in R, which means the performance is not great.
 
-This function has been adapted from FreeSurfer and it is subject to the FreeSurfer software license.
+This does NOT smooth the mesh, it smoothes per-vertex values assigned to mesh vertices.
 }
 \examples{
 \dontrun{
 sjd = fsaverage.path(T);
-surface = subject.surface(sjd, "fsaverage3", hemi = "lh");
-th = subject.morph.native(sjd, "fsaverage3", "thickness", hemi="lh");
-th_smooth = pervertexdata.smoothnn(surface, th, fwhm = 10.0);
-vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = th);
-vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = th_smooth);
+sj = "fsaverage3";
+surface = subject.surface(sjd, sj, hemi = "lh");
+th = subject.morph.native(sjd, sj, "thickness", hemi="lh", cortex_only=T);
+th_smooth = pervertexdata.smoothnn(surface, th, 15L);
+vis.data.on.subject(sjd, sj, morph_data_lh = th);
+vis.data.on.subject(sjd, sj, morph_data_lh = th_smooth);
 }
 
 }

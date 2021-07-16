@@ -32,7 +32,7 @@ fs.surface.to.igraph <- function(surface) {
 #'
 #' @inheritParams fs.surface.to.igraph
 #'
-#' @description This is a faster replacement for \code{mesh.vertex.neighbors} that requires the optional dependency package 'igraph'.
+#' @description This is a faster replacement for \code{mesh.vertex.neighbors} that requires the optional dependency package 'igraph' or 'Rvcg'.
 #'
 #' @param nodes the source vertex. Passed on to \code{igraph::neighborhood}. Can be a vector, in which case the neighborhoods for all these vertices are computed separately. If NULL, all graph vertices are used.
 #'
@@ -57,7 +57,6 @@ fs.surface.vertex.neighbors <- function(surface, nodes = NULL, order = 1L, simpl
     }
 
     if(requireNamespace("Rvcg", quietly = TRUE)) {
-        cat(sprintf("using Rvcg\n"));
         if(exists('vcgVertexNeighbors', where=asNamespace('Rvcg'), mode='function')) {
             tmesh = ensure.tmesh3d(surface);
             neigh = Rvcg::vcgVertexNeighbors(tmesh, vi = nodes, numstep = order, include_self = include_self);
@@ -99,11 +98,17 @@ fs.surface.vertex.neighbors <- function(surface, nodes = NULL, order = 1L, simpl
 #'
 #' @export
 fs.surface.as.adjacencylist <- function(surface) {
+    if(requireNamespace("Rvcg", quietly = TRUE)) {
+        if(exists('vcgVertexNeighbors', where=asNamespace('Rvcg'), mode='function')) {
+            tmesh = ensure.tmesh3d(surface);
+            return(Rvcg::vcgVertexNeighbors(tmesh));
+        }
+    }
     if(requireNamespace("igraph", quietly = TRUE)) {
         g = fs.surface.to.igraph(surface);
         return(lapply(igraph::as_adj_list(g), as.integer));
     } else {
-        stop("This functionality requires the 'igraph' package to be installed.");
+        stop("This functionality requires the 'Rvcg' or 'igraph' package to be installed.");
     }
 }
 
