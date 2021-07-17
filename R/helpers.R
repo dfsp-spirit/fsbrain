@@ -499,29 +499,58 @@ label.border <- function(surface_mesh, label, inner_only=TRUE, expand_inwards=0L
 #'
 #' @param col_string vector of RGB(A) color strings, like \code{c("#FFFFFF", ("#FF00FF"))}.
 #'
+#' @param accept_col_names logical, whether to accept color names like 'white'. Disables all sanity checks.
+#'
 #' @return logical vector
 #'
 #' @examples
 #' colors.are.grayscale(c("#FFFFFF", "#FF00FF"));
 #' all((colors.are.grayscale(c("#FFFFFF00", "#ABABABAB"))));
 #'
-#' @export
+#' @keywords internal
 #' @importFrom grDevices col2rgb
-colors.are.grayscale <- function(col_strings) {
+colors.are.grayscale <- function(col_strings, accept_col_names=TRUE) {
 
-  if(all(nchar(col_strings) == 9)) {
-    has_alpha = TRUE;
-  } else if(all(nchar(col_strings) == 7)) {
-    has_alpha = FALSE;
-  } else {
-    stop("Invalid input: parameter 'colstring' must contain RBG or RGBA color strings with 7 chars each for RGB or 9 chars each for RGBA.");
-  }
+  if(! accept_col_names) {
+    if(all(nchar(col_strings) == 9)) {
+      has_alpha = TRUE;
+    } else if(all(nchar(col_strings) == 7)) {
+      has_alpha = FALSE;
+    } else {
+      stop("Invalid input: parameter 'colstring' must contain RBG or RGBA color strings with 7 chars each for RGB or 9 chars each for RGBA.");
+    }
 
-  if(has_alpha) {
-    col_strings = substr(col_strings, 1, 7); # The alpha is irrelevant for determining whether the color is grayscale, strip it.
+    if(has_alpha) {
+      col_strings = substr(col_strings, 1, 7); # The alpha is irrelevant for determining whether the color is grayscale, strip it.
+    }
   }
 
   return(unname(unlist(apply(grDevices::col2rgb(col_strings), 2, function(x){length(unique(x)) == 1}))));
+}
+
+
+#' @title Check for the given color strings whether they have transparency, i.e., an alpha channel value != fully opaque.
+#'
+#' @param col_string vector of RGB(A) color strings, like \code{c("#FFFFFF", ("#FF00FF"))}.
+#'
+#' @param accept_col_names logical, whether to accept color names like 'white'. Disables all sanity checks.
+#'
+#' @return logical vector
+#'
+#' @examples
+#' colors.have.transparency(c("#FFFFFF", "#FF00FF", "#FF00FF00", "red", "#FF00FFDD"));
+#' all((colors.have.transparency(c("#FFFFFF00", "#ABABABAB"))));
+#'
+#' @keywords internal
+#' @importFrom grDevices col2rgb
+colors.have.transparency <- function(col_strings, accept_col_names=TRUE) {
+
+  if(! accept_col_names) {
+    if(! (all(nchar(col_strings) == 9) || (all(nchar(col_strings) == 9)))) {
+      stop("These strings do not look like RGBA color strings: invalid number of chars (expected 7 or 9 for RGB/RGBA).");
+    }
+  }
+  return(unname(unlist(apply(grDevices::col2rgb(col_strings, alpha=TRUE), 2, function(x){x[4] != 255L}))));
 }
 
 
