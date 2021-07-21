@@ -607,11 +607,11 @@ geodesic.ballstats <- function(mesh, geodist, sample_at_radii) {
                 v = face_vert_coords;
                 # Compute the crossing positions along [f(1) f(2)] using linear interpolation.
                 alpha1 = face_vert_dists[2]/(face_vert_dists[2]-face_vert_dists[1]); # scalar double
-                v1 = alpha1*v[,1] + (1-alpha1)*v[,2];  # TODO: MAY NEED row-column inversion: v[2,] instead of v[,2]
+                v1 = alpha1*v[,1] + (1-alpha1)*v[,2];
                 alpha2 = face_vert_dists[3]/(face_vert_dists[3]-face_vert_dists[1]); # scalar double
-                v2 = alpha2*v[,1] + (1-alpha2)*v[,3];  # TODO: MAY NEED row-column inversion
+                v2 = alpha2*v[,1] + (1-alpha2)*v[,3];
                 # Compute triangle area
-                b = norm( pracma::cross(v[,1]-v1,v[,1]-v2) , type="2")/2;
+                b = norm( pracma::cross(v[,1]-v1,v[,1]-v2) , type="F")/2;
                 # add it positively or negatively to the area
                 if(face_in_radius_vertices[pf_idx] == 2L) { # 2 verts in, 1 out
                     total_area_in_radius = total_area_in_radius + face_area[pf_idx] - b;
