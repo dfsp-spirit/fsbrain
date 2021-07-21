@@ -619,7 +619,7 @@ geodesic.ballstats <- function(mesh, geodist, sample_at_radii) {
                     total_area_in_radius = total_area_in_radius + b;
                 }
                 # add to the perimeter
-                total_perimeter = total_perimeter + norm(v1-v2, type = "2");
+                total_perimeter = total_perimeter + norm(v1-v2, type = "F");
             }
             res$ball_area[radius_idx] = total_area_in_radius;
             res$ball_perimeter[radius_idx] = total_perimeter;
