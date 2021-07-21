@@ -611,7 +611,7 @@ geodesic.ballstats <- function(mesh, geodist, sample_at_radii) {
                 alpha2 = face_vert_dists[3]/(face_vert_dists[3]-face_vert_dists[1]); # scalar double
                 v2 = alpha2*v[,1] + (1-alpha2)*v[,3];
                 # Compute triangle area
-                b = norm( pracma::cross(v[,1]-v1,v[,1]-v2) , type="F")/2;
+                b = pracma::Norm( pracma::cross(v[,1]-v1,v[,1]-v2))/2;
                 # add it positively or negatively to the area
                 if(face_in_radius_vertices[pf_idx] == 2L) { # 2 verts in, 1 out
                     total_area_in_radius = total_area_in_radius + face_area[pf_idx] - b;
@@ -619,7 +619,7 @@ geodesic.ballstats <- function(mesh, geodist, sample_at_radii) {
                     total_area_in_radius = total_area_in_radius + b;
                 }
                 # add to the perimeter
-                total_perimeter = total_perimeter + norm(v1-v2, type = "F");
+                total_perimeter = total_perimeter + pracma::Norm(v1-v2);
             }
             res$ball_area[radius_idx] = total_area_in_radius;
             res$ball_perimeter[radius_idx] = total_perimeter;
