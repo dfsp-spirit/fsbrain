@@ -645,7 +645,8 @@ alphablend <- function(front_color, back_color, silent=TRUE) {
     # color are fully transparent. The output alpha will be 0, and we set the rgb values to all zeroes as well.
     out_rgb[is.nan(out_rgb)] = 0.;
 
-    return(grDevices::rgb(cbind(out_rgb, out_alpha), alpha = TRUE));
+    out_col = grDevices::rgb(cbind(out_rgb, out_alpha), alpha = TRUE);
+    return(out_col);
 }
 
 
