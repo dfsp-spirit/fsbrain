@@ -497,7 +497,7 @@ label.border <- function(surface_mesh, label, inner_only=TRUE, expand_inwards=0L
 
 #' @title Check for the given color strings whether they represent gray scale colors.
 #'
-#' @param col_string vector of RGB(A) color strings, like \code{c("#FFFFFF", ("#FF00FF"))}.
+#' @param col_strings vector of RGB(A) color strings, like \code{c("#FFFFFF", ("#FF00FF"))}.
 #'
 #' @param accept_col_names logical, whether to accept color names like 'white'. Disables all sanity checks.
 #'
@@ -507,7 +507,7 @@ label.border <- function(surface_mesh, label, inner_only=TRUE, expand_inwards=0L
 #' colors.are.grayscale(c("#FFFFFF", "#FF00FF"));
 #' all((colors.are.grayscale(c("#FFFFFF00", "#ABABABAB"))));
 #'
-#' @keywords internal
+#' @export
 #' @importFrom grDevices col2rgb
 colors.are.grayscale <- function(col_strings, accept_col_names=TRUE) {
 
@@ -531,7 +531,7 @@ colors.are.grayscale <- function(col_strings, accept_col_names=TRUE) {
 
 #' @title Check for the given color strings whether they have transparency, i.e., an alpha channel value != fully opaque.
 #'
-#' @param col_string vector of RGB(A) color strings, like \code{c("#FFFFFF", ("#FF00FF"))}.
+#' @param col_strings vector of RGB(A) color strings, like \code{c("#FFFFFF", ("#FF00FF"))}.
 #'
 #' @param accept_col_names logical, whether to accept color names like 'white'. Disables all sanity checks.
 #'
@@ -541,7 +541,7 @@ colors.are.grayscale <- function(col_strings, accept_col_names=TRUE) {
 #' colors.have.transparency(c("#FFFFFF", "#FF00FF", "#FF00FF00", "red", "#FF00FFDD"));
 #' all((colors.have.transparency(c("#FFFFFF00", "#ABABABAB"))));
 #'
-#' @keywords internal
+#' @export
 #' @importFrom grDevices col2rgb
 colors.have.transparency <- function(col_strings, accept_col_names=TRUE) {
 

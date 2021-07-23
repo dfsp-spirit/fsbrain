@@ -7,9 +7,9 @@
 colors.are.grayscale(col_strings, accept_col_names = TRUE)
 }
 \arguments{
-\item{accept_col_names}{logical, whether to accept color names like 'white'. Disables all sanity checks.}
+\item{col_strings}{vector of RGB(A) color strings, like \code{c("#FFFFFF", ("#FF00FF"))}.}
 
-\item{col_string}{vector of RGB(A) color strings, like \code{c("#FFFFFF", ("#FF00FF"))}.}
+\item{accept_col_names}{logical, whether to accept color names like 'white'. Disables all sanity checks.}
 }
 \value{
 logical vector
@@ -22,4 +22,3 @@ colors.are.grayscale(c("#FFFFFF", "#FF00FF"));
 all((colors.are.grayscale(c("#FFFFFF00", "#ABABABAB"))));
 
 }
-\keyword{internal}

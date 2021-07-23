@@ -9,7 +9,6 @@ subject.descriptor.geodesic.average.distance(
   subject_id,
   surface = "white",
   hemi = "both",
-  cortex_only = FALSE,
   ...
 )
 }
@@ -21,8 +20,6 @@ subject.descriptor.geodesic.average.distance(
 \item{surface}{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 
 \item{hemi}{string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the label data files to be loaded.}
-
-\item{cortex_only}{logical, whether to limit computations to the cortex. If set, results for medial wall vertices will be \code{NA}, and they will be ignored when computing the mean distance from a vertex to all others.}
 
 \item{...}{extra parameters passed on to \code{geodesic.average.distance}. Ignored if 'cortex_only' is TRUE.}
 }
