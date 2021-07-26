@@ -72,6 +72,12 @@ If you want to compile the package under any other operating system, you will ne
 
 Recent MacOS versions do not ship with an X11 environment. You will have to install the [xquartz X11 system](https://www.xquartz.org/) if you do not have it already. If you want to create GIF movies, make sure you have imagemagick installed (easiest via [homebrew](https://brew.sh/): `brew install imagemagick@6`).
 
+
+### Windows Installation Hints
+
+Under Windows 10, it seems that you will need to install the two R packages manually in R via the `install.packages` command in R: `shiny` and `manipulateWidget`.
+
+
 ### Installation via Docker
 
 There are Docker images for fsbrain available on Dockerhub, see the [fsbrain Dockerhub repo](https://hub.docker.com/r/dfspspirit/fsbrain).
