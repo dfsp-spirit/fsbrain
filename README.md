@@ -75,7 +75,7 @@ Recent MacOS versions do not ship with an X11 environment. You will have to inst
 
 ### Windows Installation Hints
 
-Under Windows 10, it seems that you will need to install the two R packages manually in R via the `install.packages` command in R: `shiny` and `manipulateWidget`.
+Under Windows 10, it seems that you will need to install these two packages manually via the `install.packages` command: `shiny` and `manipulateWidget`.
 
 
 ### Installation via Docker
