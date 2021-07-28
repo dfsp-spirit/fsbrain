@@ -407,7 +407,7 @@ subject.descriptor.geodesic.average.distance <- function(subjects_dir, subject_i
 #'
 #' @export
 geodesic.path <- function(surface, source_vertex, target_vertices) {
-    if(! requireNamespace("Rvcg", quietly = TRUE)) {
+    if(requireNamespace("Rvcg", quietly = TRUE)) {
         tmesh = ensure.tmesh3d(surface);
 
         if(length(source_vertex) != 1L) {
