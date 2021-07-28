@@ -29,7 +29,7 @@ This can take a bit for very large graphs. This requires the optional dependency
     surface = "white", hemi = "lh");
   p = geodesic.path(surface, 5, c(10, 20));
   vis.subject.morph.native(sjd, 'fsaverage3', 'thickness', views='si');
-  vis.path.along.verts(surface$vertices, p[[1]]);
+  vis.paths.along.verts(surface$vertices, p$paths);
 }
 
 }

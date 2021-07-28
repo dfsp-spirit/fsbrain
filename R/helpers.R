@@ -179,7 +179,7 @@ annot.outline <- function(annotdata, surface_mesh, background="white", silent=TR
 #'
 #' @param do_vis logical, whether to actually draw the path.
 #'
-#' @param color a color string, like '#FF0000' to color the path. Ignored of 'no_material' is TRUE.
+#' @param color a color string, like '#FF0000' to color the path.
 #'
 #' @param no_material logical, whether to use set the custom rendering material properties for path visualization using \code{rgl::material3d} before plotting. If you set this to FALSE, no material will be set and you should set it yourself before calling this function, otherwise the looks of the path are undefined (dependent on the default material on your system, or the last material call). Setting this to TRUE also means that the 'color' argument is ignored of course, as the color is part of the material.
 #'

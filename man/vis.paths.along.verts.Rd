@@ -15,7 +15,7 @@ vis.paths.along.verts(
 
 \item{paths}{list of positive integer vectors, the vertex indices of the paths}
 
-\item{color}{a color string, like '#FF0000' to color the path. Ignored of 'no_material' is TRUE.}
+\item{color}{a color string, like '#FF0000' to color the path.}
 }
 \description{
 Visualize several paths in different colors.
