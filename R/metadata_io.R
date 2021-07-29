@@ -545,6 +545,8 @@ read.md.subjects.from.fsgd <- function(filepath) {
 #'
 #' @param long logical, whether this is for a longitudinal run. If so, the df must contain a column named 'fsid-base' as the second column.
 #'
+#' @param add_fake_level2 logical, whether to add a 2nd fake level to the level files of factors with only a single level. Such factors make little sense, but QDEC refuses to open the resulting files at all in such a case, which seems a bit overkill. If TRUE, a 2nd level named 'level2' will be added so that one can open the output in QDEC.
+#'
 #' @note IMPORTANT: If you import the dataframe from a text file with functions like \code{read.table}, they will by default replace dashes in column names with dots. So if you have a column named \code{fsid-base} in there, after loading it will be named \code{fsid.base}. See the \code{check.names} parameters to prevent that.
 #'
 #' @examples
@@ -556,7 +558,7 @@ read.md.subjects.from.fsgd <- function(filepath) {
 #' }
 #'
 #' @export
-demographics.to.qdec.table.dat <- function(df, output_path=".", long=FALSE) {
+demographics.to.qdec.table.dat <- function(df, output_path=".", long=FALSE, add_fake_level2=FALSE) {
   if(! dir.exists(output_path)) {
     dir.create(output_path); # create paths, but only non-recursively.
   }
@@ -600,10 +602,16 @@ demographics.to.qdec.table.dat <- function(df, output_path=".", long=FALSE) {
       if(! (qcol %in% c("fsid", "fsid-base"))) {
         factor_filename = file.path(output_path, sprintf("%s.levels", qcol));
         file_conn = file(factor_filename);
+        file_lines = levels(df[[qcol]]);
         if(length(levels(df[[qcol]])) < 2L) {
-          warning(sprintf("The factor '%s' has only %d levels, QDEC requires at least 2 levels per factor and will NOT open the resulting file. You can fix this manually by adding a second line with a fake level to the file '%s'.\n", qcol, length(levels(df[[qcol]])), factor_filename));
+          if(add_fake_level2) {
+            file_lines = c(file_lines, "level2");
+            message(sprintf("The factor '%s' has only %d level, adding 2nd fake level 'level2' to file '%s' as requested by parameter 'add_fake_level2'.\n", qcol, length(levels(df[[qcol]])), factor_filename));
+          } else {
+            warning(sprintf("The factor '%s' has only %d level, QDEC requires at least 2 levels per factor and will NOT open the resulting file. You can fix this manually by adding a second line with a fake level to the file '%s' or set the parameter 'add_fake_level2' to TRUE.\n", qcol, length(levels(df[[qcol]])), factor_filename));
+          }
         }
-        writeLines(levels(df[[qcol]]), file_conn);
+        writeLines(file_lines, file_conn);
         close(file_conn);
         message(sprintf("Wrote levels file '%s' for factor %s with %d levels.\n", factor_filename, qcol, length(levels(df[[qcol]]))));
       }
