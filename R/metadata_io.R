@@ -539,11 +539,11 @@ read.md.subjects.from.fsgd <- function(filepath) {
 #'
 #' @description This creates the `qdec.table.dat` and all required related files (like the factor level files) in a directory.
 #'
-#' @param df a data.frame containing demographics information. Make sure to have factors encoded as factors (not strings), so that the QDEC level files get created for them. Must contain a column named 'fsid' with the subject IDs.
+#' @param df a data.frame containing demographics information. Make sure to have factors encoded as factors (not strings), so that the QDEC level files get created for them. Must contain a column named 'fsid' with the subject IDs as first column.
 #'
 #' @param output_path character string, existing directory into which to write the QDEC files. If the last directory level does not exist, it will be created.
 #'
-#' @param long logical, whether this is for a longitudinal run. If so, the df must contain a column named 'fsid-base'.
+#' @param long logical, whether this is for a longitudinal run. If so, the df must contain a column named 'fsid-base' as the second column.
 #'
 #' @note IMPORTANT: If you import the dataframe from a text file with functions like \code{read.table}, they will by default replace dashes in column names with dots. So if you have a column named \code{fsid-base} in there, after loading it will be named \code{fsid.base}. See the \code{check.names} parameters to prevent that.
 #'

@@ -7,18 +7,22 @@
 demographics.to.qdec.table.dat(df, output_path = ".", long = FALSE)
 }
 \arguments{
-\item{df}{a data.frame containing demographics information. Make sure to have factors encoded as factors (not strings), so that the QDEC level files get created for them. Must contain a column named 'fsid' with the subject IDs.}
+\item{df}{a data.frame containing demographics information. Make sure to have factors encoded as factors (not strings), so that the QDEC level files get created for them. Must contain a column named 'fsid' with the subject IDs as first column.}
 
 \item{output_path}{character string, existing directory into which to write the QDEC files. If the last directory level does not exist, it will be created.}
 
-\item{long}{logical, whether this is for a longitudinal run. If so, the df must contain a column named 'fsid-base'.}
+\item{long}{logical, whether this is for a longitudinal run. If so, the df must contain a column named 'fsid-base' as the second column.}
 }
 \description{
 This creates the `qdec.table.dat` and all required related files (like the factor level files) in a directory.
 }
+\note{
+IMPORTANT: If you import the dataframe from a text file with functions like \code{read.table}, they will by default replace dashes in column names with dots. So if you have a column named \code{fsid-base} in there, after loading it will be named \code{fsid.base}. See the \code{check.names} parameters to prevent that.
+}
 \examples{
 \dontrun{
    dem = readxl::read_xls("~/data/study1/demographics.xsl");
+   # or: dem = read.table("~/demographics.csv", check.names=FALSE);
    # You may want to rearrange/rename/delete some columns here.
    demographics.to.qdec.table.dat(dem, "~/data/study1/qdec/");
 }
