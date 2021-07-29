@@ -600,6 +600,9 @@ demographics.to.qdec.table.dat <- function(df, output_path=".", long=FALSE) {
       if(! (qcol %in% c("fsid", "fsid-base"))) {
         factor_filename = file.path(output_path, sprintf("%s.levels", qcol));
         file_conn = file(factor_filename);
+        if(length(levels(df[[qcol]])) < 2L) {
+          warning(sprintf("The factor '%s' has only %d levels, QDEC requires at least 2 levels per factor and will NOT open the resulting file.\n", qcol, length(levels(df[[qcol]]))));
+        }
         writeLines(levels(df[[qcol]]), file_conn);
         close(file_conn);
         message(sprintf("Wrote levels file '%s' for factor %s with %d levels.\n", factor_filename, qcol, length(levels(df[[qcol]]))));
