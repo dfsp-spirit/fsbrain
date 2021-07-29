@@ -535,4 +535,78 @@ read.md.subjects.from.fsgd <- function(filepath) {
 }
 
 
+#' @title Convert a dataframe containing demographics data to a qdec.table.dat file.
+#'
+#' @description This creates the `qdec.table.dat` and all required related files (like the factor level files) in a directory.
+#'
+#' @param df a data.frame containing demographics information. Make sure to have factors encoded as factors (not strings), so that the QDEC level files get created for them. Must contain a column named 'fsid' with the subject IDs.
+#'
+#' @param output_path character string, existing directory into which to write the QDEC files. If the last directory level does not exist, it will be created.
+#'
+#' @param long logical, whether this is for a longitudinal run. If so, the df must contain a column named 'fsid-base'.
+#'
+#' @note IMPORTANT: If you import the dataframe from a text file with functions like \code{read.table}, they will by default replace dashes in column names with dots. So if you have a column named \code{fsid-base} in there, after loading it will be named \code{fsid.base}. See the \code{check.names} parameters to prevent that.
+#'
+#' @examples
+#' \dontrun{
+#'    dem = readxl::read_xls("~/data/study1/demographics.xsl");
+#'    # or: dem = read.table("~/demographics.csv", check.names=FALSE);
+#'    # You may want to rearrange/rename/delete some columns here.
+#'    demographics.to.qdec.table.dat(dem, "~/data/study1/qdec/");
+#' }
+#'
+#' @export
+demographics.to.qdec.table.dat <- function(df, output_path=".", long=FALSE) {
+  if(! dir.exists(output_path)) {
+    dir.create(output_path); # create paths, but only non-recursively.
+  }
+  if(! dir.exists(output_path)) {
+    stop(sprintf("Creating the output directory '%s' failed.\n", output_path));
+  }
+
+  # Check for required columns.
+  required_columns = c("fsid");
+  if(long) {
+    required_columns = c(required_columns, "fsid-base");
+  }
+  for(reqcol in required_columns) {
+    if(! (reqcol %in% colnames(df))) {
+      if(reqcol == "fsid-base") {
+        if("fsid.base" %in% colnames(df)) {
+          warning("A column named 'fsid.base' was found in the dataframe. Was is renamed on import from 'fsid-base'? See the documentation for this function for more hints.");
+        }
+      }
+      stop(sprintf("The data.frame in parameter 'df' must contain a column named '%s'.\n", reqcol));
+    }
+  }
+  # The fsid and fsid-base columns MUST be the first 2 columns.
+  if(colnames(df)[1] != "fsid") {
+    stop("The first column must be the 'fsid' column");
+  }
+  if(long) {
+    if(colnames(df)[2] != "fsid-base") {
+      stop("The second column must be the 'fsid-base' column for longitudinal files.");
+    }
+  }
+
+  # Write te qdec.table.dat file.
+  qdec_table_dat_file = file.path(output_path, "qdec.table.dat");
+  write.table(df, file=qdec_table_dat_file, quote = FALSE, col.names = TRUE, row.names = FALSE);
+  message(sprintf("Wrote qdec table file '%s' containing %d columns for %d subjects.\n", qdec_table_dat_file, ncol(df), nrow(df)));
+
+  # Write the factor level files.
+  for(qcol in colnames(df)) {
+    if(is.factor(df[[qcol]])) {
+      if(! (qcol %in% c("fsid", "fsid-base"))) {
+        factor_filename = file.path(output_path, sprintf("%s.levels", qcol));
+        file_conn = file(factor_filename);
+        writeLines(levels(df[[qcol]]), file_conn);
+        close(file_conn);
+        message(sprintf("Wrote levels file '%s' for factor %s with %d levels.\n", factor_filename, qcol, length(levels(df[[qcol]]))));
+      }
+    }
+  }
+}
+
+
 
