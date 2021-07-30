@@ -14,6 +14,7 @@ Version 0.5.0
 - Add functions to write group standard space per-vertex data: write.group.morph.standard and write.group.morph.standard.mf
 - Add new and more convenient volume visualization function: volvis.lb is a convenient wrapper around volvis.lightbox.
 - Add new function demographics.to.qdec.table.dat that can convert a demographics dataframe from an Excel or CSV file to qdec.table.dat format and write the additional factor level files.
+- Add new sjd.demo() function, a shortcut to download optional demonstration data and get the path to the downloaded subjects dir.
 
 
 Version 0.4.3

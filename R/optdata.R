@@ -445,5 +445,27 @@ delete_all_optional_data <- function() {
 }
 
 
+#' @title Download optional demo data if needed and return its path.
+#'
+#' @description This is a wrapper around \code{download_optional_data()} and \code{get_optional_data_filepath("subjects_dir")}. It will download the optional fsbrain demo data unless it already exists locally.
+#'
+#' @param accept_freesurfer_license logical, whether you want to also download fsaverage and fsaverage3, and accept the FreeSurfer license for fsaverage and fsaverage3, available at https://surfer.nmr.mgh.harvard.edu/fswiki/FreeSurferSoftwareLicense. Defaults to FALSE. If FALSE, only the demo data from fsbrain itself ('subject1') will be downloaded.
+#'
+#' @return character string, the path to the 'subjects_dir' directory within the downloaded optional data directory.
+#'
+#' @note This function will stop if the data cannot be accessed, i.e., the 'subjects_dir' does not exist after trying to download the data.
+#'
+#' @export
+sjd.demo <- function(accept_freesurfer_license=FALSE) {
+    download_optional_data();
+    download_optional_paper_data();
+    if(accept_freesurfer_license) {
+        download_fsaverage(accept_freesurfer_license);
+        download_fsaverage3(accept_freesurfer_license);
+    }
+    return(get_optional_data_filepath("subjects_dir"));
+}
+
+
 
 
