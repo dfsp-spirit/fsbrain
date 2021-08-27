@@ -371,10 +371,6 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
         stop("Parameter 'coloredmeshes' must be a list.");
     }
 
-    layout_dim_x = 3;
-    layout_dim_y = 3;
-    num_views = layout_dim_x * layout_dim_y;
-
     sorted_meshes = get.sorted.cmeshes(coloredmeshes);
     lh_meshes = sorted_meshes$lh;
     rh_meshes = sorted_meshes$rh;
@@ -409,7 +405,7 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     rgl::layout3d(layout_mat, widths=layout_column_widths, height=layout_row_heights);
 
     coloredmeshes_potentially_shifted = shift.hemis.rglactions(coloredmeshes, rglactions);
-
+    callback_after_render = getOption('fsbrain.callback_hook_after_render', default=NULL);
 
     #  ------------------ Row 1 --------------------
 
@@ -421,6 +417,9 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     if(draw_labels) {
         rgl::text3d(0,label_shift_y,0,"lateral lh");
     }
+    if(is.function(callback_after_render)) {
+        callback_after_render('lateral_lh');
+    }
 
     # Create the upper central view: draw both hemis from above (top view)
     rgl::next3d(reuse=FALSE);
@@ -429,6 +428,9 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     if(draw_labels) {
         rgl::text3d(0,label_shift_y_dorsal,0,"dorsal");
     }
+    if(is.function(callback_after_render)) {
+        callback_after_render('dorsal');
+    }
 
     # Create the upper right view
     rgl::next3d(reuse=FALSE);
@@ -436,6 +438,9 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     rgl::rgl.viewpoint(90, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
         rgl::text3d(0,label_shift_y,0,"lateral rh");
+    }
+    if(is.function(callback_after_render)) {
+        callback_after_render('lateral_rh');
     }
 
 
@@ -449,6 +454,9 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     if(draw_labels) {
         rgl::text3d(0,label_shift_y,0,"medial lh");
     }
+    if(is.function(callback_after_render)) {
+        callback_after_render('medial_lh');
+    }
 
     # Create the 2nd row central view: draw both hemis from below (bottom view)
     rgl::next3d(reuse=FALSE);
@@ -456,6 +464,9 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     rgl::rgl.viewpoint(0, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
         rgl::text3d(0,label_shift_y_ventral,0,"ventral");
+    }
+    if(is.function(callback_after_render)) {
+        callback_after_render('ventral');
     }
 
 
@@ -465,6 +476,9 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     rgl::rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
         rgl::text3d(0,label_shift_y,0,"medial rh");
+    }
+    if(is.function(callback_after_render)) {
+        callback_after_render('medial_rh');
     }
 
 
@@ -477,6 +491,9 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     rgl.viewpoint(0, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
         rgl::text3d(0,label_shift_y,0,"rostral");
+    }
+    if(is.function(callback_after_render)) {
+        callback_after_render('rostral');
     }
 
     # Create the bottom central view.
@@ -491,6 +508,9 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     rgl::rgl.viewpoint(180, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
         rgl::text3d(0,label_shift_y,0,"caudal");
+    }
+    if(is.function(callback_after_render)) {
+        callback_after_render('caudal');
     }
 
     if(is.character(draw_colorbar)) {
@@ -573,39 +593,48 @@ brainview.sd <- function(coloredmeshes, view_angle, background="white", skip_all
         rgl::layout3d(layout_mat, widths=layout_column_widths, height=layout_row_heights);
         rgl::next3d(reuse=TRUE);
     }
+    callback_after_render = getOption('fsbrain.callback_hook_after_render', default=NULL);
 
     if(view_angle == "lateral_lh") {
         vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style);
         handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "lh");
         rgl::rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
+        if(is.function(callback_after_render)) { callback_after_render('lateral_lh'); }
     } else if (view_angle == "dorsal") {
         vis.rotated.coloredmeshes(coloredmeshes, 0, 1, 0, 0, style=style);
         handle.rglactions.highlight.points(rglactions, 0, 1, 0, 0, hemi = "both");
         rgl::rgl.viewpoint(0, 0, fov=0, interactive=FALSE);
+        if(is.function(callback_after_render)) { callback_after_render('dorsal'); }
     } else if(view_angle == "lateral_rh") {
         vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style);
         handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "rh");
         rgl::rgl.viewpoint(90, 0, fov=0, interactive=FALSE);
+        if(is.function(callback_after_render)) { callback_after_render('lateral_lh'); }
     } else if(view_angle == "medial_lh") {
         vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style);
         handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "lh");
         rgl::rgl.viewpoint(90, 0, fov=0, interactive=FALSE);
+        if(is.function(callback_after_render)) { callback_after_render('medial_lh'); }
     } else if(view_angle == "ventral") {
         vis.rotated.coloredmeshes(coloredmeshes, pi, 1, 0, 0, style=style);
         handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "both");
         rgl::rgl.viewpoint(0, 0, fov=0, interactive=FALSE);
+        if(is.function(callback_after_render)) { callback_after_render('ventral'); }
     } else if(view_angle == "medial_rh") {
         vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style);
         handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "rh");
         rgl::rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
+        if(is.function(callback_after_render)) { callback_after_render('medial_rh'); }
     } else if(view_angle == "rostral") {
         vis.rotated.coloredmeshes(coloredmeshes, pi/2, 1, 0, 0, style=style);
         handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "both");
         rgl.viewpoint(0, 0, fov=0, interactive=FALSE);
+        if(is.function(callback_after_render)) { callback_after_render('rostral'); }
     } else if(view_angle == "caudal") {
         vis.rotated.coloredmeshes(coloredmeshes, pi/2, 1, 0, 0, style=style);
         handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "both");
         rgl::rgl.viewpoint(180, 0, fov=0, interactive=FALSE);
+        if(is.function(callback_after_render)) { callback_after_render('caudal'); }
     } else {
         stop(sprintf("Invalid view_angle '%s'. Must be one of 'lateral_lh', 'dorsal', 'lateral_rh', 'medial_lh', 'ventral', 'medial_rh', 'rostral' or 'caudal'.\n", view_angle));
     }
