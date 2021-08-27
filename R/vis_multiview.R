@@ -271,6 +271,7 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     Sys.sleep(1);
     rgl::bg3d(background);
     rgl::layout3d(layout_mat, widths=layout_column_widths, height=layout_row_heights);
+    callback_after_render = getOption('fsbrain.callback_hook_after_render', default=NULL);
 
     # Create the upper left view: draw only the left hemi, from the left
     rgl::next3d(reuse=TRUE);
@@ -280,6 +281,10 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     if(draw_labels) {
         rgl::text3d(0,label_shift_y,0,"lateral lh");
     }
+    if(is.function(callback_after_render)) {
+        callback_after_render('lateral_lh');
+    }
+
 
     # Create the upper right view
     rgl::next3d(reuse=FALSE);
@@ -288,6 +293,9 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     rgl::rgl.viewpoint(90, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
         rgl::text3d(0,label_shift_y,0,"lateral rh");
+    }
+    if(is.function(callback_after_render)) {
+        callback_after_render('lateral_rh');
     }
 
 
@@ -299,6 +307,9 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     if(draw_labels) {
         rgl::text3d(0,label_shift_y,0,"medial lh");
     }
+    if(is.function(callback_after_render)) {
+        callback_after_render('medial_lh');
+    }
 
 
     # Create the lower right view
@@ -308,6 +319,9 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     rgl::rgl.viewpoint(-90, 0, fov=0, interactive=FALSE);
     if(draw_labels) {
         rgl::text3d(0,label_shift_y,0,"medial rh");
+    }
+    if(is.function(callback_after_render)) {
+        callback_after_render('medial_rh');
     }
 
     if(is.character(draw_colorbar)) {
