@@ -93,6 +93,7 @@ vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRU
     }
 
     perform.rglactions(rglactions);
+
     return(invisible(coloredmeshes));
 }
 

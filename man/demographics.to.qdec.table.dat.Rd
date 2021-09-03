@@ -2,7 +2,7 @@
 % Please edit documentation in R/metadata_io.R
 \name{demographics.to.qdec.table.dat}
 \alias{demographics.to.qdec.table.dat}
-\title{Convert a dataframe containing demographics data to a qdec.table.dat file.}
+\title{Convert a dataframe containing demographics data to a qdec.table.dat file and related files.}
 \usage{
 demographics.to.qdec.table.dat(
   df,
@@ -21,10 +21,10 @@ demographics.to.qdec.table.dat(
 \item{add_fake_level2}{logical, whether to add a 2nd fake level to the level files of factors with only a single level. Such factors make little sense, but QDEC refuses to open the resulting files at all in such a case, which seems a bit overkill. If TRUE, a 2nd level named 'level2' will be added so that one can open the output in QDEC.}
 }
 \description{
-This creates the `qdec.table.dat` and all required related files (like the factor level files) in a directory.
+This creates the `qdec.table.dat` and all required related files (the factor level files) in a directory.
 }
 \note{
-IMPORTANT: If you import the dataframe from a text file with functions like \code{read.table}, they will by default replace dashes in column names with dots. So if you have a column named \code{fsid-base} in there, after loading it will be named \code{fsid.base}. See the \code{check.names} parameters to prevent that.
+IMPORTANT: If you import the dataframe from a text file with functions like \code{read.table}, they will by default replace dashes in column names with dots. So if you have a column named \code{fsid-base} in there, after loading it will be named \code{fsid.base}. See the \code{check.names} parameter for \code{read.table} to prevent that.
 }
 \examples{
 \dontrun{

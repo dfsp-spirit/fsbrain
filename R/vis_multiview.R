@@ -112,7 +112,23 @@ brainview.si <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 
     coloredmeshes = shift.hemis.rglactions(coloredmeshes, rglactions);
 
-    return(invisible(vis.coloredmeshes(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, style = style)));
+
+    callback_interactive_setup_mesh_before_render = getOption('fsbrain.callback_hook_interactive_setup_mesh_before_render', default=NULL);
+    if(is.function(callback_interactive_setup_mesh_before_render)) {
+        coloredmeshes = callback_interactive_setup_mesh_before_render(coloredmeshes);
+    }
+
+    cm = vis.coloredmeshes(coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, style = style);
+
+    # At this time, the rglactions have already been performed in vis.coloredmeshes, so the changes will not show up in
+    # a snapshot that the user may have requested to be taken. This is unfortunate and needs to be fixed. A workaround would
+    # be to simply take the snapshort manually (by calling rgl::rgl.snaphost() after this function, which will do what you want since this 'si' view)
+    # only has one rendered view/tile.
+    callback_after_render = getOption('fsbrain.callback_hook_after_render', default=NULL);
+    if(is.function(callback_after_render)) {
+        callback_after_render('interactive');
+    }
+    return(invisible(cm));
 }
 
 
