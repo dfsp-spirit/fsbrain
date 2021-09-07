@@ -16,6 +16,19 @@ fup <- function(word) {
 }
 
 
+#' @title Show demo visualization to test whether fsbrain is setup correctly.
+#'
+#' @note This function will try to download optional data from the internet (unless the data have already been downloaded).
+#'
+#' @keywords internal
+demo <- function() {
+  fsbrain::download_optional_data();
+  sjd = get_optional_data_filepath("subjects_dir");
+  sj = "subject1";
+  return(invisible(vis.subject.morph.native(sjd, sj, "thickness")));
+}
+
+
 #' @title Compute neighborhood of a vertex
 #'
 #' @description Given a set of query vertex indices and a mesh *m*, compute all vertices which are adjacent to the query vertices in the mesh. A vertex *u* is *adjacent* to another vertex *v* iff there exists an edge *e = (u, v)* in *m*. While you could call this function repeatedly with the old output as its new input to extend the neighborhood, you should maybe use a proper graph library for this.
