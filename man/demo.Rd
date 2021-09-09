@@ -9,4 +9,7 @@ demo()
 \description{
 Show demo visualization to test whether fsbrain is setup correctly.
 }
+\note{
+This function will try to download optional data from the internet (unless the data have already been downloaded).
+}
 \keyword{internal}

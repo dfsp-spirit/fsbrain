@@ -27,7 +27,7 @@ Suggests:
     sphereplot (>= 1.5),
     misc3d,
     RColorBrewer,
-    Rvcg,
+    Rvcg (>= 0.20.2),
     igraph,
     pracma
 VignetteBuilder: knitr
