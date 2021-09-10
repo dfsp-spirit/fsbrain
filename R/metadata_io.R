@@ -556,7 +556,7 @@ read.md.subjects.from.fsgd <- function(filepath) {
 #'    # You may want to rearrange/rename/delete some columns here.
 #'    demographics.to.qdec.table.dat(dem, "~/data/study1/qdec/");
 #' }
-#'
+#' @importFrom("utils", "write.table")
 #' @export
 demographics.to.qdec.table.dat <- function(df, output_path=".", long=FALSE, add_fake_level2=FALSE) {
   if(! dir.exists(output_path)) {
