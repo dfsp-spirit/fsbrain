@@ -33,5 +33,4 @@ IMPORTANT: If you import the dataframe from a text file with functions like \cod
    # You may want to rearrange/rename/delete some columns here.
    demographics.to.qdec.table.dat(dem, "~/data/study1/qdec/");
 }
-
 }
