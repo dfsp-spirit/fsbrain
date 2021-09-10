@@ -1,5 +1,27 @@
 # hemilist functions
+# a hemilist is just a named list with entries 'lh' and/or 'rh', which may contain anything.
 
+#' @title Create a hemilist from lh and rh data.
+#'
+#' @description Simply runs \code{list('lh' = lh_data, 'rh' = rh_data)}: A hemilist (short for hemisphere list) is just a named list with entries 'lh' and/or 'rh', which may contain anything. Hemilists are used as parameters and return values in many \code{fsbrain} functions. The 'lh' and 'rh' keys typically contain surfaces or vectors of morphometry data.
+#'
+#' @param lh_data something to wrap, typically some data for a hemisphere, e.g., a vector of morphometry data values.
+#'
+#' @param rh_data something to wrap, typically some data for a hemisphere, e.g., a vector of morphometry data values.
+#'
+#' @return named list, with the 'lh_data' in the 'lh' key and the 'rh_data' in the 'rh' key.
+#'
+#' @family hemilist functions
+#'
+#' @examples
+#'   lh_data = rnorm(163842, 5.0, 1.0);
+#'   rh_data = rnorm(163842, 5.0, 1.0);
+#'   hl = hemilist(lh_data, rh_data);
+#'
+#' @export
+hemilist <- function(lh_data = NULL, rh_data = NULL) {
+    return(list('lh' = lh_data, 'rh' = rh_data));
+}
 
 #' @title Wrap data into a named hemi list.
 #'
@@ -10,6 +32,8 @@
 #' @param hemilist optional hemilist, an existing hemilist to add the entry to. If left at the default value `NULL`, a new list will be created.
 #'
 #' @return named list, with the 'data' in the name given by parameter 'hemi'
+#'
+#' @family hemilist functions
 #'
 #' @export
 hemilist.wrap <- function(data, hemi, hemilist=NULL) {
@@ -33,6 +57,8 @@ hemilist.wrap <- function(data, hemi, hemilist=NULL) {
 #' @param hemilist hemilist, an existing hemilist
 #'
 #' @return character string, one of 'lh', 'rh' or 'both'
+#'
+#' @family hemilist functions
 #'
 #' @export
 hemilist.derive.hemi <- function(hemilist) {
@@ -61,6 +87,8 @@ hemilist.derive.hemi <- function(hemilist) {
 #' @param allow_null_list logical, whether to silently return NULL instead of raising an error if 'hemi_list' is NULL
 #'
 #' @return the data
+#'
+#' @family hemilist functions
 #'
 #' @export
 hemilist.unwrap <- function(hemi_list, hemi=NULL, allow_null_list=FALSE) {
@@ -103,6 +131,8 @@ hemilist.unwrap <- function(hemi_list, hemi=NULL, allow_null_list=FALSE) {
 #'
 #' @return the data combined with \code{\link{c}}, or NULL if both entries are NULL.
 #'
+#' @family hemilist functions
+#'
 #' @export
 hemilist.get.combined.data <- function(hemi_list) {
     lh_data = hemilist.unwrap(hemi_list, 'lh');
@@ -126,6 +156,8 @@ hemilist.get.combined.data <- function(hemi_list) {
 #' @param x any R object
 #'
 #' @return whether 'x' is a hemilist
+#'
+#' @family hemilist functions
 #'
 #' @export
 is.hemilist <- function(x) {

@@ -18,7 +18,7 @@ coloredmesh.from.color(
 
 \item{subject_id}{string. The subject identifier.}
 
-\item{color_data}{vector of hex color strings}
+\item{color_data}{vector of hex color strings, a single one or one per vertex.}
 
 \item{hemi}{string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.}
 
@@ -33,6 +33,6 @@ coloredmesh. A named list with entries: "mesh" the \code{\link{tmesh3d}} mesh ob
 Create a coloredmesh from a mesh and pre-defined colors.
 }
 \note{
-Do not call this, use \code{\link[fsbrain]{coloredmeshes.from.color}} instead.
+Do not call this directly, use \code{\link[fsbrain]{coloredmeshes.from.color}} instead.
 }
 \keyword{internal}

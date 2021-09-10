@@ -13,7 +13,8 @@ vis.subject.annot(
   views = c("t4"),
   rgloptions = rglo(),
   rglactions = list(),
-  outline = FALSE
+  outline = FALSE,
+  style = "default"
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ vis.subject.annot(
 \item{rglactions}{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action. The following example clips outliers in the data before plotting and writes a screenshot in PNG format: \code{rglactions = list("snapshot_png"="~/fsbrain.png", "clip_data"=c(0.05, 0.95))}. See \code{\link{rglactions}}.}
 
 \item{outline}{logical, whether to draw an outline only instead of filling the regions. Defaults to `FALSE`. Instead of passing `TRUE`, one can also pass a list of extra parameters to pass to \code{\link[fsbrain]{annot.outline}}, e.g., \code{outline=list('outline_color'='#000000')}. Using this increases computation time dramatically, sorry for the performance.}
+
+\item{style}{character string, a rendering style, e.g., 'default', 'shiny' or 'semitransparent'.}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.
@@ -51,6 +54,7 @@ Creates a surface mesh, loads the colors from the annotation, and renders the re
 }
 \seealso{
 Other visualization functions: 
+\code{\link{highlight.vertices.on.subject.spheres}()},
 \code{\link{highlight.vertices.on.subject}()},
 \code{\link{vis.color.on.subject}()},
 \code{\link{vis.data.on.fsaverage}()},

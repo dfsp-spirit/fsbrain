@@ -15,3 +15,12 @@ whether 'x' is a hemilist
 \description{
 A hemilist is a named list with entries 'lh' and/or 'rh'.
 }
+\seealso{
+Other hemilist functions: 
+\code{\link{hemilist.derive.hemi}()},
+\code{\link{hemilist.get.combined.data}()},
+\code{\link{hemilist.unwrap}()},
+\code{\link{hemilist.wrap}()},
+\code{\link{hemilist}()}
+}
+\concept{hemilist functions}

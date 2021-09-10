@@ -203,49 +203,71 @@ rglactions.has.key <- function(rglactions, key) {
 #'
 #' @param silent logical, whether to suppress messages
 #'
+#' @param ignore vector of character strings, actions to ignore
+#'
 #' @keywords internal
 #' @importFrom rgl rgl.snapshot rgl.postscript
-perform.rglactions <- function(rglactions, at_index=NULL, silent=TRUE) {
+perform.rglactions <- function(rglactions, at_index=NULL, silent=TRUE, ignore = c()) {
     if(is.list(rglactions)) {
+
+        #valid_rglactions = c("text", "snapshot_png", "snapshot_vec", "highlight_points", "shift_hemis_apart", "no_vis");
+        #for(action in names(rglactions)) {
+        #    if(! (action %in% valid_rglactions)) {
+        #        warning(sprintf("Ignoring unsupported rglaction '%s'.\n", action));
+        #    }
+        #}
+
         if("text" %in% names(rglactions)) {
-            do.call(rgl::text3d, rglactions$text);
+            if(!("text" %in% ignore)) {
+                do.call(rgl::text3d, rglactions$text);
+            }
         }
         if("snapshot_png" %in% names(rglactions)) {
-            if(length(rglactions$snapshot_png) == 1 || is.null(at_index)) {
-                output_image = path.expand(rglactions$snapshot_png);
-            } else {
-                if(length(rglactions$snapshot_png) < at_index) {
-                    warning(sprintf("Requested rglaction at_index '%d' but only %d entries exist for action 'snapshot_png'.\n", at_index, length(rglactions$snapshot_png)));
+            if(!("snapshot_png" %in% ignore)) {
+                if(length(rglactions$snapshot_png) == 1 || is.null(at_index)) {
+                    output_image = path.expand(rglactions$snapshot_png);
+                } else {
+                    if(length(rglactions$snapshot_png) < at_index) {
+                        warning(sprintf("Requested rglaction at_index '%d' but only %d entries exist for action 'snapshot_png'.\n", at_index, length(rglactions$snapshot_png)));
+                    }
+                    output_image = path.expand(rglactions$snapshot_png[[at_index]]);
                 }
-                output_image = path.expand(rglactions$snapshot_png[[at_index]]);
-            }
-            rgl::rgl.snapshot(output_image, fmt="png");
-            if(! silent) {
-                message(sprintf("Bitmap screenshot written to '%s' (current working dir is '%s').\n", output_image, getwd()));
+                rgl::rgl.snapshot(output_image, fmt="png");
+                if(! silent) {
+                    message(sprintf("Bitmap screenshot written to '%s' (current working dir is '%s').\n", output_image, getwd()));
+                }
             }
         }
         if("snapshot_vec" %in% names(rglactions)) {
-            snapshot_vec_format = "eps";
-            if("snapshot_vec_format" %in% names(rglactions)) {
-                supported_formats = c("ps", "eps", "tex", "pdf", "svg", "pgf");
-                if(rglactions$snapshot_vec_format %in% supported_formats) {
-                    snapshot_vec_format = rglactions$snapshot_vec_format;
-                } else {
-                    stop(sprintf("rglactions: invalid snapshot_vec_format '%s'. Must be one of ''.", rglactions$snapshot_vec_format, paste(supported_formats, collapse = ", ")));
+            if(!("snapshot_vec" %in% ignore)) {
+                snapshot_vec_format = "eps";
+                if("snapshot_vec_format" %in% names(rglactions)) {
+                    supported_formats = c("ps", "eps", "tex", "pdf", "svg", "pgf");
+                    if(rglactions$snapshot_vec_format %in% supported_formats) {
+                        snapshot_vec_format = rglactions$snapshot_vec_format;
+                    } else {
+                        stop(sprintf("rglactions: invalid snapshot_vec_format '%s'. Must be one of ''.", rglactions$snapshot_vec_format, paste(supported_formats, collapse = ", ")));
+                    }
                 }
-            }
 
-            if(length(rglactions$snapshot_vec) == 1 || is.null(at_index)) {
-                output_image = path.expand(rglactions$snapshot_vec);
-            } else {
-                if(length(rglactions$snapshot_vec) < at_index) {
-                    warning(sprintf("Requested rglaction at_index '%d' but only %d entries exist for action 'snapshot_vec'.\n", at_index, length(rglactions$snapshot_vec)));
+                if(length(rglactions$snapshot_vec) == 1 || is.null(at_index)) {
+                    output_image = path.expand(rglactions$snapshot_vec);
+                } else {
+                    if(length(rglactions$snapshot_vec) < at_index) {
+                        warning(sprintf("Requested rglaction at_index '%d' but only %d entries exist for action 'snapshot_vec'.\n", at_index, length(rglactions$snapshot_vec)));
+                    }
+                    output_image = path.expand(rglactions$snapshot_vec[[at_index]]);
                 }
-                output_image = path.expand(rglactions$snapshot_vec[[at_index]]);
+                rgl::rgl.postscript(output_image, fmt = snapshot_vec_format);
+                if(! silent) {
+                    message(sprintf("Vector graphics screenshot written to '%s' in format '%s' (current working dir is '%s').\n", output_image, snapshot_vec_format, getwd()));
+                }
             }
-            rgl::rgl.postscript(output_image, fmt = snapshot_vec_format);
-            if(! silent) {
-                message(sprintf("Vector graphics screenshot written to '%s' in format '%s' (current working dir is '%s').\n", output_image, snapshot_vec_format, getwd()));
+        }
+        if("highlight_points" %in% names(rglactions)) {
+            if(!("highlight_points" %in% ignore)) {
+                hp = rglactions$highlight_points;
+                highlight.points.spheres(hp$coords, color = hp$color, radius = hp$radius);
             }
         }
     }

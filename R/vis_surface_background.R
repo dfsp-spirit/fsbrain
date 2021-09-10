@@ -37,6 +37,8 @@ collayer.bg <- function(subjects_dir, subject_id, bg, hemi="both") {
             return(collayer.bg.sulc(subjects_dir, subject_id, hemi=hemi, bin_colors=c('#eeeeee', '#bbbbbb')));
         } else if(bg == "aparc") {
             return(collayer.bg.atlas(subjects_dir, subject_id, hemi=hemi, atlas='aparc'));
+        } else if(bg == "aparc_outline") {
+            return(collayer.bg.atlas(subjects_dir, subject_id, hemi=hemi, atlas='aparc', grayscale = FALSE, outline = TRUE));
         } else {
             stop("Parameter 'bg' has unsupported character string value.");
         }
@@ -199,7 +201,6 @@ collayer.bg.atlas <- function(subjects_dir, subject_id, hemi="both", atlas="apar
             surface_mesh = subject.surface(subjects_dir, subject_id, outline_surface, 'rh');
             annot_outline_full_options = utils::modifyList(list(annot, surface_mesh), annot_outline_extra_options);
             annot_layer$rh = do.call(annot.outline, annot_outline_full_options);
-            #annot_layer$rh = annot.outline(subject.annot(subjects_dir, subject_id, 'rh', atlas), subject.surface(subjects_dir, subject_id, outline_surface, 'rh'), background = '#FFFFFFFF', expand_inwards = outline - 1L);
         }
     } else {
         annot_layer = collayer.from.annot(subjects_dir, subject_id, hemi, atlas);
@@ -232,6 +233,11 @@ collayer.from.morphlike.data <- function(lh_morph_data=NULL, rh_morph_data=NULL,
 
     if(! 'colFn' %in% names(makecmap_options)) {
         stop("No 'colFn' present in parameter 'makecmap_options': a colormap function is required.");
+    }
+
+    bg_color = getOption('fsbrain.brain_na_color', default="#FEFEFE");
+    if((all(is.na(lh_morph_data)) & all(is.na(rh_morph_data))) || (is.null(lh_morph_data) && is.null(rh_morph_data))) {
+        return(list("lh"=bg_color, "rh"=bg_color));
     }
 
     cmr = common.makecmap.range(makecmap_options, lh_data=lh_morph_data, rh_data=rh_morph_data, return_metadata = return_metadata);
@@ -365,8 +371,9 @@ force.to.range <- function(x, data_range, allow_append = FALSE) {
 collayer.from.mask.data <- function(lh_data=NULL, rh_data=NULL, makecmap_options=list('colFn'=label.colFn)) {
 
     if(is.null(lh_data) & is.null(rh_data)) {
-        warning("Both 'lh_data' and 'rh_data' are NULL, returning a single white color value for each hemi.");
-        return(list("lh"="#FFFFFF", "rh"="#FFFFFF"));
+        bg_color = getOption('fsbrain.brain_na_color', default="#FEFEFE");
+        message("Both 'lh_data' and 'rh_data' are NULL, returning a single white color value for each hemi.");
+        return(list("lh"=bg_color, "rh"=bg_color));
     }
 
     if(is.logical(lh_data)) {
@@ -509,7 +516,7 @@ collayer.from.annot <- function(subjects_dir, subject_id, hemi, atlas) {
 #'
 #' @description Merge several color layers into one based on their transparency and alpha blending. In the final result, the lower layers are visible through the transparent or `NA` parts (if any) of the upper layers.
 #'
-#' @param collayers named list, the values must be vectors, matrices or arrays of color strings (as produced by \code{\link[grDevices]{rgb}}. The names are freeform and do not really matter. All values must have the same length.
+#' @param collayers named list, the values must be vectors, matrices or arrays of color strings (as produced by \code{\link[grDevices]{rgb}}. The names are free form and do not really matter. All values must have the same length.
 #'
 #' @param opaque_background a single color string or `NULL`. If a color string, this color will be used as a final opaque background layer to ensure that the returned colors are all opaque. Pass `NULL` to skip this, which may result in a return value that contains non-opaque color values.
 #'
@@ -528,30 +535,38 @@ collayers.merge <- function(collayers, opaque_background="#FFFFFF") {
         stop("List passed as parameter 'collayers' must not be empty.");
     }
 
+    used_opaque_bg = FALSE;
     if(! is.null(opaque_background)) {
-        bg_alpha = grDevices::col2rgb(opaque_background, alpha = TRUE)[4];
-        if(bg_alpha != 255L) {
-            warning(sprintf("Color passed as parameter 'opaque_background' is not opaque: alpha channel has value %d (expected 255).\n", bg_alpha));
-        }
-        # Add a new opaque layer at the end
-        new_layer_index = length(collayers) + 1L;
-
-        first_layer = collayers[[1]];  # We use the the first layer here, but we could use any: they must have same dimensions
-        if(is.hemilist(first_layer)) {
-            new_layer = list();
-            if(!is.null(first_layer$lh)) {
-                new_layer$lh = rep(opaque_background, length(first_layer$lh));
+        if(opaque_background != FALSE) {
+            used_opaque_bg = TRUE;
+            #cat(sprintf("Using opaque background color '%s' when merging layers.\n", opaque_background));
+            bg_alpha = grDevices::col2rgb(opaque_background, alpha = TRUE)[4];
+            if(bg_alpha != 255L) {
+                warning(sprintf("Color passed as parameter 'opaque_background' is not opaque: alpha channel has value %d (expected 255).\n", bg_alpha));
             }
-            if(!is.null(first_layer$rh)) {
-                new_layer$rh = rep(opaque_background, length(first_layer$rh));
-            }
-        } else {
-            new_layer = rep(opaque_background, length(first_layer));
-        }
+            # Add a new opaque layer at the end
+            new_layer_index = length(collayers) + 1L;
 
-        collayers[[new_layer_index]] = new_layer;
-        names(collayers)[[new_layer_index]] = 'opaque_background';
+            first_layer = collayers[[1]];  # We use the the first layer here, but we could use any: they must have same dimensions
+            if(is.hemilist(first_layer)) {
+                new_layer = list();
+                if(!is.null(first_layer$lh)) {
+                    new_layer$lh = rep(opaque_background, length(first_layer$lh));
+                }
+                if(!is.null(first_layer$rh)) {
+                    new_layer$rh = rep(opaque_background, length(first_layer$rh));
+                }
+            } else {
+                new_layer = rep(opaque_background, length(first_layer));
+            }
+
+            collayers[[new_layer_index]] = new_layer;
+            names(collayers)[[new_layer_index]] = 'opaque_background';
+        }
     }
+    #if(! used_opaque_bg) {
+    #    cat(sprintf("Did NOT use opaque background while merging layers.\n"));
+    #}
 
     merged = collayers[[1]];
     for (layer_idx in seq.int(2L, length(collayers))) {
@@ -630,7 +645,8 @@ alphablend <- function(front_color, back_color, silent=TRUE) {
     # color are fully transparent. The output alpha will be 0, and we set the rgb values to all zeroes as well.
     out_rgb[is.nan(out_rgb)] = 0.;
 
-    return(grDevices::rgb(cbind(out_rgb, out_alpha), alpha = TRUE));
+    out_col = grDevices::rgb(cbind(out_rgb, out_alpha), alpha = TRUE);
+    return(out_col);
 }
 
 

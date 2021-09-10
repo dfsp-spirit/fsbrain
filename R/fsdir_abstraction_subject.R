@@ -318,7 +318,7 @@ subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm
 #'
 #' @param subjects_dir string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
 #'
-#' @param subject_id string. The subject identifier
+#' @param subject_id string. The subject identifier. Can be a vector.
 #'
 #' @param measure string. Name of the vertex-wise measure of morphometry data file. E.g., "area" or "thickness". Used to construct the name of the morphometry file to be loaded.
 #'
@@ -334,12 +334,20 @@ subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm
 #'
 #' @param error_if_nonexistent logical. Whether to raise an error if the file does not exist or cannot be accessed. Defaults to FALSE.
 #'
-#' @return string, the file path.
+#' @return string, the file path. (Or a vector if 'subject_id' is a vector.)
 #'
 #' @export
 subject.filepath.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm='10', template_subject='fsaverage', format='auto', warn_if_nonexistent=FALSE, error_if_nonexistent=FALSE) {
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
+    }
+
+    if(length(subject_id) > 1L) {
+        filenames = rep("", length(subject_id));
+        for(sj_idx in seq_along(subject_id)) {
+            filenames[sj_idx] = subject.filepath.morph.standard(subjects_dir, subject_id[sj_idx], measure, hemi = hemi, fwhm = fwhm,  template_subject = template_subject, format = format, warn_if_nonexistent = warn_if_nonexistent, error_if_nonexistent = error_if_nonexistent);
+        }
+        return(filenames);
     }
 
     if(! is.null(fwhm)) {
@@ -414,7 +422,7 @@ subject.filepath.morph.native <- function(subjects_dir, subject_id, measure, hem
 #'
 #' @param subjects_dir character string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
 #'
-#' @param subject_id character string. The subject identifier.
+#' @param subject_id character string. The subject identifier. Can be a vector of subject identifiers.
 #'
 #' @param relative_path_parts vector of strings. The path to the file, e.g., c("surf", "lh.area").
 #'
@@ -424,11 +432,26 @@ subject.filepath.morph.native <- function(subjects_dir, subject_id, measure, hem
 #'
 #' @param warn_if_nonexistent, logical. Whether to print a warning if the file does not exist or cannot be accessed. Defaults to FALSE.
 #'
+#' @return string, the file path. (Or a vector of strings if 'subject_id' is a vector).
 #'
-#' @return string, the file path.
+#' @examples
+#' \dontrun{
+#' fsbrain:::subject.filepath.any("/data/study1", "subject1",
+#'   c("surf", "area"), hemi="lh");
+#' fsbrain:::subject.filepath.any("/data/study1", c("subject1", "subject2"),
+#'   c("surf", "area"), hemi="lh");
+#' }
 #'
 #' @keywords internal
 subject.filepath.any <- function(subjects_dir, subject_id, relative_path_parts, hemi=NULL, file_tag="", warn_if_nonexistent=FALSE) {
+
+    if(length(subject_id) > 1L) {
+        filenames = rep("", length(subject_id));
+        for(sj_idx in seq_along(subject_id)) {
+            filenames[sj_idx] = subject.filepath.any(subjects_dir, subject_id[sj_idx], relative_path_parts, hemi = hemi, file_tag = file_tag, warn_if_nonexistent = warn_if_nonexistent);
+        }
+        return(filenames);
+    }
 
     if(nchar(file_tag) > 0) {
         file_tag = sprintf("%s ", file_tag);    # Just for the format of the warning message: avoid missing/duplicate space.
@@ -673,6 +696,8 @@ subject.annot <- function(subjects_dir, subject_id, hemi, atlas) {
 #'
 #' @param force_hemilist logical, whether to return a hemilist even if the 'hemi' parameter is not set to 'both'
 #'
+#' @param as_tm logical, whether to return an \code{rgl::tmesh3d} instead of an \code{fs.surface} instance by applying the \code{fs.surface.to.tmesh3d} function.
+#'
 #' @return the `fs.surface` instance, as returned by \code{\link[freesurferformats]{read.fs.surface}}. If parameter `hemi` is set to `both`, a named list with entries `lh` and `rh` is returned, and the values of are the respective surfaces. The mesh data structure used in `fs.surface` is a *face index set*.
 #'
 #' @examples
@@ -685,7 +710,7 @@ subject.annot <- function(subjects_dir, subject_id, hemi, atlas) {
 #' @family surface mesh functions
 #'
 #' @export
-subject.surface <- function(subjects_dir, subject_id, surface, hemi, force_hemilist = FALSE) {
+subject.surface <- function(subjects_dir, subject_id, surface = "white", hemi = "both", force_hemilist = FALSE, as_tm = FALSE) {
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
@@ -695,6 +720,10 @@ subject.surface <- function(subjects_dir, subject_id, surface, hemi, force_hemil
         ret_list = list();
         ret_list$lh = subject.surface(subjects_dir, subject_id, surface, 'lh');
         ret_list$rh = subject.surface(subjects_dir, subject_id, surface, 'rh');
+        if(as_tm) {
+            ret_list$lh = fs.surface.to.tmesh3d(ret_list$lh);
+            ret_list$rh = fs.surface.to.tmesh3d(ret_list$rh);
+        }
         return(ret_list);
     }
 
@@ -702,10 +731,14 @@ subject.surface <- function(subjects_dir, subject_id, surface, hemi, force_hemil
     if(!file.exists(surface_file)) {
         stop(sprintf("Surface file '%s' for subject '%s' surface '%s' hemi '%s' cannot be accessed.\n", surface_file, subject_id, surface, hemi));
     }
+    sf = freesurferformats::read.fs.surface(surface_file);
+    if(as_tm) {
+        sf = fs.surface.to.tmesh3d(sf);
+    }
     if(force_hemilist) {
-        return(hemilist.wrap(freesurferformats::read.fs.surface(surface_file), hemi));
+        return(hemilist.wrap(sf, hemi));
     } else {
-        return(freesurferformats::read.fs.surface(surface_file));
+        return(sf);
     }
 }
 

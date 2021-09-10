@@ -1,7 +1,6 @@
 
 test_that("Hemis can be shifted apart using rglactions for non-overlapping rendering.", {
     testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
-    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
 
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -9,6 +8,28 @@ test_that("Hemis can be shifted apart using rglactions for non-overlapping rende
 
     subject_id = "subject1";
     vis.subject.morph.native(subjects_dir, subject_id, 'thickness', rglactions = list('shift_hemis_apart'=TRUE));
+    expect_equal(1L , 1L);
+})
+
+
+test_that("Points can be highlighted with 3D spheres.", {
+    testthat::skip_on_cran();
+
+    fsbrain::download_optional_data();
+    fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
+    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+    testthat::skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
+
+    subject_id = "fsaverage";
+
+    surfaces = subject.surface(subjects_dir, subject_id, surface = "white", hemi = "both");
+    vertices = c(50L, 70000L, 150000L, 300000L);
+    point_coords = vertex.coords(surfaces, vertices);
+    point_hemi = vertex.hemis(surfaces, vertices);
+    colors = c('#FFFF00', '#FFFF00', '#FFFF00', '#FF0000');
+    rglactions = list('highlight_points'=list('coords'=point_coords, 'color'=colors, 'radius'=5, 'hemi'=point_hemi));
+    cm = vis.subject.morph.native(subjects_dir, subject_id, 'curv', rglactions = rglactions, views = "si");
+    #export(cm);
     expect_equal(1L , 1L);
 })
 

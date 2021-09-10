@@ -15,7 +15,7 @@ vol.overlay.colors.from.activation(
 
 \item{colormap_fn}{function, a colormap function}
 
-\item{no_act_source_value}{numerical scalar, the value from the data in 'volume' that means no activation. The output colors for this value will be set to `NA`.}
+\item{no_act_source_value}{numerical scalar, the value from the data in 'volume' that means no activation. The output colors for this value will be set to `NA`. Set to NULL to not change anything.}
 }
 \value{
 a 3D matrix of color strings, with the same dimensions as the input volume

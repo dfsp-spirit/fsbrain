@@ -93,6 +93,7 @@ vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRU
     }
 
     perform.rglactions(rglactions);
+
     return(invisible(coloredmeshes));
 }
 
@@ -335,7 +336,7 @@ get.rglstyle.parameters <- function(renderable, style) {
 #'
 #' @description Run \code{\link{material3d}} without arguments to see valid style keywords to create new styles.
 #'
-#' @param style string. A style name. Available styles are one of: "default", "shiny", "semitransparent", "edges".
+#' @param style string. A style name. Available styles are one of: "default", "shiny", "semitransparent", "glass", "edges".
 #'
 #' @return a style, resolved to a parameter list compatible with \code{\link{material3d}}.
 #'
@@ -351,6 +352,10 @@ get.rglstyle <- function(style) {
         return(get.rglstyle.edges());
     } else if (style == "semitransparent") {
         return(get.rglstyle.semitransparent());
+    } else if (style == "glass") {
+        return(get.rglstyle.glass());
+    } else if (style == "glass2") {
+        return(get.rglstyle.glass2());
     } else {
         stop(sprintf("No such rendering style: '%s'. Try something like 'default', 'shiny', 'edges' or 'semitransparent'.\n", style));
     }
@@ -371,7 +376,7 @@ get.rglstyle.default <- function() {
 
 #' @title Get the semi-transparent visualization style parameters as a named list.
 #'
-#' @description Semitransparent rendering style. This style has a very negative impact on rendering performance. Hint: Run \code{\link{material3d}} without arguments to see valid style keywords to create new styles.
+#' @description Semitransparent rendering style. This style has a very negative impact on rendering performance (in interactive mode). Hint: Run \code{\link{material3d}} without arguments to see valid style keywords to create new styles.
 #'
 #' @return named list, style parameters that can be passed to \code{\link{shade3d}} via \code{\link{do.call}}.
 #'
@@ -383,7 +388,7 @@ get.rglstyle.semitransparent <- function() {
 
 #' @title Get the mesh edges visualization style parameters as a named list.
 #'
-#' @description Mesh edges rendering style.
+#' @description Mesh edges rendering style. Zoom in enough to see them.
 #'
 #' @return named list, style parameters that can be passed to \code{\link{shade3d}} via \code{\link{do.call}}.
 #'
@@ -392,6 +397,29 @@ get.rglstyle.edges <- function() {
     return(list(front="lines", back="lines", lwd=2.0, size=5.0));
 }
 
+
+#' @title Get the glass visualization style parameters as a named list.
+#'
+#' @description Glass-brain rendering style. This style has a very negative impact on rendering performance (especially in interactive mode). Hint: Run \code{\link{material3d}} without arguments to see valid style keywords to create new styles.
+#'
+#' @return named list, style parameters that can be passed to \code{\link{shade3d}} via \code{\link{do.call}}.
+#'
+#' @keywords internal
+get.rglstyle.glass <- function() {
+    return(list("shininess"=50, specular="black", alpha=0.4, front="filled", back="culled"));
+}
+
+
+#' @title Get the glass2 visualization style parameters as a named list.
+#'
+#' @description Glass-brain rendering style. This style has a very negative impact on rendering performance (especially in interactive mode). Hint: Run \code{\link{material3d}} without arguments to see valid style keywords to create new styles.
+#'
+#' @return named list, style parameters that can be passed to \code{\link{shade3d}} via \code{\link{do.call}}.
+#'
+#' @keywords internal
+get.rglstyle.glass2 <- function() {
+    return(list("shininess"=80, specular="white", alpha=0.4, front="filled", back="culled"));
+}
 
 
 #' @title Get a shiny visualization style.

@@ -40,4 +40,13 @@ A lightbox is a single image that holds a set of subimages, arranged in a grid. 
 
 If overlay_colors are given, the volume will be used as the background, and it will only be visible where overlay_colors has transparency.
 }
+\note{
+You should, in most cases, not call this function directly. Use \code{\link[fsbrain]{volvis.lb}} instead, which has a more intuitive interface.
+}
+\seealso{
+\code{\link[fsbrain]{volvis.lb}}
+
+Other volume visualization: 
+\code{\link{volvis.lb}()}
+}
 \concept{volume visualization}

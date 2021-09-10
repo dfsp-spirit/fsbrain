@@ -16,9 +16,23 @@ recycle <- function(x, times) {
     } else {
         if(length(x) == 1L) {
             return(rep(x, times));
+        } else if (length(x) > times) {
+            return(x[1:times]);
         } else {
-            maybe_excessive = as.integer(ceiling(times/length(x)));
-            return(maybe_excessive[1:times]);
+            res = x;
+            do_break = FALSE;
+            current_idx = 1L;
+            while (! do_break) {
+                res = c(res, x[current_idx]);
+                current_idx = current_idx + 1L;
+                if(current_idx > length(x)) {
+                    current_idx = 1L;
+                }
+                if(length(res) == times) {
+                    do_break = TRUE;
+                }
+            }
+            return(res);
         }
     }
 }

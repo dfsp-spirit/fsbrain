@@ -123,12 +123,12 @@ test_that("Axes are derived from a plane definition as expected", {
 test_that("A brain volume and an overlay can be merged", {
     testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
     testthat::skip_on_travis(); # Reduce test time on travis to prevent the build from being killed.
-    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
-    skip_if_not(box.can.run.all.tests(), "This test requires X11 and the 'magick' package (ImageMagick for R).");
+    testthat::skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+    testthat::skip_if_not(box.can.run.all.tests(), "This test requires X11 and the 'magick' package (ImageMagick for R).");
 
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
-    skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
+    testthat::skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
 
     subject_id = "subject1";
     brain = subject.volume(subjects_dir, subject_id, 'brain') / 255;
@@ -227,7 +227,7 @@ test_that("A brain volume can be visualized as a lightbox colored from the aseg"
 
     colortable = freesurferformats::read.fs.colortable(file.path(fsaverage_subject_dir, 'fsaverage', 'ext', 'FreeSurferColorLUT.txt'));
     overlay_colors = vol.overlay.colors.from.colortable(aseg, colortable);
-    colored_brain = vol.merge(brain/255, overlay_colors); # will also apply bounding box by default
+    colored_brain = vol.merge(scale01(brain), overlay_colors); # will also apply bounding box by default
 
 
     # Now test that the merged image can be visualized as a lightbox:

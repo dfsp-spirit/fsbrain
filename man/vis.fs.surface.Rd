@@ -14,7 +14,7 @@ vis.fs.surface(
 )
 }
 \arguments{
-\item{fs_surface}{an fs.surface instance, as returned by function like \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}. If a character string, it is assumed to be the full path of a surface file, and the respective file is loaded with \code{\link[freesurferformats]{read.fs.surface}}. If parameter 'hemi' is 'both', this must be a hemilist.}
+\item{fs_surface}{an fs.surface instance, as returned by function like \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}. If a character string, it is assumed to be the full path of a surface file, and the respective file is loaded with \code{\link[freesurferformats]{read.fs.surface}}. If parameter 'hemi' is 'both', this must be a hemilist. A single \code{rgl::tmesh} is also fine.}
 
 \item{col}{vector of colors, the per-vertex-colors. Defaults to white. Must be a single color or one color per vertex. If parameter 'hemi' is 'both', this must be a hemilist.}
 

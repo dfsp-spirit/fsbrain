@@ -15,3 +15,12 @@ the data combined with \code{\link{c}}, or NULL if both entries are NULL.
 \description{
 Get combined data of hemi list
 }
+\seealso{
+Other hemilist functions: 
+\code{\link{hemilist.derive.hemi}()},
+\code{\link{hemilist.unwrap}()},
+\code{\link{hemilist.wrap}()},
+\code{\link{hemilist}()},
+\code{\link{is.hemilist}()}
+}
+\concept{hemilist functions}

@@ -16,15 +16,19 @@ Imports:
     rgl,
     squash,
     fields,
+    viridis,
     data.table,
     magick,
+    methods
 Suggests:
     knitr,
     rmarkdown,
     testthat (>= 2.1.0),
     sphereplot (>= 1.5),
     misc3d,
-    viridis,
-    RColorBrewer
+    RColorBrewer,
+    Rvcg (>= 0.20.2),
+    igraph,
+    pracma
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1

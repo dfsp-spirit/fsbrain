@@ -7,9 +7,10 @@
 subject.surface(
   subjects_dir,
   subject_id,
-  surface,
-  hemi,
-  force_hemilist = FALSE
+  surface = "white",
+  hemi = "both",
+  force_hemilist = FALSE,
+  as_tm = FALSE
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ subject.surface(
 \item{hemi}{string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the surface file to be loaded. For 'both', see the information on the return value.}
 
 \item{force_hemilist}{logical, whether to return a hemilist even if the 'hemi' parameter is not set to 'both'}
+
+\item{as_tm}{logical, whether to return an \code{rgl::tmesh3d} instead of an \code{fs.surface} instance by applying the \code{fs.surface.to.tmesh3d} function.}
 }
 \value{
 the `fs.surface` instance, as returned by \code{\link[freesurferformats]{read.fs.surface}}. If parameter `hemi` is set to `both`, a named list with entries `lh` and `rh` is returned, and the values of are the respective surfaces. The mesh data structure used in `fs.surface` is a *face index set*.

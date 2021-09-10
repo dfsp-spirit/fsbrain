@@ -51,7 +51,8 @@ download_optional_data <- function() {
                            c(base_path_subject1, 'surf', 'lh.jacobian_white'),
                            c(base_path_subject1, 'surf', 'rh.jacobian_white'),
                            c(base_path_subject1, 'surf', 'lh.sulc.fwhm10.fsaverage.mgh'),
-                           c(base_path_subject1, 'surf', 'rh.sulc.fwhm10.fsaverage.mgh')
+                           c(base_path_subject1, 'surf', 'rh.sulc.fwhm10.fsaverage.mgh'),
+                           c(base_path_subject1, 'mri', 'T1.mgz')
                            );
     base_path_subject2 = c('subjects_dir', 'subject2');
     local_filenames_subject2 = list(c(base_path_subject2, 'label', 'lh.aparc.a2009s.annot'),
@@ -91,11 +92,12 @@ download_optional_data <- function() {
                                     c(base_path_subject2, 'surf', 'lh.pial.max'),
                                     c(base_path_subject2, 'surf', 'rh.pial.max'),
                                     c(base_path_subject1, 'surf', 'lh.volume'),
-                                    c(base_path_subject1, 'surf', 'rh.volume'),
-                                    c(base_path_subject1, 'surf', 'lh.jacobian_white'),
-                                    c(base_path_subject1, 'surf', 'rh.jacobian_white'),
-                                    c(base_path_subject1, 'surf', 'lh.sulc.fwhm10.fsaverage.mgh'),
-                                    c(base_path_subject1, 'surf', 'rh.sulc.fwhm10.fsaverage.mgh')
+                                    c(base_path_subject2, 'surf', 'rh.volume'),
+                                    c(base_path_subject2, 'surf', 'lh.jacobian_white'),
+                                    c(base_path_subject2, 'surf', 'rh.jacobian_white'),
+                                    c(base_path_subject2, 'surf', 'lh.sulc.fwhm10.fsaverage.mgh'),
+                                    c(base_path_subject2, 'surf', 'rh.sulc.fwhm10.fsaverage.mgh'),
+                                    c(base_path_subject2, 'mri', 'T1.mgz')
                                     );
     local_filenames = c(local_filenames_subject1, local_filenames_subject2);
 
@@ -141,7 +143,8 @@ download_optional_data <- function() {
                 '85ad831974e9f5d86d8b000df98a277b', # jacobian
                 '6258b08da232576dd25a05d8359364c2',
                 '42ab1b2e251a3ed84bb586079146e037', # lh.sulc.fwhm10.fsaverage.mgh
-                '089dab3337de5cd6f9fe345908af9707'
+                '089dab3337de5cd6f9fe345908af9707',
+                '24bb590cad3e091c13741b5edce2ea7d'
                 );
 
     md5sums_subject2 = md5sums_subject1; # In our example data, subject2 is actually just a copy of subject1, so the md5 hashes are identical.
@@ -190,7 +193,8 @@ download_optional_data <- function() {
                  'surf/lh.jacobian_white',
                  'surf/rh.jacobian_white',
                  'surf/lh.sulc.fwhm10.fsaverage.mgh',
-                 'surf/rh.sulc.fwhm10.fsaverage.mgh'
+                 'surf/rh.sulc.fwhm10.fsaverage.mgh',
+                 'mri/T1.mgz'
                  );
     ext_urls_subject1 = paste(ext_url_subject_part_subject1, ext_url_parts_each_subject, sep='');
     ext_urls_subject2 = paste(ext_url_subject_part_subject2, ext_url_parts_each_subject, sep='');
@@ -438,6 +442,28 @@ get_optional_data_filepath <- function(filename, mustWork=TRUE) {
 delete_all_optional_data <- function() {
     pkg_info = pkgfilecache::get_pkg_info("fsbrain");
     return(pkgfilecache::erase_file_cache(pkg_info));
+}
+
+
+#' @title Download optional demo data if needed and return its path.
+#'
+#' @description This is a wrapper around \code{download_optional_data()} and \code{get_optional_data_filepath("subjects_dir")}. It will download the optional fsbrain demo data unless it already exists locally.
+#'
+#' @param accept_freesurfer_license logical, whether you want to also download fsaverage and fsaverage3, and accept the FreeSurfer license for fsaverage and fsaverage3, available at https://surfer.nmr.mgh.harvard.edu/fswiki/FreeSurferSoftwareLicense. Defaults to FALSE. If FALSE, only the demo data from fsbrain itself ('subject1') will be downloaded.
+#'
+#' @return character string, the path to the 'subjects_dir' directory within the downloaded optional data directory.
+#'
+#' @note This function will stop if the data cannot be accessed, i.e., the 'subjects_dir' does not exist after trying to download the data.
+#'
+#' @export
+sjd.demo <- function(accept_freesurfer_license=FALSE) {
+    download_optional_data();
+    download_optional_paper_data();
+    if(accept_freesurfer_license) {
+        download_fsaverage(accept_freesurfer_license);
+        download_fsaverage3(accept_freesurfer_license);
+    }
+    return(get_optional_data_filepath("subjects_dir"));
 }
 
 

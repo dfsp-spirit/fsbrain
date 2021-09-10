@@ -19,7 +19,7 @@ subject.filepath.morph.standard(
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
 
-\item{subject_id}{string. The subject identifier}
+\item{subject_id}{string. The subject identifier. Can be a vector.}
 
 \item{measure}{string. Name of the vertex-wise measure of morphometry data file. E.g., "area" or "thickness". Used to construct the name of the morphometry file to be loaded.}
 
@@ -36,7 +36,7 @@ subject.filepath.morph.standard(
 \item{error_if_nonexistent}{logical. Whether to raise an error if the file does not exist or cannot be accessed. Defaults to FALSE.}
 }
 \value{
-string, the file path.
+string, the file path. (Or a vector if 'subject_id' is a vector.)
 }
 \description{
 Construct filepath of standard space morphometry data file.

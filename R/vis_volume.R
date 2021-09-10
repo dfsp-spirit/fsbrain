@@ -326,7 +326,7 @@ vol.imagestack <- function(volume, axis=1L, intensity_scale=255) {
 #'
 #' @param colormap_fn function, a colormap function
 #'
-#' @param no_act_source_value numerical scalar, the value from the data in 'volume' that means no activation. The output colors for this value will be set to `NA`.
+#' @param no_act_source_value numerical scalar, the value from the data in 'volume' that means no activation. The output colors for this value will be set to `NA`. Set to NULL to not change anything.
 #'
 #' @return a 3D matrix of color strings, with the same dimensions as the input volume
 #'
@@ -338,8 +338,10 @@ vol.imagestack <- function(volume, axis=1L, intensity_scale=255) {
 #' @export
 vol.overlay.colors.from.activation <- function(volume, colormap_fn=squash::blueorange, no_act_source_value=0) {
     col = squash::cmap(volume, map = squash::makecmap(volume, colFn = colormap_fn));
-    no_act_indices = which(volume == no_act_source_value, arr.ind = TRUE);
-    col[no_act_indices] = NA;
+    if( ! is.null(no_act_source_value)) {
+        no_act_indices = which(volume == no_act_source_value, arr.ind = TRUE);
+        col[no_act_indices] = NA;
+    }
     return(col);
 }
 
@@ -369,6 +371,10 @@ vol.overlay.colors.from.activation <- function(volume, colormap_fn=squash::blueo
 #' @return a magick image instance
 #'
 #' @family volume visualization
+#'
+#' @note You should, in most cases, not call this function directly. Use \code{\link[fsbrain]{volvis.lb}} instead, which has a more intuitive interface.
+#'
+#' @seealso \code{\link[fsbrain]{volvis.lb}}
 #'
 #' @export
 volvis.lightbox <- function(volume, slices=-5, axis=1L, per_row=5L, per_col=NULL, border_geometry="5x5", background_color = "#000000", arrange_single_image=FALSE) {
@@ -580,7 +586,7 @@ vol.mask.from.segmentation <- function(volume, include_values) {
 #'
 #' @param overlay_colors 3D array of color strings, values which are not part of the overlay (and should display background in the result) must have `NA` instead of a color string. Must have same dimensions as the `volume`.
 #'
-#' @param bbox_threshold numerical, the threshold intensity used to separate background and foreground. All voxels with intensity values greater than this value in the background `volume` will be considered `foreground` voxels. Background-only slices at the borders of the volume will be discarded. Pass `NULL` to use the full image without applying any bounding box.
+#' @param bbox_threshold numerical, the threshold intensity used to separate background and foreground. All voxels with intensity values greater than this value in the background `volume` will be considered `foreground` voxels. Background-only slices at the borders of the volume will be discarded (in the merged, final image). Pass `NULL` to use the full image without applying any bounding box.
 #'
 #' @param forced_overlay_color NULL or an rgb color string, like '#FF0000' for red. If NULL, the activation colors will be used as foreground colors. Otherwise, the given color will be for all foreground vertices.
 #'
@@ -614,7 +620,7 @@ vol.merge <- function(volume, overlay_colors, bbox_threshold=0L, forced_overlay_
 
     # Same for the overlay
     if(is.numeric(overlay_colors)) {
-        warning("Overlay is numerical and will be gray-scale. It may be hard to discern from the background volume.");
+        message("Overlay is numerical and will be gray-scale. It may be hard to discern from the background volume.");
         overlay_colors = vol.intensity.to.color(overlay_colors);
     }
 
@@ -861,7 +867,7 @@ cubes3D.tris <- function(centers, edge_length=1) {
 #'
 #' @param volume numeric 3D array, the values should be integers present in the `struct_index` column of the colortable. All other values will be assigned `NA` as a color.
 #'
-#' @param colortable a colortable, as returned by \code{\link[freesurferformats]{read.fs.colortable}}.
+#' @param colortable a colortable, as returned by \code{\link[freesurferformats]{read.fs.colortable}}, or a character string representing a path to a colortable file.
 #'
 #' @param ignored_struct_indices integer vector, `struct_index` entries in the colortable that should be ignored
 #'
@@ -876,6 +882,14 @@ vol.overlay.colors.from.colortable <- function(volume, colortable, ignored_struc
     }
 
     overlay_colors = array(rep(NA, length(volume)), dim(volume));
+
+    if(is.character(colortable) && length(colortable) == 1L) {
+        if(file.exists(colortable)) {
+            colortable = freesurferformats::read.fs.colortable(colortable);
+        } else {
+            stop(sprintf("Received character string  '%s' for parameter 'colortable', but no such file exists.", colortable));
+        }
+    }
 
     occuring_color_rows = which(colortable$struct_index %in% volume);
 
@@ -896,3 +910,168 @@ vol.overlay.colors.from.colortable <- function(volume, colortable, ignored_struc
 }
 
 
+#' @title Try to extract a 3D volume from the input argument.
+#'
+#' @description Check whether it already is such an array, whether it is a filename that can be loaded with \code{freesurferformats::read.fs.volume} into such an array, etc.
+#'
+#' @param stats a 3D array, 4D array or a string that can be treated as a filename to a volume image containing such an array.
+#'
+#' @param silent logical, whether to suppress file reading messages.
+#'
+#' @note This function stops with an error if the input cannot be returned as a 3D array.
+#'
+#' @return the obtained 3D array
+#'
+#' @keywords internal
+extract.volume.3D <- function(stats, silent = getOption("fsbrain.silent", default = FALSE)) {
+    if(! (is.array(stats) && length(dim(stats)) == 3L)) {
+        if(is.character(stats) && is.vector(stats) && length(stats) == 1L) {
+            if(! file.exists(stats)) {
+                stop(sprintf("Received single character vector '%s', but no such file exists.", stats));
+            }
+            if(!silent) {
+                message(sprintf("Reading volume file '%s'...\n", stats));
+            }
+
+            stats = freesurferformats::read.fs.volume(stats, drop_empty_dims = TRUE);
+            if((is.array(stats) && length(dim(stats)) == 4L)) {
+                message("Using first frame of loaded 4D image (assuming time is the 4th dimension in the volume).");
+                stats = stats[,,,1]; # select first frame
+            }
+            if(! ((is.array(stats) && length(dim(stats)) == 3L))) {
+                stop(sprintf("Volume data loaded from file '%s' does not have 3 non-empty dimensions, not a 3D volume.", stats));
+            }
+        } else {
+            stop("Parameter 'stats' must be a 3D array.");
+        }
+    }
+    if((is.array(stats) && length(dim(stats)) == 4L)) {
+        message("Using first frame of input 4D image (assuming time is the 4th dimension in the volume).");
+        stats = stats[,,,1]; # select first frame
+    }
+    if(! (is.array(stats) && length(dim(stats)) == 3L)) {
+        stop("Could not extract 3D volume from input.");
+    } else {
+        return(stats);
+    }
+}
+
+
+#' @title Show continuous 3D voxel/volume data as a lightbox, optionally with a background brain volume and colormap.
+#'
+#' @description This function is the main way to visualize 3D volume images that contain raw MRI scans or statistical results.
+#'
+#' @param volume numerical 3D array of per-voxel data, typically activation data, a raw MRI image, or a segmentation to show. Can also be a filename if the file can be loaded as such a volume with \code{\link[freesurferformats]{read.fs.volume}}.
+#'
+#' @param background numerical 3D array or 3D array of color strings, the background volume. Typically a raw brain volume. Dimensions and space must match those of the 'volume' for an array. Can also be a single file name as a character string. Can also be a single color name, like '#FEFEFE' but the string then must start with '#' (color names like 'red' are not allowed, they would be treated as file names). If a color string, be sure to use the \code{...} parameter to set the same color as \code{background_color} for the tiles.
+#'
+#' @param colFn a colormap function, passed to \code{vol.overlay.colors.from.activation} and used as colormap for the 'volume' data. Pass NULL to derive gray-scale values from the raw data (only recommended with single-color backgrounds). Note that the colormap is not used for the the background data (if any), which will be shown in grayscale (unless it is a 3D array of color strings).
+#'
+#' @param colortable optional, only makes sense for categorical 'volume' data like segmentations. If not NULL, a colortable as returned by \code{\link[freesurferformats]{read.fs.colortable}}, or a character string representing a path to a colortable file (like \code{"FREESURFER_HOME/FreeSurferColorLUT.txt"]}).
+#'
+#' @param no_act_source_value numerical value, passed to \code{vol.overlay.colors.from.activation}. Specifies the value which is treated as transparent in the 'volume' parameter data (where you will see the background). If you need more control, e.g., you want to treat one or morge ranges of values as NA, you should load the 'volume' data first, modify it as needed, as pass it to this function afterwards. Set this parameter to \code{NULL} to disable it. Only for 'colFn', ignored if a 'colortable' is used.
+#'
+#' @param bbox_threshold numerical scalar, passed on to \code{vol.merge}. If set, voxels with intensities smaller than this threshold will be dropped at the outside of the image. If \code{bbox_of_volume} parameter is \code{TRUE} (the default), this threshold applies to the 'volume', otherwise to the 'background'. Set to \code{NULL} to disable bounding box and show the full image.
+#'
+#' @param bbox_of_volume logical, whether the bounding box is computed on the volume (foreground), which typically is what you want. Leave alone if in doubt.
+#'
+#' @param ... extra parameters to be passed to \code{\link[fsbrain]{volvis.lightbox}}, can be used to select specific slices, set the \code{backgroud_color} for the border between and around the image tiles, etc.
+#'
+#' @note This function should be preferred over manually calling \code{\link[fsbrain]{volvis.lightbox}}.
+#'
+#' @examples
+#' \dontrun{
+#' volume = subject.volume(subjects_dir, subject_id, 'brain');
+#' volvis.lb(volume);
+#' volvis.lb("~/study1/subject1/mri/brain.mgz");
+#' volvis.lb("~/study1/subject1/mri/brain.mgz", bbox_threshold = 1L);
+#' volvis.lb("~/study1/subject1/mri/brain.mgz", background = "~/data/study1/subject1/mri/T1.mgz");
+#' volvis.lb("~/study1/subject1/mri/brain.mgz", background = "#FEFEFE", background_color="#FEFEFE");
+#' ct = file.path(find.freesurferhome(mustWork = T), "FreeSurferColorLUT.txt"); # ct = "color table"
+#' volvis.lb("~/study1/subject1/mri/aseg.mgz", background="~/study1/subject1/mri/T1.mgz",
+#'  colortable = ct, colFn=NULL, axis=2L);
+#' volvis.lb("~/study1/subject1/mri/aseg.mgz", background = "~/study1/subject1/mri/T1.mgz",
+#'  colortable = ct, colFn=NULL, bbox_threshold = 0);
+#' }
+#'
+#' @family volume visualization
+#'
+#' @export
+volvis.lb <- function(volume, background=NULL, colFn=viridis::viridis, colortable=NULL, no_act_source_value = 0, bbox_threshold = NULL, bbox_of_volume = TRUE, ...) {
+
+
+    volume = extract.volume.3D(volume);
+
+    #volume = clip.data(volume);
+    #cat(sprintf("volume dim: %s\n", paste(dim(volume), collapse = ", ")));
+
+    bbox = NULL;
+    if(!is.null(bbox_threshold)) {
+
+        if(bbox_of_volume) {
+            bbox_of = volume;
+        } else {
+            if(!(is.array(background) && is.numeric(background))) {
+                if(is.vector(background) && is.character(background) && length(background) == 1L && (!startsWith(background, "#"))) {
+                    background = extract.volume.3D(background);
+                } else {
+                    stop("Setting parameter 'bbox_of_volume' to FALSE is only possible if parameter 'background' is a numerical 3D array.");
+                }
+            }
+            bbox_of = background;
+        }
+        bbox = vol.boundary.box(bbox_of, threshold=bbox_threshold);
+        volume = volume[bbox$from[1]:bbox$to[1], bbox$from[2]:bbox$to[2], bbox$from[3]:bbox$to[3]];
+    }
+
+    if(! is.null(colFn)) {
+        if(!is.null(colortable)) {
+            stop("Both parameters 'colFn' and 'colortable' are given, only one supported. Set 'colFn' to NULL to use a colortable.");
+        }
+        overlay_colors = vol.overlay.colors.from.activation(volume, colormap_fn = colFn, no_act_source_value = no_act_source_value);
+    } else {
+        if(! is.null(colortable)) {
+            overlay_colors = vol.overlay.colors.from.colortable(volume, colortable);
+        } else {
+            overlay_colors = scale01(volume);
+        }
+    }
+
+    if(! is.null(background)) {
+        if(is.vector(background) && is.character(background) && length(background) == 1L) {
+            if(startsWith(background, "#")) {
+                bg_col = background;
+                background = array(rep(bg_col, sum(dim(volume))), dim = dim(volume));
+            }
+        }
+
+        background = extract.volume.3D(background);
+
+        # Apply bounding box to loaded background file as well.
+        if(!is.null(bbox_threshold)) {
+            background = background[bbox$from[1]:bbox$to[1], bbox$from[2]:bbox$to[2], bbox$from[3]:bbox$to[3]];
+        }
+
+
+        if(length(dim(volume)) != length(dim(background))) {
+            stop(sprintf("The dimensions of the volume and background parameters must be identical, but they are %s versus %s.", paste(dim(volume), collapse = ", "), paste(dim(background), collapse = ", ")));
+        }
+        for(dim_idx in seq_along(dim(volume))) {
+            if(dim(volume)[dim_idx] != dim(background)[dim_idx]) {
+                stop(sprintf("The dimensions of the volume and background parameters must be identical, but they are %s versus %s.", paste(dim(volume), collapse = ", "), paste(dim(background), collapse = ", ")));
+            }
+        }
+        if(is.numeric(background)) {
+            background = scale01(background);
+        }
+    } else {
+        # use black background
+        bg_col = "#000000"; # should get this from function parameters to allow customization.
+        background = array(rep(bg_col, sum(dim(volume))), dim = dim(volume));
+        # No need to apply bounding box, background dimensions are based on already bounded volume value.
+    }
+
+
+    color_vol = vol.merge(background, overlay_colors, bbox_threshold = NULL);
+    return(volvis.lightbox(color_vol, ...));
+}

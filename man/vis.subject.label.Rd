@@ -16,7 +16,8 @@ vis.subject.label(
   draw_colorbar = FALSE,
   makecmap_options = list(colFn = label.colFn.inv, col.na = "#FFFFFF00"),
   map_to_NA = 0L,
-  bg = NULL
+  bg = NULL,
+  style = "default"
 )
 }
 \arguments{
@@ -43,6 +44,8 @@ vis.subject.label(
 \item{map_to_NA}{the value or value range that should **not** be considered part of the label, and should thus be plotted as background color. Only used if 'bg' is not `NULL`. If a single value, only excatly this value is used (typically 0). If two values, they are interpreted as a range, and a values between them are mapped to NA. If you prefer to map the data to NA yourself before using this function, pass `NULL`.}
 
 \item{bg}{a background definition. Can be a surface color layer or a character string like 'curv_light' to select a pre-defined layer, see \code{\link[fsbrain]{collayer.bg}} for valid strings.}
+
+\item{style}{character string, a rendering style, e.g., 'default', 'shiny' or 'semitransparent'.}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.
@@ -67,6 +70,7 @@ Drawing a colorbar for label data makes limited sense, use a legend instead. The
 }
 \seealso{
 Other visualization functions: 
+\code{\link{highlight.vertices.on.subject.spheres}()},
 \code{\link{highlight.vertices.on.subject}()},
 \code{\link{vis.color.on.subject}()},
 \code{\link{vis.data.on.fsaverage}()},

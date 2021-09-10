@@ -16,7 +16,7 @@ subject.filepath.any(
 \arguments{
 \item{subjects_dir}{character string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
 
-\item{subject_id}{character string. The subject identifier.}
+\item{subject_id}{character string. The subject identifier. Can be a vector of subject identifiers.}
 
 \item{relative_path_parts}{vector of strings. The path to the file, e.g., c("surf", "lh.area").}
 
@@ -27,9 +27,18 @@ subject.filepath.any(
 \item{warn_if_nonexistent, }{logical. Whether to print a warning if the file does not exist or cannot be accessed. Defaults to FALSE.}
 }
 \value{
-string, the file path.
+string, the file path. (Or a vector of strings if 'subject_id' is a vector).
 }
 \description{
 Construct filepath of any freesurfer file.
+}
+\examples{
+\dontrun{
+fsbrain:::subject.filepath.any("/data/study1", "subject1",
+  c("surf", "area"), hemi="lh");
+fsbrain:::subject.filepath.any("/data/study1", c("subject1", "subject2"),
+  c("surf", "area"), hemi="lh");
+}
+
 }
 \keyword{internal}

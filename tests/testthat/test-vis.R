@@ -226,7 +226,7 @@ test_that("We can visualize clusters on fsaverage with a background and use a ra
     rh_demo_cluster_file = system.file("extdata", "rh.clusters_fsaverage.mgz", package = "fsbrain", mustWork = TRUE);
     lh_clust = freesurferformats::read.fs.morph(lh_demo_cluster_file);   # contains a single positive cluster (activation, group difference), the other values are 0
     rh_clust = freesurferformats::read.fs.morph(rh_demo_cluster_file);   # contains two negative clusters
-    vis.symmetric.data.on.subject(subjects_dir, subject_id, lh_clust, rh_clust, bg="curv", makecmap_options = list('range' = c(-2, 2)));
+    vis.symmetric.data.on.subject(subjects_dir, subject_id, lh_clust, rh_clust, bg="curv", makecmap_options = list('range' = c(-2, 2), 'colFn'=squash::jet));
 
     expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
     close.all.rgl.windows();
@@ -245,7 +245,7 @@ test_that("We can visualize clusters on fsaverage with a background and use a ra
     rh_demo_cluster_file = system.file("extdata", "rh.clusters_fsaverage.mgz", package = "fsbrain", mustWork = TRUE);
     lh_clust = freesurferformats::read.fs.morph(lh_demo_cluster_file);   # contains a single positive cluster (activation, group difference), the other values are 0
     rh_clust = freesurferformats::read.fs.morph(rh_demo_cluster_file);   # contains two negative clusters
-    vis.symmetric.data.on.subject(subjects_dir, subject_id, lh_clust, rh_clust, bg="curv", makecmap_options = list('range' = c(-8, 8)));
+    vis.symmetric.data.on.subject(subjects_dir, subject_id, lh_clust, rh_clust, bg="curv", makecmap_options = list('range' = c(-8, 8), 'colFn'=squash::jet));
 
     expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
     close.all.rgl.windows();

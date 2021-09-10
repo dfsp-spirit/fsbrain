@@ -4,7 +4,10 @@
 \alias{fsaverage.path}
 \title{Return path to fsaverage dir.}
 \usage{
-fsaverage.path()
+fsaverage.path(allow_fetch = FALSE)
+}
+\arguments{
+\item{allow_fetch}{logical, whether to allow trying to download it.}
 }
 \value{
 the path to the fsaverage directory (NOT including the 'fsaverage' dir itself).
@@ -13,5 +16,5 @@ the path to the fsaverage directory (NOT including the 'fsaverage' dir itself).
 Return path to fsaverage dir.
 }
 \note{
-This function will stop (i.e., raise an error) if the directory cannot be found.
+This function will stop (i.e., raise an error) if the directory cannot be found. The fsaverage template is part of FreeSurfer, and distributed under the FreeSurfer software license.
 }

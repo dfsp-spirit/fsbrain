@@ -16,6 +16,19 @@ fup <- function(word) {
 }
 
 
+#' @title Show demo visualization to test whether fsbrain is setup correctly.
+#'
+#' @note This function will try to download optional data from the internet (unless the data have already been downloaded).
+#'
+#' @keywords internal
+demo <- function() {
+  fsbrain::download_optional_data();
+  sjd = get_optional_data_filepath("subjects_dir");
+  sj = "subject1";
+  return(invisible(vis.subject.morph.native(sjd, sj, "thickness")));
+}
+
+
 #' @title Compute neighborhood of a vertex
 #'
 #' @description Given a set of query vertex indices and a mesh *m*, compute all vertices which are adjacent to the query vertices in the mesh. A vertex *u* is *adjacent* to another vertex *v* iff there exists an edge *e = (u, v)* in *m*. While you could call this function repeatedly with the old output as its new input to extend the neighborhood, you should maybe use a proper graph library for this.
@@ -34,8 +47,14 @@ fup <- function(word) {
 #'
 #' @export
 mesh.vertex.neighbors <- function(surface, source_vertices, k=1L, restrict_to_vertices=NULL) {
+    if(! freesurferformats::is.fs.surface(surface)) {
+      stop("Parameter 'surface' must be an fs.surface instance.");
+    }
     if(k < 1L) {
       stop("Parameter k must be a positive integer.");
+    }
+    if(length(source_vertices) < 1L) {
+      stop("Parameter 'source_vertices' must not be empty.");
     }
     vertex_indices = source_vertices;
     if(is.null(restrict_to_vertices)) {
@@ -56,7 +75,7 @@ mesh.vertex.neighbors <- function(surface, source_vertices, k=1L, restrict_to_ve
           break; # Neighborhood is already covering the whole mesh / allowed area.
       }
     }
-    return(list("vertices"=vertex_indices, "faces"=face_indices))
+    return(list("vertices"=vertex_indices, "faces"=face_indices));
 }
 
 
@@ -165,23 +184,51 @@ annot.outline <- function(annotdata, surface_mesh, background="white", silent=TR
 
 #' @title Draw a 3D line from vertex to vertex
 #'
-#' @description To get a nice path along the surface, pass the vertex indices along a geodesic path. Note: You can first open an interactive brain view (`view='si'`) with a vis* function like \code{\link[fsbrain]{vis.subject.morph.native}}, then run this function to draw into the active plot.
+#' @description To get a nice path along the surface, pass the vertex indices along a geodesic path. Note: You can first open an interactive brain view (`views='si'`) with a vis* function like \code{\link[fsbrain]{vis.subject.morph.native}}, then run this function to draw into the active plot.
 #'
-#' @param surface_vertices float matrix of size (n, 3), the surface vertex coordinates, as returned as part of \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}, in the member "vertices".
+#' @param surface_vertices float matrix of size (n, 3), the surface vertex coordinates, as returned as part of \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}, in the member "vertices". Can also be a \code{freesurferformats::fs.surface} or \code{rgl::tmesh3d} instance, in which case the coordinates are extracted automatically.
 #'
-#' @param path_vertex_indices vector of vertex indices, the path. You will need to have it computed already. (This function does **not** compute geodesic paths. You can use it to visualize such a path though.) If omitted, the vertex coordinates will be traversed in their given order to create the path.
+#' @param path_vertex_indices vector of vertex indices, the path. You will need to have it computed already. (This function does **not** compute geodesic paths, see \code{\link[fsbrain]{geodesic.path}} for that. You can use it to visualize such a path though.) If omitted, the vertex coordinates will be traversed in their given order to create the path.
 #'
 #' @param do_vis logical, whether to actually draw the path.
+#'
+#' @param color a color string, like '#FF0000' to color the path.
+#'
+#' @param no_material logical, whether to use set the custom rendering material properties for path visualization using \code{rgl::material3d} before plotting. If you set this to FALSE, no material will be set and you should set it yourself before calling this function, otherwise the looks of the path are undefined (dependent on the default material on your system, or the last material call). Setting this to TRUE also means that the 'color' argument is ignored of course, as the color is part of the material.
 #'
 #' @return n x 3 matrix, the coordinates of the path, with appropriate ones duplicated for rgl pair-wise segments3d rendering.
 #'
 #' @family surface mesh functions
 #'
-#' @seealso \code{vis.paths} if you need to draw many paths.
+#' @seealso \code{\link[fsbrain]{vis.paths}} if you need to draw many paths, \code{\link[fsbrain]{geodesic.path}} to compute a geodesic path.
+#'
+#' @examples
+#' \dontrun{
+#'   sjd = fsaverage.path(TRUE);
+#'   surface = subject.surface(sjd, 'fsaverage3',
+#'     surface = "white", hemi = "lh");
+#'   p = geodesic.path(surface, 5, c(10, 20));
+#'   vis.subject.morph.native(sjd, 'fsaverage3', views='si');
+#'   vis.path.along.verts(surface$vertices, p[[1]]);
+#' }
 #'
 #' @export
 #' @importFrom rgl segments3d material3d
-vis.path.along.verts <- function(surface_vertices, path_vertex_indices = seq(1L, nrow(surface_vertices)), do_vis = TRUE) {
+vis.path.along.verts <- function(surface_vertices, path_vertex_indices = NULL, do_vis = TRUE, color='#FF0000', no_material=FALSE) {
+    if(freesurferformats::is.fs.surface(surface_vertices)) {
+        surface_vertices = surface_vertices$vertices;
+    } else if("mesh3d" %in% class(surface_vertices)) {
+        surface_vertices = t(surface_vertices$vb[1:3,]);
+    } else {
+        if(! is.matrix(surface_vertices)) {
+            stop("Parameter 'surface_vertices' must be an fs.surface, an rgl::tmesh3d, or an nx3 numeric matrix");
+        }
+    }
+
+    if(is.null(path_vertex_indices)) {
+        path_vertex_indices = seq(1L, nrow(surface_vertices));
+    }
+
   path_vertex_coords = surface_vertices[path_vertex_indices,];
 
   num_path_points = nrow(path_vertex_coords);
@@ -205,12 +252,34 @@ vis.path.along.verts <- function(surface_vertices, path_vertex_indices = seq(1L,
   }
 
   if(do_vis) {
-      rgl::material3d(size=2.0, lwd=2.0, color=c("red"), point_antialias=TRUE, line_antialias=TRUE);
+      if(! no_material) {
+        rgl::material3d(size=2.0, lwd=2.0, color=color, point_antialias=TRUE, line_antialias=TRUE);
+      }
       rgl::segments3d(path[,1], path[,2], path[,3]);
   }
 
   return(invisible(path));
 }
+
+
+#' @title Visualize several paths in different colors.
+#'
+#' @inheritParams vis.path.along.verts
+#'
+#' @param paths list of positive integer vectors, the vertex indices of the paths
+#'
+#' @export
+vis.paths.along.verts <- function(surface_vertices, paths, color=viridis::viridis(length(paths))) {
+    if(! is.list(paths)) {
+        stop("Parameter 'paths' must be a list of integer vectors.");
+    }
+    color = recycle(color, length(paths));
+    for(p_idx in seq_along(paths)) {
+        p = paths[[p_idx]];
+        vis.path.along.verts(surface_vertices, p, color = color[p_idx]);
+    }
+}
+
 
 
 #' @title Compute slopes of paths relative to axes.
@@ -284,8 +353,6 @@ path.colors.from.orientation <- function(coords_list, use_three_colors_only = FA
         }
     } else {
         angles = path.slopes(coords_list, return_angles = TRUE); # in degrees, -90..+90
-        cat(sprintf("Found %d different angles between %f and %f.\n", length(unique(angles)), min(angles), max(angles)));
-        print(angles);
         path_colors = cbind(as.integer(scale.to.range.zero.one(angles[,1])*255), as.integer(scale.to.range.zero.one(angles[,2])*255), as.integer(scale.to.range.zero.one(angles[,3])*255));
     }
 
@@ -295,6 +362,18 @@ path.colors.from.orientation <- function(coords_list, use_three_colors_only = FA
 #' @title Scale given values to range 0..1.
 #' @keywords internal
 scale.to.range.zero.one <- function(x, ...){(x - min(x, ...)) / (max(x, ...) - min(x, ...))}
+
+
+#' @title Scale given values to range 0..1.
+#'
+#' @param x the numeric data
+#'
+#' @param ... the numeric data
+#'
+#' @return the scaled data
+#'
+#' @export
+scale01 <- function(x, ...) { scale.to.range.zero.one(x, ...) }
 
 
 #' @title Given a list of path coordinates, create matrix containing only the first and last point of each path.
@@ -401,12 +480,10 @@ label.border <- function(surface_mesh, label, inner_only=TRUE, expand_inwards=0L
     }
 
     label_edges_sorted = as.data.frame(t(apply(label_edges, 1, sort)));    # Sort start and target vertex within edge to count edges (u,v) and (v,u) as 2 occurrences of same edge later.
-    #print(head(label_edges_sorted));
     edge_dt = data.table::as.data.table(label_edges_sorted);
     edgecount_dt = edge_dt[, .N, by = names(edge_dt)]; # add column 'N' which contains the counts (i.e., how often each edge occurs over all faces).
     border_edges = edgecount_dt[edgecount_dt$N==1][,1:2]; # Border edges occur only once, as the other face they touch is not part of the label.
 
-    #cat(sprintf("Counted %d unique edges, out of those there were %d border edges which occured only once.\n", nrow(edgecount_dt), nrow(border_edges)));
     border_vertices = unique(as.vector(t(border_edges)));
 
     if(expand_inwards > 0L) {
@@ -428,6 +505,65 @@ label.border <- function(surface_mesh, label, inner_only=TRUE, expand_inwards=0L
     }
 
     return(list("vertices"=border_vertices, "edges"=border_edges, "faces"=border_faces));
+}
+
+
+#' @title Check for the given color strings whether they represent gray scale colors.
+#'
+#' @param col_strings vector of RGB(A) color strings, like \code{c("#FFFFFF", ("#FF00FF"))}.
+#'
+#' @param accept_col_names logical, whether to accept color names like 'white'. Disables all sanity checks.
+#'
+#' @return logical vector
+#'
+#' @examples
+#' colors.are.grayscale(c("#FFFFFF", "#FF00FF"));
+#' all((colors.are.grayscale(c("#FFFFFF00", "#ABABABAB"))));
+#'
+#' @export
+#' @importFrom grDevices col2rgb
+colors.are.grayscale <- function(col_strings, accept_col_names=TRUE) {
+
+  if(! accept_col_names) {
+    if(all(nchar(col_strings) == 9)) {
+      has_alpha = TRUE;
+    } else if(all(nchar(col_strings) == 7)) {
+      has_alpha = FALSE;
+    } else {
+      stop("Invalid input: parameter 'colstring' must contain RBG or RGBA color strings with 7 chars each for RGB or 9 chars each for RGBA.");
+    }
+
+    if(has_alpha) {
+      col_strings = substr(col_strings, 1, 7); # The alpha is irrelevant for determining whether the color is grayscale, strip it.
+    }
+  }
+
+  return(unname(unlist(apply(grDevices::col2rgb(col_strings), 2, function(x){length(unique(x)) == 1}))));
+}
+
+
+#' @title Check for the given color strings whether they have transparency, i.e., an alpha channel value != fully opaque.
+#'
+#' @param col_strings vector of RGB(A) color strings, like \code{c("#FFFFFF", ("#FF00FF"))}.
+#'
+#' @param accept_col_names logical, whether to accept color names like 'white'. Disables all sanity checks.
+#'
+#' @return logical vector
+#'
+#' @examples
+#' colors.have.transparency(c("#FFFFFF", "#FF00FF", "#FF00FF00", "red", "#FF00FFDD"));
+#' all((colors.have.transparency(c("#FFFFFF00", "#ABABABAB"))));
+#'
+#' @export
+#' @importFrom grDevices col2rgb
+colors.have.transparency <- function(col_strings, accept_col_names=TRUE) {
+
+  if(! accept_col_names) {
+    if(! (all(nchar(col_strings) == 9) || (all(nchar(col_strings) == 9)))) {
+      stop("These strings do not look like RGBA color strings: invalid number of chars (expected 7 or 9 for RGB/RGBA).");
+    }
+  }
+  return(unname(unlist(apply(grDevices::col2rgb(col_strings, alpha=TRUE), 2, function(x){x[4] != 255L}))));
 }
 
 
@@ -637,13 +773,24 @@ find.subjectsdir.of <- function(subject_id='fsaverage', mustWork=FALSE) {
 
 #' @title Return path to fsaverage dir.
 #'
+#' @param allow_fetch logical, whether to allow trying to download it.
+#'
 #' @return the path to the fsaverage directory (NOT including the 'fsaverage' dir itself).
 #'
-#' @note This function will stop (i.e., raise an error) if the directory cannot be found.
+#' @note This function will stop (i.e., raise an error) if the directory cannot be found. The fsaverage template is part of FreeSurfer, and distributed under the FreeSurfer software license.
 #'
 #' @export
-fsaverage.path <- function() {
-    return(find.subjectsdir.of(subject_id='fsaverage', mustWork=TRUE));
+fsaverage.path <- function(allow_fetch = FALSE) {
+
+  search_res = find.subjectsdir.of(subject_id='fsaverage', mustWork=FALSE);
+  if(search_res$found) {
+    return(search_res$found_at);
+  }
+
+  if(allow_fetch) {
+    fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
+  }
+  return(find.subjectsdir.of(subject_id='fsaverage', mustWork=TRUE));
 }
 
 
@@ -779,7 +926,7 @@ fsbrain.set.default.figsize <- function(width, height, xstart=50L, ystart=50L) {
 #'
 #' @note Instead of calling this function to split the data, you could use the 'split_by_hemi' parameter of \code{\link[fsbrain]{subject.morph.native}}.
 #'
-#' @return a hemilist, each entry contains the data part of the respective hemi.
+#' @return a hemilist, each entry contains the data part of the respective hemisphere.
 #' @export
 vdata.split.by.hemi <- function(subjects_dir, subject_id, vdata, surface='white', expand=TRUE) {
   nv = subject.num.verts(subjects_dir, subject_id, surface=surface);

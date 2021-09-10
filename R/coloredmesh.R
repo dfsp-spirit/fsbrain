@@ -86,16 +86,31 @@ fs.surface.to.tmesh3d <- function(surface) {
     return(rgl::tmesh3d(c(t(surface$vertices)), c(t(surface$faces)), homogeneous=FALSE));
 }
 
+#' @title Get an fs.surface brain mesh from an rgl tmesh3d instance.
+#'
+#' @param tmesh a tmesh3d instance, see \code{rgl::tmesh3d} for details.
+#'
+#' @return an fs.surface instance, as returned by \code{subject.surface} or \code{freesurferformats::read.fs.surface}.
+#'
+#' @export
+tmesh3d.to.fs.surface <- function(tmesh) {
+    vertices = t(tmesh$vb[1:3,]);
+    faces = t(tmesh$it);
+    surface = list('vertices'=vertices, 'faces'=faces);
+    class(surface) <- c(class(surface), 'fs.surface');
+    return(surface);
+}
+
 
 #' @title Create a coloredmesh from a mesh and pre-defined colors.
 #'
 #' @inheritParams coloredmeshes.from.color
 #'
-#' @param color_data vector of hex color strings
+#' @param color_data vector of hex color strings, a single one or one per vertex.
 #'
 #' @return coloredmesh. A named list with entries: "mesh" the \code{\link{tmesh3d}} mesh object. "col": the mesh colors. "render", logical, whether to render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'.
 #'
-#' @note Do not call this, use \code{\link[fsbrain]{coloredmeshes.from.color}} instead.
+#' @note Do not call this directly, use \code{\link[fsbrain]{coloredmeshes.from.color}} instead.
 #'
 #' @keywords internal
 #' @importFrom rgl tmesh3d rgl.open wire3d
@@ -120,6 +135,8 @@ coloredmesh.from.color <- function(subjects_dir, subject_id, color_data, hemi, s
     if(nrow(surface_mesh$vertices) != length(color_data)) {
         if(length(color_data) == 1L) {
             color_data = rep(color_data, nrow(surface_mesh$vertices));
+        } else if(length(color_data) == 0L) {
+            color_data = rep('#FEFEFE', nrow(surface_mesh$vertices));
         } else {
             warning(sprintf("Data mismatch: surface has %d vertices, but %d color values passed in argument 'color_data'.\n", nrow(surface_mesh$vertices), length(color_data)));
         }

@@ -16,6 +16,7 @@ fsbrain_group_morph\.png$
 fsbrain_group_annot\.png$
 ^appveyor\.yml$
 web/
+docker/
 ^doc$
 ^\.github$
 
