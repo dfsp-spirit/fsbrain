@@ -29,7 +29,7 @@
 #' vis.data.on.subject(sjd, sj, morph_data_lh = th_smooth);
 #' }
 #'
-#' @export
+#' @keywords internal
 pervertexdata.smoothnn <- function(surface, data, num_iter, k=1L) {
     if(! freesurferformats::is.fs.surface(surface)) {
         stop("Parameter 'surface' must be an fs.surface instance.");
@@ -175,7 +175,7 @@ pervertexdata.smoothnn.compute.fwhm <- function(surface, niters, is_template) {
 #' vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = vdata_smoothed);
 #' }
 #'
-#' @export
+#' @keywords internal
 pervertexdata.smoothgaussian <- function(spherical_surface, data, fwhm = 15.0, truncfactor = 3.5) {
     gstd = fwhm / sqrt(log(256.0));
     maxdist = truncfactor * gstd;
@@ -255,7 +255,7 @@ setRefClass("DoubleVecReference",
 #'
 #' @return named list with 3 entries. Each is a vector with neighborhood information: 'neigh' is an int vector of the neighbor vertices, 'neigh_dist_dotproduct' a numerical vector of dp distances for these neighbors, and 'neigh_dist_surface' the same for along-the-surface-distances instead of dp distances.
 #'
-#' @export
+#' @keywords internal
 #'
 #' @importFrom methods new
 surf.sphere.dist <- function(spherical_surface, maxdist) {
@@ -385,6 +385,7 @@ extend_neighbors <- function(spherical_surface, targetvidx, currentvidx, min_dot
     return(invisible(0L));
 }
 
+
 #' @title Compute Gaussian weights
 #'
 #' @inheritParams surf.sphere.dist
@@ -407,7 +408,8 @@ extend_neighbors <- function(spherical_surface, targetvidx, currentvidx, min_dot
 #' }
 #'
 #' @return vector of Gaussian weights for vertices
-#'  see int MRISgaussianWeights(MRIS *surf, MRI *dist, double GStd) in util/mrisurf_mri.cpp
+#'
+#' @keywords internal
 surf.sphere.gaussianweights <- function(spherical_surface, sphere_dists, gstd) {
 
     gvar2 = 2 * (gstd * gstd); # twice the variance

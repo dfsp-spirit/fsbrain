@@ -15,7 +15,6 @@ surf.sphere.gaussianweights(spherical_surface, sphere_dists, gstd)
 }
 \value{
 vector of Gaussian weights for vertices
- see int MRISgaussianWeights(MRIS *surf, MRI *dist, double GStd) in util/mrisurf_mri.cpp
 }
 \description{
 Compute Gaussian weights
@@ -34,3 +33,4 @@ vis.data.on.subject(sjd, "fsaverage3", morph_data_lh=morph_data);
 }
 
 }
+\keyword{internal}

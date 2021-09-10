@@ -41,3 +41,4 @@ This function uses the pseudo-geodesic distance along the mesh edges.
 }
 
 }
+\keyword{internal}

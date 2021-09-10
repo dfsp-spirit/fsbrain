@@ -1,6 +1,5 @@
 # Functions for computing approx geodesic distance on brain meshes using Rvcg.
-# IMPORTANT: This requires Rvcg from Github, as the CRAN version does not include the
-# required functions.
+
 
 
 #' @title Compute all vertices within given geodesic distance on the mesh.
@@ -27,7 +26,7 @@
 #'   res$vertices;
 #' }
 #'
-#' @export
+#' @keywords internal
 geod.vert.neighborhood <- function(mesh, vertex, max_distance=5.0, include_max = TRUE, return_distances = TRUE) {
     mesh = ensure.tmesh3d(mesh);
     if(requireNamespace("Rvcg", quietly = TRUE)) {
@@ -90,7 +89,7 @@ geod.vert.neighborhood <- function(mesh, vertex, max_distance=5.0, include_max =
 #'   vis.color.on.subject(sjd, 'fsaverage', color_lh=colors$lh, color_rh=colors$rh);
 #' }
 #'
-#' @export
+#' @keywords internal
 geod.patches.color.overlay <- function(mesh, vertex, color = "#FF0000", bg_color = "#FEFEFE", ...) {
     color = recycle(color, length(vertex));
     if(is.hemilist(mesh)) {
@@ -160,7 +159,7 @@ geod.patches.color.overlay.singlehemi <- function(mesh, vertex, color = "#FF0000
 #'   # res$lh and res$rh now hold the per-vertex data.
 #' }
 #'
-#' @export
+#' @keywords internal
 geod.patches.pervertexdata <- function(mesh, vertex, ...) {
     if(is.hemilist(mesh)) {
         if(! is.fs.surface(mesh$lh)) {
@@ -345,7 +344,7 @@ geodesic.average.distance <- function(surfaces) {
 #'   vis.data.on.subject(sjd, "fsaverage3", morph_data_lh = dist$lh);
 #' }
 #'
-#' @export
+#' @keywords internal
 subject.descriptor.geodesic.average.distance <- function(subjects_dir, subject_id, surface = "white", hemi = "both", ...) {
     surfaces = subject.surface(subjects_dir, subject_id, surface = surface, hemi = hemi, force_hemilist = TRUE);
     return(geodesic.average.distance(surfaces, ...));
@@ -462,7 +461,7 @@ geodesic.path <- function(surface, source_vertex, target_vertices) {
 #'   vis.data.on.subject(sjd, 'fsaverage3', morph_data_lh = gc$perimeter);
 #' }
 #'
-#' @export
+#' @keywords interal
 geodesic.circles <- function(surface, vertices=NULL, scale=5.0) {
 
     warning("This function has not been tested yet, do not use.");
@@ -529,11 +528,11 @@ geodesic.circles <- function(surface, vertices=NULL, scale=5.0) {
 #'
 #' @param sample_at_radii double vector, the different ball radii for which to perform the computation
 #'
-#' @keywords internal
-#'
 #' @note This is called from \code{geodesic.circles}, there should be no need to call it directly.
 #'
 #' @return named list with entries: 'ball_area': vector of double, ball area at each sample radius. 'ball_perimeter': vector of double, ball perimeter at each sample radius.
+#'
+#' @keywords internal
 geodesic.ballstats <- function(mesh, geodist, sample_at_radii) {
     if(requireNamespace("Rvcg", quietly = TRUE)) {
         face_area = Rvcg::vcgArea(mesh, perface = TRUE)$pertriangle;
@@ -591,28 +590,28 @@ geodesic.ballstats <- function(mesh, geodist, sample_at_radii) {
 }
 
 
-#' @keywords internal
-#'
-#' @importFrom stats cor
-test_ballstats <- function() {
-    # Load expected data from running fastmarching matlab toolbox
-    lh_perim = freesurferformats::read.fs.curv("~/develop/neuroimaging/stuff_by_others/toolbox_geodesic/output_fsaverage3/lh.PerimeterFunction.5.w")
-    rh_perim = freesurferformats::read.fs.curv("~/develop/neuroimaging/stuff_by_others/toolbox_geodesic/output_fsaverage3/rh.PerimeterFunction.5.w")
-    lh_rad = freesurferformats::read.fs.curv("~/develop/neuroimaging/stuff_by_others/toolbox_geodesic/output_fsaverage3/lh.RadiusFunction.5.w")
-    rh_rad = freesurferformats::read.fs.curv("~/develop/neuroimaging/stuff_by_others/toolbox_geodesic/output_fsaverage3/rh.RadiusFunction.5.w")
-    expected = list("lh_perim"=lh_perim, "rh_perim"=rh_perim, "lh_rad"=lh_rad, "rh_rad"=rh_rad);
-
-    # Compute data in R
-    sjd = fsaverage.path(TRUE);
-    surfaces = subject.surface(sjd, 'fsaverage3', hemi='both');
-    lh_gc = geodesic.circles(surfaces$lh);
-    rh_gc = geodesic.circles(surfaces$rh);
-    found = list("lh_perim"=lh_gc$perimeter, "rh_perim"=rh_gc$perimeter, "lh_rad"=lh_gc$radius, "rh_rad"=rh_gc$radius);
-
-    # Check similarity
-    stats::cor(expected$lh_perim, found$lh_perim);
-    stats::cor(expected$rh_perim, found$rh_perim);
-    stats::cor(expected$lh_rad, found$lh_rad);
-    stats::cor(expected$rh_rad, found$rh_rad);
-}
+# @keywords internal
+#
+# @importFrom stats cor
+#test_ballstats <- function() {
+#    # Load expected data from running fastmarching matlab toolbox
+#    lh_perim = freesurferformats::read.fs.curv("~/develop/neuroimaging/stuff_by_others/toolbox_geodesic/output_fsaverage3/lh.PerimeterFunction.5.w")
+#    rh_perim = freesurferformats::read.fs.curv("~/develop/neuroimaging/stuff_by_others/toolbox_geodesic/output_fsaverage3/rh.PerimeterFunction.5.w")
+#    lh_rad = freesurferformats::read.fs.curv("~/develop/neuroimaging/stuff_by_others/toolbox_geodesic/output_fsaverage3/lh.RadiusFunction.5.w")
+#    rh_rad = freesurferformats::read.fs.curv("~/develop/neuroimaging/stuff_by_others/toolbox_geodesic/output_fsaverage3/rh.RadiusFunction.5.w")
+#    expected = list("lh_perim"=lh_perim, "rh_perim"=rh_perim, "lh_rad"=lh_rad, "rh_rad"=rh_rad);
+#
+#    # Compute data in R
+#    sjd = fsaverage.path(TRUE);
+#    surfaces = subject.surface(sjd, 'fsaverage3', hemi='both');
+#    lh_gc = geodesic.circles(surfaces$lh);
+#    rh_gc = geodesic.circles(surfaces$rh);
+#    found = list("lh_perim"=lh_gc$perimeter, "rh_perim"=rh_gc$perimeter, "lh_rad"=lh_gc$radius, "rh_rad"=rh_gc$radius);
+#
+#    # Check similarity
+#    stats::cor(expected$lh_perim, found$lh_perim);
+#    stats::cor(expected$rh_perim, found$rh_perim);
+#    stats::cor(expected$lh_rad, found$lh_rad);
+#    stats::cor(expected$rh_rad, found$rh_rad);
+#}
 
