@@ -70,6 +70,8 @@ group.morph.native <- function(subjects_dir, subjects_list, measure, hemi, forma
 #'
 #' @param df logical, whether to return a dataframe instead of the named list. The dataframe will have one subject per column, and *n* rows, where *n* is the number of vertices of the template subject surface.
 #'
+#' @param df_t logical, whether to return a transposed dataframe. Only one of df or df_t must be TRUE.
+#'
 #' @return named list with standard space morph data, the names are the subject identifiers from the subjects_list, and the values are morphometry data vectors (all with identical length, the data is mapped to a template subject).
 #'
 #' @family morphometry data functions
@@ -88,13 +90,31 @@ group.morph.native <- function(subjects_dir, subjects_list, measure, hemi, forma
 #' }
 #'
 #' @export
-group.morph.standard <- function(subjects_dir, subjects_list, measure, hemi='both', fwhm='10', template_subject='fsaverage', format='mgh', cortex_only=FALSE, df=FALSE) {
+group.morph.standard <- function(subjects_dir, subjects_list, measure, hemi='both', fwhm='10', template_subject='fsaverage', format='mgh', cortex_only=FALSE, df=FALSE, df_t=FALSE) {
 
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
     }
 
     check.subjectslist(subjects_list, subjects_dir=subjects_dir);
+
+    if(df_t) {
+        if(df) {
+            stop("Only one of parameters 'df' and 'df_t' can be TRUE.");
+        }
+        num_subjects = length(subjects_list);
+        num_verts = length(subject.morph.standard(subjects_dir, subjects_list[1], measure, hemi, fwhm=fwhm, template_subject=template_subject, format=format, cortex_only=cortex_only));
+        data_mtx = matrix(rep(0.0, num_subjects * num_verts), ncol = num_verts, nrow = num_subjects);
+
+        subject_index = 1L;
+        for(subject_id in subjects_list) {
+            data_mtx[subject_index, ] = subject.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm=fwhm, template_subject=template_subject, format=format, cortex_only=cortex_only);
+            subject_index = subject_index + 1L;
+        }
+        df = as.data.frame(data_mtx);
+        rownames(df) = subjects_list;
+        return(df);
+    }
 
     data_all_subjects = list();
     for(subject_id in subjects_list) {
