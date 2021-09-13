@@ -139,7 +139,7 @@ group.agg.atlas.native <- function(subjects_dir, subjects_list, measure, hemi, a
           agg_all_subjects = subject_agg;
         }
     }
-    agg_res = reshape::cast(agg_all_subjects, subject~region, value='aggregated');
+    agg_res = reshape::cast(agg_all_subjects, subject~region, value='aggregated', fun.aggregate = agg_fun);
     rownames(agg_res) = subjects_list;
     agg_res_df_nt = as.data.frame(agg_res);
 
