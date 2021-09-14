@@ -123,12 +123,12 @@ test_that("A brain volume segmentation can be rendered with correct colors from 
 
 test_that("Brain structures can be rendered as contours using misc3d", {
     testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
-    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
-    skip_if_not(box.can.run.all.tests(), "This test requires X11, the misc3d package, and an aseg.mgz file for the demo subject.");
+    testthat::skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+    testthat::skip_if_not(box.can.run.all.tests(), "This test requires X11, the misc3d package, and an aseg.mgz file for the demo subject.");
 
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
-    skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
+    testthat::skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
 
     subject_id = "subject1";
     aseg = subject.volume(subjects_dir, subject_id, 'aseg');    # Not shipped with the package atm.
