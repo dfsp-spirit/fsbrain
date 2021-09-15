@@ -484,6 +484,10 @@ vis.export.from.coloredmeshes <- function(coloredmeshes, colorbar_legend=NULL, i
 #'
 #' @inheritParams vis.export.from.coloredmeshes
 #'
+#' @param horizontal deprecated (since 0.5.0) and ignored, use parameter 'draw_colorbar' instead.
+#'
+#' @param draw_colorbar logical or one of the character strings 'vertical' or 'horizontal', whether to draw a colorbar. Defaults to 'horizontal'.
+#'
 #' @return magick image instance or named list, depending on the value of 'img_only'. If the latter, the list contains the fields 'rev_vl', 'rev_cb', and 'rev_ex', which are the return values of the functions \code{vislayout.from.coloredmeshes}, \code{coloredmesh.plot.colorbar.separate}, and {combine.colorbar.with.brainview.image}, respectively.
 #'
 #' @note Note that your screen resolution has to be high enough to generate the final image in the requested resolution, see the 'fsbrain FAQ' vignette for details and solutions if you run into trouble.
@@ -498,6 +502,25 @@ vis.export.from.coloredmeshes <- function(coloredmeshes, colorbar_legend=NULL, i
 #' }
 #'
 #' @export
-export <- function(coloredmeshes, colorbar_legend=NULL, img_only=TRUE, horizontal=TRUE, silent = TRUE, quality=1L, output_img="fsbrain_arranged.png", image.plot_extra_options=NULL, large_legend=TRUE, view_angles = get.view.angle.names(angle_set = "t4"), style = 'default', grid_like = TRUE, background_color = "white", transparency_color=NULL, ...) {
+export <- function(coloredmeshes, colorbar_legend=NULL, img_only=TRUE, draw_colorbar = "horizontal", horizontal=NULL, silent = TRUE, quality=1L, output_img="fsbrain_arranged.png", image.plot_extra_options=NULL, large_legend=TRUE, view_angles = get.view.angle.names(angle_set = "t4"), style = 'default', grid_like = TRUE, background_color = "white", transparency_color=NULL, ...) {
+    if(! is.null(horizontal)) {
+        message("Parameter 'horizontal' is deprecated and ignored, please use parameter 'draw_colorbar' instead.");
+    }
+    if(is.logical(draw_colorbar)) {
+        if(draw_colorbar) {
+            horizontal = TRUE;
+        } else {
+            horizontal = NULL;
+        }
+    } else {
+        if(!(draw_colorbar %in% c("horizontal", "vertical"))) {
+            stop("Parameter 'draw_colorbar' must be a logical value or one of 'horizontal', 'vertical'.");
+        }
+        if(draw_colorbar == "horizontal") {
+            horizontal = TRUE;
+        } else {
+            horizontal = FALSE;
+        }
+    }
     return(vis.export.from.coloredmeshes(coloredmeshes, colorbar_legend = colorbar_legend, img_only = img_only, horizontal = horizontal, silent = silent, quality=quality, output_img=output_img, image.plot_extra_options=image.plot_extra_options, large_legend=large_legend, view_angles = view_angles, style = style, grid_like = grid_like, background_color = background_color, transparency_color=transparency_color, ...));
 }

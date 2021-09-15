@@ -2,7 +2,7 @@
 % Please edit documentation in R/vis.R
 \name{hemlist.ensure.contains}
 \alias{hemlist.ensure.contains}
-\title{title Ensure an entry for a hemilist is not NULL or NA.}
+\title{title Ensure an key for a hemilist exists.}
 \usage{
 hemlist.ensure.contains(hemilist, required_hemi, error_tag = "")
 }
@@ -12,6 +12,6 @@ hemlist.ensure.contains(hemilist, required_hemi, error_tag = "")
 \item{required_hemi}{string, one of 'lh', 'rh' or 'both'.}
 }
 \description{
-title Ensure an entry for a hemilist is not NULL or NA.
+title Ensure an key for a hemilist exists.
 }
 \keyword{internal}

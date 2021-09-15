@@ -8,7 +8,8 @@ export(
   coloredmeshes,
   colorbar_legend = NULL,
   img_only = TRUE,
-  horizontal = TRUE,
+  draw_colorbar = "horizontal",
+  horizontal = NULL,
   silent = TRUE,
   quality = 1L,
   output_img = "fsbrain_arranged.png",
@@ -29,7 +30,9 @@ export(
 
 \item{img_only}{logical, whether to return only the resulting image}
 
-\item{horizontal}{logical, whether to plot the colorbar horizontally (TRUE) or vertically (FALSE). Pass 'NULL' to force no colorbar at all.}
+\item{draw_colorbar}{logical or one of the character strings 'vertical' or 'horizontal', whether to draw a colorbar. Defaults to 'horizontal'.}
+
+\item{horizontal}{deprecated (since 0.5.0) and ignored, use parameter 'draw_colorbar' instead.}
 
 \item{silent}{logical, whether to suppress messages}
 
