@@ -356,7 +356,6 @@ plot.fsbrain.colorbar <- function(colors, horizontal=FALSE) {
 #'
 #' @note This returns a sequential, multi-hue palette.
 #'
-#' @importFrom squash jet
 #' @export
 cm.seq <- function(report=FALSE) {
     if(requireNamespace('grDevices', quietly = TRUE)) {
@@ -373,8 +372,8 @@ cm.seq <- function(report=FALSE) {
         if(report) { message('RColorBrewer::brewer.pal#YlGn'); }
         return(grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, name="YlGn")));
     }
-    if(report) { message('squash::jet#jet'); }
-    return(squash::jet); # ahem.
+    if(report) { message('viridis::viridis#viridis'); }
+    return(viridis::viridis);
 }
 
 

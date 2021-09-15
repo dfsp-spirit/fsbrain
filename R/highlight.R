@@ -122,7 +122,7 @@ highlight.vertices.on.subject <- function(subjects_dir, vis_subject_id, verts_lh
 #' \dontrun{
 #'    fsbrain::download_fsaverage(T);
 #'    subjects_dir = fsaverage.path();
-#'    mkco = list('colFn'=squash::jet, 'n'=300);
+#'    mkco = list('colFn'=viridis::viridis, 'n'=300);
 #'    # Ex.1: highlight with patches and custom colormap:
 #'    highlight.vertices.on.subject.spheres(subjects_dir, 'fsaverage',
 #'      vertices=c(300, 5000, 100000), makecmap_options = mkco);

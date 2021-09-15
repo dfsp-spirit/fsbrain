@@ -43,7 +43,6 @@
 #' @family visualization functions
 #' @family morphometry visualization functions
 #'
-#' @importFrom squash jet
 #' @export
 vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi="both", surface="white", views=c("t4"), rgloptions = rglo(), rglactions = list(), draw_colorbar = FALSE, cortex_only=FALSE, style = 'default', makecmap_options=mkco.seq(), bg=NULL) {
 
@@ -117,7 +116,6 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi="bo
 #' @family visualization functions
 #' @family morphometry visualization functions
 #'
-#' @importFrom squash jet
 #' @export
 vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi="both", fwhm="10", surface="white", template_subject = 'fsaverage', template_subjects_dir = NULL, views=c("t4"), rgloptions = rglo(), rglactions = list(), draw_colorbar = FALSE, cortex_only = FALSE, makecmap_options=mkco.seq(), bg=NULL, style = 'default') {
 
@@ -268,7 +266,6 @@ vis.subject.label <- function(subjects_dir, subject_id, label, hemi, surface="wh
 #' @family visualization functions
 #' @family morphometry visualization functions
 #'
-#' @importFrom squash jet
 #' @export
 vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh=NULL, morph_data_rh=NULL, surface="white", views=c('t4'), rgloptions=rglo(), rglactions = list(), draw_colorbar = FALSE, makecmap_options=mkco.seq(), bg=NULL, morph_data_both=NULL, style = "default") {
 
@@ -319,7 +316,6 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh=NULL
 #' @family visualization functions
 #' @family morphometry visualization functions
 #'
-#' @importFrom squash jet
 #' @export
 vis.symmetric.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh=NULL, morph_data_rh=NULL, surface="white", views=c('t4'), rgloptions=rglo(), rglactions = list(), draw_colorbar = TRUE, makecmap_options=list('colFn'=cm.cbry(), symm=TRUE, col.na='#FFFFFF00', 'n'=200), map_to_NA=c(0), bg=NULL, morph_data_both=NULL, style = "default") {
 

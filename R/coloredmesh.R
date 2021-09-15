@@ -24,7 +24,7 @@
 #' @family coloredmesh functions
 #'
 #' @export
-#' @importFrom squash cmap makecmap jet
+#' @importFrom squash cmap makecmap
 #' @importFrom rgl tmesh3d rgl.open wire3d
 coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hemi, surface="white", clip=NULL, cortex_only=FALSE, makecmap_options=mkco.seq()) {
 
@@ -198,7 +198,7 @@ coloredmeshes.from.color <- function(subjects_dir, subject_id, color_data, hemi,
 #' @family coloredmesh functions
 #'
 #' @export
-#' @importFrom squash cmap makecmap jet
+#' @importFrom squash cmap makecmap
 #' @importFrom rgl tmesh3d rgl.open wire3d
 coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm, surface="white", template_subject='fsaverage', template_subjects_dir=NULL, clip = NULL, cortex_only=FALSE, makecmap_options=mkco.seq()) {
 
@@ -365,7 +365,7 @@ coloredmesh.from.preloaded.data <- function(fs_surface, morph_data=NULL, col=NUL
 #' @family coloredmesh functions
 #'
 #' @export
-#' @importFrom squash cmap makecmap jet
+#' @importFrom squash cmap makecmap
 #' @importFrom rgl tmesh3d rgl.open wire3d
 #' @importFrom utils modifyList
 coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surface="white", outline=FALSE) {
