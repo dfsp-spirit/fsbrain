@@ -82,6 +82,90 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi="bo
 
 
 
+#' @ title Ensure an key for a hemilist exists.
+#'
+#' @param hemilist a hemilist
+#'
+#' @param required_hemi string, one of 'lh', 'rh' or 'both'.
+#'
+#' @keywords internal
+hemlist.ensure.contains <- function(hemilist, required_hemi, error_tag="") {
+    if(!(required_hemi %in% c("lh", "rh", "both"))) {
+        stop(sprintf("Parameter 'required_hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", required_hemi));
+    }
+    if(required_hemi == "both") {
+        if(!("lh" %in% names(hemilist))) {
+            stop(sprintf("Hemilist %s does not contain required valid (non-NA/NULL) entry for key 'lh', and both 'lh' and 'rh' are required.\n", error_tag));
+        }
+        if(!("rh" %in% names(hemilist))) {
+            stop(sprintf("Hemilist %s does not contain required valid (non-NA/NULL) entry for key 'rh', and both 'lh' and 'rh' are required.\n", error_tag));
+        }
+    } else {
+        if(!(required_hemi %in% names(hemilist))) {
+            stop(sprintf("Hemilist %s does not contain required valid entry for key '%s'.\n", error_tag, required_hemi));
+        }
+
+    }
+    return(invisible(NULL));
+}
+
+
+#' @title Visualize pre-loaded data.
+#'
+#' @inheritParams vis.subject.morph.native
+#'
+#' @param surfaces a \code{\link[fsbrain]{hemilist}} of surfaces loaded with a function like \code{freesurferformats::read.fs.surface}.
+#'
+#' @param pervertex_data a \code{\link[fsbrain]{hemilist}} of per-vertex data for the surfaces, i.e., a list of numeric vectors. E.g., loaded  from a moorphometry data file with a function like \code{freesurferformats::read.fs.morph}.
+#'´
+#' @family visualization functions
+#'
+#' @export
+vis.subject.pre <- function(surfaces, pervertex_data, hemi="both", views=c("t4"), rgloptions = rglo(), rglactions = list(), draw_colorbar = FALSE, style = 'default', makecmap_options=mkco.seq()) {
+    if(!(hemi %in% c("lh", "rh", "both"))) {
+        stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
+    }
+
+    if(! is.hemilist(pervertex_data)) {
+        if(hemi %in% c("lh", "rh")) { # let me fix this for you.
+            pervertex_data = hemilist.wrap(pervertex_data, hemi=hemi);
+        } else {
+            stop("Parameter 'pervertex_data' must be a hemilist if 'hemi' is set to 'both'.");
+        }
+    }
+    pervertex_data = rglactions.transform(pervertex_data, rglactions); # apply transform or data clipping
+
+    if(! is.hemilist(surfaces)) {
+        if(hemi %in% c("lh", "rh")) { # let me fix this for you.
+            surfaces = hemilist.wrap(surfaces, hemi=hemi);
+        } else {
+            stop("Parameter 'surfaces' must be a hemilist if 'hemi' is set to 'both'.");
+        }
+    }
+
+    hemlist.ensure.contains(surfaces, hemi, "surfaces");
+    hemlist.ensure.contains(pervertex_data, hemi, "pervertex_data");
+
+    both_hemi_colors = collayer.from.morphlike.data(pervertex_data$lh, pervertex_data$rh, makecmap_options=makecmap_options, return_metadata=TRUE);
+    metadata = both_hemi_colors$metadata;
+    both_hemi_colors$metadata = NULL;
+
+    if(! is.hemilist(both_hemi_colors)) {
+        stop("both_hemi_colors must be a hemilist")
+    }
+
+    coloredmeshes = coloredmeshes.from.color(subjects_dir, subject_id, both_hemi_colors, hemi, surface=surfaces, metadata=list('src_data'=pervertex_data, 'map'=metadata$map, 'makecmap_options'=makecmap_options));
+
+    if(hasIn(rglactions, c('no_vis'))) {
+        return(coloredmeshes);
+    }
+
+    return(invisible(brainviews(views, coloredmeshes, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, style = style)));
+}
+
+
+
+
 
 #' @title Visualize native space morphometry data for a subject or a group.
 #'

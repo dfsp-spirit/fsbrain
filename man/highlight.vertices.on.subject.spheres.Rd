@@ -54,7 +54,7 @@ If no patches are visualized, the color used for the brain can be set with \code
 \dontrun{
    fsbrain::download_fsaverage(T);
    subjects_dir = fsaverage.path();
-   mkco = list('colFn'=squash::jet, 'n'=300);
+   mkco = list('colFn'=viridis::viridis, 'n'=300);
    # Ex.1: highlight with patches and custom colormap:
    highlight.vertices.on.subject.spheres(subjects_dir, 'fsaverage',
      vertices=c(300, 5000, 100000), makecmap_options = mkco);
@@ -78,6 +78,7 @@ Other visualization functions:
 \code{\link{vis.subject.label}()},
 \code{\link{vis.subject.morph.native}()},
 \code{\link{vis.subject.morph.standard}()},
+\code{\link{vis.subject.pre}()},
 \code{\link{vis.symmetric.data.on.subject}()},
 \code{\link{vislayout.from.coloredmeshes}()}
 
