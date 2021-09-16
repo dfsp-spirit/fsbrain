@@ -413,6 +413,8 @@ vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.ang
 #'
 #' @note Note that your screen resolution has to be high enough to generate the final image in the requested resolution, see the 'fsbrain FAQ' vignette for details and solutions if you run into trouble.
 #'
+#' @seealso This function should not be used anymore, it will be deprecated soon. Please use the \code{\link[fsbrain]{export}} function instead.
+#'
 #' @examples
 #' \dontrun{
 #'     rand_data = rnorm(327684, 5, 1.5);

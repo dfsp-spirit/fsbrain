@@ -143,7 +143,7 @@ This opens the plot in a window as usual and also saves it in PNG format to the 
 
 While one could convert the PNGs to these formats, doing so makes little sense. The images produced by fsbrain are **bitmap** images, not vector graphics. I would recommend to export the figures in high resolution as PNG images instead. 
 
-The default settings used by the the *vis.export.from.coloredmeshes()* function should be fine to reach the 300 DPI typically required for publications, unless you want the image to fill the entire page. In that case, you can further increase the output resolution.
+The default settings used by the the *export()* function should be fine to reach the 300 DPI typically required for publications, unless you want the image to fill the entire page. In that case, you can further increase the output resolution.
 
 ### A journal requires me to submit a vector graphics file, what to do?
 
@@ -336,7 +336,7 @@ combine.colorbar.with.brainview.image(output_brain_img, output_cbar_img, output_
 
 You may have to play a bit with the resolution settings of your brain images and the colorbar to get this right (the background cropping makes it hard to compute the exact values in advance).
 
-You should also have a look at the new `vis.export.from.coloredmeshes` function, which produces an image with colorbar and provides sane defaults for the resolution and suitable text sizes, etc.
+You should also have a look at the new `export()` function, which produces an image with colorbar and provides sane defaults for the resolution and suitable text sizes, etc.
 
 ### Can I export PNG images with transparent (instead of white) background?
 
@@ -344,7 +344,7 @@ To the best of my knowledge, RGL cannot produce transparent images (though you c
 useful for usage in presentations, we provide a hacked solution based on post-processing the output images
 with the magick package in R.
 
-This required fsbrain version >= 0.4.3 and is implemented in the `vis.export.from.coloredmeshes` function via the `transparency_color` parameter. 
+This required fsbrain version >= 0.4.3 and is implemented in the `export()` function via the `transparency_color` parameter. 
 
 Here is how it works: the `transparency_color` is used as a background color for rendering in RGL. During the fsbrain post-processing, all pixels with this color in the image will be replaced with transparency.
 
@@ -355,7 +355,7 @@ This means that:
 
 ```{r, eval = FALSE}
 coloredmeshes = vis.subject.morph.standard(subjects_dir, "subject1", "sulc", cortex_only=TRUE, views=NULL);
-vis.export.from.coloredmeshes(coloredmeshes, colorbar_legend = "sulcal depth [mm]", transparency_color = "#FFFFFF");
+export(coloredmeshes, colorbar_legend = "sulcal depth [mm]", transparency_color = "#FFFFFF");
 ```
 
 
@@ -388,7 +388,7 @@ coloredmeshes = vis.subject.morph.native(subjects_dir, "subject1", "thickness", 
 vislayout.from.coloredmeshes(coloredmeshes, view_angles = view_angles, grid_like=FALSE, output_img="~/fsbrain_horizontal.png");
 ```
 
-If you want a colorbar, you can use `vis.export.from.coloredmeshes` instead of `vislayout.from.coloredmeshes`.
+If you want a colorbar, you can use `export` instead of `vislayout.from.coloredmeshes`. Using `export` is now recommended in any case.
 
 ## Various topics
 

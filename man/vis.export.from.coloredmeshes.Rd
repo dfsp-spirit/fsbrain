@@ -72,3 +72,6 @@ Note that your screen resolution has to be high enough to generate the final ima
 }
 
 }
+\seealso{
+This function should not be used anymore, it will be deprecated soon. Please use the \code{\link[fsbrain]{export}} function instead.
+}

@@ -31,11 +31,11 @@ fsbrain.set.default.figsize(1000, 1000);
 
 ## Eporting publication-ready plots
 
-The `vis.export.*` functions provide a high-level interface to export plots.
+The `export()` function provides a high-level interface to export plots.
 
 ```{r rgl=TRUE, fig.show = 'hide'}
 cm = vis.subject.morph.standard(sjd, sj, 'sulc', rglactions=list('no_vis'=T));
-img = vis.export.from.coloredmeshes(cm, colorbar_legend='Sulcal depth [mm]');
+img = export(cm, colorbar_legend='Sulcal depth [mm]');
 ```
 
 The image gets exported as a PNG file into the current working directory by default, and you can set the 'output_img' parameter to save it wherever you want. One can also show it directly:

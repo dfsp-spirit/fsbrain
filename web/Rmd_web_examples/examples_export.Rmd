@@ -1,7 +1,7 @@
 ---
 title: "fsbrain export API visualization examples"
 author: "Tim Schäfer"
-date: "April 28, 2021"
+date: "September 16, 2021"
 output: html_document
 ---
 
@@ -11,7 +11,7 @@ rgl::setupKnitr()
 ```
 
 This document shows how to use different options of the fsbrain export API fpr producing publication-ready figures
-from data visualized on a the surface of a single subject. It is basically a demonstration of the `vis.export.from.coloredmeshes` function.
+from data visualized on a the surface of a single subject. It is basically a demonstration of the `export` function.
 
 ## Example data
 
@@ -45,14 +45,16 @@ fsbrain.set.default.figsize(700, 700);
 
 ### A basic example
 
-The `vis.export.*` functions provide a high-level interface to export plots. It works on a coloredmeshes instance, which is returned by all live visualization functions in fsbrain and repesents two brain meshes along with some metadata like the per-vertex data, colormap, and resulting per-vertex colors.
+The `export` function provides a high-level interface to export plots. It works on a coloredmeshes instance, which is returned by all live visualization functions in fsbrain and represents two brain meshes along with some metadata like the per-vertex data, a colormap, and resulting per-vertex colors. See the help for the ``fsbrain::hemilist` function for details if you need them.
+
+Note: The function `export` is an alias for the `vis.export.from.coloredmeshes` function, which was the name used before fsbrain version 0.5.0. So if you do have an older version of fsbrain, simply replace the function name for the following examples.
 
 Here is an example that obtains the coloredmeshes instance (called `cm` here) by running `vis.subject.morph.standard`. 
 
 
 ```{r rgl=TRUE, fig.show = 'hide'}
 cm = vis.subject.morph.standard(sjd, sj, 'thickness', fwhm='10', cortex_only = T, views=NULL);
-img = vis.export.from.coloredmeshes(cm);
+img = export(cm);
 ```
 
 Note that we suppress the output of the `vis.subject.morph.standard` function with `views=NULL` here, because this is faster and we are only interested in the return value of the function. Suppressing the rendering is optional, but we will do it throughout this document.
@@ -66,7 +68,7 @@ img;
 ```
 
 
-In the following examples, we will use different data by obtaining our `cm` value from different visualization functions so that this document does not look too boring. However, we are mainly interested in, and will only comment on, the different parameters passed to the `vis.export.from.coloredmeshes` function.
+In the following examples, we will use different data by obtaining our `cm` value from different visualization functions so that this document does not look too boring. However, we are mainly interested in, and will only comment on, the different parameters passed to the `export` function.
 
 ### Adding a description text above the colorbar and changing the output file location
 
@@ -74,7 +76,7 @@ This is especially important if you export lots of figures so you do not confuse
 
 ```{r rgl=TRUE, fig.show = 'hide', warning = 'hide'}
 cm = vis.subject.morph.standard(sjd, sj, 'sulc', fwhm='10', cortex_only = T, views=NULL);
-img = vis.export.from.coloredmeshes(cm, colorbar_legend='Sulcal depth [mm]', output_img = "~/sulcal_depth.png");
+img = export(cm, colorbar_legend='Sulcal depth [mm]', output_img = "~/sulcal_depth.png");
 ```
 
 ```{r}
@@ -95,7 +97,7 @@ Let's use them to modify the views:
 
 ```{r rgl=TRUE, fig.show = 'hide', warning = 'hide'}
 cm = vis.subject.annot(sjd, sj, 'aparc', views=NULL);
-img = vis.export.from.coloredmeshes(cm, view_angles = c("sd_medial_lh", "sd_medial_rh"));
+img = export(cm, view_angles = c("sd_medial_lh", "sd_medial_rh"));
 ```
 
 ```{r}
@@ -106,7 +108,7 @@ The layout of the individual tiles is automatically determined by the number of 
 
 ```{r rgl=TRUE, fig.show = 'hide', warning = 'hide'}
 cm = vis.subject.morph.native(sjd, sj, 'curv', cortex_only = T, views=NULL, rglactions=list('trans_fun'=clip.data));
-img = vis.export.from.coloredmeshes(cm, view_angles = get.view.angle.names(angle_set = "t8"), colorbar_legend='Mean curvature [mm^-1]');
+img = export(cm, view_angles = get.view.angle.names(angle_set = "t8"), colorbar_legend='Mean curvature [mm^-1]');
 ```
 
 
@@ -118,7 +120,7 @@ For all other numbers, a vertical strip of images will be produced. One can alwa
 
 ```{r rgl=TRUE, fig.show = 'hide', warning = 'hide'}
 cm = vis.subject.morph.native(sjd, sj, 'jacobian_white', cortex_only = T, views=NULL, rglactions=list('trans_fun'=clip.data), makecmap_options = list('colFn'=viridis::rocket));
-img = vis.export.from.coloredmeshes(cm, view_angles = get.view.angle.names("t4"), grid_like = FALSE, colorbar_legend='Jacobian white');
+img = export(cm, view_angles = get.view.angle.names("t4"), grid_like = FALSE, colorbar_legend='Jacobian white');
 ```
 
 
@@ -133,7 +135,7 @@ The position of the colorbar can be set using the `horizontal` parameter. It can
 
 ```{r rgl=TRUE, fig.show = 'hide', warning = 'hide'}
 cm = vis.subject.morph.standard(sjd, sj, 'sulc', fwhm='10', cortex_only = T, views=NULL);
-img = vis.export.from.coloredmeshes(cm, colorbar_legend='Sulcal depth [mm]', horizontal = FALSE);
+img = export(cm, colorbar_legend='Sulcal depth [mm]', horizontal = FALSE);
 ```
 
 ```{r}
@@ -150,7 +152,7 @@ It's possible to change the background color of the plot with the `background_co
 
 ```{r rgl=TRUE, fig.show = 'hide', warning = 'hide'}
 cm = vis.subject.morph.standard(sjd, sj, 'sulc', fwhm='10', cortex_only = T, views=NULL);
-img = vis.export.from.coloredmeshes(cm, c("sd_medial_lh", "sd_medial_rh"), background_color = '#000000', horizontal = NULL);
+img = export(cm, c("sd_medial_lh", "sd_medial_rh"), background_color = '#000000', horizontal = NULL);
 ```
 
 ```{r}
@@ -164,7 +166,7 @@ To the best of my knowledge, rendering with a transparent background is not supp
 
 ```{r rgl=TRUE, fig.show = 'hide', warning = 'hide'}
 cm = vis.subject.morph.standard(sjd, sj, 'sulc', fwhm='10', cortex_only = T, views=NULL);
-img = vis.export.from.coloredmeshes(cm, view_angles = c("sd_medial_lh", "sd_medial_rh"), transparency_color = '#FFFFFF');
+img = export(cm, view_angles = c("sd_medial_lh", "sd_medial_rh"), transparency_color = '#FFFFFF');
 ```
 
 ```{r}
