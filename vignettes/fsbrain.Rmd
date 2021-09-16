@@ -700,11 +700,11 @@ See the help for the `coloredmesh.plot.colorbar.separate()` function for more cu
 
 ### Exporting publication quality plots
 
-In publications one typically has very little space, and the white space between in the plots shown above is too large. Therefore, we provide the `vis.export.from.coloredmeshes()` function, which creates a tight layout of the brain from four different angles, and adds a colorbar (if possible for the plotted data).
+In publications one typically has very little space, and the white space between in the plots shown above is too large. Therefore, we provide the `export()` function, which creates a tight layout of the brain from four different angles, and adds a colorbar (if possible for the plotted data).
 
 ```{r, eval = FALSE}
 coloredmeshes = vis.subject.morph.standard(subjects_dir, 'subject1', 'sulc', rglactions=list('no_vis'=T));
-img = vis.export.from.coloredmeshes(coloredmeshes, colorbar_legend='Sulcal depth [mm]', output_img='~/fig1.png');
+img = export(coloredmeshes, colorbar_legend='Sulcal depth [mm]', output_img='~/fig1.png');
 ```
 
 This function creates four different plots, then trims the individual images and combines them into a final output image. This takes a bit longer (some seconds as opposed to almost instant visualization for the standard `vis.subject.*` functions) and is intended for exporting the final figures for a publication. For interactive use during the analysis, where the whitespace does not matter, we recommend using the faster `vis.subject.*` functions.

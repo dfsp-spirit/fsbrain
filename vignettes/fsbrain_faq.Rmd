@@ -41,6 +41,32 @@ vis.data.on.subject('~/data/', 'subject1_spm12', lh_gyrification, NULL, surface=
 
 You should be able to load data from a number of different neuroimaging software packages with freesurferformats, as it supports the very common NIFTI and GIFTI file formats.
 
+### What is the best way to visualize data from data computed in R (or from arbitrary files that do not follow the FreeSurfer recon-all directory layout)?
+
+One should use the `vis.subject.pre` function for that. Here is a full example that loads both the surfaces and the per-vertex data into R first and the creates a plot based on this pre-loaded data, without accessing any files anymore:
+
+```{r, eval = FALSE}
+library("fsbrain");
+library("freesurferformats");
+
+# Manually load some data from wherever you want. You can also compute this data in R of course, without loading anything.
+my_data_dir="~/data/study1/subject1"; # just an example.
+surf_lh <- read.fs.surface(file.path(my_data_dir, "lh_sphere.surf.gii"));
+surf_rh <- read.fs.surface(file.path(my_data_dir, "whatever/rh_sphere.obj"));
+pvd_lh = read.fs.morph(file.path(my_data_dir, "lh.curv")); # pvd is for 'per-vertex data'.
+pvd_rh = read.fs.morph(file.path(my_data_dir, "surf/converted/rh.mean_curvature.mgh"));
+
+
+# Call high-level API for live plot.
+surfaces = hemilist(surf_lh, surf_rh);
+pvd  = hemilist(pvd_lh, pvd_rh);
+cm = vis.subject.pre(surfaces, pvd , draw_colorbar = T, rglactions = list('trans_fun'=limit_fun(-0.2, 0.2)));
+
+# Export if you feel like it
+export(cm, output_img = "~/out.png", grid_like = FALSE, colorbar_legend="Mean curvature [1/mm]");
+```
+
+
 ### Can I used fsbrain to visualize surface data from BrainSuite surfaces in DFS format?
 
 
@@ -57,6 +83,7 @@ class(sfb) = c(class(sfb), 'fs.surface');
 # show it with fsbrain
 fsbrain::vis.fs.surface(sfb);
 ```
+
 
 If the DFS surface file contains vertex colors, labels and/or morphometry data, you can display that as well:
 
