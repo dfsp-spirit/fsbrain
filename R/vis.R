@@ -154,7 +154,7 @@ vis.subject.pre <- function(surfaces, pervertex_data, hemi="both", views=c("t4")
         stop("both_hemi_colors must be a hemilist")
     }
 
-    coloredmeshes = coloredmeshes.from.color(subjects_dir, subject_id, both_hemi_colors, hemi, surface=surfaces, metadata=list('src_data'=pervertex_data, 'map'=metadata$map, 'makecmap_options'=makecmap_options));
+    coloredmeshes = coloredmeshes.from.color(subjects_dir=NULL, subject_id=NULL, both_hemi_colors, hemi, surface=surfaces, metadata=list('src_data'=pervertex_data, 'map'=metadata$map, 'makecmap_options'=makecmap_options));
 
     if(hasIn(rglactions, c('no_vis'))) {
         return(coloredmeshes);
