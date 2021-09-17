@@ -17,4 +17,3 @@ double vector with length equal to num vertices in the mesh, the geodesic distan
 \description{
 Simple internal wrapper around \code{Rvcg::vcgDijkstra} with function check.
 }
-\keyword{internal}

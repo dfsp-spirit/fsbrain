@@ -17,4 +17,3 @@ a vector or hemilist of vectors of values
 \description{
 Get vertex data for a single fs.surface or a hemilist of surfaces.
 }
-\keyword{internal}

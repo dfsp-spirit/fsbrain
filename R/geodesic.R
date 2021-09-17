@@ -26,7 +26,7 @@
 #'   res$vertices;
 #' }
 #'
-#' @keywords internal
+#' @export
 geod.vert.neighborhood <- function(mesh, vertex, max_distance=5.0, include_max = TRUE, return_distances = TRUE) {
     mesh = ensure.tmesh3d(mesh);
     if(requireNamespace("Rvcg", quietly = TRUE)) {
@@ -89,7 +89,7 @@ geod.vert.neighborhood <- function(mesh, vertex, max_distance=5.0, include_max =
 #'   vis.color.on.subject(sjd, 'fsaverage', color_lh=colors$lh, color_rh=colors$rh);
 #' }
 #'
-#' @keywords internal
+#' @export
 geod.patches.color.overlay <- function(mesh, vertex, color = "#FF0000", bg_color = "#FEFEFE", ...) {
     color = recycle(color, length(vertex));
     if(is.hemilist(mesh)) {
@@ -192,7 +192,7 @@ geod.patches.pervertexdata <- function(mesh, vertex, ...) {
 #'
 #' @return a vector or hemilist of vectors of values
 #'
-#' @keywords internal
+#' @export
 constant.pervertexdata <- function(surfaces, value = NA) {
     mesh = surfaces;
     if(is.hemilist(mesh)) {
@@ -251,7 +251,7 @@ geod.patches.pervertexdata.singlehemi <- function(mesh, vertex, ...) {
 #'
 #' @return double vector with length equal to num vertices in the mesh, the geodesic distances from all other vertices to the query vertex \code{v}.
 #'
-#' @keywords internal
+#' @export
 geodesic.dists.to.vertex <- function(mesh, v) {
     if(! exists('vcgDijkstra', where=asNamespace('Rvcg'), mode='function')) {
         stop("Your Rvcg version does not export the vcgDijkstra function, which means it is too old. You need to install Rvcg from GitHub for this this functionality to be available. Try 'devtools::install_github('zarquon42b/Rvcg')'.");
