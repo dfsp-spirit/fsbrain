@@ -148,6 +148,28 @@ coloredmesh.from.color <- function(subjects_dir, subject_id, color_data, hemi, s
 }
 
 
+#' @title Create fsbrain instance from 2 coloredmeshes.
+#'
+#' @param lh_cm coloredmesh for left hemisphere
+#'
+#' @param rh_cm coloredmesh for right hemisphere
+#'
+#' @return fsbrain instance
+#'
+#' @keywords internal
+brain <- function(lh_cm, rh_cm) {
+    if(! is.fs.coloredmesh(lh_cm)) {
+        stop("Parameter 'lh_cm' must be an fs.coloredmesh instance.");
+    }
+    if(! is.fs.coloredmesh(rh_cm)) {
+        stop("Parameter 'rh_cm' must be an fs.coloredmesh instance.");
+    }
+    brain = list("lh"=lh_cm, "rh"=rh_cm);
+    class(brain) = c(class(brain), "fsbrain");
+    return(brain);
+}
+
+
 #' @title Create coloredmeshes for both hemis using pre-defined colors.
 #'
 #' @inheritParams coloredmesh.from.morph.native
@@ -172,7 +194,7 @@ coloredmeshes.from.color <- function(subjects_dir, subject_id, color_data, hemi,
         }
         lh_cm = coloredmesh.from.color(subjects_dir, subject_id, color_data$lh, 'lh', surface=surface, metadata=metadata);
         rh_cm = coloredmesh.from.color(subjects_dir, subject_id, color_data$rh, 'rh', surface=surface, metadata=metadata);
-        return(list("lh"=lh_cm, "rh"=rh_cm));
+        return(brain(lh_cm, rh_cm));
     } else {
         if(is.hemilist(color_data)) {
             color_data = hemilist.unwrap(color_data);
@@ -520,9 +542,8 @@ coloredmesh.from.mask <- function(subjects_dir, subject_id, mask, hemi, surface=
 #'
 #' @export
 print.fs.coloredmesh <- function(x, ...) {
-    cat(sprintf("Brain coloredmesh with %d vertices and %d faces.\n", ncol(x$mesh$vb), ncol(x$mesh$it)));             # nocov start
-    cat(sprintf(" * Hemi is '%s', will be rendered: %s.\n", x$hemi, !x$render));
-    cat(sprintf(" * Contains %d color values, %d unique colors.\n", length(x$col), length(unique(x$col))));           # nocov end
+    cat(sprintf("Brain %s hemisphere coloredmesh with %d vertices and %d faces.\n", x$hemi, ncol(x$mesh$vb), ncol(x$mesh$it)));                 # nocov start
+    cat(sprintf(" * Per-vertex color: %d color values, %d unique colors.\n", length(x$col), length(unique(x$col))));    # nocov end
 }
 
 
@@ -535,6 +556,44 @@ print.fs.coloredmesh <- function(x, ...) {
 #' @export
 is.fs.coloredmesh <- function(x) inherits(x, "fs.coloredmesh")
 
+
+#' @title Check whether object is an fsbrain (S3)
+#'
+#' @param x any `R` object
+#'
+#' @return TRUE if its argument is an fsbrain (that is, has "fsbrain" amongst its classes) and FALSE otherwise.
+#'
+#' @export
+is.fsbrain <- function(x) inherits(x, "fsbrain")
+
+
+
+#' @title Print description of an fsbrain (S3).
+#'
+#' @param x fsbrain instance with class `fsbrain`.
+#'
+#' @param ... further arguments passed to or from other methods
+#'
+#' @export
+print.fsbrain <- function(x, ...) {
+    valid_hemis = c();               # nocov start
+    num_verts = 0L;
+    if(is.fs.coloredmesh(x$lh)) {
+        valid_hemis = c(valid_hemis, 'lh');
+        num_verts = num_verts + ncol(x$lh$mesh$vb);
+    }
+    if(is.fs.coloredmesh(x$rh)) {
+        valid_hemis = c(valid_hemis, 'rh');
+        num_verts = num_verts + ncol(x$rh$mesh$vb);
+    }
+    cat(sprintf("fsbrain instance with %d hemispheres (%s) and %d vertices total:\n", length(valid_hemis), paste(valid_hemis, collapse=", "), num_verts));
+    if(is.fs.coloredmesh(x$lh)) {
+        print.fs.coloredmesh(x$lh);
+    }
+    if(is.fs.coloredmesh(x$rh)) {
+        print.fs.coloredmesh(x$rh);
+    }# nocov end
+}
 
 
 #' @title fs.coloredmesh constructor
