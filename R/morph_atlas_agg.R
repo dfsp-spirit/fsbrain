@@ -98,6 +98,8 @@ subject.atlas.agg <- function(vertex_morph_data, vertex_label_names, agg_fun = b
 #' @export
 group.agg.atlas.native <- function(subjects_dir, subjects_list, measure, hemi, atlas, agg_fun = mean, cache_file=NULL) {
 
+    check.subjectslist(subjects_list);
+
     if(! is.null(cache_file)) {
       if(file.exists(cache_file)) {
         e <- new.env();
@@ -119,6 +121,8 @@ group.agg.atlas.native <- function(subjects_dir, subjects_list, measure, hemi, a
     if (! dir.exists(subjects_dir)) {
         stop(sprintf("Subjects directory '%s' does not exist or cannot be accessed.\n", subjects_dir));
     }
+
+    check.subjectslist(subjects_list, subjects_dir=subjects_dir);
 
     agg_all_subjects = data.frame()
     for (subject_id in subjects_list) {
@@ -196,6 +200,8 @@ group.agg.atlas.native <- function(subjects_dir, subjects_list, measure, hemi, a
 #' @export
 group.agg.atlas.standard <- function(subjects_dir, subjects_list, measure, hemi, atlas, fwhm, agg_fun = mean, template_subject='fsaverage', cache_file=NULL) {
 
+  check.subjectslist(subjects_list);
+
   if(! is.null(cache_file)) {
     if(file.exists(cache_file)) {
       e <- new.env();
@@ -217,6 +223,8 @@ group.agg.atlas.standard <- function(subjects_dir, subjects_list, measure, hemi,
   if (! dir.exists(subjects_dir)) {
     stop(sprintf("Subjects directory '%s' does not exist or cannot be accessed.\n", subjects_dir));
   }
+
+  check.subjectslist(subjects_list, subjects_dir=subjects_dir);
 
   if (typeof(fwhm) != "character") {
     stop(sprintf("Parameter 'fwhm' must be of type 'character', but is '%s'.\n", typeof(fwhm)));

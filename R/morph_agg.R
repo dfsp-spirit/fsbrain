@@ -30,6 +30,8 @@ group.morph.agg.native <- function(subjects_dir, subjects_list, measure, hemi, a
     stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
   }
 
+  check.subjectslist(subjects_list, subjects_dir=subjects_dir);
+
   agg_all_subjects = data.frame();
   for (subject_id in subjects_list) {
       morph_data = subject.morph.native(subjects_dir, subject_id, measure, hemi, format=format, cortex_only=cortex_only);
@@ -93,6 +95,9 @@ group.morph.agg.standard <- function(subjects_dir, subjects_list, measure, hemi,
   if(!(hemi %in% c("lh", "rh", "both"))) {
     stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
   }
+
+  check.subjectslist(subjects_list, subjects_dir=subjects_dir);
+
   agg_all_subjects = data.frame();
   for (subject_id in subjects_list) {
     morph_data = subject.morph.standard(subjects_dir, subject_id, measure, hemi, fwhm=fwhm, template_subject=template_subject, format=format, cortex_only=cortex_only);
@@ -153,6 +158,8 @@ group.morph.agg.standard.vertex <- function(subjects_dir, subjects_list, measure
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
     }
 
+    check.subjectslist(subjects_list, subjects_dir=subjects_dir);
+
     if(split_by_hemi) {
         ret_list = list();
         if(hemi %in% c("lh", "both")) {
@@ -212,6 +219,9 @@ group.morph.agg.standard.vertex <- function(subjects_dir, subjects_list, measure
 #' @export
 group.multimorph.agg.standard <- function(subjects_dir, subjects_list, measures, hemis, fwhm, agg_fun = mean, template_subject='fsaverage', format='mgh', cast=TRUE, cortex_only=FALSE, agg_fun_extra_params=NULL) {
   agg_all_measures_and_hemis = data.frame();
+
+  check.subjectslist(subjects_list, subjects_dir=subjects_dir);
+
   for (hemi in hemis) {
     if(!(hemi %in% c("lh", "rh", "both"))) {
       stop(sprintf("Each entry in the parameter 'hemis' must be one of 'lh', 'rh' or 'both, but the current one is '%s'.\n", hemi));
@@ -260,6 +270,9 @@ group.multimorph.agg.standard <- function(subjects_dir, subjects_list, measures,
 #' @export
 group.multimorph.agg.native <- function(subjects_dir, subjects_list, measures, hemis, agg_fun = mean, format='curv', cast=TRUE, cortex_only=FALSE, agg_fun_extra_params=NULL) {
   agg_all_measures_and_hemis = data.frame();
+
+  check.subjectslist(subjects_list, subjects_dir=subjects_dir);
+
   for (hemi in hemis) {
     if(!(hemi %in% c("lh", "rh", "both"))) {
       stop(sprintf("Each entry in the parameter 'hemis' must be one of 'lh', 'rh' or 'both' but the current one is '%s'.\n", hemi));
