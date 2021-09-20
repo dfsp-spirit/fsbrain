@@ -362,6 +362,13 @@ check.subjectslist <- function(subjects_list, subjects_dir=NULL, report_name='su
         }
         if(length(subjects_list) != length(unique(subjects_list))) {
             warning(sprintf("The '%s' contains %d duplicate entries.\n", report_name, (length(subjects_list) - length(unique(subjects_list)))));
+            duplicates = c();
+            for(s in subjects_list) {
+                if(length(which(subjects_list == s)) > 1L) {
+                    duplicates = c(duplicates, s);
+                }
+            }
+            warning(sprintf(" Duplicates: %s.\n", paste(unique(duplicates), collapse = ", ")));
         }
         if(! is.null(subjects_dir)) {
             if(! dir.exists(subjects_dir)) {
