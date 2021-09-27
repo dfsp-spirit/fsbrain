@@ -296,15 +296,20 @@ group.morph.standard.sf <- function(filepath, df=TRUE) {
 }
 
 
-#' @title Write combined data for a group to a single MGH file.
+#' @title Reshape and write combined per-vertex data for a group to a single MGH file.
 #'
-#' @description Write morphometry data for a group into a single MGH or MGZ file.
+#' @description Write morphometry data for a group into a single MGH or MGZ file. In neuroimaging, the first 3 dimensions in the resulting 4D volume file are space, and the 4th is the time/subject dimension.
 #'
 #' @param filepath character string, path to the target file, should end with '.mgh' or '.mgz'.
 #'
-#' @param data numerical 4d matrix, with first dimension holding 1D data for all vertices of a subject, 2nd and 3rd dimension are of length 1, and 4th dimenions is for each subject.
+#' @param data numerical 2D matrix, with the rows identifying the subjects and the columns identifying the vertices.
 #'
 #' @note The file will contain no information on the subject identifiers. The data can be for one or both hemispheres. See \code{\link{group.morph.standard.sf}} to read the data back into R.
+#'
+#' @examples
+#'     # create per-vertex data for 255 subjects.
+#'     mat = matrix(rnorm(255 * 163842, 3.0, 0.5), nrow=255, ncol = 163842);
+#'     fsbrain::write.group.morph.standard.sf("~/group_pvd.mgz", mat);
 #'
 #' @export
 write.group.morph.standard.sf <- function(filepath, data) {
@@ -313,13 +318,18 @@ write.group.morph.standard.sf <- function(filepath, data) {
 }
 
 
-#' @title Convert group 1D data to array format.
+#' @title Convert group 2D data (1 vector per subject) to 4D array format.
 #'
-#' @description In general, 1D morphometry data for a group can be stored in a dataframe, a named list, or already a 4D array. This function will convert the given format to matrix format.
+#' @description In general, 1D morphometry data for a group can be stored in a dataframe, a named list, or already a 4D array. This function will convert the given format to 4D array format.
 #'
-#' @param data 4D array, named list, or data.frame of group data. The data is expected to be a vector (1D) per subject, as suitable for surface based (vertex-wise) measures.
+#' @param data 2D matrix, named list, or data.frame of group data. The data is expected to be a vector (1D) per subject, as suitable for surface based (vertex-wise) measures. Subjects in rows, per-vertex data in columns.
 #'
-#' @return the array form of the group data. No values are changed, this is only a different data type.
+#' @return the 4D array form of the group data. No values are changed, this is only a different data layout. In neuroimaging, the first 3 dimensions are space, and the 4th is the time/subject dimension.
+#'
+#' @examples
+#'     create per-vertex data for 255 subjects.
+#'     mat = matrix(rnorm(255 * 163842, 3.0, 0.5), nrow=255, ncol = 163842);
+#'     fsbrain:::group.data.to.array(mat);
 #'
 #' @keywords internal
 group.data.to.array <- function(data) {
@@ -334,11 +344,17 @@ group.data.to.array <- function(data) {
         }
         dim(data) = c(ddim[1], 1, 1, ddim[2]);
     }
+    if(is.matrix(data)) {
+        ddim = dim(data);
+        data = array(data=data, dim = c(ddim[1], 1, 1, ddim[2]));
+    }
+
+    # Check output format.
     if(! is.array(data)) {
-        stop("Parameter 'data' must be a matrix, named list, or data.frame.");
+        stop("Output data must be an array, conversion failed.");
     }
     if(length(dim(data)) != 4L) {
-        stop("Data must have 4 dimensions.");
+        stop(sprintf("Output data must have 4 dimensions but has %d.\n", length(dim(data))));
     }
     return(data);
 }

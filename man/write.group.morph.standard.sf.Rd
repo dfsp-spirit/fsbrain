@@ -2,18 +2,24 @@
 % Please edit documentation in R/fsdir_abstraction_group.R
 \name{write.group.morph.standard.sf}
 \alias{write.group.morph.standard.sf}
-\title{Write combined data for a group to a single MGH file.}
+\title{Reshape and write combined per-vertex data for a group to a single MGH file.}
 \usage{
 write.group.morph.standard.sf(filepath, data)
 }
 \arguments{
 \item{filepath}{character string, path to the target file, should end with '.mgh' or '.mgz'.}
 
-\item{data}{numerical 4d matrix, with first dimension holding 1D data for all vertices of a subject, 2nd and 3rd dimension are of length 1, and 4th dimenions is for each subject.}
+\item{data}{numerical 2D matrix, with the rows identifying the subjects and the columns identifying the vertices.}
 }
 \description{
-Write morphometry data for a group into a single MGH or MGZ file.
+Write morphometry data for a group into a single MGH or MGZ file. In neuroimaging, the first 3 dimensions in the resulting 4D volume file are space, and the 4th is the time/subject dimension.
 }
 \note{
 The file will contain no information on the subject identifiers. The data can be for one or both hemispheres. See \code{\link{group.morph.standard.sf}} to read the data back into R.
+}
+\examples{
+    # create per-vertex data for 255 subjects.
+    mat = matrix(rnorm(255 * 163842, 3.0, 0.5), nrow=255, ncol = 163842);
+    fsbrain::write.group.morph.standard.sf("~/group_pvd.mgz", mat);
+
 }
