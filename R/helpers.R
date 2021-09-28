@@ -25,7 +25,7 @@ demo <- function() {
   fsbrain::download_optional_data();
   sjd = get_optional_data_filepath("subjects_dir");
   sj = "subject1";
-  return(invisible(vis.subject.morph.native(sjd, sj, "thickness")));
+  return(invisible(vis.subject.morph.native(sjd, sj, "thickness", cortex_only = T, draw_colorbar = T)));
 }
 
 
