@@ -104,7 +104,7 @@ group.agg.atlas.native <- function(subjects_dir, subjects_list, measure, hemi, a
 
     if(hemi == "split") {
       lh_df = group.agg.atlas.native(subjects_dir, subjects_list, measure, "lh", atlas, agg_fun = agg_fun);
-      rh_df = group.agg.atlas.native(subjects_dir, subjects_list, measure, "lh", atlas, agg_fun = agg_fun);
+      rh_df = group.agg.atlas.native(subjects_dir, subjects_list, measure, "rh", atlas, agg_fun = agg_fun);
       subject = lh_df$subject;
       lh_df$subject = NULL;
       rh_df$subject = NULL;
