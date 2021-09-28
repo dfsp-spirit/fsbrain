@@ -69,7 +69,7 @@ subject.atlas.agg <- function(vertex_morph_data, vertex_label_names, agg_fun = b
 #'
 #' @param measure, string. Name of the vertex-wise measure of morphometry data file. E.g., "area" or "thickness". Used to construct the name of the morphometry file to be loaded.
 #'
-#' @param hemi, string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded. If set to 'both', combined data for 'lh' and 'rh' will be used.
+#' @param hemi, string, one of 'lh', 'rh', 'split', or 'both'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded. If set to 'both', combined data for 'lh' and 'rh' will be used. If 'split', the data for hte two hemispheres will go into seprate columns, with column names having 'lh_' and 'rh_' prefixes.
 #'
 #' @param atlas, string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.
 #'
@@ -98,9 +98,28 @@ subject.atlas.agg <- function(vertex_morph_data, vertex_label_names, agg_fun = b
 #' @export
 group.agg.atlas.native <- function(subjects_dir, subjects_list, measure, hemi, atlas, agg_fun = mean, cache_file=NULL) {
 
+    if(!(hemi %in% c("lh", "rh", "both", "split"))) {
+      stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh', 'split' or 'both' but is '%s'.\n", hemi));
+    }
+
+    if(hemi == "split") {
+      lh_df = group.agg.atlas.native(subjects_dir, subjects_list, measure, "lh", atlas, agg_fun = agg_fun);
+      rh_df = group.agg.atlas.native(subjects_dir, subjects_list, measure, "lh", atlas, agg_fun = agg_fun);
+      subject = lh_df$subject;
+      lh_df$subject = NULL;
+      rh_df$subject = NULL;
+      colnames(lh_df) = paste('lh_', colnames(lh_df), sep="");
+      colnames(rh_df) = paste('rh_', colnames(rh_df), sep="");
+      return(cbind(subject, lh_df, rh_df));
+
+    }
+
     check.subjectslist(subjects_list);
 
     if(! is.null(cache_file)) {
+      if(hemi == "split") {
+        stop("Parameter 'cache_file' not supported if hemi is 'split', must be NULL.");
+      }
       if(file.exists(cache_file)) {
         e <- new.env();
         object_names = load(cache_file, envir = e);
@@ -114,9 +133,6 @@ group.agg.atlas.native <- function(subjects_dir, subjects_list, measure, hemi, a
       }
     }
 
-    if(!(hemi %in% c("lh", "rh", "both"))) {
-        stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
-    }
 
     if (! dir.exists(subjects_dir)) {
         stop(sprintf("Subjects directory '%s' does not exist or cannot be accessed.\n", subjects_dir));
