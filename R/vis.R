@@ -73,6 +73,26 @@ vis.subject.morph.native <- function(subjects_dir, subject_id, measure, hemi="bo
 
     coloredmeshes = coloredmeshes.from.color(subjects_dir, subject_id, both_hemi_colors, hemi, surface=surface, metadata=list('src_data'=measure_data, 'map'=metadata$map, 'makecmap_options'=makecmap_options));
 
+    if(hasIn(rglactions, c('replace_final_colors_by_vertex'))) {
+        if(hemi %in% c('both', 'lh')) {
+            if(hasIn(rglactions, c('replace_final_colors_by_vertex', 'lh'))) {
+                for(color in names(rglactions$replace_final_colors_by_vertex$lh)) {
+                    vert_indices = rglactions$replace_final_colors_by_vertex$lh[[color]];
+                    coloredmeshes$lh$col[vert_indices] = color;
+                }
+            }
+        }
+        if(hemi %in% c('both', 'rh')) {
+            if(hasIn(rglactions, c('replace_final_colors_by_vertex', 'rh'))) {
+                for(color in names(rglactions$replace_final_colors_by_vertex$rh)) {
+                    vert_indices = rglactions$replace_final_colors_by_vertex$rh[[color]];
+                    coloredmeshes$rh$col[vert_indices] = color;
+                }
+            }
+        }
+
+    }
+
     if(hasIn(rglactions, c('no_vis'))) {
         return(coloredmeshes);
     }
@@ -757,9 +777,11 @@ vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi='both', surf
 #'
 #' @param rh_region_value_list named list. A list for the right hemisphere in which the names are atlas regions, and the values are the value to write to all vertices of that region.
 #'
-#' @param value_for_unlisted_regions numerical scalar or `NaN`, the value to assign to regions which do not occur in the region_value_lists. Defaults to `NaN`.
+#' @param value_for_unlisted_regions numerical scalar or `NA`, the value to assign to regions which do not occur in the region_value_lists. Defaults to `NA`.
 #'
 #' @param silent logical, whether to suppress mapping info in case of unnamed region value lists (see 'lh_region_value_list' description).
+#'
+#' @param border logical, whether to add a black border around the regions. Alternatively, the parameter can be given as a named list with entries 'color' and 'expand_inwards', where the latter defines the borders thickness. E.g., \code{border = list('color'='#FF0000', 'expand_inwards'=2L)}. Border computation is slow, sorry.
 #'
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
@@ -786,8 +808,18 @@ vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi='both', surf
 #'
 #' @importFrom grDevices heat.colors
 #' @export
-vis.region.values.on.subject <- function(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, surface="white", views=c('t4'), rgloptions=rglo(), rglactions = list(), value_for_unlisted_regions = NA, draw_colorbar = FALSE, makecmap_options=mkco.heat(), bg=NULL, silent=FALSE, style = "default") {
+vis.region.values.on.subject <- function(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, surface="white", views=c('t4'), rgloptions=rglo(), rglactions = list(), value_for_unlisted_regions = NA, draw_colorbar = FALSE, makecmap_options=mkco.heat(), bg=NULL, silent=FALSE, style = "default", border=NULL) {
     morph_like_data = spread.values.over.subject(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, value_for_unlisted_regions = value_for_unlisted_regions, silent=silent);
+    if(! is.null(border)) {
+        border_expand_inwards = getIn(border, 'expand_inwards', default = 0L);
+        border_color = getIn(border, 'colors', default = "#000000");
+        border_verts = subject.annot.border(subjects_dir, subject_id, hemi="both", atlas=atlas, expand_inwards=border_expand_inwards); # these are by region, we use 'unlist' in the next line to merge all of them together.
+        lh_replace_list = list();
+        lh_replace_list[[border_color]]=unlist(unname(border_verts$lh));
+        rh_replace_list = list();
+        rh_replace_list[[border_color]]=unlist(unname(border_verts$rh));
+        rglactions = list('replace_final_colors_by_vertex'=list('lh'=lh_replace_list, 'rh'=rh_replace_list));
+    }
     return(invisible(vis.data.on.subject(subjects_dir, subject_id, morph_like_data$lh, morph_like_data$rh, surface=surface, views=views, rgloptions=rgloptions, rglactions=rglactions, draw_colorbar = draw_colorbar, makecmap_options=makecmap_options, bg=bg, style = style)));
 }
 

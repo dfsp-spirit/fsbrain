@@ -188,6 +188,40 @@ annot.outline <- function(annotdata, surface_mesh, background="white", silent=TR
 }
 
 
+#' @title Compute annot border vertices.
+#'
+#' @inheritParams subject.annot
+#'
+#' @inheritParams annot.outline
+#'
+#' @return hemilist of integer vectors, the vertices in the border
+subject.annot.border <- function (subjects_dir, subject_id, hemi, atlas, surface="white", expand_inwards=0L, limit_to_regions=NULL) {
+  if (!(hemi %in% c("lh", "rh", "both"))) {
+    stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh' or 'both' but is '%s'.\n", hemi));
+  }
+  if (hemi == "both") {
+    res = list();
+    res$lh = subject.annot.border(subjects_dir, subject_id, hemi="lh", atlas=atlas, surface=surface, expand_inwards=expand_inwards, limit_to_regions=limit_to_regions);
+    res$rh = subject.annot.border(subjects_dir, subject_id, hemi="rh", atlas=atlas, surface=surface, expand_inwards=expand_inwards, limit_to_regions=limit_to_regions);
+    return(res);
+  }
+  else {
+    annot_file = file.path(subjects_dir, subject_id, "label", sprintf("%s.%s.annot", hemi, atlas));
+    if (!file.exists(annot_file)) {
+      stop(sprintf("Annotation file '%s' for subject '%s' atlas '%s' hemi '%s' cannot be accessed.\n", annot_file, subject_id, atlas, hemi));
+    }
+    annot = freesurferformats::read.fs.annot(annot_file);
+    surface_file = file.path(subjects_dir, subject_id, "surf", sprintf("%s.%s", hemi, surface));
+    if (!file.exists(surface_file)) {
+      stop(sprintf("Surface file '%s' for subject '%s' surface '%s' hemi '%s' cannot be accessed.\n", surface_file, subject_id, surface, hemi));
+    }
+    surface = freesurferformats::read.fs.surface(surface_file);
+    border_vertices = annot.outline.border.vertices(annot, surface, expand_inwards=expand_inwards, limit_to_regions=limit_to_regions);
+    return(border_vertices);
+  }
+}
+
+
 #' @title Compute the border vertices for each region in an annot.
 #'
 #' @inheritParams annot.outline
@@ -732,7 +766,7 @@ read.colorcsv <- function(filepath) {
 getIn <- function(named_list, listkeys, default=NULL) {
   num_keys = length(listkeys);
   if(length(named_list) < 1L | num_keys  < 1L) {
-    return(NULL);
+    return(default);
   }
   nlist = named_list;
   current_key_index = 0L;
@@ -740,18 +774,18 @@ getIn <- function(named_list, listkeys, default=NULL) {
     current_key_index = current_key_index + 1L;
     if(current_key_index < num_keys) {
       if(!is.list(nlist)) {
-        return(NULL);
+        return(default);
       }
       if(lkey %in% names(nlist)) {
         nlist = nlist[[lkey]];
       } else {
-        return(NULL);
+        return(default);
       }
     } else {
       if(lkey %in% names(nlist)) {
         return(nlist[[lkey]]);
       } else {
-        return(NULL);
+        return(default);
       }
     }
   }

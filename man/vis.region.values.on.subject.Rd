@@ -19,7 +19,8 @@ vis.region.values.on.subject(
   makecmap_options = mkco.heat(),
   bg = NULL,
   silent = FALSE,
-  style = "default"
+  style = "default",
+  border = NULL
 )
 }
 \arguments{
@@ -41,7 +42,7 @@ vis.region.values.on.subject(
 
 \item{rglactions}{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action. The following example clips outliers in the data before plotting and writes a screenshot in PNG format: \code{rglactions = list("snapshot_png"="~/fsbrain.png", "clip_data"=c(0.05, 0.95))}. See \code{\link{rglactions}}.}
 
-\item{value_for_unlisted_regions}{numerical scalar or `NaN`, the value to assign to regions which do not occur in the region_value_lists. Defaults to `NaN`.}
+\item{value_for_unlisted_regions}{numerical scalar or `NA`, the value to assign to regions which do not occur in the region_value_lists. Defaults to `NA`.}
 
 \item{draw_colorbar}{logical or one of the character strings 'vertical' or 'horizontal', whether to draw a colorbar. Notice: the colorbar is drawn to a separate subplot, and this only works if there is enough space for it, i.e., the plot resolution must be high enough. You may have to increase the plot size for the colorbar to show up, see the vignette for instructions. Defaults to `FALSE`. See  \code{\link[fsbrain]{coloredmesh.plot.colorbar.separate}} for an alternative.}
 
@@ -52,6 +53,8 @@ vis.region.values.on.subject(
 \item{silent}{logical, whether to suppress mapping info in case of unnamed region value lists (see 'lh_region_value_list' description).}
 
 \item{style}{character string, a rendering style, e.g., 'default', 'shiny' or 'semitransparent'.}
+
+\item{border}{logical, whether to add a black border around the regions. Alternatively, the parameter can be given as a named list with entries 'color' and 'expand_inwards', where the latter defines the borders thickness. E.g., \code{border = list('color'='#FF0000', 'expand_inwards'=2L)}. Border computation is slow, sorry.}
 }
 \value{
 list of coloredmeshes. The coloredmeshes used for the visualization.
