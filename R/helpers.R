@@ -534,6 +534,81 @@ vis.paths <- function(coords_list, path_color = "#FF0000") {
 }
 
 
+#sjd = fsaverage.path(T);
+#sj = "fsaverage";
+#mesh = subject.surface(sjd, sj, hemi="lh");
+#lab = subject.label(sjd, sj, "cortex", hemi = "lh");
+#sm = submesh.vertex(mesh, lab);
+
+#' @title Create a submesh including on the given vertices.
+#'
+#' @examples
+#'     mesh = subject.surface()
+#'
+#' @keywords internal
+submesh.vertex <- function(surface_mesh, old_vertex_indices_to_use) {
+  nv_new = length(old_vertex_indices_to_use);
+  nv_old = nrow(surface_mesh$vertices);
+  new_verts = matrix(data=rep(0.0, nv_new*3), nrow=nv_new);
+  vert_mapping = rep(NA, nv_old);
+
+  # Create a map from the old vertex indices to the new ones. Needed to construct faces later.
+  mapped_new_vertex_index = 1L;
+  vertex_is_retained = rep(FALSE, nv_old);
+  vertex_is_retained[old_vertex_indices_to_use] = TRUE;
+  for(old_vert_idx in seq(nv_old)) {
+    if(vertex_is_retained[old_vert_idx]) {
+      vert_mapping[old_vert_idx] = mapped_new_vertex_index;
+      mapped_new_vertex_index = mapped_new_vertex_index + 1L;
+    } # no 'else' needed, the rest stays at NA.
+  }
+
+  # Use the subset of the old vertices (simply grab coords).
+  new_vertices = surface_mesh$vertices[old_vertex_indices_to_use, ];
+
+  # Now for the faces.
+  nf_old = nrow(surface_mesh$faces);
+  new_faces = matrix(rep(NA, nf_old*3), ncol=3, nrow=nf_old); #over-allocate and remove invalid ones later.
+  #new_faces = matrix(ncol=3, nrow=0);
+
+  new_face_idx = 0L;
+  for(old_face_idx in seq(nf_old)) {
+    new_face_idx = new_face_idx + 1L;
+    old_face_indices = surface_mesh$faces[old_face_idx, ];
+    new_face_indices = vert_mapping[old_face_indices];
+    #cat(sprintf("Checking old face %d with old verts %d %d %d and new verts %d %d %d.\n", old_face_idx, old_face_indices[1], old_face_indices[2], old_face_indices[3], new_face_indices[1], new_face_indices[2], new_face_indices[3]));
+    new_faces[new_face_idx, ] = new_face_indices;
+
+    #if(! any(is.na(new_face_indices))) {
+    #  # All vertices of the old face have a valid mapping in the new mesh, add the new face.
+    #  new_faces = rbind(new_faces, new_face_indices);
+    #}
+  }
+
+  df = data.frame(new_faces);
+
+  new_faces = data.matrix(df[complete.cases(df),]);
+
+  new_mesh = list('vertices'=new_vertices, 'faces'=new_faces); # the sub mesh
+  class(new_mesh) = c(class(new_mesh), 'fs.surface');
+  return(new_mesh);
+}
+
+
+
+
+#' @keywords internal
+label.border.fast <- function(surface_mesh, label) {
+  if(freesurferformats::is.fs.label(label)) {
+    label_vertices = label$vertexdata$vertex_index;
+  } else {
+    label_vertices = label;
+  }
+
+  label_mesh = submesh.vertex(surface_mesh, label_vertices);
+  #Rvcg::vcgBorder()
+}
+
 #' @title Compute border of a label.
 #'
 #' @description Compute the border of a label (i.e., a subset of the vertices of a mesh). The border thickness can be specified. Useful to draw the outline of a region, e.g., a significant cluster on the surface or a part of a ROI from a brain parcellation.
@@ -564,6 +639,12 @@ label.border <- function(surface_mesh, label, inner_only=TRUE, expand_inwards=0L
 
     if(length(label_vertices) == 0L) {
         return(list("vertices"=c(), "edges"=c(), "faces"=c()));
+    }
+
+    if(expand_inwards == 0L & derive == FALSE & inner_only == TRUE) {
+      if(requireNamespace("Rvcg", quietly = TRUE)) {
+        return(label.border.fast(surface_mesh, label));
+      }
     }
 
     if(inner_only) {
