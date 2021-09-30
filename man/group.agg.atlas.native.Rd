@@ -21,7 +21,7 @@ group.agg.atlas.native(
 
 \item{measure, }{string. Name of the vertex-wise measure of morphometry data file. E.g., "area" or "thickness". Used to construct the name of the morphometry file to be loaded.}
 
-\item{hemi, }{string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded. If set to 'both', combined data for 'lh' and 'rh' will be used.}
+\item{hemi, }{string, one of 'lh', 'rh', 'split', or 'both'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded. If set to 'both', combined data for 'lh' and 'rh' will be used. If 'split', the data for hte two hemispheres will go into seprate columns, with column names having 'lh_' and 'rh_' prefixes.}
 
 \item{atlas, }{string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.}
 

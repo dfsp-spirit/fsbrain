@@ -13,11 +13,12 @@ is.hemilist(x)
 whether 'x' is a hemilist
 }
 \description{
-A hemilist is a named list with entries 'lh' and/or 'rh'.
+A hemilist is a named list with entries 'lh' and/or 'rh', see \code{\link{hemilist}}.
 }
 \seealso{
 Other hemilist functions: 
 \code{\link{hemilist.derive.hemi}()},
+\code{\link{hemilist.from.prefixed.list}()},
 \code{\link{hemilist.get.combined.data}()},
 \code{\link{hemilist.unwrap}()},
 \code{\link{hemilist.wrap}()},

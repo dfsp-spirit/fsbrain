@@ -26,6 +26,7 @@ Simply runs \code{list('lh' = lh_data, 'rh' = rh_data)}: A hemilist (short for h
 \seealso{
 Other hemilist functions: 
 \code{\link{hemilist.derive.hemi}()},
+\code{\link{hemilist.from.prefixed.list}()},
 \code{\link{hemilist.get.combined.data}()},
 \code{\link{hemilist.unwrap}()},
 \code{\link{hemilist.wrap}()},

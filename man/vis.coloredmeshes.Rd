@@ -21,7 +21,7 @@ vis.coloredmeshes(
 
 \item{skip_all_na}{logical, whether to skip (i.e., not render) meshes in the list that have the property 'render' set to FALSE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.}
 
-\item{style, }{a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.}
+\item{style}{a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.}
 
 \item{rgloptions}{option list passed to \code{\link{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))};}
 

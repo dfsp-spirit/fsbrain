@@ -7,7 +7,7 @@
 hemilist.unwrap(hemi_list, hemi = NULL, allow_null_list = FALSE)
 }
 \arguments{
-\item{hemi_list}{named list, can have entries 'lh' and/or 'rh'}
+\item{hemi_list}{named list, can have entries 'lh' and/or 'rh', see \code{\link{hemilist}}.}
 
 \item{hemi}{character string, the hemi data name to retrieve from the list. Can be NULL if the list only has a single entry.}
 
@@ -22,6 +22,7 @@ Unwrap hemi data from a named hemi list.
 \seealso{
 Other hemilist functions: 
 \code{\link{hemilist.derive.hemi}()},
+\code{\link{hemilist.from.prefixed.list}()},
 \code{\link{hemilist.get.combined.data}()},
 \code{\link{hemilist.wrap}()},
 \code{\link{hemilist}()},

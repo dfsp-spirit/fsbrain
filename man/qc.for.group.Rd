@@ -15,7 +15,7 @@ qc.for.group(subjects_dir, subjects_list, measure, atlas, hemi = "both", ...)
 
 \item{atlas}{string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.}
 
-\item{hemi}{string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded. If set to 'both', combined data for 'lh' and 'rh' will be used.}
+\item{hemi}{string, one of 'lh', 'rh', 'split', or 'both'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded. If set to 'both', combined data for 'lh' and 'rh' will be used. If 'split', the data for hte two hemispheres will go into seprate columns, with column names having 'lh_' and 'rh_' prefixes.}
 
 \item{...}{parameters passed to \code{\link[fsbrain]{qc.from.regionwise.df}}.}
 }
