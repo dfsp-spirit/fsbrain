@@ -100,9 +100,9 @@ mesh.vertex.included.faces <- function(surface_mesh, source_vertices) {
 #'
 #' @description For each region in an atlas, compute the outer border and color the respective vertices in the region-specific color from the annot's colortable.
 #'
-#' @param annotdata an annotation, as returned by functions like \code{\link[fsbrain]{subject.annot}}.
+#' @param annotdata an annotation, as returned by functions like \code{\link[fsbrain]{subject.annot}}. If a character string, interpreted as a path to a file containing such data, and loaded with \code{freesurferformats::read.fs.annot}
 #'
-#' @param surface_mesh brain surface mesh, as returned by functions like \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}.
+#' @param surface_mesh brain surface mesh, as returned by functions like \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}. If a character string, interpreted as a path to a file containing such data, and loaded with \code{freesurferformats::read.fs.surface}
 #'
 #' @param background color, the background color to assign to the non-border parts of the regions. Defaults to 'white'.
 #'
@@ -124,10 +124,16 @@ mesh.vertex.included.faces <- function(surface_mesh, source_vertices) {
 # @importFrom doParallel registerDoParallel
 annot.outline <- function(annotdata, surface_mesh, background="white", silent=TRUE, expand_inwards=0L, outline_color=NULL, limit_to_regions=NULL) {
 
+    if(is.character(annotdata)) {
+      annotdate = freesurferformats::read.fs.annot(annotdata);
+    }
     if(! freesurferformats::is.fs.annot(annotdata)) {
       stop("Parameter 'annotdata' must be an fs.annot instance.");
     }
 
+  if(is.character(surface_mesh)) {
+    surface_mesh = freesurferformats::read.fs.surface(surface_mesh);
+  }
     if(! freesurferformats::is.fs.surface(surface_mesh)) {
       stop("Parameter 'surface_mesh' must be an fs.surface instance.");
     }
@@ -179,6 +185,66 @@ annot.outline <- function(annotdata, surface_mesh, background="white", silent=TR
         }
     }
     return(col);
+}
+
+
+#' @title Compute the border vertices for each region in an annot.
+#'
+#' @inheritParams annot.outline
+#'
+#' @return named list, the keys are the region names and the values are vectors of integers encoding vertex indices.
+#'
+#' @export
+annot.outline.border.vertices <- function(annotdata, surface_mesh, silent=TRUE, expand_inwards=0L, limit_to_regions=NULL) {
+
+  if(is.character(annotdata)) {
+    annotdate = freesurferformats::read.fs.annot(annotdata);
+  }
+  if(! freesurferformats::is.fs.annot(annotdata)) {
+    stop("Parameter 'annotdata' must be an fs.annot instance.");
+  }
+
+  if(is.character(surface_mesh)) {
+    surface_mesh = freesurferformats::read.fs.surface(surface_mesh);
+  }
+  if(! freesurferformats::is.fs.surface(surface_mesh)) {
+    stop("Parameter 'surface_mesh' must be an fs.surface instance.");
+  }
+
+  if(length(annotdata$vertices) != nrow(surface_mesh$vertices)) {
+    stop(sprintf("Annotation is for %d vertices but mesh contains %d, vertex counts must match.\n", length(annotdata$vertices), nrow(surface_mesh$vertices)));
+  }
+
+  border_vertices = list();
+
+  for(region_idx in seq_len(annotdata$colortable$num_entries)) {
+    region_name = annotdata$colortable$struct_names[[region_idx]];
+
+    region_index_in_limit_to_regions_parameter = NULL;
+
+    if(! is.null(limit_to_regions)) {
+      if(! is.character(limit_to_regions)) {
+        stop("Parameter 'limit_to_regions' must be NULL or a vector of character strings.");
+      }
+      if(! region_name %in% limit_to_regions) {
+        next;
+      } else {
+        region_index_in_limit_to_regions_parameter = which(limit_to_regions == region_name);
+        if(length(region_index_in_limit_to_regions_parameter) != 1L) {
+          stop("Regions in parameter 'limit_to_regions' must be unique.");
+        }
+      }
+    }
+
+    if(!silent) {
+      message(sprintf("Computing outline for region %d of %d: '%s'\n", region_idx, annotdata$colortable$num_entries, region_name));
+    }
+    label_vertices = label.from.annotdata(annotdata, region_name, error_on_invalid_region = FALSE);
+    label_border = label.border(surface_mesh, label_vertices, expand_inwards=expand_inwards);
+    border_vertices[[region_name]] = label_border$vertices;
+
+  }
+  return(border_vertices);
 }
 
 
