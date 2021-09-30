@@ -812,7 +812,7 @@ vis.region.values.on.subject <- function(subjects_dir, subject_id, atlas, lh_reg
     morph_like_data = spread.values.over.subject(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, value_for_unlisted_regions = value_for_unlisted_regions, silent=silent);
     if(! is.null(border)) {
         border_expand_inwards = getIn(border, 'expand_inwards', default = 0L);
-        border_color = getIn(border, 'colors', default = "#000000");
+        border_color = getIn(border, 'color', default = "#000000");
         border_verts = subject.annot.border(subjects_dir, subject_id, hemi="both", atlas=atlas, expand_inwards=border_expand_inwards); # these are by region, we use 'unlist' in the next line to merge all of them together.
         lh_replace_list = list();
         lh_replace_list[[border_color]]=unlist(unname(border_verts$lh));
