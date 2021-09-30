@@ -586,8 +586,7 @@ submesh.vertex <- function(surface_mesh, old_vertex_indices_to_use) {
   }
 
   df = data.frame(new_faces);
-
-  new_faces = data.matrix(df[complete.cases(df),]);
+  new_faces = data.matrix(df[complete.cases(df),]); # remove all faces containing an NA vertex
 
   new_mesh = list('vertices'=new_vertices, 'faces'=new_faces); # the sub mesh
   class(new_mesh) = c(class(new_mesh), 'fs.surface');
