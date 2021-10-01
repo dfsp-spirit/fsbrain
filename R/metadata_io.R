@@ -543,7 +543,9 @@ read.md.subjects.from.fsgd <- function(filepath) {
 #'
 #' @param output_path character string, existing directory into which to write the QDEC files. If the last directory level does not exist, it will be created.
 #'
-#' @param long logical, whether this is for a longitudinal run. If so, the df must contain a column named 'fsid-base' as the second column.
+#' @param long logical, whether this is for a longitudinal run. If so, the df must contain a column named 'fsid-base' as the second column. It must also contain some column that gives the inter-scan time (from this scan timepoint to the previous one). The time unit (years, days, ...) is up to you, but typically one is interested in yearly change, the unit should be years. The name of the column (e.g., 'years') must be given to 'mris_slopes' later on the command line with the \code{--time <column_name>} argument.
+#'
+#' @param long_timecolumn character string, the name of the column holding the inter-scan time. Ignored unless parameter \code{long} is \code{TRUE}. See the description for parameter \code{long} for details.
 #'
 #' @param add_fake_level2 logical, whether to add a 2nd fake level to the level files of factors with only a single level. Such factors make little sense, but QDEC refuses to open the resulting files at all in such a case, which seems a bit overkill. If TRUE, a 2nd level named 'level2' will be added so that one can open the output in QDEC.
 #'
@@ -558,7 +560,7 @@ read.md.subjects.from.fsgd <- function(filepath) {
 #' }
 #' @importFrom utils write.table
 #' @export
-demographics.to.qdec.table.dat <- function(df, output_path=".", long=FALSE, add_fake_level2=FALSE) {
+demographics.to.qdec.table.dat <- function(df, output_path=".", long=FALSE, add_fake_level2=FALSE, long_timecolumn="years") {
   if(! dir.exists(output_path)) {
     dir.create(output_path); # create paths, but only non-recursively.
   }
@@ -569,14 +571,17 @@ demographics.to.qdec.table.dat <- function(df, output_path=".", long=FALSE, add_
   # Check for required columns.
   required_columns = c("fsid");
   if(long) {
-    required_columns = c(required_columns, "fsid-base");
+    required_columns = c(required_columns, "fsid-base", long_timecolumn);
   }
   for(reqcol in required_columns) {
     if(! (reqcol %in% colnames(df))) {
       if(reqcol == "fsid-base") {
         if("fsid.base" %in% colnames(df)) {
-          warning("A column named 'fsid.base' was found in the dataframe. Was is renamed on import from 'fsid-base'? See the documentation for this function for more hints.");
+          warning("A column named 'fsid.base' was found in the dataframe but requird column 'fsid-base' is missing. Was it maybe accidentaly renamed on import by R functions to create a valid R variable name? See the note in the documentation for this function for more hints on how to avoid that.");
         }
+      }
+      if(reqcol == long_timecolumn) {
+        warning(sprintf("A time column giving the inter-scan time is required for a longitudinal table but was not found. Expected column name '%s' for this column, use parameter 'long_timecolumn' to adapt the name.\n", long_timecolumn));
       }
       stop(sprintf("The data.frame in parameter 'df' must contain a column named '%s'.\n", reqcol));
     }

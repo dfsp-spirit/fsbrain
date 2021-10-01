@@ -8,7 +8,8 @@ demographics.to.qdec.table.dat(
   df,
   output_path = ".",
   long = FALSE,
-  add_fake_level2 = FALSE
+  add_fake_level2 = FALSE,
+  long_timecolumn = "years"
 )
 }
 \arguments{
@@ -16,9 +17,11 @@ demographics.to.qdec.table.dat(
 
 \item{output_path}{character string, existing directory into which to write the QDEC files. If the last directory level does not exist, it will be created.}
 
-\item{long}{logical, whether this is for a longitudinal run. If so, the df must contain a column named 'fsid-base' as the second column.}
+\item{long}{logical, whether this is for a longitudinal run. If so, the df must contain a column named 'fsid-base' as the second column. It must also contain some column that gives the inter-scan time (from this scan timepoint to the previous one). The time unit (years, days, ...) is up to you, but typically one is interested in yearly change, the unit should be years. The name of the column (e.g., 'years') must be given to 'mris_slopes' later on the command line with the \code{--time <column_name>} argument.}
 
 \item{add_fake_level2}{logical, whether to add a 2nd fake level to the level files of factors with only a single level. Such factors make little sense, but QDEC refuses to open the resulting files at all in such a case, which seems a bit overkill. If TRUE, a 2nd level named 'level2' will be added so that one can open the output in QDEC.}
+
+\item{long_timecolumn}{character string, the name of the column holding the inter-scan time. Ignored unless parameter \code{long} is \code{TRUE}. See the description for parameter \code{long} for details.}
 }
 \description{
 This creates the `qdec.table.dat` and all required related files (the factor level files) in a directory.
