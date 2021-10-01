@@ -625,4 +625,41 @@ demographics.to.qdec.table.dat <- function(df, output_path=".", long=FALSE, add_
 }
 
 
+#' @title Find completely run FreeSurfer long subjects in a recon-all long output folder.
+#'
+#' @description This finds all subjects for which the FreeSurfer long pipeline finished. It can work without a subjects file, by scanning the directory names to find all potential subjects. It checks only whether the expected folder for each subject exists. For a subject named 'subject1' and 2 timepoints, these folders are checked for existence: subject1, subject1_MR1, subject1_MR2, subject1_MR1.long.subject1, subject1_MR2.long.subject1
+#'
+#' @param subjects_dir char, the recon-all long output directory
+#'
+#' @param subjects_to_check a vector of chars, the subject names (the cross-sectional names, without the '_MR1' or '_MR2' or 'long' suffixes). If NULL, the folder will be scanned for subjects, by looking for all '_MR1' folders and stripping the '_MR1' suffix.
+#'
+#' @param timepoints vector of integers, the timepoints to check. E.g., \code{c(1,2)} or \code{seq.int(2)} if you want to check scan timepoints '_MR1' and 'MR2'.
+#'
+#' @return a named list with entries 'subjects_okay' and 'subjects_missing_dirs'. Each of these two keys contains a vector of character strings, the respective subjects (a subset if 'subjects_to_check'). In 'subjects_okay' are all subjects for which the expected long directories were found, the rest is in 'subjects_missing_dirs'.
+#'
+#' @keywords internal
+fslong.subjects.finished <- function(subjects_dir, subjects_to_check=NULL, timepoints=seq.int(2)) {
+  if(! dir.exists(subjects_dir)) {
+    stop("The subjects_dir does not exist or cannot be read.");
+  }
+
+  # Let's figure out the subjects ourselves. We scan all directories that end with '_MR1' and strip that suffix.
+  if(is.null(subjects_to_check)) {
+    potential_subject_dirs_files = list.files(path=subjects_dir, pattern="_MR1$");
+    is_existing_dir = dir.exists(file.path(subjects_dir, potential_subject_dirs_files));
+    potential_subject_dirs = potential_subject_dirs_files[is_existing_dir];
+    potential_subject_dirs = potential_subject_dirs[nchar(potential_subject_dirs) > 3L]; # After we strip the '_MR1', something has to be left.
+    subjects_to_check = substring(potential_subject_dirs, 1L, nchar(potential_subject_dirs) - 4L);
+  }
+
+  subject_okay = rep(TRUE, length(subjects_to_check));
+  for(tp in timepoints) {
+    tp_suffix = sprintf("_MR%d", tp);
+    subject_okay[which(!dir.exists(file.path(subjects_dir, paste(subjects_to_check, tp_suffix, sep=""))))] = FALSE;
+
+    tp_long_suffix = sprintf("_MR%d.long.%s", tp, subjects_to_check);
+    subject_okay[which(!dir.exists(file.path(subjects_dir, paste(subjects_to_check, tp_long_suffix, sep=""))))] = FALSE;
+  }
+  return(list('subjects_okay'=subjects_to_check[subject_okay], 'subjects_missing_dirs'=subjects_to_check[!subject_okay]));
+}
 
