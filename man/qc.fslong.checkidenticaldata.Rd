@@ -22,4 +22,7 @@ qc.fslong.checkidenticaldata(
 \description{
 Check whether subjects for FS longitudinal pipeline contain data that is identical between time points.
 }
+\note{
+Keep in mind that this checks on the level of the FreeSurfer reconstruction, which is not 100% deterministic. So identical raw MRI data may lead to different vertex counts in 2 runs. So this is not a final check to exclude copied raw MRI images, it only checks for copied FreeSurfer reconstructions.
+}
 \keyword{internal}
