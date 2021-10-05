@@ -13,11 +13,11 @@ demographics.to.qdec.table.dat(
 )
 }
 \arguments{
-\item{df}{a data.frame containing demographics information. Make sure to have factors encoded as factors (not strings), so that the QDEC level files get created for them. Must contain a column named 'fsid' with the subject IDs as first column.}
+\item{df}{a data.frame containing demographics information. Make sure to have factors encoded as factors (not strings), so that the QDEC level files get created for them. Must contain a column named 'fsid' with the subject IDs as first column. If you want a long table, make sure to use \code{\link{qdec.table.skeleton}} to generate the timepoint information instead of doing it manually.}
 
 \item{output_path}{character string, existing directory into which to write the QDEC files. If the last directory level does not exist, it will be created.}
 
-\item{long}{logical, whether this is for a longitudinal run. If so, the df must contain a column named 'fsid-base' as the second column. It must also contain some column that gives the inter-scan time (from this scan timepoint to the previous one). The time unit (years, days, ...) is up to you, but typically one is interested in yearly change, the unit should be years. The name of the column (e.g., 'years') must be given to 'mris_slopes' later on the command line with the \code{--time <column_name>} argument.}
+\item{long}{logical, whether this is for a longitudinal run. If so, the df must contain a column named 'fsid-base' as the second column. It must also contain some column that gives the inter-scan time (from this scan timepoint to the previous one). The time unit (years, days, ...) is up to you, but typically one is interested in yearly change, the unit should be years. The name of the column (e.g., 'years') must be given to 'mris_slopes' later on the command line with the \code{--time <column_name>} argument. The requires information can be generated conveniently with the \code{\link{qdec.table.skeleton}} function.}
 
 \item{add_fake_level2}{logical, whether to add a 2nd fake level to the level files of factors with only a single level. Such factors make little sense, but QDEC refuses to open the resulting files at all in such a case, which seems a bit overkill. If TRUE, a 2nd level named 'level2' will be added so that one can open the output in QDEC.}
 
@@ -36,4 +36,7 @@ IMPORTANT: If you import the dataframe from a text file with functions like \cod
    # You may want to rearrange/rename/delete some columns here.
    demographics.to.qdec.table.dat(dem, "~/data/study1/qdec/");
 }
+}
+\seealso{
+The function \code{\link{qdec.table.skeleton}} to generate the data.frame used as the 'df' argument for this function.
 }

@@ -539,17 +539,19 @@ read.md.subjects.from.fsgd <- function(filepath) {
 #'
 #' @description This creates the `qdec.table.dat` and all required related files (the factor level files) in a directory.
 #'
-#' @param df a data.frame containing demographics information. Make sure to have factors encoded as factors (not strings), so that the QDEC level files get created for them. Must contain a column named 'fsid' with the subject IDs as first column.
+#' @param df a data.frame containing demographics information. Make sure to have factors encoded as factors (not strings), so that the QDEC level files get created for them. Must contain a column named 'fsid' with the subject IDs as first column. If you want a long table, make sure to use \code{\link{qdec.table.skeleton}} to generate the timepoint information instead of doing it manually.
 #'
 #' @param output_path character string, existing directory into which to write the QDEC files. If the last directory level does not exist, it will be created.
 #'
-#' @param long logical, whether this is for a longitudinal run. If so, the df must contain a column named 'fsid-base' as the second column. It must also contain some column that gives the inter-scan time (from this scan timepoint to the previous one). The time unit (years, days, ...) is up to you, but typically one is interested in yearly change, the unit should be years. The name of the column (e.g., 'years') must be given to 'mris_slopes' later on the command line with the \code{--time <column_name>} argument.
+#' @param long logical, whether this is for a longitudinal run. If so, the df must contain a column named 'fsid-base' as the second column. It must also contain some column that gives the inter-scan time (from this scan timepoint to the previous one). The time unit (years, days, ...) is up to you, but typically one is interested in yearly change, the unit should be years. The name of the column (e.g., 'years') must be given to 'mris_slopes' later on the command line with the \code{--time <column_name>} argument. The requires information can be generated conveniently with the \code{\link{qdec.table.skeleton}} function.
 #'
 #' @param long_timecolumn character string, the name of the column holding the inter-scan time. Ignored unless parameter \code{long} is \code{TRUE}. See the description for parameter \code{long} for details.
 #'
 #' @param add_fake_level2 logical, whether to add a 2nd fake level to the level files of factors with only a single level. Such factors make little sense, but QDEC refuses to open the resulting files at all in such a case, which seems a bit overkill. If TRUE, a 2nd level named 'level2' will be added so that one can open the output in QDEC.
 #'
 #' @note IMPORTANT: If you import the dataframe from a text file with functions like \code{read.table}, they will by default replace dashes in column names with dots. So if you have a column named \code{fsid-base} in there, after loading it will be named \code{fsid.base}. See the \code{check.names} parameter for \code{read.table} to prevent that.
+#'
+#' @seealso The function \code{\link{qdec.table.skeleton}} to generate the data.frame used as the 'df' argument for this function.
 #'
 #' @examples
 #' \dontrun{
@@ -588,7 +590,7 @@ demographics.to.qdec.table.dat <- function(df, output_path=".", long=FALSE, add_
   }
   # The fsid and fsid-base columns MUST be the first 2 columns.
   if(colnames(df)[1] != "fsid") {
-    stop("The first column must be the 'fsid' column");
+    stop("The first column must be the 'fsid' column.");
   }
   if(long) {
     if(colnames(df)[2] != "fsid-base") {
@@ -662,4 +664,42 @@ fslong.subjects.finished <- function(subjects_dir, subjects_to_check=NULL, timep
   }
   return(list('subjects_okay'=subjects_to_check[subject_okay], 'subjects_missing_dirs'=subjects_to_check[!subject_okay]));
 }
+
+
+#' @title Generate skeleton dataframe for FreeSurfer QDEC long file from subjects list.
+#'
+#' @param subjects_list vector of character strings, the Freesurfer subject IDs (cross-sectional names, without any suffixes like \code{_MR1, long,} etc.)
+#'
+#' @param isi numerical vector, the inter-scan interval for the subjects, in a unit of your choice. Typically in years.
+#'
+#' @param isi_name character string, the name for the isi columns. Defaults to "years".
+#'
+#' @param timepoint_names vector of character strings, the timepoint names. These are mandatory for QDEC, so there should be very little reason to change them. Leave along unless you know what you are doing.
+#'
+#' @return data.frame with 3 columns named fsid and fsid-base and 'isi_name', a data.frame to use with the \code{\link{demographics.to.qdec.table.dat}} function.
+#'
+#' @seealso The function \code{\link{demographics.to.qdec.table.dat}} to write the result to a QDEC file.
+#'
+#' @export
+qdec.table.skeleton <- function(subjects_list, isi=rep(0.8, length(subjects_list)), isi_name="years", timepoint_names=c("_MR1", "_MR2")) {
+  num_timepoints = 2L;
+  num_columns = length(subjects_list) * num_timepoints;
+  qdec = data.frame("fsid"=rep("?", num_columns), "fsid-base"=rep("?", num_columns), stringsAsFactors = F, check.names = F);
+  qdec[[isi_name]] = rep(0.0, num_columns); # temporary, will be overwritten later.
+
+  current_subject_index = 1L;
+  for(subject in subjects_list) {
+    fsid_base = subject;
+    df_start_column = current_subject_index * 2L - 1L; # for this subject
+    df_end_column = df_start_column + 1L;              # for this subject
+    qdec$fsid[df_start_column] = paste(subject, timepoint_names[1], sep="");
+    qdec$fsid[df_end_column] = paste(subject, timepoint_names[2], sep="");
+    qdec$`fsid-base`[df_start_column:df_end_column] = fsid_base;
+    qdec[[isi_name]][df_start_column] = 0.0; # the first scan timepoint is always at time 0.
+    qdec[[isi_name]][df_end_column] = isi[current_subject_index]; # the first scan timepoint is always at time 0.
+    current_subject_index = current_subject_index + 1L;
+  }
+  return(qdec);
+}
+
 
