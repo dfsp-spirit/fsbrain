@@ -559,6 +559,12 @@ read.md.subjects.from.fsgd <- function(filepath) {
 #'    # or: dem = read.table("~/demographics.csv", check.names=FALSE);
 #'    # You may want to rearrange/rename/delete some columns here.
 #'    demographics.to.qdec.table.dat(dem, "~/data/study1/qdec/");
+#'    #
+#'    # a second one with real data:
+#'    dem = data.frame("ID"=paste("subject", seq(5), sep=""),
+#'       "age"=sample.int(20, 5)+10L, "isi"=rnorm(5, 2.0, 0.1)); #sample data.
+#'    long_table = qdec.table.skeleton(dem$ID, dem$isi);
+#'    demographics.to.qdec.table.dat(long_table, long=TRUE);
 #' }
 #' @importFrom utils write.table
 #' @export
@@ -627,6 +633,33 @@ demographics.to.qdec.table.dat <- function(df, output_path=".", long=FALSE, add_
 }
 
 
+#' @title Get subject names from sub directories of FreeSurfer long directory.
+#'
+#' @description Find all subject names for which the FreeSurfer longitudinal pipeline may have finished. These are the subjects that have the \code{_MR1} and \code{_MR2} directories.
+#'
+#' @param subjects_dir character string, path to a single recon-all longitudinal output dir from FreeSurfer.
+#'
+#' @keywords internal
+fslong.subjects.detect <- function(subjects_dir, timepoint_names=c("_MR1", "_MR2")) {
+  potential_subject_dirs_files = list.files(path=subjects_dir, pattern="_MR1$");
+  is_existing_dir = dir.exists(file.path(subjects_dir, potential_subject_dirs_files));
+  potential_subject_dirs = potential_subject_dirs_files[is_existing_dir];
+  potential_subject_dirs = potential_subject_dirs[nchar(potential_subject_dirs) > 3L]; # After we strip the '_MR1', something has to be left.
+  subjects = substring(potential_subject_dirs, 1L, nchar(potential_subject_dirs) - 4L);
+
+  # Check whether all directories exist
+  subjects_existing_dirs = c();
+  for(subject in subjects) {
+    sd_tp1 = paste(subject, timepoint_names[1], sep="");
+    sd_tp2 = paste(subject, timepoint_names[2], sep="");
+    if(dir.exists(file.path(subjects_dir, sd_tp1)) & dir.exists(file.path(subjects_dir, sd_tp2))) {
+      subjects_existing_dirs = c(subjects_existing_dirs, subject);
+    }
+  }
+
+  return(subjects_existing_dirs);
+}
+
 #' @title Find completely run FreeSurfer long subjects in a recon-all long output folder.
 #'
 #' @description This finds all subjects for which the FreeSurfer long pipeline finished. It can work without a subjects file, by scanning the directory names to find all potential subjects. It checks only whether the expected folder for each subject exists. For a subject named 'subject1' and 2 timepoints, these folders are checked for existence: subject1, subject1_MR1, subject1_MR2, subject1_MR1.long.subject1, subject1_MR2.long.subject1
@@ -647,11 +680,7 @@ fslong.subjects.finished <- function(subjects_dir, subjects_to_check=NULL, timep
 
   # Let's figure out the subjects ourselves. We scan all directories that end with '_MR1' and strip that suffix.
   if(is.null(subjects_to_check)) {
-    potential_subject_dirs_files = list.files(path=subjects_dir, pattern="_MR1$");
-    is_existing_dir = dir.exists(file.path(subjects_dir, potential_subject_dirs_files));
-    potential_subject_dirs = potential_subject_dirs_files[is_existing_dir];
-    potential_subject_dirs = potential_subject_dirs[nchar(potential_subject_dirs) > 3L]; # After we strip the '_MR1', something has to be left.
-    subjects_to_check = substring(potential_subject_dirs, 1L, nchar(potential_subject_dirs) - 4L);
+    subjects_to_check = fslong.subjects.detect(subjects_dir);
   }
 
   subject_okay = rep(TRUE, length(subjects_to_check));
@@ -663,6 +692,35 @@ fslong.subjects.finished <- function(subjects_dir, subjects_to_check=NULL, timep
     subject_okay[which(!dir.exists(file.path(subjects_dir, paste(subjects_to_check, tp_long_suffix, sep=""))))] = FALSE;
   }
   return(list('subjects_okay'=subjects_to_check[subject_okay], 'subjects_missing_dirs'=subjects_to_check[!subject_okay]));
+}
+
+
+#' @title Check whether subjects for FS longitudinal pipeline contain data that is identical between time points.
+#'
+#' @inheritParams qdec.table.skeleton
+#'
+#' @inheritParams subject.morph.native
+#'
+#' @keywords internal
+qc.fslong.checkidenticaldata <- function(subjects_dir, subjects_to_check=NULL, timepoint_names=c("_MR1", "_MR2"), measure="thickness", surface="white") {
+  # Let's figure out the subjects ourselves. We scan all directories that end with '_MR1' and strip that suffix.
+  if(is.null(subjects_to_check)) {
+    subjects_to_check = fslong.subjects.detect(subjects_dir);
+  }
+
+  suspects = c();
+
+  for(subject in subjects_to_check) {
+    sd_tp1 = paste(subject, timepoint_names[1], sep="");
+    sd_tp2 = paste(subject, timepoint_names[2], sep="");
+    nv_tp1 = subject.num.verts(subjects_dir, sd_tp1, surface=surface);
+    nv_tp2 = subject.num.verts(subjects_dir, sd_tp2, surface=surface);
+    if((nv_tp1$lh == nv_tp2$lh) & (nv_tp1$rh == nv_tp2$rh)) {
+      cat(sprintf("Subject '%s' has identical vertex counts for both %s native hemispheres between timepoints %s and %s.\n", subject, surface, timepoint_names[1], timepoint_names[2]));
+      suspects = c(suspects, subject);
+    }
+  }
+  return(suspects);
 }
 
 
@@ -680,8 +738,18 @@ fslong.subjects.finished <- function(subjects_dir, subjects_to_check=NULL, timep
 #'
 #' @seealso The function \code{\link{demographics.to.qdec.table.dat}} to write the result to a QDEC file.
 #'
+#' @examples
+#'     dem = data.frame("ID"=paste("subject", seq(5), sep=""),
+#'       "age"=sample.int(20, 5)+10L, "isi"=rnorm(5, 2.0, 0.1)); #sample data.
+#'     qdec.table.skeleton(dem$ID, dem$isi);
+#'
 #' @export
 qdec.table.skeleton <- function(subjects_list, isi=rep(0.8, length(subjects_list)), isi_name="years", timepoint_names=c("_MR1", "_MR2")) {
+
+  if(length(subjects_list) != length(isi)) {
+    stop("Length of parameters 'subjects_list' and 'isi' must match.");
+  }
+
   num_timepoints = 2L;
   num_columns = length(subjects_list) * num_timepoints;
   qdec = data.frame("fsid"=rep("?", num_columns), "fsid-base"=rep("?", num_columns), stringsAsFactors = F, check.names = F);

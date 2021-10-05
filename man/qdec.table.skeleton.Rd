@@ -26,6 +26,12 @@ data.frame with 3 columns named fsid and fsid-base and 'isi_name', a data.frame 
 \description{
 Generate skeleton dataframe for FreeSurfer QDEC long file from subjects list.
 }
+\examples{
+    dem = data.frame("ID"=paste("subject", seq(5), sep=""),
+      "age"=sample.int(20, 5)+10L, "isi"=rnorm(5, 2.0, 0.1)); #sample data.
+    qdec.table.skeleton(dem$ID, dem$isi);
+
+}
 \seealso{
 The function \code{\link{demographics.to.qdec.table.dat}} to write the result to a QDEC file.
 }

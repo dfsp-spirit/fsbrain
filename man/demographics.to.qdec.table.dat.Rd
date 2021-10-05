@@ -35,6 +35,12 @@ IMPORTANT: If you import the dataframe from a text file with functions like \cod
    # or: dem = read.table("~/demographics.csv", check.names=FALSE);
    # You may want to rearrange/rename/delete some columns here.
    demographics.to.qdec.table.dat(dem, "~/data/study1/qdec/");
+   #
+   # a second one with real data:
+   dem = data.frame("ID"=paste("subject", seq(5), sep=""),
+      "age"=sample.int(20, 5)+10L, "isi"=rnorm(5, 2.0, 0.1)); #sample data.
+   long_table = qdec.table.skeleton(dem$ID, dem$isi);
+   demographics.to.qdec.table.dat(long_table, long=TRUE);
 }
 }
 \seealso{
