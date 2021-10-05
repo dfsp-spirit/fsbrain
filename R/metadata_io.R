@@ -711,6 +711,7 @@ qc.fslong.checkidenticaldata <- function(subjects_dir, subjects_to_check=NULL, t
   }
 
   suspects = c();
+  maybe_okay = c()
 
   for(subject in subjects_to_check) {
     sd_tp1 = paste(subject, timepoint_names[1], sep="");
@@ -720,9 +721,11 @@ qc.fslong.checkidenticaldata <- function(subjects_dir, subjects_to_check=NULL, t
     if((nv_tp1$lh == nv_tp2$lh) & (nv_tp1$rh == nv_tp2$rh)) {
       cat(sprintf("Subject '%s' has identical vertex counts for both %s native hemispheres between timepoints %s and %s.\n", subject, surface, timepoint_names[1], timepoint_names[2]));
       suspects = c(suspects, subject);
+    } else {
+      maybe_okay = c(maybe_okay, subject);
     }
   }
-  return(suspects);
+  return(list("suspects"=suspects, "maybe_okay"=maybe_okay));
 }
 
 
