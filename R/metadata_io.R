@@ -790,12 +790,12 @@ qdec.table.skeleton <- function(subjects_list, isi=rep(0.8, length(subjects_list
 #'
 #' @return the data.frame containing the subset of subjects from the original QDEC file.
 #'
-#' @note This assumes that there are 2 timepoints per subject and warns if not all requested subjects where found.
+#' @note This assumes that there are 2 time points per subject and warns if not all requested subjects were found.
 #'
 #' @keywords internal
 #' @importFrom utils write.table
 qdec.table.filter <- function(qdec_file, subjects_list, output_qdec_file=NULL) {
-  qdd = read.table(qdec_file, header=T);
+  qdd = read.table(qdec_file, header=TRUE, check.names = FALSE, stringsAsFactors = FALSE);
   subset_qdd = qdd[qdd$fsid.base %in% sm, ];
   if(! is.null(output_qdec_file)) {
     write.table(subset_qdd, file=output_qdec_file, quote = FALSE, col.names = TRUE, row.names = FALSE);

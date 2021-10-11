@@ -20,6 +20,6 @@ the data.frame containing the subset of subjects from the original QDEC file.
 Filter QDEC long table for subjects.
 }
 \note{
-This assumes that there are 2 timepoints per subject and warns if not all requested subjects where found.
+This assumes that there are 2 time points per subject and warns if not all requested subjects were found.
 }
 \keyword{internal}
