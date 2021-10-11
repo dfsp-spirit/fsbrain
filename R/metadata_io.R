@@ -549,6 +549,8 @@ read.md.subjects.from.fsgd <- function(filepath) {
 #'
 #' @param add_fake_level2 logical, whether to add a 2nd fake level to the level files of factors with only a single level. Such factors make little sense, but QDEC refuses to open the resulting files at all in such a case, which seems a bit overkill. If TRUE, a 2nd level named 'level2' will be added so that one can open the output in QDEC.
 #'
+#' @param qdec_file_name character string, the filename of the QDEC file to write. Must be only the file name (with extension if you want). See \code{output_path} to set the ouput directory where this will be created.
+#'
 #' @note IMPORTANT: If you import the dataframe from a text file with functions like \code{read.table}, they will by default replace dashes in column names with dots. So if you have a column named \code{fsid-base} in there, after loading it will be named \code{fsid.base}. See the \code{check.names} parameter for \code{read.table} to prevent that.
 #'
 #' @seealso The function \code{\link{qdec.table.skeleton}} to generate the data.frame used as the 'df' argument for this function.
@@ -568,7 +570,7 @@ read.md.subjects.from.fsgd <- function(filepath) {
 #' }
 #' @importFrom utils write.table
 #' @export
-demographics.to.qdec.table.dat <- function(df, output_path=".", long=FALSE, add_fake_level2=FALSE, long_timecolumn="years") {
+demographics.to.qdec.table.dat <- function(df, output_path=".", long=FALSE, add_fake_level2=FALSE, long_timecolumn="years", qdec_file_name="qdec.table.dat") {
   if(! dir.exists(output_path)) {
     dir.create(output_path); # create paths, but only non-recursively.
   }
@@ -605,9 +607,9 @@ demographics.to.qdec.table.dat <- function(df, output_path=".", long=FALSE, add_
   }
 
   # Write te qdec.table.dat file.
-  qdec_table_dat_file = file.path(output_path, "qdec.table.dat");
+  qdec_table_dat_file = file.path(output_path, qdec_file_name);
   write.table(df, file=qdec_table_dat_file, quote = FALSE, col.names = TRUE, row.names = FALSE);
-  message(sprintf("Wrote qdec table file '%s' containing %d columns for %d subjects.\n", qdec_table_dat_file, ncol(df), nrow(df)));
+  message(sprintf("Wrote qdec table file '%s' containing %d columns and %d rows.\n", qdec_table_dat_file, ncol(df), nrow(df)));
 
   # Write the factor level files.
   for(qcol in colnames(df)) {
@@ -775,4 +777,33 @@ qdec.table.skeleton <- function(subjects_list, isi=rep(0.8, length(subjects_list
   return(qdec);
 }
 
+
+
+
+#' @title Filter QDEC long table for subjects.
+#'
+#' @param qdec_file the source QDEC table
+#'
+#' @param subjects_list the subjects to extract from the QDEC file
+#'
+#' @param output_qdec_file optional character string, a file name to which to write the resulting, filtered table. If not given, no file is created.
+#'
+#' @return the data.frame containing the subset of subjects from the original QDEC file.
+#'
+#' @note This assumes that there are 2 timepoints per subject and warns if not all requested subjects where found.
+#'
+#' @keywords internal
+#' @importFrom utils write.table
+qdec.table.filter <- function(qdec_file, subjects_list, output_qdec_file=NULL) {
+  qdd = read.table(qdec_file, header=T);
+  subset_qdd = qdd[qdd$fsid.base %in% sm, ];
+  if(! is.null(output_qdec_file)) {
+    write.table(subset_qdd, file=output_qdec_file, quote = FALSE, col.names = TRUE, row.names = FALSE);
+  }
+  num_subjects_extracted = nrow(subset_qdd)/2L;
+  if(num_subjects_extracted != length(subjects_list)) {
+    warning(sprintf("Requested to extract %d subjects from QDEC table, but %f found.\n", length(subjects_list), num_subjects_extracted));
+  }
+  return(subset_qdd);
+}
 

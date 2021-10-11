@@ -9,7 +9,8 @@ demographics.to.qdec.table.dat(
   output_path = ".",
   long = FALSE,
   add_fake_level2 = FALSE,
-  long_timecolumn = "years"
+  long_timecolumn = "years",
+  qdec_file_name = "qdec.table.dat"
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ demographics.to.qdec.table.dat(
 \item{add_fake_level2}{logical, whether to add a 2nd fake level to the level files of factors with only a single level. Such factors make little sense, but QDEC refuses to open the resulting files at all in such a case, which seems a bit overkill. If TRUE, a 2nd level named 'level2' will be added so that one can open the output in QDEC.}
 
 \item{long_timecolumn}{character string, the name of the column holding the inter-scan time. Ignored unless parameter \code{long} is \code{TRUE}. See the description for parameter \code{long} for details.}
+
+\item{qdec_file_name}{character string, the filename of the QDEC file to write. Must be only the file name (with extension if you want). See \code{output_path} to set the ouput directory where this will be created.}
 }
 \description{
 This creates the `qdec.table.dat` and all required related files (the factor level files) in a directory.
