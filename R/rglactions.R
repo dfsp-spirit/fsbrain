@@ -2,7 +2,7 @@
 
 #' @title Clip data at quantiles to remove outliers.
 #'
-#' @description Set all data values outside the given quantile range to the border values. This is usefull to properly visualize morphometry data that includes outliers. These outliers negatively affect the colormap, as all the non-outlier values become hard to distinguish. This function can be used to filter the data before plotting it.
+#' @description Set all data values outside the given quantile range to the border values. This is useful to properly visualize morphometry data that includes outliers. These outliers negatively affect the colormap, as all the non-outlier values become hard to distinguish. This function can be used to filter the data before plotting it.
 #'
 #' @param data, numeric vector. The input data. Can also be a hemi list.
 #'
@@ -28,6 +28,33 @@ clip.data <- function(data, lower=0.05, upper=0.95){
         data[ data > quantiles[2] ] = quantiles[2];
     }
     return(data);
+}
+
+
+#' @title Get data clipping function.
+#'
+#' @description Get data clipping function to use in an \code{\link{rglaction}} as 'trans_fun' to transform data. This is typically used to limit the colorbar in a plot to a certain range. This uses percentiles to clip. Clipping means that values more extreme than the gíven quantiles will be set to the quantile values.
+#'
+#' @inheritParams clip.data
+#'
+#' @return a function that takes as argument the data, and clips it to the requested range. I.e., values outside the range will be set to the closest border value. Designed to be used as \code{rglactions$trans_fun} in vis functions, to limit the colorbar and data range.
+#'
+#' @examples
+#'    rglactions = list("trans_fun"=clip_fun(0.10, 0.90));
+#'    rglactions = list("trans_fun"=clip_fun());
+#'    f = clip_fun();
+#'    f(rnorm(100));
+#'
+#' @importFrom stats quantile
+#' @export
+clip_fun <- function(lower=0.05, upper=0.95) {
+    res_fun <- function(data) {
+        quantiles = stats::quantile(data, c(lower, upper), na.rm = TRUE, names = FALSE);
+        data[ data < quantiles[1] ] = quantiles[1];
+        data[ data > quantiles[2] ] = quantiles[2];
+        return(data);
+    };
+    return(res_fun);
 }
 
 

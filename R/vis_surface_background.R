@@ -232,7 +232,10 @@ collayer.bg.atlas <- function(subjects_dir, subject_id, hemi="both", atlas="apar
 collayer.from.morphlike.data <- function(lh_morph_data=NULL, rh_morph_data=NULL, makecmap_options=list('colFn'=cm.seq()), return_metadata=FALSE) {
 
     if(! 'colFn' %in% names(makecmap_options)) {
-        stop("No 'colFn' present in parameter 'makecmap_options': a colormap function is required.");
+        # If we add a 'colFn' entry here it's too late, because that colFn cannot be added to the coloredmesh instance here, meaning
+        # that it will not be available to draw the colorbar later, if requested. We could hack all that, but it seems more reasonable
+        # to simply fail here.
+        stop("No 'colFn' entry present in parameter 'makecmap_options': a colormap function is required. Try 'colFn=viridis::viridis'.");
     }
 
     bg_color = getOption('fsbrain.brain_na_color', default="#FEFEFE");
