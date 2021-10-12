@@ -42,7 +42,7 @@ brainviews <- function(views, coloredmeshes, rgloptions = rglo(), rglactions = l
                 angle = substr(view, 4, nchar(view));
                 invisible(brainview.sd(coloredmeshes, background = background, angle, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, style = style));
             } else {
-                stop(sprintf("Invalid view '%s'. Valid ones include 'si', 'sr', 'sd_<angle>', 't4' and 't9'.\n", view));
+                stop(sprintf("Invalid view '%s'. Valid ones include 'si', 'sr', 'sd_<angle>', 't4' and 't9'. Run get.view.angle.names() for valid <angle> values.\n", view));
             }
         }
     }
