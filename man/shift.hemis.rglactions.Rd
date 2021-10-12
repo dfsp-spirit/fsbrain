@@ -9,10 +9,10 @@ shift.hemis.rglactions(coloredmeshes, rglactions)
 \arguments{
 \item{coloredmeshes}{hemilist of coloredmeshes}
 
-\item{rglactions}{the rglactions, a named list as passed to functions like vis.subject.morph.native.}
+\item{rglactions}{the \code{\link{rglactions}}, a named list as passed to functions like vis.subject.morph.native.}
 }
 \value{
-hemilist of coloredmeshes, the coordinates may or may not have been shifted, depending on the rglactions.
+hemilist of coloredmeshes, the coordinates may or may not have been shifted, depending on the \code{\link{rglactions}}.
 }
 \description{
 Shift hemis apart if indicated in rglactions

@@ -7,10 +7,10 @@
 rglactions.has.key(rglactions, key)
 }
 \arguments{
-\item{rglactions, }{named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.}
+\item{rglactions, }{named list. A list in which the names are from a set of pre-defined actions, see \code{\link{rglactions}}. The values can be used to specify parameters for the action.}
 }
 \value{
-logical, whether the rglactions instance has the requested key as a name.
+logical, whether the \code{\link{rglactions}} instance has the requested key as a name.
 }
 \description{
 Check for a key in names of rglactions.

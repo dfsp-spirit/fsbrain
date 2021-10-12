@@ -9,7 +9,7 @@ rglactions.transform(measure_data, rglactions)
 \arguments{
 \item{measure_data}{numeric vector, or hemilist of numeric vectors. The data, usually vertex-wise morphometry data.}
 
-\item{rglactions}{named list, passed as parameter 'rglactions' to functions like \code{\link[fsbrain]{vis.subject.morph.native}}.}
+\item{rglactions}{named list, passed as parameter '\code{\link{rglactions}}' to functions like \code{\link[fsbrain]{vis.subject.morph.native}}.}
 }
 \value{
 the transformed data

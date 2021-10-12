@@ -15,9 +15,12 @@ limit_fun(vmin, vmax)
 a function that takes as argument the data, and clips it to the requested range. I.e., values outside the range will be set to the closest border value ('vmin' or 'vmax'). Designed to be used as \code{rglactions$trans_fun} in vis functions, to limit the colorbar and data range.
 }
 \description{
-Get data limiting function to use in rglactions as 'trans_fun' to transform data. This is typically used to limit the colorbar in a plot to a certain range. This is similar to \code{\link{clip.data}}, but uses absolute values instead of percentiles to clip.
+Get data limiting function to use in rglactions as 'trans_fun' to transform data. This is typically used to limit the colorbar in a plot to a certain range. This is similar to \code{\link{clip.data/clip_fun}}, but uses absolute values instead of percentiles to clip.
 }
 \examples{
    rglactions = list("trans_fun"=limit_fun(2,3));
 
+}
+\seealso{
+\code{\link{rglactions}}
 }

@@ -15,10 +15,15 @@ clip_fun(lower = 0.05, upper = 0.95)
 a function that takes as argument the data, and clips it to the requested range. I.e., values outside the range will be set to the closest border value. Designed to be used as \code{rglactions$trans_fun} in vis functions, to limit the colorbar and data range.
 }
 \description{
-Get data clipping function to use in an \code{\link{rglaction}} as 'trans_fun' to transform data. This is typically used to limit the colorbar in a plot to a certain range. This uses percentiles to clip. Clipping means that values more extreme than the gíven quantiles will be set to the quantile values.
+Get data clipping function to use in \code{\link{rglactions}} as 'trans_fun' to transform data. This is typically used to limit the colorbar in a plot to a certain range. This uses percentiles to clip. Clipping means that values more extreme than the gíven quantiles will be set to the quantile values.
 }
 \examples{
    rglactions = list("trans_fun"=clip_fun(0.10, 0.90));
    rglactions = list("trans_fun"=clip_fun());
+   f = clip_fun();
+   f(rnorm(100));
 
+}
+\seealso{
+\code{\link{rglactions}}
 }

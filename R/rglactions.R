@@ -4,13 +4,15 @@
 #'
 #' @description Set all data values outside the given quantile range to the border values. This is useful to properly visualize morphometry data that includes outliers. These outliers negatively affect the colormap, as all the non-outlier values become hard to distinguish. This function can be used to filter the data before plotting it.
 #'
-#' @param data, numeric vector. The input data. Can also be a hemi list.
+#' @param data, numeric vector. The input data. Can also be a \code{\link{hemilist}}.
 #'
 #' @param lower, numeric. The probability for the lower quantile, defaults to `0.05`.
 #'
 #' @param upper, numeric. The probability for the upper quantile, defaults to `0.95`.
 #'
 #' @return numeric vector. The output data.
+#'
+#' @seealso The \code{\link{clip_fun}} function is more convenient when used in \code{\link{rglactions}}, as it allows specification of custom quantiles.
 #'
 #' @examples
 #'    full_data = rnorm(50, 3, 1);
@@ -33,11 +35,13 @@ clip.data <- function(data, lower=0.05, upper=0.95){
 
 #' @title Get data clipping function.
 #'
-#' @description Get data clipping function to use in an \code{\link{rglaction}} as 'trans_fun' to transform data. This is typically used to limit the colorbar in a plot to a certain range. This uses percentiles to clip. Clipping means that values more extreme than the gíven quantiles will be set to the quantile values.
+#' @description Get data clipping function to use in \code{\link{rglactions}} as 'trans_fun' to transform data. This is typically used to limit the colorbar in a plot to a certain range. This uses percentiles to clip. Clipping means that values more extreme than the gíven quantiles will be set to the quantile values.
 #'
 #' @inheritParams clip.data
 #'
 #' @return a function that takes as argument the data, and clips it to the requested range. I.e., values outside the range will be set to the closest border value. Designed to be used as \code{rglactions$trans_fun} in vis functions, to limit the colorbar and data range.
+#'
+#' @seealso \code{\link{rglactions}}
 #'
 #' @examples
 #'    rglactions = list("trans_fun"=clip_fun(0.10, 0.90));
@@ -62,9 +66,9 @@ clip_fun <- function(lower=0.05, upper=0.95) {
 #'
 #' @param coloredmeshes hemilist of coloredmeshes
 #'
-#' @param rglactions the rglactions, a named list as passed to functions like vis.subject.morph.native.
+#' @param rglactions the \code{\link{rglactions}}, a named list as passed to functions like vis.subject.morph.native.
 #'
-#' @return hemilist of coloredmeshes, the coordinates may or may not have been shifted, depending on the rglactions.
+#' @return hemilist of coloredmeshes, the coordinates may or may not have been shifted, depending on the \code{\link{rglactions}}.
 #'
 #' @keywords internal
 shift.hemis.rglactions <- function(coloredmeshes, rglactions) {
@@ -99,7 +103,7 @@ shift.hemis.rglactions <- function(coloredmeshes, rglactions) {
 #'
 #' @param measure_data numeric vector, or hemilist of numeric vectors. The data, usually vertex-wise morphometry data.
 #'
-#' @param rglactions named list, passed as parameter 'rglactions' to functions like \code{\link[fsbrain]{vis.subject.morph.native}}.
+#' @param rglactions named list, passed as parameter '\code{\link{rglactions}}' to functions like \code{\link[fsbrain]{vis.subject.morph.native}}.
 #'
 #' @return the transformed data
 #'
@@ -128,13 +132,15 @@ rglactions.transform <- function(measure_data, rglactions) {
 
 #' @title Get data limiting function.
 #'
-#' @description Get data limiting function to use in rglactions as 'trans_fun' to transform data. This is typically used to limit the colorbar in a plot to a certain range. This is similar to \code{\link{clip.data}}, but uses absolute values instead of percentiles to clip.
+#' @description Get data limiting function to use in rglactions as 'trans_fun' to transform data. This is typically used to limit the colorbar in a plot to a certain range. This is similar to \code{\link{clip.data/clip_fun}}, but uses absolute values instead of percentiles to clip.
 #'
 #' @param vmin numerical scalar, the lower border. Data values below this will be set to vmin in the return value.
 #'
 #' @param vmax numerical scalar, the upper border. Data values above this will be set to vmax in the return value.
 #'
 #' @return a function that takes as argument the data, and clips it to the requested range. I.e., values outside the range will be set to the closest border value ('vmin' or 'vmax'). Designed to be used as \code{rglactions$trans_fun} in vis functions, to limit the colorbar and data range.
+#'
+#' @seealso \code{\link{rglactions}}
 #'
 #' @examples
 #'    rglactions = list("trans_fun"=limit_fun(2,3));
@@ -152,7 +158,7 @@ limit_fun <- function(vmin, vmax) {
 
 #' @title Get data limiting function to NA.
 #'
-#' @description Get data limiting function to use in rglactions as 'trans_fun' to transform data. This is typically used to limit the colorbar in a plot to a certain range. This is similar to \code{\link{clip.data}}, but uses absolute values instead of percentiles to clip.
+#' @description Get data limiting function to use in \code{\link{rglactions}} as 'trans_fun' to transform data. This is typically used to limit the colorbar in a plot to a certain range. This is similar to \code{\link{clip.data}}, but uses absolute values instead of percentiles to clip.
 #'
 #' @param vmin numerical scalar, the lower border. Data values below this will be set to `NA` in the return value.
 #'
@@ -180,7 +186,7 @@ limit_fun_na <- function(vmin, vmax) {
 
 #' @title Get data limiting function, setting values inside range to NA.
 #'
-#' @description Get data limiting function to use in rglactions as 'trans_fun' to transform data.
+#' @description Get data limiting function to use in \code{\link{rglactions}} as 'trans_fun' to transform data.
 #'
 #' @param vmin numerical scalar, the lower border. Data values between this and vmax will be set to `NA` in the return value.
 #'
@@ -207,9 +213,9 @@ limit_fun_na_inside <- function(vmin, vmax) {
 
 #' @title Check for a key in names of rglactions.
 #'
-#' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action.
+#' @param rglactions, named list. A list in which the names are from a set of pre-defined actions, see \code{\link{rglactions}}. The values can be used to specify parameters for the action.
 #'
-#' @return logical, whether the rglactions instance has the requested key as a name.
+#' @return logical, whether the \code{\link{rglactions}} instance has the requested key as a name.
 #'
 #' @keywords internal
 rglactions.has.key <- function(rglactions, key) {
@@ -222,7 +228,7 @@ rglactions.has.key <- function(rglactions, key) {
 
 #' @title Perform rglactions, like taking screenshots.
 #'
-#' @description Take a list specifying actions and execute them. This function should be called once an rgl scene has been setup and rendered. A typical usecase is to save a screenshot of the scene.
+#' @description Take a list specifying actions, see \code{\link{rglactions}}, and execute them. This function should be called once an rgl scene has been setup and rendered. A typical use case is to save a screenshot of the scene.
 #'
 #' @param rglactions, named list. A list in which the names are from a set of pre-defined actions. The values can be used to specify parameters for the action. See \code{\link{rglactions}}.
 #'
@@ -303,7 +309,7 @@ perform.rglactions <- function(rglactions, at_index=NULL, silent=TRUE, ignore = 
 
 #' @title Create rglactions list, suitable to be passed as parameter to vis functions.
 #'
-#' @note List of all available rglactions: (1) `snapshot_png=filepath` takes a screenshot in PNG format and saves it in at `filepath`. (2) `trans_fun=function` uses the transformation function trans_fun to the data before mapping data values to colors and plotting. Popular transformation functions are \code{\link{limit_fun}}, \code{\link{limit_fun_na}}, and \code{\link{clip.data}}. (3) `text=arglist` calls \code{\link{text3d}} with the given args after plotting. (4) `snapshot_vec=filepath` takes a screenshot in vector format and saves it in at `filepath`. You also need to set the format via `snapshot_vec_format`, valid entries are one of "ps", "eps", "tex", "pdf", "svg", "pgf" (default is 'eps'). This is experimental and may take a while.
+#' @note List of all available rglactions: (1) `snapshot_png=filepath` takes a screenshot in PNG format and saves it in at `filepath`. (2) `trans_fun=function` uses the transformation function trans_fun to the data before mapping data values to colors and plotting. Popular transformation functions are \code{\link{limit_fun}}, \code{\link{limit_fun_na}}, and \code{\link{clip_fun}}. (3) `text=arglist` calls \code{\link{text3d}} with the given args after plotting. (4) `snapshot_vec=filepath` takes a screenshot in vector format and saves it in at `filepath`. You also need to set the format via `snapshot_vec_format`, valid entries are one of "ps", "eps", "tex", "pdf", "svg", "pgf" (default is 'eps'). This is experimental and may take a while.
 #'
 #' @return named list, an example `rlgactions` instance that will save a screenshot of the plot produced by the vis function in the current working directory (see \code{getwd}), under the name 'fsbrain_out.png'.
 #'
@@ -312,7 +318,9 @@ perform.rglactions <- function(rglactions, at_index=NULL, silent=TRUE, ignore = 
 #'    rgla_screenie = rglactions();   # same as above
 #'    rgla_vec_scr = list('snapshot_vec'="~/fsbrain.pdf",
 #'      "snapshot_vec_format"="pdf");
-#'    rgla_clamp = list('trans_fun'=clip.data);
+#'    rgla_clamp = list('trans_fun'=clip.data); # old style
+#'    rgla_clamp = list('trans_fun'=clip_fun(0.05, 0.95)); # new style
+#'    rgla_clamp = list('trans_fun'=clip_fun();            # equivalent.
 #'    rgla_limit = list('trans_fun'=limit_fun(2,5));
 #'    rgla_ls = list('trans_fun'=limit_fun_na(2,5), 'snapshot_png'='~/fig1.png');
 #' @export

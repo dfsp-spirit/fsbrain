@@ -15,7 +15,7 @@ limit_fun_na_inside(vmin, vmax)
 a function that takes as argument the data, and clips it to the requested range. I.e., values inside the range will be set to `NA`. Designed to be used as \code{rglactions$trans_fun} in vis functions.
 }
 \description{
-Get data limiting function to use in rglactions as 'trans_fun' to transform data.
+Get data limiting function to use in \code{\link{rglactions}} as 'trans_fun' to transform data.
 }
 \note{
 This is useful for thresholding data plotted with a background. All values inside the range will set to NA and be transparent, and thus be displayed as the background color.

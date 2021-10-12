@@ -16,6 +16,6 @@ perform.rglactions(rglactions, at_index = NULL, silent = TRUE, ignore = c())
 \item{ignore}{vector of character strings, actions to ignore}
 }
 \description{
-Take a list specifying actions and execute them. This function should be called once an rgl scene has been setup and rendered. A typical usecase is to save a screenshot of the scene.
+Take a list specifying actions, see \code{\link{rglactions}}, and execute them. This function should be called once an rgl scene has been setup and rendered. A typical use case is to save a screenshot of the scene.
 }
 \keyword{internal}

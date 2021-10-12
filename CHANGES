@@ -1,6 +1,11 @@
 fsbrain Changes
 ===============
 
+Version 0.6.0
+-------------
+- Add clip_fun as an alternative to clip.data for rglactions. This makes the API more consistent, see limit_fun.
+- More links between function documentation, especially to rglactions. Makes it easier to find navigate the docs.
+
 
 Version 0.5.0
 -------------
