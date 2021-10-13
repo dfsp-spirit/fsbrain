@@ -796,7 +796,7 @@ qdec.table.skeleton <- function(subjects_list, isi=rep(0.8, length(subjects_list
 #' @importFrom utils write.table
 qdec.table.filter <- function(qdec_file, subjects_list, output_qdec_file=NULL) {
   qdd = read.table(qdec_file, header=TRUE, check.names = FALSE, stringsAsFactors = FALSE);
-  subset_qdd = qdd[qdd$fsid.base %in% sm, ];
+  subset_qdd = qdd[qdd$fsid.base %in% subjects_list];
   if(! is.null(output_qdec_file)) {
     write.table(subset_qdd, file=output_qdec_file, quote = FALSE, col.names = TRUE, row.names = FALSE);
   }
@@ -806,4 +806,34 @@ qdec.table.filter <- function(qdec_file, subjects_list, output_qdec_file=NULL) {
   }
   return(subset_qdd);
 }
+
+
+#' @title Write deepcopy list for longitudinal subjects.
+#'
+#' @return vector of character strings, the file entries. Set ouput_file to also write them to a file.
+#'
+#' @keywords internal
+deepcopylist.long <- function(measures=c("thickness", "area",  "volume"), fwhms=c("5", "10", "15"), hemis=c("lh", "rh"), long_measures=c("avg", "rate", "spc", "pc1"), template="fsaverage", has_stacked_file=TRUE, output_file=NULL) {
+  filelist = c();
+  for(measure in measures) {
+    for (hemi in hemis) {
+      for(long_measure in long_measures) {
+        for(fwhm in fwhms) {
+          filename = sprintf("%s.long.%s-%s.fwhm%s.%s.mgh", hemi, measure, long_measure, fwhm, template);
+          filelist = c(filelist, filename);
+        }
+      }
+      if(has_stacked_file) {
+        stack_filename=sprintf("%s.long.%s-stack.mgh", hemi, measure);
+        filelist = c(filelist, stack_filename);
+      }
+    }
+  }
+  if(! is.null(output_file)) {
+    write.table(data.frame(filelist), file=output_file, quote = FALSE, col.names = FALSE, row.names = FALSE);
+    cat(sprintf("Deepcopy list with %d entries written to file '%s'.\n", length(filelist), output_file));
+  }
+  return(filelist);
+}
+
 
