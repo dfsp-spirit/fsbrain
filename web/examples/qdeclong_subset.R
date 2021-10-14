@@ -12,7 +12,8 @@ args = commandArgs(trailingOnly=TRUE);
 
 
 if (length(args) == 3) {
-    fsbrain:::qdec.table.filter(args[1], fsbrain::read.md.subjects(args[2], FALSE), args[3]);
+    subjects_list = fsbrain::read.md.subjects(args[2], FALSE);
+    fsbrain:::qdec.table.filter(args[1], subjects_list, args[3]);
 } else {
     stop("USAGE: ./qdeclong_subset.R <input_qdec_file> <subject_file> <output_qdec_file>\n <input_qdec_file>  : Path to a qdec.table.dat file in longitudinal format.\n <subject_file>     : Path to subjects file containing 1 subject ID per line. Subjects must occur in <input_qdec_file>.\n <output_qdec_file> : Path for the output qdec long table containing only subjects from <subjects_file>. Will be created.");
 

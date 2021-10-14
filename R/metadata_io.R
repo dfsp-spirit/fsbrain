@@ -796,13 +796,14 @@ qdec.table.skeleton <- function(subjects_list, isi=rep(0.8, length(subjects_list
 #' @importFrom utils write.table
 qdec.table.filter <- function(qdec_file, subjects_list, output_qdec_file=NULL) {
   qdd = read.table(qdec_file, header=TRUE, check.names = FALSE, stringsAsFactors = FALSE);
-  subset_qdd = qdd[qdd$fsid.base %in% subjects_list];
+  cat(sprintf("Input QDEC file '%s' contains %d rows.\n", qdec_file, nrow(qdd)));
+  subset_qdd = qdd[qdd$fsid.base %in% subjects_list, ];
   if(! is.null(output_qdec_file)) {
     write.table(subset_qdd, file=output_qdec_file, quote = FALSE, col.names = TRUE, row.names = FALSE);
   }
   num_subjects_extracted = nrow(subset_qdd)/2L;
   if(num_subjects_extracted != length(subjects_list)) {
-    warning(sprintf("Requested to extract %d subjects from QDEC table, but %f found.\n", length(subjects_list), num_subjects_extracted));
+    warning(sprintf("Requested to extract %d subjects from QDEC table, but %d found.\n", length(subjects_list), num_subjects_extracted));
   }
   return(subset_qdd);
 }
