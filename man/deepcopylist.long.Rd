@@ -14,6 +14,9 @@ deepcopylist.long(
   output_file = NULL
 )
 }
+\value{
+vector of character strings, the file entries. Set ouput_file to also write them to a file.
+}
 \description{
 Write deepcopy list for longitudinal subjects.
 }
