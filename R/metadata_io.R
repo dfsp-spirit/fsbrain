@@ -803,6 +803,7 @@ qdec.table.filter <- function(qdec_file, subjects_list, output_qdec_file=NULL) {
   subset_qdd = qdd[qdd$`fsid-base` %in% subjects_list, ];
   if(! is.null(output_qdec_file)) {
     write.table(subset_qdd, file=output_qdec_file, quote = FALSE, col.names = TRUE, row.names = FALSE);
+    cat(sprintf("Writing filtered table to file '%s'.\n", output_qdec_file));
   }
   num_subjects_extracted = as.integer(nrow(subset_qdd)/2L);
   if(num_subjects_extracted != length(subjects_list)) {
