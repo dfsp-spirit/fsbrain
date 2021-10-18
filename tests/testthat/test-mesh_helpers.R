@@ -20,7 +20,7 @@ test_that("Label border can be computed", {
 
     lh_label_border = label.border(lh_surf, lh_label);
     #vis.labeldata.on.subject(subjects_dir, subject_id, lh_label_border$vertices, NULL);
-    testthat::expect_equal(length(lh_label_border$vertices), 188);
+    testthat::expect_equal(length(lh_label_border$vertices), 188L);
 })
 
 
