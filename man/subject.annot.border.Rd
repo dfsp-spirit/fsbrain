@@ -17,11 +17,13 @@ subject.annot.border(
 \arguments{
 \item{subjects_dir}{string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.}
 
-\item{subject_id}{string. The subject identifier}
+\item{subject_id}{string. The subject identifier.}
 
-\item{hemi}{string, one of 'lh', 'rh' or 'both'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.}
+\item{hemi}{string, one of 'lh', 'rh', or 'both'. The hemisphere name. Used to construct the names of the label data files to be loaded.}
 
 \item{atlas}{string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.}
+
+\item{surface}{string. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 
 \item{expand_inwards}{integer, additional thickness of the borders. Increases computation time, defaults to 0L.}
 
