@@ -190,7 +190,7 @@ annot.outline <- function(annotdata, surface_mesh, background="white", silent=TR
 
 #' @title Compute annot border vertices.
 #'
-#' @inheritParams subject.morph.native
+#' @inheritParams vis.subject.morph.native
 #'
 #' @inheritParams subject.annot
 #'

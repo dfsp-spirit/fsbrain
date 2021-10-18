@@ -320,7 +320,7 @@ perform.rglactions <- function(rglactions, at_index=NULL, silent=TRUE, ignore = 
 #'      "snapshot_vec_format"="pdf");
 #'    rgla_clamp = list('trans_fun'=clip.data); # old style
 #'    rgla_clamp = list('trans_fun'=clip_fun(0.05, 0.95)); # new style
-#'    rgla_clamp = list('trans_fun'=clip_fun();            # equivalent.
+#'    rgla_clamp = list('trans_fun'=clip_fun());            # equivalent.
 #'    rgla_limit = list('trans_fun'=limit_fun(2,5));
 #'    rgla_ls = list('trans_fun'=limit_fun_na(2,5), 'snapshot_png'='~/fig1.png');
 #' @export
