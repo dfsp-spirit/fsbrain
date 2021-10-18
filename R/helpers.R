@@ -542,7 +542,7 @@ vis.paths <- function(coords_list, path_color = "#FF0000") {
 #lab = subject.label(sjd, sj, "cortex", hemi = "lh");
 #sm = submesh.vertex(mesh, lab);
 
-#' @title Create a submesh including on the given vertices.
+#' @title Create a submesh including only the given vertices.
 #'
 #' @param surface_mesh an fs.surface instance, the original mesh
 #'
@@ -555,10 +555,19 @@ vis.paths <- function(coords_list, path_color = "#FF0000") {
 #' @keywords internal
 #' @importFrom stats complete.cases
 submesh.vertex <- function(surface_mesh, old_vertex_indices_to_use) {
-  stop("This function is not implemented yet.");
-  nv_new = length(old_vertex_indices_to_use);
+
+  if(! is.vector(old_vertex_indices_to_use)) {
+    stop("Argument 'old_vertex_indices_to_use' must be a vector.");
+  }
+  old_vertex_indices_to_use = as.integer(old_vertex_indices_to_use);
+
   nv_old = nrow(surface_mesh$vertices);
-  new_verts = matrix(data=rep(0.0, nv_new*3), nrow=nv_new);
+  if(min(old_vertex_indices_to_use) < 1L | max(old_vertex_indices_to_use) > nv_old) {
+    stop("Invalid 'old_vertex_indices_to_use' parameter: must be integer vector containing values >=1 and <=num_verts(surface_mesh).");
+  }
+
+  nv_new = length(old_vertex_indices_to_use);
+
   vert_mapping = rep(NA, nv_old);
 
   # Create a map from the old vertex indices to the new ones. Needed to construct faces later.
@@ -574,6 +583,10 @@ submesh.vertex <- function(surface_mesh, old_vertex_indices_to_use) {
 
   # Use the subset of the old vertices (simply grab coords).
   new_vertices = surface_mesh$vertices[old_vertex_indices_to_use, ];
+  cat(sprintf("new_vertices has dim %d, %d.\n", dim(new_vertices)[1], dim(new_vertices)[2]));
+  if(nv_new != dim(new_vertices)[1]) {
+    stop("New vertex count does not match expectation.");
+  }
 
   # Now for the faces.
   nf_old = nrow(surface_mesh$faces);
@@ -595,9 +608,11 @@ submesh.vertex <- function(surface_mesh, old_vertex_indices_to_use) {
   }
 
   df = data.frame(new_faces);
+  cat(sprintf("Full faces Df has %d rows.\n", nrow(df)));
   new_faces = data.matrix(df[stats::complete.cases(df),]); # remove all faces containing an NA vertex
+  cat(sprintf("Filtered Face matrix has %d rows.\n", nrow(new_faces)));
 
-  new_mesh = list('vertices'=new_vertices, 'faces'=new_faces); # the sub mesh
+  new_mesh = list('vertices'=new_vertices, 'faces'=new_faces); #, 'vert_mapping'=vert_mapping); # the sub mesh
   class(new_mesh) = c(class(new_mesh), 'fs.surface');
   return(new_mesh);
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/helpers.R
 \name{submesh.vertex}
 \alias{submesh.vertex}
-\title{Create a submesh including on the given vertices.}
+\title{Create a submesh including only the given vertices.}
 \usage{
 submesh.vertex(surface_mesh, old_vertex_indices_to_use)
 }
@@ -15,7 +15,7 @@ submesh.vertex(surface_mesh, old_vertex_indices_to_use)
 the new mesh, made up of the given 'old_vertex_indices_to_use' and all (complete) faces that exist between the query vertices in the source mesh.
 }
 \description{
-Create a submesh including on the given vertices.
+Create a submesh including only the given vertices.
 }
 \note{
 THIS FUNCTION IS NOT IMPLEMENTED YET, THE RETURNED MESH IS BROKEN.
