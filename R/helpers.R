@@ -190,6 +190,8 @@ annot.outline <- function(annotdata, surface_mesh, background="white", silent=TR
 
 #' @title Compute annot border vertices.
 #'
+#' @inheritParams subject.morph.native
+#'
 #' @inheritParams subject.annot
 #'
 #' @inheritParams annot.outline
@@ -546,6 +548,7 @@ vis.paths <- function(coords_list, path_color = "#FF0000") {
 #'     mesh = subject.surface()
 #'
 #' @keywords internal
+#' @importFrom stats complete.cases
 submesh.vertex <- function(surface_mesh, old_vertex_indices_to_use) {
   nv_new = length(old_vertex_indices_to_use);
   nv_old = nrow(surface_mesh$vertices);
@@ -586,7 +589,7 @@ submesh.vertex <- function(surface_mesh, old_vertex_indices_to_use) {
   }
 
   df = data.frame(new_faces);
-  new_faces = data.matrix(df[complete.cases(df),]); # remove all faces containing an NA vertex
+  new_faces = data.matrix(df[stats::complete.cases(df),]); # remove all faces containing an NA vertex
 
   new_mesh = list('vertices'=new_vertices, 'faces'=new_faces); # the sub mesh
   class(new_mesh) = c(class(new_mesh), 'fs.surface');

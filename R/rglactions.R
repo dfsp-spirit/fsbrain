@@ -132,7 +132,7 @@ rglactions.transform <- function(measure_data, rglactions) {
 
 #' @title Get data limiting function.
 #'
-#' @description Get data limiting function to use in rglactions as 'trans_fun' to transform data. This is typically used to limit the colorbar in a plot to a certain range. This is similar to \code{\link{clip.data/clip_fun}}, but uses absolute values instead of percentiles to clip.
+#' @description Get data limiting function to use in rglactions as 'trans_fun' to transform data. This is typically used to limit the colorbar in a plot to a certain range. This is similar to \code{\link{clip.data}} or \code{\link{clip_fun}}, but uses absolute values instead of percentiles to clip.
 #'
 #' @param vmin numerical scalar, the lower border. Data values below this will be set to vmin in the return value.
 #'

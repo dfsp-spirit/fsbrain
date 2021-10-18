@@ -16,7 +16,7 @@ the 4D array form of the group data. No values are changed, this is only a diffe
 In general, 1D morphometry data for a group can be stored in a dataframe, a named list, or already a 4D array. This function will convert the given format to 4D array format.
 }
 \examples{
-    create per-vertex data for 255 subjects.
+    # create per-vertex data for 255 subjects.
     mat = matrix(rnorm(255 * 163842, 3.0, 0.5), nrow=255, ncol = 163842);
     fsbrain:::group.data.to.array(mat);
 

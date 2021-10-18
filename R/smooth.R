@@ -203,7 +203,7 @@ pervertexdata.smoothgaussian <- function(spherical_surface, data, fwhm = 15.0, t
 #'   surface="sphere", hemi="lh");
 #' vr = fsbrain:::surf.avg.vertexradius(spherical_surface);
 #' # Show histogram to verify that the surface is a sphere centered at 0,0,0:
-#' hist(freesurferformats:::vertexdists.to.point(spherical_surface, c(0,0,0)));
+#' hist(freesurferformats::vertexdists.to.point(spherical_surface, c(0,0,0)));
 #' # Plot the coords and a point at the origin:
 #' fsbrain::highlight.points.spheres(rbind(spherical_surface$vertices, c(0,0,0)));
 #' }
@@ -213,7 +213,7 @@ surf.avg.vertexradius <- function(surface, with_stddev=FALSE) {
     surface = ensure.fs.surface(surface);
     nv = nrow(surface$vertices);
 
-    dists = freesurferformats:::vertexdists.to.point(surface, c(0,0,0));
+    dists = freesurferformats::vertexdists.to.point(surface, c(0,0,0));
     avg = sum(dists) / nv;
     if(with_stddev) {
         ds = sum(dists * dists);

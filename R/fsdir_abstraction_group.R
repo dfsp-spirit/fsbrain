@@ -327,7 +327,7 @@ write.group.morph.standard.sf <- function(filepath, data) {
 #' @return the 4D array form of the group data. No values are changed, this is only a different data layout. In neuroimaging, the first 3 dimensions are space, and the 4th is the time/subject dimension.
 #'
 #' @examples
-#'     create per-vertex data for 255 subjects.
+#'     # create per-vertex data for 255 subjects.
 #'     mat = matrix(rnorm(255 * 163842, 3.0, 0.5), nrow=255, ncol = 163842);
 #'     fsbrain:::group.data.to.array(mat);
 #'

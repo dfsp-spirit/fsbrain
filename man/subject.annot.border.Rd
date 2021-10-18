@@ -19,7 +19,7 @@ subject.annot.border(
 
 \item{subject_id}{string. The subject identifier}
 
-\item{hemi}{string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.}
+\item{hemi}{string, one of 'lh', 'rh' or 'both'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.}
 
 \item{atlas}{string. The atlas name. E.g., "aparc", "aparc.2009s", or "aparc.DKTatlas". Used to construct the name of the annotation file to be loaded.}
 
