@@ -598,6 +598,7 @@ submesh.vertex <- function(surface_mesh, old_vertex_indices_to_use) {
     new_face_idx = new_face_idx + 1L;
     old_face_indices = surface_mesh$faces[old_face_idx, ];
     new_face_indices = vert_mapping[old_face_indices];
+
     #cat(sprintf("Checking old face %d with old verts %d %d %d and new verts %d %d %d.\n", old_face_idx, old_face_indices[1], old_face_indices[2], old_face_indices[3], new_face_indices[1], new_face_indices[2], new_face_indices[3]));
     new_faces[new_face_idx, ] = new_face_indices;
 
@@ -618,8 +619,6 @@ submesh.vertex <- function(surface_mesh, old_vertex_indices_to_use) {
 }
 
 
-
-
 #' @keywords internal
 label.border.fast <- function(surface_mesh, label) {
   if(freesurferformats::is.fs.label(label)) {
@@ -628,8 +627,8 @@ label.border.fast <- function(surface_mesh, label) {
     label_vertices = label;
   }
 
-  label_mesh = submesh.vertex(surface_mesh, label_vertices);
-  #Rvcg::vcgBorder()
+  #label_mesh = submesh.vertex(surface_mesh, label_vertices);
+  return(NULL);
 }
 
 #' @title Compute border of a label.
@@ -664,11 +663,11 @@ label.border <- function(surface_mesh, label, inner_only=TRUE, expand_inwards=0L
         return(list("vertices"=c(), "edges"=c(), "faces"=c()));
     }
 
-    if(expand_inwards == 0L & derive == FALSE & inner_only == TRUE) {
-      if(requireNamespace("Rvcg", quietly = TRUE)) {
-        return(label.border.fast(surface_mesh, label));
-      }
-    }
+    #if(expand_inwards == 0L & derive == FALSE & inner_only == TRUE) {
+    #  if(requireNamespace("Rvcg", quietly = TRUE)) {
+    #    return(label.border.fast(surface_mesh, label));
+    #  }
+    #}
 
     if(inner_only) {
       label_faces = mesh.vertex.included.faces(surface_mesh, label_vertices);

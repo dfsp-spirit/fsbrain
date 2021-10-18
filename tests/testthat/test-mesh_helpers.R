@@ -1,9 +1,9 @@
 test_that("Label border can be computed", {
     testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
-    skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+    testthat::skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
-    skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
+    testthat::skip_if_not(dir.exists(subjects_dir), message="Test data missing.");
 
     subject_id = 'subject1';
     surface = 'white';
@@ -20,7 +20,7 @@ test_that("Label border can be computed", {
 
     lh_label_border = label.border(lh_surf, lh_label);
     #vis.labeldata.on.subject(subjects_dir, subject_id, lh_label_border$vertices, NULL);
-    expect_equal(length(lh_label_border$vertices), 188);
+    testthat::expect_equal(length(lh_label_border$vertices), 188);
 })
 
 
