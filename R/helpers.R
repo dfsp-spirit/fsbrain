@@ -544,12 +544,18 @@ vis.paths <- function(coords_list, path_color = "#FF0000") {
 
 #' @title Create a submesh including on the given vertices.
 #'
-#' @examples
-#'     mesh = subject.surface()
+#' @param surface_mesh an fs.surface instance, the original mesh
+#'
+#' @param old_vertex_indices_to_use integer vector, the vertex indices of the 'surface_mesh' that should be used to construct the new mesh.
+#'
+#' @return the new mesh, made up of the given 'old_vertex_indices_to_use' and all (complete) faces that exist between the query vertices in the source mesh.
+#'
+#' @note THIS FUNCTION IS NOT IMPLEMENTED YET, THE RETURNED MESH IS BROKEN.
 #'
 #' @keywords internal
 #' @importFrom stats complete.cases
 submesh.vertex <- function(surface_mesh, old_vertex_indices_to_use) {
+  stop("This function is not implemented yet.");
   nv_new = length(old_vertex_indices_to_use);
   nv_old = nrow(surface_mesh$vertices);
   new_verts = matrix(data=rep(0.0, nv_new*3), nrow=nv_new);

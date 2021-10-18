@@ -6,11 +6,18 @@
 \usage{
 submesh.vertex(surface_mesh, old_vertex_indices_to_use)
 }
+\arguments{
+\item{surface_mesh}{an fs.surface instance, the original mesh}
+
+\item{old_vertex_indices_to_use}{integer vector, the vertex indices of the 'surface_mesh' that should be used to construct the new mesh.}
+}
+\value{
+the new mesh, made up of the given 'old_vertex_indices_to_use' and all (complete) faces that exist between the query vertices in the source mesh.
+}
 \description{
 Create a submesh including on the given vertices.
 }
-\examples{
-    mesh = subject.surface()
-
+\note{
+THIS FUNCTION IS NOT IMPLEMENTED YET, THE RETURNED MESH IS BROKEN.
 }
 \keyword{internal}
