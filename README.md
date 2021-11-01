@@ -186,7 +186,7 @@ Want to see brains spin? [Check this out.](./web/fsbrain_movies.md) (WARNING: lo
 
 ### Volume visualization
 
-First versions of some volume visualization functions are available in the current dev version. You can find [a preview of the results here](./web/fsbrain_volume.md).
+Volume visualization is not the main goal of fsbrain, but standard lightbox views and simple 3D views are supported. Have a look at the vignettes or the documentation for the `volvis.lb` function. You can find some [example output here](./web/fsbrain_volume.md).
 
 ### Example Notebooks
 
