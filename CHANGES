@@ -1,10 +1,16 @@
 fsbrain Changes
 ===============
 
-Version 0.6.0
+Version 0.5.1
 -------------
 - Add clip_fun as an alternative to clip.data for rglactions. This makes the API more consistent, see limit_fun.
 - More links between function documentation, especially to rglactions. Makes it easier to find navigate the docs.
+- Tests: explicitely use testthat namespace in more tests for easier copy and pasting of test code.
+- Add some functions for working with FreeSurfer longitudinal preprocessing pipelines and QDEC tables.
+- Expose geodesic functions as part of public API.
+- Data loading: support aggregating atlas over hemis separately.
+- Support drawing region borders with function vis.region.values on.subject
+- Docs: more links between docs for easier navigation in help browser, fix various typos.
 
 
 Version 0.5.0
