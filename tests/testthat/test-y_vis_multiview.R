@@ -382,6 +382,7 @@ test_that("View angle names can be retrieved", {
 
 test_that("We can shift hemis apart", {
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+    testthat::skip_on_cran();
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 
