@@ -1,6 +1,11 @@
 fsbrain Changes
 ===============
 
+Version 0.5.2
+-------------
+- Fix: set the example for write.group.morph.standard.sf() to dontrun to prevent creation of files in user home when it is run.
+
+
 Version 0.5.1
 -------------
 - Add clip_fun as an alternative to clip.data for rglactions. This makes the API more consistent, see limit_fun.
