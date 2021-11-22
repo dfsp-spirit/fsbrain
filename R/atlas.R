@@ -204,6 +204,8 @@ label.to.annot <- function(label_vertices_by_region, num_vertices_in_surface, co
     # Derive the label names and colors from the label codes
 
     annot = list("colortable_df"=colortable_df, "colortable"=colortable, "vertices"=seq(0L, as.integer(num_vertices_in_surface) - 1L), "label_codes"=label_codes, "label_names"=label_names, "hex_colors_rgb"=hex_colors_rgb);
+    class(annot) = c(class("annot"), "fs.annot");
+    return(annot);
 
 }
 
