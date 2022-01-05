@@ -1,6 +1,11 @@
 fsbrain Changes
 ===============
 
+Version 0.5.3.dev (WIP)
+------------------------
+- Add vis.seg.legend() function to visualize legend for a segmented volume based on color lookup table.
+
+
 Version 0.5.2
 -------------
 - Fix: set the example for write.group.morph.standard.sf() to dontrun to prevent creation of files in user home when it is run.
