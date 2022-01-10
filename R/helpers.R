@@ -536,13 +536,18 @@ vis.paths <- function(coords_list, path_color = "#FF0000") {
 }
 
 
-#sjd = fsaverage.path(T);
-#sj = "fsaverage";
-#mesh = subject.surface(sjd, sj, hemi="lh");
-#lab = subject.label(sjd, sj, "cortex", hemi = "lh");
-#sm = submesh.vertex(mesh, lab);
+# sjd = fsaverage.path(T);
+# sj = "fsaverage";
+# mesh = subject.surface(sjd, sj, hemi="lh");
+# lab = subject.label(sjd, sj, "cortex", hemi = "lh");
+# sm = submesh.vertex(mesh, lab);
 # vis.fs.surface(mesh);
 # vis.fs.surface(sm);
+#
+# col = rep("white", nrow(mesh$vertices));
+# bd = label.border.fast <- function(surface_mesh, label);
+# col[bd$vertices] = "red";
+# vis.fs.surface(mesh, col=col);
 
 #' @title Create a submesh including only the given vertices.
 #'
@@ -550,11 +555,24 @@ vis.paths <- function(coords_list, path_color = "#FF0000") {
 #'
 #' @param old_vertex_indices_to_use integer vector, the vertex indices of the 'surface_mesh' that should be used to construct the new sub mesh.
 #'
-#' @return the new mesh, made up of the given 'old_vertex_indices_to_use' and all (complete) faces that exist between the query vertices in the source mesh.
+#' @param ret_mappings whether to return the vertex mappings. If TRUE, the return value becomes a list with entries 'submesh', 'vmap_full_to_submesh', and 'vmap_submesh_to_full'.
+#'
+#' @return the new mesh, made up of the given 'old_vertex_indices_to_use' and all (complete) faces that exist between the query vertices in the source mesh. But see 'ret_mapping' parameter.
+#'
+#' @examples
+#' \dontrun{
+#' sjd = fsaverage.path(T);
+#' sj = "fsaverage";
+#' mesh = subject.surface(sjd, sj, hemi="lh");
+#' lab = subject.label(sjd, sj, "cortex", hemi = "lh");
+#' sm = fsbrain:::submesh.vertex(mesh, lab);
+#' vis.fs.surface(mesh);
+#' vis.fs.surface(sm);
+#' }
 #'
 #' @keywords internal
 #' @importFrom stats complete.cases
-submesh.vertex <- function(surface_mesh, old_vertex_indices_to_use) {
+submesh.vertex <- function(surface_mesh, old_vertex_indices_to_use, ret_mappings=FALSE) {
 
   if(! is.vector(old_vertex_indices_to_use)) {
     stop("Argument 'old_vertex_indices_to_use' must be a vector.");
@@ -569,7 +587,7 @@ submesh.vertex <- function(surface_mesh, old_vertex_indices_to_use) {
 
   nv_new = length(old_vertex_indices_to_use);
 
-  vert_mapping = rep(NA, nv_old);
+  vert_mapping = rep(NA, nv_old); # position/index is old vertex, value is new vertex. old ones not in new mesh receive value of NA.
 
   # Create a map from the old vertex indices to the new ones. Needed to construct faces later.
   mapped_new_vertex_index = 1L;
@@ -584,49 +602,90 @@ submesh.vertex <- function(surface_mesh, old_vertex_indices_to_use) {
 
   # Use the subset of the old vertices (simply grab coords).
   new_vertices = surface_mesh$vertices[old_vertex_indices_to_use, ];
-  #cat(sprintf("The new_vertices coordinate matrix has dim %d, %d (full mesh had %d verts).\n", dim(new_vertices)[1], dim(new_vertices)[2], nv_old));
-  #if(nv_new != dim(new_vertices)[1]) {
-  #  stop("New vertex count does not match expectation.");
-  #}
 
   # Now for the faces.
   nf_old = nrow(surface_mesh$faces);
   new_faces = matrix(rep(NA, (nf_old*3L)), ncol=3L, nrow=nf_old); #over-allocate and remove invalid ones later.
-  #new_faces = matrix(ncol=3, nrow=0);
 
   new_face_idx = 0L;
   for(old_face_idx in seq(nf_old)) {
     new_face_idx = new_face_idx + 1L;
     old_face_indices = surface_mesh$faces[old_face_idx, ];
     new_face_indices = vert_mapping[old_face_indices];
-
-    #cat(sprintf("Checking old face %d with old verts %d %d %d and new verts %d %d %d.\n", old_face_idx, old_face_indices[1], old_face_indices[2], old_face_indices[3], new_face_indices[1], new_face_indices[2], new_face_indices[3]));
     new_faces[new_face_idx, ] = new_face_indices;
   }
 
   df = data.frame(new_faces);
-  cat(sprintf("Full faces Df has %d rows.\n", nrow(df)));
   new_faces = data.matrix(df[stats::complete.cases(df),]); # remove all faces containing an NA vertex
-  #cat(sprintf("Filtered Face matrix has %d rows.\n", nrow(new_faces)));
 
   new_mesh = list('vertices'=new_vertices, 'faces'=new_faces); #, 'vert_mapping'=vert_mapping); # the sub mesh
   class(new_mesh) = c(class(new_mesh), 'fs.surface');
+
+  if(ret_mappings) {
+    nnv = nrow(new_vertices); # nnv = number of new vertices.
+    rev_mapping = rep(-1L, nnv);
+    for(map_idx in seq.int(nv_old)) {
+      if(! is.na(vert_mapping[map_idx])) {
+        rev_mapping[vert_mapping[map_idx]] = map_idx;
+      }
+    }
+    if(any(rev_mapping < 0L)) {
+      stop("wth");
+    }
+    res = list('submesh'=new_mesh, 'vmap_full_to_submesh'=vert_mapping , 'vmap_submesh_to_full'=rev_mapping);
+    return(res);
+  }
+
   return(new_mesh);
 }
 
 
-
+#' @title Compute border vertices of a label using Rvcg.
+#'
+#' @param surface_mesh an fs.surface instance, see \code{\link{subject.surface}}.
+#'
+#' @param label an fs.label instance (see \code{\link{subject.label}}) or an integer vector, the vertex indices of the label.
+#'
+#' @return named list with entry 'vertices' containing an integer vector with the indices of the border vertices.
+#'
+#' @note This is faster than using the \code{\link{label.border}} function, but it does not fully match its functionality (some parameter are not implemented for this function), and it requires the \code{Rvcg} package, which is an optional dependency.
+#'
+#' @seealso \code{\link{label.border}}, which is slower but provides more options and does not require Rvcg.
+#'
+#' @examples
+#' \dontrun{
+#' sjd = fsaverage.path(T);
+#' sj = "fsaverage";
+#' mesh = subject.surface(sjd, sj, hemi="lh");
+#' lab = subject.label(sjd, sj, "cortex", hemi = "lh");
+#' col = rep("white", nrow(mesh$vertices));
+#' bd = fsbrain:::label.border.fast <- function(surface_mesh, label);
+#' col[bd$vertices] = "red";
+#' vis.fs.surface(mesh, col=col);
+#' }
+#'
 #' @keywords internal
 label.border.fast <- function(surface_mesh, label) {
-  if(freesurferformats::is.fs.label(label)) {
-    label_vertices = label$vertexdata$vertex_index;
-  } else {
-    label_vertices = label;
-  }
 
-  label_mesh = submesh.vertex(surface_mesh, label_vertices);
-  return(NULL);
+  if(requireNamespace("Rvcg", quietly = TRUE)) {
+
+    if(freesurferformats::is.fs.label(label)) {
+      label_vertices = label$vertexdata$vertex_index;
+    } else {
+      label_vertices = label;
+    }
+
+    submesh_res = submesh.vertex(surface_mesh, label_vertices, ret_mappings = TRUE); # a submesh of the surface, only including the vertices (and faces) which are part of the label.
+    label_mesh = submesh_res$submesh;
+    rev_mapping = submesh_res$vmap_submesh_to_full;
+    bd = Rvcg::vcgBorder(freesurferformats::fs.surface.to.tmesh3d(label_mesh));
+    res = list("vertices"=rev_mapping[which(bd$bordervb)]);
+    return(res);
+  } else {
+    stop("The optional dependency package 'Rvcg' is required to use this function, please install it.");
+  }
 }
+
 
 #' @title Compute border of a label.
 #'
