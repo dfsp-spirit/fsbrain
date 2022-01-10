@@ -541,16 +541,16 @@ vis.paths <- function(coords_list, path_color = "#FF0000") {
 #mesh = subject.surface(sjd, sj, hemi="lh");
 #lab = subject.label(sjd, sj, "cortex", hemi = "lh");
 #sm = submesh.vertex(mesh, lab);
+# vis.fs.surface(mesh);
+# vis.fs.surface(sm);
 
 #' @title Create a submesh including only the given vertices.
 #'
 #' @param surface_mesh an fs.surface instance, the original mesh
 #'
-#' @param old_vertex_indices_to_use integer vector, the vertex indices of the 'surface_mesh' that should be used to construct the new mesh.
+#' @param old_vertex_indices_to_use integer vector, the vertex indices of the 'surface_mesh' that should be used to construct the new sub mesh.
 #'
 #' @return the new mesh, made up of the given 'old_vertex_indices_to_use' and all (complete) faces that exist between the query vertices in the source mesh.
-#'
-#' @note THIS FUNCTION IS NOT IMPLEMENTED YET, THE RETURNED MESH IS BROKEN.
 #'
 #' @keywords internal
 #' @importFrom stats complete.cases
@@ -559,11 +559,12 @@ submesh.vertex <- function(surface_mesh, old_vertex_indices_to_use) {
   if(! is.vector(old_vertex_indices_to_use)) {
     stop("Argument 'old_vertex_indices_to_use' must be a vector.");
   }
-  old_vertex_indices_to_use = as.integer(old_vertex_indices_to_use);
+  old_vertex_indices_to_use = sort(as.integer(old_vertex_indices_to_use)); # sort is essential! The vertex indices in 'old_vertex_indices_to_use' may not be sorted,
+  # and the order of the 'new_vertices' will be wrong then (vertices will be ordered incorrectly, and thus faces will be broken).
 
   nv_old = nrow(surface_mesh$vertices);
   if(min(old_vertex_indices_to_use) < 1L | max(old_vertex_indices_to_use) > nv_old) {
-    stop("Invalid 'old_vertex_indices_to_use' parameter: must be integer vector containing values >=1 and <=num_verts(surface_mesh).");
+    stop(sprintf("Invalid 'old_vertex_indices_to_use' parameter: must be integer vector containing values >=1 and <=num_verts(surface_mesh), which is %d.\n", nv_old));
   }
 
   nv_new = length(old_vertex_indices_to_use);
@@ -583,14 +584,14 @@ submesh.vertex <- function(surface_mesh, old_vertex_indices_to_use) {
 
   # Use the subset of the old vertices (simply grab coords).
   new_vertices = surface_mesh$vertices[old_vertex_indices_to_use, ];
-  cat(sprintf("new_vertices has dim %d, %d.\n", dim(new_vertices)[1], dim(new_vertices)[2]));
-  if(nv_new != dim(new_vertices)[1]) {
-    stop("New vertex count does not match expectation.");
-  }
+  #cat(sprintf("The new_vertices coordinate matrix has dim %d, %d (full mesh had %d verts).\n", dim(new_vertices)[1], dim(new_vertices)[2], nv_old));
+  #if(nv_new != dim(new_vertices)[1]) {
+  #  stop("New vertex count does not match expectation.");
+  #}
 
   # Now for the faces.
   nf_old = nrow(surface_mesh$faces);
-  new_faces = matrix(rep(NA, nf_old*3), ncol=3, nrow=nf_old); #over-allocate and remove invalid ones later.
+  new_faces = matrix(rep(NA, (nf_old*3L)), ncol=3L, nrow=nf_old); #over-allocate and remove invalid ones later.
   #new_faces = matrix(ncol=3, nrow=0);
 
   new_face_idx = 0L;
@@ -601,22 +602,18 @@ submesh.vertex <- function(surface_mesh, old_vertex_indices_to_use) {
 
     #cat(sprintf("Checking old face %d with old verts %d %d %d and new verts %d %d %d.\n", old_face_idx, old_face_indices[1], old_face_indices[2], old_face_indices[3], new_face_indices[1], new_face_indices[2], new_face_indices[3]));
     new_faces[new_face_idx, ] = new_face_indices;
-
-    #if(! any(is.na(new_face_indices))) {
-    #  # All vertices of the old face have a valid mapping in the new mesh, add the new face.
-    #  new_faces = rbind(new_faces, new_face_indices);
-    #}
   }
 
   df = data.frame(new_faces);
   cat(sprintf("Full faces Df has %d rows.\n", nrow(df)));
   new_faces = data.matrix(df[stats::complete.cases(df),]); # remove all faces containing an NA vertex
-  cat(sprintf("Filtered Face matrix has %d rows.\n", nrow(new_faces)));
+  #cat(sprintf("Filtered Face matrix has %d rows.\n", nrow(new_faces)));
 
   new_mesh = list('vertices'=new_vertices, 'faces'=new_faces); #, 'vert_mapping'=vert_mapping); # the sub mesh
   class(new_mesh) = c(class(new_mesh), 'fs.surface');
   return(new_mesh);
 }
+
 
 
 #' @keywords internal
@@ -627,7 +624,7 @@ label.border.fast <- function(surface_mesh, label) {
     label_vertices = label;
   }
 
-  #label_mesh = submesh.vertex(surface_mesh, label_vertices);
+  label_mesh = submesh.vertex(surface_mesh, label_vertices);
   return(NULL);
 }
 
