@@ -54,7 +54,7 @@ list of coloredmeshes. The coloredmeshes used for the visualization.
 Creates a surface mesh, applies a colormap transform the morphometry data values into colors, and renders the resulting colored mesh in an interactive window. If hemi is 'both', the data is rendered for the whole brain.
 }
 \examples{
-\donttest{
+\dontrun{
    fsbrain::download_optional_data();
    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
    vis.subject.morph.native(subjects_dir, 'subject1', 'thickness', 'lh', views=c("t9"));

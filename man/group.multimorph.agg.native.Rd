@@ -42,7 +42,7 @@ dataframe with aggregated values over all measures and hemis for all subjects, w
 Compute the mean (or other aggregates) over all vertices of a subject from native space morphometry data (like 'surf/lh.area'). You can specify several measures and hemispheres. Uses knowledge about the FreeSurfer directory structure to load the correct files.
 }
 \examples{
-\donttest{
+\dontrun{
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     subjects_list = c("subject1", "subject2")
     data = group.multimorph.agg.native(subjects_dir, subjects_list, c("thickness", "area"),

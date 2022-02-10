@@ -30,7 +30,7 @@ dataframe with concatenated vertex values. Each column contains the values for o
 A measure is something like 'thickness' or 'area'. This function concatenates the native space data for all subjects into a single long vector for each measure. A dataframe is then created, in which each column is one such vector. This can be used to compute the correlation between measures on vertex level, for example.
 }
 \examples{
-\donttest{
+\dontrun{
    fsbrain::download_optional_data();
    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
    subjects_list = c('subject1', 'subject2');

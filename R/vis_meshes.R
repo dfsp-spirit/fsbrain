@@ -22,7 +22,7 @@
 #' @return the list of visualized coloredmeshes
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    cm = vis.subject.morph.native(subjects_dir, 'subject1', 'thickness',

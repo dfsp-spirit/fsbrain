@@ -39,7 +39,7 @@ Visualize a list of colored meshes in a single scene.
 To change or adapt the colorbar, you should use the makecmap_options parameter when constructing them in a vis function. See the example.
 }
 \examples{
-\donttest{
+\dontrun{
    fsbrain::download_optional_data();
    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
    cm = vis.subject.morph.native(subjects_dir, 'subject1', 'thickness',

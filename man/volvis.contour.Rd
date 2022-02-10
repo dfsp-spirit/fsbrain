@@ -24,7 +24,7 @@ the rendered triangles (a `Triangles3D` instance) with coordinates in surface RA
 Compute a smoothed surface from the voxel intensities in the given volume and render it. Requires the `misc3d` package to be installed, which is an optional dependency.
 }
 \examples{
-\donttest{
+\dontrun{
    fsbrain::download_optional_data();
    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
    brain = subject.volume(subjects_dir, 'subject1', 'brain');

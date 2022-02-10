@@ -42,7 +42,7 @@ dataframe with aggregated values for all subjects, with 3 columns and n rows, wh
 Compute the mean (or other aggregates) over all vertices of a subject from native space morphometry data (like 'surf/lh.area'). Uses knowledge about the FreeSurfer directory structure to load the correct file.
 }
 \examples{
-\donttest{
+\dontrun{
    fsbrain::download_optional_data();
    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
    subjects_list = c("subject1", "subject2");

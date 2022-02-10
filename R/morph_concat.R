@@ -9,13 +9,13 @@
 #' @param measures, vector of strings. Names of the vertex-wise morhometry measures. E.g., c("area", "thickness"). Used to construct the names of the morphometry file to be loaded. The data of each measure will be one column in the resulting dataframe.
 #'
 #' @param hemi, string, one of 'lh', 'rh' or 'both'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.
-#' 
+#'
 #' @param cortex_only logical, whether to set non-cortex data to NA
 #'
 #' @return dataframe with concatenated vertex values. Each column contains the values for one measure, concatenated for all subjects. WARNING: This dataframe can get large if you have many subjects.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    subjects_list = c('subject1', 'subject2');
@@ -82,13 +82,13 @@ group.concat.measures.native <- function(subjects_dir, subjects_list, measures, 
 #' @param hemi, string, one of 'lh', 'rh' or 'both'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.
 #'
 #' @param fwhm_per_measure, vector of strings. The fwhm settings to use, for each measure. If this is a string instead of a vector of strings, the same fwhm will be used for all measures.
-#' 
+#'
 #' @param cortex_only logical, whether to set non-cortex data to NA
 #'
 #' @return dataframe with concatenated vertex values. Each column contains the values for one measure, concatenated for all subjects. The column names are a concatination of the measure, "_fwhm", and the fwhm for that measure. WARNING: This dataframe can get large if you have many subjects.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    subjects_list = c('subject1', 'subject2');

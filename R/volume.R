@@ -22,7 +22,7 @@
 #' @return numerical array, the voxel data. If `with_header`, the full volume datastructure (see above).
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    brain = subject.volume(subjects_dir, 'subject1', 'brain', with_header = TRUE);
@@ -32,7 +32,7 @@
 #'
 #' @export
 subject.volume <- function(subjects_dir, subject_id, volume, format='auto', drop_empty_dims=TRUE, with_header=FALSE, mri_subdir=NULL) {
-    formats =tolower(format);
+    format =tolower(format);
     if(!(format %in% c('auto', 'mgh', 'mgz'))) {
         stop(sprintf("The volume format must be one of ('auto', 'mgh', 'mgz') but is '%s'.\n", format));
     }

@@ -58,7 +58,7 @@ list of coloredmeshes. The coloredmeshes used for the visualization.
 This function is intended to plot symmetric data around zero (like positive and negative activation data, signed p-values, etc.) on a subject's surface. It is a thin wrapper around \code{\link[fsbrain]{vis.data.on.subject}}.
 }
 \examples{
-\donttest{
+\dontrun{
    fsbrain::download_optional_data();
    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
    morph_data_lh = subject.morph.native(subjects_dir, 'subject1', 'thickness', 'lh');

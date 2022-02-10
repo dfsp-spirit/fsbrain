@@ -23,7 +23,7 @@
 #' @family morphometry data functions
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    subjects_list = c("subject1", "subject2");
@@ -467,7 +467,7 @@ check.subjects.files <- function(subjects_dir, subjects_list, sfiles=c("surf/lh.
 #' @family label data functions
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    subjects_list = c("subject1", "subject2");
@@ -507,7 +507,7 @@ group.label <- function(subjects_dir, subjects_list, label, hemi, return_one_bas
 #' @family mesh data functions
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    subjects_list = c("subject1", "subject2");
@@ -549,7 +549,7 @@ group.surface <- function(subjects_dir, subjects_list, surface, hemi='both', for
 #' @family atlas functions
 #'
 #'@examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    subjects_list = c("subject1", "subject2");

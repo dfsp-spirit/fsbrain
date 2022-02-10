@@ -54,7 +54,7 @@ Visualizes a label. Note that a label is just a set of vertices, and that you ca
 Drawing a colorbar for label data makes limited sense, use a legend instead. The colorbar can give a rough overview of the relative number of label and non-label vertices though, so it is possible to request one.
 }
 \examples{
-\donttest{
+\dontrun{
    fsbrain::download_optional_data();
 
   # Define the data to use:

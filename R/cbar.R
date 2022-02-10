@@ -233,7 +233,7 @@ coloredmeshes.combined.data.range <- function(coloredmeshes) {
 #' @note This function plots one or more legends (see \code{\link[graphics]{legend}}). You may have to adapt the device size before calling this function if you inted to plot a large colortable.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    annot = subject.annot(subjects_dir, 'subject1', 'lh', 'aparc');

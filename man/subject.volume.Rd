@@ -36,7 +36,7 @@ numerical array, the voxel data. If `with_header`, the full volume datastructure
 Load a brain volume (like `mri/brain.mgz`) for a subject from disk. Uses knowledge about the FreeSurfer directory structure to load the correct file.
 }
 \examples{
-\donttest{
+\dontrun{
    fsbrain::download_optional_data();
    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
    brain = subject.volume(subjects_dir, 'subject1', 'brain', with_header = TRUE);

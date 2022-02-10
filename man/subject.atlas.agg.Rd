@@ -27,7 +27,7 @@ dataframe with aggregated values for all regions, with 2 columns and n rows, whe
 Aggregate morphometry data over brain atlas regions, e.g., compute the mean thickness value over all regions in an atlas.
 }
 \examples{
-\donttest{
+\dontrun{
    fsbrain::download_optional_data();
    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
    morph_data = subject.morph.native(subjects_dir, 'subject1', 'thickness', 'lh');
