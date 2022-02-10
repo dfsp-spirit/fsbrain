@@ -681,11 +681,11 @@ merge.hemi.annots <- function(lh_annot, rh_annot) {
 #' @return vector of strings, the region names.
 #'
 #' @examples
-#' \donttest{
-#'    fsbrain::download_optional_data();
-#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
-#'    atlas_regions = get.atlas.region.names('aparc',
-#'     template_subjects_dir=subjects_dir, template_subject='subject1');
+#' \dontrun{
+#'  fsbrain::download_optional_data();
+#'  subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+#'  atlas_regions = get.atlas.region.names('aparc',
+#'  template_subjects_dir=subjects_dir, template_subject='subject1');
 #' }
 #'
 #' @family atlas functions

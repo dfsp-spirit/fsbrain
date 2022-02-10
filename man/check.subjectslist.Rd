@@ -20,4 +20,7 @@ check.subjectslist(
 \description{
 Check whether the subjects_list looks good, warn if not.
 }
+\note{
+This function will stop if subjects dirs are missing.
+}
 \keyword{internal}
