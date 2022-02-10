@@ -1,9 +1,10 @@
 fsbrain Changes
 ===============
 
-Version 0.5.3.dev (WIP)
+Version 0.5.3
 ------------------------
 - Add vis.seg.legend() function to visualize legend for a segmented volume based on color lookup table.
+- Replace all 'donttest' instructions in examples with 'dontrun', because CRAN runs the 'donttest' stuff and fails on it.
 
 
 Version 0.5.2
