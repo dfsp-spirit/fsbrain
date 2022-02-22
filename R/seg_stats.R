@@ -7,7 +7,7 @@
 #'
 #' @description Determine subjects that potentially failed segmentation, based on region-wise data. The data can be anything, but there must be one numerical value per subject per region.
 #'
-#' @param rdf data.frame, the region data. The first column must contain the subject identifier, all other columns should contain numerical data for a single region. (Each row represents a subject.) This can be produced by calling \code{\link[fsbrain]{group.agg.atlas.native}}.
+#' @param rdf data.frame, the region data. The first column must contain the subject identifier, all other columns should contain numerical data for a single region. (Each row represents a subject.) This can be produced by calling \code{\link[fsbrain]{group.agg.atlas.native}} or by parsing a text file produced by the FreeSurfer tool 'aparcstats2table' (see \code{fsbrain:::qc.from.segstats.table} for parsing code).
 #'
 #' @param z_threshold numerical, the cutoff value for considering a subject an outlier (in standard deviations).
 #'
