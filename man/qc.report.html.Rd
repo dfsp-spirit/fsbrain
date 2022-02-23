@@ -5,10 +5,10 @@
 \title{Create visual quality check report from QC result.}
 \usage{
 qc.report.html(
-  qcres,
   subjects_dir,
   subjects_list,
-  out_dir = "fsbrain_qc_report"
+  out_dir = "fsbrain_qc_report",
+  subjects_metadata = list()
 )
 }
 \arguments{
@@ -21,9 +21,9 @@ Create visual quality check report from QC result.
 }
 \examples{
 \dontrun{
-s = sjld("~/data/study1");
-qc = qc.for.group(s$d, s$l, "thickness", "aparc");
-fsbrain:::qc.report.html(qc, s$d, s$l);
+s = sjld("~/data/IXI_min/mri/freesurfer");
+s$l = s$l[1:100]; # first few subjects are enough
+fsbrain:::qc.report.html(s$d, s$l);
 }
 
 }

@@ -7,7 +7,7 @@
 subject.report.html(
   subjects_dir,
   subjects_list,
-  metadata = list(),
+  subjects_metadata = list(),
   out_dir = "fsbrain_qc_report"
 )
 }

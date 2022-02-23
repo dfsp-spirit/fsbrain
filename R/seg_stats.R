@@ -223,13 +223,28 @@ sjld <- function(subjects_dir) {
 #' \dontrun{
 #' s = sjld("~/data/IXI_min/mri/freesurfer");
 #' s$l = s$l[1:100]; # first few subjects are enough
-#' qc = qc.for.group(s$d, s$l, "thickness", "aparc");
-#' failed = unique(c(qc$lh$failed_subjects, qc$rh$failed_subjects));
-#' fsbrain:::qc.report.html(qc, s$d, failed);
+#' fsbrain:::qc.report.html(s$d, s$l);
 #' }
 #'
 #' @keywords internal
-qc.report.html <- function(qcres, subjects_dir, subjects_list, out_dir="fsbrain_qc_report") {
+qc.report.html <- function(subjects_dir, subjects_list, out_dir="fsbrain_qc_report", subjects_metadata = list()) {
+    qc = qc.for.group(subjects_dir, subjects_list, measure="thickness", atlas="aparc");
+    failed = unique(c(qc$lh$failed_subjects, qc$rh$failed_subjects));
+
+    for(subject in failed) {
+        if(! (subject %in% names(subjects_metadata))) {
+            subjects_metadata[[subject]] = list();
+        }
+        subjects_metadata[[subject]]$qc_result = "failed";
+    }
+    subject.report.html(subjects_dir, failed, out_dir = out_dir, subjects_metadata = subjects_metadata);
+}
+
+
+#' @title Create visual quality check report from QC result.
+#'
+#' @keywords internal
+subject.report.html <- function(subjects_dir, subjects_list, subjects_metadata = list(), out_dir="fsbrain_qc_report") {
     rep_title = sprintf("fsbrain QC report for %d subjects in dir %s", length(subjects_list), subjects_dir);
     report = sprintf("<html>\n<head>\n<title>%s</title>\n</head>\n<body>\n", rep_title);
     report = paste(report, sprintf("<h2>%s</h2>", rep_title), collapse = "");
@@ -246,19 +261,19 @@ qc.report.html <- function(qcres, subjects_dir, subjects_list, out_dir="fsbrain_
         img = export(cm, colorbar_legend=sprintf("Subject %s", subject), output_img = output_img);
         report = paste(report, sprintf("<h3>%s</h3>", subject), collapse = "");
         report = paste(report, sprintf("<img src='%s' width=800/>", output_img_rel), collapse = "");
+        if(subject %in% names(subjects_metadata)) {
+            report = paste(report, "<ul>\n", collapse = "");
+            for(key in names(subjects_metadata[[subject]])) {
+                val = subjects_metadata[[subject]][[key]];
+                report = paste(report, sprintf("<li>%s: %s</li>\n", key, val), collapse = "");
+            }
+            report = paste(report, "</ul>\n", collapse = "");
+        }
     }
     report = paste(report, "</body>\n</html>\n", collapse = "");
     out_file = file.path(out_dir, "report.html");
     writeLines(report, con=out_file);
     cat(sprintf("Report written to file '%s'.\n", out_file));
-}
-
-
-#' @title Create visual quality check report from QC result.
-#'
-#' @keywords internal
-subject.report.html <- function(subjects_dir, subjects_list, metadata = list(), out_dir="fsbrain_qc_report") {
-
 }
 
 
