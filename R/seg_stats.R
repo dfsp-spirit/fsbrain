@@ -222,15 +222,16 @@ sjld <- function(subjects_dir) {
 #' @examples
 #' \dontrun{
 #' s = sjld("~/data/IXI_min/mri/freesurfer");
-#' s$l = s$l[1:10]; # first few subjects are enough
+#' s$l = s$l[1:100]; # first few subjects are enough
 #' qc = qc.for.group(s$d, s$l, "thickness", "aparc");
-#' fsbrain:::qc.report.html(qc, s$d, s$l);
+#' failed = unique(c(qc$lh$failed_subjects, qc$rh$failed_subjects));
+#' fsbrain:::qc.report.html(qc, s$d, failed);
 #' }
 #'
 #' @keywords internal
 qc.report.html <- function(qcres, subjects_dir, subjects_list, out_dir="fsbrain_qc_report") {
-    rep_title = sprintf("fsbrain QC report: for %d subjects in dir %s", length(subjects_list), subjects_dir);
-    report = sprintf("<html>\n<head>%s</head>\n<body>\n", rep_title);
+    rep_title = sprintf("fsbrain QC report for %d subjects in dir %s", length(subjects_list), subjects_dir);
+    report = sprintf("<html>\n<head>\n<title>%s</title>\n</head>\n<body>\n", rep_title);
     report = paste(report, sprintf("<h2>%s</h2>", rep_title), collapse = "");
     cur_subject_idx = 0L;
     if(! dir.exists(out_dir)) {
@@ -249,6 +250,7 @@ qc.report.html <- function(qcres, subjects_dir, subjects_list, out_dir="fsbrain_
     report = paste(report, "</body>\n</html>\n", collapse = "");
     out_file = file.path(out_dir, "report.html");
     writeLines(report, con=out_file);
+    cat(sprintf("Report written to file '%s'.\n", out_file));
 }
 
 
