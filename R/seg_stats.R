@@ -196,3 +196,67 @@ qc.vis.failcount.by.region <- function(qc_res, atlas, subjects_dir=fsaverage.pat
     return(invisible(vis.region.values.on.subject(subjects_dir, subject_id, atlas, lh_region_value_list=lh_data, rh_region_value_list=rh_data, makecmap_options=makecmap_options, ...)));
 }
 
+#' @title Get subjects list from subjects.txt file in dir.
+#'
+#' @param subjects_dir character string, existing subjects dir with a subjects.txt file containing one subject per line and no header line.
+#'
+#' @return named list with entries: 'd', the query subjects_dir (repeated from the parameter), 'l', vector of character strings, the subjects_list read from the file, 'f', the subjects_file.
+#'
+#' @note This function stops if the file does not exist or cannot be read.
+#'
+#' @export
+sjld <- function(subjects_dir) {
+    subjects_file = file.path(subjects_dir, 'subjects.txt');
+    if(! file.exists(subjects_file)) {
+        stop(sprintf("Expected subjects file '%s' does not exist or cannot be read.", subjects_file));
+    } else {
+        res = list('f'=subjects_file, 'd'=subjects_dir, 'l'=read.md.subjects(subjects_file, header = FALSE));
+        return(res);
+    }
+}
+
+#' @title Create visual quality check report from QC result.
+#'
+#' @inheritParams qc.for.group
+#'
+#' @examples
+#' \dontrun{
+#' s = sjld("~/data/IXI_min/mri/freesurfer");
+#' s$l = s$l[1:10]; # first few subjects are enough
+#' qc = qc.for.group(s$d, s$l, "thickness", "aparc");
+#' fsbrain:::qc.report.html(qc, s$d, s$l);
+#' }
+#'
+#' @keywords internal
+qc.report.html <- function(qcres, subjects_dir, subjects_list, out_dir="fsbrain_qc_report") {
+    rep_title = sprintf("fsbrain QC report: for %d subjects in dir %s", length(subjects_list), subjects_dir);
+    report = sprintf("<html>\n<head>%s</head>\n<body>\n", rep_title);
+    report = paste(report, sprintf("<h2>%s</h2>", rep_title), collapse = "");
+    cur_subject_idx = 0L;
+    if(! dir.exists(out_dir)) {
+        dir.create(out_dir, showWarnings = FALSE, recursive = FALSE);
+    }
+    for(subject in subjects_list) {
+        cur_subject_idx = cur_subject_idx + 1L;
+        cat(sprintf("Handling subject '%s': %d of %d.\n", subject, cur_subject_idx, length(subjects_list)));
+        cm = vis.subject.annot(subjects_dir, subject, atlas="aparc", views=NULL);
+        output_img_rel = sprintf("subject_%s.png", subject);
+        output_img = file.path(out_dir, output_img_rel);
+        img = export(cm, colorbar_legend=sprintf("Subject %s", subject), output_img = output_img);
+        report = paste(report, sprintf("<h3>%s</h3>", subject), collapse = "");
+        report = paste(report, sprintf("<img src='%s' width=800/>", output_img_rel), collapse = "");
+    }
+    report = paste(report, "</body>\n</html>\n", collapse = "");
+    out_file = file.path(out_dir, "report.html");
+    writeLines(report, con=out_file);
+}
+
+
+#' @title Create visual quality check report from QC result.
+#'
+#' @keywords internal
+subject.report.html <- function(subjects_dir, subjects_list, metadata = list(), out_dir="fsbrain_qc_report") {
+
+}
+
+
