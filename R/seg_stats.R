@@ -219,6 +219,12 @@ sjld <- function(subjects_dir) {
 #'
 #' @inheritParams qc.for.group
 #'
+#' @param subjects_metadata named list, keys can be subjects from subjects_list. Each key can hold another named list of strings, represeting arbitrary metadata for that subject that will be displayed in the report.
+#'
+#' @param out_dir character string, path to output dir. The last directory part will be created if it does not exist (but not recursively).
+#'
+#' @param qc optional qc result. If NULL, a QC report is created using standard settings 'aparc' and 'thickness'.
+#'
 #' @examples
 #' \dontrun{
 #' s = sjld("~/data/IXI_min/mri/freesurfer");
@@ -227,8 +233,11 @@ sjld <- function(subjects_dir) {
 #' }
 #'
 #' @keywords internal
-qc.report.html <- function(subjects_dir, subjects_list, out_dir="fsbrain_qc_report", subjects_metadata = list()) {
-    qc = qc.for.group(subjects_dir, subjects_list, measure="thickness", atlas="aparc");
+qc.report.html <- function(subjects_dir, subjects_list, out_dir="fsbrain_qc_report", subjects_metadata = list(), qc=NULL) {
+    if(is.null(qc)) {
+        qc = qc.for.group(subjects_dir, subjects_list, measure="thickness", atlas="aparc");
+    }
+
     failed = unique(c(qc$lh$failed_subjects, qc$rh$failed_subjects));
 
     for(subject in failed) {
@@ -238,10 +247,13 @@ qc.report.html <- function(subjects_dir, subjects_list, out_dir="fsbrain_qc_repo
         subjects_metadata[[subject]]$qc_result = "failed";
     }
     subject.report.html(subjects_dir, failed, out_dir = out_dir, subjects_metadata = subjects_metadata);
+    cat(sprintf("To browse report: %s\n", sprintf("browseURL('%s/report.html')", out_dir)));
 }
 
 
 #' @title Create visual quality check report from QC result.
+#'
+#' @inheritParams qc.report.html
 #'
 #' @keywords internal
 subject.report.html <- function(subjects_dir, subjects_list, subjects_metadata = list(), out_dir="fsbrain_qc_report") {
