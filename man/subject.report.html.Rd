@@ -8,7 +8,8 @@ subject.report.html(
   subjects_dir,
   subjects_list,
   subjects_metadata = list(),
-  out_dir = "fsbrain_qc_report"
+  out_dir = "fsbrain_qc_report",
+  keep_existing_images = TRUE
 )
 }
 \arguments{
@@ -19,6 +20,8 @@ subject.report.html(
 \item{subjects_metadata}{named list, keys can be subjects from subjects_list. Each key can hold another named list of strings, represeting arbitrary metadata for that subject that will be displayed in the report.}
 
 \item{out_dir}{character string, path to output dir. The last directory part will be created if it does not exist (but not recursively).}
+
+\item{keep_existing_images}{logical, whether to keep existing images. A lot faster on 2nd call.}
 }
 \description{
 Create visual quality check report from QC result.

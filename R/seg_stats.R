@@ -225,6 +225,8 @@ sjld <- function(subjects_dir) {
 #'
 #' @param qc optional qc result. If NULL, a QC report is created using standard settings 'aparc' and 'thickness'.
 #'
+#' @param ... passed on to \code{subject.report.html}.
+#'
 #' @examples
 #' \dontrun{
 #' s = sjld("~/data/IXI_min/mri/freesurfer");
@@ -233,7 +235,7 @@ sjld <- function(subjects_dir) {
 #' }
 #'
 #' @keywords internal
-qc.report.html <- function(subjects_dir, subjects_list, out_dir="fsbrain_qc_report", subjects_metadata = list(), qc=NULL) {
+qc.report.html <- function(subjects_dir, subjects_list, out_dir="fsbrain_qc_report", subjects_metadata = list(), qc=NULL, ...) {
     if(is.null(qc)) {
         qc = qc.for.group(subjects_dir, subjects_list, measure="thickness", atlas="aparc");
     }
@@ -246,17 +248,19 @@ qc.report.html <- function(subjects_dir, subjects_list, out_dir="fsbrain_qc_repo
         }
         subjects_metadata[[subject]]$qc_result = "failed";
     }
-    subject.report.html(subjects_dir, failed, out_dir = out_dir, subjects_metadata = subjects_metadata);
+    subject.report.html(subjects_dir, failed, out_dir = out_dir, subjects_metadata = subjects_metadata, ...);
     cat(sprintf("To browse report: %s\n", sprintf("browseURL('%s/report.html')", out_dir)));
 }
 
 
 #' @title Create visual quality check report from QC result.
 #'
+#' @param keep_existing_images logical, whether to keep existing images. A lot faster on 2nd call.
+#'
 #' @inheritParams qc.report.html
 #'
 #' @keywords internal
-subject.report.html <- function(subjects_dir, subjects_list, subjects_metadata = list(), out_dir="fsbrain_qc_report") {
+subject.report.html <- function(subjects_dir, subjects_list, subjects_metadata = list(), out_dir="fsbrain_qc_report", keep_existing_images=TRUE) {
     rep_title = sprintf("fsbrain QC report for %d subjects in dir %s", length(subjects_list), subjects_dir);
     report = sprintf("<html>\n<head>\n<title>%s</title>\n</head>\n<body>\n", rep_title);
     report = paste(report, sprintf("<h2>%s</h2>", rep_title), collapse = "");
@@ -267,10 +271,13 @@ subject.report.html <- function(subjects_dir, subjects_list, subjects_metadata =
     for(subject in subjects_list) {
         cur_subject_idx = cur_subject_idx + 1L;
         cat(sprintf("Handling subject '%s': %d of %d.\n", subject, cur_subject_idx, length(subjects_list)));
-        cm = vis.subject.annot(subjects_dir, subject, atlas="aparc", views=NULL);
         output_img_rel = sprintf("subject_%s.png", subject);
         output_img = file.path(out_dir, output_img_rel);
-        img = export(cm, colorbar_legend=sprintf("Subject %s", subject), output_img = output_img);
+        if((! file.exists(output_img)) | (!keep_existing_images)) {
+            cm = vis.subject.annot(subjects_dir, subject, atlas="aparc", views=NULL);
+            img = export(cm, colorbar_legend=sprintf("Subject %s", subject), output_img = output_img);
+        }
+
         report = paste(report, sprintf("<h3>%s</h3>", subject), collapse = "");
         report = paste(report, sprintf("<img src='%s' width=800/>", output_img_rel), collapse = "");
         if(subject %in% names(subjects_metadata)) {

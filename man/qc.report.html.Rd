@@ -9,7 +9,8 @@ qc.report.html(
   subjects_list,
   out_dir = "fsbrain_qc_report",
   subjects_metadata = list(),
-  qc = NULL
+  qc = NULL,
+  ...
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ qc.report.html(
 \item{subjects_metadata}{named list, keys can be subjects from subjects_list. Each key can hold another named list of strings, represeting arbitrary metadata for that subject that will be displayed in the report.}
 
 \item{qc}{optional qc result. If NULL, a QC report is created using standard settings 'aparc' and 'thickness'.}
+
+\item{...}{passed on to \code{subject.report.html}.}
 }
 \description{
 Create visual quality check report from QC result.
