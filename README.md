@@ -94,10 +94,14 @@ The documentation can be accessed from within an R session after you have loaded
   * [basic fsbrain example notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples.html): Live visualization of subject data
   * [advanced fsbrain example notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples_adv.html): Plotting group data
   * [export API fsbrain example notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples_export.html): Exporting publication-ready plots
-* A detailed vignette with explanations and examples for the functions of the package is included, run `browseVignettes("fsbrain")` to see the vignettes. You can also open the vignette directly:
-  * learn how to load and visualize surface-based neuroimaging data and results: `vignette("fsbrain")` [read online at CRAN](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain.html)
-  * learn how to load and visualize volume-based neuroimaging data and results: `vignette("fsbrain_vol")` [read online at CRAN](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain_vol.html)
-  * read the fsbrain FAQ: `vignette("fsbrain_faq")` [read online at CRAN](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain_faq.html)
+  
+  
+* Detailed vignettes with explanations and examples for the functions of the package is included, run `browseVignettes("fsbrain")` to see the vignettes. You can also open the vignette directly:
+  * How to load and visualize surface-based neuroimaging data: `vignette("fsbrain")` or: [read online at CRAN](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain.html)
+  * How to load and visualize volume-based neuroimaging data: `vignette("fsbrain_vol")` or: [read online at CRAN](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain_vol.html)
+  * The fsbrain FAQ: `vignette("fsbrain_faq")` or: [read online at CRAN](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain_faq.html)
+  
+  
 * Help for a specific function can be accessed in the usual R manner: `?<function>`, where you replace `<function>` with a function name. Like this: `?group.morph.native`.
 * Run `example(<function>)` to see a live demo that uses the function `<function>`. Like this: `example(group.morph.native)`.
 * The [unit tests](./tests/testthat/) that come with this package are essentially a list of examples that illustrate how to use the functions.
