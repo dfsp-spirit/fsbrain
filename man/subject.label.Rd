@@ -33,7 +33,7 @@ integer vector with label data: the list of vertex indices in the label. See 're
 Load a label (like 'label/lh.cortex.label') for a subject from disk. Uses knowledge about the FreeSurfer directory structure to load the correct file.
 }
 \examples{
-\donttest{
+\dontrun{
    fsbrain::download_optional_data();
    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
    cortex_lh = subject.label(subjects_dir, "subject1", "cortex.label", "lh");

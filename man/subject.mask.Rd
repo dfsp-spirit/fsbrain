@@ -33,7 +33,7 @@ the mask, a logical vector with the length of the vertices in the surface. If pa
 Compute a binary vertex mask for the surface vertices of a subject. By defaults, the medial wall is masked.
 }
 \examples{
-\donttest{
+\dontrun{
    # Generate a binary mask of the medial wall. Wall vertices will
    #  be set to 0, cortex vertices will be set to 1.
    fsbrain::download_optional_data();

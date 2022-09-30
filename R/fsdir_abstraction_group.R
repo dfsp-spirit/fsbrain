@@ -23,7 +23,7 @@
 #' @family morphometry data functions
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    subjects_list = c("subject1", "subject2");
@@ -370,6 +370,8 @@ group.data.to.array <- function(data) {
 #'
 #' @param report_name character string, the variable name that should be used for the list in the messages.
 #'
+#' @note This function will stop if subjects dirs are missing.
+#'
 #' @keywords internal
 check.subjectslist <- function(subjects_list, subjects_dir=NULL, report_name='subjects_list') {
     if(is.null(subjects_list)) {
@@ -408,6 +410,44 @@ check.subjectslist <- function(subjects_list, subjects_dir=NULL, report_name='su
 }
 
 
+#' @title Report subjects missing files
+#'
+#' @inheritParams group.morph.native
+#'
+#' @param sfiles vector of character strings, the file names, relative to the data dir of the subject.
+#'
+#' @return vector of character strings, the subjects missing any of the files.
+#'
+#' @keywords internal
+check.subjects.files <- function(subjects_dir, subjects_list, sfiles=c("surf/lh.thickness", "surf/rh.thickness", "surf/lh.white", "surf/rh.white", "label/lh.aparc.annot", "label/rh.aparc.annot")) {
+    subjects_missing_files = c();
+    if(length(subjects_list) < 1L) {
+        stop(sprintf("The subjects_list must not be empty.\n"));
+    }
+    if(length(subjects_dir) > 1L) {
+        stop("The 'subjects_dir' must be a single directory.");
+    }
+    if(! dir.exists(subjects_dir)) {
+        stop("Directory subjects_dir does not exist.");
+    }
+    for(subject in subjects_list) {
+        sjd = file.path(subjects_dir, subject);
+        if(! dir.exists(sjd)) {
+            subjects_missing_files = c(subjects_missing_files, subject);
+            next;
+        }
+        for(sfile in sfiles) {
+            ffile = file.path(sjd, sfile);
+            if(! file.exists(ffile)) {
+                subjects_missing_files = c(subjects_missing_files, subject);
+                break;
+            }
+        }
+    }
+    return(subjects_missing_files);
+}
+
+
 #' @title Retrieve label data for a group of subjects.
 #'
 #' @description Load a label (like 'label/lh.cortex.label') for a group of subjects from disk. Uses knowledge about the FreeSurfer directory structure to load the correct file.
@@ -427,7 +467,7 @@ check.subjectslist <- function(subjects_list, subjects_dir=NULL, report_name='su
 #' @family label data functions
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    subjects_list = c("subject1", "subject2");
@@ -467,7 +507,7 @@ group.label <- function(subjects_dir, subjects_list, label, hemi, return_one_bas
 #' @family mesh data functions
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    subjects_list = c("subject1", "subject2");
@@ -509,7 +549,7 @@ group.surface <- function(subjects_dir, subjects_list, surface, hemi='both', for
 #' @family atlas functions
 #'
 #'@examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    subjects_list = c("subject1", "subject2");

@@ -24,7 +24,7 @@ list of `fs.coloredvoxels` instances, invisible. The function is called for the 
 Draw 3D boxes at all given coordinates using rgl, analogous to \code{\link{rgl.spheres}}. Constructs the coordinates for triangles making up the boxes, then uses \code{\link{triangles3d}} to render them.
 }
 \examples{
-\donttest{
+\dontrun{
    # Plot a 3D cloud of 500 red voxels:
    centers = matrix(rnorm(500*3)*100, ncol=3);
    rglvoxels(centers, voxelcol="red");

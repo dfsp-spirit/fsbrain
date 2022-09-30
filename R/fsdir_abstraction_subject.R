@@ -25,7 +25,7 @@
 #' @family morphometry data functions
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'
@@ -104,7 +104,7 @@ subject.morph.native <- function(subjects_dir, subject_id, measure, hemi, format
 #' @family label functions
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    # Generate a binary mask of the medial wall. Wall vertices will
 #'    #  be set to 0, cortex vertices will be set to 1.
 #'    fsbrain::download_optional_data();
@@ -262,7 +262,7 @@ apply.labeldata.to.morphdata <- function(morphdata, labeldata, masked_data_value
 #' @return vector with standard space morph data
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    thickness_lh = subject.morph.standard(subjects_dir, "subject1", "thickness", "lh", fwhm='10');
@@ -503,7 +503,7 @@ subject.filepath.any <- function(subjects_dir, subject_id, relative_path_parts, 
 #' @family label data functions
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    cortex_lh = subject.label(subjects_dir, "subject1", "cortex.label", "lh");
@@ -550,7 +550,7 @@ subject.label <- function(subjects_dir, subject_id, label, hemi, return_one_base
 #' @return logical vector. The mask. It contains a logical value for each vertex. By default, the vertex indices from the labels are FALSE and the rest are TRUE, but this can be changed with the parameter 'invert_labels'.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'
 #'   # Define the data to use:
@@ -642,7 +642,7 @@ labeldata.from.mask <- function(mask, invert=FALSE) {
 #'      The "colortable" is another named list with 3 entries: "num_entries": int, number of brain structures. "struct_names": vector of strings, the brain structure names. "table": numeric matrix with num_entries rows and 5 colums. The 5 columns are: 1 = color red channel, 2=color blue channel, 3=color green channel, 4=color alpha channel, 5=unique color code. "colortable_df": The same information as a dataframe. Contains the extra columns "hex_color_string_rgb" and "hex_color_string_rgba" that hold the color as an RGB(A) hex string, like "#rrggbbaa".
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    annot_lh = subject.annot(subjects_dir, "subject1", "lh", "aparc");
@@ -701,7 +701,7 @@ subject.annot <- function(subjects_dir, subject_id, hemi, atlas) {
 #' @return the `fs.surface` instance, as returned by \code{\link[freesurferformats]{read.fs.surface}}. If parameter `hemi` is set to `both`, a named list with entries `lh` and `rh` is returned, and the values of are the respective surfaces. The mesh data structure used in `fs.surface` is a *face index set*.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    lh_white = subject.surface(subjects_dir, "subject1", "white", "lh");

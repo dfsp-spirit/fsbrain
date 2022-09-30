@@ -63,7 +63,7 @@ list of coloredmeshes. The coloredmeshes used for the visualization.
 This function can be used for rendering a single value (color) for all vertices of an atlas region. The typical usecase is the visualization of results of atlas-based analyses, e.g., p-value, means or other aggregated values over all vertices of a region.
 }
 \examples{
-\donttest{
+\dontrun{
    fsbrain::download_optional_data();
    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
    atlas = 'aparc';   # Desikan atlas

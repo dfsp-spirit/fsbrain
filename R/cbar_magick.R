@@ -24,14 +24,16 @@
 #'
 #' @param transparency_color the temporary background color that will get mapped to transparency, or NULL if you do not want a transparent background. If used, it can be any color that does not occur in the foreground. Try 'white' or 'black' if in doubt.
 #'
+#' @param delete_colorbar_img logical, whether to delete the colorbar_img after the combine operation.
+#'
 #' @return named list with entries 'output_img_path': character string, path to saved image. 'merged_img': magick image instance, the merged image
 #'
 #' @family colorbar functions
 #' @export
-combine.colorbar.with.brainview.image <- function(brainview_img = "fsbrain_arranged.png", colorbar_img = "fsbrain_cbar.png", output_img = "fsbrain_merged.png", offset="+0+0", extend_brainview_img_height_by=NULL, silent=FALSE, allow_colorbar_shrink=TRUE, horizontal=FALSE, background_color = "#FFFFFF", transparency_color = NULL) {
+combine.colorbar.with.brainview.image <- function(brainview_img = "fsbrain_arranged.png", colorbar_img = "fsbrain_cbar.png", output_img = "fsbrain_merged.png", offset="+0+0", extend_brainview_img_height_by=NULL, silent=FALSE, allow_colorbar_shrink=TRUE, horizontal=FALSE, background_color = "#FFFFFF", transparency_color = NULL, delete_colorbar_img=TRUE) {
 
     if(! horizontal) {
-        return(invisible(combine.colorbar.with.brainview.image.vertical(brainview_img, colorbar_img, output_img, offset=offset, extend_brainview_img_width_by=extend_brainview_img_height_by, silent=silent, allow_colorbar_shrink=allow_colorbar_shrink, background_color = background_color, transparency_color = transparency_color)));
+        return(invisible(combine.colorbar.with.brainview.image.vertical(brainview_img, colorbar_img, output_img, offset=offset, extend_brainview_img_width_by=extend_brainview_img_height_by, silent=silent, allow_colorbar_shrink=allow_colorbar_shrink, background_color = background_color, transparency_color = transparency_color, delete_colorbar_img = delete_colorbar_img)));
     }
 
     if (requireNamespace("magick", quietly = TRUE)) {
@@ -105,6 +107,12 @@ combine.colorbar.with.brainview.image <- function(brainview_img = "fsbrain_arran
             message(sprintf("Combined image with horizontal colorbar written to '%s'.\n", output_img));
         }
 
+        if(delete_colorbar_img) {
+            if (file.exists(colorbar_img)) {
+                file.remove(colorbar_img);
+            }
+        }
+
     } else {
         warning("The 'magick' package must be installed to use this functionality. Combined image NOT written.");
         return(invisible(NULL));
@@ -121,7 +129,7 @@ combine.colorbar.with.brainview.image <- function(brainview_img = "fsbrain_arran
 #' @param extend_brainview_img_width_by integer value in pixels, the size of the right border to add to the brainview_img. Increase this if the right part of the colorbar is off the image canvas.
 #'
 #' @keywords internal
-combine.colorbar.with.brainview.image.vertical <- function(brainview_img, colorbar_img, output_img, offset="+0+0", extend_brainview_img_width_by=NULL, silent=FALSE, allow_colorbar_shrink=TRUE, background_color = "#FFFFFF", transparency_color = NULL) {
+combine.colorbar.with.brainview.image.vertical <- function(brainview_img, colorbar_img, output_img, offset="+0+0", extend_brainview_img_width_by=NULL, silent=FALSE, allow_colorbar_shrink=TRUE, background_color = "#FFFFFF", transparency_color = NULL, delete_colorbar_img = TRUE) {
 
     if (requireNamespace("magick", quietly = TRUE)) {
 
@@ -195,6 +203,12 @@ combine.colorbar.with.brainview.image.vertical <- function(brainview_img, colorb
         magick::image_write(combined_img, path = output_img);
         if(! silent) {
             message(sprintf("Combined image with vertical colorbar written to '%s'.\n", output_img));
+        }
+
+        if(delete_colorbar_img) {
+            if (file.exists(colorbar_img)) {
+                file.remove(colorbar_img);
+            }
         }
 
         return(invisible(list('output_img_path'=output_img, 'merged_img'=combined_img)));

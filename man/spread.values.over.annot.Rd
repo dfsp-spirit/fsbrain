@@ -30,7 +30,7 @@ named list with following entries: "spread_data": a vector of length n, where n 
 Given an annotation and a list of values (one per brain region), return data that has the values for each region mapped to all region vertices.
 }
 \examples{
-\donttest{
+\dontrun{
    fsbrain::download_optional_data();
    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
    annot = subject.annot(subjects_dir, 'subject1', 'lh', 'aparc');

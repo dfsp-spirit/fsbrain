@@ -1,6 +1,17 @@
 fsbrain Changes
 ===============
 
+Version 0.5.4-WIP
+-----------------
+- Add 'delete_colorbar_img' parameter to 'combine.colorbar.with.brainview.image()' function. This is TRUE by default, meaning that the merged cbar image file (fsbrain_cbar.png by default) will be deleted after the merge operation by default. This changes the old behaviour, in which the file was left behind in the current working directory.
+
+
+Version 0.5.3
+------------------------
+- Add vis.seg.legend() function to visualize legend for a segmented volume based on color lookup table.
+- Replace all 'donttest' instructions in examples with 'dontrun', because CRAN runs the 'donttest' stuff and fails on it.
+
+
 Version 0.5.2
 -------------
 - Fix: set the example for write.group.morph.standard.sf() to dontrun to prevent creation of files in user home when it is run.

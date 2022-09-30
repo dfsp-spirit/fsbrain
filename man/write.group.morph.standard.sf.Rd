@@ -18,8 +18,10 @@ Write morphometry data for a group into a single MGH or MGZ file. In neuroimagin
 The file will contain no information on the subject identifiers. The data can be for one or both hemispheres. See \code{\link{group.morph.standard.sf}} to read the data back into R.
 }
 \examples{
-    # create per-vertex data for 5 subjects.
-    mat = matrix(rnorm(5 * 163842, 3.0, 0.5), nrow=5, ncol = 163842);
-    fsbrain::write.group.morph.standard.sf("~/group_pvd.mgz", mat);
+\dontrun{
+# create per-vertex data for 5 subjects.
+mat = matrix(rnorm(5 * 163842, 3.0, 0.5), nrow=5, ncol = 163842);
+fsbrain::write.group.morph.standard.sf("~/group_pvd.mgz", mat);
+}
 
 }

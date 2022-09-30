@@ -30,7 +30,7 @@ named list of surfaces: Each name is a subject identifier from subjects_list, an
 Retrieve surface mesh data for a group of subjects.
 }
 \examples{
-\donttest{
+\dontrun{
    fsbrain::download_optional_data();
    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
    subjects_list = c("subject1", "subject2");

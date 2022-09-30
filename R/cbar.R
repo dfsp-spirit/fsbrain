@@ -233,7 +233,7 @@ coloredmeshes.combined.data.range <- function(coloredmeshes) {
 #' @note This function plots one or more legends (see \code{\link[graphics]{legend}}). You may have to adapt the device size before calling this function if you inted to plot a large colortable.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    annot = subject.annot(subjects_dir, 'subject1', 'lh', 'aparc');
@@ -281,6 +281,36 @@ vis.colortable.legend <- function(colortable, ncols=1L, plot_struct_index=TRUE) 
 }
 
 
+#' @title Plot legend for a brain volume segmentation based on colorLUT.
+#'
+#' @param colortable a colortable data.frame, or a character string, which will be treated as a filename and loaded with \code{\link[freesurferformats]{read.fs.colortable}}. Typically \code{FS_HOME/FreeSurferColorLUT.txt}.
+#'
+#' @param segvol optional 3D or 4D array of integer data, the brain segmentation. Or a character string, which will be treated as a filename and loaded with \code{\link[freesurferformats]{read.fs.volume}}. If given, only colortable entries which actually occur in the volume data are plotted. If \code{NULL}, all entries are plotted, which may be a lot.
+#'
+#' @param ... passed on to \link{vis.colortable.legend}
+#'
+#' @examples
+#' \dontrun{
+#' ct = file.path(fs.home(), "FreeSurferColorLUT.txt");
+#' seg = file.path(fs.home(), "subjects", "fsaverage", "mri", "aseg.mgz");
+#' vis.seg.legend(ct, seg);
+#'
+#' }
+#'
+#' @export
+vis.seg.legend <- function(colortable, segvol, ...) {
+    if(is.character(colortable)) {
+        colortable = freesurferformats::read.fs.colortable(colortable);
+    }
+    if(! is.null(segvol)) {
+        if(is.character(segvol)) {
+            segvol = freesurferformats::read.fs.volume(segvol);
+        }
+        seg_regions = unique(as.integer(segvol));
+        colortable = colortable[colortable$struct_index %in% seg_regions, ];
+    }
+    vis.colortable.legend(colortable, ...);
+}
 
 
 #' @title Determine whether colorbar can be plotted with given metadata.

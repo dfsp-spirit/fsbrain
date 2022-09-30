@@ -36,7 +36,7 @@ dataframe with aggregated values for all regions and subjects, with n columns an
 Aggregate native space morphometry data over brain atlas regions, e.g., compute the mean thickness value over all regions in an atlas for all subjects.
 }
 \examples{
-\donttest{
+\dontrun{
    fsbrain::download_optional_data();
    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
    agg = group.agg.atlas.native(subjects_dir, c('subject1', 'subject2'),

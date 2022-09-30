@@ -27,7 +27,7 @@ logical vector. The mask. It contains a logical value for each vertex. By defaul
 Create a binary mask for the data of a single hemisphere from one or more labels. A label contains the vertex indices which are part of it, but often having a mask in more convenient.
 }
 \examples{
-\donttest{
+\dontrun{
    fsbrain::download_optional_data();
 
   # Define the data to use:

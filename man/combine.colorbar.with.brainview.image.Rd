@@ -14,7 +14,8 @@ combine.colorbar.with.brainview.image(
   allow_colorbar_shrink = TRUE,
   horizontal = FALSE,
   background_color = "#FFFFFF",
-  transparency_color = NULL
+  transparency_color = NULL,
+  delete_colorbar_img = TRUE
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ combine.colorbar.with.brainview.image(
 \item{background_color}{color string, the background color to use. Use 'transparency_color' if you want a transparent background.}
 
 \item{transparency_color}{the temporary background color that will get mapped to transparency, or NULL if you do not want a transparent background. If used, it can be any color that does not occur in the foreground. Try 'white' or 'black' if in doubt.}
+
+\item{delete_colorbar_img}{logical, whether to delete the colorbar_img after the combine operation.}
 }
 \value{
 named list with entries 'output_img_path': character string, path to saved image. 'merged_img': magick image instance, the merged image

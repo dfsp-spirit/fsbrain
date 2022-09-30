@@ -7,7 +7,7 @@
 #'
 #' @description Determine subjects that potentially failed segmentation, based on region-wise data. The data can be anything, but there must be one numerical value per subject per region.
 #'
-#' @param rdf data.frame, the region data. The first column must contain the subject identifier, all other columns should contain numerical data for a single region. (Each row represents a subject.) This can be produced by calling \code{\link[fsbrain]{group.agg.atlas.native}}.
+#' @param rdf data.frame, the region data. The first column must contain the subject identifier, all other columns should contain numerical data for a single region. (Each row represents a subject.) This can be produced by calling \code{\link[fsbrain]{group.agg.atlas.native}} or by parsing a text file produced by the FreeSurfer tool 'aparcstats2table' (see \code{fsbrain:::qc.from.segstats.table} for parsing code).
 #'
 #' @param z_threshold numerical, the cutoff value for considering a subject an outlier (in standard deviations).
 #'
@@ -195,4 +195,104 @@ qc.vis.failcount.by.region <- function(qc_res, atlas, subjects_dir=fsaverage.pat
     makecmap_options$n = num_colors_needed;
     return(invisible(vis.region.values.on.subject(subjects_dir, subject_id, atlas, lh_region_value_list=lh_data, rh_region_value_list=rh_data, makecmap_options=makecmap_options, ...)));
 }
+
+#' @title Get subjects list from subjects.txt file in dir.
+#'
+#' @param subjects_dir character string, existing subjects dir with a subjects.txt file containing one subject per line and no header line.
+#'
+#' @return named list with entries: 'd', the query subjects_dir (repeated from the parameter), 'l', vector of character strings, the subjects_list read from the file, 'f', the subjects_file.
+#'
+#' @note This function stops if the file does not exist or cannot be read.
+#'
+#' @export
+sjld <- function(subjects_dir) {
+    subjects_file = file.path(subjects_dir, 'subjects.txt');
+    if(! file.exists(subjects_file)) {
+        stop(sprintf("Expected subjects file '%s' does not exist or cannot be read.", subjects_file));
+    } else {
+        res = list('f'=subjects_file, 'd'=subjects_dir, 'l'=read.md.subjects(subjects_file, header = FALSE));
+        return(res);
+    }
+}
+
+#' @title Create visual quality check report from QC result.
+#'
+#' @inheritParams qc.for.group
+#'
+#' @param subjects_metadata named list, keys can be subjects from subjects_list. Each key can hold another named list of strings, represeting arbitrary metadata for that subject that will be displayed in the report.
+#'
+#' @param out_dir character string, path to output dir. The last directory part will be created if it does not exist (but not recursively).
+#'
+#' @param qc optional qc result. If NULL, a QC report is created using standard settings 'aparc' and 'thickness'.
+#'
+#' @param ... passed on to \code{subject.report.html}.
+#'
+#' @examples
+#' \dontrun{
+#' s = sjld("~/data/IXI_min/mri/freesurfer");
+#' s$l = s$l[1:100]; # first few subjects are enough
+#' fsbrain:::qc.report.html(s$d, s$l);
+#' }
+#'
+#' @keywords internal
+qc.report.html <- function(subjects_dir, subjects_list, out_dir="fsbrain_qc_report", subjects_metadata = list(), qc=NULL, ...) {
+    if(is.null(qc)) {
+        qc = qc.for.group(subjects_dir, subjects_list, measure="thickness", atlas="aparc");
+    }
+
+    failed = unique(c(qc$lh$failed_subjects, qc$rh$failed_subjects));
+
+    for(subject in failed) {
+        if(! (subject %in% names(subjects_metadata))) {
+            subjects_metadata[[subject]] = list();
+        }
+        subjects_metadata[[subject]]$qc_result = "failed";
+    }
+    subject.report.html(subjects_dir, failed, out_dir = out_dir, subjects_metadata = subjects_metadata, ...);
+    cat(sprintf("To browse report: %s\n", sprintf("browseURL('%s/report.html')", out_dir)));
+}
+
+
+#' @title Create visual quality check report from QC result.
+#'
+#' @param keep_existing_images logical, whether to keep existing images. A lot faster on 2nd call.
+#'
+#' @inheritParams qc.report.html
+#'
+#' @keywords internal
+subject.report.html <- function(subjects_dir, subjects_list, subjects_metadata = list(), out_dir="fsbrain_qc_report", keep_existing_images=TRUE) {
+    rep_title = sprintf("fsbrain QC report for %d subjects in dir %s", length(subjects_list), subjects_dir);
+    report = sprintf("<html>\n<head>\n<title>%s</title>\n</head>\n<body>\n", rep_title);
+    report = paste(report, sprintf("<h2>%s</h2>", rep_title), collapse = "");
+    cur_subject_idx = 0L;
+    if(! dir.exists(out_dir)) {
+        dir.create(out_dir, showWarnings = FALSE, recursive = FALSE);
+    }
+    for(subject in subjects_list) {
+        cur_subject_idx = cur_subject_idx + 1L;
+        cat(sprintf("Handling subject '%s': %d of %d.\n", subject, cur_subject_idx, length(subjects_list)));
+        output_img_rel = sprintf("subject_%s.png", subject);
+        output_img = file.path(out_dir, output_img_rel);
+        if((! file.exists(output_img)) | (!keep_existing_images)) {
+            cm = vis.subject.annot(subjects_dir, subject, atlas="aparc", views=NULL);
+            img = export(cm, colorbar_legend=sprintf("Subject %s", subject), output_img = output_img);
+        }
+
+        report = paste(report, sprintf("<h3>%s</h3>", subject), collapse = "");
+        report = paste(report, sprintf("<img src='%s' width=800/>", output_img_rel), collapse = "");
+        if(subject %in% names(subjects_metadata)) {
+            report = paste(report, "<ul>\n", collapse = "");
+            for(key in names(subjects_metadata[[subject]])) {
+                val = subjects_metadata[[subject]][[key]];
+                report = paste(report, sprintf("<li>%s: %s</li>\n", key, val), collapse = "");
+            }
+            report = paste(report, "</ul>\n", collapse = "");
+        }
+    }
+    report = paste(report, "</body>\n</html>\n", collapse = "");
+    out_file = file.path(out_dir, "report.html");
+    writeLines(report, con=out_file);
+    cat(sprintf("Report written to file '%s'.\n", out_file));
+}
+
 

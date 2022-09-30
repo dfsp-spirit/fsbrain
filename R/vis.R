@@ -34,7 +34,7 @@
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    vis.subject.morph.native(subjects_dir, 'subject1', 'thickness', 'lh', views=c("t9"));
@@ -204,7 +204,7 @@ vis.subject.pre <- function(surfaces, pervertex_data, hemi="both", views=c("t4")
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    fsaverage_dir = file.path(Sys.getenv('FREESURFER_HOME'), 'subjects');
@@ -280,7 +280,7 @@ vis.subject.morph.standard <- function(subjects_dir, subject_id, measure, hemi="
 #' @note Drawing a colorbar for label data makes limited sense, use a legend instead. The colorbar can give a rough overview of the relative number of label and non-label vertices though, so it is possible to request one.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    subject_id = 'subject1';
@@ -359,7 +359,7 @@ vis.subject.label <- function(subjects_dir, subject_id, label, hemi, surface="wh
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    morph_data_lh = subject.morph.native(subjects_dir, 'subject1', 'thickness', 'lh');
@@ -409,7 +409,7 @@ vis.data.on.subject <- function(subjects_dir, vis_subject_id, morph_data_lh=NULL
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    morph_data_lh = subject.morph.native(subjects_dir, 'subject1', 'thickness', 'lh');
@@ -497,7 +497,7 @@ perform.na.mapping <- function(data, map_to_NA) {
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    color_lh = '#ff0000';
@@ -571,7 +571,7 @@ vis.color.on.subject <- function(subjects_dir, vis_subject_id, color_lh=NULL, co
 #' @note Drawing a colorbar for label data makes limited sense, use a legend instead. The colorbar can give a rough overview of the relative number of label and non-label vertices though, so it is possible to request one.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'
 #'   # Define the data to use:
@@ -645,7 +645,7 @@ vis.mask.on.subject <- function(subjects_dir, vis_subject_id, mask_lh, mask_rh, 
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'
 #'   # Define the data to use:
@@ -731,7 +731,7 @@ vis.data.on.fsaverage <- function(subjects_dir=NULL, vis_subject_id="fsaverage",
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    vis.subject.annot(subjects_dir, 'subject1', 'aparc', 'both');
@@ -786,7 +786,7 @@ vis.subject.annot <- function(subjects_dir, subject_id, atlas, hemi='both', surf
 #' @return list of coloredmeshes. The coloredmeshes used for the visualization.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    atlas = 'aparc';   # Desikan atlas

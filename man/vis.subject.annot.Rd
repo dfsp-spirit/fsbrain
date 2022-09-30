@@ -45,7 +45,7 @@ list of coloredmeshes. The coloredmeshes used for the visualization.
 Creates a surface mesh, loads the colors from the annotation, and renders the resulting colored mesh in an interactive window. If hemi is 'both', the data is rendered for the whole brain.
 }
 \examples{
-\donttest{
+\dontrun{
    fsbrain::download_optional_data();
    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
    vis.subject.annot(subjects_dir, 'subject1', 'aparc', 'both');

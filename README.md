@@ -16,6 +16,7 @@ The plots produced by *fsbrain* can be integrated into R notebooks or written to
 
 
 ## News
+* 2022-02-13: New fsbrain version 0.5.3 released on CRAN, see the [CHANGES](./CHANGES).
 * 2021-11-11: New fsbrain version 0.5.1 released on CRAN, see the [CHANGES](./CHANGES).
 * 2021-09-16: New fsbrain version 0.5.0 released on CRAN, see the [CHANGES](./CHANGES).
 * 2021-05-12: New fsbrain version 0.4.3 released on CRAN, see the [CHANGES](./CHANGES).
@@ -119,7 +120,8 @@ Continuous integration results:
 <!-- badges: start -->
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/dfsp-spirit/fsbrain?branch=master&svg=true)](https://ci.appveyor.com/project/dfsp-spirit/fsbrain) AppVeyor CI under Windows
 
-[![R-CMD-check](https://github.com/dfsp-spirit/fsbrain/workflows/R-CMD-check/badge.svg)](https://github.com/dfsp-spirit/fsbrain/actions) GitHub Actions, Ubuntu Linux and MacOS (Note: Currently this always "fails" because of a warning caused by rgl when running headless, so the badge is rather useless atm and one needs to follow the link to see the relevant CI results.)
+<!-- [![R-CMD-check](https://github.com/dfsp-spirit/fsbrain/workflows/R-CMD-check/badge.svg)](https://github.com/dfsp-spirit/fsbrain/actions) -->
+[GitHub Actions, Ubuntu Linux and MacOS](https://github.com/dfsp-spirit/fsbrain/actions) (Note: Currently this is always "failing" because of a warning caused by the `rgl` package when running headless. So the simlpe "passing"/"failing" status is useless, and one needs to follow the link to check the relevant CI results in detail.)
 <!-- badges: end -->
 
 ## License

@@ -22,7 +22,7 @@ list of annotations, as returned by freesurferformats::read.fs.annot(). If hemi 
 Load a brain surface annotation, i.e., a cortical parcellation based on an atlas, for a group of subjects.
 }
 \examples{
-\donttest{
+\dontrun{
    fsbrain::download_optional_data();
    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
    subjects_list = c("subject1", "subject2");

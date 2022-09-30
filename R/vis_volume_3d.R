@@ -14,7 +14,7 @@
 #' @param ... material properties, passed to \code{\link{triangles3d}}. Example: \code{color = "#0000ff", lit=FALSE}.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    brain = subject.volume(subjects_dir, 'subject1', 'brain');
@@ -220,7 +220,7 @@ hull.retain.along.axis <- function(volume, hull, dim_check=2L, upwards=TRUE, thi
 #' @return the rendered triangles (a `Triangles3D` instance) with coordinates in surface RAS space if any, `NULL` otherwise. This will be a list if you pass a 4D volume and select 'all' frames.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    brain = subject.volume(subjects_dir, 'subject1', 'brain');
@@ -355,7 +355,7 @@ apply.transform <- function(object, matrix_fun) {
 #'
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    # Plot a 3D cloud of 500 red voxels:
 #'    centers = matrix(rnorm(500*3)*100, ncol=3);
 #'    rglvoxels(centers, voxelcol="red");

@@ -45,7 +45,7 @@ list of coloredmeshes. The coloredmeshes used for the visualization.
 Visualize pre-defined vertex colors on a subject.
 }
 \examples{
-\donttest{
+\dontrun{
    fsbrain::download_optional_data();
    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
    color_lh = '#ff0000';

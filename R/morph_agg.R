@@ -15,7 +15,7 @@
 #' @family global aggregation functions
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'    subjects_list = c("subject1", "subject2");
@@ -258,7 +258,7 @@ group.multimorph.agg.standard <- function(subjects_dir, subjects_list, measures,
 #' @family global aggregation functions
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 #'     subjects_list = c("subject1", "subject2")
 #'     data = group.multimorph.agg.native(subjects_dir, subjects_list, c("thickness", "area"),

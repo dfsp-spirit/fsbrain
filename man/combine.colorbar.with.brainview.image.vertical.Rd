@@ -13,7 +13,8 @@ combine.colorbar.with.brainview.image.vertical(
   silent = FALSE,
   allow_colorbar_shrink = TRUE,
   background_color = "#FFFFFF",
-  transparency_color = NULL
+  transparency_color = NULL,
+  delete_colorbar_img = TRUE
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ combine.colorbar.with.brainview.image.vertical(
 \item{background_color}{color string, the background color to use. Use 'transparency_color' if you want a transparent background.}
 
 \item{transparency_color}{the temporary background color that will get mapped to transparency, or NULL if you do not want a transparent background. If used, it can be any color that does not occur in the foreground. Try 'white' or 'black' if in doubt.}
+
+\item{delete_colorbar_img}{logical, whether to delete the colorbar_img after the combine operation.}
 }
 \description{
 Combine a vertical colorbar and a brainview image into a new figure.

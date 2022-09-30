@@ -63,7 +63,7 @@ list of coloredmeshes. The coloredmeshes used for the visualization.
 Renders standard space morphometry data for a single subject, or the group mean for a group of subjects. The default template subject is fsaverage.
 }
 \examples{
-\donttest{
+\dontrun{
    fsbrain::download_optional_data();
    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
    fsaverage_dir = file.path(Sys.getenv('FREESURFER_HOME'), 'subjects');
