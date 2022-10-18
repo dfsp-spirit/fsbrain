@@ -1,6 +1,6 @@
 # colorbar functions
 
-#' @title Draw coloredbar into background of current plot.
+#' @title Draw colorebar into background of current plot.
 #'
 #' @description Requires a rgl 3d visualisation to be open that already contains a rendered object. Uses \code{\link{bgplot3d}} to add a colorbar in the background of the plot using \code{\link[fields]{image.plot}}. Experimental.
 #'
@@ -104,7 +104,7 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
 #' @importFrom grDevices png pdf dev.off
 #' @importFrom utils modifyList
 #' @export
-coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=FALSE, image.plot_extra_options = list(horizontal=FALSE, 'legend.cex'=1.8, 'legend.width'=2, 'legend.mar' = 12, 'axis.args'=list('cex.axis'=5.0)), png_options=list('filename'='fsbrain_cbar.png', 'width'=1400, 'height'=1400, 'bg'='#FFFFFF00'), silent=FALSE, trim_png=TRUE) {
+coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=FALSE, image.plot_extra_options = list(horizontal=FALSE, 'legend.cex'=1.8, 'legend.width'=2, 'legend.mar' = 12, 'axis.args'=list('cex.axis'=5.0)), png_options=list('filename'='fsbrain_cbar.png', 'width'=1400, 'height'=1400, 'bg'='#FFFFFF00'), silent=FALSE, trim_png=TRUE, log_breaks=FALSE) {
 
     if(length(coloredmeshes) < 1) {
         message("Requested to draw separate colorbar, but mesh list is empty. Skipping.");
@@ -145,6 +145,21 @@ coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=FALSE, image.
 
     image.plot_options_internal = list(legend.only=TRUE, zlim = zlim, col = makecmap_options$colFn(num_col), add=TRUE, graphics.reset=TRUE);
     image.plot_options = modifyList(image.plot_options_internal, image.plot_extra_options);
+
+    # Enable plotting log-scale color bar.
+    if(is.integer(log_breaks) && length(log_breaks) == 1L) {
+        num_break_labels = log_breaks;
+        break_labels = squash::prettyLog(combined_data_range, n=num_break_labels);  # Our x axis labels for a few of the breaks. Typically around 5 labels.
+
+        num_fields_breaks = num_col + 1L;
+        predicted_field_breaks = seq(combined_data_range[0], combined_data_range[1], length.out = num_fields_breaks); # The breaks of fields.imageplot, these are 1 per color (typically >= 100).
+        breaks_at_index = as.integer(seq.int(0, num_col+1L, length.out = num_break_labels)); # The indices into the breaks of fields.imageplot at which we want to place our x axis label strings.
+        lab.breaks = rep("", num_fields_breaks);
+        lab.breaks[breaks_at_index] = break_labels; # Set our labels, leave the rest as empty strings.
+
+        image.plot_options["lab.breaks"] = lab.breaks;
+    }
+
     if(show) {
         plot.new();
         do.call(fields::image.plot, image.plot_options);
