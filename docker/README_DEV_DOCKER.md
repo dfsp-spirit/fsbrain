@@ -23,7 +23,7 @@ To create a new version of the image on docker.io, one needs to build the new im
 1) login to docker.io:
 
 ```
-sudo docker login -u "dfspspirit" --password-stdin docker.io
+docker login -u "dfspspirit"  docker.io
 ```
 
 2) tag the image with the dockerhub user/repo and a version,  e.g.:
