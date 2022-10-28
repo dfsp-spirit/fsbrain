@@ -111,7 +111,6 @@ coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=FALSE, image.
         return(invisible(NULL));
     }
 
-
     makecmap_options = coloredmeshes.get.md(coloredmeshes, 'makecmap_options');
     if(is.null(makecmap_options)) {
         warning("Requested to draw colorbar, but meshes contain no 'makecmap_options' metadata, falling back to defaults.");
@@ -141,10 +140,6 @@ coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=FALSE, image.
         zlim = combined_data_range;
     }
 
-    cat(sprintf("1 zlim has length %d.\n", length(zlim)));
-    cat(sprintf("1 zlim has length %d, from %f to %f.\n", length(zlim), zlim[1], zlim[2]));
-    cat(sprintf("1 zlim has type: %s\n", typeof(zlim)));
-
     num_col = ifelse(is.null(makecmap_options$n), 100L, makecmap_options$n);  # for small meshes with < 100 verts, the user will have to set n to <= num_verts
 
     image.plot_options_internal = list(legend.only=TRUE, zlim = zlim, col = makecmap_options$colFn(num_col), add=TRUE, graphics.reset=TRUE);
@@ -152,32 +147,24 @@ coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=FALSE, image.
 
     # Enable plotting log-scale color bar.
     # NOTE: Use 'area' instead of 'thickness' as PVD when testing this with the code from the example, thickness has a min of 0 (won't work with log).
-    if(is.logical(log_breaks) && log_breaks) {
-        log_breaks = 5L;  # Default number of breaks is 5.
-    }
-    if(is.numeric(log_breaks) && length(log_breaks) == 1L) {
-        num_break_labels = as.integer(log_breaks);
-        cat(sprintf("2 Using %d log breaks.\n", num_break_labels));
-        cat(sprintf("2 Zlim has length %d, from %f to %f.\n", length(zlim), zlim[1], zlim[2]));
-
-        use_method_prettylog = FALSE
-        if (use_method_prettylog) {
-            break_labels_log = squash::prettyLog(combined_data_range, n=num_break_labels);  # Our x axis labels for a few of the breaks. Typically around 5 labels.
-            num_fields_breaks = num_col + 1L;
-            #predicted_field_breaks = seq(combined_data_range[0], combined_data_range[1], length.out = num_fields_breaks); # The breaks of fields.imageplot, these are 1 per color (typically >= 100).
-            breaks_at_index = as.integer(seq.int(0, num_col+1L, length.out = num_break_labels)); # The indices into the breaks of fields.imageplot at which we want to place our x axis label strings.
-            lab.breaks = rep("", num_fields_breaks);
-            lab.breaks[breaks_at_index] = break_labels_log; # Set our labels, leave the rest as empty strings.
-            image.plot_options["lab.breaks"] = lab.breaks;
-        } else {
-            #ticks<- c( 1, 2,4,8,16,32)
-            #image.plot(x,y,log(z), axis.args=list( at=log(ticks), labels=ticks))
+    if((is.logical(log_breaks) && log_breaks) ||  is.numeric(log_breaks)) {
+        if(is.logical(log_breaks) && log_breaks) {
+            log_breaks = 5L;  # If simply 'True', use default number of breaks = 5.
+        }
+        if(is.numeric(log_breaks) && length(log_breaks) == 1L) { # If a single number, treat it as the *number* of ticks to create.
+            num_break_labels = as.integer(log_breaks);
             ticks = squash::prettyLog(combined_data_range, n=num_break_labels);
-            cat("ticks: ", ticks, "\n")
-            image.plot_options$axis.args = list(at=log(ticks), labels=ticks);
-            image.plot_options$zlim = log(image.plot_options$zlim);
+        } else if(is.numeric(log_breaks) && length(log_breaks) > 1L) {  # If a vector, treat the values in there as the desired ticks.
+            ticks = log_breaks;
         }
 
+        tick_axis_args = list('at'=log(ticks), 'labels'=ticks)
+        if ("axis.args" %in% names(image.plot_options)) {
+            image.plot_options$axis.args = modifyList(image.plot_options$axis.args, tick_axis_args);
+        } else {
+            image.plot_options$axis.args = tick_axis_args;
+        }
+        image.plot_options$zlim = log(image.plot_options$zlim);
     }
 
     if(show) {
