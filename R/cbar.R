@@ -18,6 +18,7 @@
 #' @importFrom fields image.plot
 #' @keywords internal
 draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
+
     if(! is.list(coloredmeshes)) {
         stop("Parameter 'coloredmeshes' must be a list.");
     }
@@ -55,7 +56,20 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
         }
         num_col = ifelse(is.null(makecmap_options$n), 100L, makecmap_options$n);
 
-        rgl::bgplot3d({op = graphics::par(mar = rep(0.1, 4)); plot.new(); fields::image.plot(add=T, legend.only = TRUE, zlim = zlim, col = makecmap_options$colFn(num_col), horizontal = horizontal, ...); graphics::par(op);});
+        # Check whether to plot in log10 scale.
+        if('base' %in% names(makecmap_options)) {
+            num_ticks_default = 5L;
+            if (as.integer(makecmap_options$base) == 10L) {
+                ticks = squash::prettyLog(combined_data_range, n=num_ticks_default);
+            } else {
+                stop(sprintf(" - Invalid 'base' value in 'makecmap_options', only 10 is supported for log 10 scale. (Do not set it at all for linear scale.)\n"));
+            }
+            axis.args = list('at'=log(ticks), 'labels'=ticks);
+            rgl::bgplot3d({op = graphics::par(mar = rep(0.1, 4)); plot.new(); fields::image.plot(add=T, legend.only = TRUE, zlim = log(zlim), axis.args=axis.args, col = makecmap_options$colFn(num_col), horizontal = horizontal, ...); graphics::par(op);});
+        } else {
+            # Plot linear scale.
+            rgl::bgplot3d({op = graphics::par(mar = rep(0.1, 4)); plot.new(); fields::image.plot(add=T, legend.only = TRUE, zlim = zlim, col = makecmap_options$colFn(num_col), horizontal = horizontal, ...); graphics::par(op);});
+        }
     } else {
         warning("Requested to draw colorbar, but meshes do not contain the required metadata. Skipping.");
     }
@@ -107,7 +121,6 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
 #' @importFrom utils modifyList
 #' @export
 coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=FALSE, image.plot_extra_options = list(horizontal=FALSE, 'legend.cex'=1.8, 'legend.width'=2, 'legend.mar' = 12, 'axis.args'=list('cex.axis'=5.0)), png_options=list('filename'='fsbrain_cbar.png', 'width'=1400, 'height'=1400, 'bg'='#FFFFFF00'), silent=FALSE, trim_png=TRUE, log_breaks=FALSE) {
-    cat(sprintf("coloredmesh.plot.colorbar.separate called.\n"));
 
     if(length(coloredmeshes) < 1) {
         message("Requested to draw separate colorbar, but mesh list is empty. Skipping.");
@@ -153,24 +166,18 @@ coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=FALSE, image.
     # NOTE: Use 'area' instead of 'thickness' as PVD when testing this with the code from the example, thickness has a min of 0 (won't work with log).
     if((is.logical(log_breaks) && log_breaks) ||  is.numeric(log_breaks) || 'base' %in% names(makecmap_options)) {
         num_ticks_default = 5L;
-        cat(sprintf("Plotting on log scale.\n"));
         if(is.logical(log_breaks) && log_breaks) {
             log_breaks = num_ticks_default;  # If simply 'True', use default number of breaks = 5.
-            cat(sprintf("Parameter 'log_breaks' is TRUE, setting to 5L.\n"));
         }
 
         if(is.numeric(log_breaks) && length(log_breaks) == 1L) { # If a single number, treat it as the *number* of ticks to create.
             num_break_labels = as.integer(log_breaks);
-            cat(sprintf("Plotting on log scale with %d ticks, auto-generated from data.\n", num_break_labels));
             ticks = squash::prettyLog(combined_data_range, n=num_break_labels);
         } else if(is.numeric(log_breaks) && length(log_breaks) > 1L) {  # If a vector, treat the values in there as the desired ticks.
-            cat(sprintf("Plotting on log scale with %d user-provided ticks.\n", length(log_breaks)));
             ticks = log_breaks;
         } else {
-            cat(sprintf("Plotting on log scale based on 'base' key in makecmap_options obtained from 'colored_meshes' parameter.\n"));
             if (as.integer(makecmap_options$base) == 10L) {
                 ticks = squash::prettyLog(combined_data_range, n=num_ticks_default);
-                cat(sprintf(" - Okay, assuming log 10 scale cbar."));
             } else {
                 stop(sprintf(" - Invalid 'base' value in 'makecmap_options', only 10 is supported for log 10 scale. (Do not set it at all for linear scale.)"));
             }
