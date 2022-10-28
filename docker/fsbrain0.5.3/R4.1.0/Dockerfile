@@ -9,6 +9,7 @@ FROM rocker/r-ver:4.1.0
 WORKDIR /root
 
 ##### Install tools and system dependencies #####
+RUN apt-get update && apt-get install -y apt-utils
 RUN apt-get update && apt-get install -y \
   build-essential \
   git \
@@ -23,6 +24,10 @@ RUN apt-get update && apt-get install -y \
   libxml2-dev \
   mesa-common-dev \
   xvfb \
+  libtk8.6 \
+  libfontconfig1-dev \
+  libharfbuzz-dev \
+  libfribidi-dev \
   && rm -rf /var/lib/apt/lists/*
 
 ##### Install required R packages #####
