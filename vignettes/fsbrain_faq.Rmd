@@ -477,4 +477,20 @@ lazy-load database '/Users/youruser/Library/R/3.6/library/fsbrain/R/fsbrain.rdb'
 
 To fix this, simply restart R.
 
+### I see no output image after running a vis function, and also get no error message. What to do?
 
+So you get nothing at all after running a vis command, like this:
+
+```{r, eval = FALSE}
+vis.subject.annot(subject_dir, 'sub-sub001', 'aparc', 'both', 'pial',views=c('si'));
+```
+
+Then you can try to open the visualization in an rgl widget like this:
+
+```{r, eval = FALSE}
+vis.subject.annot(subject_dir, 'sub-sub001', 'aparc', 'both', 'pial',views=c('si')); library(rgl); rglwidget()
+```
+
+This should show the brain plot in rstudio.
+
+Thanks to Clancy-wu for reporting this workaround.
