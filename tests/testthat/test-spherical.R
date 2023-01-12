@@ -11,11 +11,11 @@
 #     coords_preauricular = eeg_coords(c("LPA", "RPA"));
 #
 #     sphere_radius = 3; # just for plotting
-#     rgl::rgl.spheres(sph2fs(coords_near_eyes$theta, coords_near_eyes$phi), col="blue", radius = sphere_radius);
-#     rgl::rgl.spheres(sph2fs(coords_near_ears$theta, coords_near_ears$phi), col="green", radius = sphere_radius);
-#     rgl::rgl.spheres(sph2fs(coord_top_center$theta, coord_top_center$phi), col="red", radius = sphere_radius);
-#     rgl::rgl.spheres(sph2fs(coord_nose$theta, coord_nose$phi), col="black", radius = sphere_radius);
-#     rgl::rgl.spheres(sph2fs(coords_preauricular$theta, coords_preauricular$phi), col="yellow", radius = sphere_radius);
+#     rgl::spheres3d(sph2fs(coords_near_eyes$theta, coords_near_eyes$phi), col="blue", radius = sphere_radius);
+#     rgl::spheres3d(sph2fs(coords_near_ears$theta, coords_near_ears$phi), col="green", radius = sphere_radius);
+#     rgl::spheres3d(sph2fs(coord_top_center$theta, coord_top_center$phi), col="red", radius = sphere_radius);
+#     rgl::spheres3d(sph2fs(coord_nose$theta, coord_nose$phi), col="black", radius = sphere_radius);
+#     rgl::spheres3d(sph2fs(coords_preauricular$theta, coords_preauricular$phi), col="yellow", radius = sphere_radius);
 #
 #     rgl.coord.lines();
 #

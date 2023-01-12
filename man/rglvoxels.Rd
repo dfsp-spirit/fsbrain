@@ -21,7 +21,7 @@ rglvoxels(centers, r = 1, voxelcol = NULL, do_show = TRUE, ...)
 list of `fs.coloredvoxels` instances, invisible. The function is called for the side effect of visualizing the data, and usually you can ignore the return value.
 }
 \description{
-Draw 3D boxes at all given coordinates using rgl, analogous to \code{\link{rgl.spheres}}. Constructs the coordinates for triangles making up the boxes, then uses \code{\link{triangles3d}} to render them.
+Draw 3D boxes at all given coordinates using rgl, analogous to \code{\link{spheres3d}}. Constructs the coordinates for triangles making up the boxes, then uses \code{\link{triangles3d}} to render them.
 }
 \examples{
 \dontrun{

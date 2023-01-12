@@ -25,7 +25,7 @@
 #'
 #' @export
 #' @importFrom squash cmap makecmap
-#' @importFrom rgl tmesh3d rgl.open wire3d
+#' @importFrom rgl tmesh3d open3d wire3d
 coloredmesh.from.morph.native <- function(subjects_dir, subject_id, measure, hemi, surface="white", clip=NULL, cortex_only=FALSE, makecmap_options=mkco.seq()) {
 
     if(!(hemi %in% c("lh", "rh"))) {
@@ -113,7 +113,7 @@ tmesh3d.to.fs.surface <- function(tmesh) {
 #' @note Do not call this directly, use \code{\link[fsbrain]{coloredmeshes.from.color}} instead.
 #'
 #' @keywords internal
-#' @importFrom rgl tmesh3d rgl.open wire3d
+#' @importFrom rgl tmesh3d open3d wire3d
 coloredmesh.from.color <- function(subjects_dir, subject_id, color_data, hemi, surface="white", metadata=list()) {
 
     if(!(hemi %in% c("lh", "rh"))) {
@@ -221,7 +221,7 @@ coloredmeshes.from.color <- function(subjects_dir, subject_id, color_data, hemi,
 #'
 #' @export
 #' @importFrom squash cmap makecmap
-#' @importFrom rgl tmesh3d rgl.open wire3d
+#' @importFrom rgl tmesh3d open3d wire3d
 coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, hemi, fwhm, surface="white", template_subject='fsaverage', template_subjects_dir=NULL, clip = NULL, cortex_only=FALSE, makecmap_options=mkco.seq()) {
 
     if(!(hemi %in% c("lh", "rh"))) {
@@ -290,7 +290,7 @@ coloredmesh.from.morph.standard <- function(subjects_dir, subject_id, measure, h
 #'
 #' @export
 #' @importFrom squash cmap makecmap
-#' @importFrom rgl tmesh3d rgl.open wire3d
+#' @importFrom rgl tmesh3d open3d wire3d
 #' @importFrom utils modifyList
 coloredmesh.from.morphdata <- function(subjects_dir, vis_subject_id, morph_data, hemi, surface="white", makecmap_options=mkco.seq()) {
 
@@ -388,7 +388,7 @@ coloredmesh.from.preloaded.data <- function(fs_surface, morph_data=NULL, col=NUL
 #'
 #' @export
 #' @importFrom squash cmap makecmap
-#' @importFrom rgl tmesh3d rgl.open wire3d
+#' @importFrom rgl tmesh3d open3d wire3d
 #' @importFrom utils modifyList
 coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surface="white", outline=FALSE) {
 
@@ -445,7 +445,7 @@ coloredmesh.from.annot <- function(subjects_dir, subject_id, atlas, hemi, surfac
 #'
 #' @export
 #' @importFrom squash cmap makecmap rainbow2
-#' @importFrom rgl tmesh3d rgl.open wire3d
+#' @importFrom rgl tmesh3d open3d wire3d
 coloredmesh.from.label <- function(subjects_dir, subject_id, label, hemi, surface="white", makecmap_options=list('colFn'=squash::rainbow2), binary = TRUE) {
 
     if(!(hemi %in% c("lh", "rh"))) {
