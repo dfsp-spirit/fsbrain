@@ -78,7 +78,13 @@ jobs:
         if: runner.os != 'Windows'
         run: export RGL_USE_NULL=true
 
-      - name: Install dependencies
+
+      - name: Install curl on Windows
+        if: runner.os == 'Windows'
+        run: install.packages("curl")
+        shell: Rscript {0}
+
+        name: Install dependencies
         run: |
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
