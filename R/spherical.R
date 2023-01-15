@@ -83,13 +83,13 @@ eeg_coords <- function(label_subset=NULL) {
 #'
 #' @note The x, y and z axes are plotted in red, green, and blue, respectively.
 #'
-#' @importFrom rgl rgl.lines
+#' @importFrom rgl segments3d
 #' @keywords internal
 rgl.coord.lines <- function(len = 100) {
     len = recycle(len, 3L);
-    rgl::rgl.lines(x=c(0, len[1]), y=c(0,0), z=c(0,0), col="red");
-    rgl::rgl.lines(x=c(0, 0), y=c(0,len[2]), z=c(0,0), col="green");
-    rgl::rgl.lines(x=c(0, 0), y=c(0,0), z=c(0,len[3]), col="blue");
+    rgl::segments3d(x=c(0, len[1]), y=c(0,0), z=c(0,0), col="red");
+    rgl::segments3d(x=c(0, 0), y=c(0,len[2]), z=c(0,0), col="green");
+    rgl::segments3d(x=c(0, 0), y=c(0,0), z=c(0,len[3]), col="blue");
     return(invisible(NULL));
 }
 

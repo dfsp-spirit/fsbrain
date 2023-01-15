@@ -129,8 +129,8 @@ get.demo.volume <- function(vd = 30L, bg = NA, num_centers = 8L) {
 
 #' @title Close rgl windows after test.
 close.all.rgl.windows <- function() {
-  while (rgl::rgl.cur() > 0) {
-    rgl::rgl.close();
+  while (rgl::cur3d() > 0) {
+    rgl::close3d();
   }
 }
 

@@ -46,21 +46,21 @@ test_that("Brain volume CRS voxels are rendered at the correct surface space RAS
 
     # Retrieve coloredmeshes (no displaying needed) so we can render the surface and set transparent style if needed
     cm = vis.subject.morph.native(subjects_dir, 'subject1', 'thickness', views=NULL);
-    vis.coloredmeshes(cm, style = 'default');   # try with style = 'semitransparent' if required, but be warned: it will have bad performance. (Later rgl.spheres calls draw into this.)
+    vis.coloredmeshes(cm, style = 'default');   # try with style = 'semitransparent' if required, but be warned: it will have bad performance. (Later spheres3d calls draw into this.)
 
     # ----- Draw a red dot at surface RAS origin -----
     # The voxel at the origin of surface RAS coordinate system. Note that this is NOT expected to be in the
     #   center of the brain surface (because the brain surface is not centered at 0.0, 0.0, 0.0, see the min/max vertex coords along the axes).
     fs_crs = c(128, 128, 128);
     surface_ras_coords = (vox2ras_tkr() %*% vol.vox.from.crs(fs_crs, add_affine=TRUE))[1:3]; # switch to 1-based R indices with affine column, matmult, then strip affine column from result.
-    rgl::rgl.spheres(surface_ras_coords, r = 5, color = "#ff0000");    # adds to the active surface plot.
+    rgl::spheres3d(surface_ras_coords, r = 5, color = "#ff0000");    # adds to the active surface plot.
 
      # ----- Draw a set of 8 green spheres at the outer corners of the 256x256x256 volume (in surface RAS space) -----
      fs_boundary_crs = matrix(c(0, 0, 0, 0, 0, 255, 0, 255, 255, 0, 255, 0, 255, 255, 255, 255, 0, 0, 255, 255, 0, 255, 0, 255), ncol=3, byrow=TRUE);
      boundary_crs_aff = vol.vox.from.crs(fs_boundary_crs, add_affine=TRUE); # switch to 1-based R indices, add affine column
      for(row_idx in seq_len(nrow(boundary_crs_aff))) {
          surface_ras = (vox2ras_tkr() %*% boundary_crs_aff[row_idx,])[1:3];
-         rgl::rgl.spheres(surface_ras, r = 5, color = "#00ff00");
+         rgl::spheres3d(surface_ras, r = 5, color = "#00ff00");
      }
 
      # Compute the bounding box of the brain from the volume data, plot blue spheres at border.
@@ -68,7 +68,7 @@ test_that("Brain volume CRS voxels are rendered at the correct surface space RAS
      bbox_R_aff = cbind(bbox$edge_coords, 1);
      for(row_idx in seq_len(nrow(bbox_R_aff))) {
          surface_ras = (vox2ras_tkr() %*% bbox_R_aff[row_idx,])[1:3];
-         rgl::rgl.spheres(surface_ras, r = 5, color = "#0000ff");
+         rgl::spheres3d(surface_ras, r = 5, color = "#0000ff");
      }
 
      # That's it, now look at the plot.

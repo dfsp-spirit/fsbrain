@@ -37,7 +37,7 @@ test_that("We can visualize morphometry data in multiview.", {
         cmesh = coloredmeshes[[1]]; # 1 = lh , 2 = rh
 
         # open3d(); shade3d(cmesh$mesh, col=cmesh$col);
-        # rgl.viewpoint(0, 0, fov=0, interactive=FALSE, zoom=.9);
+        # view3d(0, 0, fov=0, interactive=FALSE, zoom=.9);
 
         ax = 1;
         ay = 0;
@@ -46,7 +46,7 @@ test_that("We can visualize morphometry data in multiview.", {
             for(phi in c(0, 90, -90)) {
                 for(rotation_angle in c(0, pi, pi/2)) {
                     label_text = sprintf("[%d %d %d] theta=%d, phi=%d, a=%f", ax, ay, az, theta, phi, rotation_angle);
-                    rgl::open3d(); rgl::shade3d(rgl::rotate3d(cmesh$mesh, rotation_angle, ax, ay, az), col=cmesh$col); rgl::rgl.viewpoint(theta, phi, fov=0, interactive=FALSE, type="modelviewpoint"); rgl::text3d(0, -150, 100, label_text);
+                    rgl::open3d(); rgl::shade3d(rgl::rotate3d(cmesh$mesh, rotation_angle, ax, ay, az), col=cmesh$col); rgl::view3d(theta, phi, fov=0, interactive=FALSE, type="modelviewpoint"); rgl::text3d(0, -150, 100, label_text);
 
                 }
             }

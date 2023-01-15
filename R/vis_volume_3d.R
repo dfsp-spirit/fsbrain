@@ -81,7 +81,7 @@ volvis.voxels <- function(volume, render_every=1, voxelcol=NULL, ...) {
             row_idx = rendered_voxels[idx];
             surface_ras[idx,] = (vox2surface_ras_matrix %*% voxel_crs[row_idx,])[1:3];
         }
-        #rgl::rgl.spheres(surface_ras, r = 0.5, ...);
+        #rgl::spheres3d(surface_ras, r = 0.5, ...);
         return(invisible(rglvoxels(surface_ras, r = 1.0, voxelcol=voxelcol, ...)));
     } else {
         warning("No foreground voxels in volume, nothing to visualize.");
@@ -339,7 +339,7 @@ apply.transform <- function(object, matrix_fun) {
 
 #' @title Draw 3D boxes at locations using rgl.
 #'
-#' @description Draw 3D boxes at all given coordinates using rgl, analogous to \code{\link{rgl.spheres}}. Constructs the coordinates for triangles making up the boxes, then uses \code{\link{triangles3d}} to render them.
+#' @description Draw 3D boxes at all given coordinates using rgl, analogous to \code{\link{spheres3d}}. Constructs the coordinates for triangles making up the boxes, then uses \code{\link{triangles3d}} to render them.
 #'
 #' @param centers numerical matrix with 3 columns. Each column represents the x, y, z coordinates of a center at which to create a cube.
 #'

@@ -196,7 +196,7 @@ highlight.points.spheres <- function(coords, color = "#FF0000", radius = 1.0) {
     if(is.vector(coords)) {
         coords = matrix(coords, ncol = 3, byrow = TRUE);
     }
-    rgl::rgl.spheres(coords[,1], coords[,2], coords[,3], radius = radius, col = color);
+    rgl::spheres3d(coords[,1], coords[,2], coords[,3], radius = radius, col = color);
 }
 
 
