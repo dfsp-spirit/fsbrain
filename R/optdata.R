@@ -244,7 +244,9 @@ download_fsaverage <- function(accept_freesurfer_license=FALSE) {
                                     c(base_path_fsaverage, 'surf', 'lh.curv'),
                                     c(base_path_fsaverage, 'surf', 'rh.curv'),
                                     c(base_path_fsaverage, 'ext', 'FreeSurferColorLUT.txt'),
-                                    c(base_path_fsaverage, 'LICENSE')
+                                    c(base_path_fsaverage, 'LICENSE'),
+                                    c(base_path_fsaverage, 'surf', 'lh.sphere'),
+                                    c(base_path_fsaverage, 'surf', 'rh.sphere')
     );
 
 
@@ -265,7 +267,9 @@ download_fsaverage <- function(accept_freesurfer_license=FALSE) {
                 '3e81598a5ac0546443ec37d0ac477c80',
                 '76ad91d2488de081392313ad5a87fafb',
                 'a3735566ef949bd4d7ed303837cc5e77',  # color LUT
-                'b39610adfe02fdce2ad9d30797c567b3'    # LICENSE
+                'b39610adfe02fdce2ad9d30797c567b3',  # LICENSE
+                '9bcc318b66c4da5e479b33e9451ec5e1',
+                '9bcc318b66c4da5e479b33e9451ec5e1' # rh.sphere
     );
 
 
@@ -287,7 +291,9 @@ download_fsaverage <- function(accept_freesurfer_license=FALSE) {
                                    'surf/lh.curv',
                                    'surf/rh.curv',
                                    'ext/FreeSurferColorLUT.txt',
-                                   'LICENSE'
+                                   'LICENSE',
+                                   'surf/lh.sphere',
+                                   'surf/rh.sphere'
     );
     ext_urls = paste(ext_url_subject_part_fsaverage, ext_url_parts_each_subject, sep='');
     base_url = 'http://rcmd.org/projects/nitestdata/';

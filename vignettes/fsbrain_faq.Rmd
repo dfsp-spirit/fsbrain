@@ -15,7 +15,7 @@ The *fsbrain* software is designed to be used with the output of [FreeSurfer](ht
 
 However, while designed primarily with FreeSurfer in mind, fsbrain is not limited to FreeSurfer output, see below.
 
-### **Q**: Which file formats are supported? 
+### **Q**: Which file formats are supported?
 
 The *fsbrain* library uses [freesurferformats](https://github.com/dfsp-spirit/freesurferformats) to load a variety of neuroimaging file formats, including data exchange formats used by other brain imaging software. See the [freesurferformats website](https://github.com/dfsp-spirit/freesurferformats) for the full list.
 
@@ -41,7 +41,7 @@ vis.data.on.subject('~/data/', 'subject1_spm12', lh_gyrification, NULL, surface=
 
 You should be able to load data from a number of different neuroimaging software packages with freesurferformats, as it supports the very common NIFTI and GIFTI file formats.
 
-### What is the best way to visualize data from data computed in R (or from arbitrary files that do not follow the FreeSurfer recon-all directory layout)?
+### What is the best way to visualize data computed in R (or from arbitrary files that do not follow the FreeSurfer recon-all directory layout)?
 
 One should use the `vis.subject.pre` function for that. Here is a full example that loads both the surfaces and the per-vertex data into R first and the creates a plot based on this pre-loaded data, without accessing any files anymore:
 
@@ -94,13 +94,13 @@ sfb_thickness = list('vertices'=t(bd_thickness$vertices), faces=t(bd_thickness$f
 class(sfb_thickness) = c(class(sfb_thickness), 'fs.surface');
 
 # Display the vertex colors:
-fsbrain::vis.fs.surface(sfb_thickness, col=rgb(t(bd_thickness$vColor)));        
+fsbrain::vis.fs.surface(sfb_thickness, col=rgb(t(bd_thickness$vColor)));
 
 # Display labels (feel free to change the colormap).
-fsbrain::vis.fs.surface(sfb_thickness, per_vertex_data = bd_thickness$labels);  
+fsbrain::vis.fs.surface(sfb_thickness, per_vertex_data = bd_thickness$labels);
 
 # Display raw morphometry data (feel free to change the colormap).
-fsbrain::vis.fs.surface(sfb_thickness, per_vertex_data = bd_thickness$attributes);        
+fsbrain::vis.fs.surface(sfb_thickness, per_vertex_data = bd_thickness$attributes);
 ```
 
 Note: The `bssr` package is not on CRAN (as of September 2020), you will have to install it from the BrainSuite website.
@@ -141,7 +141,7 @@ This opens the plot in a window as usual and also saves it in PNG format to the 
 
 ###  Can I save fsbrain figures as vector images (like PDF, EPS, SVG)?
 
-While one could convert the PNGs to these formats, doing so makes little sense. The images produced by fsbrain are **bitmap** images, not vector graphics. I would recommend to export the figures in high resolution as PNG images instead. 
+While one could convert the PNGs to these formats, doing so makes little sense. The images produced by fsbrain are **bitmap** images, not vector graphics. I would recommend to export the figures in high resolution as PNG images instead.
 
 The default settings used by the the *export()* function should be fine to reach the 300 DPI typically required for publications, unless you want the image to fill the entire page. In that case, you can further increase the output resolution.
 
@@ -216,7 +216,7 @@ install.packages('viridis');
 ```
 
 
-Of course, you can use any colormap function you want, currently the only limitation is that it should accept an integer parameter: the requested number of colors. 
+Of course, you can use any colormap function you want, currently the only limitation is that it should accept an integer parameter: the requested number of colors.
 
 The exact number of colors that will be requested depends on your data, and if the colormap you want only supports very few colors, you can use a wrapper function to interpolate. Here is an example for the very popular *RColorBrewer* package. Some of its colormaps have less than 10 colors, which is usually not enough for neuroimaging data. Here we wrap the 'Blues' palette, which has 9 colors:
 
@@ -260,7 +260,7 @@ colFn_sequential_heat = function(n) { grDevices::hcl.colors(n, "YlOrRd"); }
 
 Make sure to read the next entry as well if you are using a diverging colormap.
 
-### I am using a diverging colormap. When plotting the colorbar (legend), the neutral value is not at zero. How to fix it? 
+### I am using a diverging colormap. When plotting the colorbar (legend), the neutral value is not at zero. How to fix it?
 
 When using a diverging colormap, make sure to set the *symm* option to *makecmap_options* when using a visualization function, like this:
 
@@ -300,7 +300,7 @@ Yes, see the answer to the next question for details.
 
 ### Can I get a color legend when plotting a segmentation/parcellation (different brain regions), based on a color lookup table (like the *FreeSurferColorLUT.txt* file)?
 
-Yes, use the `vis.colortable.legend` function. You can pass an annotation or a color lookup table, and it will create a plot that shows the colors and the structure (or region) names. The output will be a separate plot, so you can use standard R methods to save it in vector formats like PDF for best quality. 
+Yes, use the `vis.colortable.legend` function. You can pass an annotation or a color lookup table, and it will create a plot that shows the colors and the structure (or region) names. The output will be a separate plot, so you can use standard R methods to save it in vector formats like PDF for best quality.
 
 Hint: you can load a color lookup table with `freesurferformats::read.fs.colortable`.
 
@@ -344,7 +344,7 @@ To the best of my knowledge, RGL cannot produce transparent images (though you c
 useful for usage in presentations, we provide a hacked solution based on post-processing the output images
 with the magick package in R.
 
-This required fsbrain version >= 0.4.3 and is implemented in the `export()` function via the `transparency_color` parameter. 
+This required fsbrain version >= 0.4.3 and is implemented in the `export()` function via the `transparency_color` parameter.
 
 Here is how it works: the `transparency_color` is used as a background color for rendering in RGL. During the fsbrain post-processing, all pixels with this color in the image will be replaced with transparency.
 
@@ -412,7 +412,7 @@ vis.fs.surface('~/Documents/my_mesh.ply');
 The full error most likely looks like this, or similar:
 
 ```{r, eval = FALSE}
-Error in par(new = TRUE, pty = "m", plt = smallplot, err = -1) : 
+Error in par(new = TRUE, pty = "m", plt = smallplot, err = -1) :
   invalid value specified for graphical parameter "plt"
 ```
 
@@ -426,7 +426,7 @@ This can happen when visualizing morphometry data with function like `vis.subjec
 
 ```{r, eval = FALSE}
 vis.subject.morph.native(sjd, sj, 'your_measure_here')
-Error in squash::cmap(lh_morph_data, map = common_cmap) : 
+Error in squash::cmap(lh_morph_data, map = common_cmap) :
   Found 2193 values outside map range.
 ```
 
@@ -450,6 +450,15 @@ Warning messages:
 ```
 
 This happens if you do not have X11, or no window can be opened. Possible reasons include that you are running R on a remote host using an SSH connection without X11 forwarding, or that you do not have XQuartz installed under MacOS.
+
+If you do not want to plot (e.g., you only use fsbrain to load data), feel free to ignore this warning.
+
+If you want to plot and cannot install X11 on a machine (e.g., a compute node of a high performance computing cluster), you can still plot on the box using xvfb or similar means, see the next question.
+
+
+### How can I plot on a machine that does not have X11?
+
+You can achieve this by using a virtual display server, e.g. by running R/fsbrain via [xvfb](https://en.wikipedia.org/wiki/Xvfb) under Linux. An example script that illustrates how to do this for fsbrain can be found in the  [fsbrain_xvfb_demo directory](https://github.com/dfsp-spirit/fsbrain/tree/master/web/fsbrain_xvfb_demo) of the fsbrain repo on GitHub.
 
 
 ### I am trying to plot a very large image with fsbrain, but the output is not as large as expected. Why?

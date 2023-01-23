@@ -1,6 +1,6 @@
 # colorbar functions
 
-#' @title Draw coloredbar into background of current plot.
+#' @title Draw colorebar into background of current plot.
 #'
 #' @description Requires a rgl 3d visualisation to be open that already contains a rendered object. Uses \code{\link{bgplot3d}} to add a colorbar in the background of the plot using \code{\link[fields]{image.plot}}. Experimental.
 #'
@@ -18,6 +18,7 @@
 #' @importFrom fields image.plot
 #' @keywords internal
 draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
+
     if(! is.list(coloredmeshes)) {
         stop("Parameter 'coloredmeshes' must be a list.");
     }
@@ -55,7 +56,20 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
         }
         num_col = ifelse(is.null(makecmap_options$n), 100L, makecmap_options$n);
 
-        rgl::bgplot3d({op = graphics::par(mar = rep(0.1, 4)); plot.new(); fields::image.plot(add=T, legend.only = TRUE, zlim = zlim, col = makecmap_options$colFn(num_col), horizontal = horizontal, ...); graphics::par(op);});
+        # Check whether to plot in log10 scale.
+        if('base' %in% names(makecmap_options)) {
+            num_ticks_default = 5L;
+            if (as.integer(makecmap_options$base) == 10L) {
+                ticks = squash::prettyLog(combined_data_range, n=num_ticks_default);
+            } else {
+                stop(sprintf(" - Invalid 'base' value in 'makecmap_options', only 10 is supported for log 10 scale. (Do not set it at all for linear scale.)\n"));
+            }
+            axis.args = list('at'=log(ticks), 'labels'=ticks);
+            rgl::bgplot3d({op = graphics::par(mar = rep(0.1, 4)); plot.new(); fields::image.plot(add=T, legend.only = TRUE, zlim = log(zlim), axis.args=axis.args, col = makecmap_options$colFn(num_col), horizontal = horizontal, ...); graphics::par(op);});
+        } else {
+            # Plot linear scale.
+            rgl::bgplot3d({op = graphics::par(mar = rep(0.1, 4)); plot.new(); fields::image.plot(add=T, legend.only = TRUE, zlim = zlim, col = makecmap_options$colFn(num_col), horizontal = horizontal, ...); graphics::par(op);});
+        }
     } else {
         warning("Requested to draw colorbar, but meshes do not contain the required metadata. Skipping.");
     }
@@ -77,6 +91,8 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
 #' @param silent logical, whether to suppress messages. Defaults to `FALSE`.
 #'
 #' @param trim_png logical, whether to trim the output PNG image using image magick, i.e., remove everything but the foreground. Ignored unless an output PNG image is actually written (see 'png_options') and the 'magick' package is installed.
+#'
+#' @param log_break: logical, scalar int, or vector of ints. Whether to use log10 scale for plotting the cbar. If logical and TRUE, uses log scale with default number (=5) ticks auto-computed from the data. If a single integer N, uses N ticks auto-computed from the data instead. If a numeric vector, uses the supplied values in the vector as ticks, note that they must be on a `log(data)` scale. If the 'makecmap_options' stored in the passed 'coloredmeshes' contain a 'base' value of 10, log 10 is assumed (with the default 5 ticks), even if this parameter is left at its default value, logical FALSE.
 #'
 #' @note If you increase the output resolution of the colorbar (using 'png_options'), you will have to increase the font sizes as well (using 'image.plot_extra_options'), otherwise the axis and legend labels will be hard to read.
 #'
@@ -104,15 +120,15 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
 #' @importFrom grDevices png pdf dev.off
 #' @importFrom utils modifyList
 #' @export
-coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=FALSE, image.plot_extra_options = list(horizontal=FALSE, 'legend.cex'=1.8, 'legend.width'=2, 'legend.mar' = 12, 'axis.args'=list('cex.axis'=5.0)), png_options=list('filename'='fsbrain_cbar.png', 'width'=1400, 'height'=1400, 'bg'='#FFFFFF00'), silent=FALSE, trim_png=TRUE) {
+coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=FALSE, image.plot_extra_options = list(horizontal=FALSE, 'legend.cex'=1.8, 'legend.width'=2, 'legend.mar' = 12, 'axis.args'=list('cex.axis'=5.0)), png_options=list('filename'='fsbrain_cbar.png', 'width'=1400, 'height'=1400, 'bg'='#FFFFFF00'), silent=FALSE, trim_png=TRUE, log_breaks=FALSE) {
 
     if(length(coloredmeshes) < 1) {
         message("Requested to draw separate colorbar, but mesh list is empty. Skipping.");
         return(invisible(NULL));
     }
 
-
     makecmap_options = coloredmeshes.get.md(coloredmeshes, 'makecmap_options');
+    print(makecmap_options);
     if(is.null(makecmap_options)) {
         warning("Requested to draw colorbar, but meshes contain no 'makecmap_options' metadata, falling back to defaults.");
         makecmap_options = mkco.seq();
@@ -145,6 +161,38 @@ coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=FALSE, image.
 
     image.plot_options_internal = list(legend.only=TRUE, zlim = zlim, col = makecmap_options$colFn(num_col), add=TRUE, graphics.reset=TRUE);
     image.plot_options = modifyList(image.plot_options_internal, image.plot_extra_options);
+
+    # Enable plotting log-scale color bar.
+    # NOTE: Use 'area' instead of 'thickness' as PVD when testing this with the code from the example, thickness has a min of 0 (won't work with log).
+    if((is.logical(log_breaks) && log_breaks) ||  is.numeric(log_breaks) || 'base' %in% names(makecmap_options)) {
+        num_ticks_default = 5L;
+        if(is.logical(log_breaks) && log_breaks) {
+            log_breaks = num_ticks_default;  # If simply 'True', use default number of breaks = 5.
+        }
+
+        if(is.numeric(log_breaks) && length(log_breaks) == 1L) { # If a single number, treat it as the *number* of ticks to create.
+            num_break_labels = as.integer(log_breaks);
+            ticks = squash::prettyLog(combined_data_range, n=num_break_labels);
+        } else if(is.numeric(log_breaks) && length(log_breaks) > 1L) {  # If a vector, treat the values in there as the desired ticks.
+            ticks = log_breaks;
+        } else {
+            if (as.integer(makecmap_options$base) == 10L) {
+                ticks = squash::prettyLog(combined_data_range, n=num_ticks_default);
+            } else {
+                stop(sprintf(" - Invalid 'base' value in 'makecmap_options', only 10 is supported for log 10 scale. (Do not set it at all for linear scale.)"));
+            }
+
+        }
+
+        tick_axis_args = list('at'=log(ticks), 'labels'=ticks)
+        if ("axis.args" %in% names(image.plot_options)) {
+            image.plot_options$axis.args = modifyList(image.plot_options$axis.args, tick_axis_args);
+        } else {
+            image.plot_options$axis.args = tick_axis_args;
+        }
+        image.plot_options$zlim = log(image.plot_options$zlim);
+    }
+
     if(show) {
         plot.new();
         do.call(fields::image.plot, image.plot_options);
