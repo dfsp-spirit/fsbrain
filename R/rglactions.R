@@ -72,16 +72,21 @@ clip_fun <- function(lower=0.05, upper=0.95) {
 #'
 #' @keywords internal
 shift.hemis.rglactions <- function(coloredmeshes, rglactions) {
+
     if(rglactions.has.key(rglactions, 'shift_hemis_apart')) {
+        logger::log_info("Function shift.hemis.rglactions called, key 'shift_hemis_apart' is present.");
         shift_hemis = rglactions$shift_hemis_apart;
         if(is.logical(shift_hemis)) {
+            logger::log_info("Function shift.hemis.rglactions called with logical.");
             if(shift_hemis) {
                 return(shift.hemis.apart(coloredmeshes, hemi_order_on_axis='lr'));
             }
         } else if(is.list(shift_hemis)) {
-            # interprete the list as extra parameters to pass to shift.hemis.apart
+            logger::log_info("Function shift.hemis.rglactions called with list.");
+            # interpret the list as extra parameters to pass to shift.hemis.apart
             return(do.call(shift.hemis.apart, utils::modifyList(list(coloredmeshes), shift_hemis)));
         } else if(is.character(shift_hemis)) {
+            logger::log_info("Function shift.hemis.rglactions called with char.");
             if(shift_hemis == 'lr' | shift_hemis == 'lhrh') {
                 return(shift.hemis.apart(coloredmeshes, hemi_order_on_axis='lr'));
             } else if(shift_hemis == 'rl' | shift_hemis == 'rhlh') {
@@ -94,6 +99,8 @@ shift.hemis.rglactions <- function(coloredmeshes, rglactions) {
         } else {
             warning("Value in rglactions$shift_hemis_apart is not supported, ignored. Not shifting hemis.");
         }
+    } else {
+        logger::log_info("Function shift.hemis.rglactions called, but key 'shift_hemis_apart' is not present, doing nothing.");
     }
     return(coloredmeshes);
 }

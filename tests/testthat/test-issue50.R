@@ -22,3 +22,18 @@ test_that("Issue50 is fixed: t9 view export works with inflated surfaces without
 
     testthat::expect_equal(1L-1L, 0L);    # Must have expect, otherwise test gets skipped. One currently needs to verify visually that the figure looks correct (tight layout, non-overlapping surfaces).
 })
+
+test_that("Issue50 is fixed: t9 view export works with inflated surfaces without overlap on native", {
+
+    testthat::skip_on_cran();
+    testthat::skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+
+    fsbrain::download_optional_data()
+    fsbrain::download_fsaverage(accept_freesurfer_license = TRUE)
+    sjd = fsbrain::get_optional_data_filepath("subjects_dir");
+    sj = 'subject1';
+
+    cm = fsbrain::vis.subject.morph.standard(sjd, sj, 'sulc', fwhm='10', cortex_only = T, views=NULL, surface = "inflated", rglactions = list('shift_hemis_apart'=TRUE));
+    img = fsbrain::export(cm, colorbar_legend='Sulcal depth [mm]', output_img = "~/sulcal_depth.png", view_angles = fsbrain::get.view.angle.names(angle_set = "t9"));
+
+})

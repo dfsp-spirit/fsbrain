@@ -287,6 +287,7 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     Sys.sleep(1);
     rgl::bg3d(background);
     rgl::layout3d(layout_mat, widths=layout_column_widths, height=layout_row_heights);
+
     callback_after_render = getOption('fsbrain.callback_hook_after_render', default=NULL);
 
     # Create the upper left view: draw only the left hemi, from the left
@@ -611,13 +612,15 @@ brainview.sd <- function(coloredmeshes, view_angle, background="white", skip_all
     }
     callback_after_render = getOption('fsbrain.callback_hook_after_render', default=NULL);
 
+    coloredmeshes_potentially_shifted = shift.hemis.rglactions(coloredmeshes, rglactions);
+
     if(view_angle == "lateral_lh") {
         vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style);
         handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "lh");
         rgl::view3d(-90, 0, fov=0, interactive=FALSE);
         if(is.function(callback_after_render)) { callback_after_render('lateral_lh'); }
     } else if (view_angle == "dorsal") {
-        vis.rotated.coloredmeshes(coloredmeshes, 0, 1, 0, 0, style=style);
+        vis.rotated.coloredmeshes(coloredmeshes_potentially_shifted, 0, 1, 0, 0, style=style);
         handle.rglactions.highlight.points(rglactions, 0, 1, 0, 0, hemi = "both");
         rgl::view3d(0, 0, fov=0, interactive=FALSE);
         if(is.function(callback_after_render)) { callback_after_render('dorsal'); }
@@ -632,7 +635,7 @@ brainview.sd <- function(coloredmeshes, view_angle, background="white", skip_all
         rgl::view3d(90, 0, fov=0, interactive=FALSE);
         if(is.function(callback_after_render)) { callback_after_render('medial_lh'); }
     } else if(view_angle == "ventral") {
-        vis.rotated.coloredmeshes(coloredmeshes, pi, 1, 0, 0, style=style);
+        vis.rotated.coloredmeshes(coloredmeshes_potentially_shifted, pi, 1, 0, 0, style=style);
         handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "both");
         rgl::view3d(0, 0, fov=0, interactive=FALSE);
         if(is.function(callback_after_render)) { callback_after_render('ventral'); }
@@ -642,12 +645,12 @@ brainview.sd <- function(coloredmeshes, view_angle, background="white", skip_all
         rgl::view3d(-90, 0, fov=0, interactive=FALSE);
         if(is.function(callback_after_render)) { callback_after_render('medial_rh'); }
     } else if(view_angle == "rostral") {
-        vis.rotated.coloredmeshes(coloredmeshes, pi/2, 1, 0, 0, style=style);
+        vis.rotated.coloredmeshes(coloredmeshes_potentially_shifted, pi/2, 1, 0, 0, style=style);
         handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "both");
         view3d(0, 0, fov=0, interactive=FALSE);
         if(is.function(callback_after_render)) { callback_after_render('rostral'); }
     } else if(view_angle == "caudal") {
-        vis.rotated.coloredmeshes(coloredmeshes, pi/2, 1, 0, 0, style=style);
+        vis.rotated.coloredmeshes(coloredmeshes_potentially_shifted, pi/2, 1, 0, 0, style=style);
         handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "both");
         rgl::view3d(180, 0, fov=0, interactive=FALSE);
         if(is.function(callback_after_render)) { callback_after_render('caudal'); }
