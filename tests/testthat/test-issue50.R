@@ -16,7 +16,9 @@ test_that("Issue50 is fixed: t9 view export works with inflated surfaces without
 
     cm = fsbrain::vis.symmetric.data.on.subject(subjects_dir, subject_id, lh_clust, rh_clust, surface="inflated", bg="curv_light", rglactions = list('shift_hemis_apart'=TRUE), views = NULL);
 
-    fsbrain::export(cm, img_only = TRUE, output_img = "fsbrain_out.png", rglactions = list('shift_hemis_apart'=TRUE), view_angles="t9", colorbar_legend= "issue50 test");
+    fsbrain::export(cm, img_only = TRUE, output_img = "fsbrain_issue50_export.png", rglactions = list('shift_hemis_apart'=TRUE), view_angles="t9", colorbar_legend= "issue50 test");
+
+    vislayout.from.coloredmeshes(cm, view_angles = "t9", rglactions = list('shift_hemis_apart'=TRUE));
 
     testthat::expect_equal(1L-1L, 0L);    # Must have expect, otherwise test gets skipped. One currently needs to verify visually that the figure looks correct (tight layout, non-overlapping surfaces).
 })
