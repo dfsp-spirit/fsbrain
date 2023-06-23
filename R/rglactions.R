@@ -99,8 +99,6 @@ shift.hemis.rglactions <- function(coloredmeshes, rglactions) {
         } else {
             warning("Value in rglactions$shift_hemis_apart is not supported, ignored. Not shifting hemis.");
         }
-    } else {
-        logger::log_info("Function shift.hemis.rglactions called, but key 'shift_hemis_apart' is not present, doing nothing.");
     }
     return(coloredmeshes);
 }
