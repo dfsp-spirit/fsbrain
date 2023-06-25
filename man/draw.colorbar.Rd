@@ -2,7 +2,7 @@
 % Please edit documentation in R/cbar.R
 \name{draw.colorbar}
 \alias{draw.colorbar}
-\title{Draw coloredbar into background of current plot.}
+\title{Draw colorebar into background of current plot.}
 \usage{
 draw.colorbar(coloredmeshes, horizontal = FALSE, ...)
 }

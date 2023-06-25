@@ -92,7 +92,7 @@ draw.colorbar <- function(coloredmeshes, horizontal=FALSE, ...) {
 #'
 #' @param trim_png logical, whether to trim the output PNG image using image magick, i.e., remove everything but the foreground. Ignored unless an output PNG image is actually written (see 'png_options') and the 'magick' package is installed.
 #'
-#' @param log_break: logical, scalar int, or vector of ints. Whether to use log10 scale for plotting the cbar. If logical and TRUE, uses log scale with default number (=5) ticks auto-computed from the data. If a single integer N, uses N ticks auto-computed from the data instead. If a numeric vector, uses the supplied values in the vector as ticks, note that they must be on a `log(data)` scale. If the 'makecmap_options' stored in the passed 'coloredmeshes' contain a 'base' value of 10, log 10 is assumed (with the default 5 ticks), even if this parameter is left at its default value, logical FALSE.
+#' @param log_breaks: logical, scalar int, or vector of ints. Whether to use log10 scale for plotting the cbar. If logical and TRUE, uses log scale with default number (=5) ticks auto-computed from the data. If a single integer N, uses N ticks auto-computed from the data instead. If a numeric vector, uses the supplied values in the vector as ticks, note that they must be on a `log(data)` scale. If the 'makecmap_options' stored in the passed 'coloredmeshes' contain a 'base' value of 10, log 10 is assumed (with the default 5 ticks), even if this parameter is left at its default value, logical FALSE.
 #'
 #' @note If you increase the output resolution of the colorbar (using 'png_options'), you will have to increase the font sizes as well (using 'image.plot_extra_options'), otherwise the axis and legend labels will be hard to read.
 #'

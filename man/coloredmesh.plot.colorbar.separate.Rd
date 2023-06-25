@@ -12,7 +12,8 @@ coloredmesh.plot.colorbar.separate(
   png_options = list(filename = "fsbrain_cbar.png", width = 1400, height = 1400, bg =
     "#FFFFFF00"),
   silent = FALSE,
-  trim_png = TRUE
+  trim_png = TRUE,
+  log_breaks = FALSE
 )
 }
 \arguments{
@@ -27,6 +28,8 @@ coloredmesh.plot.colorbar.separate(
 \item{silent}{logical, whether to suppress messages. Defaults to `FALSE`.}
 
 \item{trim_png}{logical, whether to trim the output PNG image using image magick, i.e., remove everything but the foreground. Ignored unless an output PNG image is actually written (see 'png_options') and the 'magick' package is installed.}
+
+\item{log_breaks:}{logical, scalar int, or vector of ints. Whether to use log10 scale for plotting the cbar. If logical and TRUE, uses log scale with default number (=5) ticks auto-computed from the data. If a single integer N, uses N ticks auto-computed from the data instead. If a numeric vector, uses the supplied values in the vector as ticks, note that they must be on a `log(data)` scale. If the 'makecmap_options' stored in the passed 'coloredmeshes' contain a 'base' value of 10, log 10 is assumed (with the default 5 ticks), even if this parameter is left at its default value, logical FALSE.}
 }
 \value{
 named list, entries: 'output_img_path': character string, the path to the output file, or NULL.
