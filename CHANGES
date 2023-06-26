@@ -1,9 +1,14 @@
 fsbrain Changes
 ===============
 
-Version 0.5.4-WIP
------------------
+Version 0.5.4
+-------------
+- FIX: Change usage of rgl functions that were recently deprectated to current API. This ensures that fsbrain is compatible with the latest rgl version. Thanks to @dmurdoch for the patch. Fixes #52.
 - Add 'delete_colorbar_img' parameter to 'combine.colorbar.with.brainview.image()' function. This is TRUE by default, meaning that the merged cbar image file (fsbrain_cbar.png by default) will be deleted after the merge operation by default. This changes the old behaviour, in which the file was left behind in the current working directory.
+- Rename some internal functions and fix various small complaints from the latest version of R CMD CHECK, from r-base 4.3. (Required for CRAN upload.)
+- NEW: Support plotting colorbar with log scale, implements feature request #44
+- FIX: Fix broken hemis on 9 view with inflated surfaces, see issue #50
+
 
 
 Version 0.5.3
