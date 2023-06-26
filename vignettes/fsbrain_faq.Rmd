@@ -25,7 +25,7 @@ You can use [freesurferformats](https://github.com/dfsp-spirit/freesurferformats
 
 ### **Q**: Can I use fsbrain to visualize data from SPM12 / CAT12 or other software packages?
 
-Yes, the [computational anatomy toolbox (CAT12)](http://www.neuro.uni-jena.de/cat/) for [SPM](https://www.fil.ion.ucl.ac.uk/spm/) writes surfaces in GIFTI format and the morphometry data in curv format, both formats are supported by *fsbrain*. After running CAT12 surface measure computation on your subject `subject1`, you should have the following files in the *surf/* subdir:
+Yes, the [computational anatomy toolbox (CAT12)](https://neuro-jena.github.io/cat/) for [SPM](https://www.fil.ion.ucl.ac.uk/spm/) writes surfaces in GIFTI format and the morphometry data in curv format, both formats are supported by *fsbrain*. After running CAT12 surface measure computation on your subject `subject1`, you should have the following files in the *surf/* subdir:
 
 * lh.central.subject1.gii
 * lh.gyrification.subject1

@@ -8,15 +8,12 @@ ts <- person(given = "Tim", family = "Schaefer", middle = NULL,
 ce <- person(given = "Christine", family = "Ecker", middle = NULL,
        email = "Christine.Ecker@kgu.de", role = "aut", comment = NULL)
 
-
-citEntry(
-  entry        = "misc",
+bibentry("Article",
+  doi = "10.1101/2020.09.18.302935",
   title        = "fsbrain: an {R} package for the visualization of structural neuroimaging data",
   author       = c(ts, ce),
   year         = "2020",
   url          = "https://www.biorxiv.org/content/10.1101/2020.09.18.302935v1",
   doi          = "10.1101/2020.09.18.302935",
-  textVersion  = paste("Tim Schaefer, Christine Ecker (2020).",
-                     "fsbrain: an R package for the visualization of structural neuroimaging data.",
-                     "bioRxiv doi: 10.1101/2020.09.18.302935")
+  organization = "bioRxiv",
 )
