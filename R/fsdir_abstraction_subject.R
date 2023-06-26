@@ -670,7 +670,7 @@ subject.annot <- function(subjects_dir, subject_id, hemi, atlas) {
         }
         rh_annot = freesurferformats::read.fs.annot(rh_annot_file);
 
-        merged_annot = merge.hemi.annots(lh_annot, rh_annot);
+        merged_annot = mergehemi.annots(lh_annot, rh_annot);
         return(merged_annot);
     }
     else {

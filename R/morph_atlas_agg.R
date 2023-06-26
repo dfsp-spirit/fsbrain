@@ -653,7 +653,7 @@ write.region.values.fsaverage <- function(hemi, atlas, region_value_list, output
 #' @return annot, the merged annotation.
 #'
 #' @keywords internal
-merge.hemi.annots <- function(lh_annot, rh_annot) {
+mergehemi.annots <- function(lh_annot, rh_annot) {
   merged_annot = list();
   merged_annot$colortable = lh_annot$colortable;        # randomly use the lh one, they must be identical for lh nad rh anyways
   merged_annot$colortable_df = lh_annot$colortable_df;  # same
