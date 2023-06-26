@@ -128,7 +128,7 @@ coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=FALSE, image.
     }
 
     makecmap_options = coloredmeshes.get.md(coloredmeshes, 'makecmap_options');
-    print(makecmap_options);
+
     if(is.null(makecmap_options)) {
         warning("Requested to draw colorbar, but meshes contain no 'makecmap_options' metadata, falling back to defaults.");
         makecmap_options = mkco.seq();
