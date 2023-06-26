@@ -326,7 +326,7 @@ apply.transform <- function(object, matrix_fun) {
             surface_ras[idx,] = (affine_matrix %*% m_cp[idx,])[1:3];
         }
         return(surface_ras);
-    } else if(class(m) == 'Triangles3D') {
+    } else if('Triangles3D' %in% class(m)) {
         m$v1 = apply.transform(m$v1, matrix_fun=matrix_fun);   # v1 is an n x 3 matrix of the x,y,z coords of vertex v1 of the face
         m$v2 = apply.transform(m$v2, matrix_fun=matrix_fun);
         m$v3 = apply.transform(m$v3, matrix_fun=matrix_fun);

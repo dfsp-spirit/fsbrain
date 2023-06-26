@@ -359,7 +359,7 @@ test_that("Merging annotations works", {
     num_verts_subject1_rh = 153333
     num_verts_subject1_both = num_verts_subject1_lh + num_verts_subject1_rh
 
-    annot = merge.hemi.annots(lh_annot, rh_annot);
+    annot = mergehemi.annots(lh_annot, rh_annot);
     # Ensure vertex-wise data was merged.
     expect_equal(length(annot$vertices), num_verts_subject1_both);
     expect_equal(length(annot$label_codes), num_verts_subject1_both);

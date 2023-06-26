@@ -46,5 +46,6 @@ test_that("Principal curvatures can be computed", {
     rh_pc = principal.curvatures(rh_curvatures$K1, rh_curvatures$K2);
 
     vis.data.on.subject(subjects_dir, subject_id, morph_data_lh = lh_pc$principal_curvature_k1, morph_data_rh = rh_pc$principal_curvature_k1, rglactions = list('trans_fun'=clip.data));
+    expect_true(1L == 1L);
 })
 

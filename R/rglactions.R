@@ -74,19 +74,19 @@ clip_fun <- function(lower=0.05, upper=0.95) {
 shift.hemis.rglactions <- function(coloredmeshes, rglactions) {
 
     if(rglactions.has.key(rglactions, 'shift_hemis_apart')) {
-        logger::log_info("Function shift.hemis.rglactions called, key 'shift_hemis_apart' is present.");
+        #logger::log_info("Function shift.hemis.rglactions called, key 'shift_hemis_apart' is present.");
         shift_hemis = rglactions$shift_hemis_apart;
         if(is.logical(shift_hemis)) {
-            logger::log_info("Function shift.hemis.rglactions called with logical.");
+            #logger::log_info("Function shift.hemis.rglactions called with logical.");
             if(shift_hemis) {
                 return(shift.hemis.apart(coloredmeshes, hemi_order_on_axis='lr'));
             }
         } else if(is.list(shift_hemis)) {
-            logger::log_info("Function shift.hemis.rglactions called with list.");
+            #logger::log_info("Function shift.hemis.rglactions called with list.");
             # interpret the list as extra parameters to pass to shift.hemis.apart
             return(do.call(shift.hemis.apart, utils::modifyList(list(coloredmeshes), shift_hemis)));
         } else if(is.character(shift_hemis)) {
-            logger::log_info("Function shift.hemis.rglactions called with char.");
+            #logger::log_info("Function shift.hemis.rglactions called with char.");
             if(shift_hemis == 'lr' | shift_hemis == 'lhrh') {
                 return(shift.hemis.apart(coloredmeshes, hemi_order_on_axis='lr'));
             } else if(shift_hemis == 'rl' | shift_hemis == 'rhlh') {
