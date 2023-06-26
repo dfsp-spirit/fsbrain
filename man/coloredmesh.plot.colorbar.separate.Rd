@@ -7,8 +7,8 @@
 coloredmesh.plot.colorbar.separate(
   coloredmeshes,
   show = FALSE,
-  image.plot_extra_options = list(horizontal = FALSE, legend.cex = 1.8, legend.width =
-    2, legend.mar = 12, axis.args = list(cex.axis = 5)),
+  image.plot_extra_options = list(horizontal = FALSE, legend.cex = 1.8, legend.width = 2,
+    legend.mar = 12, axis.args = list(cex.axis = 5)),
   png_options = list(filename = "fsbrain_cbar.png", width = 1400, height = 1400, bg =
     "#FFFFFF00"),
   silent = FALSE,

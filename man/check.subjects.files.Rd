@@ -7,8 +7,8 @@
 check.subjects.files(
   subjects_dir,
   subjects_list,
-  sfiles = c("surf/lh.thickness", "surf/rh.thickness", "surf/lh.white",
-    "surf/rh.white", "label/lh.aparc.annot", "label/rh.aparc.annot")
+  sfiles = c("surf/lh.thickness", "surf/rh.thickness", "surf/lh.white", "surf/rh.white",
+    "label/lh.aparc.annot", "label/rh.aparc.annot")
 )
 }
 \arguments{
