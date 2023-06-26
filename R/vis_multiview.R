@@ -193,7 +193,7 @@ get.sorted.cmeshes <- function(coloredmeshes) {
         # This is the old style of passing the list: unsorted with unmerged colormaps. We need to fiddle with the data.
         # Some functions still use this, but they will all be reworked in the future. Once done, this part can be removed.
         warning("The old style of passing coloredmeshes should not be in use anymore.");
-        hemi_sorted_cmeshes = sort.coloredmeshes.by.hemi(coloredmeshes);
+        hemi_sorted_cmeshes = sortcoloredmeshes.by.hemi(coloredmeshes);
         lh_meshes = hemi_sorted_cmeshes$lh;
         rh_meshes = hemi_sorted_cmeshes$rh;
     }
