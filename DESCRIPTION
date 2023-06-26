@@ -19,8 +19,7 @@ Imports:
     viridis,
     data.table,
     magick,
-    methods,
-    logger
+    methods
 Suggests:
     knitr,
     rmarkdown,
