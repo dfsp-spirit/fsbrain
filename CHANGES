@@ -1,6 +1,11 @@
 fsbrain Changes
 ===============
 
+Version 0.5.5
+-------------
+- Change some minor docstring issues in internal functions (requested by CRAN team)
+
+
 Version 0.5.4
 -------------
 - FIX: Change usage of rgl functions that were recently deprectated to current API. This ensures that fsbrain is compatible with the latest rgl version. Thanks to @dmurdoch for the patch. Fixes #52.

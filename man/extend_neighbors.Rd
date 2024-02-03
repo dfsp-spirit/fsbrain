@@ -21,13 +21,13 @@ extend_neighbors(
 
 \item{currentvidx}{positive integer, initial current vertex. Pass identical value as in targetvidx, this is changed later in the recursion.}
 
+\item{min_dotp_thresh}{double, the minimal dotproduct distance threshold to use. Only vertices along the structural mesh neighborhood with values greater this will be included in the neighborhood. Yes, greater.}
+
 \item{ref_visited}{pass-by-reference (via RefClasses) integer vector of length \code{num_mesh_vertices}: whether the respective vertex has been visited already.}
 
 \item{ref_neighbors}{pass-by-reference (via RefClasses) integer vector of length \code{num_mesh_vertices}: whether the respective vertex is part of the current neighborhood.}
 
 \item{ref_neighbor_dpdists}{pass-by-reference (via RefClasses) double vector of length \code{num_mesh_vertices}: the dotproduct distance to the respective vertex (if it is part of the neighborhood).}
-
-\item{min_dotp_threshold}{double, the minimal dotproduct distance threshold to use. Only vertices along the structural mesh neighborhood with values greater this will be included in the neighborhood. Yes, greater.}
 }
 \value{
 integer, invisible. Either \code{0L} or \code{1L}. Used in the recursion only, ignore. The return values of interest are in the 3 \code{ref_*} parameters.

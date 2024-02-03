@@ -2,16 +2,16 @@
 % Please edit documentation in R/cbar.R
 \name{draw.colorbar}
 \alias{draw.colorbar}
-\title{Draw colorebar into background of current plot.}
+\title{Draw colorbar into background of current plot.}
 \usage{
 draw.colorbar(coloredmeshes, horizontal = FALSE, ...)
 }
 \arguments{
+\item{coloredmeshes}{fs.coloredmesh as returned by the coloredmesh.from.* functions.}
+
 \item{horizontal}{logical, whether the colorbar should be drawn in horizontal orientation. Defaults to `TRUE`.}
 
 \item{...}{extra params passed to \code{\link[fields]{image.plot}}}
-
-\item{coloredmesh}{fs.coloredmesh as returned by the coloredmesh.from.* functions.}
 }
 \description{
 Requires a rgl 3d visualisation to be open that already contains a rendered object. Uses \code{\link{bgplot3d}} to add a colorbar in the background of the plot using \code{\link[fields]{image.plot}}. Experimental.

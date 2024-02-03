@@ -11,7 +11,7 @@ surf.sphere.spatialfilter(source_data, sphere_dists, gaussian_weights)
 
 \item{sphere_dists}{named list with 3 entries, as returned by \code{surf.sphere.dist}}
 
-\item{gaussian_weight}{list of double vectors, the Gaussian weights for all neighbors of the respective vertex. As returned by \code{surf.sphere.gaussianweights}.}
+\item{gaussian_weights}{list of double vectors, the Gaussian weights for all neighbors of the respective vertex. As returned by \code{surf.sphere.gaussianweights}.}
 }
 \value{
 numerical vector, the spatially filtered per-vertex data.

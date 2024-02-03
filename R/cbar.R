@@ -1,10 +1,10 @@
 # colorbar functions
 
-#' @title Draw colorebar into background of current plot.
+#' @title Draw colorbar into background of current plot.
 #'
 #' @description Requires a rgl 3d visualisation to be open that already contains a rendered object. Uses \code{\link{bgplot3d}} to add a colorbar in the background of the plot using \code{\link[fields]{image.plot}}. Experimental.
 #'
-#' @param coloredmesh fs.coloredmesh as returned by the coloredmesh.from.* functions.
+#' @param coloredmeshes fs.coloredmesh as returned by the coloredmesh.from.* functions.
 #'
 #' @param horizontal logical, whether the colorbar should be drawn in horizontal orientation. Defaults to `TRUE`.
 #'

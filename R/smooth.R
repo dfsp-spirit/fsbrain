@@ -322,7 +322,7 @@ surf.sphere.dist <- function(spherical_surface, maxdist) {
 #'
 #' @param currentvidx positive integer, initial current vertex. Pass identical value as in targetvidx, this is changed later in the recursion.
 #'
-#' @param min_dotp_threshold double, the minimal dotproduct distance threshold to use. Only vertices along the structural mesh neighborhood with values greater this will be included in the neighborhood. Yes, greater.
+#' @param min_dotp_thresh double, the minimal dotproduct distance threshold to use. Only vertices along the structural mesh neighborhood with values greater this will be included in the neighborhood. Yes, greater.
 #'
 #' @param ref_visited pass-by-reference (via RefClasses) integer vector of length \code{num_mesh_vertices}: whether the respective vertex has been visited already.
 #'
@@ -502,7 +502,7 @@ surf.metric.properties <- function(surface, is_template, template_scale_factor=1
 #'
 #' @param sphere_dists named list with 3 entries, as returned by \code{surf.sphere.dist}
 #'
-#' @param gaussian_weight list of double vectors, the Gaussian weights for all neighbors of the respective vertex. As returned by \code{surf.sphere.gaussianweights}.
+#' @param gaussian_weights list of double vectors, the Gaussian weights for all neighbors of the respective vertex. As returned by \code{surf.sphere.gaussianweights}.
 #'
 #' @return numerical vector, the spatially filtered per-vertex data.
 #'

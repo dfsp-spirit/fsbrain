@@ -57,7 +57,7 @@ export(
 \item{...}{extra arguments passed to \code{vislayout.from.coloredmeshes}.}
 }
 \value{
-magick image instance or named list, depending on the value of 'img_only'. If the latter, the list contains the fields 'rev_vl', 'rev_cb', and 'rev_ex', which are the return values of the functions \code{vislayout.from.coloredmeshes}, \code{coloredmesh.plot.colorbar.separate}, and {combine.colorbar.with.brainview.image}, respectively.
+magick image instance or named list, depending on the value of 'img_only'. If the latter, the list contains the fields 'rev_vl', 'rev_cb', and 'rev_ex', which are the return values of the functions \code{vislayout.from.coloredmeshes}, \code{coloredmesh.plot.colorbar.separate}, and \code{combine.colorbar.with.brainview.image}, respectively.
 }
 \description{
 This function serves as an easy (but slightly inflexible) way to export a high-quality, tight-layout, colorbar figure to disk. If no colorbar is required, one can use \code{vislayout.from.coloredmeshes} instead. It is an alias for `vis.export.from.coloredmeshes` that requires less typing.

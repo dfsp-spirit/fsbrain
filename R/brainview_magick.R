@@ -409,7 +409,7 @@ vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.ang
 #'
 #' @param ... extra arguments passed to \code{vislayout.from.coloredmeshes}.
 #'
-#' @return magick image instance or named list, depending on the value of 'img_only'. If the latter, the list contains the fields 'rev_vl', 'rev_cb', and 'rev_ex', which are the return values of the functions \code{vislayout.from.coloredmeshes}, \code{coloredmesh.plot.colorbar.separate}, and {combine.colorbar.with.brainview.image}, respectively.
+#' @return magick image instance or named list, depending on the value of 'img_only'. If the latter, the list contains the fields 'rev_vl', 'rev_cb', and 'rev_ex', which are the return values of the functions \code{vislayout.from.coloredmeshes}, \code{coloredmesh.plot.colorbar.separate}, and \code{combine.colorbar.with.brainview.image}, respectively.
 #'
 #' @note Note that your screen resolution has to be high enough to generate the final image in the requested resolution, see the 'fsbrain FAQ' vignette for details and solutions if you run into trouble.
 #'
@@ -490,7 +490,7 @@ vis.export.from.coloredmeshes <- function(coloredmeshes, colorbar_legend=NULL, i
 #'
 #' @param draw_colorbar logical or one of the character strings 'vertical' or 'horizontal', whether to draw a colorbar. Defaults to 'horizontal'.
 #'
-#' @return magick image instance or named list, depending on the value of 'img_only'. If the latter, the list contains the fields 'rev_vl', 'rev_cb', and 'rev_ex', which are the return values of the functions \code{vislayout.from.coloredmeshes}, \code{coloredmesh.plot.colorbar.separate}, and {combine.colorbar.with.brainview.image}, respectively.
+#' @return magick image instance or named list, depending on the value of 'img_only'. If the latter, the list contains the fields 'rev_vl', 'rev_cb', and 'rev_ex', which are the return values of the functions \code{vislayout.from.coloredmeshes}, \code{coloredmesh.plot.colorbar.separate}, and \code{combine.colorbar.with.brainview.image}, respectively.
 #'
 #' @note Note that your screen resolution has to be high enough to generate the final image in the requested resolution, see the 'fsbrain FAQ' vignette for details and solutions if you run into trouble.
 #'
