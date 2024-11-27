@@ -1,6 +1,6 @@
 # fsbrain
 
-[![DOI](https://zenodo.org/badge/209085379.svg)](https://zenodo.org/doi/10.5281/zenodo.3559816) 
+[![DOI](https://zenodo.org/badge/209085379.svg)](https://zenodo.org/doi/10.5281/zenodo.3559816)
 
 An R package for structural neuroimaging. Provides high-level functions to access (read and write) and visualize surface-based brain morphometry data (e.g. cortical thickness) for individual subjects and groups.
 
@@ -67,8 +67,12 @@ R packages are compiled from source by default under Linux, so you need some dev
 
 * for deb-based Linux distributions (Debian, Ubuntu, ...):
 ```shell
-sudo apt-get install libmagick++-dev libx11-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libfreetype6-dev libxml2-dev libssh-dev libcurl4-openssl-dev libgfortran4
+sudo apt-get install libmagick++-dev libx11-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libfreetype6-dev libxml2-dev libssh-dev libcurl4-openssl-dev gfortran libblas-dev liblapack-dev libgfortran4
 ```
+
+Note: For recent Ubuntu versions, you may have to replace ```libgfortan4``` in the command above with ```libgfortan5```.
+
+
 * for rpm-based Linux distributions (Fedora, CentOS, RHEL, ...):
 ```shell
 sudo yum install ImageMagick-c++-devel libX11-devel mesa-libGLU-devel freetype-devel libxml2-devel
@@ -99,14 +103,14 @@ The documentation can be accessed from within an R session after you have loaded
   * [basic fsbrain example notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples.html): Live visualization of subject data
   * [advanced fsbrain example notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples_adv.html): Plotting group data
   * [export API fsbrain example notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples_export.html): Exporting publication-ready plots
-  
-  
+
+
 * Detailed vignettes with explanations and examples for the functions of the package is included, run `browseVignettes("fsbrain")` to see the vignettes. You can also open the vignette directly:
   * How to load and visualize surface-based neuroimaging data: `vignette("fsbrain")` or: [read online at CRAN](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain.html)
   * How to load and visualize volume-based neuroimaging data: `vignette("fsbrain_vol")` or: [read online at CRAN](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain_vol.html)
   * The fsbrain FAQ: `vignette("fsbrain_faq")` or: [read online at CRAN](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain_faq.html)
-  
-  
+
+
 * Help for a specific function can be accessed in the usual R manner: `?<function>`, where you replace `<function>` with a function name. Like this: `?group.morph.native`.
 * Run `example(<function>)` to see a live demo that uses the function `<function>`. Like this: `example(group.morph.native)`.
 * The [unit tests](./tests/testthat/) that come with this package are essentially a list of examples that illustrate how to use the functions.
