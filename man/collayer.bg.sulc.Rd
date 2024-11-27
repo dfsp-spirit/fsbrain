@@ -36,11 +36,11 @@ Compute a binarized sulcal depth surface color layer, this is intended as a back
 You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
 
 Other surface color layer: 
+\code{\link{collayer.bg}()},
 \code{\link{collayer.bg.atlas}()},
 \code{\link{collayer.bg.meancurv}()},
-\code{\link{collayer.bg}()},
-\code{\link{collayer.from.annotdata}()},
 \code{\link{collayer.from.annot}()},
+\code{\link{collayer.from.annotdata}()},
 \code{\link{collayer.from.mask.data}()},
 \code{\link{collayer.from.morphlike.data}()},
 \code{\link{collayers.merge}()}

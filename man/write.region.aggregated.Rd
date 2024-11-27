@@ -37,7 +37,7 @@ Given an atlas, a subjects list and a measure, aggregate the measure over each r
 }
 \seealso{
 Other output functions: 
-\code{\link{write.region.values.fsaverage}()},
-\code{\link{write.region.values}()}
+\code{\link{write.region.values}()},
+\code{\link{write.region.values.fsaverage}()}
 }
 \concept{output functions}

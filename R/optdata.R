@@ -307,7 +307,7 @@ download_fsaverage <- function(accept_freesurfer_license=FALSE) {
 
 #' @title Download the FreeSurfer v6 low-resolution fsaverage3 subject.
 #'
-#' @description Download some relevant files from the FreeSurfer v6 fsaverage3 subject. The files are subject to the FreeSurfer software license, see parameter 'accept_freesurfer_license' for details. This data is not required for the package to work. If you are working on a machine that has FreeSurfer installed, you already have this data anyways and do not need to download it. Also downloads data for subject1 that has been mapped to fsaverage.
+#' @description Download some relevant files from the FreeSurfer v6 fsaverage3 subject. The files are subject to the FreeSurfer software license, see parameter 'accept_freesurfer_license' for details. This data is not required for the package to work. If you are working on a machine that has FreeSurfer installed, you already have this data anyways and do not need to download it.
 #'
 #' @inheritParams download_fsaverage
 #'
@@ -364,6 +364,135 @@ download_fsaverage3 <- function(accept_freesurfer_license=FALSE) {
     );
     ext_urls_subject1 = paste(ext_url_subject_part_subject1, ext_url_parts_subject1, sep='');
     ext_urls = c(ext_urls_fsaverage3, ext_urls_subject1);
+    base_url = 'http://rcmd.org/projects/nitestdata/';
+    urls = paste(base_url, ext_urls, sep='');
+
+    cfiles = pkgfilecache::ensure_files_available(pkg_info, local_filenames, urls, md5sums=md5sums);
+    cfiles$file_status = NULL; # not exposed to end user
+    return(invisible(cfiles));
+}
+
+#' @title Download the FreeSurfer v6 fsaverage6 subject.
+#'
+#' @description Download some relevant files from the FreeSurfer v6 fsaverage6 subject. The files are subject to the FreeSurfer software license, see parameter 'accept_freesurfer_license' for details. This data is not required for the package to work. If you are working on a machine that has FreeSurfer installed, you already have this data anyways and do not need to download it.
+#'
+#' @inheritParams download_fsaverage
+#'
+#' @return Named list. The list has entries: "available": vector of strings. The names of the files that are available in the local file cache. You can access them using get_optional_data_file(). "missing": vector of strings. The names of the files that this function was unable to retrieve.
+#'
+#' @note The subject fsaverage6 is a slightly downsampled (low mesh resolution) version of the standard fsaverage. If you never heard about fsaverage6, you do not need it. You will have to manually re-sample your data in FreeSurfer if you want to use it with fsaverage6.
+#'
+#' @export
+download_fsaverage6 <- function(accept_freesurfer_license=FALSE) {
+
+    if(! accept_freesurfer_license) {
+        cat(sprintf("Nothing downloaded. You have to accept the FreeSurfer license to download and use fsaverage.\n"));
+        cat(sprintf("Read the license at https://surfer.nmr.mgh.harvard.edu/fswiki/FreeSurferSoftwareLicense and set parameter 'accept_freesurfer_license' to TRUE if you accept it.\n"));
+        return(invisible(NULL));
+    }
+
+    pkg_info = pkgfilecache::get_pkg_info("fsbrain");
+    base_path_subject = c('subjects_dir', 'fsaverage6');
+    local_filenames = list(c(base_path_subject, 'mri','brainmask.mgz'),
+                           c(base_path_subject, 'mri','orig.mgz'),
+                           c(base_path_subject, 'mri','T1.mgz'),
+                           c(base_path_subject, 'mri','aseg.mgz'),
+                           c(base_path_subject, 'mri','brain.mgz'),
+                           c(base_path_subject, 'surf','lh.inflated'),
+                           c(base_path_subject, 'surf','lh.pial'),
+                           c(base_path_subject, 'surf','lh.sphere'),
+                           c(base_path_subject, 'surf','lh.white'),
+                           c(base_path_subject, 'surf','lh.thickness'),
+                           c(base_path_subject, 'surf','lh.area'),
+                           c(base_path_subject, 'surf','lh.curv'),
+                           c(base_path_subject, 'surf','lh.sulc'),
+                           c(base_path_subject, 'surf','lh.sphere.reg'),
+                           c(base_path_subject, 'label','lh.cortex.label'),
+                           c(base_path_subject, 'label','lh.aparc.annot'),
+                           c(base_path_subject, 'label','lh.aparc.a2009s.annot'),
+                           c(base_path_subject, 'surf','rh.inflated'),
+                           c(base_path_subject, 'surf','rh.pial'),
+                           c(base_path_subject, 'surf','rh.sphere'),
+                           c(base_path_subject, 'surf','rh.white'),
+                           c(base_path_subject, 'surf','rh.thickness'),
+                           c(base_path_subject, 'surf','rh.area'),
+                           c(base_path_subject, 'surf','rh.curv'),
+                           c(base_path_subject, 'surf','rh.sulc'),
+                           c(base_path_subject, 'surf','rh.sphere.reg'),
+                           c(base_path_subject, 'label','rh.cortex.label'),
+                           c(base_path_subject, 'label','rh.aparc.annot'),
+                           c(base_path_subject, 'label','rh.aparc.a2009s.annot')
+    );
+
+
+
+    md5sums = c('5424459df81b8ec4b6f01312d77cd3f7',  #mri/brainmask.mgz
+                '5e006fdd31520b3af62bd3204e290703',  #mri/orig.mgz
+                '528de3f4b12f28eb475a40b05b405dc9',  #mri/T1.mgz
+                '66215103483f3960fbaea7cdd96b5333',  #mri/aseg.mgz
+                '5424459df81b8ec4b6f01312d77cd3f7',  #mri/brain.mgz
+                'c78e55996ce6fe277ad1e462c250b535',  #surf/lh.inflated
+                '78e6d7073a20cf31013dd2963837f955',  #surf/lh.pial
+                '113c4e4df4a4367e614f83c6954a4e1d',  #surf/lh.sphere
+                'f671cdb2fc598451076ad2b4307cd830',  #surf/lh.white
+                'f32aa4b19bc46434ce59f54f25b4d131',  #surf/lh.thickness
+                '9c80522e9eff642a263d7ec0e896452a',  #surf/lh.area
+                'f9d17c2adebc81c3ae7ce8cbd068910f',  #surf/lh.curv
+                '2130116a66f7419548926499c73aeba3',  #surf/lh.sulc
+                '113c4e4df4a4367e614f83c6954a4e1d',  #surf/lh.sphere.reg
+                'b895b033488489670f769dc9372b9945',  #label/lh.cortex.label
+                '655226d4a4d8264af44910e67c53a4cb',  #label/lh.aparc.annot
+                'ec7e51e9b9c0c5edc4d2eb37c83e5421',  #label/lh.aparc.a2009s.annot
+                '7c93f564d9604a1c6b723841041dbe14',  #surf/rh.inflated
+                '2e42e96454afd2708655f5266ec0935e',  #surf/rh.pial
+                '113c4e4df4a4367e614f83c6954a4e1d',  #surf/rh.sphere
+                '7f3a96ef16c0f197abc69c00e8baf9e2',  #surf/rh.white
+                'e42b1621a0fdaaf3432f521f5f200972',  #surf/rh.thickness
+                '1acaaae1e3e640f2eafd725b0cd27c51',  #surf/rh.area
+                '6b4da0da0c5c5ce3f873842cccc225f0',  #surf/rh.curv
+                '2956af249b2d9a8a7c83bb25dca10cdc',  #surf/rh.sulc
+                '113c4e4df4a4367e614f83c6954a4e1d',  #surf/rh.sphere.reg
+                '0c719a151b837aedfe5e32c01db4a76f',  #label/rh.cortex.label
+                '7bca4032e02926fa6181efbd6b93c4b3',  #label/rh.aparc.annot
+                'cf08c1e0d8c9c48b752e1b874b7cb25e'  #label/rh.aparc.a2009s.annot
+    );
+
+
+
+    ext_url_subject_part_fsaverage6 = 'subjects_dir/fsaverage6/';
+    ext_url_parts_fsaverage6 = c('mri/brainmask.mgz',
+                                 'mri/orig.mgz',
+                                 'mri/T1.mgz',
+                                 'mri/aseg.mgz',
+                                 'mri/brain.mgz',
+                                 'surf/lh.inflated',
+                                 'surf/lh.pial',
+                                 'surf/lh.sphere',
+                                 'surf/lh.white',
+                                 'surf/lh.thickness',
+                                 'surf/lh.area',
+                                 'surf/lh.curv',
+                                 'surf/lh.sulc',
+                                 'surf/lh.sphere.reg',
+                                 'label/lh.cortex.label',
+                                 'label/lh.aparc.annot',
+                                 'label/lh.aparc.a2009s.annot',
+                                 'surf/rh.inflated',
+                                 'surf/rh.pial',
+                                 'surf/rh.sphere',
+                                 'surf/rh.white',
+                                 'surf/rh.thickness',
+                                 'surf/rh.area',
+                                 'surf/rh.curv',
+                                 'surf/rh.sulc',
+                                 'surf/rh.sphere.reg',
+                                 'label/rh.cortex.label',
+                                 'label/rh.aparc.annot',
+                                 'label/rh.aparc.a2009s.annot'
+    );
+    ext_urls_fsaverage6 = paste(ext_url_subject_part_fsaverage6, ext_url_parts_fsaverage6, sep='');
+
+    ext_urls = ext_urls_fsaverage6;
     base_url = 'http://rcmd.org/projects/nitestdata/';
     urls = paste(base_url, ext_urls, sep='');
 

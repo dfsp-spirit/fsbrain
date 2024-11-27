@@ -89,8 +89,8 @@ Other mask functions:
 \code{\link{mask.from.labeldata.for.hemi}()}
 
 Other visualization functions: 
-\code{\link{highlight.vertices.on.subject.spheres}()},
 \code{\link{highlight.vertices.on.subject}()},
+\code{\link{highlight.vertices.on.subject.spheres}()},
 \code{\link{vis.color.on.subject}()},
 \code{\link{vis.data.on.fsaverage}()},
 \code{\link{vis.data.on.subject}()},

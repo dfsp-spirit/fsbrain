@@ -20,11 +20,11 @@ See \code{\link{hemilist}} for details.
 }
 \seealso{
 Other hemilist functions: 
+\code{\link{hemilist}()},
 \code{\link{hemilist.from.prefixed.list}()},
 \code{\link{hemilist.get.combined.data}()},
 \code{\link{hemilist.unwrap}()},
 \code{\link{hemilist.wrap}()},
-\code{\link{hemilist}()},
 \code{\link{is.hemilist}()}
 }
 \concept{hemilist functions}

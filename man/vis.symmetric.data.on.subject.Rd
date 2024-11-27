@@ -68,8 +68,8 @@ This function is intended to plot symmetric data around zero (like positive and 
 }
 \seealso{
 Other visualization functions: 
-\code{\link{highlight.vertices.on.subject.spheres}()},
 \code{\link{highlight.vertices.on.subject}()},
+\code{\link{highlight.vertices.on.subject.spheres}()},
 \code{\link{vis.color.on.subject}()},
 \code{\link{vis.data.on.fsaverage}()},
 \code{\link{vis.data.on.subject}()},

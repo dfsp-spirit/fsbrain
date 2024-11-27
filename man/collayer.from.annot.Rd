@@ -25,10 +25,10 @@ Compute surface color layer from annotation or atlas data.
 You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
 
 Other surface color layer: 
+\code{\link{collayer.bg}()},
 \code{\link{collayer.bg.atlas}()},
 \code{\link{collayer.bg.meancurv}()},
 \code{\link{collayer.bg.sulc}()},
-\code{\link{collayer.bg}()},
 \code{\link{collayer.from.annotdata}()},
 \code{\link{collayer.from.mask.data}()},
 \code{\link{collayer.from.morphlike.data}()},

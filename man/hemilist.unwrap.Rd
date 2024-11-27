@@ -21,11 +21,11 @@ Unwrap hemi data from a named hemi list.
 }
 \seealso{
 Other hemilist functions: 
+\code{\link{hemilist}()},
 \code{\link{hemilist.derive.hemi}()},
 \code{\link{hemilist.from.prefixed.list}()},
 \code{\link{hemilist.get.combined.data}()},
 \code{\link{hemilist.wrap}()},
-\code{\link{hemilist}()},
 \code{\link{is.hemilist}()}
 }
 \concept{hemilist functions}
