@@ -1,6 +1,7 @@
 # fsbrain
 
 [![DOI](https://zenodo.org/badge/209085379.svg)](https://zenodo.org/doi/10.5281/zenodo.3559816)
+ ![HiRSE Code Promo Badge](https://img.shields.io/badge/Promo-8db427?label=HiRSE&labelColor=005aa0&link=https%3A%2F%2Fgo.fzj.de%2FCodePromo)
 
 An R package for structural neuroimaging. Provides high-level functions to access (read and write) and visualize surface-based brain morphometry data (e.g. cortical thickness) for individual subjects and groups.
 
