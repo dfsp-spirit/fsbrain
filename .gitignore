@@ -25,6 +25,11 @@ vignettes/*.html
 vignettes/*.pdf
 vignettes/*.R
 
+
+tests/testthat/fsbrain_arranged.png
+tests/testthat/fsbrain_issue50_export.png
+
+
 # OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
 .httr-oauth
 
