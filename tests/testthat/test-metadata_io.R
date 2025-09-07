@@ -21,6 +21,7 @@ test_that("Demographics file with header can be read with stringsAsFactors = TRU
 
 
 test_that("Demographics reports can be generated.", {
+    testthat::skip_on_cran();
   demogr_file = system.file("extdata", "demographics.tsv", package = "fsbrain", mustWork = TRUE);
   column_names = c("subject_id", "group", "age");
   demographics = read.md.demographics(demogr_file, header = TRUE, column_names = column_names);
