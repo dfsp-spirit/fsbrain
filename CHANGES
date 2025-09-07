@@ -1,6 +1,12 @@
 fsbrain Changes
 ===============
 
+Version 0.5.6
+-------------
+- Fix all links in the documentation strings to functions from external packages by adding the package to the link
+- Update usage of the now deprecated igraph::is.igraph function to the replacement igraph::is_igraph
+
+
 Version 0.5.5
 -------------
 - Change some minor docstring issues in internal functions (requested by CRAN team)
