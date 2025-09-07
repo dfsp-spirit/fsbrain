@@ -2,7 +2,7 @@
 
 #' @title Draw colorbar into background of current plot.
 #'
-#' @description Requires a rgl 3d visualisation to be open that already contains a rendered object. Uses \code{\link{bgplot3d}} to add a colorbar in the background of the plot using \code{\link[fields]{image.plot}}. Experimental.
+#' @description Requires a rgl 3d visualisation to be open that already contains a rendered object. Uses \code{\link[rgl]{bgplot3d}} to add a colorbar in the background of the plot using \code{\link[fields]{image.plot}}. Experimental.
 #'
 #' @param coloredmeshes fs.coloredmesh as returned by the coloredmesh.from.* functions.
 #'

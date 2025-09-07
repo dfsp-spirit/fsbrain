@@ -7,9 +7,9 @@
 get.rglstyle.glass2()
 }
 \value{
-named list, style parameters that can be passed to \code{\link{shade3d}} via \code{\link{do.call}}.
+named list, style parameters that can be passed to \code{\link[rgl]{shade3d}} via \code{\link{do.call}}.
 }
 \description{
-Glass-brain rendering style. This style has a very negative impact on rendering performance (especially in interactive mode). Hint: Run \code{\link{material3d}} without arguments to see valid style keywords to create new styles.
+Glass-brain rendering style. This style has a very negative impact on rendering performance (especially in interactive mode). Hint: Run \code{\link[rgl]{material3d}} without arguments to see valid style keywords to create new styles.
 }
 \keyword{internal}

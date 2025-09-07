@@ -723,7 +723,7 @@ normalize <- function(x) {
 
 #' @title Return triangles for a 3D cube or cuboid.
 #'
-#' @description Each row of the returned matrix encodes a point (the x, y, and z coordinates), and 3 consecutive rows encode a triangle. Obvisouly, a point will occur several times (as part of several triangles). The result can be passed to \code{\link{triangles3d}} to render a 3D box. The defaults for the parameters will create a cube with edge length 1 centered at (0, 0, 0).
+#' @description Each row of the returned matrix encodes a point (the x, y, and z coordinates), and 3 consecutive rows encode a triangle. Obvisouly, a point will occur several times (as part of several triangles). The result can be passed to \code{\link[rgl]{triangles3d}} to render a 3D box. The defaults for the parameters will create a cube with edge length 1 centered at (0, 0, 0).
 #'
 #' @param xmin numeric, minimal x coordinate
 #'

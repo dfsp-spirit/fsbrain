@@ -7,7 +7,7 @@
 get.rglstyle.edges()
 }
 \value{
-named list, style parameters that can be passed to \code{\link{shade3d}} via \code{\link{do.call}}.
+named list, style parameters that can be passed to \code{\link[rgl]{shade3d}} via \code{\link{do.call}}.
 }
 \description{
 Mesh edges rendering style. Zoom in enough to see them.

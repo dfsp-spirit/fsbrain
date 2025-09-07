@@ -10,11 +10,11 @@ get.rglstyle(style)
 \item{style}{string. A style name. Available styles are one of: "default", "shiny", "semitransparent", "glass", "edges".}
 }
 \value{
-a style, resolved to a parameter list compatible with \code{\link{material3d}}.
+a style, resolved to a parameter list compatible with \code{\link[rgl]{material3d}}.
 }
 \description{
-Run \code{\link{material3d}} without arguments to see valid style keywords to create new styles.
+Run \code{\link[rgl]{material3d}} without arguments to see valid style keywords to create new styles.
 }
 \seealso{
-\code{\link{shade3d}} can use the returned style
+\code{\link[rgl]{shade3d}} can use the returned style
 }
