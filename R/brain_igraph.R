@@ -17,7 +17,7 @@
 #' @export
 fs.surface.to.igraph <- function(surface) {
     if(requireNamespace("igraph", quietly = TRUE)) {
-        if(igraph::is.igraph(surface)) {
+        if(igraph::is_igraph(surface)) {
             return(surface);
         }
         surface = ensure.fs.surface(surface);
