@@ -219,7 +219,7 @@ collayer.bg.atlas <- function(subjects_dir, subject_id, hemi="both", atlas="apar
 #'
 #' @param rh_morph_data numerical vector, can be NULL
 #'
-#' @param makecmap_options named list of parameters to pass to \code{\link{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.
+#' @param makecmap_options named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.
 #'
 #' @param return_metadata logical, whether to return additional metadata as entry 'metadata' in the returned list
 #'
@@ -363,7 +363,7 @@ force.to.range <- function(x, data_range, allow_append = FALSE) {
 #'
 #' @param rh_data numerical vector, can be NULL
 #'
-#' @param makecmap_options named list of parameters to pass to \code{\link{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.
+#' @param makecmap_options named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.
 #'
 #' @return named hemi list, each entry is a vector of color strings, one color per surface vertex. The coloring represents the label data.
 #'
@@ -657,9 +657,9 @@ alphablend <- function(front_color, back_color, silent=TRUE) {
 #'
 #' @param color rgba color strings
 #'
-#' @param gamma_correct logical, whether to apply non-linear gamma correction. First performs gamma expansion, then applies the gray-scale channel weigths, then gamma compression.
+#' @param gamma_correct logical, whether to apply non-linear gamma correction. First performs gamma expansion, then applies the gray-scale channel weights, then gamma compression.
 #'
-#' @return rgba color strings, the grayscale colors. The information from one of the three rgb channels would be enough. The alpha value is not touched.
+#' @return rgba color strings, the gray-scale colors. The information from one of the three RGB channels would be enough. The alpha value is not touched.
 #'
 #' @references see https://en.wikipedia.org/wiki/Grayscale#Converting_color_to_grayscale
 #'

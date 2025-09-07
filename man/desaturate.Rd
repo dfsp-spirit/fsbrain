@@ -9,10 +9,10 @@ desaturate(color, gamma_correct = FALSE)
 \arguments{
 \item{color}{rgba color strings}
 
-\item{gamma_correct}{logical, whether to apply non-linear gamma correction. First performs gamma expansion, then applies the gray-scale channel weigths, then gamma compression.}
+\item{gamma_correct}{logical, whether to apply non-linear gamma correction. First performs gamma expansion, then applies the gray-scale channel weights, then gamma compression.}
 }
 \value{
-rgba color strings, the grayscale colors. The information from one of the three rgb channels would be enough. The alpha value is not touched.
+rgba color strings, the gray-scale colors. The information from one of the three RGB channels would be enough. The alpha value is not touched.
 }
 \description{
 Perform simple desaturation or grayscale conversion of RGBA colors.

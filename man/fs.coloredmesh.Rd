@@ -14,7 +14,7 @@ fs.coloredmesh(
 )
 }
 \arguments{
-\item{mesh}{a `mesh3d` instance as returned by \code{\link{tmesh3d}} or an `fs.surface` brain surface mesh as returned by functions like \code{\link[fsbrain]{subject.surface}}.}
+\item{mesh}{a `mesh3d` instance as returned by \code{\link[rgl]{tmesh3d}} or an `fs.surface` brain surface mesh as returned by functions like \code{\link[fsbrain]{subject.surface}}.}
 
 \item{col}{vector of vertex colors for the mesh, one color per vertex. Expanded if exactly one color.}
 

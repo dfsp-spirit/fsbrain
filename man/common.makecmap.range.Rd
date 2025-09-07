@@ -12,7 +12,7 @@ common.makecmap.range(
 )
 }
 \arguments{
-\item{makecmap_options}{named list of parameters to pass to \code{\link{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.}
+\item{makecmap_options}{named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from 'measure'.}
 
 \item{lh_data}{numeric vector, data for left hemisphere.}
 
