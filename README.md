@@ -20,6 +20,7 @@ The plots produced by *fsbrain* can be integrated into R notebooks or written to
 
 
 ## News
+* 2025-09-09: New fsbrain version 0.5.6 released on CRAN, see the [CHANGES](./CHANGES).
 * 2024-02-03: New fsbrain version 0.5.5 released on CRAN, see the [CHANGES](./CHANGES).
 * 2023-06-26: New fsbrain version 0.5.4 released on CRAN, see the [CHANGES](./CHANGES).
 * 2022-12-22: We are looking for help! If you have a Mac and are interested in helping fsbrain development, please [contact us by email](http://rcmd.org/ts/#contact) or reply to [#46](https://github.com/dfsp-spirit/fsbrain/issues/46) here on GitHub!
