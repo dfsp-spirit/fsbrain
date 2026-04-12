@@ -70,10 +70,10 @@ R packages are compiled from source by default under Linux, so you need some dev
 
 * for deb-based Linux distributions (Debian, Ubuntu, ...):
 ```shell
-sudo apt-get install libmagick++-dev libx11-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libfreetype6-dev libxml2-dev libssh-dev libcurl4-openssl-dev gfortran libblas-dev liblapack-dev libgfortran4
+sudo apt-get install libmagick++-dev libx11-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libfreetype6-dev libxml2-dev libssh-dev libcurl4-openssl-dev gfortran libblas-dev liblapack-dev libgfortran5
 ```
 
-Note: For recent Ubuntu versions, you may have to replace ```libgfortan4``` in the command above with ```libgfortan5```.
+Note: For older Ubuntu versions, you may have to replace ```libgfortan5``` in the command above with ```libgfortan4```.
 
 
 * for rpm-based Linux distributions (Fedora, CentOS, RHEL, ...):
@@ -86,6 +86,8 @@ If you want to compile the package under any other operating system, you will ne
 #### MacOS System dependencies
 
 Recent MacOS versions do not ship with an X11 environment. You will have to install the [xquartz X11 system](https://www.xquartz.org/) if you do not have it already. If you want to create GIF movies, make sure you have imagemagick installed (easiest via [homebrew](https://brew.sh/): `brew install imagemagick@6`).
+
+Note that X11 is not needed for rendering, but only for stuff like opening windows, etc. So if you are fine with displaying images in your web browser, as opposed to a graphics window, you can use the `rglwidget` command, and thus run fsbrain without the need for X11.
 
 
 #### Windows Installation Hints
