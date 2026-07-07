@@ -170,7 +170,12 @@ annot.outline <- function(annotdata, surface_mesh, background="white", silent=TR
         label_border = label.border(surface_mesh, label_vertices, expand_inwards=expand_inwards);
 
         if(is.null(outline_color)) {
-          col[label_border$vertices] = as.character(annotdata$colortable_df$hex_color_string_rgba[[region_idx]]);
+          hex_rgba = as.character(annotdata$colortable_df$hex_color_string_rgba[[region_idx]]);
+          # FreeSurfer annotation colortables often store alpha=0 for all regions.
+          # Strip the alpha channel (last 2 hex chars) to force full opacity,
+          # otherwise the outlines become invisible when alpha-blended with the
+          # foreground (see GitHub issue #28).
+          col[label_border$vertices] = substr(hex_rgba, 1, 7);
         } else {
           if(length(outline_color) > 1L) {
             if(length(outline_color) != length(limit_to_regions)) {
