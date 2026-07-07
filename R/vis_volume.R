@@ -1251,10 +1251,27 @@ draw.segments.on.image <- function(img, segments, slice_axis, row_axis, col_axis
 #' \dontrun{
 #'    fsbrain::download_optional_data();
 #'    subjects_dir <- fsbrain::get_optional_data_filepath("subjects_dir");
+#'
 #'    # Axial slices with white surface contours in red:
 #'    img <- volvis.lb.with.surface(subjects_dir, "subject1",
-#'       volume="brain", surface="white", axis=3L);
-#'    magick::image_write(img, "~/fsbrain_qa_slices.png");
+#'       volume="brain", surface="white", axis=3L,
+#'       surface_color="#FF0000");
+#'    magick::image_write(img, "~/fsbrain_qa_axial.png");
+#'
+#'    # Coronal slices in green:
+#'    img <- volvis.lb.with.surface(subjects_dir, "subject1",
+#'       volume="brain", surface="white", axis=2L,
+#'       surface_color="#00FF00");
+#'
+#'    # Sagittal slices: left hemisphere red, right hemisphere blue:
+#'    img <- volvis.lb.with.surface(subjects_dir, "subject1",
+#'       volume="brain", surface="white", axis=1L,
+#'       surface_color=c("#FF0000", "#0000FF"));
+#'
+#'    # Single hemisphere, pial surface, every 5th slice:
+#'    img <- volvis.lb.with.surface(subjects_dir, "subject1",
+#'       volume="brain", surface="pial", hemi="lh",
+#'       axis=3L, slices=-5, surface_color="#FF8800");
 #' }
 #'
 #' @family volume visualization

@@ -34,7 +34,7 @@ volvis.lb.with.surface(
 
 \item{surface_color}{character string or vector of length 2, the color(s) for the surface contour lines. If a single color, both hemispheres use it. If two colors, the first is for lh and the second for rh. Defaults to \code{"#FF0000"} (red).}
 
-\item{surface_lwd}{numeric, line width for the contours. Defaults to 1.}
+\item{surface_lwd}{numeric, line width for the contour lines (passed as `lwd` to \code{\link[graphics]{segments}}). Defaults to 1.}
 
 \item{slices}{passed to \code{\link[fsbrain]{volvis.lightbox}}. A negative integer N means "use every Nth slice". A numeric vector gives explicit slice indices (1-based). Defaults to \code{-5} (every 5th slice).}
 
@@ -60,10 +60,27 @@ Creates a lightbox view of 2D MRI slices with the cortical surface boundary cont
 \dontrun{
    fsbrain::download_optional_data();
    subjects_dir <- fsbrain::get_optional_data_filepath("subjects_dir");
+
    # Axial slices with white surface contours in red:
    img <- volvis.lb.with.surface(subjects_dir, "subject1",
-      volume="brain", surface="white", axis=3L);
-   magick::image_write(img, "~/fsbrain_qa_slices.png");
+      volume="brain", surface="white", axis=3L,
+      surface_color="#FF0000");
+   magick::image_write(img, "~/fsbrain_qa_axial.png");
+
+   # Coronal slices in green:
+   img <- volvis.lb.with.surface(subjects_dir, "subject1",
+      volume="brain", surface="white", axis=2L,
+      surface_color="#00FF00");
+
+   # Sagittal slices: left hemisphere red, right hemisphere blue:
+   img <- volvis.lb.with.surface(subjects_dir, "subject1",
+      volume="brain", surface="white", axis=1L,
+      surface_color=c("#FF0000", "#0000FF"));
+
+   # Single hemisphere, pial surface, every 5th slice:
+   img <- volvis.lb.with.surface(subjects_dir, "subject1",
+      volume="brain", surface="pial", hemi="lh",
+      axis=3L, slices=-5, surface_color="#FF8800");
 }
 
 }

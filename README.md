@@ -209,6 +209,26 @@ Want to see brains spin? [Check this out.](./web/fsbrain_movies.md) (WARNING: lo
 
 Volume visualization is not the main goal of fsbrain, but standard lightbox views and simple 3D views are supported. Have a look at the vignettes or the documentation for the `volvis.lb` function. You can find some [example output here](./web/fsbrain_volume.md).
 
+A particularly useful feature for quality assessment (QA) of FreeSurfer reconstructions is `volvis.lb.with.surface()`, which overlays the cortical surface boundary contours onto 2D MRI slices — similar to what `freeview` shows:
+
+```r
+fsbrain::download_optional_data();
+subjects_dir <- fsbrain::get_optional_data_filepath("subjects_dir");
+
+# Axial QA view — red contours trace the white surface on brain.mgz slices
+img <- volvis.lb.with.surface(subjects_dir, "subject1",
+  volume = "brain", surface = "white", axis = 3L, surface_color = "#FF0000");
+magick::image_write(img, "~/fsbrain_qa_axial.png");
+
+# Coronal (green) and sagittal (lh red, rh blue) are also supported
+img <- volvis.lb.with.surface(subjects_dir, "subject1",
+  volume = "brain", surface = "white", axis = 2L, surface_color = "#00FF00");
+img <- volvis.lb.with.surface(subjects_dir, "subject1", axis = 1L,
+  surface_color = c("#FF0000", "#0000FF"));
+```
+
+This works with any FreeSurfer subject directory — just point `subjects_dir` and `subject_id` at your own data. See `?volvis.lb.with.surface` for all options.
+
 ### Example Notebooks
 
 To see a combination of example figures and the code used to produce them, you should have a look at the example notebooks: [getting started notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples.html) and [advanced examples notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples_adv.html).
