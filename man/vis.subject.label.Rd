@@ -78,11 +78,13 @@ Other visualization functions:
 \code{\link{vis.labeldata.on.subject}()},
 \code{\link{vis.mask.on.subject}()},
 \code{\link{vis.region.values.on.subject}()},
+\code{\link{vis.rglwidget}()},
 \code{\link{vis.subject.annot}()},
 \code{\link{vis.subject.morph.native}()},
 \code{\link{vis.subject.morph.standard}()},
 \code{\link{vis.subject.pre}()},
 \code{\link{vis.symmetric.data.on.subject}()},
+\code{\link{vis.volume.on.surface}()},
 \code{\link{vislayout.from.coloredmeshes}()}
 
 Other label functions: 

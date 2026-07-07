@@ -422,3 +422,140 @@ print.fs.coloredvoxels <- function(x, ...) {
 }
 
 
+# ══════════════════════════════════════════════════════════════════════════════════════
+# Combined surface + volume visualization
+# ══════════════════════════════════════════════════════════════════════════════════════
+
+#' @title Visualize a brain volume overlaid on a cortical surface in 3D.
+#'
+#' @description Render a brain volume (as an isosurface or as voxels) together with a cortical surface mesh colored by morphometry data in the same interactive 3D scene. The volume coordinates are transformed to surface RAS space using the FreeSurfer \code{vox2ras_tkr} matrix, ensuring proper spatial alignment of volume and surface.
+#'
+#' @param subjects_dir character string, the FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
+#'
+#' @param subject_id character string, the subject identifier.
+#'
+#' @param volume numeric 3D array or character string. Either a 3D volume array with voxel intensities, or the name of a volume file to load from the subject's `mri/` directory (e.g., \code{"brain"}, \code{"aseg"}, \code{"aparc+aseg"}). Background voxels should have value \code{NA} or 0.
+#'
+#' @param volume_mode character string, one of \code{"contour"} or \code{"voxels"}. The rendering mode for the volume: \code{"contour"} creates a smooth isosurface using the `misc3d` package (requires the optional dependency `misc3d`), \code{"voxels"} renders individual foreground voxels as small cubes. Defaults to \code{"contour"}.
+#'
+#' @param volume_level numeric scalar, the intensity threshold for contour mode. Only voxels with intensity values >= this threshold contribute to the isosurface. Ignored in voxel mode. Defaults to 80 (suitable for a raw brain.mgz with values in range 0-255).
+#'
+#' @param volume_color character string, the color for the volume rendering. Defaults to \code{"#666666"} (medium gray).
+#'
+#' @param volume_alpha numeric in range 0..1, the transparency (alpha) of the volume overlay. Lower values make the volume more transparent, revealing the surface beneath. Defaults to 0.3.
+#'
+#' @param measure character string or NULL, the morphometry data to use for coloring the surface. E.g., \code{"thickness"}, \code{"sulc"}, \code{"area"}, or \code{"curv"}. Pass \code{NULL} to render the surface in a single plain color without morphometry overlay. Defaults to \code{"thickness"}.
+#'
+#' @param surface character string, the display surface. E.g., \code{"white"}, \code{"pial"}, or \code{"inflated"}. Defaults to \code{"white"}.
+#'
+#' @param hemi character string, one of \code{'lh'}, \code{'rh'}, or \code{'both'}. The hemisphere to display. Defaults to \code{"both"}.
+#'
+#' @param views list of strings, the view configuration. For single interactive view use \code{c("si")}. For 4-angle tiled view use \code{c("t4")}. For 9-angle tiled view use \code{c("t9")}. Defaults to \code{c("t4")}.
+#'
+#' @param surface_style character string, a rendering style for the cortical surface, e.g., \code{'default'}, \code{'shiny'} or \code{'semitransparent'}. Use \code{'semitransparent'} to make the surface partially see-through, which works well for volume overlays. Defaults to \code{"semitransparent"}.
+#'
+#' @param rgloptions named list, parameters passed to \code{\link[rgl]{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,800,800))}. Defaults to the result of \code{\link[fsbrain]{rglo}}.
+#'
+#' @param makecmap_options named list of parameters to pass to \code{\link[squash]{makecmap}}. Should include at least a colormap function as name \code{'colFn'}. Defaults to the result of \code{\link[fsbrain]{mkco.seq}}.
+#'
+#' @param cortex_only logical, whether to mask the medial wall (i.e., only render cortical vertices). Defaults to \code{FALSE}.
+#'
+#' @param render_every integer, for voxel mode only: render every Nth foreground voxel. Higher values improve performance but reduce density. Set to 1 to render all voxels (may be slow). Defaults to 20.
+#'
+#' @param ... extra parameters passed to the volume rendering backend (e.g., \code{lit=FALSE} for unlit voxels).
+#'
+#' @return invisible named list with entries: \code{"surface"} (the coloredmeshes from the surface rendering, a hemilist of \code{coloredmesh} instances) and \code{"volume"} (the volume rendering result: a `Triangles3D` object for contour mode, or a list of \code{coloredvoxels} for voxel mode).
+#'
+#' @examples
+#' \dontrun{
+#'    fsbrain::download_optional_data();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+#'    # Contour overlay of brain volume on thickness-colored surface:
+#'    vis.volume.on.surface(subjects_dir, 'subject1', 'brain',
+#'       volume_mode='contour', volume_level=60, measure='thickness',
+#'       views=c('si'), surface_style='semitransparent');
+#'    # Voxel overlay of aseg segmentation ventricles:
+#'    aseg = subject.volume(subjects_dir, 'subject1', 'aseg');
+#'    ventricle_mask = vol.mask.from.segmentation(aseg, c(4,14,15,43));
+#'    vis.volume.on.surface(subjects_dir, 'subject1', ventricle_mask,
+#'       volume_mode='voxels', measure=NULL, views=c('si'),
+#'       volume_color='red');
+#' }
+#'
+#' @family visualization functions
+#' @family volume visualization
+#'
+#' @export
+vis.volume.on.surface <- function(subjects_dir, subject_id,
+    volume = "brain", volume_mode = "contour", volume_level = 80,
+    volume_color = "#666666", volume_alpha = 0.3,
+    measure = "thickness", surface = "white",
+    hemi = "both", views = c("t4"),
+    surface_style = "semitransparent",
+    rgloptions = rglo(),
+    makecmap_options = mkco.seq(),
+    cortex_only = FALSE,
+    render_every = 20L,
+    ...
+) {
+    # ── Validate parameters ──────────────────────────────────────────────────
+    if(!(volume_mode %in% c("contour", "voxels"))) {
+        stop("Parameter 'volume_mode' must be one of 'contour' or 'voxels'.");
+    }
+
+    if(volume_mode == "contour") {
+        if (!requireNamespace("misc3d", quietly = TRUE)) {
+            stop("The 'misc3d' package is required for contour mode. Please install it.");
+        }
+    }
+
+    # ── Load volume data if a name was given ─────────────────────────────────
+    if(is.character(volume) && length(volume) == 1L && !startsWith(volume, "#")) {
+        vol_data = subject.volume(subjects_dir, subject_id, volume);
+    } else {
+        vol_data = volume;
+    }
+
+    if(!(is.array(vol_data) && length(dim(vol_data)) == 3L)) {
+        stop("Parameter 'volume' must be a 3D numeric array or the name of a volume file in the subject's mri/ directory.");
+    }
+
+    # ── Render the cortical surface ──────────────────────────────────────────
+    coloredmeshes = vis.subject.morph.native(
+        subjects_dir = subjects_dir,
+        subject_id = subject_id,
+        measure = measure,
+        hemi = hemi,
+        surface = surface,
+        views = views,
+        rgloptions = rgloptions,
+        style = surface_style,
+        makecmap_options = makecmap_options,
+        cortex_only = cortex_only
+    );
+
+    # ── Render the volume overlay ────────────────────────────────────────────
+    vol_result = NULL;
+
+    if(volume_mode == "contour") {
+        # Create isosurface in voxel CRS, transform to surface RAS, draw into scene
+        vol_tris = misc3d::contour3d(vol_data, level = volume_level,
+            color = volume_color, alpha = volume_alpha, draw = FALSE);
+        vol_tris = apply.transform(vol_tris, vox2ras_tkr());
+        misc3d::drawScene.rgl(vol_tris, add = TRUE);
+        vol_result = vol_tris;
+
+    } else if(volume_mode == "voxels") {
+        # volvis.voxels handles the vox2ras_tkr transform internally
+        # and renders directly into the current rgl scene
+        vol_data_bg = vol_data;
+        vol_data_bg[vol_data_bg == 0] = NA;
+        vol_result = volvis.voxels(vol_data_bg,
+            render_every = render_every,
+            voxelcol = volume_color, ...);
+    }
+
+    return(invisible(list("surface" = coloredmeshes, "volume" = vol_result)));
+}
+
+
