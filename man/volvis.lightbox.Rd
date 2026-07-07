@@ -48,6 +48,7 @@ You should, in most cases, not call this function directly. Use \code{\link[fsbr
 
 Other volume visualization: 
 \code{\link{vis.volume.on.surface}()},
-\code{\link{volvis.lb}()}
+\code{\link{volvis.lb}()},
+\code{\link{volvis.lb.with.surface}()}
 }
 \concept{volume visualization}

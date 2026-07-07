@@ -103,6 +103,7 @@ Other visualization functions:
 
 Other volume visualization: 
 \code{\link{volvis.lb}()},
+\code{\link{volvis.lb.with.surface}()},
 \code{\link{volvis.lightbox}()}
 }
 \concept{visualization functions}
