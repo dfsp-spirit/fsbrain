@@ -648,7 +648,10 @@ alphablend <- function(front_color, back_color, silent=TRUE) {
     # color are fully transparent. The output alpha will be 0, and we set the rgb values to all zeroes as well.
     out_rgb[is.nan(out_rgb)] = 0.;
 
-    out_col = grDevices::rgb(cbind(out_rgb, out_alpha), alpha = TRUE);
+    # Apply per-row rgb() so the computed alpha is preserved. We cannot use
+    # rgb(matrix, alpha=TRUE) because it ignores the 4th column and forces alpha=255.
+    # unname() is needed to strip row/col names that confuse apply().
+    out_col = apply(unname(cbind(out_rgb, out_alpha)), 1L, function(r) grDevices::rgb(r[1], r[2], r[3], r[4]));
     return(out_col);
 }
 
