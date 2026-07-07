@@ -258,3 +258,83 @@ test_that("R NA over opaque annotation color -> annotation preserved", {
         expect_equal(has_alpha(result), 255L)
     }
 })
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# 12. Demo for issue #14: collayers.merge with semi-transparent layers
+#    Before the 2026-07-07 fix, ALL output was forced to alpha=255.
+#    Now semi-transparency is correctly preserved.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+test_that("issue #14: collayers.merge preserves semi-transparency in output", {
+    n <- 20L
+
+    # --- Build a foreground layer with three kinds of vertices ---
+    #   [1:5]   opaque red
+    #   [6:10]  semi-transparent red (alpha ~0.5)
+    #   [11:15] fully transparent (NA → #00000000)
+    #   [16:20] opaque red
+    fg <- rep("#FF0000FF", n)
+    fg[6:10]  <- "#FF000080"   # red, alpha=0x80/255 ≈ 0.5
+    fg[11:15] <- NA_character_  # fully transparent
+
+    # --- Build a background layer with three kinds of vertices ---
+    #   [1:5]   opaque blue
+    #   [6:10]  semi-transparent green (alpha ~0.25)
+    #   [11:15] opaque green
+    #   [16:20] fully transparent
+    bg <- rep("#0000FFFF", n)
+    bg[6:10]  <- "#00FF0040"   # green, alpha=0x40/255 ≈ 0.25
+    bg[11:15] <- "#00FF00FF"   # opaque green
+    bg[16:20] <- "#00000000"   # fully transparent
+
+    merged <- collayers.merge(list(fg = fg, bg = bg), opaque_background = FALSE)
+
+    # --- Verify each region ---
+
+    # Region [1:5]: opaque red over opaque blue → opaque red
+    expect_equal(merged[1:5], rep("#FF0000FF", 5L))
+
+    # Region [6:10]: semi-transparent red over semi-transparent green
+    # out_a ≈ 0.627 → ~160/255, out_r ≈ 0.801 → 204, out_g ≈ 0.199 → 51
+    # Before the fix, alpha was forced to 255. Now it should be ~160.
+    for (i in 6:10) {
+        rgba <- parse_rgba(merged[i])
+        expect_equal(rgba[1], 204L, tolerance = 1,   # R ≈ 204
+                     label = sprintf("vert %d: red channel", i))
+        expect_equal(rgba[2], 51L, tolerance = 1,    # G ≈ 51
+                     label = sprintf("vert %d: green channel", i))
+        expect_equal(rgba[3], 0L,                    # B = 0
+                     label = sprintf("vert %d: blue channel", i))
+        # KEY ASSERTION: alpha is NOT 255 — transparency is preserved
+        expect_equal(rgba[4], 160L, tolerance = 1,
+                     label = sprintf("vert %d: alpha should be ~160 (not 255)", i))
+        expect_true(rgba[4] < 255L,
+                    label = sprintf("vert %d: alpha must be < 255 (semi-transparent)", i))
+    }
+
+    # Region [11:15]: transparent (NA) over opaque green → opaque green
+    expect_equal(merged[11:15], rep("#00FF00FF", 5L))
+
+    # Region [16:20]: opaque red over fully transparent → opaque red
+    expect_equal(merged[16:20], rep("#FF0000FF", 5L))
+})
+
+
+test_that("issue #14 demo: 3 semi-transparent layers preserve alpha in output", {
+    # All three layers are semi-transparent — final alpha should be < 1.0
+    n <- 5L
+    top    <- rep("#FF000040", n)   # red,    alpha ≈ 0.25
+    middle <- rep("#00FF0040", n)   # green,  alpha ≈ 0.25
+    bottom <- rep("#0000FF40", n)   # blue,   alpha ≈ 0.25
+
+    merged <- collayers.merge(list(top = top, middle = middle, bottom = bottom),
+                               opaque_background = FALSE)
+
+    # With all three layers semi-transparent, the final alpha must be < 1.
+    for (i in seq_len(n)) {
+        rgba <- parse_rgba(merged[i])
+        expect_true(rgba[4] > 0L && rgba[4] < 255L,
+                    label = sprintf("3-layer merge: alpha=%d should be in (0,255)", rgba[4]))
+    }
+})
