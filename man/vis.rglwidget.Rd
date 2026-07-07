@@ -14,7 +14,7 @@ vis.rglwidget(
 )
 }
 \arguments{
-\item{coloredmeshes, }{a hemilist of coloredmeshes (as returned by \code{\link[fsbrain]{vis.subject.morph.native}} and similar functions when called with \code{rglactions=list('no_vis'=TRUE)}) or a flat list of \code{\link[fsbrain]{coloredmesh}} instances.}
+\item{coloredmeshes, }{a hemilist of coloredmeshes (as returned by \code{\link[fsbrain]{vis.subject.morph.native}} and similar functions when called with \code{rglactions=list('no_vis'=TRUE)}) or a flat list of \code{coloredmesh} instances.}
 
 \item{background}{string, background color passed to \code{\link[rgl]{bg3d}}. Defaults to "white".}
 
@@ -53,7 +53,7 @@ Create an interactive 3D brain view that can be embedded in R Shiny applications
 
 }
 \seealso{
-Other visualization functions: 
+Other visualization functions:
 \code{\link{highlight.vertices.on.subject}()},
 \code{\link{highlight.vertices.on.subject.spheres}()},
 \code{\link{vis.color.on.subject}()},

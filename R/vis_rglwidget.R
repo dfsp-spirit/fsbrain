@@ -2,7 +2,7 @@
 #'
 #' @description Create an interactive 3D brain view that can be embedded in R Shiny applications or RMarkdown/HTML documents. Unlike the standard \code{vis.*} functions which open an X11/OpenGL window and are designed for static screenshot export, this function renders to a headless rgl device and returns an \code{\link[rgl]{rglwidget}} object that provides interactive 3D rendering in a web browser. The user can rotate, zoom, and pan the brain in the widget.
 #'
-#' @param coloredmeshes, a hemilist of coloredmeshes (as returned by \code{\link[fsbrain]{vis.subject.morph.native}} and similar functions when called with \code{rglactions=list('no_vis'=TRUE)}) or a flat list of \code{\link[fsbrain]{coloredmesh}} instances.
+#' @param coloredmeshes, a hemilist of coloredmeshes (as returned by \code{\link[fsbrain]{vis.subject.morph.native}} and similar functions when called with \code{rglactions=list('no_vis'=TRUE)}) or a flat list of \code{coloredmesh} instances.
 #'
 #' @param background string, background color passed to \code{\link[rgl]{bg3d}}. Defaults to "white".
 #'
