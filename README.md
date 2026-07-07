@@ -215,7 +215,7 @@ To see a combination of example figures and the code used to produce them, you s
 
 ## Contributing
 
-Please refer to [CONTRIBUTING.md](./CONTRIBUTING.md).
+Please refer to [CONTRIBUTING.md](./CONTRIBUTING.md). For dev setup instructions, also read [README_DEVELOPMENT.md](./README_DEVELOPMENT.md).
 
 If you have any question, suggestion or comment on fsbrain, please [open an issue](https://github.com/dfsp-spirit/fsbrain/issues). If you want to contact me via email, please use the maintainer email address listed on the [CRAN webpage for fsbrain](https://cran.r-project.org/package=fsbrain).
 
