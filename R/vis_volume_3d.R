@@ -521,6 +521,10 @@ vis.volume.on.surface <- function(subjects_dir, subject_id,
     }
 
     # ── Render the cortical surface ──────────────────────────────────────────
+    if(is.null(measure)) {
+        measure = "thickness";
+    }
+
     coloredmeshes = vis.subject.morph.native(
         subjects_dir = subjects_dir,
         subject_id = subject_id,
