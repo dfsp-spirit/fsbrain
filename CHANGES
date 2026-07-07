@@ -1,6 +1,15 @@
 fsbrain Changes
 ===============
 
+
+Version 0.6.0
+-------------
+- NEW: Add `vis.volume.on.surface()` function that renders a mesh and a volume in the same 3D space simultaneously.
+- NEW: Add `volvis.lb.with.surface()` function that renders volume lightbox slices with mesh surface contours overlaid. Supports per-hemisphere surface colors and is great for QA.
+- FIX: `alphablend()` now preserves computed alpha values in output colors. The old code used `rgb(matrix, alpha=TRUE)` which ignored the alpha column and forced all output to fully opaque. Fixes #28.
+- FIX: `annot.outline()` now strips the alpha channel from FreeSurfer annotation colors (which often store alpha=0), so that annotation region outlines remain visible instead of blending to invisibility.
+
+
 Version 0.5.6
 -------------
 - Fix all links in the documentation strings to functions from external packages by adding the package to the link
