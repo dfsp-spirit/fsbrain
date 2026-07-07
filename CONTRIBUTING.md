@@ -28,3 +28,5 @@ Note that you do not have to use rstudio of follow these suggestions, any editor
   * Run the unit tests (`Menu > Build > Check Package`).
   * Generate the test coverage report (`Item bar > Addins > Report test coverage for a package`). Wait until the report shows up in the Viewer.
 - If this completed without errors, you are ready to make your changes in a new branch, as explained above.
+
+For instructions for the command line, i.e., without using rstudio, please refer to [README_DEVELOPMENT.md](./README_DEVELOPMENT.md).
