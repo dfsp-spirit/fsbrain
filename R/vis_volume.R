@@ -1169,21 +1169,21 @@ mesh.slice.intersection <- function(surface, axis, slice_crs_coord) {
 
 #' @title Draw contour segments onto a magick image.
 #'
-#' @description Draws a set of line segments (as returned by \code{\link[fsbrain]{mesh.slice.intersection}}) onto a magick image, mapping CRS coordinates to image pixel coordinates.
+#' @description Draws a set of line segments (as returned by \code{\link[fsbrain]{mesh.slice.intersection}}) onto a magick image. Individual mesh triangles produce small segments, which collectively trace the contour boundary when drawn together.
 #'
 #' @param img a magick image instance (a single 2D slice image).
 #'
 #' @param segments list of 2×2 matrices, each a line segment in 0-based CRS coordinates on the two orthogonal axes.
 #'
-#' @param slice_axis integer, the axis (1,2,3) perpendicular to the slice plane. Used to determine how the segment columns map to CRS axes.
+#' @param slice_axis integer, the axis (1,2,3) perpendicular to the slice plane.
 #'
 #' @param row_axis integer, which CRS axis (1, 2, or 3) maps to the image row dimension.
 #'
 #' @param col_axis integer, which CRS axis (1, 2, or 3) maps to the image column dimension.
 #'
-#' @param color character string, the color for the contour lines. Defaults to red.
+#' @param color character string, the color for the contour lines.
 #'
-#' @param lwd numeric, line width. Defaults to 1.
+#' @param lwd numeric, line width passed to \code{\link[graphics]{segments}}. Defaults to 1.
 #'
 #' @return the modified magick image (invisibly).
 #'
@@ -1191,8 +1191,6 @@ mesh.slice.intersection <- function(surface, axis, slice_crs_coord) {
 draw.segments.on.image <- function(img, segments, slice_axis, row_axis, col_axis, color = "#FF0000", lwd = 1) {
     if (length(segments) == 0) return(invisible(img));
 
-    # Segments have 2 columns in the order of setdiff(1:3, slice_axis) (sorted ascending).
-    # Map actual CRS axis number to column index in the segment matrix.
     other_axes <- setdiff(1:3, slice_axis);
     row_col <- match(row_axis, other_axes);
     col_col <- match(col_axis, other_axes);
@@ -1201,20 +1199,12 @@ draw.segments.on.image <- function(img, segments, slice_axis, row_axis, col_axis
     img_width  <- img_info$width;
     img_height <- img_info$height;
 
-    magick::image_draw(img);
+    img <- magick::image_draw(img);
     for (seg in segments) {
-        # seg is 2×2: row 1 = start, row 2 = end
-        x0 <- seg[1, col_col] + 1;   # CRS (0-based) → pixel (1-based)
-        y0 <- seg[1, row_col] + 1;
-        x1 <- seg[2, col_col] + 1;
-        y1 <- seg[2, row_col] + 1;
-
-        # Clip to image boundaries
-        x0 <- max(1, min(img_width, x0));
-        y0 <- max(1, min(img_height, y0));
-        x1 <- max(1, min(img_width, x1));
-        y1 <- max(1, min(img_height, y1));
-
+        x0 <- max(1, min(img_width,  seg[1, col_col] + 1));
+        y0 <- max(1, min(img_height, seg[1, row_col] + 1));
+        x1 <- max(1, min(img_width,  seg[2, col_col] + 1));
+        y1 <- max(1, min(img_height, seg[2, row_col] + 1));
         graphics::segments(x0, y0, x1, y1, col = color, lwd = lwd);
     }
     dev.off();
@@ -1239,7 +1229,7 @@ draw.segments.on.image <- function(img, segments, slice_axis, row_axis, col_axis
 #'
 #' @param surface_color character string or vector of length 2, the color(s) for the surface contour lines. If a single color, both hemispheres use it. If two colors, the first is for lh and the second for rh. Defaults to \code{"#FF0000"} (red).
 #'
-#' @param surface_lwd numeric, line width for the contours. Defaults to 1.
+#' @param surface_lwd numeric, line width for the contour lines (passed as `lwd` to \code{\link[graphics]{segments}}). Defaults to 1.
 #'
 #' @param slices passed to \code{\link[fsbrain]{volvis.lightbox}}. A negative integer N means "use every Nth slice". A numeric vector gives explicit slice indices (1-based). Defaults to \code{-5} (every 5th slice).
 #'
