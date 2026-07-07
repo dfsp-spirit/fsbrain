@@ -56,7 +56,7 @@ vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRU
 
     if(draw_colorbar == "vertical") {
         layout_mat = matrix(c(1, 2), ncol=2, byrow = T);
-        layout_column_widths = c(3L, 1L);
+        layout_column_widths = c(2L, 1L);
         layout_row_heights = rep(1L, nrow(layout_mat));
     } else if(draw_colorbar == "horizontal") {
         horizontal = TRUE;
