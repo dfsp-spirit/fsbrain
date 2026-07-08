@@ -225,6 +225,11 @@ img <- volvis.lb.with.surface(subjects_dir, "subject1",
   volume = "brain", surface = "white", axis = 2L, surface_color = "#00FF00");
 img <- volvis.lb.with.surface(subjects_dir, "subject1", axis = 1L,
   surface_color = c("#FF0000", "#0000FF"));
+
+# Multiple surfaces can be overlaid at once, each with its own color:
+img <- volvis.lb.with.surface(subjects_dir, "subject1",
+  volume = "brain", surface = c("white", "pial"), axis = 3L,
+  surface_color = c("#FF0000", "#FFFF00"));
 ```
 
 This works with any FreeSurfer subject directory — just point `subjects_dir` and `subject_id` at your own data. See `?volvis.lb.with.surface` for all options.

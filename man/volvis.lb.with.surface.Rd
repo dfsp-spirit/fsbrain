@@ -28,11 +28,11 @@ volvis.lb.with.surface(
 
 \item{volume}{numeric 3D array or character string. Either a 3D brain volume (e.g., from T1.mgz or brain.mgz), or the name of a volume file to load from the subject's `mri/` directory. Defaults to \code{"brain"}.}
 
-\item{surface}{character string, the surface to use for contour extraction. One of \code{"white"}, \code{"pial"}, or \code{"inflated"}. Defaults to \code{"white"}.}
+\item{surface}{character string or vector of strings, the surface(s) to use for contour extraction. One or more of \code{"white"}, \code{"pial"}, or \code{"inflated"}. If a vector, contours for all surfaces are drawn. Defaults to \code{"white"}.}
 
 \item{hemi}{character string, one of \code{'lh'}, \code{'rh'}, or \code{'both'}. Which hemisphere surface(s) to overlay. Defaults to \code{"both"}.}
 
-\item{surface_color}{character string or vector of length 2, the color(s) for the surface contour lines. If a single color, both hemispheres use it. If two colors, the first is for lh and the second for rh. Defaults to \code{"#FF0000"} (red).}
+\item{surface_color}{character string or character vector, the color(s) for the surface contour lines. If a single color, all surfaces and hemispheres use it. If a vector of length \code{length(surface)}, each surface gets its own color (both hemispheres use it). If a vector of length \code{2 * length(surface)}, colors are assigned as \code{(lh_surf1, rh_surf1, lh_surf2, rh_surf2, ...)}. Defaults to \code{"#FF0000"} (red).}
 
 \item{surface_lwd}{numeric, line width for the contour lines (passed as `lwd` to \code{\link[graphics]{segments}}). Defaults to 1.}
 
@@ -81,11 +81,21 @@ Creates a lightbox view of 2D MRI slices with the cortical surface boundary cont
    img <- volvis.lb.with.surface(subjects_dir, "subject1",
       volume="brain", surface="pial", hemi="lh",
       axis=3L, slices=-5, surface_color="#FF8800");
+
+   # Both white and pial surfaces overlaid: white in red, pial in yellow:
+   img <- volvis.lb.with.surface(subjects_dir, "subject1",
+      volume="brain", surface=c("white", "pial"), axis=3L,
+      surface_color=c("#FF0000", "#FFFF00"));
+
+   # White (lh red, rh blue) + pial (lh green, rh orange):
+   img <- volvis.lb.with.surface(subjects_dir, "subject1",
+      volume="brain", surface=c("white", "pial"), axis=3L,
+      surface_color=c("#FF0000", "#0000FF", "#00FF00", "#FF8800"));
 }
 
 }
 \seealso{
-Other volume visualization: 
+Other volume visualization:
 \code{\link{vis.volume.on.surface}()},
 \code{\link{volvis.lb}()},
 \code{\link{volvis.lightbox}()}

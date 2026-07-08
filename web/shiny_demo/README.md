@@ -110,3 +110,10 @@ dashboard, click **New deployment → From GitHub repository**, select the
 
 > **Note:** GitHub Pages will **not** work for this — it serves only static
 > files, and a Shiny app needs a running R process on the server.
+
+
+## Public instance by dfsp-spirit on posit cloud
+
+This will only work after a new fsbrain version is released.
+
+It will become available at https://connect.posit.cloud/timschaefer/content/019f40eb-f687-4aaa-6413-4f7b18f1b292. For now, stay tuned.

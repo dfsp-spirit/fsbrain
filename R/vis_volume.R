@@ -1223,11 +1223,11 @@ draw.segments.on.image <- function(img, segments, slice_axis, row_axis, col_axis
 #'
 #' @param volume numeric 3D array or character string. Either a 3D brain volume (e.g., from T1.mgz or brain.mgz), or the name of a volume file to load from the subject's `mri/` directory. Defaults to \code{"brain"}.
 #'
-#' @param surface character string, the surface to use for contour extraction. One of \code{"white"}, \code{"pial"}, or \code{"inflated"}. Defaults to \code{"white"}.
+#' @param surface character string or vector of strings, the surface(s) to use for contour extraction. One or more of \code{"white"}, \code{"pial"}, or \code{"inflated"}. If a vector, contours for all surfaces are drawn. Defaults to \code{"white"}.
 #'
 #' @param hemi character string, one of \code{'lh'}, \code{'rh'}, or \code{'both'}. Which hemisphere surface(s) to overlay. Defaults to \code{"both"}.
 #'
-#' @param surface_color character string or vector of length 2, the color(s) for the surface contour lines. If a single color, both hemispheres use it. If two colors, the first is for lh and the second for rh. Defaults to \code{"#FF0000"} (red).
+#' @param surface_color character string or character vector, the color(s) for the surface contour lines. If a single color, all surfaces and hemispheres use it. If a vector of length \code{length(surface)}, each surface gets its own color (both hemispheres use it). If a vector of length \code{2 * length(surface)}, colors are assigned as \code{(lh_surf1, rh_surf1, lh_surf2, rh_surf2, ...)}. Defaults to \code{"#FF0000"} (red).
 #'
 #' @param surface_lwd numeric, line width for the contour lines (passed as `lwd` to \code{\link[graphics]{segments}}). Defaults to 1.
 #'
@@ -1272,6 +1272,16 @@ draw.segments.on.image <- function(img, segments, slice_axis, row_axis, col_axis
 #'    img <- volvis.lb.with.surface(subjects_dir, "subject1",
 #'       volume="brain", surface="pial", hemi="lh",
 #'       axis=3L, slices=-5, surface_color="#FF8800");
+#'
+#'    # Both white and pial surfaces overlaid: white in red, pial in yellow:
+#'    img <- volvis.lb.with.surface(subjects_dir, "subject1",
+#'       volume="brain", surface=c("white", "pial"), axis=3L,
+#'       surface_color=c("#FF0000", "#FFFF00"));
+#'
+#'    # White (lh red, rh blue) + pial (lh green, rh orange):
+#'    img <- volvis.lb.with.surface(subjects_dir, "subject1",
+#'       volume="brain", surface=c("white", "pial"), axis=3L,
+#'       surface_color=c("#FF0000", "#0000FF", "#00FF00", "#FF8800"));
 #' }
 #'
 #' @family volume visualization
@@ -1310,21 +1320,50 @@ volvis.lb.with.surface <- function(subjects_dir, subject_id,
     }
     voldim <- dim(vol_data);
 
-    # ── Load surfaces and transform to CRS ────────────────────────────────────
-    hemis <- if(hemi == "both") c("lh", "rh") else hemi;
-    surface_colors <- if(length(surface_color) == 2) surface_color else rep(surface_color, 2);
-    names(surface_colors) <- c("lh", "rh");
+    # ── Normalize surface and surface_color to parallel vectors ───────────────
+    surfaces <- as.character(surface);
+    nsurf <- length(surfaces);
 
+    hemis <- if(hemi == "both") c("lh", "rh") else hemi;
+    nhemi <- length(hemis);
+
+    # Build per-surface, per-hemisphere color map
+    # surface_color can be:
+    #   length 1                   → all surfaces × hemis get this color
+    #   length nsurf               → each surface has its own color (both hemis)
+    #   length nsurf * nhemi       → per-(surface,hemi) color, ordered as
+    #                                 (surf1_lh, surf1_rh, surf2_lh, surf2_rh, ...)
+    nc <- length(surface_color);
+    if(nc == 1L) {
+        surf_col_map <- matrix(surface_color, nrow = nsurf, ncol = nhemi);
+    } else if(nc == nsurf) {
+        surf_col_map <- matrix(rep(surface_color, each = nhemi),
+            nrow = nsurf, ncol = nhemi, byrow = TRUE);
+    } else if(nc == nsurf * nhemi) {
+        surf_col_map <- matrix(surface_color, nrow = nsurf, ncol = nhemi, byrow = TRUE);
+    } else {
+        stop(sprintf(paste0("Length of 'surface_color' (%d) must be 1, the ",
+            "number of surfaces (%d), or the number of surfaces times the ",
+            "number of hemispheres (%d)."), nc, nsurf, nsurf * nhemi));
+    }
+    rownames(surf_col_map) <- surfaces;
+    colnames(surf_col_map) <- hemis;
+
+    # ── Load all surfaces and transform to CRS ────────────────────────────────
+    # surf_crs[[surface]][[hemi]]  (if hemi missing for a surface, skip)
     surf_crs <- list();
-    for (h in hemis) {
-        surf_path <- file.path(subjects_dir, subject_id, "surf",
-            paste0(h, ".", surface));
-        if(!file.exists(surf_path)) {
-            warning(sprintf("Surface file not found, skipping '%s': %s", h, surf_path));
-            next;
+    for (surf_name in surfaces) {
+        surf_crs[[surf_name]] <- list();
+        for (h in hemis) {
+            surf_path <- file.path(subjects_dir, subject_id, "surf",
+                paste0(h, ".", surf_name));
+            if(!file.exists(surf_path)) {
+                warning(sprintf("Surface file not found, skipping '%s': %s", h, surf_path));
+                next;
+            }
+            s <- freesurferformats::read.fs.surface(surf_path);
+            surf_crs[[surf_name]][[h]] <- mesh.ras2crs(s);
         }
-        s <- freesurferformats::read.fs.surface(surf_path);
-        surf_crs[[h]] <- mesh.ras2crs(s);
     }
 
     if(length(surf_crs) == 0) {
@@ -1363,14 +1402,17 @@ volvis.lb.with.surface <- function(subjects_dir, subject_id,
         slice_2d <- vol.slice(vol_rgb, slice_index = slice_r_idx, axis = axis);
         img <- magick::image_read(slice_2d);
 
-        # Compute and draw contours for each hemisphere
-        for (h in names(surf_crs)) {
-            segs <- mesh.slice.intersection(surf_crs[[h]], axis, slice_crs);
-            if(length(segs) > 0) {
-                img <- draw.segments.on.image(img, segs,
-                    slice_axis = axis,
-                    row_axis = row_axis, col_axis = col_axis,
-                    color = surface_colors[[h]], lwd = surface_lwd);
+        # Compute and draw contours for each surface × hemisphere
+        for (surf_name in names(surf_crs)) {
+            for (h in names(surf_crs[[surf_name]])) {
+                segs <- mesh.slice.intersection(surf_crs[[surf_name]][[h]],
+                    axis, slice_crs);
+                if(length(segs) > 0) {
+                    img <- draw.segments.on.image(img, segs,
+                        slice_axis = axis,
+                        row_axis = row_axis, col_axis = col_axis,
+                        color = surf_col_map[surf_name, h], lwd = surface_lwd);
+                }
             }
         }
         magick_images[[si]] <- img;

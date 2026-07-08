@@ -14,6 +14,29 @@ You can also add activation data, p-values, [colors from a segmenation like aseg
 
 The function to achieve this is `volvis.lightbox`, or the more convenient replacement `volvis.lb` in newer fsbrain versions (>=0.5.0).
 
+## Lightbox with surface contours
+
+The `volvis.lb.with.surface()` function overlays cortical surface boundary contours onto 2D MRI lightbox slices — similar to FreeSurfer's `freeview` QA view. This is extremely useful for quality assessment (QA) of surface reconstructions against the underlying MRI volume.
+
+The function supports overlaying **multiple surfaces at once**, each with its own color. For example, here the white surface is shown in red and the pial surface in yellow, on axial slices:
+
+![Lightbox surface contours](https://github.com/dfsp-spirit/fsbrain_gallery/raw/master/volume/lightbox_surface_contours.png?raw=true "Lightbox view with white (red) and pial (yellow) surface contours overlaid on axial MRI slices, rendered with fsbrain")
+
+Example code to produce this image:
+
+```r
+img <- volvis.lb.with.surface(subjects_dir, "subject1",
+  volume = "brain",
+  surface = c("white", "pial"),
+  axis = 3L,
+  surface_color = c("#FF0000", "#FFFF00"),
+  surface_lwd = 1.5);
+
+magick::image_write(img, "~/lightbox_surface_contours.png");
+```
+
+Different colors per hemisphere are also supported — see `?volvis.lb.with.surface` for details.
+
 ## Voxel-based 3D renderings
 
 It is now possible to view volumes (the whole brain, segmentations, voxel-based activation values, or brain structures) in 3D in a voxel view. Here are two examples:
