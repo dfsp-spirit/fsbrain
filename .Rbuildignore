@@ -19,5 +19,6 @@ fsbrain_group_annot\.png$
 web/
 docker/
 ^doc$
+^cran-comments\.md$
 ^\.github$
 
