@@ -5,8 +5,13 @@
 #' This app demonstrates how to embed fsbrain's 3D brain renderings
 #' into an R Shiny application using the vis.rglwidget() function.
 #'
+#' The app downloads only 6 data files (~16 MB total): 2 white surfaces and
+#' 4 morphometry overlays (thickness + sulcal depth) for a single subject.
+#' No fsaverage template is needed — rendering is on the native subject surface.
+#' Startup completes well within Posit Connect Cloud's 60-second timeout.
+#'
 #' Requirements:
-#'   - R packages: shiny, fsbrain (>= 0.5.6 with vis.rglwidget), rgl
+#'   - R packages: shiny, fsbrain (>= 0.5.6), rgl, pkgfilecache
 #'   - An X11 display is NOT required (rendering is headless).
 #'
 #' Usage:
@@ -24,60 +29,51 @@ library("pkgfilecache")
 
 # ── One-time setup (cached) ──────────────────────────────────────────────────
 
-cat("[setup] Downloading example subject data...\n")
-fsbrain::download_optional_data()
-
-cat("[setup] Downloading minimal fsaverage template (surfaces + cortex labels only)...\n")
-# Download only the essential fsaverage files needed for visualization:
-# white surfaces, curvature, cortex labels, and license.
-# This is ~7 files instead of 19, making it much faster on constrained
-# platforms like Posit Connect Cloud (avoids the 60s startup timeout).
+cat("[setup] Downloading minimal subject data (6 files, ~16 MB)...\n")
 pkg_info <- pkgfilecache::get_pkg_info("fsbrain")
-fsavg_base <- c("subjects_dir", "fsaverage")
-fsavg_files <- list(
-    c(fsavg_base, "surf",  "lh.white"),
-    c(fsavg_base, "surf",  "rh.white"),
-    c(fsavg_base, "surf",  "lh.curv"),
-    c(fsavg_base, "surf",  "rh.curv"),
-    c(fsavg_base, "label", "lh.cortex.label"),
-    c(fsavg_base, "label", "rh.cortex.label"),
-    c(fsavg_base, "LICENSE")
+
+subj_base  <- c("subjects_dir", "subject1")
+base_url   <- "https://rcmd.org/projects/nitestdata/subjects_dir/subject1"
+
+# Only the files strictly needed: 2 surfaces + 4 morphometry overlays.
+dl_files <- list(
+    c(subj_base, "surf", "lh.white"),
+    c(subj_base, "surf", "rh.white"),
+    c(subj_base, "surf", "lh.thickness"),
+    c(subj_base, "surf", "rh.thickness"),
+    c(subj_base, "surf", "lh.sulc"),
+    c(subj_base, "surf", "rh.sulc")
 )
-fsavg_md5 <- c(
-    "cbffce8198e0e10c17f79f6ae0454af5",  # lh.white
-    "1159a9ee160b1b0c76e0bb9ae789b9be",  # rh.white
-    "3e81598a5ac0546443ec37d0ac477c80",  # lh.curv
-    "76ad91d2488de081392313ad5a87fafb",  # rh.curv
-    "578f81e9946a76eb1c42d897d07da4a7",  # lh.cortex.label
-    "c8f59de23e9f90f18e96e9d037e42799",  # rh.cortex.label
-    "b39610adfe02fdce2ad9d30797c567b3"   # LICENSE
+dl_md5 <- c(
+    "b6d2cdb9793aae3b76c2dcbf03491988",  # lh.white
+    "8034395bc9fcfa02c05c6cf6559ab97e",  # rh.white
+    "96d6350a6b158453a0231a1f01cfbd58",  # lh.thickness
+    "4ec315e8daa6c3bbda46c36b9188b60f",  # rh.thickness
+    "bc268800c1cb102a43e99a3ab061ca94",  # lh.sulc
+    "13aec75d8712f14345688ce5ad53f648"   # rh.sulc
 )
-fsavg_urls <- paste0("https://rcmd.org/projects/nitestdata/subjects_dir/fsaverage/",
+dl_urls <- paste0(base_url, "/",
     c("surf/lh.white", "surf/rh.white",
-      "surf/lh.curv", "surf/rh.curv",
-      "label/lh.cortex.label", "label/rh.cortex.label",
-      "LICENSE"))
-pkgfilecache::ensure_files_available(pkg_info, fsavg_files, fsavg_urls, md5sums = fsavg_md5)
+      "surf/lh.thickness", "surf/rh.thickness",
+      "surf/lh.sulc", "surf/rh.sulc"))
+
+pkgfilecache::ensure_files_available(pkg_info, dl_files, dl_urls, md5sums = dl_md5)
+cat("[setup] Data download complete.\n")
 
 subjects_dir <- fsbrain::get_optional_data_filepath("subjects_dir")
 
 cat("[setup] Pre-building coloredmeshes (cached for all sessions)...\n")
 
 # Build coloredmeshes once — they're expensive to compute and don't change.
-cm_annot <- vis.subject.annot(
-    subjects_dir, "subject1", "aparc", "both",
-    rglactions = list("no_vis" = TRUE)
-)
-
-cm_morph <- vis.subject.morph.standard(
+cm_thickness <- vis.subject.morph.native(
     subjects_dir, "subject1", "thickness", "both",
-    fwhm = "10", cortex_only = TRUE,
+    cortex_only = TRUE,
     rglactions = list("no_vis" = TRUE)
 )
 
-cm_sulc <- vis.subject.morph.standard(
+cm_sulc <- vis.subject.morph.native(
     subjects_dir, "subject1", "sulc", "both",
-    fwhm = "10", cortex_only = TRUE,
+    cortex_only = TRUE,
     rglactions = list("no_vis" = TRUE)
 )
 
@@ -92,11 +88,10 @@ ui <- fluidPage(
             h4("Data Layer"),
             radioButtons("data_layer", NULL,
                 choices = c(
-                    "Cortical Parcellation (aparc)" = "annot",
-                    "Cortical Thickness"           = "thickness",
-                    "Sulcal Depth"                 = "sulc"
+                    "Cortical Thickness" = "thickness",
+                    "Sulcal Depth"       = "sulc"
                 ),
-                selected = "annot"
+                selected = "thickness"
             ),
             hr(),
             p("Use mouse to rotate (drag), zoom (scroll), and pan (right-drag)."),
@@ -120,8 +115,7 @@ server <- function(input, output, session) {
 
     output$brain3d <- rgl::renderRglwidget({
         cm <- switch(input$data_layer,
-            "annot"     = cm_annot,
-            "thickness" = cm_morph,
+            "thickness" = cm_thickness,
             "sulc"      = cm_sulc
         )
 

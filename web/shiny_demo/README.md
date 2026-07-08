@@ -5,13 +5,17 @@ An interactive 3D brain visualization demo using
 [rgl](https://cran.r-project.org/package=rgl), and
 [Shiny](https://shiny.posit.co).
 
-The app renders a subject's brain in your web browser via **WebGL** — no X11
-display or GPU required on the server. You can rotate, zoom, and pan the 3D
-model and switch between three data layers:
+The app renders a subject's cortical surface in your web browser via **WebGL**
+— no X11 display or GPU required on the server. You can rotate, zoom, and pan
+the 3D model and switch between two morphometry data layers:
 
-- **Cortical Parcellation** (Desikan-Killiany atlas via `aparc`)
 - **Cortical Thickness**
 - **Sulcal Depth**
+
+The demo is deliberately minimal: it downloads only 6 files (~16 MB total) on
+first launch — 2 white surfaces and 4 morphometry overlays for a single subject.
+No fsaverage template, parcellation data, or MRI volumes are needed. Startup
+completes well within Posit Connect Cloud's 60-second timeout.
 
 ## Running locally
 
@@ -21,7 +25,7 @@ model and switch between three data layers:
 - The following R packages:
 
 ```r
-install.packages(c("shiny", "rgl"))
+install.packages(c("shiny", "rgl", "pkgfilecache"))
 install.packages("fsbrain")   # from CRAN, or remotes::install_github("dfsp-spirit/fsbrain") for dev version
 ```
 
@@ -36,17 +40,14 @@ Rscript web/shiny_demo/app.R
 Or from within R:
 
 ```r
-shiny::runApp(system.file("shiny_demo", package = "fsbrain"))
-# If the demo is not bundled in your fsbrain install, use the repo path instead:
-# shiny::runApp("web/shiny_demo")
+shiny::runApp("web/shiny_demo")
 ```
 
 Then open the URL printed in the console (usually
 [http://127.0.0.1:PORT](http://127.0.0.1:PORT)) in your browser.
 
-> **Note:** On first launch, the app downloads example subject data and the
-> `fsaverage` FreeSurfer template (~200 MB). This happens once and is cached
-> for subsequent runs.
+> **Note:** On first launch, the app downloads the required data files from
+> `rcmd.org` (~16 MB). This happens once and is cached for subsequent runs.
 
 ### Running on a headless server / without a display
 
