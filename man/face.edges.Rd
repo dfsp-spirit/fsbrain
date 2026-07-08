@@ -12,7 +12,7 @@ face.edges(surface_mesh, face_indices = "all")
 \item{face_indices}{integer vector, the face indices. Can also be the character string 'all' to use all faces.}
 }
 \value{
-integer matrix of size (n, 2) where n is the number of edges. The indices (source and target vertex) in each row are **not** sorted, and the edges are **not** unique. I.e., each undirected edge `u, v` (with the exception of edges on the mesh border) will occur twice in the result: once as `u, v` and once as `v, u`.
+integer matrix of size (n, 2) where n is the number of edges. The indices (source and target vertex) in each row are \strong{not} sorted, and the edges are \strong{not} unique. I.e., each undirected edge \verb{u, v} (with the exception of edges on the mesh border) will occur twice in the result: once as \verb{u, v} and once as \verb{v, u}.
 }
 \description{
 Compute edges of a tri-mesh. Can compute all edges, or only a subset, given by the face indices in the mesh.

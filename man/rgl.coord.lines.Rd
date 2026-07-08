@@ -10,10 +10,10 @@ rgl.coord.lines(len = 100)
 \item{len}{numeric scalar or vector of length 3, length of axes. You can specify a negative value to see the negative directions.}
 }
 \value{
-`NULL`, called for the plotting side effect.
+\code{NULL}, called for the plotting side effect.
 }
 \description{
-Plot positive x, y, and z axes from the center to 'len'. Gets added to current plot. Useful for debugging and understanding the `rgl` coordinate system.
+Plot positive x, y, and z axes from the center to 'len'. Gets added to current plot. Useful for debugging and understanding the \code{rgl} coordinate system.
 }
 \note{
 The x, y and z axes are plotted in red, green, and blue, respectively.

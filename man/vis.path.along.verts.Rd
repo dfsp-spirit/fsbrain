@@ -15,7 +15,7 @@ vis.path.along.verts(
 \arguments{
 \item{surface_vertices}{float matrix of size (n, 3), the surface vertex coordinates, as returned as part of \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}, in the member "vertices". Can also be a \code{freesurferformats::fs.surface} or \code{rgl::tmesh3d} instance, in which case the coordinates are extracted automatically.}
 
-\item{path_vertex_indices}{vector of vertex indices, the path. You will need to have it computed already. (This function does **not** compute geodesic paths, see \code{\link[fsbrain]{geodesic.path}} for that. You can use it to visualize such a path though.) If omitted, the vertex coordinates will be traversed in their given order to create the path.}
+\item{path_vertex_indices}{vector of vertex indices, the path. You will need to have it computed already. (This function does \strong{not} compute geodesic paths, see \code{\link[fsbrain]{geodesic.path}} for that. You can use it to visualize such a path though.) If omitted, the vertex coordinates will be traversed in their given order to create the path.}
 
 \item{do_vis}{logical, whether to actually draw the path.}
 
@@ -27,7 +27,7 @@ vis.path.along.verts(
 n x 3 matrix, the coordinates of the path, with appropriate ones duplicated for rgl pair-wise segments3d rendering.
 }
 \description{
-To get a nice path along the surface, pass the vertex indices along a geodesic path. Note: You can first open an interactive brain view (`views='si'`) with a vis* function like \code{\link[fsbrain]{vis.subject.morph.native}}, then run this function to draw into the active plot.
+To get a nice path along the surface, pass the vertex indices along a geodesic path. Note: You can first open an interactive brain view (\code{views='si'}) with a vis* function like \code{\link[fsbrain]{vis.subject.morph.native}}, then run this function to draw into the active plot.
 }
 \examples{
 \dontrun{

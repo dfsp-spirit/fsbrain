@@ -13,7 +13,7 @@ A numerical vector of length 3 with the x, y, and z coordinates of the center. T
 Get pre-computed center for fsaverage white surface.
 }
 \note{
-The coordinates are for the white surface and in surface space, i.e., based on the raw values stored in the `fsaverae/surf/lh.white` and `fsaverage/surf/rh.white` files, without applying any transformation.
+The coordinates are for the white surface and in surface space, i.e., based on the raw values stored in the \code{fsaverae/surf/lh.white} and \code{fsaverage/surf/rh.white} files, without applying any transformation.
 }
 \seealso{
 \code{\link{surfs.props}}, which was used to compute the returned values.

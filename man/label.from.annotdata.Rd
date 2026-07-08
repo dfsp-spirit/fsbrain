@@ -27,7 +27,7 @@ label.from.annotdata(
 integer vector with label data: the list of vertex indices in the label. See 'return_one_based_indices' for important information.
 }
 \description{
-The returned label can be used to mask morphometry data, e.g., to set the values of a certain region to `NaN` or to extract only values from a certain region.
+The returned label can be used to mask morphometry data, e.g., to set the values of a certain region to \code{NaN} or to extract only values from a certain region.
 }
 \seealso{
 Other atlas functions: 

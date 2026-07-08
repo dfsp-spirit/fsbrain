@@ -7,9 +7,9 @@
 clip_fun(lower = 0.05, upper = 0.95)
 }
 \arguments{
-\item{lower}{numeric. The probability for the lower quantile, defaults to `0.05`.}
+\item{lower}{numeric. The probability for the lower quantile, defaults to \code{0.05}.}
 
-\item{upper}{numeric. The probability for the upper quantile, defaults to `0.95`.}
+\item{upper}{numeric. The probability for the upper quantile, defaults to \code{0.95}.}
 }
 \value{
 a function that takes as argument the data, and clips it to the requested range. I.e., values outside the range will be set to the closest border value. Designed to be used as \code{rglactions$trans_fun} in vis functions, to limit the colorbar and data range.

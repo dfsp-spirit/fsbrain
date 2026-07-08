@@ -22,12 +22,12 @@ subject.mask(
 
 \item{from_label}{string, the label file to use. Defaults to 'cortex', which will result in a mask of the medial wall versus cortex vertices.}
 
-\item{surf_num_verts}{string or integer. If an integer, interpreted as the number of vertices in the respective surface (lh or rh). If a character string, interpreted as a surface name, (e.g.,`white` or `pial`), and the respective surface will be loaded to determine the number of vertices in it. If parameter `hemi` is set to `both` and you supply the vertex count as an integer, this can be a vector of length 2 if the surfaces have different vertex counts (the first entry for `lh`, the second for `rh`).}
+\item{surf_num_verts}{string or integer. If an integer, interpreted as the number of vertices in the respective surface (lh or rh). If a character string, interpreted as a surface name, (e.g.,\code{white} or \code{pial}), and the respective surface will be loaded to determine the number of vertices in it. If parameter \code{hemi} is set to \code{both} and you supply the vertex count as an integer, this can be a vector of length 2 if the surfaces have different vertex counts (the first entry for \code{lh}, the second for \code{rh}).}
 
-\item{invert_mask}{logical, whether to invert the mask. E.g., when the mask is loaded from the cortex labels, if this is set to FALSE, the cortex would be masked (set to 0 in the final mask). If you want **everything but the cortex** to be masked (set to 0), you should set this to `TRUE`. Defaults to `TRUE`.}
+\item{invert_mask}{logical, whether to invert the mask. E.g., when the mask is loaded from the cortex labels, if this is set to FALSE, the cortex would be masked (set to 0 in the final mask). If you want \strong{everything but the cortex} to be masked (set to 0), you should set this to \code{TRUE}. Defaults to \code{TRUE}.}
 }
 \value{
-the mask, a logical vector with the length of the vertices in the surface. If parameter `hemi` is set to `both`, a named list with entries `lh` and `rh` is returned, and the values of are the respective masks.
+the mask, a logical vector with the length of the vertices in the surface. If parameter \code{hemi} is set to \code{both}, a named list with entries \code{lh} and \code{rh} is returned, and the values of are the respective masks.
 }
 \description{
 Compute a binary vertex mask for the surface vertices of a subject. By defaults, the medial wall is masked.

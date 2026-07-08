@@ -7,9 +7,9 @@
 surfs.props(lh, rh)
 }
 \arguments{
-\item{lh}{`fs.surface` instance, the mesh for the left hemisphere. If a string, assumed to be the path to a surface mesh file that should be loaded.}
+\item{lh}{\code{fs.surface} instance, the mesh for the left hemisphere. If a string, assumed to be the path to a surface mesh file that should be loaded.}
 
-\item{rh}{`fs.surface` instance, the mesh for the right hemisphere. If a string, assumed to be the path to a surface mesh file that should be loaded.}
+\item{rh}{\code{fs.surface} instance, the mesh for the right hemisphere. If a string, assumed to be the path to a surface mesh file that should be loaded.}
 }
 \value{
 named list with entries 'center', 'radius', 'min' and 'max', each of which are numerical vectors of length 3, holding the x, y and z coordinates or values.

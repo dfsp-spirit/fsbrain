@@ -23,7 +23,7 @@ vis.export.from.coloredmeshes(
 )
 }
 \arguments{
-\item{coloredmeshes}{list of coloredmesh. A coloredmesh is a named list as returned by the `coloredmesh.from*` functions (like \code{\link{coloredmesh.from.morph.native}}). It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh. The `vis*` functions (like \code{\link[fsbrain]{vis.subject.morph.native}}) all return a list of coloredmeshes.}
+\item{coloredmeshes}{list of coloredmesh. A coloredmesh is a named list as returned by the \verb{coloredmesh.from*} functions (like \code{\link{coloredmesh.from.morph.native}}). It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh. The \verb{vis*} functions (like \code{\link[fsbrain]{vis.subject.morph.native}}) all return a list of coloredmeshes.}
 
 \item{colorbar_legend}{character string or NULL, the title for the colorbar.}
 

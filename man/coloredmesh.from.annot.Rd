@@ -22,7 +22,7 @@ coloredmesh.from.annot(
 
 \item{hemi}{string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.}
 
-\item{surface}{character string or `fs.surface` instance. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
+\item{surface}{character string or \code{fs.surface} instance. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 
 \item{outline}{logical, whether to draw an outline only instead of filling the regions. Defaults to FALSE. Only makes sense if you did not pass an outline already. The current implementation for outline computation is rather slow, so setting this to TRUE will considerably increase computation time.}
 }

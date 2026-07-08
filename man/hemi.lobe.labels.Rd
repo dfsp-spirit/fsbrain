@@ -21,7 +21,7 @@ hemi.lobe.labels(
 
 \item{include_cingulate}{logical, whether to include the vertices of the cingulate in the lobes}
 
-\item{as_annot}{return a hemilist of annotations instead of the return value described in the *value* section}
+\item{as_annot}{return a hemilist of annotations instead of the return value described in the \emph{value} section}
 }
 \description{
 Compute lobe labels for a single hemi from aparc atlas.

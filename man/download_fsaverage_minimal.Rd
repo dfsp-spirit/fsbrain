@@ -18,5 +18,5 @@ Named list. The list has entries: "available": vector of strings. The names of t
 Download a minimal subset of files from the FreeSurfer v6 fsaverage subject, containing only the white surfaces, cortex labels, and curvature files needed for basic 3D visualization (e.g., in a Shiny app). This is much faster than \code{\link{download_fsaverage}} which downloads 19 files. The files are subject to the FreeSurfer software license, see parameter 'accept_freesurfer_license' for details.
 }
 \note{
-This downloads approximately 7 files instead of the 19 downloaded by \code{download_fsaverage}, making it suitable for environments with startup time constraints (e.g., Posit Connect Cloud).
+This downloads approximately 8 files instead of the 19 downloaded by \code{download_fsaverage}, making it suitable for environments with startup time constraints (e.g., Posit Connect Cloud, shinyapps.io).
 }

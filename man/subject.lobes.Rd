@@ -21,13 +21,13 @@ subject.lobes(
 
 \item{include_cingulate}{logical, whether to include the vertices of the cingulate in the lobes}
 
-\item{as_annot}{return a hemilist of annotations instead of the return value described in the *value* section}
+\item{as_annot}{return a hemilist of annotations instead of the return value described in the \emph{value} section}
 }
 \value{
-hemilist of integer vectors, the vectors represent vertex indices of the hemispheres, and each vertex is assigned one of the following values: `0`=no_lobe, `1`=frontal, `2`=parietal, `3`=temporal, `4`=occipital.
+hemilist of integer vectors, the vectors represent vertex indices of the hemispheres, and each vertex is assigned one of the following values: \code{0}=no_lobe, \code{1}=frontal, \code{2}=parietal, \code{3}=temporal, \code{4}=occipital.
 }
 \description{
-This gives you labels that represent brain lobes for a subject. The lobe definition is based on the Desikan-Killiany atlas (Desikan *et al.*, 2010) as suggested on the FreeSurfer website at https://surfer.nmr.mgh.harvard.edu/fswiki/CorticalParcellation.
+This gives you labels that represent brain lobes for a subject. The lobe definition is based on the Desikan-Killiany atlas (Desikan \emph{et al.}, 2010) as suggested on the FreeSurfer website at https://surfer.nmr.mgh.harvard.edu/fswiki/CorticalParcellation.
 }
 \seealso{
 Other atlas functions: 

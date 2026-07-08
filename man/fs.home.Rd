@@ -7,7 +7,7 @@
 fs.home()
 }
 \value{
-the FreeSurfer path, typically what the environment variable `FREESURFER_HOME` points to.
+the FreeSurfer path, typically what the environment variable \code{FREESURFER_HOME} points to.
 }
 \description{
 Return FreeSurfer path.

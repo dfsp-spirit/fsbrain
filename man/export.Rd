@@ -24,7 +24,7 @@ export(
 )
 }
 \arguments{
-\item{coloredmeshes}{list of coloredmesh. A coloredmesh is a named list as returned by the `coloredmesh.from*` functions (like \code{\link{coloredmesh.from.morph.native}}). It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh. The `vis*` functions (like \code{\link[fsbrain]{vis.subject.morph.native}}) all return a list of coloredmeshes.}
+\item{coloredmeshes}{list of coloredmesh. A coloredmesh is a named list as returned by the \verb{coloredmesh.from*} functions (like \code{\link{coloredmesh.from.morph.native}}). It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh. The \verb{vis*} functions (like \code{\link[fsbrain]{vis.subject.morph.native}}) all return a list of coloredmeshes.}
 
 \item{colorbar_legend}{character string or NULL, the title for the colorbar.}
 
@@ -60,7 +60,7 @@ export(
 magick image instance or named list, depending on the value of 'img_only'. If the latter, the list contains the fields 'rev_vl', 'rev_cb', and 'rev_ex', which are the return values of the functions \code{vislayout.from.coloredmeshes}, \code{coloredmesh.plot.colorbar.separate}, and \code{combine.colorbar.with.brainview.image}, respectively.
 }
 \description{
-This function serves as an easy (but slightly inflexible) way to export a high-quality, tight-layout, colorbar figure to disk. If no colorbar is required, one can use \code{vislayout.from.coloredmeshes} instead. It is an alias for `vis.export.from.coloredmeshes` that requires less typing.
+This function serves as an easy (but slightly inflexible) way to export a high-quality, tight-layout, colorbar figure to disk. If no colorbar is required, one can use \code{vislayout.from.coloredmeshes} instead. It is an alias for \code{vis.export.from.coloredmeshes} that requires less typing.
 }
 \note{
 Note that your screen resolution has to be high enough to generate the final image in the requested resolution, see the 'fsbrain FAQ' vignette for details and solutions if you run into trouble.

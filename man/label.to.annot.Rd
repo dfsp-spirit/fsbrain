@@ -18,7 +18,7 @@ label.to.annot(
 
 \item{colortable_df}{NULL or dataframe, a colortable. It must contain the columns 'struct_name', 'r', 'g', 'b', and 'a'. All other columns will be derived if missing. The entries in 'struct_name' must match keys from the 'label_vertices_by_region' parameter. There must be one more row in here than there are labels. This row identifies the 'unknown' region (see also parameter 'index_of_unknown_region'). If NULL, a colortable will be auto-generated.}
 
-\item{index_of_unknown_region}{positive integer, the index of the row in 'colortable_df' that defines the 'unknown' or 'background' region to which all vertices will be assigned which are *not* part of any of the given labels.}
+\item{index_of_unknown_region}{positive integer, the index of the row in 'colortable_df' that defines the 'unknown' or 'background' region to which all vertices will be assigned which are \emph{not} part of any of the given labels.}
 }
 \value{
 an annotation, see \code{\link[freesurferformats]{read.fs.annot}} for details.

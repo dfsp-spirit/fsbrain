@@ -15,7 +15,7 @@ label.border(
 \arguments{
 \item{surface_mesh}{surface mesh, as loaded by \code{\link[fsbrain]{subject.surface}} or \code{\link[freesurferformats]{read.fs.surface}}.}
 
-\item{label}{instance of class `fs.label` or an integer vector, the vertex indices. This function only makes sense if they form a patch on the surface, but that is not checked.}
+\item{label}{instance of class \code{fs.label} or an integer vector, the vertex indices. This function only makes sense if they form a patch on the surface, but that is not checked.}
 
 \item{inner_only}{logical, whether only faces consisting only of label_vertices should be considered to be label faces. If FALSE, faces containing at least one label vertex will be used. Defaults to TRUE. Leave this alone if in doubt, especially if you want to draw several label borders which are directly adjacent on the surface.}
 
@@ -24,7 +24,7 @@ label.border(
 \item{derive}{logical, whether the returned result should also include the border edges and faces in addition to the border vertices. Takes longer if requested, defaults to FALSE.}
 }
 \value{
-the border as a list with the following entries: `vertices`: integer vector, the vertex indices of the border. Iff the parameter `derive` is TRUE, the following two additional fields are included: `edges`: integer matrix of size (n, 2) for n edges. Each row defines an edge by its start and target vertex. `faces`: integer vector, the face indices of the border.
+the border as a list with the following entries: \code{vertices}: integer vector, the vertex indices of the border. Iff the parameter \code{derive} is TRUE, the following two additional fields are included: \code{edges}: integer matrix of size (n, 2) for n edges. Each row defines an edge by its start and target vertex. \code{faces}: integer vector, the face indices of the border.
 }
 \description{
 Compute the border of a label (i.e., a subset of the vertices of a mesh). The border thickness can be specified. Useful to draw the outline of a region, e.g., a significant cluster on the surface or a part of a ROI from a brain parcellation.

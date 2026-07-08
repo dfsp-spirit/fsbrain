@@ -30,7 +30,7 @@ vis.fs.surface(
 see \code{\link{vis.coloredmeshes}}
 }
 \description{
-Render a mesh. All mesh formats supported by the *freesurferformats* package are supported, including OFF, PLY, OBJ, STL, and many more.
+Render a mesh. All mesh formats supported by the \emph{freesurferformats} package are supported, including OFF, PLY, OBJ, STL, and many more.
 }
 \note{
 This function can be used to visualize arbitrary triangular meshes in R. Despite its name, it is not limited to brain surface meshes.

@@ -27,7 +27,7 @@ demographics.to.qdec.table.dat(
 \item{qdec_file_name}{character string, the filename of the QDEC file to write. Must be only the file name (with extension if you want). See \code{output_path} to set the ouput directory where this will be created.}
 }
 \description{
-This creates the `qdec.table.dat` and all required related files (the factor level files) in a directory.
+This creates the \code{qdec.table.dat} and all required related files (the factor level files) in a directory.
 }
 \note{
 IMPORTANT: If you import the dataframe from a text file with functions like \code{read.table}, they will by default replace dashes in column names with dots. So if you have a column named \code{fsid-base} in there, after loading it will be named \code{fsid.base}. See the \code{check.names} parameter for \code{read.table} to prevent that.

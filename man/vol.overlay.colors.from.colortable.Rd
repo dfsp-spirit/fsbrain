@@ -12,16 +12,16 @@ vol.overlay.colors.from.colortable(
 )
 }
 \arguments{
-\item{volume}{numeric 3D array, the values should be integers present in the `struct_index` column of the colortable. All other values will be assigned `NA` as a color.}
+\item{volume}{numeric 3D array, the values should be integers present in the \code{struct_index} column of the colortable. All other values will be assigned \code{NA} as a color.}
 
 \item{colortable}{a colortable, as returned by \code{\link[freesurferformats]{read.fs.colortable}}, or a character string representing a path to a colortable file.}
 
-\item{ignored_struct_indices}{integer vector, `struct_index` entries in the colortable that should be ignored}
+\item{ignored_struct_indices}{integer vector, \code{struct_index} entries in the colortable that should be ignored}
 
-\item{ignored_struct_names}{vector of character strings, `struct_name` entries in the colortable that should be ignored. Can be combined with `ignored_struct_indices`.}
+\item{ignored_struct_names}{vector of character strings, \code{struct_name} entries in the colortable that should be ignored. Can be combined with \code{ignored_struct_indices}.}
 }
 \value{
-character string 3D array, the colors. Voxels in the volume which were not matched by the colortable are set to `NA` in it.
+character string 3D array, the colors. Voxels in the volume which were not matched by the colortable are set to \code{NA} in it.
 }
 \description{
 Use the intensity values of the voxels in volume and lookup the respective colors in a colortable.

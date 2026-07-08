@@ -9,7 +9,7 @@ rglvoxels(centers, r = 1, voxelcol = NULL, do_show = TRUE, ...)
 \arguments{
 \item{centers}{numerical matrix with 3 columns. Each column represents the x, y, z coordinates of a center at which to create a cube.}
 
-\item{r}{numerical vector or scalar, the cube edge length. This is the length of the axis-parallel edges of the cube. The vector must have length 1 (same edge length for all cubes), or the length must be identical to the number of rows in parameter `centers`.}
+\item{r}{numerical vector or scalar, the cube edge length. This is the length of the axis-parallel edges of the cube. The vector must have length 1 (same edge length for all cubes), or the length must be identical to the number of rows in parameter \code{centers}.}
 
 \item{voxelcol}{vector of rgb color strings for the individual voxels. Its length must be identical to \code{nrow(centers)} if given.}
 
@@ -18,7 +18,7 @@ rglvoxels(centers, r = 1, voxelcol = NULL, do_show = TRUE, ...)
 \item{...}{material properties, passed to \code{\link[rgl]{triangles3d}}. Example: \code{color = "#0000ff", lit=FALSE}.}
 }
 \value{
-list of `fs.coloredvoxels` instances, invisible. The function is called for the side effect of visualizing the data, and usually you can ignore the return value.
+list of \code{fs.coloredvoxels} instances, invisible. The function is called for the side effect of visualizing the data, and usually you can ignore the return value.
 }
 \description{
 Draw 3D boxes at all given coordinates using rgl, analogous to \code{\link[rgl]{spheres3d}}. Constructs the coordinates for triangles making up the boxes, then uses \code{\link[rgl]{triangles3d}} to render them.

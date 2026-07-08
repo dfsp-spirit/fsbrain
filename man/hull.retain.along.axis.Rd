@@ -2,7 +2,7 @@
 % Please edit documentation in R/vis_volume_3d.R
 \name{hull.retain.along.axis}
 \alias{hull.retain.along.axis}
-\title{Copy the first *n* foreground voxel values.}
+\title{Copy the first \emph{n} foreground voxel values.}
 \usage{
 hull.retain.along.axis(
   volume,
@@ -27,6 +27,6 @@ hull.retain.along.axis(
 numeric 3d array, the updated hull volume.
 }
 \description{
-Copy the first *n* foreground voxel values along the axis and direction from the volume to the hull, thus adding foreground voxels to the hull.
+Copy the first \emph{n} foreground voxel values along the axis and direction from the volume to the hull, thus adding foreground voxels to the hull.
 }
 \keyword{internal}

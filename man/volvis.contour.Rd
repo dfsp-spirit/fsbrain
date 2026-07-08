@@ -9,19 +9,19 @@ volvis.contour(volume, level = 80, show = TRUE, frame = 1L, color = "white")
 \arguments{
 \item{volume}{a 3D brain volume}
 
-\item{level}{numeric, intensity threshold for the data. Voxels with intensity value smaller than `level` will be ignored when creating the contour surface.}
+\item{level}{numeric, intensity threshold for the data. Voxels with intensity value smaller than \code{level} will be ignored when creating the contour surface.}
 
-\item{show}{logical, whether to display the triangles. Defaults to `TRUE`.}
+\item{show}{logical, whether to display the triangles. Defaults to \code{TRUE}.}
 
 \item{frame}{integer, the frame to show in case of a 4D input volume. Can also be the character string 'all' to draw the contents of all frames at once. Useful to plot white matter tracts from DTI data, where each tract is stored in a different frame.}
 
 \item{color}{the color to use when plotting. Can be a vector of colors when plotting all frames of a 4D image (one color per frame).}
 }
 \value{
-the rendered triangles (a `Triangles3D` instance) with coordinates in surface RAS space if any, `NULL` otherwise. This will be a list if you pass a 4D volume and select 'all' frames.
+the rendered triangles (a \code{Triangles3D} instance) with coordinates in surface RAS space if any, \code{NULL} otherwise. This will be a list if you pass a 4D volume and select 'all' frames.
 }
 \description{
-Compute a smoothed surface from the voxel intensities in the given volume and render it. Requires the `misc3d` package to be installed, which is an optional dependency.
+Compute a smoothed surface from the voxel intensities in the given volume and render it. Requires the \code{misc3d} package to be installed, which is an optional dependency.
 }
 \examples{
 \dontrun{

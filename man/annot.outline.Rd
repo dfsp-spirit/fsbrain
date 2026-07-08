@@ -25,7 +25,7 @@ annot.outline(
 
 \item{expand_inwards}{integer, additional thickness of the borders. Increases computation time, defaults to 0L.}
 
-\item{outline_color}{NULL or a color string (like 'black' or '#000000'), the color to use for the borders. If left at the default value `NULL`, the colors from the annotation color lookup table will be used.}
+\item{outline_color}{NULL or a color string (like 'black' or '#000000'), the color to use for the borders. If left at the default value \code{NULL}, the colors from the annotation color lookup table will be used.}
 
 \item{limit_to_regions}{vector of character strings or NULL, a list of regions for which to draw the outline (see \code{\link[fsbrain]{get.atlas.region.names}}). If NULL, all regions will be used. If (and only if) this parameter is used, the 'outline_color' parameter can be a vector of color strings, one color per region.}
 }

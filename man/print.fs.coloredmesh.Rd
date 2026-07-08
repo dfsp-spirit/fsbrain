@@ -7,7 +7,7 @@
 \method{print}{fs.coloredmesh}(x, ...)
 }
 \arguments{
-\item{x}{brain surface with class `fs.coloredmesh`.}
+\item{x}{brain surface with class \code{fs.coloredmesh}.}
 
 \item{...}{further arguments passed to or from other methods}
 }

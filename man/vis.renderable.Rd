@@ -14,7 +14,7 @@ vis.renderable(cmesh, skip_all_na = TRUE, style = "default")
 \item{style}{a rendering style, can be a style name or a list defining an rgl material style}
 }
 \description{
-Renders instances of `coloredmesh`, `coloredvoxels` and `Triangles3D`.
+Renders instances of \code{coloredmesh}, \code{coloredvoxels} and \code{Triangles3D}.
 }
 \seealso{
 \code{\link[fsbrain]{fsbrain.renderable}}

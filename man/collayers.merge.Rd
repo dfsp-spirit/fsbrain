@@ -9,13 +9,13 @@ collayers.merge(collayers, opaque_background = "#FFFFFF")
 \arguments{
 \item{collayers}{named list, the values must be vectors, matrices or arrays of color strings (as produced by \code{\link[grDevices]{rgb}}. The names are free form and do not really matter. All values must have the same length.}
 
-\item{opaque_background}{a single color string or `NULL`. If a color string, this color will be used as a final opaque background layer to ensure that the returned colors are all opaque. Pass `NULL` to skip this, which may result in a return value that contains non-opaque color values.}
+\item{opaque_background}{a single color string or \code{NULL}. If a color string, this color will be used as a final opaque background layer to ensure that the returned colors are all opaque. Pass \code{NULL} to skip this, which may result in a return value that contains non-opaque color values.}
 }
 \value{
 a color layer, i.e., vector of color strings in a hemilist
 }
 \description{
-Merge several color layers into one based on their transparency and alpha blending. In the final result, the lower layers are visible through the transparent or `NA` parts (if any) of the upper layers.
+Merge several color layers into one based on their transparency and alpha blending. In the final result, the lower layers are visible through the transparent or \code{NA} parts (if any) of the upper layers.
 }
 \seealso{
 Other surface color layer: 

@@ -12,8 +12,8 @@ vol.mask.from.segmentation(volume, include_values)
 \item{include_values}{numerical vector, the intensity values which qualify a voxel to be part of the result (without being set to NA)}
 }
 \value{
-numerical array with same dimensions as the input volume. All values which are not part of `include_values` replaced with `NA`.
+numerical array with same dimensions as the input volume. All values which are not part of \code{include_values} replaced with \code{NA}.
 }
 \description{
-Extract subset from a volume by value, set all other voxel values to `NA`. Typically used to extract a brain structure (like corpus callosum) from a volume segmentation (like the `mri/aseg.mgz` file of a subject). You should consider passing the volume and the include values as integers.
+Extract subset from a volume by value, set all other voxel values to \code{NA}. Typically used to extract a brain structure (like corpus callosum) from a volume segmentation (like the \code{mri/aseg.mgz} file of a subject). You should consider passing the volume and the include values as integers.
 }

@@ -7,7 +7,7 @@
 \method{print}{fsbrain}(x, ...)
 }
 \arguments{
-\item{x}{fsbrain instance with class `fsbrain`.}
+\item{x}{fsbrain instance with class \code{fsbrain}.}
 
 \item{...}{further arguments passed to or from other methods}
 }

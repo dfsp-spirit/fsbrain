@@ -9,15 +9,15 @@ apply.labeldata.to.morphdata(morphdata, labeldata, masked_data_value = NA)
 \arguments{
 \item{morphdata}{numerical vector, the morphometry data for one hemisphere}
 
-\item{labeldata}{integer vector or `fs.label` instance. A label as returned by \code{\link[fsbrain]{subject.label}}.}
+\item{labeldata}{integer vector or \code{fs.label} instance. A label as returned by \code{\link[fsbrain]{subject.label}}.}
 
-\item{masked_data_value}{numerical, the value to set for all morphometry data values of vertices which are *not* part of the label. Defaults to NA.}
+\item{masked_data_value}{numerical, the value to set for all morphometry data values of vertices which are \emph{not} part of the label. Defaults to NA.}
 }
 \value{
 numerical vector, the masked data.
 }
 \description{
-This function will set all values in morphdata which are *not* part of the labeldata to NA (or whatever is specified by 'masked_data_value'). This is typically used to ignore values which are not part of the cortex (or any other label) during your analysis.
+This function will set all values in morphdata which are \emph{not} part of the labeldata to NA (or whatever is specified by 'masked_data_value'). This is typically used to ignore values which are not part of the cortex (or any other label) during your analysis.
 }
 \seealso{
 Other label functions: 

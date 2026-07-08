@@ -28,7 +28,7 @@ write.region.aggregated(
 
 \item{agg_fun, }{function. An R function that aggregates data, typically max, mean, min or something similar. Note: this is NOT a string, put the function name without quotes. Defaults to mean.}
 
-\item{outfile_morph_name, }{string. The measure part of the output file name. E.g., 'agg_thickness' will write the file '<subject>/surf/<hemi>.agg_thickness.mgh'. Defaults to 'agg_<measure>'.}
+\item{outfile_morph_name, }{string. The measure part of the output file name. E.g., 'agg_thickness' will write the file '\if{html}{\out{<subject>}}/surf/\if{html}{\out{<hemi>}}.agg_thickness.mgh'. Defaults to 'agg_\if{html}{\out{<measure>}}'.}
 
 \item{format, }{string. A morphometry file format. One of 'mgh', 'mgz' or 'curv.' The output file name extension will be set accordingly. Defaults to 'mgz'.}
 }

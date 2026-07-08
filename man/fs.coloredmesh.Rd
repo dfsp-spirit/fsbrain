@@ -14,7 +14,7 @@ fs.coloredmesh(
 )
 }
 \arguments{
-\item{mesh}{a `mesh3d` instance as returned by \code{\link[rgl]{tmesh3d}} or an `fs.surface` brain surface mesh as returned by functions like \code{\link[fsbrain]{subject.surface}}.}
+\item{mesh}{a \code{mesh3d} instance as returned by \code{\link[rgl]{tmesh3d}} or an \code{fs.surface} brain surface mesh as returned by functions like \code{\link[fsbrain]{subject.surface}}.}
 
 \item{col}{vector of vertex colors for the mesh, one color per vertex. Expanded if exactly one color.}
 
@@ -27,7 +27,7 @@ fs.coloredmesh(
 \item{add_normals}{logical, whether to compute normals and save them in the mesh.}
 }
 \value{
-an `fs.coloredmesh` instance. The only fields one should use in client code are 'mesh', 'hemi' and 'col', all others are considered internal and may change without notice.
+an \code{fs.coloredmesh} instance. The only fields one should use in client code are 'mesh', 'hemi' and 'col', all others are considered internal and may change without notice.
 }
 \description{
 fs.coloredmesh constructor

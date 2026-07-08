@@ -17,19 +17,19 @@ coloredmesh.plot.colorbar.separate(
 )
 }
 \arguments{
-\item{coloredmeshes}{list of coloredmeshes. A coloredmesh is a named list as returned by the `coloredmesh.from` functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh. The `vis*` functions (like \code{\link[fsbrain]{vis.subject.morph.native}}) all return a list of coloredmeshes.}
+\item{coloredmeshes}{list of coloredmeshes. A coloredmesh is a named list as returned by the \code{coloredmesh.from} functions. It has the entries 'mesh' of type tmesh3d, a 'col', which is a color specification for such a mesh. The \verb{vis*} functions (like \code{\link[fsbrain]{vis.subject.morph.native}}) all return a list of coloredmeshes.}
 
-\item{show}{logical, Whether to open the resulting plot. Defaults to `TRUE`.}
+\item{show}{logical, Whether to open the resulting plot. Defaults to \code{TRUE}.}
 
 \item{image.plot_extra_options}{named list of extra optins to pass to \code{\link[fields]{image.plot}}. This can be used to add a legend to the colorbar, rotate the colorbar, or whatever. The options "legend_only", "zlim", and "col" are computed and set for you  by this function, so there is no need to pass these. Your list will be merged with the internal options, so you could overwrite named arguments if needed.}
 
 \item{png_options}{Options to pass to \code{\link[grDevices]{png}}, see the docs of that function for details. Allow you to save the plot as a png bitmap image. Example: \code{png_options = list("filename"="fsbrain_cbar.png", "width"=800)}. Defaults to NULL, which will not save anything.}
 
-\item{silent}{logical, whether to suppress messages. Defaults to `FALSE`.}
+\item{silent}{logical, whether to suppress messages. Defaults to \code{FALSE}.}
 
 \item{trim_png}{logical, whether to trim the output PNG image using image magick, i.e., remove everything but the foreground. Ignored unless an output PNG image is actually written (see 'png_options') and the 'magick' package is installed.}
 
-\item{log_breaks}{logical, scalar int, or vector of ints. Whether to use log10 scale for plotting the cbar. If logical and TRUE, uses log scale with default number (=5) ticks auto-computed from the data. If a single integer N, uses N ticks auto-computed from the data instead. If a numeric vector, uses the supplied values in the vector as ticks, note that they must be on a `log(data)` scale. If the 'makecmap_options' stored in the passed 'coloredmeshes' contain a 'base' value of 10, log 10 is assumed (with the default 5 ticks), even if this parameter is left at its default value, logical FALSE.}
+\item{log_breaks}{logical, scalar int, or vector of ints. Whether to use log10 scale for plotting the cbar. If logical and TRUE, uses log scale with default number (=5) ticks auto-computed from the data. If a single integer N, uses N ticks auto-computed from the data instead. If a numeric vector, uses the supplied values in the vector as ticks, note that they must be on a \code{log(data)} scale. If the 'makecmap_options' stored in the passed 'coloredmeshes' contain a 'base' value of 10, log 10 is assumed (with the default 5 ticks), even if this parameter is left at its default value, logical FALSE.}
 }
 \value{
 named list, entries: 'output_img_path': character string, the path to the output file, or NULL.

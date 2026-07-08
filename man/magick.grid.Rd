@@ -14,9 +14,9 @@ magick.grid(
 \arguments{
 \item{magickimage}{an ImageMagick image}
 
-\item{per_row}{positive integer, the number of subimages per row in the output image. If `NULL`, automatically computed from the number of slices and the `per_col` parameter.}
+\item{per_row}{positive integer, the number of subimages per row in the output image. If \code{NULL}, automatically computed from the number of slices and the \code{per_col} parameter.}
 
-\item{per_col}{positive integer, the number of subimages per column in the output image. If `NULL`, automatically computed from the number of slices and the `per_row` parameter.}
+\item{per_col}{positive integer, the number of subimages per column in the output image. If \code{NULL}, automatically computed from the number of slices and the \code{per_row} parameter.}
 
 \item{background_color}{string, a valid ImageMagick color string such as "white" or "#000080". The color to use when extending images (e.g., when creating the border). Defaults to black.}
 }

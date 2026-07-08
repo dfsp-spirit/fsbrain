@@ -7,7 +7,7 @@
 is.fs.coloredvoxels(x)
 }
 \arguments{
-\item{x}{any `R` object}
+\item{x}{any \code{R} object}
 }
 \value{
 TRUE if its argument is a fs.coloredvoxels instance (that is, has "fs.coloredvoxels" among its classes) and FALSE otherwise.

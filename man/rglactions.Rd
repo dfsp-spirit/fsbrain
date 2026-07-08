@@ -7,13 +7,13 @@
 rglactions()
 }
 \value{
-named list, an example `rlgactions` instance that will save a screenshot of the plot produced by the vis function in the current working directory (see \code{getwd}), under the name 'fsbrain_out.png'.
+named list, an example \code{rlgactions} instance that will save a screenshot of the plot produced by the vis function in the current working directory (see \code{getwd}), under the name 'fsbrain_out.png'.
 }
 \description{
 Create rglactions list, suitable to be passed as parameter to vis functions.
 }
 \note{
-List of all available rglactions: (1) `snapshot_png=filepath` takes a screenshot in PNG format and saves it in at `filepath`. (2) `trans_fun=function` uses the transformation function trans_fun to the data before mapping data values to colors and plotting. Popular transformation functions are \code{\link{limit_fun}}, \code{\link{limit_fun_na}}, and \code{\link{clip_fun}}. (3) `text=arglist` calls \code{\link[rgl]{text3d}} with the given args after plotting. (4) `snapshot_vec=filepath` takes a screenshot in vector format and saves it in at `filepath`. You also need to set the format via `snapshot_vec_format`, valid entries are one of "ps", "eps", "tex", "pdf", "svg", "pgf" (default is 'eps'). This is experimental and may take a while.
+List of all available rglactions: (1) \code{snapshot_png=filepath} takes a screenshot in PNG format and saves it in at \code{filepath}. (2) \verb{trans_fun=function} uses the transformation function trans_fun to the data before mapping data values to colors and plotting. Popular transformation functions are \code{\link{limit_fun}}, \code{\link{limit_fun_na}}, and \code{\link{clip_fun}}. (3) \code{text=arglist} calls \code{\link[rgl]{text3d}} with the given args after plotting. (4) \code{snapshot_vec=filepath} takes a screenshot in vector format and saves it in at \code{filepath}. You also need to set the format via \code{snapshot_vec_format}, valid entries are one of "ps", "eps", "tex", "pdf", "svg", "pgf" (default is 'eps'). This is experimental and may take a while.
 }
 \examples{
    rgla_screenie = list('snapshot_png'='fsbain_out.png');

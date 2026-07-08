@@ -11,12 +11,12 @@ vol.boundary.mask(volume, plane = 1L, threshold = 0L)
 
 \item{plane}{integer vector of length 2 or something that will be turned into one by \code{\link[fsbrain]{vol.plane.axes}}.}
 
-\item{threshold}{numerical, the threshold intensity used to separate background and foreground. All voxels with intensity values greater than this value will be considered `foreground` voxels.}
+\item{threshold}{numerical, the threshold intensity used to separate background and foreground. All voxels with intensity values greater than this value will be considered \code{foreground} voxels.}
 }
 \value{
-integer 2D matrix with dimensions of a slice of the volume. Positions set to 1 are `foreground` pixels and positions set to 0 are `background` pixels (see `Details` section).
+integer 2D matrix with dimensions of a slice of the volume. Positions set to 1 are \code{foreground} pixels and positions set to 0 are \code{background} pixels (see \code{Details} section).
 }
 \description{
-Compute, over all images in a stack along an axis, the foreground and background pixels as a binary mask. A pixel is a `foreground` pixel iff its value is greater than the `threshold` parameter in at least one of the slices. A pixel is a `background` pixel iff its value is below or euqal to the `threshold` in all slices.
+Compute, over all images in a stack along an axis, the foreground and background pixels as a binary mask. A pixel is a \code{foreground} pixel iff its value is greater than the \code{threshold} parameter in at least one of the slices. A pixel is a \code{background} pixel iff its value is below or euqal to the \code{threshold} in all slices.
 }
 \keyword{internal}

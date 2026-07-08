@@ -22,15 +22,15 @@ apply.label.to.morphdata(
 
 \item{hemi}{string, one of 'lh', 'rh' or 'both'. The hemisphere name. Used to construct the names of the annotation and morphometry data files to be loaded.}
 
-\item{label}{string, `fs.label` instance, or label vertex data. If a string, interpreted as the file name of the label file, without the hemi part (if any), optionally including the '.label' suffix. E.g., 'cortex.label' or 'cortex' for '?h.cortex.label'.}
+\item{label}{string, \code{fs.label} instance, or label vertex data. If a string, interpreted as the file name of the label file, without the hemi part (if any), optionally including the '.label' suffix. E.g., 'cortex.label' or 'cortex' for '?h.cortex.label'.}
 
-\item{masked_data_value}{numerical, the value to set for all morphometry data values of vertices which are *not* part of the label. Defaults to NA.}
+\item{masked_data_value}{numerical, the value to set for all morphometry data values of vertices which are \emph{not} part of the label. Defaults to NA.}
 }
 \value{
 numerical vector, the masked data.
 }
 \description{
-This function will set all values in morphdata which are *not* part of the label loaded from the file to NA (or whatever is specified by 'masked_data_value'). This is typically used to ignore values which are not part of the cortex (or any other label) during your analysis.
+This function will set all values in morphdata which are \emph{not} part of the label loaded from the file to NA (or whatever is specified by 'masked_data_value'). This is typically used to ignore values which are not part of the cortex (or any other label) during your analysis.
 }
 \seealso{
 Other label functions: 

@@ -7,15 +7,15 @@
 vol.intensity.to.color(volume, scale = NULL)
 }
 \arguments{
-\item{volume}{numeric array, typically a 3D image with intensities in range `[0, 1]`. This function now also supports numeric matrices (2D images, slices) and numeric vectors (1D).}
+\item{volume}{numeric array, typically a 3D image with intensities in range \verb{[0, 1]}. This function now also supports numeric matrices (2D images, slices) and numeric vectors (1D).}
 
-\item{scale}{numeric or character string, a scaling to apply to the values. Defaults to NULL, which means *no scaling* and requires the values in `volume` to be in rage `[0, 1]`. You can pass a number like 255 or the string 'normalize' to scale based on the data. You can pass the string 'normalize_if_needed' to scale only if the data is *outside* the range `[0, 1]`, so that data in range `[0.3, 0.5]` would **not** be rescaled to `[0, 1]`.}
+\item{scale}{numeric or character string, a scaling to apply to the values. Defaults to NULL, which means \emph{no scaling} and requires the values in \code{volume} to be in rage \verb{[0, 1]}. You can pass a number like 255 or the string 'normalize' to scale based on the data. You can pass the string 'normalize_if_needed' to scale only if the data is \emph{outside} the range \verb{[0, 1]}, so that data in range \verb{[0.3, 0.5]} would \strong{not} be rescaled to \verb{[0, 1]}.}
 }
 \value{
 array (or matrix, or vector) of RGB color strings. All of them will represent gray values.
 }
 \description{
-Convert a gray-scale image defined by intensity values in range `[0, 1]` to an image with identical dimensions that contains an R color string (like `#222222`) at each position. The color strings are computed from the intensities, by taking the intensity value as the value for all three RGB channels. I.e., the output is still gray-scale, but defined in RGB space. To make it clear, this function does **not** apply a colormap. It only changes the representation of the data, not the resulting colors.
+Convert a gray-scale image defined by intensity values in range \verb{[0, 1]} to an image with identical dimensions that contains an R color string (like \verb{#222222}) at each position. The color strings are computed from the intensities, by taking the intensity value as the value for all three RGB channels. I.e., the output is still gray-scale, but defined in RGB space. To make it clear, this function does \strong{not} apply a colormap. It only changes the representation of the data, not the resulting colors.
 }
 \examples{
    vol.intensity.to.color(c(0.0, 0.5, 1.0));

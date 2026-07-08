@@ -7,7 +7,7 @@
 is.Triangles3D(x)
 }
 \arguments{
-\item{x}{any `R` object}
+\item{x}{any \code{R} object}
 }
 \value{
 TRUE if its argument is a Triangles3D instance (that is, has "Triangles3D" amongst its classes) and FALSE otherwise.

@@ -16,7 +16,7 @@ If 'maxr' is TRUE, a numeric scalar representing the max of the x, y, and z radi
 Get pre-computed radius for fsaverage white surface.
 }
 \note{
-The coordinates are for the white surface and in surface space, i.e., based on the raw values stored in the `fsaverae/surf/lh.white` and `fsaverage/surf/rh.white` files, without applying any transformation.
+The coordinates are for the white surface and in surface space, i.e., based on the raw values stored in the \code{fsaverae/surf/lh.white} and \code{fsaverage/surf/rh.white} files, without applying any transformation.
 }
 \seealso{
 \code{\link{surfs.props}}, which was used to compute the returned values.

@@ -9,7 +9,7 @@ draw.colorbar(coloredmeshes, horizontal = FALSE, ...)
 \arguments{
 \item{coloredmeshes}{fs.coloredmesh as returned by the coloredmesh.from.* functions.}
 
-\item{horizontal}{logical, whether the colorbar should be drawn in horizontal orientation. Defaults to `TRUE`.}
+\item{horizontal}{logical, whether the colorbar should be drawn in horizontal orientation. Defaults to \code{TRUE}.}
 
 \item{...}{extra params passed to \code{\link[fields]{image.plot}}}
 }

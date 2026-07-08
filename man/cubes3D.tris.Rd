@@ -9,7 +9,7 @@ cubes3D.tris(centers, edge_length = 1)
 \arguments{
 \item{centers}{numerical matrix with 3 columns. Each column represents the x, y, z coordinates of a center at which to create a cube.}
 
-\item{edge_length}{numerical vector or scalar, the edge length. Must have length 1 (same edge length for all cubes), or the length must be identical to the number of rows in parameter `centers`.}
+\item{edge_length}{numerical vector or scalar, the edge length. Must have length 1 (same edge length for all cubes), or the length must be identical to the number of rows in parameter \code{centers}.}
 }
 \value{
 matrix of triangle coordinates, see \code{\link[fsbrain]{cube3D.tris}}.

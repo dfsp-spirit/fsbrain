@@ -28,7 +28,7 @@ write.region.values(
 
 \item{region_value_list, }{named list. A list in which the names are atlas regions, and the values are the value to write to all vertices of that region.}
 
-\item{outfile_morph_name, }{string. The measure part of the output file name. E.g., 'agg_thickness' will write the file '<subject>/surf/<hemi>.agg_thickness.mgh'.}
+\item{outfile_morph_name, }{string. The measure part of the output file name. E.g., 'agg_thickness' will write the file '\if{html}{\out{<subject>}}/surf/\if{html}{\out{<hemi>}}.agg_thickness.mgh'.}
 
 \item{format, }{string. A morphometry file format. One of 'mgh', 'mgz' or 'curv.' The output file name extension will be set accordingly. Defaults to 'mgz'.}
 

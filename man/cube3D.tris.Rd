@@ -28,9 +28,9 @@ cube3D.tris(
 
 \item{zmax}{numeric, maximal z coordinate}
 
-\item{center}{numeric vector of length 3 or NULL, coordinates where to center a cube with the edge length defined in parameter `edge_length`. If this is not `NULL`, the parameters `xmin`, `xmax`, ... will be ignored, and their values will be computed for a cube based on the `center` and `edge_length`. Note that you can only create cubes using `center` and `edge_length`, while the min/max methods allows the construction of cuboids.}
+\item{center}{numeric vector of length 3 or NULL, coordinates where to center a cube with the edge length defined in parameter \code{edge_length}. If this is not \code{NULL}, the parameters \code{xmin}, \code{xmax}, ... will be ignored, and their values will be computed for a cube based on the \code{center} and \code{edge_length}. Note that you can only create cubes using \code{center} and \code{edge_length}, while the min/max methods allows the construction of cuboids.}
 
-\item{edge_length}{numeric, the edge length of the cube. Only used if parameter `center` is used, ignored otherwise.}
+\item{edge_length}{numeric, the edge length of the cube. Only used if parameter \code{center} is used, ignored otherwise.}
 }
 \value{
 numerical matrix with 36 rows and 3 columns, the 3D coordinates. Each row encodes a point (the x, y, and z coordinates), and 3 consecutive rows encode a triangle.

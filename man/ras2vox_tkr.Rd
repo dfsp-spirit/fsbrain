@@ -10,7 +10,7 @@ ras2vox_tkr()
 numeric 4x4 matrix, the FreeSurfer ras2vox_tkr matrix.
 }
 \description{
-Applying this matrix to a FreeSurfer surface RAS coordinate (from a surface file like `lh.white`) will give you the voxel index (CRS) in a conformed FreeSurfer volume.  The returned matrix is the inverse of the `vox2ras_tkr` matrix.
+Applying this matrix to a FreeSurfer surface RAS coordinate (from a surface file like \code{lh.white}) will give you the voxel index (CRS) in a conformed FreeSurfer volume.  The returned matrix is the inverse of the \code{vox2ras_tkr} matrix.
 }
 \examples{
    # Compute the FreeSurfer CRS voxel index of surface RAS coordinate (0.0, 0.0, 0.0):

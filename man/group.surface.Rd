@@ -24,7 +24,7 @@ group.surface(
 \item{force_hemilist}{logical, whether to force the individual values inside the named return value list to be hemilists (even if the 'hemi' parameter is not set to 'both'). If this is FALSE, the inner values will contain the respective (lh or rh) surface only.}
 }
 \value{
-named list of surfaces: Each name is a subject identifier from subjects_list, and the values are hemilists of `fs.surface` instances.
+named list of surfaces: Each name is a subject identifier from subjects_list, and the values are hemilists of \code{fs.surface} instances.
 }
 \description{
 Retrieve surface mesh data for a group of subjects.

@@ -7,7 +7,7 @@
 vis.colortable.legend(colortable, ncols = 1L, plot_struct_index = TRUE)
 }
 \arguments{
-\item{colortable}{dataframe, a colortable as returned by \code{\link[freesurferformats]{read.fs.colortable}} or the inner 'colortable_df' returned by \code{\link[fsbrain]{subject.annot}}. One can also pass an annotation (*fs.annot* instance).}
+\item{colortable}{dataframe, a colortable as returned by \code{\link[freesurferformats]{read.fs.colortable}} or the inner 'colortable_df' returned by \code{\link[fsbrain]{subject.annot}}. One can also pass an annotation (\emph{fs.annot} instance).}
 
 \item{ncols}{positive integer, the number of columns to use when plotting}
 

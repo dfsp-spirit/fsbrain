@@ -13,7 +13,7 @@ find.freesurferhome(mustWork = FALSE)
 named list with the following entries: "found": logical, whether it was found. "found_at": Only set if found=TRUE, the path to the FreeSurfer installation directory (including the directory itself). See 'mustWork' for important information.
 }
 \description{
-Try to find directory containing the FreeSurfer installation, based on environment variables and *educated guessing*.
+Try to find directory containing the FreeSurfer installation, based on environment variables and \emph{educated guessing}.
 }
 \seealso{
 \code{\link{fs.home}}

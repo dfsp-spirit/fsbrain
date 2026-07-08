@@ -25,7 +25,7 @@ collayer.bg.atlas(
 
 \item{grayscale}{logical, whether to convert the atlas colors to grayscale}
 
-\item{outline}{logical, whether to draw an outline only instead of filling the regions. Defaults to `FALSE`. Instead of passing `TRUE`, one can also pass a list of extra parameters to pass to \code{\link[fsbrain]{annot.outline}}, e.g., \code{outline=list('outline_color'='#000000')}.}
+\item{outline}{logical, whether to draw an outline only instead of filling the regions. Defaults to \code{FALSE}. Instead of passing \code{TRUE}, one can also pass a list of extra parameters to pass to \code{\link[fsbrain]{annot.outline}}, e.g., \code{outline=list('outline_color'='#000000')}.}
 
 \item{outline_surface}{character string, the surface to load. Only relevant when 'outline' is used. (In that case the surface mesh is needed to compute the vertices forming the region borders.)}
 }

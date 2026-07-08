@@ -13,6 +13,6 @@ normalize(x)
 the scaled data
 }
 \description{
-Scales data to the range `[0, 1]` based on min and max values.
+Scales data to the range \verb{[0, 1]} based on min and max values.
 }
 \keyword{internal}

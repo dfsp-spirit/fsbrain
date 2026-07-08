@@ -17,10 +17,10 @@ alphablend(front_color, back_color, silent = TRUE)
 rgba color strings, the alpha-blended colors
 }
 \description{
-Implements the *over* alpha blending operation.
+Implements the \emph{over} alpha blending operation.
 }
 \references{
-see the *Alpha blending* section on https://en.wikipedia.org/wiki/Alpha_compositing
+see the \emph{Alpha blending} section on https://en.wikipedia.org/wiki/Alpha_compositing
 }
 \seealso{
 Other color functions: 

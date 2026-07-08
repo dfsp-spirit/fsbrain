@@ -26,7 +26,7 @@ volvis.lb.with.surface(
 
 \item{subject_id}{character string, the subject identifier.}
 
-\item{volume}{numeric 3D array or character string. Either a 3D brain volume (e.g., from T1.mgz or brain.mgz), or the name of a volume file to load from the subject's `mri/` directory. Defaults to \code{"brain"}.}
+\item{volume}{numeric 3D array or character string. Either a 3D brain volume (e.g., from T1.mgz or brain.mgz), or the name of a volume file to load from the subject's \verb{mri/} directory. Defaults to \code{"brain"}.}
 
 \item{surface}{character string or vector of strings, the surface(s) to use for contour extraction. One or more of \code{"white"}, \code{"pial"}, or \code{"inflated"}. If a vector, contours for all surfaces are drawn. Defaults to \code{"white"}.}
 
@@ -34,7 +34,7 @@ volvis.lb.with.surface(
 
 \item{surface_color}{character string or character vector, the color(s) for the surface contour lines. If a single color, all surfaces and hemispheres use it. If a vector of length \code{length(surface)}, each surface gets its own color (both hemispheres use it). If a vector of length \code{2 * length(surface)}, colors are assigned as \code{(lh_surf1, rh_surf1, lh_surf2, rh_surf2, ...)}. Defaults to \code{"#FF0000"} (red).}
 
-\item{surface_lwd}{numeric, line width for the contour lines (passed as `lwd` to \code{\link[graphics]{segments}}). Defaults to 1.}
+\item{surface_lwd}{numeric, line width for the contour lines (passed as \code{lwd} to \code{\link[graphics]{segments}}). Defaults to 1.}
 
 \item{slices}{passed to \code{\link[fsbrain]{volvis.lightbox}}. A negative integer N means "use every Nth slice". A numeric vector gives explicit slice indices (1-based). Defaults to \code{-5} (every 5th slice).}
 
@@ -54,7 +54,7 @@ volvis.lb.with.surface(
 a magick image instance containing the lightbox with surface contours overlaid. Can be saved with \code{\link[magick]{image_write}} or displayed interactively.
 }
 \description{
-Creates a lightbox view of 2D MRI slices with the cortical surface boundary contours drawn on top. This is the fsbrain equivalent of what FreeSurfer's `freeview` or `tkmedit` show — useful for quality assessment of surface reconstruction against the underlying MRI volume. The surface mesh is loaded from the subject's FreeSurfer directory and its intersection with each displayed slice plane is computed and drawn as colored contour lines.
+Creates a lightbox view of 2D MRI slices with the cortical surface boundary contours drawn on top. This is the fsbrain equivalent of what FreeSurfer's \code{freeview} or \code{tkmedit} show — useful for quality assessment of surface reconstruction against the underlying MRI volume. The surface mesh is loaded from the subject's FreeSurfer directory and its intersection with each displayed slice plane is computed and drawn as colored contour lines.
 }
 \examples{
 \dontrun{
@@ -95,7 +95,7 @@ Creates a lightbox view of 2D MRI slices with the cortical surface boundary cont
 
 }
 \seealso{
-Other volume visualization:
+Other volume visualization: 
 \code{\link{vis.volume.on.surface}()},
 \code{\link{volvis.lb}()},
 \code{\link{volvis.lightbox}()}

@@ -11,7 +11,7 @@ get.slice.indices(voldim, axis, slices)
 
 \item{axis}{integer, the axis}
 
-\item{slices}{slice index definition. If a vector of integers, interpreted as slice indices. If a single negative interger `-n`, interpreted as every `nth` slice, starting at slice 1. The character string 'all' or the value `NULL` will be interpreted as *all slices*.}
+\item{slices}{slice index definition. If a vector of integers, interpreted as slice indices. If a single negative interger \code{-n}, interpreted as every \code{nth} slice, starting at slice 1. The character string 'all' or the value \code{NULL} will be interpreted as \emph{all slices}.}
 }
 \value{
 integer vector, the computed slice indices. They are guaranteed to be valid indices into the volume.

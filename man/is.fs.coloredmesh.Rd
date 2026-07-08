@@ -7,7 +7,7 @@
 is.fs.coloredmesh(x)
 }
 \arguments{
-\item{x}{any `R` object}
+\item{x}{any \code{R} object}
 }
 \value{
 TRUE if its argument is a coloredmesh (that is, has "fs.coloredmesh" amongst its classes) and FALSE otherwise.

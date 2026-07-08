@@ -27,7 +27,7 @@ subject.surface(
 \item{as_tm}{logical, whether to return an \code{rgl::tmesh3d} instead of an \code{fs.surface} instance by applying the \code{fs.surface.to.tmesh3d} function.}
 }
 \value{
-the `fs.surface` instance, as returned by \code{\link[freesurferformats]{read.fs.surface}}. If parameter `hemi` is set to `both`, a named list with entries `lh` and `rh` is returned, and the values of are the respective surfaces. The mesh data structure used in `fs.surface` is a *face index set*.
+the \code{fs.surface} instance, as returned by \code{\link[freesurferformats]{read.fs.surface}}. If parameter \code{hemi} is set to \code{both}, a named list with entries \code{lh} and \code{rh} is returned, and the values of are the respective surfaces. The mesh data structure used in \code{fs.surface} is a \emph{face index set}.
 }
 \description{
 Load a brain surface mesh for a subject.

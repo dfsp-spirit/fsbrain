@@ -10,7 +10,7 @@ vol.planes(plane = NULL)
 \item{plane}{NULL, a plane index, or a plane name.}
 }
 \value{
-if `plane` is NULL, all available planes and their indices as a named list. If `plane` is an integer (a plane index), its name. If `plane` is an characters string (a plane name), its index.
+if \code{plane} is NULL, all available planes and their indices as a named list. If \code{plane} is an integer (a plane index), its name. If \code{plane} is an characters string (a plane name), its index.
 }
 \description{
 Translate names and indices of 3D image planes. The names only make sense if the data in the volume is in the default FreeSurfer conformed orientation.

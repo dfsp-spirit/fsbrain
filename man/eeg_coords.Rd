@@ -7,7 +7,7 @@
 eeg_coords(label_subset = NULL)
 }
 \arguments{
-\item{label_subset}{vector of character strings, electrode names like 'Nz' or 'RPA'. ÖLeave at the default value `NULL` to get all available ones.}
+\item{label_subset}{vector of character strings, electrode names like 'Nz' or 'RPA'. ÖLeave at the default value \code{NULL} to get all available ones.}
 }
 \value{
 data.frame with one row per electrode, and the following 3 columns: 'label': the electrode name, 'theta': the azimuth in degrees, 'phi': the latitude in degrees.

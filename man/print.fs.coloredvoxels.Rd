@@ -7,7 +7,7 @@
 \method{print}{fs.coloredvoxels}(x, ...)
 }
 \arguments{
-\item{x}{brain voxel tris with class `fs.coloredvoxels`.}
+\item{x}{brain voxel tris with class \code{fs.coloredvoxels}.}
 
 \item{...}{further arguments passed to or from other methods}
 }

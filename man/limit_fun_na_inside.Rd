@@ -7,12 +7,12 @@
 limit_fun_na_inside(vmin, vmax)
 }
 \arguments{
-\item{vmin}{numerical scalar, the lower border. Data values between this and vmax will be set to `NA` in the return value.}
+\item{vmin}{numerical scalar, the lower border. Data values between this and vmax will be set to \code{NA} in the return value.}
 
 \item{vmax}{numerical scalar, the upper border. See 'vmin'.}
 }
 \value{
-a function that takes as argument the data, and clips it to the requested range. I.e., values inside the range will be set to `NA`. Designed to be used as \code{rglactions$trans_fun} in vis functions.
+a function that takes as argument the data, and clips it to the requested range. I.e., values inside the range will be set to \code{NA}. Designed to be used as \code{rglactions$trans_fun} in vis functions.
 }
 \description{
 Get data limiting function to use in \code{\link{rglactions}} as 'trans_fun' to transform data.
@@ -25,5 +25,5 @@ This is useful for thresholding data plotted with a background. All values insid
 
 }
 \seealso{
-\code{\link{limit_fun_na}} which will set the values outside the range to `NA`.
+\code{\link{limit_fun_na}} which will set the values outside the range to \code{NA}.
 }

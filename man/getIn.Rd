@@ -11,10 +11,10 @@ getIn(named_list, listkeys, default = NULL)
 
 \item{listkeys}{vector of character strings, the nested names of the lists}
 
-\item{default}{the default value to return in case the requested value is `NULL`.}
+\item{default}{the default value to return in case the requested value is \code{NULL}.}
 }
 \value{
-the value at the path through the lists, or `NULL` (or the 'default') if no such path exists.
+the value at the path through the lists, or \code{NULL} (or the 'default') if no such path exists.
 }
 \description{
 Retrieve values from nested named lists

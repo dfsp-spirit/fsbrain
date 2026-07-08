@@ -22,7 +22,7 @@ coloredmesh.from.color(
 
 \item{hemi}{string, one of 'lh' or 'rh'. The hemisphere name. Used to construct the names of the label data files to be loaded.}
 
-\item{surface}{character string or `fs.surface` instance. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
+\item{surface}{character string or \code{fs.surface} instance. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 
 \item{metadata}{a named list, can contain whatever you want. Typical entries are: 'src_data' a hemilist containing the source data from which the 'color_data' was created, optional. If available, it is encoded into the coloredmesh and can be used later to plot a colorbar. 'makecmap_options': the options used to created the colormap from the data.}
 }

@@ -29,9 +29,9 @@ vis.volume.on.surface(
 
 \item{subject_id}{character string, the subject identifier.}
 
-\item{volume}{numeric 3D array or character string. Either a 3D volume array with voxel intensities, or the name of a volume file to load from the subject's `mri/` directory (e.g., \code{"brain"}, \code{"aseg"}, \code{"aparc+aseg"}). Background voxels should have value \code{NA} or 0.}
+\item{volume}{numeric 3D array or character string. Either a 3D volume array with voxel intensities, or the name of a volume file to load from the subject's \verb{mri/} directory (e.g., \code{"brain"}, \code{"aseg"}, \code{"aparc+aseg"}). Background voxels should have value \code{NA} or 0.}
 
-\item{volume_mode}{character string, one of \code{"contour"} or \code{"voxels"}. The rendering mode for the volume: \code{"contour"} creates a smooth isosurface using the `misc3d` package (requires the optional dependency `misc3d`), \code{"voxels"} renders individual foreground voxels as small cubes. Defaults to \code{"contour"}.}
+\item{volume_mode}{character string, one of \code{"contour"} or \code{"voxels"}. The rendering mode for the volume: \code{"contour"} creates a smooth isosurface using the \code{misc3d} package (requires the optional dependency \code{misc3d}), \code{"voxels"} renders individual foreground voxels as small cubes. Defaults to \code{"contour"}.}
 
 \item{volume_level}{numeric scalar, the intensity threshold for contour mode. Only voxels with intensity values >= this threshold contribute to the isosurface. Ignored in voxel mode. Defaults to 80 (suitable for a raw brain.mgz with values in range 0-255).}
 
@@ -60,7 +60,7 @@ vis.volume.on.surface(
 \item{...}{extra parameters passed to the volume rendering backend (e.g., \code{lit=FALSE} for unlit voxels).}
 }
 \value{
-invisible named list with entries: \code{"surface"} (the coloredmeshes from the surface rendering, a hemilist of \code{coloredmesh} instances) and \code{"volume"} (the volume rendering result: a `Triangles3D` object for contour mode, or a list of \code{coloredvoxels} for voxel mode).
+invisible named list with entries: \code{"surface"} (the coloredmeshes from the surface rendering, a hemilist of \code{coloredmesh} instances) and \code{"volume"} (the volume rendering result: a \code{Triangles3D} object for contour mode, or a list of \code{coloredvoxels} for voxel mode).
 }
 \description{
 Render a brain volume (as an isosurface or as voxels) together with a cortical surface mesh colored by morphometry data in the same interactive 3D scene. The volume coordinates are transformed to surface RAS space using the FreeSurfer \code{vox2ras_tkr} matrix, ensuring proper spatial alignment of volume and surface.

@@ -1,4 +1,4 @@
-## R CMD check results
+## R CMD check results on local R CMD check --as-cran
 There was 1 NOTE:
 
 * checking CRAN incoming feasibility ... NOTE
@@ -10,3 +10,13 @@ There was 1 NOTE:
 
 ### Notes on False Positives
 * The bioRxiv URL in `inst/CITATION` is valid and resolves correctly in a standard browser. The 403 Forbidden status is maybe due to bioRxiv's automated protection blocking the R CMD check scraper.
+
+
+### Full local output
+
+
+
+
+## Winbuilder
+
+We also check on Winbuilder.

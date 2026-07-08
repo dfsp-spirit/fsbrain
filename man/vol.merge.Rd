@@ -12,11 +12,11 @@ vol.merge(
 )
 }
 \arguments{
-\item{volume}{3D array, can be numeric (gray-scale intensity values) or color strings. If numeric, the intensity values must be in range `[0, 1]`.}
+\item{volume}{3D array, can be numeric (gray-scale intensity values) or color strings. If numeric, the intensity values must be in range \verb{[0, 1]}.}
 
-\item{overlay_colors}{3D array of color strings, values which are not part of the overlay (and should display background in the result) must have `NA` instead of a color string. Must have same dimensions as the `volume`.}
+\item{overlay_colors}{3D array of color strings, values which are not part of the overlay (and should display background in the result) must have \code{NA} instead of a color string. Must have same dimensions as the \code{volume}.}
 
-\item{bbox_threshold}{numerical, the threshold intensity used to separate background and foreground. All voxels with intensity values greater than this value in the background `volume` will be considered `foreground` voxels. Background-only slices at the borders of the volume will be discarded (in the merged, final image). Pass `NULL` to use the full image without applying any bounding box.}
+\item{bbox_threshold}{numerical, the threshold intensity used to separate background and foreground. All voxels with intensity values greater than this value in the background \code{volume} will be considered \code{foreground} voxels. Background-only slices at the borders of the volume will be discarded (in the merged, final image). Pass \code{NULL} to use the full image without applying any bounding box.}
 
 \item{forced_overlay_color}{NULL or an rgb color string, like '#FF0000' for red. If NULL, the activation colors will be used as foreground colors. Otherwise, the given color will be for all foreground vertices.}
 }

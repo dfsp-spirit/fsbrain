@@ -27,7 +27,7 @@ subject.label(
 \item{full}{logical, whether to return the full label structure instead of only the vertex indices.}
 }
 \value{
-integer vector with label data: the list of vertex indices in the label. See 'return_one_based_indices' for important information. If parameter `hemi` is set to `both`, a named list with entries `lh` and `rh` is returned, and the values of are the respective labels.
+integer vector with label data: the list of vertex indices in the label. See 'return_one_based_indices' for important information. If parameter \code{hemi} is set to \code{both}, a named list with entries \code{lh} and \code{rh} is returned, and the values of are the respective labels.
 }
 \description{
 Load a label (like 'label/lh.cortex.label') for a subject from disk. Uses knowledge about the FreeSurfer directory structure to load the correct file.

@@ -16,21 +16,21 @@ volvis.lightbox(
 )
 }
 \arguments{
-\item{volume}{3D array, can be numeric (gray-scale intensity values) or color strings. If numeric, the intensity values must be in range `[0, 1]`.}
+\item{volume}{3D array, can be numeric (gray-scale intensity values) or color strings. If numeric, the intensity values must be in range \verb{[0, 1]}.}
 
-\item{slices}{slice index definition. If a vector of integers, interpreted as slice indices. If a single negative interger `-n`, interpreted as every `nth` slice, starting at slice 1. The character string 'all' or the value `NULL` will be interpreted as *all slices*.}
+\item{slices}{slice index definition. If a vector of integers, interpreted as slice indices. If a single negative interger \code{-n}, interpreted as every \code{nth} slice, starting at slice 1. The character string 'all' or the value \code{NULL} will be interpreted as \emph{all slices}.}
 
 \item{axis}{positive integer in range 1L..3L, the axis to use.}
 
-\item{per_row}{positive integer, the number of subimages per row in the output image. If `NULL`, automatically computed from the number of slices and the `per_col` parameter.}
+\item{per_row}{positive integer, the number of subimages per row in the output image. If \code{NULL}, automatically computed from the number of slices and the \code{per_col} parameter.}
 
-\item{per_col}{positive integer, the number of subimages per column in the output image. If `NULL`, automatically computed from the number of slices and the `per_row` parameter.}
+\item{per_col}{positive integer, the number of subimages per column in the output image. If \code{NULL}, automatically computed from the number of slices and the \code{per_row} parameter.}
 
 \item{border_geometry}{string, a geometry string passed to \code{magick::image_border} to define the borders to add to each image tile. The default value adds 5 pixels, both horizontally and vertically.}
 
 \item{background_color}{string, a valid ImageMagick color string such as "white" or "#000080". The color to use when extending images (e.g., when creating the border). Defaults to black.}
 
-\item{arrange_single_image}{logical, whether to apply the given arrangement (from parameters `per_row` and `per_column`) even if a single slice (a 2D image) is passed as `volume`. Defaults to FALSE, which prevents that background tiles are added to fill the row up to `per_row` images. This also prevents the border from getting added to a single image, so all you see is the raw image. Set to `TRUE` if you want to arrange even a single image in a row with a border.}
+\item{arrange_single_image}{logical, whether to apply the given arrangement (from parameters \code{per_row} and \code{per_column}) even if a single slice (a 2D image) is passed as \code{volume}. Defaults to FALSE, which prevents that background tiles are added to fill the row up to \code{per_row} images. This also prevents the border from getting added to a single image, so all you see is the raw image. Set to \code{TRUE} if you want to arrange even a single image in a row with a border.}
 }
 \value{
 a magick image instance

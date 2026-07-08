@@ -9,7 +9,7 @@ gen.test.volume(vdim = c(256L, 256L, 256L), bg = NA)
 \arguments{
 \item{vdim}{integer vector of length 3, the dimensions}
 
-\item{bg}{value to use for outer background voxels. Typically `0L` or `NA`.}
+\item{bg}{value to use for outer background voxels. Typically \code{0L} or \code{NA}.}
 }
 \value{
 a 3d array of integers
