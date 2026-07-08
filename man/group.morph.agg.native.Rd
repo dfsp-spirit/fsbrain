@@ -36,7 +36,7 @@ group.morph.agg.native(
 \item{agg_fun_extra_params}{named list, extra parameters to pass to the aggregation function 'agg_fun' besides the loaded morphometry data. This is useful if you have masked the data and need to ignore NA values in the agg_fun.}
 }
 \value{
-dataframe with aggregated values for all subjects, with 3 columns and n rows, where n is the number of subjects. The 3 columns are 'subject_id', 'hemi', and '\if{html}{\out{<measure>}}' (e.g., "thickness"), the latter contains the aggregated data.
+dataframe with aggregated values for all subjects, with 3 columns and n rows, where n is the number of subjects. The 3 columns are 'subject_id', 'hemi', and \code{'<measure>'} (e.g., "thickness"), the latter contains the aggregated data.
 }
 \description{
 Compute the mean (or other aggregates) over all vertices of a subject from native space morphometry data (like 'surf/lh.area'). Uses knowledge about the FreeSurfer directory structure to load the correct file.

@@ -10,7 +10,7 @@
 #'
 #' @param measure, string. Name of the vertex-wise measure of morphometry data file. E.g., "area" or "thickness". Used to construct the name of the morphometry file to be loaded.
 #'
-#' @return dataframe with aggregated values for all subjects, with 3 columns and n rows, where n is the number of subjects. The 3 columns are 'subject_id', 'hemi', and '<measure>' (e.g., "thickness"), the latter contains the aggregated data.
+#' @return dataframe with aggregated values for all subjects, with 3 columns and n rows, where n is the number of subjects. The 3 columns are 'subject_id', 'hemi', and `'<measure>'` (e.g., "thickness"), the latter contains the aggregated data.
 #'
 #' @family global aggregation functions
 #'
@@ -85,7 +85,7 @@ group.morph.agg.native <- function(subjects_dir, subjects_list, measure, hemi, a
 #'
 #' @param measure, string. Name of the vertex-wise measure of morphometry data file. E.g., "area" or "thickness". Used to construct the name of the morphometry file to be loaded.
 #'
-#' @return dataframe with aggregated values for all subjects, with 2 columns and n rows, where n is the number of subjects. The 2 columns are 'subject_id' and '<hemi>.<measure>' (e.g., "lh.thickness"), the latter contains the aggregated data.
+#' @return dataframe with aggregated values for all subjects, with 2 columns and n rows, where n is the number of subjects. The 2 columns are 'subject_id' and `'<hemi>.<measure>'` (e.g., "lh.thickness"), the latter contains the aggregated data.
 #'
 #' @family global aggregation functions
 #'
@@ -212,7 +212,7 @@ group.morph.agg.standard.vertex <- function(subjects_dir, subjects_list, measure
 #'
 #' @param agg_fun_extra_params named list, extra parameters to pass to the aggregation function 'agg_fun' besides the loaded morphometry data. This is useful if you have masked the data and need to ignore NA values in the agg_fun.
 #'
-#' @return dataframe with aggregated values over all measures and hemis for all subjects, with m columns and n rows, where n is the number of subjects. The m columns are 'subject_id' and '<hemi>.<measure>' (e.g., "lh.thickness") for all combinations of hemi and measure, the latter contains the aggregated data.
+#' @return dataframe with aggregated values over all measures and hemis for all subjects, with m columns and n rows, where n is the number of subjects. The m columns are 'subject_id' and `'<hemi>.<measure>'` (e.g., "lh.thickness") for all combinations of hemi and measure, the latter contains the aggregated data.
 #'
 #' @family global aggregation functions
 #'
@@ -253,7 +253,7 @@ group.multimorph.agg.standard <- function(subjects_dir, subjects_list, measures,
 #'
 #' @inheritParams group.multimorph.agg.standard
 #'
-#' @return dataframe with aggregated values over all measures and hemis for all subjects, with m columns and n rows, where n is the number of subjects. The m columns are 'subject_id' and '<hemi>.<measure>' (e.g., "lh.thickness") for all combinations of hemi and measure, the latter contains the aggregated data.
+#' @return dataframe with aggregated values over all measures and hemis for all subjects, with m columns and n rows, where n is the number of subjects. The m columns are 'subject_id' and `'<hemi>.<measure>'` (e.g., "lh.thickness") for all combinations of hemi and measure, the latter contains the aggregated data.
 #'
 #' @family global aggregation functions
 #'

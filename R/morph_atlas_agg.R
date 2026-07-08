@@ -386,7 +386,7 @@ spread.values.over.annot <- function(annot, region_value_list, value_for_unliste
 #'
 #' @param agg_fun, function. An R function that aggregates data, typically max, mean, min or something similar. Note: this is NOT a string, put the function name without quotes. Defaults to mean.
 #'
-#' @param outfile_morph_name, string. The measure part of the output file name. E.g., 'agg_thickness' will write the file '<subject>/surf/<hemi>.agg_thickness.mgh'. Defaults to 'agg_<measure>'.
+#' @param outfile_morph_name, string. The measure part of the output file name. E.g., 'agg_thickness' will write the file `'<subject>/surf/<hemi>.agg_thickness.mgh'`. Defaults to `'agg_<measure>'`.
 #'
 #' @param format, string. A morphometry file format. One of 'mgh', 'mgz' or 'curv.' The output file name extension will be set accordingly. Defaults to 'mgz'.
 #'
@@ -421,13 +421,13 @@ write.region.aggregated <- function(subjects_dir, subjects_list, measure, hemi, 
 #'
 #' @param region_value_list, named list. A list in which the names are atlas regions, and the values are the value to write to all vertices of that region.
 #'
-#' @param outfile_morph_name, string. The measure part of the output file name. E.g., 'agg_thickness' will write the file '<subject>/surf/<hemi>.agg_thickness.mgh'.
+#' @param outfile_morph_name, string. The measure part of the output file name. E.g., 'agg_thickness' will write the file `'<subject>/surf/<hemi>.agg_thickness.mgh'`.
 #'
 #' @param format, string. A morphometry file format. One of 'mgh', 'mgz' or 'curv.' The output file name extension will be set accordingly. Defaults to 'mgz'.
 #'
 #' @param do_write_file, logical. Whether to write the data to a file on the disk. If FALSE, the data are only returned (and the outfile_morph_name parameter gets ignored). Default to TRUE.
 #'
-#' @param output_path string, path to the output directory. If omitted, defaults to the 'surf' directory of the subject (i.e., '<subjects_dir>/<subject_id>/surf/').
+#' @param output_path string, path to the output directory. If omitted, defaults to the 'surf' directory of the subject (i.e., `'<subjects_dir>/<subject_id>/surf/'`).
 #'
 #' @param value_for_unlisted_regions, numeric scalar. The value to assign to vertices which are part of atlas regions that are not listed in region_value_list. Defaults to NaN.
 #'

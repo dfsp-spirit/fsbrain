@@ -42,7 +42,7 @@ group.multimorph.agg.standard(
 \item{agg_fun_extra_params}{named list, extra parameters to pass to the aggregation function 'agg_fun' besides the loaded morphometry data. This is useful if you have masked the data and need to ignore NA values in the agg_fun.}
 }
 \value{
-dataframe with aggregated values over all measures and hemis for all subjects, with m columns and n rows, where n is the number of subjects. The m columns are 'subject_id' and '\if{html}{\out{<hemi>}}.\if{html}{\out{<measure>}}' (e.g., "lh.thickness") for all combinations of hemi and measure, the latter contains the aggregated data.
+dataframe with aggregated values over all measures and hemis for all subjects, with m columns and n rows, where n is the number of subjects. The m columns are 'subject_id' and \code{'<hemi>.<measure>'} (e.g., "lh.thickness") for all combinations of hemi and measure, the latter contains the aggregated data.
 }
 \description{
 Compute the mean (or other aggregates) over all vertices of a subject from standard space morphometry data (like 'surf/lh.area.fwhm10.fsaverage.mgh'). You can specify several measures and hemispheres. Uses knowledge about the FreeSurfer directory structure to load the correct files.
