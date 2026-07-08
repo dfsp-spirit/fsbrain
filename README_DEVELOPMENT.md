@@ -32,7 +32,11 @@ On the console:
 * to run CRAN checks on source: ```Rscript -e "devtools::check()"```
 * to build package and run CRAN checks on build version: ```R CMD build . && R CMD check fsbrain_0.5.1.tar.gz```, or whatever version your are building
 * to build package and run only package checks and tests (faster): ```R CMD check . --no-manual --no-vignettes```
+* run the hard-core way before a release, so you do not get bothered by CRAN later: ```R CMD check --as-cran```
+*
+Observe the output of those check commands carefully, they skip checks if a tool is not installed locally. E.g., to get all checks, you may need to install these:
 
+```sudo apt install pqdf tidy```
 
 ## Building the documentation (vignettes)
 
