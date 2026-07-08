@@ -46,3 +46,15 @@ On the console, run ```Rscript -e devtools::build_vignettes()```
 You will need to do this if you added a new argument to a function and R CMD check complains about code/documentation mismatches.
 
 On the console, run ```Rscript -e "roxygen2::roxygenise()"```
+
+
+## Making a new release
+
+- Make sure all changes are logged in CHANGES file
+- Bump version in DESCRIPTION
+- Build package and make sure it passes CRAN tests locally. Best done with a recent R version, as they may have introduced even more annoying checks in later versions: ```R CMD check build . && R CMD check --as-cran fsbrain_0.5.0.tar.gz```, or whatever version your are building
+- Upload the package to [winbuilder](https://win-builder.r-project.org/upload.aspx) to check there. The service will read package metadata for your email and report back via mail when done.
+- If everything is green both locally and on Winbuilder, submit to CRAN via their [package submission form](https://cran.r-project.org/submit.html)
+- You will receive feedback from CRAN, either package was accepted or some version of R they test with some check still failed. Bad luck. You will have to modify source and do the loop again.
+- Once it passes and CRAN confirms it's on its way to the repo, tag the final git submit that made it into CRAN with the version, e.g. ```git tag v0.5.0 c2hf5hjdk3``` if `c2hf5hjdk3` is the commit ID. Check ```git log --oneline``` for commit IDs. When you have tagged it like this locally, make sure to push the tag: ```git push --tags```.
+- Log into github.com, and make a release there based on the tag. Copy relevant CHANGES section as description.
