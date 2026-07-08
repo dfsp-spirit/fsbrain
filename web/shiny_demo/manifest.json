@@ -578,13 +578,8 @@
       }
     },
     "fsbrain": {
-      "Source": "github",
-      "Repository": "https://github.com/dfsp-spirit/fsbrain",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "fsbrain",
-      "RemoteUsername": "dfsp-spirit",
-      "RemoteRef": "master",
+      "Source": "CRAN",
+      "Repository": "https://cloud.r-project.org",
       "description": {
         "Package": "fsbrain",
         "Type": "Package",
