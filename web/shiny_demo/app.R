@@ -20,12 +20,45 @@
 library("shiny")
 library("fsbrain")
 library("rgl")
+library("pkgfilecache")
 
 # ── One-time setup (cached) ──────────────────────────────────────────────────
 
-cat("[setup] Downloading example data and fsaverage template...\n")
+cat("[setup] Downloading example subject data...\n")
 fsbrain::download_optional_data()
-fsbrain::download_fsaverage(accept_freesurfer_license = TRUE)
+
+cat("[setup] Downloading minimal fsaverage template (surfaces + cortex labels only)...\n")
+# Download only the essential fsaverage files needed for visualization:
+# white surfaces, curvature, cortex labels, and license.
+# This is ~7 files instead of 19, making it much faster on constrained
+# platforms like Posit Connect Cloud (avoids the 60s startup timeout).
+pkg_info <- pkgfilecache::get_pkg_info("fsbrain")
+fsavg_base <- c("subjects_dir", "fsaverage")
+fsavg_files <- list(
+    c(fsavg_base, "surf",  "lh.white"),
+    c(fsavg_base, "surf",  "rh.white"),
+    c(fsavg_base, "surf",  "lh.curv"),
+    c(fsavg_base, "surf",  "rh.curv"),
+    c(fsavg_base, "label", "lh.cortex.label"),
+    c(fsavg_base, "label", "rh.cortex.label"),
+    c(fsavg_base, "LICENSE")
+)
+fsavg_md5 <- c(
+    "cbffce8198e0e10c17f79f6ae0454af5",  # lh.white
+    "1159a9ee160b1b0c76e0bb9ae789b9be",  # rh.white
+    "3e81598a5ac0546443ec37d0ac477c80",  # lh.curv
+    "76ad91d2488de081392313ad5a87fafb",  # rh.curv
+    "578f81e9946a76eb1c42d897d07da4a7",  # lh.cortex.label
+    "c8f59de23e9f90f18e96e9d037e42799",  # rh.cortex.label
+    "b39610adfe02fdce2ad9d30797c567b3"   # LICENSE
+)
+fsavg_urls <- paste0("https://rcmd.org/projects/nitestdata/subjects_dir/fsaverage/",
+    c("surf/lh.white", "surf/rh.white",
+      "surf/lh.curv", "surf/rh.curv",
+      "label/lh.cortex.label", "label/rh.cortex.label",
+      "LICENSE"))
+pkgfilecache::ensure_files_available(pkg_info, fsavg_files, fsavg_urls, md5sums = fsavg_md5)
+
 subjects_dir <- fsbrain::get_optional_data_filepath("subjects_dir")
 
 cat("[setup] Pre-building coloredmeshes (cached for all sessions)...\n")
