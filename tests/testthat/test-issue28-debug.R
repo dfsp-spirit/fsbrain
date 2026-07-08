@@ -26,9 +26,11 @@ non_bg_colors <- function(outline_vec, bg = "white") {
 # ── Step 1: Inspect raw annotation colortable colors ──────────────────────────
 
 test_that("STEP 1: Annotation colortable produces valid RGBA hex strings", {
+    testthat::skip_on_cran();
     skip_if(tests_running_on_cran_under_macos(),
             message = "Skipping on CRAN under MacOS.")
     fsbrain::download_optional_data()
+    fsbrain::download_fsaverage(accept_freesurfer_license = TRUE)
     subjects_dir <- fsbrain::get_optional_data_filepath("subjects_dir")
     skip_if_not(dir.exists(subjects_dir), message = "Test data missing.")
 
@@ -76,9 +78,11 @@ test_that("STEP 1: Annotation colortable produces valid RGBA hex strings", {
 # ── Step 2: Inspect annot.outline output ──────────────────────────────────────
 
 test_that("STEP 2: annot.outline produces colored outlines, not all-black", {
+    testthat::skip_on_cran();
     skip_if(tests_running_on_cran_under_macos(),
             message = "Skipping on CRAN under MacOS.")
     fsbrain::download_optional_data()
+    fsbrain::download_fsaverage(accept_freesurfer_license = TRUE)
     subjects_dir <- fsbrain::get_optional_data_filepath("subjects_dir")
     skip_if_not(dir.exists(subjects_dir), message = "Test data missing.")
 
@@ -127,6 +131,7 @@ test_that("STEP 2: annot.outline produces colored outlines, not all-black", {
 # ── Step 3: Check col2rgb parsing of RGBA hex strings ─────────────────────────
 
 test_that("STEP 3: col2rgb correctly parses 8-digit RGBA hex strings", {
+    testthat::skip_on_cran();
     # Test the exact format produced by grDevices::rgb(r, g, b, a)
     test_colors <- c(
         "#FF0000FF",  # red, opaque
@@ -164,6 +169,7 @@ test_that("STEP 3: col2rgb correctly parses 8-digit RGBA hex strings", {
 # ── Step 4: alphablend with annotation-like colors ────────────────────────────
 
 test_that("STEP 4: alphablend preserves background color when foreground is transparent", {
+    testthat::skip_on_cran();
     # Simulate: annotation outline color as background, cluster-data transparent as foreground
 
     # Typical annotation RGBA colors
@@ -216,9 +222,11 @@ test_that("STEP 4: alphablend preserves background color when foreground is tran
 # ── Step 6: End-to-end pipeline with real data (no rendering) ─────────────────
 
 test_that("STEP 6: Full pipeline — cluster data over annot.outline background", {
+    testthat::skip_on_cran();
     skip_if(tests_running_on_cran_under_macos(),
             message = "Skipping on CRAN under MacOS.")
     fsbrain::download_optional_data()
+    fsbrain::download_fsaverage(accept_freesurfer_license = TRUE)
     subjects_dir <- fsbrain::get_optional_data_filepath("subjects_dir")
     skip_if_not(dir.exists(subjects_dir), message = "Test data missing.")
 
@@ -355,9 +363,11 @@ test_that("STEP 6: Full pipeline — cluster data over annot.outline background"
 # ── Step 7: Check what rgl does with merged colors ────────────────────────────
 
 test_that("STEP 7: Merged colors are fully opaque (check alpha values)", {
+    testthat::skip_on_cran();
     skip_if(tests_running_on_cran_under_macos(),
             message = "Skipping on CRAN under MacOS.")
     fsbrain::download_optional_data()
+    fsbrain::download_fsaverage(accept_freesurfer_license = TRUE)
     subjects_dir <- fsbrain::get_optional_data_filepath("subjects_dir")
     skip_if_not(dir.exists(subjects_dir), message = "Test data missing.")
 
