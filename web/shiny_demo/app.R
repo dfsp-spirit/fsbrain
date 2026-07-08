@@ -29,20 +29,22 @@ library("pkgfilecache")
 
 # ── One-time setup (cached) ──────────────────────────────────────────────────
 
-cat("[setup] Downloading minimal subject data (6 files, ~16 MB)...\n")
+cat("[setup] Downloading minimal subject data (8 files, ~16 MB)...\n")
 pkg_info <- pkgfilecache::get_pkg_info("fsbrain")
 
 subj_base  <- c("subjects_dir", "subject1")
 base_url   <- "https://rcmd.org/projects/nitestdata/subjects_dir/subject1"
 
-# Only the files strictly needed: 2 surfaces + 4 morphometry overlays.
+# Only the files strictly needed: 2 surfaces + 4 morphometry overlays + 2 cortex labels.
 dl_files <- list(
     c(subj_base, "surf", "lh.white"),
     c(subj_base, "surf", "rh.white"),
     c(subj_base, "surf", "lh.thickness"),
     c(subj_base, "surf", "rh.thickness"),
     c(subj_base, "surf", "lh.sulc"),
-    c(subj_base, "surf", "rh.sulc")
+    c(subj_base, "surf", "rh.sulc"),
+    c(subj_base, "label", "lh.cortex.label"),
+    c(subj_base, "label", "rh.cortex.label")
 )
 dl_md5 <- c(
     "b6d2cdb9793aae3b76c2dcbf03491988",  # lh.white
@@ -50,12 +52,15 @@ dl_md5 <- c(
     "96d6350a6b158453a0231a1f01cfbd58",  # lh.thickness
     "4ec315e8daa6c3bbda46c36b9188b60f",  # rh.thickness
     "bc268800c1cb102a43e99a3ab061ca94",  # lh.sulc
-    "13aec75d8712f14345688ce5ad53f648"   # rh.sulc
+    "13aec75d8712f14345688ce5ad53f648",  # rh.sulc
+    "929873a4ae3542331d84e5a97c852824",  # lh.cortex.label
+    "6b650fa9076561d96cd4ac1bbb6dd55d"   # rh.cortex.label
 )
 dl_urls <- paste0(base_url, "/",
     c("surf/lh.white", "surf/rh.white",
       "surf/lh.thickness", "surf/rh.thickness",
-      "surf/lh.sulc", "surf/rh.sulc"))
+      "surf/lh.sulc", "surf/rh.sulc",
+      "label/lh.cortex.label", "label/rh.cortex.label"))
 
 pkgfilecache::ensure_files_available(pkg_info, dl_files, dl_urls, md5sums = dl_md5)
 cat("[setup] Data download complete.\n")
