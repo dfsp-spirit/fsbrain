@@ -17,6 +17,7 @@ There was 1 NOTE, but read on:
 
 ### Full local output
 
+```shell
 $ R CMD build . && R CMD check --as-cran fsbrain_0.6.0.tar.gz
 * checking for file ‘./DESCRIPTION’ ... OK
 * preparing ‘fsbrain’:
@@ -115,8 +116,7 @@ Status: 2 NOTEs
 See
   ‘/home/ts/develop/fsbrain/fsbrain.Rcheck/00check.log’
 for details.
-
-
+```
 
 
 
@@ -124,3 +124,12 @@ for details.
 ## Winbuilder
 
 We also check on Winbuilder.
+
+* Status: OK for R version 4.5.3 (2026-03-11 ucrt)
+* Status: OK for R version 4.6.1 (2026-06-24 ucrt)
+* R Under development (unstable) (2026-07-07 r90210 ucrt) shows 1 error, but it seems to be a bug on CRAN, I think it cached an older version of the package that file I uploaded that had a broken test. I removed the test and re-uploaded the package several times, but the error keeps showing up. The logs are here: https://win-builder.r-project.org/0HOv798EgV96/00check.log and the error is:
+*
+* "══ Failed tests
+   ── Error ('test-issue28-debug.R:446:5'): STEP 8: Compare coloredmeshes — direct annot.outline vs as background
+   ..."
+   but the file 'test-issue28-debug.R' is nowhere in the repo or in the archive I uploaded.
