@@ -53,7 +53,7 @@ Create an interactive 3D brain view that can be embedded in R Shiny applications
 
 }
 \seealso{
-Other visualization functions:
+Other visualization functions: 
 \code{\link{highlight.vertices.on.subject}()},
 \code{\link{highlight.vertices.on.subject.spheres}()},
 \code{\link{vis.color.on.subject}()},

@@ -4,10 +4,12 @@
 \alias{download_fsaverage}
 \title{Download the FreeSurfer v6 fsaverage subject.}
 \usage{
-download_fsaverage(accept_freesurfer_license = FALSE)
+download_fsaverage(accept_freesurfer_license = FALSE, scheme = "https")
 }
 \arguments{
 \item{accept_freesurfer_license}{logical, whether you accept the FreeSurfer license for fsaverage, available at https://surfer.nmr.mgh.harvard.edu/fswiki/FreeSurferSoftwareLicense. Defaults to FALSE.}
+
+\item{scheme}{character string, the URL scheme to use. Either `"https"` (the default) or `"http"`. Switching to `"http"` can be useful as a fallback if the HTTPS server is unreachable.}
 }
 \value{
 Named list. The list has entries: "available": vector of strings. The names of the files that are available in the local file cache. You can access them using get_optional_data_file(). "missing": vector of strings. The names of the files that this function was unable to retrieve.

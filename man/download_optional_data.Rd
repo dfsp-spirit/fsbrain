@@ -4,7 +4,10 @@
 \alias{download_optional_data}
 \title{Download optional data for this package if required.}
 \usage{
-download_optional_data()
+download_optional_data(scheme = "https")
+}
+\arguments{
+\item{scheme}{character string, the URL scheme to use. Either `"https"` (the default) or `"http"`. Switching to `"http"` can be useful as a fallback if the HTTPS server is unreachable.}
 }
 \value{
 Named list. The list has entries: "available": vector of strings. The names of the files that are available in the local file cache. You can access them using get_optional_data_file(). "missing": vector of strings. The names of the files that this function was unable to retrieve.

@@ -222,7 +222,8 @@ download_optional_data <- function(scheme="https") {
 #' @return Named list. The list has entries: "available": vector of strings. The names of the files that are available in the local file cache. You can access them using get_optional_data_file(). "missing": vector of strings. The names of the files that this function was unable to retrieve.
 #'
 #' @export
-download_fsaverage <- function(accept_freesurfer_license=FALSE, scheme="https") {
+download_fsaverage <- function(accept_freesurfer_license=FALSE,
+                               scheme="https") {
 
     if(! accept_freesurfer_license) {
         cat(sprintf("Nothing downloaded. You have to accept the FreeSurfer license to download and use fsaverage.\n"));
@@ -320,7 +321,8 @@ download_fsaverage <- function(accept_freesurfer_license=FALSE, scheme="https") 
 #' @note The subject fsaverage3 is a downsampled (low mesh resolution) version of the standard fsaverage. If you never heard about fsaverage3, you do not need it. You will have to manually re-sample your data in FreeSurfer if you want to use it with fsaverage3.
 #'
 #' @export
-download_fsaverage3 <- function(accept_freesurfer_license=FALSE, scheme="https") {
+download_fsaverage3 <- function(accept_freesurfer_license=FALSE,
+                                scheme="https") {
 
     if(! accept_freesurfer_license) {
         cat(sprintf("Nothing downloaded. You have to accept the FreeSurfer license to download and use fsaverage.\n"));
@@ -387,7 +389,8 @@ download_fsaverage3 <- function(accept_freesurfer_license=FALSE, scheme="https")
 #' @note The subject fsaverage6 is a slightly downsampled (low mesh resolution) version of the standard fsaverage. If you never heard about fsaverage6, you do not need it. You will have to manually re-sample your data in FreeSurfer if you want to use it with fsaverage6.
 #'
 #' @export
-download_fsaverage6 <- function(accept_freesurfer_license=FALSE, scheme="https") {
+download_fsaverage6 <- function(accept_freesurfer_license=FALSE,
+                                scheme="https") {
 
     if(! accept_freesurfer_license) {
         cat(sprintf("Nothing downloaded. You have to accept the FreeSurfer license to download and use fsaverage.\n"));
