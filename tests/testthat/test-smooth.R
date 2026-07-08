@@ -64,22 +64,3 @@ test_that("We can compute Gaussian weights based on a spherical surface.", {
 })
 
 
-test_that("Computing fwhm from niters and vice versa is consistent.", {
-    testthat::skip("This test is broken");
-    testthat::skip_on_cran();
-    fsbrain::download_optional_data(); # Currently does NOT download the sphere file used below, you need to copy it manually.
-    sphere_surf_file = get_optional_data_filepath("subjects_dir/fsaverage3/surf/lh.sphere", mustWork = F);
-    if(! file.exists(sphere_surf_file)) {
-        testthat::skip("The sphere file is available");
-    }
-
-    fwhm = 15.0;
-    spherical_surface = freesurferformats::read.fs.surface(sphere_surf_file);
-
-    # This is not gonna work because the niter value gets rounded down and transformed to an integer before returning it.
-    niter = fsbrain:::pervertexdata.smoothnn.compute.numiter(spherical_surface, fwhm = fwhm, is_template = TRUE);
-    fwhm2 = fsbrain:::pervertexdata.smoothnn.compute.fwhm(spherical_surface, niter, is_template = TRUE);
-    testthat::expect_equal(fwhm, fwhm2, tolerance = 1e-2);
-})
-
-
