@@ -209,6 +209,11 @@ The next figure illustrates some options to visualize your results with differen
 
 Want to see brains spin? [Check this out.](./web/fsbrain_movies.md) (WARNING: loads 8 MB webpage with animated gif).
 
+
+### Live visualization on the web
+
+You can also use fsbrain in a shiny app, see the [demo code here](./web/shiny_demo/) and a live demo here on posit cloud: [fsbrain in shiny app](https://connect.posit.cloud/timschaefer/content/019f40eb-f687-4aaa-6413-4f7b18f1b292).
+
 ### Volume visualization
 
 Volume visualization is not the main goal of fsbrain, but standard lightbox views and simple 3D views are supported. Have a look at the vignettes or the documentation for the `volvis.lb` function. You can find some [example output here](./web/fsbrain_volume.md).
