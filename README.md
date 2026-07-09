@@ -215,28 +215,9 @@ Volume visualization is not the main goal of fsbrain, but standard lightbox view
 
 A particularly useful feature for quality assessment (QA) of FreeSurfer reconstructions is `volvis.lb.with.surface()`, which overlays the cortical surface boundary contours onto 2D MRI slices — similar to what `freeview` shows:
 
-```r
-fsbrain::download_optional_data();
-subjects_dir <- fsbrain::get_optional_data_filepath("subjects_dir");
+![Visvoloutline](./web/fsbrain_vol_outline.png?raw=true "Volume slizes with contours of white and pial surfaces, shown in red and yellow respectively. Rendered with fsbrain")
 
-# Axial QA view — red contours trace the white surface on brain.mgz slices
-img <- volvis.lb.with.surface(subjects_dir, "subject1",
-  volume = "brain", surface = "white", axis = 3L, surface_color = "#FF0000");
-magick::image_write(img, "~/fsbrain_qa_axial.png");
 
-# Coronal (green) and sagittal (lh red, rh blue) are also supported
-img <- volvis.lb.with.surface(subjects_dir, "subject1",
-  volume = "brain", surface = "white", axis = 2L, surface_color = "#00FF00");
-img <- volvis.lb.with.surface(subjects_dir, "subject1", axis = 1L,
-  surface_color = c("#FF0000", "#0000FF"));
-
-# Multiple surfaces can be overlaid at once, each with its own color:
-img <- volvis.lb.with.surface(subjects_dir, "subject1",
-  volume = "brain", surface = c("white", "pial"), axis = 3L,
-  surface_color = c("#FF0000", "#FFFF00"));
-```
-
-This works with any FreeSurfer subject directory — just point `subjects_dir` and `subject_id` at your own data. See `?volvis.lb.with.surface` for all options.
 
 ### Example Notebooks
 
