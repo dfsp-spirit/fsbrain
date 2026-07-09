@@ -26,8 +26,8 @@ test_that("Demographics reports can be generated.", {
   column_names = c("subject_id", "group", "age");
   demographics = read.md.demographics(demogr_file, header = TRUE, column_names = column_names);
 
-  # The expect_warning wrapper in the next line ignores the warning from the t.test function that it cannot compute exact p-values with ties.
-  expect_warning(report_unpaired <- report.on.demographics(demographics, group_column_name="group"));
+  # Note: wilcox.test (called internally) may or may not warn about ties depending on R version (changed in R 4.4.0).
+  report_unpaired <- report.on.demographics(demographics, group_column_name="group");
   expect_equal(length(report_unpaired), 11);  # check number of lines in report
 
   report_paired <- report.on.demographics(demographics, group_column_name="group", paired=TRUE);
