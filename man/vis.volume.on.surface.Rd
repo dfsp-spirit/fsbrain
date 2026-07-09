@@ -104,7 +104,8 @@ Other visualization functions:
 Other volume visualization: 
 \code{\link{volvis.lb}()},
 \code{\link{volvis.lb.with.surface}()},
-\code{\link{volvis.lightbox}()}
+\code{\link{volvis.lightbox}()},
+\code{\link{volvis.slices.with.surface}()}
 }
 \concept{visualization functions}
 \concept{volume visualization}
