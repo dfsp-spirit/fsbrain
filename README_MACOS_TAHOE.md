@@ -41,16 +41,15 @@ library(fsbrain);
 
 # Download example data (only needed once)
 fsbrain::download_optional_data();
-fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
 subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 
 # Create visualization and export with colorbar
-cm = vis.subject.morph.standard(subjects_dir, 'fsaverage', 'sulc', 
-                                 surface = 'inflated',
-                                 rglactions = list('no_vis' = TRUE));
+cm = vis.subject.morph.native(subjects_dir, 'subject1', 'thickness', 
+                               rglactions = list('no_vis' = TRUE));
 
 # Export with colorbar - this now works even without X11!
-export(cm, colorbar_legend = 'Sulcal depth', output_img = 'brain_plot.png');
+export(cm, colorbar_legend = 'Cortical Thickness [mm]', 
+       output_img = 'brain_plot.png', draw_colorbar = 'horizontal');
 ```
 
-Under the hood, fsbrain exports the 3D scene as a vector graphic (SVG) and converts it to PNG, bypassing the need for X11 entirely. This produces publication-ready plots with colorbars, just like on other platforms.
+Under the hood, fsbrain exports the 3D scene as a PDF vector graphic and converts it to PNG using ImageMagick, bypassing the need for X11 entirely. This produces publication-ready plots with colorbars, just like on other platforms. The PDF intermediate file is automatically deleted after conversion.

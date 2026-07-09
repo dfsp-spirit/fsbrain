@@ -23,18 +23,16 @@ safe.image.trim <- function(image) {
 #'
 #' @description Takes a screenshot of the current rgl scene. On systems with working X11/OpenGL,
 #' uses the standard rgl.snapshot() method. On systems without X11 (e.g., recent macOS versions
-#' where XQuartz is broken), falls back to exporting as SVG via rgl.postscript() and converting
+#' where XQuartz is broken), falls back to exporting as PDF via rgl.postscript() and converting
 #' to PNG using ImageMagick.
 #'
 #' @param output_image character string, path to the output PNG file.
-#' @param width integer, width of the output image in pixels (used for SVG conversion). Default 800.
-#' @param height integer, height of the output image in pixels (used for SVG conversion). Default 800.
 #' @param silent logical, whether to suppress messages. Default TRUE.
 #'
 #' @return invisible NULL, called for side effect of writing the image file.
 #'
 #' @keywords internal
-take.screenshot <- function(output_image, width = 800L, height = 800L, silent = TRUE) {
+take.screenshot <- function(output_image, silent = TRUE) {
     output_image = path.expand(output_image);
 
     # Check if we can use the standard snapshot method (needs working X11/OpenGL)
@@ -58,24 +56,25 @@ take.screenshot <- function(output_image, width = 800L, height = 800L, silent = 
     }
 
     if(use_fallback) {
-        # Fallback: export to SVG, then convert to PNG using ImageMagick
-        svg_file = tempfile(fileext = ".svg");
-        rgl::rgl.postscript(svg_file, fmt = "svg");
+        # Fallback: export to PDF, then convert to PNG using ImageMagick
+        # PDF is much smaller than SVG (21.8 MB vs 170.2 MB for a brain mesh)
+        pdf_file = tempfile(fileext = ".pdf");
+        rgl::rgl.postscript(pdf_file, fmt = "pdf");
 
-        # Convert SVG to PNG using ImageMagick command line
+        # Convert PDF to PNG using ImageMagick command line
         # Use density to control output resolution (150 DPI gives good quality)
         convert_cmd = sprintf("convert -density 150 -background white -flatten %s %s", 
-                              shQuote(svg_file), shQuote(output_image));
+                              shQuote(pdf_file), shQuote(output_image));
         result = system(convert_cmd, ignore.stdout = TRUE, ignore.stderr = TRUE);
 
-        unlink(svg_file);
+        unlink(pdf_file);
 
         if(result != 0) {
-            stop("Failed to convert SVG to PNG. Make sure ImageMagick 'convert' is installed and in PATH.");
+            stop("Failed to convert PDF to PNG. Make sure ImageMagick 'convert' is installed and in PATH.");
         }
 
         if(!silent) {
-            message(sprintf("Screenshot written to '%s' (via SVG fallback).\n", output_image));
+            message(sprintf("Screenshot written to '%s' (via PDF fallback, no X11 required).\n", output_image));
         }
     }
 
