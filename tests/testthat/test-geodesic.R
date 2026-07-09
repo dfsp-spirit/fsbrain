@@ -64,6 +64,7 @@ test_that("The geodesic per-vertex distance data for several vertices over a ful
 
 test_that("We can render publication-ready vertex highlight figures with geodesic per-vertex distance morph data.", {
     testthat::skip_on_cran();
+    testthat::skip_if_not(box.has.x11display(), "This test requires an X11 display.");
 
     fsbrain::download_optional_data();
     fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);

@@ -1,6 +1,24 @@
 # Helper functions related to image magick.
 
 
+#' @title Safe wrapper around magick::image_trim that handles blank images.
+#'
+#' @param image a magick image object.
+#'
+#' @return the trimmed magick image, or the original if trimming fails (e.g., uniform/blank image).
+#'
+#' @keywords internal
+safe.image.trim <- function(image) {
+    tryCatch(
+        magick::image_trim(image),
+        error = function(e) {
+            warning("Could not trim image (possibly blank rendering): ", conditionMessage(e));
+            image;
+        }
+    );
+}
+
+
 #' @title Wrapper around magick::image_append that allows specifying the background color when working with images of different width/height.
 #'
 #' @param images a vector/stack of magick images. See \code{magick::image_blank} or other methods to get one.

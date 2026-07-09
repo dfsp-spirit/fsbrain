@@ -53,7 +53,7 @@ combine.colorbar.with.brainview.image <- function(brainview_img = "fsbrain_arran
         height_cbar = magick::image_info(cbar_img)$height;
 
         # Trim the colorbar (remove all whitespace around it):
-        cbar_img_trimmed = magick::image_trim(cbar_img);
+        cbar_img_trimmed = safe.image.trim(cbar_img);
         width_cbar_trimmed = magick::image_info(cbar_img_trimmed)$width;
         height_cbar_trimmed = magick::image_info(cbar_img_trimmed)$height;
 
@@ -148,7 +148,7 @@ combine.colorbar.with.brainview.image.vertical <- function(brainview_img, colorb
         width_cbar = magick::image_info(cbar_img)$width;
 
         # Trim the colorbar (remove all whitespace around it):
-        cbar_img_trimmed = magick::image_trim(cbar_img);
+        cbar_img_trimmed = safe.image.trim(cbar_img);
         height_cbar_trimmed = magick::image_info(cbar_img_trimmed)$height;
         width_cbar_trimmed = magick::image_info(cbar_img_trimmed)$width;
 
@@ -259,7 +259,7 @@ combine.colorbar.with.brainview.animation <- function(brain_animation, colorbar_
         }
 
         # Crop all unneeded whitespace around the colorbar (remove all white borders).
-        cbar_img_trimmed = magick::image_trim(cbar_img);
+        cbar_img_trimmed = safe.image.trim(cbar_img);
         width_cbar_trimmed = magick::image_info(cbar_img_trimmed)$width;
 
         if(width_cbar_trimmed > 1.2 * width_mov) {

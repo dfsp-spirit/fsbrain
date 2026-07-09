@@ -62,6 +62,7 @@ test_that("The voxel hull can be computed from a volume", {
 
 test_that("The voxel contour can be visualized for a volume", {
     testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
+    testthat::skip_if_not(box.has.x11display(), "This test requires an X11 display.");
     myvol = gen.test.volume(c(25, 25, 25), bg = 1L);
     volvis.contour(myvol);
     testthat::expect_equal(dim(myvol), c(25,25,25)); # add a check to prevent skip

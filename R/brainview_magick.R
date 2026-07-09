@@ -33,7 +33,7 @@ arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=
         images = magick::image_read(brainview_images);
 
         # trim images
-        images = magick::image_trim(images);
+        images = safe.image.trim(images);
 
         # Add tiny border back (to prevent them from touching each other)
         images = magick::image_border(images, background_color, border_geometry);
@@ -166,7 +166,7 @@ arrange.brainview.images.grid <- function(brainview_images, output_img, colorbar
         images = magick::image_read(brainview_images);
 
         # trim images
-        images = magick::image_trim(images);
+        images = safe.image.trim(images);
 
         # Add tiny border back (to prevent them from touching each other)
         images = magick::image_border(images, background_color, border_geometry);

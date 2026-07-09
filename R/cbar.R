@@ -216,7 +216,7 @@ coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=FALSE, image.
             if(trim_png) {
                 if (requireNamespace("magick", quietly = TRUE)) {
                     cbar_img = magick::image_read(png_options$filename);
-                    cbar_img_trimmed = magick::image_trim(cbar_img);
+                    cbar_img_trimmed = safe.image.trim(cbar_img);
                     magick::image_write(cbar_img_trimmed, path = png_options$filename);
                 } else {
                     warning("Ignored request to trim colorbar image: this functionality requires the 'magick' package.");

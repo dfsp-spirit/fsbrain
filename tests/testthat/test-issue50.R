@@ -2,6 +2,7 @@
 test_that("Issue50 is fixed: t9 view export works with inflated surfaces without overlap", {
     testthat::skip_on_cran();
     testthat::skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+    testthat::skip_if_not(box.has.x11display(), "This test requires an X11 display.");
 
     fsbrain::download_optional_data();
     fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
@@ -25,6 +26,7 @@ test_that("Issue50 is fixed: t9 view export works with inflated surfaces without
 
     testthat::skip_on_cran();
     testthat::skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+    testthat::skip_if_not(box.has.x11display(), "This test requires an X11 display.");
 
     fsbrain::download_optional_data()
     fsbrain::download_fsaverage(accept_freesurfer_license = TRUE)
