@@ -93,6 +93,10 @@ Recent MacOS versions do not ship with an X11 environment. You will have to inst
 
 Note that X11 is not needed for rendering, but only for stuff like opening windows, etc. So if you are fine with displaying images in your web browser, as opposed to a graphics window, you can use the `rglwidget` command, and thus run fsbrain without the need for X11.
 
+#### Known issue: Visualization problems on recent macOS versions
+
+If fsbrain does not open visualization windows or produces blank plots on recent macOS versions (Tahoe 26.x or Sonoma 14.x), see [README_MACOS_TAHOE.md](./README_MACOS_TAHOE.md) for details and workarounds.
+
 
 #### Windows Installation Hints
 
