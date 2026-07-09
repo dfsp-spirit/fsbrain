@@ -1480,6 +1480,28 @@
         "Built": "R 4.3.3; ; 2025-10-20 15:36:41 UTC; unix"
       }
     },
+    "shinycssloaders": {
+      "Source": "CRAN",
+      "Repository": "https://cloud.r-project.org",
+      "description": {
+        "Package": "shinycssloaders",
+        "Type": "Package",
+        "Title": "Add Loading Animations to a 'shiny' Output While It's Recalculating",
+        "Version": "1.1.0",
+        "Authors@R": "c(\n    person(\"Andrzej\", \"Saliński\", role = c(\"aut\", \"cre\"), email = \"andrzej.salinski@gmail.com\"),\n    person(\"Dean\", \"Attali\", role = c(\"aut\"), email = \"daattali@gmail.com\")\n  )",
+        "Description": "Automatically show a loading spinner on any Shiny output\n    (e.g., plot, table) while it's recalculating.",
+        "License": "MIT + file LICENSE",
+        "Depends": "R (>= 3.1.0)",
+        "Imports": "shiny (>= 1.0.0), grDevices",
+        "Suggests": "testthat, knitr, rmarkdown",
+        "Encoding": "UTF-8",
+        "RoxygenNote": "7.3.2",
+        "NeedsCompilation": "no",
+        "Author": "Andrzej Saliński [aut, cre], Dean Attali [aut]",
+        "Maintainer": "Andrzej Saliński <andrzej.salinski@gmail.com>",
+        "Repository": "CRAN"
+      }
+    },
     "sourcetools": {
       "Source": "CRAN",
       "Repository": "https://cloud.r-project.org",

@@ -23,6 +23,7 @@
 #'
 
 library("shiny")
+library("shinycssloaders")
 library("fsbrain")
 library("rgl")
 library("pkgfilecache")
@@ -108,7 +109,12 @@ ui <- fluidPage(
 
         mainPanel(
             width = 9,
-            rgl::rglwidgetOutput("brain3d", width = "100%", height = "650px")
+            shinycssloaders::withSpinner(
+                rgl::rglwidgetOutput("brain3d", width = "100%", height = "650px"),
+                type = 6,
+                color = "#2c3e50",
+                size = 1.5
+            )
         )
     )
 )

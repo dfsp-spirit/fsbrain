@@ -25,7 +25,7 @@ completes well within Posit Connect Cloud's 60-second timeout.
 - The following R packages:
 
 ```r
-install.packages(c("shiny", "rgl", "pkgfilecache"))
+install.packages(c("shiny", "shinycssloaders", "rgl", "pkgfilecache"))
 install.packages("fsbrain")   # from CRAN, or remotes::install_github("dfsp-spirit/fsbrain") for dev version
 ```
 
