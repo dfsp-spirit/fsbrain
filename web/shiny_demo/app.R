@@ -100,6 +100,8 @@ ui <- fluidPage(
                 selected = "thickness"
             ),
             hr(),
+            p("Please be patient while the 3D brain is loaded. It may take a few seconds for full resolution meshes."),
+            hr(),
             p("Use mouse to rotate (drag), zoom (scroll), and pan (right-drag)."),
             hr(),
             p("Powered by ", a("fsbrain", href = "https://github.com/dfsp-spirit/fsbrain"),
