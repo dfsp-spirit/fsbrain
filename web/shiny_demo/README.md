@@ -114,6 +114,7 @@ dashboard, click **New deployment → From GitHub repository**, select the
 
 ## Public instance by dfsp-spirit on posit cloud
 
-This will only work after a new fsbrain version is released.
+A public version is available here: https://connect.posit.cloud/timschaefer/content/019f40eb-f687-4aaa-6413-4f7b18f1b292.
 
-It will become available at https://connect.posit.cloud/timschaefer/content/019f40eb-f687-4aaa-6413-4f7b18f1b292. For now, stay tuned.
+Please allow it some time to load, those meshes are huge.
+
