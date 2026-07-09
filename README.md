@@ -20,6 +20,7 @@ The plots produced by *fsbrain* can be integrated into R notebooks or written to
 
 
 ## News
+* 2026-07-09: New fsbrain version 0.6.1 released. Adds automatic fallback for plot export on recent macOS versions (Tahoe, Sonoma) where X11/XQuartz is broken. You can now export publication-ready plots with colorbars even without a working X11 display. See [README_MACOS_TAHOE.md](./README_MACOS_TAHOE.md) for details.
 * 2026-07-08: New fsbrain version 0.6.0 released on CRAN, see the [CHANGES](./CHANGES).
 * 2025-09-09: New fsbrain version 0.5.6 released on CRAN, see the [CHANGES](./CHANGES).
 * 2024-02-03: New fsbrain version 0.5.5 released on CRAN, see the [CHANGES](./CHANGES).
@@ -95,7 +96,7 @@ Note that X11 is not needed for rendering, but only for stuff like opening windo
 
 #### Known issue: Visualization problems on recent macOS versions
 
-If fsbrain does not open visualization windows or produces blank plots on recent macOS versions (Tahoe 26.x or Sonoma 14.x), see [README_MACOS_TAHOE.md](./README_MACOS_TAHOE.md) for details and workarounds.
+If fsbrain does not open visualization windows or produces blank plots on recent macOS versions (Tahoe 26.x or Sonoma 14.x), see [README_MACOS_TAHOE.md](./README_MACOS_TAHOE.md) for details and workarounds. Note that fsbrain includes an automatic fallback that allows exporting plots with colorbars even without X11.
 
 
 #### Windows Installation Hints

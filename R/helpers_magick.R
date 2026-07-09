@@ -19,6 +19,70 @@ safe.image.trim <- function(image) {
 }
 
 
+#' @title Take screenshot of rgl scene, with fallback for systems without X11.
+#'
+#' @description Takes a screenshot of the current rgl scene. On systems with working X11/OpenGL,
+#' uses the standard rgl.snapshot() method. On systems without X11 (e.g., recent macOS versions
+#' where XQuartz is broken), falls back to exporting as SVG via rgl.postscript() and converting
+#' to PNG using ImageMagick.
+#'
+#' @param output_image character string, path to the output PNG file.
+#' @param width integer, width of the output image in pixels (used for SVG conversion). Default 800.
+#' @param height integer, height of the output image in pixels (used for SVG conversion). Default 800.
+#' @param silent logical, whether to suppress messages. Default TRUE.
+#'
+#' @return invisible NULL, called for side effect of writing the image file.
+#'
+#' @keywords internal
+take.screenshot <- function(output_image, width = 800L, height = 800L, silent = TRUE) {
+    output_image = path.expand(output_image);
+
+    # Check if we can use the standard snapshot method (needs working X11/OpenGL)
+    use_fallback = FALSE;
+    if(rgl::rgl.useNULL()) {
+        use_fallback = TRUE;
+    }
+
+    if(!use_fallback) {
+        # Try standard screenshot method
+        tryCatch({
+            rgl::rgl.snapshot(output_image, fmt = "png");
+            if(!silent) {
+                message(sprintf("Screenshot written to '%s'.\n", output_image));
+            }
+            return(invisible(NULL));
+        }, error = function(e) {
+            # Snapshot failed, use fallback
+            use_fallback <<- TRUE;
+        });
+    }
+
+    if(use_fallback) {
+        # Fallback: export to SVG, then convert to PNG using ImageMagick
+        svg_file = tempfile(fileext = ".svg");
+        rgl::rgl.postscript(svg_file, fmt = "svg");
+
+        # Convert SVG to PNG using ImageMagick command line
+        # Use density to control output resolution (150 DPI gives good quality)
+        convert_cmd = sprintf("convert -density 150 -background white -flatten %s %s", 
+                              shQuote(svg_file), shQuote(output_image));
+        result = system(convert_cmd, ignore.stdout = TRUE, ignore.stderr = TRUE);
+
+        unlink(svg_file);
+
+        if(result != 0) {
+            stop("Failed to convert SVG to PNG. Make sure ImageMagick 'convert' is installed and in PATH.");
+        }
+
+        if(!silent) {
+            message(sprintf("Screenshot written to '%s' (via SVG fallback).\n", output_image));
+        }
+    }
+
+    return(invisible(NULL));
+}
+
+
 #' @title Wrapper around magick::image_append that allows specifying the background color when working with images of different width/height.
 #'
 #' @param images a vector/stack of magick images. See \code{magick::image_blank} or other methods to get one.

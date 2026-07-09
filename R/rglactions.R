@@ -270,7 +270,7 @@ perform.rglactions <- function(rglactions, at_index=NULL, silent=TRUE, ignore = 
                     }
                     output_image = path.expand(rglactions$snapshot_png[[at_index]]);
                 }
-                rgl::rgl.snapshot(output_image, fmt="png");
+                take.screenshot(output_image, silent = silent);
                 if(! silent) {
                     message(sprintf("Bitmap screenshot written to '%s' (current working dir is '%s').\n", output_image, getwd()));
                 }
