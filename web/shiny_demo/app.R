@@ -11,7 +11,7 @@
 #' Startup completes well within Posit Connect Cloud's 60-second timeout.
 #'
 #' Requirements:
-#'   - R packages: shiny, fsbrain (>= 0.5.6), rgl, pkgfilecache
+#'   - R packages: shiny, fsbrain (>= 0.6.0), rgl, pkgfilecache
 #'   - An X11 display is NOT required (rendering is headless).
 #'
 #' Usage:
@@ -100,7 +100,6 @@ ui <- fluidPage(
             ),
             hr(),
             p("Use mouse to rotate (drag), zoom (scroll), and pan (right-drag)."),
-            p(em("No X11 required — renders via WebGL in your browser.")),
             hr(),
             p("Powered by ", a("fsbrain", href = "https://github.com/dfsp-spirit/fsbrain"),
               " + ", a("rgl", href = "https://cran.r-project.org/package=rgl"),
