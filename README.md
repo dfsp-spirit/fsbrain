@@ -96,7 +96,7 @@ Note that X11 is not needed for rendering, but only for stuff like opening windo
 
 #### Known issue: Visualization problems on recent macOS versions
 
-If fsbrain does not open visualization windows or produces blank plots on recent macOS versions (Tahoe 26.x or Sonoma 14.x), see [README_MACOS_TAHOE.md](./README_MACOS_TAHOE.md) for details and workarounds. Note that fsbrain includes an automatic fallback that allows exporting plots with colorbars even without X11.
+If fsbrain does not open visualization windows or produces blank plots on recent macOS versions (Tahoe 26.x or Sonoma 14.x), see [README_MACOS_TAHOE.md](./README_MACOS_TAHOE.md) for details and a partial workaround.
 
 
 #### Windows Installation Hints
