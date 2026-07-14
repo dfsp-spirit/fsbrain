@@ -202,6 +202,10 @@ view_angle_to_scimesh_camera <- function(scene, view_angle) {
         stop("The 'scimesh' package is required for the scimesh renderer backend.")
     }
 
+    if (startsWith(view_angle, "sd_")) {
+        view_angle <- substring(view_angle, 4L)
+    }
+
     all_meshes <- filter_scene_by_view(scene, "both")
     if (length(all_meshes) == 0L) {
         stop("No meshes in scene to compute camera position.")
