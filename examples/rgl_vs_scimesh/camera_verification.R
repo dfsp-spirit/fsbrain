@@ -26,15 +26,16 @@ library(fsbrain)
 # Which data to visualise
 measure <- "sulc"
 surface <- "white"
-hemi    <- "lh"
+hemi    <- "both"
 subject <- "subject1"
 
 # Which view angles to compare.  Single view is best for initial
 # verification; use get.view.angle.names("all") to test everything.
-view_angles <- c("sd_lateral_lh")
+# The default below is the standard 4-view (t4) layout angles.
+view_angles <- get.view.angle.names(angle_set = "t4")
 
 # Output image filename (without extension — suffixes are appended).
-output_basename <- paste0(measure, "_", surface, "_", hemi)
+output_basename <- paste0(measure, "_", surface, "_both")
 
 
 # -------------------------------------------------------------------

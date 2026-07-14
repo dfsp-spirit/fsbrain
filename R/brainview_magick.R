@@ -371,7 +371,12 @@ vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.ang
             }
 
             bg_rgba = color_to_rgba(background_color);
-            opts = fsbrain_style_to_scimesh_options(style, bg_rgba);
+            rw <- rgloptions$windowRect
+            img_w <- if (length(rw) >= 3L) as.integer(rw[3L]) else 800L
+            img_h <- if (length(rw) >= 4L) as.integer(rw[4L]) else 600L
+            opts = fsbrain_style_to_scimesh_options(style, bg_rgba,
+                                                    width = img_w,
+                                                    height = img_h);
 
             for(view_idx in seq_len(length(view_angles))) {
                 view = view_angles[[view_idx]];

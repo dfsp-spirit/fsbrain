@@ -243,10 +243,20 @@ view_angle_to_scimesh_camera <- function(scene, view_angle) {
         hemi_meshes <- all_meshes
     }
 
-    cam <- scimesh::camera_auto(hemi_meshes,
-        direction = view_config$direction,
+    all_verts <- do.call(rbind, lapply(hemi_meshes, function(m) m$vertices))
+    bbox_center <- colMeans(apply(all_verts, 2L, range))
+    bbox_extent <- max(apply(all_verts, 2L, function(col) diff(range(col)))) / 2.0
+
+    dir <- view_config$direction / sqrt(sum(view_config$direction^2))
+    dist <- bbox_extent * 1.35
+    eye <- bbox_center + dir * dist
+
+    cam <- scimesh::camera(
+        eye = eye,
+        center = bbox_center,
         up = view_config$up,
-        margin = 1.1)
+        projection = "orthographic"
+    )
 
     return(list(camera = cam, hemi_filter = view_config$hemi_filter))
 }
@@ -262,12 +272,16 @@ view_angle_to_scimesh_camera <- function(scene, view_angle) {
 #'   \code{\link{get.rglstyle}} for valid options.
 #' @param bg_rgba numeric vector of length 4, the background color in RGBA
 #'   (0-1 scale).
+#' @param width integer, output image width in pixels. Defaults to 800.
+#' @param height integer, output image height in pixels. Defaults to 600.
 #'
 #' @return a scimesh render options list from \code{render_options()}.
 #'
 #' @keywords internal
 fsbrain_style_to_scimesh_options <- function(style = "default",
-                                             bg_rgba = c(1, 1, 1, 1)) {
+                                             bg_rgba = c(1, 1, 1, 1),
+                                             width = 800L,
+                                             height = 600L) {
     if (!requireNamespace("scimesh", quietly = TRUE)) {
         stop("The 'scimesh' package is required for the scimesh renderer backend.")
     }
@@ -307,8 +321,8 @@ fsbrain_style_to_scimesh_options <- function(style = "default",
     }
 
     scimesh::render_options(
-        width = 800L,
-        height = 600L,
+        width = as.integer(width),
+        height = as.integer(height),
         shading = shading,
         backface_culling = backface_culling,
         background_color = bg_rgba,
