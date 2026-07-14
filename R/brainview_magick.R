@@ -359,19 +359,51 @@ vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.ang
             background_color = transparency_color;
         }
 
-        # Create the temporary images at the temp paths
-        for(view_idx in seq_len(length(view_angles))) {
-            view = view_angles[[view_idx]];
-            view_image = view_images[[view_idx]];
-
-            internal_rglactions = list("snapshot_png"=view_image);
-            if(rglactions.has.key(rglactions, "snapshot_png")) {
-                warning("The key 'snapshot_png' in the 'rglactions' parameter is not supported for this function, it will be ignored. Use 'output_img' instead.");
-                rglactions$snapshot_png = NULL;
+        if(get.fsbrain.renderer.backend() == "scimesh") {
+            if (!requireNamespace("scimesh", quietly = TRUE)) {
+                stop("Renderer backend is 'scimesh' but the scimesh package is not installed.");
             }
-            final_rglactions = modifyList(rglactions, internal_rglactions);
 
-            brainviews(c(view), coloredmeshes, rgloptions = rgloptions, rglactions = final_rglactions, style = style, background = background_color);
+            scene = coloredmeshes_to_scimesh(coloredmeshes);
+            if(length(scene) == 0L) {
+                warning("No renderable meshes in scene. Nothing to visualize.");
+                return(invisible(NULL));
+            }
+
+            bg_rgba = color_to_rgba(background_color);
+            opts = fsbrain_style_to_scimesh_options(style, bg_rgba);
+
+            for(view_idx in seq_len(length(view_angles))) {
+                view = view_angles[[view_idx]];
+                view_image = view_images[[view_idx]];
+
+                cam_info = view_angle_to_scimesh_camera(scene, view);
+                renderable = filter_scene_by_view(scene, cam_info$hemi_filter);
+
+                if(length(renderable) > 0L) {
+                    img = scimesh::render_scene(renderable, cam_info$camera, opts);
+                    scimesh::write_png(img, view_image);
+                } else {
+                    warning(sprintf("No meshes to render for view '%s', creating empty placeholder.", view));
+                    blank_img = magick::image_blank(100L, 100L, background_color);
+                    magick::image_write(blank_img, view_image);
+                }
+            }
+        } else {
+            # Create the temporary images at the temp paths using rgl
+            for(view_idx in seq_len(length(view_angles))) {
+                view = view_angles[[view_idx]];
+                view_image = view_images[[view_idx]];
+
+                internal_rglactions = list("snapshot_png"=view_image);
+                if(rglactions.has.key(rglactions, "snapshot_png")) {
+                    warning("The key 'snapshot_png' in the 'rglactions' parameter is not supported for this function, it will be ignored. Use 'output_img' instead.");
+                    rglactions$snapshot_png = NULL;
+                }
+                final_rglactions = modifyList(rglactions, internal_rglactions);
+
+                brainviews(c(view), coloredmeshes, rgloptions = rgloptions, rglactions = final_rglactions, style = style, background = background_color);
+            }
         }
 
         # Now merge them into one
