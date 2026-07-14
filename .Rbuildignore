@@ -23,3 +23,4 @@ docker/
 ^\.github$
 
 ^CRAN-SUBMISSION$
+^\.opencode
