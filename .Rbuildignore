@@ -24,3 +24,4 @@ docker/
 
 ^CRAN-SUBMISSION$
 ^\.opencode
+^examples$
