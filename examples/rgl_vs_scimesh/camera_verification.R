@@ -6,8 +6,12 @@
 # Renders the same brain surface views with both the rgl and scimesh
 # renderer backends and saves the output images for visual comparison.
 #
-# Each view is rendered twice, once per backend.  Output files carry
-# an _rgl or _scimesh suffix before the .png extension.
+# Two test modes:
+#   1. Single views — each of the 9 anatomical angles rendered
+#      individually and saved with backend-specific suffixes.
+#   2. Composite export — a tiled 4-view figure with colour bar,
+#      using the export() function that produces the final
+#      publication-ready output.
 #
 # Usage:
 #   Rscript examples/rgl_vs_scimesh/camera_verification.R
@@ -23,18 +27,14 @@ library(fsbrain)
 # Configuration
 # -------------------------------------------------------------------
 
-# Which data to visualise
 measure <- "sulc"
 surface <- "white"
 hemi    <- "both"
 subject <- "subject1"
 
-# Which view angles to compare.  Single view is best for initial
-# verification; use get.view.angle.names("all") to test everything.
-# The default below is the standard 4-view (t4) layout angles.
-view_angles <- get.view.angle.names(angle_set = "t4")
+single_view_angles <- get.view.angle.names(angle_set = "all")
+composite_view_angles <- get.view.angle.names(angle_set = "t4")
 
-# Output image filename (without extension — suffixes are appended).
 output_basename <- paste0(measure, "_", surface, "_both")
 
 
@@ -54,66 +54,68 @@ coloured_meshes <- vis.subject.morph.native(
 )
 
 
-# -------------------------------------------------------------------
-# Render with rgl backend
-# -------------------------------------------------------------------
-message("--- Rendering with rgl ---")
-options(fsbrain.renderer_backend = "rgl")
-cat(sprintf("  Backend: %s\n", get.fsbrain.renderer.backend()))
+# ===================================================================
+# Test 1: Single views (all 9 angles)
+# ===================================================================
+message("\n=== Test 1: Single views (9 angles) ===")
 
-for (view in view_angles) {
-    cat(sprintf("  Rendering view '%s'...\n", view))
+for (renderer in c("rgl", "scimesh")) {
 
-    out_path <- sprintf("%s_%s_rgl.png", output_basename,
-                        sub("^sd_", "", view))
+    options(fsbrain.renderer_backend = renderer)
+    cat(sprintf("\n--- Rendering with %s ---\n", renderer))
 
-    vislayout.from.coloredmeshes(
+    for (view in single_view_angles) {
+        view_name <- sub("^sd_", "", view)
+        cat(sprintf("  %s...\n", view_name))
+
+        out_path <- sprintf("%s_%s_%s.png",
+                            output_basename, view_name, renderer)
+
+        vislayout.from.coloredmeshes(
+            coloured_meshes,
+            view_angles   = view,
+            output_img    = out_path,
+            style         = "default",
+            background_color = "white",
+            silent        = TRUE,
+            grid_like     = FALSE
+        )
+    }
+}
+
+
+# ===================================================================
+# Test 2: Composite export with colour bar (4-view tile)
+# ===================================================================
+message("\n=== Test 2: Composite 4-view + colour bar ===")
+
+for (renderer in c("rgl", "scimesh")) {
+
+    options(fsbrain.renderer_backend = renderer)
+    cat(sprintf("\n--- Exporting with %s ---\n", renderer))
+
+    out_path <- sprintf("%s_t4_%s.png", output_basename, renderer)
+
+    export(
         coloured_meshes,
-        view_angles   = view,
-        output_img    = out_path,
-        style         = "default",
+        colorbar_legend = "Sulcal depth [mm]",
+        view_angles     = composite_view_angles,
+        output_img      = out_path,
+        draw_colorbar   = "horizontal",
+        style           = "default",
         background_color = "white",
-        silent        = TRUE,
-        grid_like     = FALSE
+        quality         = 1L,
+        large_legend    = FALSE,
+        silent          = TRUE
     )
 
-    cat(sprintf("    -> %s\n", out_path))
+    cat(sprintf("  -> %s\n", out_path))
 }
 
 
-# -------------------------------------------------------------------
-# Render with scimesh backend
-# -------------------------------------------------------------------
-message("--- Rendering with scimesh ---")
-options(fsbrain.renderer_backend = "scimesh")
-cat(sprintf("  Backend: %s\n", get.fsbrain.renderer.backend()))
-
-for (view in view_angles) {
-    cat(sprintf("  Rendering view '%s'...\n", view))
-
-    out_path <- sprintf("%s_%s_scimesh.png", output_basename,
-                        sub("^sd_", "", view))
-
-    vislayout.from.coloredmeshes(
-        coloured_meshes,
-        view_angles   = view,
-        output_img    = out_path,
-        style         = "default",
-        background_color = "white",
-        silent        = TRUE,
-        grid_like     = FALSE
-    )
-
-    cat(sprintf("    -> %s\n", out_path))
-}
-
-
-# -------------------------------------------------------------------
-# Summary
-# -------------------------------------------------------------------
-message("\n--- Done. Output files ---")
-for (view in view_angles) {
-    view_name <- sub("^sd_", "", view)
-    cat(sprintf("%s_%s_rgl.png\n",     output_basename, view_name))
-    cat(sprintf("%s_%s_scimesh.png\n", output_basename, view_name))
-}
+# ===================================================================
+# Summary: list all outputs and their sizes
+# ===================================================================
+message("\n=== Output files ===\n")
+system(sprintf("identify %s_*_rgl.png %s_*_scimesh.png %s_t4_*.png",
+               output_basename, output_basename, output_basename))
