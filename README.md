@@ -16,10 +16,11 @@ An R package for structural neuroimaging. Provides high-level functions to acces
 
 The *fsbrain* R package provides a well-tested and consistent interface to neuroimaging data in [R](https://www.r-project.org/). It supports reading, writing, and visualizing various kinds of raw data and statistical results on brain surfaces and volumes. While the package provides a very convenient interface for working with data arranged in the standard [FreeSurfer](http://freesurfer.net/) directory structure (SUBJECTS_DIR), *fsbrain* is not limited to this layout or FreeSurfer file formats. You can load brain meshes, volumes, and data from a range of other neuroimaging software packages and visualize them.
 
-The plots produced by *fsbrain* can be integrated into R notebooks or written to high-quality bitmap image files, ready for publication. The [rgl](https://CRAN.R-project.org/package=rgl) renderer used by *fsbrain* provides fast, hardware-accelerated rendering based on the OpenGL standard.
+The plots produced by *fsbrain* can be integrated into R notebooks or written to high-quality bitmap image files, ready for publication. By default, *fsbrain* uses the [rgl](https://CRAN.R-project.org/package=rgl) package for rendering, which provides fast, hardware-accelerated 3D graphics based on OpenGL. As an alternative, *fsbrain* also supports the [scimesh](https://CRAN.R-project.org/package=scimesh) software renderer — a headless, GPU-free C++ renderer that produces identical static images without requiring X11, OpenGL, or a GPU. This is ideal for headless servers, HPC clusters, or macOS systems where XQuartz is broken.
 
 
 ## News
+* 2026-07-14: New alternative rendering backend via [scimesh](https://CRAN.R-project.org/package=scimesh). Switchable with `options(fsbrain.renderer_backend = "scimesh")`. Enables publication-quality static images without X11/OpenGL/GPU — great for macOS Tahoe/Sonoma, HPC clusters, and headless servers.
 * 2026-07-09: New fsbrain version 0.6.1 released. Adds automatic fallback for plot export on recent macOS versions (Tahoe, Sonoma) where X11/XQuartz is broken. You can now export publication-ready plots with colorbars even without a working X11 display. See [README_MACOS_TAHOE.md](./README_MACOS_TAHOE.md) for details.
 * 2026-07-08: New fsbrain version 0.6.0 released on CRAN, see the [CHANGES](./CHANGES).
 * 2025-09-09: New fsbrain version 0.5.6 released on CRAN, see the [CHANGES](./CHANGES).
@@ -50,6 +51,29 @@ install.packages("fsbrain");
 In case something goes wrong, don't worry. Just install the missing [system dependencies](#system-dependencies) and retry.
 
 
+### Optional: scimesh rendering backend for headless environments
+
+For headless environments (HPC clusters, servers, CI runners) or macOS systems where XQuartz is broken, you can use the [scimesh](https://CRAN.R-project.org/package=scimesh) software renderer instead of rgl. It produces identical publication-ready static images without X11, OpenGL, XQuartz, or a GPU.
+
+```r
+install.packages("scimesh");
+```
+
+To activate the scimesh backend for the current R session:
+
+```r
+options(fsbrain.renderer_backend = "scimesh");
+```
+
+Now all `vis.*` functions and `vislayout.from.coloredmeshes()` will render with scimesh. Switch back at any time:
+
+```r
+options(fsbrain.renderer_backend = "rgl");
+```
+
+**What scimesh supports**: All static image export (single views, multi-view layouts, colorbars), all rendering styles. **What it does not**: Interactive 3D windows, real-time rotation, browser-based widgets (`vis.rglwidget`), animated GIFs — these remain available through the default rgl backend. In practice, most users only need static images for presentations and publications, for which scimesh works perfectly.
+
+
 ### Risky: install the dev version of fsbrain with the latest features
 
 This version is not guaranteed to be in a usable state, try at your own risk and run the tests before using it.
@@ -66,6 +90,8 @@ devtools::install_github("dfsp-spirit/fsbrain", build_vignettes=TRUE);
 A *system dependency* is a **non-R** software that is needed for the installation of a package. System dependencies cannot be installed automatically using the R package system, so you need to install them manually or using the package manager of your operating system.
 
 The *fsbrain* package itself does not have any system dependencies, however, it uses *rgl* for rendering. You can check the *SystemRequirements* section on the [rgl page at CRAN](https://CRAN.R-project.org/package=rgl) for the full list of rgl dependencies or read on. To get GIFTI format support, you will also need `libxml2-dev`.
+
+**Note**: If you use the [scimesh](https://CRAN.R-project.org/package=scimesh) backend, none of the rgl system dependencies are required — scimesh is a pure C++ software renderer with no external library dependencies beyond a C++ compiler.
 
 To install the system dependencies for *rgl* and *xml2*:
 
@@ -90,9 +116,11 @@ If you want to compile the package under any other operating system, you will ne
 
 #### MacOS System dependencies
 
-Recent MacOS versions do not ship with an X11 environment. You will have to install the [xquartz X11 system](https://www.xquartz.org/) if you do not have it already. If you want to create GIF movies, make sure you have imagemagick installed (easiest via [homebrew](https://brew.sh/): `brew install imagemagick@6`).
+Recent macOS versions do not ship with an X11 environment. If you want to use the default rgl backend for interactive viewing, you will need to install [XQuartz](https://www.xquartz.org/). If you want to create GIF movies, make sure you have imagemagick installed (easiest via [homebrew](https://brew.sh/): `brew install imagemagick@6`).
 
-Note that X11 is not needed for rendering, but only for stuff like opening windows, etc. So if you are fine with displaying images in your web browser, as opposed to a graphics window, you can use the `rglwidget` command, and thus run fsbrain without the need for X11.
+**Recommended for static image export**: Use the [scimesh backend](#optional-scimesh-rendering-backend-for-headless-environments), which requires neither X11 nor XQuartz and produces identical publication-ready images.
+
+Note that X11 is not needed for rendering, but only for opening interactive windows. If you only need publication-quality static images (which is the typical use case), the scimesh backend or the browser-based `rglwidget` are better options.
 
 #### Known issue: Visualization problems on recent macOS versions
 
@@ -249,6 +277,7 @@ Packages similar to fsbrain:
 
 Packages used by fsbrain:
 
+* [scimesh](https://CRAN.R-project.org/package=scimesh) by Tim Schäfer: Headless C++ software renderer for 3D meshes. No GPU or X11 required.
 * [rgl](https://CRAN.R-project.org/package=rgl) by Daniel Adler, Duncan Murdoch et al.: OpenGL-based mesh renderer.
 * [oro.nifti](https://github.com/muschellij2/oro.nifti) by Brandon Witcher et al. : Loading and manipulation of brain volumes from NIFTI v1 files.
 * [freesurferformats](https://github.com/dfsp-spirit/freesurferformats) by Tim Schäfer (me): Loading and writing various neuroimaging file formats and general mesh file formats, with a focus on FreeSurfer formats.

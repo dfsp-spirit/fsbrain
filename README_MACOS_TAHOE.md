@@ -1,37 +1,123 @@
-# Visualization problems on recent macOS versions
+# Visualization on macOS Tahoe and Sonoma
 
-**If you are using macOS Tahoe (26.x) or macOS Sonoma (14.x) and fsbrain does not open any visualization windows or produces blank plots**, this is a known issue with the rgl package and XQuartz on these macOS versions. Recent macOS releases have changed how they handle OpenGL and X11, which breaks the graphics window that fsbrain needs to create plots.
+## The problem
 
-This is not a problem with fsbrain itself, but with the underlying graphics system (rgl/XQuartz) that fsbrain relies on. The issue is being tracked in the rgl package, e.g., here:
-- [rgl issue #488: rgl not displaying plots in XQuartz on Mac OS Tahoe](https://github.com/dmurdoch/rgl/issues/488)
-- [rgl issue #423: Issue displaying 3D plots in rgl on MacOS](https://github.com/dmurdoch/rgl/issues/423)
+Recent macOS versions (Tahoe 26.x, Sonoma 14.x) changed how they handle
+OpenGL and X11. This breaks [XQuartz](https://www.xquartz.org/) — the X11
+environment that [rgl](https://CRAN.R-project.org/package=rgl) needs to
+open graphics windows. As a result, fsbrain may produce blank plots or
+fail to open visualization windows.
 
-Currently it seems there are only partial workarounds, no solutions. Here is our current suggestion:
+This is not a problem with fsbrain itself, but with the underlying
+graphics stack (rgl / XQuartz). The issue is tracked upstream:
 
+- [rgl issue #488](https://github.com/dmurdoch/rgl/issues/488)
+- [rgl issue #423](https://github.com/dmurdoch/rgl/issues/423)
 
-## Workaround: Use browser-based visualization
+## Solution 1 (recommended): Use the scimesh backend
 
-You can visualize your data using `vis.rglwidget()`, which creates an interactive 3D view in your web browser instead of an X11 window. Here's a complete example:
+The [scimesh](https://CRAN.R-project.org/package=scimesh) package provides
+a headless, CPU-based software renderer that produces publication-quality
+static images. It requires **no X11, no OpenGL, no XQuartz, and no GPU**.
+
+scimesh has been specifically designed to replace the rendering part of
+fsbrain's image export pipeline. The output is visually identical to rgl.
+
+### Installation
 
 ```r
-library(fsbrain);
-
-# Download example data (only needed once)
-fsbrain::download_optional_data();
-fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
-subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
-
-# Create visualization data without opening a window
-cm = vis.subject.morph.standard(subjects_dir, 'fsaverage', 'sulc',
-                                 surface = 'inflated',
-                                 rglactions = list('no_vis' = TRUE));
-
-# Create interactive browser-based visualization
-widget = vis.rglwidget(cm);
-
-# Display the widget (in RStudio viewer or web browser)
-widget;
+install.packages("scimesh")
 ```
 
-**Note**: The `vis.rglwidget()` function provides interactive 3D viewing in the browser, but does not include colorbars.
+### Usage
 
+```r
+library(fsbrain)
+options(fsbrain.renderer_backend = "scimesh")
+
+# Download example data (first time only)
+subjects_dir <- sjd.demo()
+
+# Build visualization data (no rendering yet)
+cm <- vis.subject.morph.native(subjects_dir, "subject1", "sulc",
+                                views = NULL)
+
+# Export publication-ready figure with 4 views
+vislayout.from.coloredmeshes(
+    cm,
+    view_angles = get.view.angle.names("t4"),
+    output_img  = "sulc_t4.png"
+)
+
+# Export with colorbar
+export(cm,
+       colorbar_legend = "Sulcal depth [mm]",
+       output_img      = "sulc_figure.png",
+       draw_colorbar   = "horizontal")
+```
+
+### What works
+
+- All `vis.*` functions (`vis.subject.morph.native`,
+  `vis.subject.morph.standard`, `vis.subject.annot`,
+  `vis.subject.label`, `vis.symmetric.data.on.subject`,
+  `vis.region.values.on.subject`, etc.)
+- Multi-view layouts (4-view t4, 9-view t9, single views)
+- Colorbars (horizontal and vertical)
+- All rendering styles (`"default"`, `"shiny"`, `"semitransparent"`,
+  `"glass"`, `"edges"`)
+- Publication-quality PNG output at any resolution
+- Volume visualisation functions (already rgl-free)
+
+### Limitations
+
+- No interactive 3D windows (`views = "si"`)
+- No real-time rotation (`views = "sr"`, `vis.coloredmeshes.rotating`)
+- No browser-based 3D widgets (`vis.rglwidget`) — see Solution 2 below
+- No animated GIF export via rgl (`movie3d`)
+
+In practice, these limitations are rarely relevant: most users use
+fsbrain to create static figures for presentations and publications,
+for which scimesh works perfectly.
+
+## Solution 2: Browser-based interactive visualization
+
+If you need interactive 3D viewing, you can use `vis.rglwidget()`, which
+renders the scene in your web browser. Note that this does **not** include
+colorbars and cannot produce multi-view layouts.
+
+```r
+library(fsbrain)
+
+# Download example data (only needed once)
+fsbrain::download_optional_data()
+subjects_dir <- fsbrain::get_optional_data_filepath("subjects_dir")
+
+# Create visualization data without opening a window
+cm <- vis.subject.morph.native(subjects_dir, "subject1", "sulc",
+                                views = NULL)
+
+# Create interactive browser-based widget
+widget <- vis.rglwidget(cm)
+widget  # displays in RStudio viewer or web browser
+```
+
+## Quick comparison
+
+| Feature | scimesh backend | rglwidget | rgl (XQuartz) |
+|---------|:---:|:---:|:---:|
+| Static image export (PNG) | ✓ | — | ✓ |
+| Multi-view layouts (t4, t9) | ✓ | — | ✓ |
+| Colorbars | ✓ | — | ✓ |
+| All vis.* functions | ✓ | via no_vis | ✓ |
+| Interactive 3D window | — | — | ✓ |
+| Interactive 3D in browser | — | ✓ | via rglwidget |
+| Real-time rotation | — | — | ✓ |
+| Requires X11 / XQuartz | No | No | **Yes** |
+| Requires GPU / OpenGL | No | No | Yes |
+| Publication-quality output | ✓ | — | ✓ |
+
+**Bottom line**: For creating static figures (the most common use case),
+use the scimesh backend. If you need interactive 3D exploration, use
+`vis.rglwidget()`. If you have a working XQuartz installation, the
+default rgl backend also works.
