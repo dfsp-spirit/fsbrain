@@ -1,0 +1,92 @@
+# Compute a mask for a subject.
+
+Compute a binary vertex mask for the surface vertices of a subject. By
+defaults, the medial wall is masked.
+
+## Usage
+
+``` r
+subject.mask(
+  subjects_dir,
+  subject_id,
+  hemi = "both",
+  from_label = "cortex",
+  surf_num_verts = "white",
+  invert_mask = TRUE
+)
+```
+
+## Arguments
+
+- subjects_dir:
+
+  string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the
+  data for all your subjects, each in a subdir named after the subject
+  identifier.
+
+- subject_id:
+
+  string. The subject identifier
+
+- hemi:
+
+  string, one of 'lh', 'rh' or 'both'. The hemisphere name. Used to
+  construct the names of the annotation and morphometry data files to be
+  loaded.
+
+- from_label:
+
+  string, the label file to use. Defaults to 'cortex', which will result
+  in a mask of the medial wall versus cortex vertices.
+
+- surf_num_verts:
+
+  string or integer. If an integer, interpreted as the number of
+  vertices in the respective surface (lh or rh). If a character string,
+  interpreted as a surface name, (e.g.,`white` or `pial`), and the
+  respective surface will be loaded to determine the number of vertices
+  in it. If parameter `hemi` is set to `both` and you supply the vertex
+  count as an integer, this can be a vector of length 2 if the surfaces
+  have different vertex counts (the first entry for `lh`, the second for
+  `rh`).
+
+- invert_mask:
+
+  logical, whether to invert the mask. E.g., when the mask is loaded
+  from the cortex labels, if this is set to FALSE, the cortex would be
+  masked (set to 0 in the final mask). If you want **everything but the
+  cortex** to be masked (set to 0), you should set this to `TRUE`.
+  Defaults to `TRUE`.
+
+## Value
+
+the mask, a logical vector with the length of the vertices in the
+surface. If parameter `hemi` is set to `both`, a named list with entries
+`lh` and `rh` is returned, and the values of are the respective masks.
+
+## See also
+
+Other label functions:
+[`apply.label.to.morphdata()`](https://dfsp-spirit.github.io/fsbrain/reference/apply.label.to.morphdata.md),
+[`apply.labeldata.to.morphdata()`](https://dfsp-spirit.github.io/fsbrain/reference/apply.labeldata.to.morphdata.md),
+[`subject.lobes()`](https://dfsp-spirit.github.io/fsbrain/reference/subject.lobes.md),
+[`vis.labeldata.on.subject()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.labeldata.on.subject.md),
+[`vis.subject.label()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.subject.label.md)
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+   # Generate a binary mask of the medial wall. Wall vertices will
+   #  be set to 0, cortex vertices will be set to 1.
+   fsbrain::download_optional_data();
+   subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+   mask = subject.mask(subjects_dir, "subject1");
+   # Print some information on the mask:
+   #cat(sprintf("lh: %d verts, %d in cortex, %d medial wall.\n", length(mask$lh),
+   # sum(mask$lh), (length(mask$lh)- sum(mask$lh))))
+   # Output: lh: 149244 verts, 140891 in cortex, 8353 medial wall.
+   # Now visualize the mask to illustrate that it is correct:
+   vis.mask.on.subject(subjects_dir, "subject1", mask$lh, mask$rh);
+} # }
+```

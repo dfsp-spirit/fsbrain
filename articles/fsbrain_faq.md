@@ -1,0 +1,705 @@
+# The fsbrain FAQ
+
+## Input data
+
+### **Q**: What kind of input data do I need for fsbrain?
+
+The *fsbrain* software is designed to be used with the output of
+[FreeSurfer](http://freesurfer.net/) and similar neuroimaging software
+packages. Running FreeSurfer’s *recon-all* on your T1w MRI scan results
+in a directory structure full of different files and file types for each
+subject. The *fsbrain* library uses knowledge on this directory layout
+to load the proper data.
+
+However, while designed primarily with FreeSurfer in mind, fsbrain is
+not limited to FreeSurfer output, see below.
+
+### **Q**: Which file formats are supported?
+
+The *fsbrain* library uses
+[freesurferformats](https://github.com/dfsp-spirit/freesurferformats) to
+load a variety of neuroimaging file formats, including data exchange
+formats used by other brain imaging software. See the [freesurferformats
+website](https://github.com/dfsp-spirit/freesurferformats) for the full
+list.
+
+### **Q**: I want to load a single file that is *somewhere* on my harddisk, i.e., not within a standard recon-all output directory structure. How can I load it?
+
+You can use
+[freesurferformats](https://github.com/dfsp-spirit/freesurferformats)
+directly to load the data, then pass it to *fsbrain*. See the next
+question for an example.
+
+### **Q**: Can I use fsbrain to visualize data from SPM12 / CAT12 or other software packages?
+
+Yes, the [computational anatomy toolbox
+(CAT12)](https://neuro-jena.github.io/cat/) for
+[SPM](https://www.fil.ion.ucl.ac.uk/spm/) writes surfaces in GIFTI
+format and the morphometry data in curv format, both formats are
+supported by *fsbrain*. After running CAT12 surface measure computation
+on your subject `subject1`, you should have the following files in the
+*surf/* subdir:
+
+- lh.central.subject1.gii
+- lh.gyrification.subject1
+
+Try the following to visualize the gyrification data for the left
+hemisphere in *fsbrain*:
+
+``` r
+
+lh_surf = freesurferformats::read_nisurface('~/data/subject1_spm12/surf/lh.central.subject1.gii');
+lh_gyrification = freesurferformats::read.fs.curv('~/data/subject1_spm12/surf/lh.gyrification.subject1');
+vis.data.on.subject('~/data/', 'subject1_spm12', lh_gyrification, NULL, surface=lh_surf);
+```
+
+You should be able to load data from a number of different neuroimaging
+software packages with freesurferformats, as it supports the very common
+NIFTI and GIFTI file formats.
+
+### What is the best way to visualize data computed in R (or from arbitrary files that do not follow the FreeSurfer recon-all directory layout)?
+
+One should use the `vis.subject.pre` function for that. Here is a full
+example that loads both the surfaces and the per-vertex data into R
+first and the creates a plot based on this pre-loaded data, without
+accessing any files anymore:
+
+``` r
+
+library("fsbrain");
+library("freesurferformats");
+
+# Manually load some data from wherever you want. You can also compute this data in R of course, without loading anything.
+my_data_dir="~/data/study1/subject1"; # just an example.
+surf_lh <- read.fs.surface(file.path(my_data_dir, "lh_sphere.surf.gii"));
+surf_rh <- read.fs.surface(file.path(my_data_dir, "whatever/rh_sphere.obj"));
+pvd_lh = read.fs.morph(file.path(my_data_dir, "lh.curv")); # pvd is for 'per-vertex data'.
+pvd_rh = read.fs.morph(file.path(my_data_dir, "surf/converted/rh.mean_curvature.mgh"));
+
+
+# Call high-level API for live plot.
+surfaces = hemilist(surf_lh, surf_rh);
+pvd  = hemilist(pvd_lh, pvd_rh);
+cm = vis.subject.pre(surfaces, pvd , draw_colorbar = T, rglactions = list('trans_fun'=limit_fun(-0.2, 0.2)));
+
+# Export if you feel like it
+export(cm, output_img = "~/out.png", grid_like = FALSE, colorbar_legend="Mean curvature [1/mm]");
+```
+
+### Can I used fsbrain to visualize surface data from BrainSuite surfaces in DFS format?
+
+Yes, you can install the BrainSuite `bssr` R package to read DFS files
+and then visualize them. In the following examples, the directory
+`~/data/brainsuite_subject1/` contains the output of the cortical
+surface extraction sequence from BrainSuite (I used version 19b),
+applied to the fsbrain demo subject ‘subject1’.
+
+``` r
+
+# read file with bssr package
+bd = bssr::readdfs('~/data/brainsuite_subject1/subject1_v1_sMRI.brain.dfs');
+
+# turn into fs.surface
+sfb = list('vertices'=t(bd$vertices), faces=t(bd$faces)+1L);
+class(sfb) = c(class(sfb), 'fs.surface');
+
+# show it with fsbrain
+fsbrain::vis.fs.surface(sfb);
+```
+
+If the DFS surface file contains vertex colors, labels and/or
+morphometry data, you can display that as well:
+
+``` r
+
+# load and turn into fs.surface
+bd_thickness = bssr::readdfs('~/data/brainsuite_subject1/subject1_v1_sMRI.pvc-thickness_0-6mm.right.mid.cortex.dfs');
+sfb_thickness = list('vertices'=t(bd_thickness$vertices), faces=t(bd_thickness$faces)+1L);
+class(sfb_thickness) = c(class(sfb_thickness), 'fs.surface');
+
+# Display the vertex colors:
+fsbrain::vis.fs.surface(sfb_thickness, col=rgb(t(bd_thickness$vColor)));
+
+# Display labels (feel free to change the colormap).
+fsbrain::vis.fs.surface(sfb_thickness, per_vertex_data = bd_thickness$labels);
+
+# Display raw morphometry data (feel free to change the colormap).
+fsbrain::vis.fs.surface(sfb_thickness, per_vertex_data = bd_thickness$attributes);
+```
+
+Note: The `bssr` package is not on CRAN (as of September 2020), you will
+have to install it from the BrainSuite website.
+
+## Visualization
+
+### How can I set the output image resolution?
+
+To increase the output resolution, you need to increase the size of the
+*rgl* rendering device. To do this globally, before you call any
+*fsbrain* rendering function:
+
+``` r
+
+fsbrain.set.default.figsize(1200, 1200);
+```
+
+Alternatively, you can control the size when calling an *fsbrain*
+visualization function by passing the same information in the optional
+`rgloptions` parameter, like this:
+
+``` r
+
+rgloptions = list('windowRect'=c(20, 20, 1800, 1200));
+vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', rgloptions=rgloptions);
+```
+
+The 4 values in the ‘windowRect’ vector are the x and y screen positions
+(in pixels) where to position the upper left corner of the rendering
+window on your desktop, and the width and height of the plot/window.
+
+### How can I save high quality figures to PNG images?
+
+Note that fsbrain renders images, which means the output is pixel-based
+(i.e., bitmap as opposed to vector graphics). To get high quality
+output, you need to increase the size of the *rgl* rendering device, as
+explained in the last question.
+
+To save the plot to a file in PNG format, you can use an rglaction:
+
+``` r
+
+rgla = list('snapshot_png'='~/subject1_thickness.png');
+vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', rglactions=rgla);
+```
+
+This opens the plot in a window as usual and also saves it in PNG format
+to the file *subject1_thickness.png* in your home directory.
+
+### Can I save fsbrain figures as vector images (like PDF, EPS, SVG)?
+
+While one could convert the PNGs to these formats, doing so makes little
+sense. The images produced by fsbrain are **bitmap** images, not vector
+graphics. I would recommend to export the figures in high resolution as
+PNG images instead.
+
+The default settings used by the the *export()* function should be fine
+to reach the 300 DPI typically required for publications, unless you
+want the image to fill the entire page. In that case, you can further
+increase the output resolution.
+
+### A journal requires me to submit a vector graphics file, what to do?
+
+If a journal requires you to submit vector graphics files (PDF, SVG,
+EPS, …), you should simply embed the bitmap in a vector format container
+and submit that. E.g., in the free vector graphics software Inkscape,
+you could do this with the following steps (takes less than a minute
+from the 2nd time you do it):
+
+1.  Start Inkscape, open the menu and select `File --> New` if needed.
+2.  Embed your PNG image exported from fsbrain: `File --> Import...` and
+    select the PNG image. In the new `png bitmap image import` window,
+    the default settings should be fine (`Image Import Type: Embed`,
+    `Image DPI: From File`, `Image Rendering Mode: None (Auto)`), just
+    click `OK`.
+3.  Make the embedded image fill the entire page. Go to
+    `File --> Document Properties`, and on the `Page` tab under
+    `Custom Size`, click on `Fit page to content` to expand it, then
+    make sure the margins are all set to 0 (the default), and click the
+    button `Resize page to drawing or selection`.
+
+You can now save the image as SVG, PDF, EPS or whatever by clicking
+`File --> Save as...`. I would recommend EPS format if you are using
+LateX, and PDF if you just need to upload the image in any vector format
+to the publisher’s website. Make sure to check the result in a standard
+vector graphics viewer like Adobe Acrobat before submitting it.
+
+This will of course not lead to a true vector graphics file that can be
+scaled/zoomed in without losing quality, but that is not what they are
+asking you to submit. They just want a vector container. I would not
+recommend to try to vectorize (or `trace`) the output of fsbrain to
+generate a true vector image as the quality will usually be bad, but you
+are of course free to try.
+
+### When visualizing data with outliers and long tails, the colors are not helpful. What to do?
+
+If you have data with very few but extreme outliers, almost all of your
+plot will have a single color. This happens for example when plotting
+curvature data. You can of course first load the data using
+`subject.morph.native`, adjust it (transform it, remove outliers), and
+then plot it using `vis.data.on.subject`.
+
+In many cases, it is easier to use `rglactions` to clip the data to the
+5th to 95th percentile, which can be done with an rglaction. E.g.:
+
+``` r
+
+rgla = list('trans_fun'=clip.data);
+vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'curv', rglactions=rgla);
+```
+
+### Can I limit the data range, including the min and max values displayed on the color bar?
+
+Yes, this can be achieved in different ways:
+
+The first option is to use `rglactions` in combination with `limit_fun`:
+
+``` r
+
+rgla = list('trans_fun'=limit_fun(2,3));
+vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', rglactions = rgla);
+```
+
+This will limit your data to the range 2 to 3.
+
+If you want the data values outside the given range to be plotted as
+background (in the color for `NA` values), use `limit_fun_na` instead of
+`limit_fun`.
+
+See the answer to the next question for a second option.
+
+### How can I enforce fixed colorbar settings (i.e., one color should represent the same value) across several images?
+
+This typically means that you want a colorbar that shows a larger data
+range than the real data range of your subject, for some of the
+subjects. In this case you should use the ‘range’ entry in
+‘makecmap_options’:
+
+``` r
+
+makecmap_options = list('range'=c(0,6));
+vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', makecmap_options = makecmap_options);
+```
+
+This is useful when plotting group data to ensure that all subjects use
+the same colors for identical values, or when comparing statistical
+results.
+
+### How can I change the colormap for the plots?
+
+Pass a colormap function to any visualization function that supports the
+*makecmap_options* parameter, as entry *colFn* like illustrated below:
+
+``` r
+
+makecmap_options = list('colFn'=viridis::viridis);
+vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', makecmap_options=makecmap_options);
+```
+
+In that example, we used the popular *viridis* colormap. In R, it is
+available from the *viridis* package. If you don’t have it, you can
+install it with:
+
+``` r
+
+install.packages('viridis');
+```
+
+Of course, you can use any colormap function you want, currently the
+only limitation is that it should accept an integer parameter: the
+requested number of colors.
+
+The exact number of colors that will be requested depends on your data,
+and if the colormap you want only supports very few colors, you can use
+a wrapper function to interpolate. Here is an example for the very
+popular *RColorBrewer* package. Some of its colormaps have less than 10
+colors, which is usually not enough for neuroimaging data. Here we wrap
+the ‘Blues’ palette, which has 9 colors:
+
+``` r
+
+colFn_many_blues = colorRampPalette(RColorBrewer::brewer.pal(9, name="Blues"));
+makecmap_options = list('colFn'=colFn_many_blues);
+vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', makecmap_options=makecmap_options);
+```
+
+### What are the best colormaps for my data?
+
+Choosing a colormap can be a surprisingly complex question and there are
+many publications which discuss this topic. You may want to consider
+what kind of data you have and what property you want to highlight, how
+many colors you need, whether you want colorblind-friendly colors, how
+they look when printed in gray-scale, whether they look pleasing to you,
+and maybe many more dimensions.
+
+The most important thing is to decide is whether you need a sequential,
+qualitative, or diverging palette for your data.
+
+I am definitely not an expert, but here are some color functions I
+personally like and use with fsbrain:
+
+``` r
+
+colFn_sequential = viridis::viridis;
+colFn_qualitative = function(n) { RColorBrewer::brewer.pal(n, name="Set2"); } # n <= 11
+colFn_diverging = grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, name="RdBu"));
+```
+
+They require the *viridis* and *RColorBrewer* packages to be installed.
+The qualitative map is fine if you do not have more than 11 different
+values.
+
+If you have R \>= 3.6, you may not need any extra packages: have a look
+at the
+[`grDevices::hcl.colors`](https://rdrr.io/r/grDevices/palettes.html)
+function. Here are some suggestions:
+
+``` r
+
+colFn_sequential = function(n) { grDevices::hcl.colors(n, palette = "viridis"); }
+colFn_qualitative = function(n) { grDevices::hcl.colors(n, palette = "Dark 3"); }
+colFn_diverging = function(n) { grDevices::hcl.colors(n, palette = "Blue-Red 3"); }
+```
+
+If you want a heatmap-style colormap (single hue sequential,
+yellow/red), try:
+
+``` r
+
+colFn_sequential_heat = function(n) { grDevices::hcl.colors(n, "YlOrRd"); }
+```
+
+Make sure to read the next entry as well if you are using a diverging
+colormap.
+
+### I am using a diverging colormap. When plotting the colorbar (legend), the neutral value is not at zero. How to fix it?
+
+When using a diverging colormap, make sure to set the *symm* option to
+*makecmap_options* when using a visualization function, like this:
+
+``` r
+
+makecmap_options = list('colFn'=colFn_diverging, 'symm'=TRUE);
+```
+
+This ensures that the neutral color of the diverging colormap (usually
+white) is aligned with the zero mark in the colorbar/legend, by adapting
+the value range displayed on the colorbar.
+
+### The colorbar shows only very few different colors, why is that and how can I change it?
+
+The impression that the numbers of colors in the colorbar is lower than
+in the rendered image is a consequence of the rendering process: the
+lighting (shadows, highlights) and the material properties (glossyness,
+partial transparency) have an effect on the appearance of colors in the
+rendered image.
+
+You can set the parameter *n* in the *makecmap_options* (see above) to
+request more colors, which will lead to a smooth colorbar.
+
+``` r
+
+mkc = list('n'=200L, 'colFn'=viridis::viridis);
+vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', makecmap_options=mkc);
+```
+
+This also means that more colors are used in the rendered image, but the
+effect will be less noticable.
+
+### Can I set a custom color for NA values in the plot, like the masked medial wall?
+
+By default, NA values are rendered in white. You can change this using
+col.na in makecmap_options:
+
+``` r
+
+mkc = list('n'=200L, 'col.na'='orange', 'colFn'=viridis::viridis);
+vis.subject.morph.native('~/mysubjects_dir', 'subject1', 'thickness', cortex_only = TRUE, makecmap_options=mkc);
+```
+
+This is also useful when plotting clusters, just set all values which
+are not part of any cluster to NA.
+
+### Can I get a color legend when plotting atlas regions from an annotation? I want to know the region names for the colors.
+
+Yes, see the answer to the next question for details.
+
+### Can I get a color legend when plotting a segmentation/parcellation (different brain regions), based on a color lookup table (like the *FreeSurferColorLUT.txt* file)?
+
+Yes, use the `vis.colortable.legend` function. You can pass an
+annotation or a color lookup table, and it will create a plot that shows
+the colors and the structure (or region) names. The output will be a
+separate plot, so you can use standard R methods to save it in vector
+formats like PDF for best quality.
+
+Hint: you can load a color lookup table with
+[`freesurferformats::read.fs.colortable`](https://rdrr.io/pkg/freesurferformats/man/read.fs.colortable.html).
+
+### There is too much whitespace between the different views of the brain. How can I reduce it?
+
+While this is not possible in `rgl`, fsbrain provides the
+`vislayout.from.coloredmeshes` function to achieve this using Image
+Magick. You need to have the suggested ‘magick’ package installed for
+this to work. The function renders separate images, crops the output
+figures to remove the background, then merges the seperate cropped
+images into a final output image and saves it as a PNG file. Here is a
+usage example:
+
+``` r
+
+# To get coloredmeshes return value only, ignore the visualization:
+cm = vis.subject.morph.native(sjd, sj, 'thickness', makecmap_options = list('n'=200), cortex_only = T);
+# Produce high quality tight layout:
+vislayout.from.coloredmeshes(cm);
+```
+
+Note that your output resolution settings (see question above) now count
+for each of the single images. This means that you will get quite high
+resolution output in combination with the tight layout. This makes the
+function ideal for producing plots for publications.
+
+You can adjust various settings, e.g., change the rendering style,
+select different views, and save it to a custom file name in your home
+directory:
+
+``` r
+
+output_brain_img = "fsbrain_arranged.png";
+vislayout.from.coloredmeshes(cm, view_angles = get.view.angle.names(angle_set='t9'), output_img = output_brain_img);
+```
+
+It is also possible to plot a separate colorbar image and combine that
+with the tight layout brainview image. Note that the settings for the
+colorbar are stored in the coloredmeshes, and can be adjusted by
+altering the initial call to `vis.subject.morph.native` (or whatever
+visualization function you use) above.
+
+``` r
+
+output_cbar_img = "fsbrain_cbar.png";
+output_final_img = "fsbrain_merged.png";
+coloredmesh.plot.colorbar.separate(cm, image.plot_extra_options = list('horizontal' = TRUE), png_options = list('filename'=output_cbar_img, 'width'=1800));
+combine.colorbar.with.brainview.image(output_brain_img, output_cbar_img, output_final_img);
+```
+
+You may have to play a bit with the resolution settings of your brain
+images and the colorbar to get this right (the background cropping makes
+it hard to compute the exact values in advance).
+
+You should also have a look at the new
+[`export()`](https://dfsp-spirit.github.io/fsbrain/reference/export.md)
+function, which produces an image with colorbar and provides sane
+defaults for the resolution and suitable text sizes, etc.
+
+### Can I export PNG images with transparent (instead of white) background?
+
+To the best of my knowledge, RGL cannot produce transparent images
+(though you can of course render semi-transparent surfaces in the
+scene). However, since exporting PNGs with a transparent background is
+very useful for usage in presentations, we provide a hacked solution
+based on post-processing the output images with the magick package in R.
+
+This required fsbrain version \>= 0.4.3 and is implemented in the
+[`export()`](https://dfsp-spirit.github.io/fsbrain/reference/export.md)
+function via the `transparency_color` parameter.
+
+Here is how it works: the `transparency_color` is used as a background
+color for rendering in RGL. During the fsbrain post-processing, all
+pixels with this color in the image will be replaced with transparency.
+
+This means that: \* The `transparency_color` has to be an RGB color,
+i.e., it cannot have an alpha value (if it is an RGBA color, the alpha
+part is silently ignored by RGL it seems). \* The `transparency_color`
+can be almost any RGB color, but (1) it should not occur in the brain
+surface visualization to prevent transparent parts in the brain after
+post-processing. And (2) because of anti-aliasing, the color may
+slightly affect the border pixels of the rendered brain surfaces, so a
+neutral color like ‘#FFFFFF’ (for white) or some gray value like
+‘#DDDDDD’ is maybe more suitable than a hot pink. At high resolution,
+this is hardly noticable though.
+
+``` r
+
+coloredmeshes = vis.subject.morph.standard(subjects_dir, "subject1", "sulc", cortex_only=TRUE, views=NULL);
+export(coloredmeshes, colorbar_legend = "sulcal depth [mm]", transparency_color = "#FFFFFF");
+```
+
+### When visualizing data on the inflated surface, the left and right hemisphere overlap and look garbled. How to fix that?
+
+This happens due to the inflation. One can use the `rglactions`
+parameter to push the hemis apart. By default, it pushes them apart by
+the amount they overlap:
+
+``` r
+
+vis.subject.morph.native(sjd, sj, 'thickness', rglactions = list('shift_hemis_apart'=TRUE), surface='inflated', views='si');
+```
+
+You can also set a distance manually:
+
+``` r
+
+vis.subject.morph.native(sjd, sj, 'thickness', rglactions = list('shift_hemis_apart'=list('min_dist'=20)), surface='inflated', views='si');
+```
+
+If you need more customization options, have a look at the
+`shift.hemis.apart` function. If you pass a named list in the rglactions
+for ‘shift_hemis_apart’ (like in the previous example), the entries are
+passed on to that function.
+
+### When plotting several views, can I have the subplots arranged in a horizontal strip (rather than 2x2 tiles)?
+
+There is no ‘view’ setting for that yet (like ‘t4’ for 4 tiles), but you
+can set the ‘grid_like’ to false to get a horizontal strip of images.
+Here is an example:
+
+``` r
+
+subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+
+view_angles = get.view.angle.names(angle_set = "t4");
+
+coloredmeshes = vis.subject.morph.native(subjects_dir, "subject1", "thickness", views=NULL);
+vislayout.from.coloredmeshes(coloredmeshes, view_angles = view_angles, grid_like=FALSE, output_img="~/fsbrain_horizontal.png");
+```
+
+If you want a colorbar, you can use `export` instead of
+`vislayout.from.coloredmeshes`. Using `export` is now recommended in any
+case.
+
+## Various topics
+
+### Can I integrate the plots produced by *fsbrain* into an R Markdown document (the R equivalent of a Python Jupyter notebook)?
+
+Yes, see the example notebook files in the directory
+[web](https://github.com/dfsp-spirit/fsbrain/tree/master/web/Rmd_web_examples)
+of the *fsbrain* repository. The Rmd files are actually notebooks in R
+markdown format.
+
+### Can I use fsbrain to visualize arbitrary triangular meshes in R?
+
+Yes, *fsbrain* is not limited to brain surface meshes, and a wide array
+of mesh file formats are supported. Keep in mind though that fsbrain
+works with triangular meshes. To visualize a mesh from a file, the
+easiest way is to use `vis.fs.surface`:
+
+``` r
+
+vis.fs.surface('~/Documents/my_mesh.ply');
+```
+
+## Technical problems
+
+### I am getting the error ‘invalid value specified for graphical parameter plt’, why?
+
+The full error most likely looks like this, or similar:
+
+``` r
+Error in par(new = TRUE, pty = "m", plt = smallplot, err = -1) :
+  invalid value specified for graphical parameter "plt"
+```
+
+If you experience this error, it most likely happened when you tried to
+plot something with a colorbar, and did not increase the device size
+(image resolution). The error occurs if there is no space for the
+colorbar plot, and the solution is to increase the resolution as
+explained in the answer to the question ‘How can I set the output image
+resolution?’ above.
+
+### I am getting the error ‘Error in squash::cmap, found x values outside map range’
+
+This can happen when visualizing morphometry data with function like
+`vis.subject.morph.native`. The full error most likely looks like this,
+or similar:
+
+``` r
+vis.subject.morph.native(sjd, sj, 'your_measure_here')
+Error in squash::cmap(lh_morph_data, map = common_cmap) :
+  Found 2193 values outside map range.
+```
+
+Most likely you have `Inf` values in your data, most likely in the
+medial wall, just try plotting without it:
+
+``` r
+
+vis.subject.morph.native(sjd, sj, 'your_measure_here', cortex_only = T)
+```
+
+If this does not help, load the data and inspect it manually.
+
+### I am getting the warning ‘RGL: unable to open X11 display’ when loading fsbrain
+
+The full message most likely looks like this:
+
+``` r
+Warning messages:
+1: In rgl.init(initValue, onlyNULL) : RGL: unable to open X11 display
+2: 'rgl.init' failed, running with 'rgl.useNULL = TRUE'.
+```
+
+This happens if you do not have X11, or no window can be opened.
+Possible reasons include that you are running R on a remote host using
+an SSH connection without X11 forwarding, or that you do not have
+XQuartz installed under MacOS.
+
+If you do not want to plot (e.g., you only use fsbrain to load data),
+feel free to ignore this warning.
+
+If you want to plot and cannot install X11 on a machine (e.g., a compute
+node of a high performance computing cluster), you can still plot on the
+box using xvfb or similar means, see the next question.
+
+### How can I plot on a machine that does not have X11?
+
+You can achieve this by using a virtual display server, e.g. by running
+R/fsbrain via [xvfb](https://en.wikipedia.org/wiki/Xvfb) under Linux. An
+example script that illustrates how to do this for fsbrain can be found
+in the [fsbrain_xvfb_demo
+directory](https://github.com/dfsp-spirit/fsbrain/tree/master/web/fsbrain_xvfb_demo)
+of the fsbrain repo on GitHub.
+
+### I am trying to plot a very large image with fsbrain, but the output is not as large as expected. Why?
+
+The output dimensions are limited by your screen resolution, so to be
+able to do something like this:
+
+``` r
+
+fsbrain::fsbrain.set.default.figsize(3000, 3000, 0, 0);
+```
+
+you would need to have a screen with a resolution larger than 3000x3000
+pixels.
+
+A technical note: This limitation exists due to the fact that rgl
+renders to an OpenGL window produced by your display server, and fsbrain
+basically takes a screenshot of that window. One can circumvent this
+limitation by using a virtual display server, e.g. by running R/fsbrain
+via [xvfb](https://en.wikipedia.org/wiki/Xvfb) under Linux. An example
+script that illustrates how to do this for fsbrain can be found in the
+[fsbrain_xvfb_demo
+directory](https://github.com/dfsp-spirit/fsbrain/tree/master/web/fsbrain_xvfb_demo)
+of the fsbrain repo on GitHub.
+
+### What to do about the error ‘lazy-load database is corrupt’ when loading fsbrain?
+
+If you install the development version from github and try to load it
+without restarting R, you ma^y get this error:
+
+``` r
+library("fsbrain")
+Error: package or namespace load failed for ‘fsbrain’ in get(method, envir = home):
+lazy-load database '/Users/youruser/Library/R/3.6/library/fsbrain/R/fsbrain.rdb' is corrupt
+```
+
+To fix this, simply restart R.
+
+### I see no output image after running a vis function, and also get no error message. What to do?
+
+So you get nothing at all after running a vis command, like this:
+
+``` r
+
+vis.subject.annot(subject_dir, 'sub-sub001', 'aparc', 'both', 'pial',views=c('si'));
+```
+
+Then you can try to open the visualization in an rgl widget like this:
+
+``` r
+
+vis.subject.annot(subject_dir, 'sub-sub001', 'aparc', 'both', 'pial',views=c('si')); library(rgl); rglwidget()
+```
+
+This should show the brain plot in rstudio.
+
+Thanks to Clancy-wu for reporting this workaround.

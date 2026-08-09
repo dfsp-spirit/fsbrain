@@ -1,0 +1,90 @@
+# Create a binary mask from labels.
+
+Create a binary mask for the data of a single hemisphere from one or
+more labels. A label contains the vertex indices which are part of it,
+but often having a mask in more convenient.
+
+## Usage
+
+``` r
+mask.from.labeldata.for.hemi(
+  labels,
+  num_vertices_in_hemi,
+  invert_labels = FALSE,
+  existing_mask = NULL
+)
+```
+
+## Arguments
+
+- labels:
+
+  list of labels. A label is just a vector of vertex indices. It can be
+  created manually, but is typically loaded from a label file using
+  [`subject.label`](https://dfsp-spirit.github.io/fsbrain/reference/subject.label.md).
+
+- num_vertices_in_hemi:
+
+  integer. The number of vertices of the surface for which the mask is
+  created. This must be for a single hemisphere.
+
+- invert_labels:
+
+  logical, whether to invert the label data.
+
+- existing_mask:
+
+  an existing mask to modify or NULL. If it is NULL, a new mask will be
+  created before applying any labels, and the values set during
+  initialization of this new mask are the negation of the 'invert_label'
+  parameter. Defaults to NULL.
+
+## Value
+
+logical vector. The mask. It contains a logical value for each vertex.
+By default, the vertex indices from the labels are FALSE and the rest
+are TRUE, but this can be changed with the parameter 'invert_labels'.
+
+## See also
+
+Other label data functions:
+[`group.label()`](https://dfsp-spirit.github.io/fsbrain/reference/group.label.md),
+[`labeldata.from.mask()`](https://dfsp-spirit.github.io/fsbrain/reference/labeldata.from.mask.md),
+[`subject.label()`](https://dfsp-spirit.github.io/fsbrain/reference/subject.label.md)
+
+Other mask functions:
+[`coloredmesh.from.mask()`](https://dfsp-spirit.github.io/fsbrain/reference/coloredmesh.from.mask.md),
+[`vis.mask.on.subject()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.mask.on.subject.md)
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+   fsbrain::download_optional_data();
+
+  # Define the data to use:
+  subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+  subject_id = 'subject1';
+  surface = 'white';
+  hemi = 'both';
+  atlas = 'aparc';
+  region = 'bankssts';
+
+  # Create a mask from a region of an annotation:
+  lh_annot = subject.annot(subjects_dir, subject_id, 'lh', atlas);
+  rh_annot = subject.annot(subjects_dir, subject_id, 'rh', atlas);
+  lh_label = label.from.annotdata(lh_annot, region);
+  rh_label = label.from.annotdata(rh_annot, region);
+  lh_mask = mask.from.labeldata.for.hemi(lh_label, length(lh_annot$vertices));
+  rh_mask = mask.from.labeldata.for.hemi(rh_label, length(rh_annot$vertices));
+
+  # Edit the mask: add the vertices from another region to it:
+  region2 = 'medialorbitofrontal';
+  lh_label2 = label.from.annotdata(lh_annot, region2);
+  rh_label2 = label.from.annotdata(rh_annot, region2);
+  lh_mask2 = mask.from.labeldata.for.hemi(lh_label2, length(lh_annot$vertices),
+   existing_mask = lh_mask);
+  rh_mask2 = mask.from.labeldata.for.hemi(rh_label2, length(rh_annot$vertices),
+   existing_mask = rh_mask);
+} # }
+```

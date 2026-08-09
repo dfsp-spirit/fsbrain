@@ -1,0 +1,88 @@
+# Extract a region from an atlas annotation as a label for a group of subjects.
+
+The returned label can be used to mask morphometry data, e.g., to set
+the values of a certain region to NaN or to extract only values from a
+certain region.
+
+## Usage
+
+``` r
+group.label.from.annot(
+  subjects_dir,
+  subjects_list,
+  hemi,
+  atlas,
+  region,
+  return_one_based_indices = TRUE,
+  invert = FALSE,
+  error_on_invalid_region = TRUE
+)
+```
+
+## Arguments
+
+- subjects_dir, :
+
+  string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the
+  data for all your subjects, each in a subdir named after the subject
+  identifier.
+
+- subjects_list, :
+
+  vector of string. The subject identifiers.
+
+- hemi, :
+
+  string, one of 'lh' or 'rh'. The hemisphere name. Used to construct
+  the names of the label data files to be loaded.
+
+- atlas, :
+
+  string. The atlas name. E.g., "aparc", "aparc.2009s", or
+  "aparc.DKTatlas". Used to construct the name of the annotation file to
+  be loaded.
+
+- region, :
+
+  string. A valid region name for the annotation, i.e., one of the
+  regions of the atlas.
+
+- return_one_based_indices, :
+
+  logical. Whether the indices should be 1-based. Indices are stored
+  zero-based in label files, but R uses 1-based indices. Defaults to
+  TRUE.
+
+- invert, :
+
+  logical. If TRUE, return the indices of all vertices which are NOT
+  part of the region. Defaults to FALSE.
+
+- error_on_invalid_region, :
+
+  logical. Whether to throw an error if the given region does not appear
+  in the region list of the annotation. If set to FALSE, this will be
+  ignored and an empty vertex list will be returned. Defaults to TRUE.
+
+## Value
+
+named list of integer vectors with label data: for each subject, the
+list of vertex indices in the label.
+
+## See also
+
+Other atlas functions:
+[`get.atlas.region.names()`](https://dfsp-spirit.github.io/fsbrain/reference/get.atlas.region.names.md),
+[`group.agg.atlas.native()`](https://dfsp-spirit.github.io/fsbrain/reference/group.agg.atlas.native.md),
+[`group.agg.atlas.standard()`](https://dfsp-spirit.github.io/fsbrain/reference/group.agg.atlas.standard.md),
+[`group.annot()`](https://dfsp-spirit.github.io/fsbrain/reference/group.annot.md),
+[`label.from.annotdata()`](https://dfsp-spirit.github.io/fsbrain/reference/label.from.annotdata.md),
+[`label.to.annot()`](https://dfsp-spirit.github.io/fsbrain/reference/label.to.annot.md),
+[`regions.to.ignore()`](https://dfsp-spirit.github.io/fsbrain/reference/regions.to.ignore.md),
+[`spread.values.over.annot()`](https://dfsp-spirit.github.io/fsbrain/reference/spread.values.over.annot.md),
+[`spread.values.over.hemi()`](https://dfsp-spirit.github.io/fsbrain/reference/spread.values.over.hemi.md),
+[`spread.values.over.subject()`](https://dfsp-spirit.github.io/fsbrain/reference/spread.values.over.subject.md),
+[`subject.annot()`](https://dfsp-spirit.github.io/fsbrain/reference/subject.annot.md),
+[`subject.atlas.agg()`](https://dfsp-spirit.github.io/fsbrain/reference/subject.atlas.agg.md),
+[`subject.label.from.annot()`](https://dfsp-spirit.github.io/fsbrain/reference/subject.label.from.annot.md),
+[`subject.lobes()`](https://dfsp-spirit.github.io/fsbrain/reference/subject.lobes.md)

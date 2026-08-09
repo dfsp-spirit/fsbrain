@@ -1,0 +1,81 @@
+# Write one value per atlas region for a template subject.
+
+Given an atlas and a list that contains one value for each atlas region,
+write a morphometry file in which all region vertices are assigned the
+value. Can be used to plot stuff like p-values or effect sizes onto
+brain regions.
+
+## Usage
+
+``` r
+write.region.values.fsaverage(
+  hemi,
+  atlas,
+  region_value_list,
+  output_file,
+  template_subject = "fsaverage",
+  template_subjects_dir = NULL,
+  show_freeview_tip = FALSE,
+  value_for_unlisted_regions = NaN
+)
+```
+
+## Arguments
+
+- hemi, :
+
+  string, one of 'lh' or 'rh'. The hemisphere name. Used to construct
+  the names of the annotation and morphometry data files to be loaded.
+
+- atlas, :
+
+  string. The atlas name. E.g., "aparc", "aparc.2009s", or
+  "aparc.DKTatlas". Used to construct the name of the annotation file to
+  be loaded.
+
+- region_value_list, :
+
+  named list. A list in which the names are atlas regions, and the
+  values are the value to write to all vertices of that region.
+
+- output_file, :
+
+  string or `NULL`. Path of the output file, including file name and
+  extension. The format is determined from the (absence of a) file
+  extension. If NULL, no file will be written.
+
+- template_subject:
+
+  string, template subject name. Defaults to 'fsaverage'.
+
+- template_subjects_dir:
+
+  string, the path to the subjects directory containing the template
+  subject directory. If this is `NULL`, the function will try to find it
+  using the environment, see the function
+  [`find.subjectsdir.of`](https://dfsp-spirit.github.io/fsbrain/reference/find.subjectsdir.of.md)
+  for details. Defaults to NULL.
+
+- show_freeview_tip:
+
+  logical, whether to print the freeview command on howto use the
+  overlay to the console. (Only happens if the output_file is not
+  `NULL`.)
+
+- value_for_unlisted_regions, :
+
+  numeric scalar. The value to assign to vertices which are part of
+  atlas regions that are not listed in region_value_list. Defaults to
+  NaN.
+
+## Value
+
+a named list with the following entries: "data": a vector containing the
+data. "file_written": string, path to the file that was written, only
+exists if do_write = TRUE.
+
+## See also
+
+Other output functions:
+[`write.region.aggregated()`](https://dfsp-spirit.github.io/fsbrain/reference/write.region.aggregated.md),
+[`write.region.values()`](https://dfsp-spirit.github.io/fsbrain/reference/write.region.values.md)

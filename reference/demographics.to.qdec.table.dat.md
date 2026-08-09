@@ -1,0 +1,99 @@
+# Convert a dataframe containing demographics data to a qdec.table.dat file and related files.
+
+This creates the `qdec.table.dat` and all required related files (the
+factor level files) in a directory.
+
+## Usage
+
+``` r
+demographics.to.qdec.table.dat(
+  df,
+  output_path = ".",
+  long = FALSE,
+  add_fake_level2 = FALSE,
+  long_timecolumn = "years",
+  qdec_file_name = "qdec.table.dat"
+)
+```
+
+## Arguments
+
+- df:
+
+  a data.frame containing demographics information. Make sure to have
+  factors encoded as factors (not strings), so that the QDEC level files
+  get created for them. Must contain a column named 'fsid' with the
+  subject IDs as first column. If you want a long table, make sure to
+  use
+  [`qdec.table.skeleton`](https://dfsp-spirit.github.io/fsbrain/reference/qdec.table.skeleton.md)
+  to generate the timepoint information instead of doing it manually.
+
+- output_path:
+
+  character string, existing directory into which to write the QDEC
+  files. If the last directory level does not exist, it will be created.
+
+- long:
+
+  logical, whether this is for a longitudinal run. If so, the df must
+  contain a column named 'fsid-base' as the second column. It must also
+  contain some column that gives the inter-scan time (from this scan
+  timepoint to the previous one). The time unit (years, days, ...) is up
+  to you, but typically one is interested in yearly change, the unit
+  should be years. The name of the column (e.g., 'years') must be given
+  to 'mris_slopes' later on the command line with the
+  `--time <column_name>` argument. The requires information can be
+  generated conveniently with the
+  [`qdec.table.skeleton`](https://dfsp-spirit.github.io/fsbrain/reference/qdec.table.skeleton.md)
+  function.
+
+- add_fake_level2:
+
+  logical, whether to add a 2nd fake level to the level files of factors
+  with only a single level. Such factors make little sense, but QDEC
+  refuses to open the resulting files at all in such a case, which seems
+  a bit overkill. If TRUE, a 2nd level named 'level2' will be added so
+  that one can open the output in QDEC.
+
+- long_timecolumn:
+
+  character string, the name of the column holding the inter-scan time.
+  Ignored unless parameter `long` is `TRUE`. See the description for
+  parameter `long` for details.
+
+- qdec_file_name:
+
+  character string, the filename of the QDEC file to write. Must be only
+  the file name (with extension if you want). See `output_path` to set
+  the ouput directory where this will be created.
+
+## Note
+
+IMPORTANT: If you import the dataframe from a text file with functions
+like `read.table`, they will by default replace dashes in column names
+with dots. So if you have a column named `fsid-base` in there, after
+loading it will be named `fsid.base`. See the `check.names` parameter
+for `read.table` to prevent that.
+
+## See also
+
+The function
+[`qdec.table.skeleton`](https://dfsp-spirit.github.io/fsbrain/reference/qdec.table.skeleton.md)
+to generate the data.frame used as the 'df' argument for this function.
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+   dem = readxl::read_xls("~/data/study1/demographics.xsl");
+   # or: dem = read.table("~/demographics.csv", check.names=FALSE);
+   # You may want to rearrange/rename/delete some columns here.
+   demographics.to.qdec.table.dat(dem, "~/data/study1/qdec/");
+   #
+   # a second one with real data:
+   dem = data.frame("ID"=paste("subject", seq(5), sep=""),
+      "age"=sample.int(20, 5)+10L, "isi"=rnorm(5, 2.0, 0.1)); #sample data.
+   long_table = qdec.table.skeleton(dem$ID, dem$isi);
+   demographics.to.qdec.table.dat(long_table, long=TRUE);
+} # }
+```

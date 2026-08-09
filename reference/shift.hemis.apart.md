@@ -1,0 +1,56 @@
+# Shift hemispheres apart.
+
+Modify mesh coordinates of a hemilist of coloredmeshes to introduce a
+gap between the two hemispheres.
+
+## Usage
+
+``` r
+shift.hemis.apart(
+  coloredmeshes_hl,
+  shift_by = NULL,
+  axis = 1L,
+  hemi_order_on_axis = "lr",
+  min_dist = 0
+)
+```
+
+## Arguments
+
+- coloredmeshes_hl:
+
+  hemilist of coloredmeshes
+
+- shift_by:
+
+  numerical vector of length 2, the amount by which to shift the hemis.
+  The first value is for the left hemi, the second for the right hemi
+  (values can be negative). Pass `NULL` to determine the shift
+  automatically from the mesh coordinates, and adapt
+  'hemi_order_on_axis' to define how that happens.
+
+- axis:
+
+  positive integer, one of 1L, 2L or 3L. The axis on which to shift
+  (x,y,z).
+
+- hemi_order_on_axis:
+
+  character string, one of 'auto', 'auto_flipped', 'lr' or 'rl'. Defines
+  how to determine the order of the hemis on the axes. This is ignored
+  unless 'shift_by' is `NULL`. The 'auto' setting assumes that the
+  hemisphere with the smaller minimal vertex coordinate (on the given
+  axis) comes first. Note that if the overlap (or shift) is extreme,
+  this may not hold anymore. Therefore, the default value is 'lr', which
+  works for FreeSurfer data. The 'auto_flipped' setting will always
+  return the inverse of 'auto', so if 'auto' did not work,
+  'auto_flipped' will.
+
+- min_dist:
+
+  numerical scalar, the minimal distance of the hemispheres. Ignored
+  unless 'shift_by' is `NULL`.
+
+## Value
+
+hemilist of coloredmeshes, the shifted meshes

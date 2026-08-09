@@ -1,0 +1,111 @@
+# Retrieve standard space morphometry data for a group of subjects.
+
+Load standard space morphometry data (like 'surf/lh.area') for a group
+of subjects from disk. Uses knowledge about the FreeSurfer directory
+structure to load the correct file.
+
+## Usage
+
+``` r
+group.morph.standard(
+  subjects_dir,
+  subjects_list,
+  measure,
+  hemi = "both",
+  fwhm = "10",
+  template_subject = "fsaverage",
+  format = "mgh",
+  cortex_only = FALSE,
+  df = FALSE,
+  df_t = FALSE
+)
+```
+
+## Arguments
+
+- subjects_dir, :
+
+  string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the
+  data for all your subjects, each in a subdir named after the subject
+  identifier.
+
+- subjects_list, :
+
+  vector of strings. The subject identifiers.
+
+- measure, :
+
+  string. Name of the vertex-wise measure of morphometry data file.
+  E.g., "area" or "thickness". Used to construct the name of the
+  morphometry file to be loaded.
+
+- hemi, :
+
+  string, one of 'lh', 'rh' or 'both'. The hemisphere name. Used to
+  construct the names of the annotation and morphometry data files to be
+  loaded.
+
+- fwhm, :
+
+  string. Smoothing as string, e.g. '10' or '25'.
+
+- template_subject, :
+
+  string. Template subject name, defaults to 'fsaverage'.
+
+- format, :
+
+  string. One of 'mgh', 'mgz', 'curv'. Defaults to 'mgh'.
+
+- cortex_only:
+
+  logical, whether to mask the medial wall, i.e., whether the
+  morphometry data for all vertices which are *not* part of the cortex
+  (as defined by the label file `label/?h.cortex.label`) should be
+  replaced with NA values. In other words, setting this to TRUE will
+  ignore the values of the medial wall between the two hemispheres. If
+  set to true, the mentioned label file needs to exist for the template
+  subject. Defaults to FALSE.
+
+- df:
+
+  logical, whether to return a dataframe instead of the named list. The
+  dataframe will have one subject per column, and *n* rows, where *n* is
+  the number of vertices of the template subject surface.
+
+- df_t:
+
+  logical, whether to return a transposed dataframe. Only one of df or
+  df_t must be TRUE.
+
+## Value
+
+named list with standard space morph data, the names are the subject
+identifiers from the subjects_list, and the values are morphometry data
+vectors (all with identical length, the data is mapped to a template
+subject).
+
+## See also
+
+Other morphometry data functions:
+[`apply.label.to.morphdata()`](https://dfsp-spirit.github.io/fsbrain/reference/apply.label.to.morphdata.md),
+[`apply.labeldata.to.morphdata()`](https://dfsp-spirit.github.io/fsbrain/reference/apply.labeldata.to.morphdata.md),
+[`group.morph.native()`](https://dfsp-spirit.github.io/fsbrain/reference/group.morph.native.md),
+[`subject.morph.native()`](https://dfsp-spirit.github.io/fsbrain/reference/subject.morph.native.md),
+[`subject.morph.standard()`](https://dfsp-spirit.github.io/fsbrain/reference/subject.morph.standard.md)
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+   fsbrain::download_optional_data();
+   subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+   subjects_list = c("subject1", "subject2");
+   fulldata = group.morph.standard(subjects_dir, subjects_list, "thickness", "lh", fwhm='10');
+   mean(fulldata$subject1);
+
+   cortexdata = group.morph.standard(subjects_dir, subjects_list, "thickness",
+    "lh", fwhm='10', cortex_only=FALSE);
+   mean(cortexdata$subject1, na.rm=TRUE);
+} # }
+```

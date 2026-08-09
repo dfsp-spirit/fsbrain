@@ -1,0 +1,11 @@
+pandoc: 3.8.3
+pkgdown: 2.2.1
+pkgdown_sha: ~
+articles:
+  fsbrain_faq: fsbrain_faq.html
+  fsbrain_vol: fsbrain_vol.html
+  fsbrain: fsbrain.html
+last_built: 2026-08-09T16:09Z
+urls:
+  reference: https://dfsp-spirit.github.io/fsbrain/reference
+  article: https://dfsp-spirit.github.io/fsbrain/articles

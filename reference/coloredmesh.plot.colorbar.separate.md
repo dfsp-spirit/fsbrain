@@ -1,0 +1,119 @@
+# Draw colorbar for coloredmeshes in separate 2D plot.
+
+Draw a colorbar for the coloredmeshes to a separate 2D plot. Due to the
+suboptimal handling of colorbar drawing in the three-dimensional
+multi-panel views, it is often desirable to plot the colorbar in a
+separate window, export it from there and then manually add it to the
+final plot version in some image manipulation software like Inkscape. If
+you need more control over the colormap than offered by this function
+(e.g., setting the color value for NA values or making a symmetric
+colormap to ensure that the zero point for divergent colormaps is a
+neutral color), you should write custom code, and the return value from
+this function will come in handy to do that.
+
+## Usage
+
+``` r
+coloredmesh.plot.colorbar.separate(
+  coloredmeshes,
+  show = FALSE,
+  image.plot_extra_options = list(horizontal = FALSE, legend.cex = 1.8, legend.width = 2,
+    legend.mar = 12, axis.args = list(cex.axis = 5)),
+  png_options = list(filename = "fsbrain_cbar.png", width = 1400, height = 1400, bg =
+    "#FFFFFF00"),
+  silent = FALSE,
+  trim_png = TRUE,
+  log_breaks = FALSE
+)
+```
+
+## Arguments
+
+- coloredmeshes:
+
+  list of coloredmeshes. A coloredmesh is a named list as returned by
+  the `coloredmesh.from` functions. It has the entries 'mesh' of type
+  tmesh3d, a 'col', which is a color specification for such a mesh. The
+  `vis*` functions (like
+  [`vis.subject.morph.native`](https://dfsp-spirit.github.io/fsbrain/reference/vis.subject.morph.native.md))
+  all return a list of coloredmeshes.
+
+- show:
+
+  logical, Whether to open the resulting plot. Defaults to `TRUE`.
+
+- image.plot_extra_options:
+
+  named list of extra optins to pass to
+  [`image.plot`](https://rdrr.io/pkg/fields/man/image.plot.html). This
+  can be used to add a legend to the colorbar, rotate the colorbar, or
+  whatever. The options "legend_only", "zlim", and "col" are computed
+  and set for you by this function, so there is no need to pass these.
+  Your list will be merged with the internal options, so you could
+  overwrite named arguments if needed.
+
+- png_options:
+
+  Options to pass to [`png`](https://rdrr.io/r/grDevices/png.html), see
+  the docs of that function for details. Allow you to save the plot as a
+  png bitmap image. Example:
+  `png_options = list("filename"="fsbrain_cbar.png", "width"=800)`.
+  Defaults to NULL, which will not save anything.
+
+- silent:
+
+  logical, whether to suppress messages. Defaults to `FALSE`.
+
+- trim_png:
+
+  logical, whether to trim the output PNG image using image magick,
+  i.e., remove everything but the foreground. Ignored unless an output
+  PNG image is actually written (see 'png_options') and the 'magick'
+  package is installed.
+
+- log_breaks:
+
+  logical, scalar int, or vector of ints. Whether to use log10 scale for
+  plotting the cbar. If logical and TRUE, uses log scale with default
+  number (=5) ticks auto-computed from the data. If a single integer N,
+  uses N ticks auto-computed from the data instead. If a numeric vector,
+  uses the supplied values in the vector as ticks, note that they must
+  be on a `log(data)` scale. If the 'makecmap_options' stored in the
+  passed 'coloredmeshes' contain a 'base' value of 10, log 10 is assumed
+  (with the default 5 ticks), even if this parameter is left at its
+  default value, logical FALSE.
+
+## Value
+
+named list, entries: 'output_img_path': character string, the path to
+the output file, or NULL.
+
+## Note
+
+If you increase the output resolution of the colorbar (using
+'png_options'), you will have to increase the font sizes as well (using
+'image.plot_extra_options'), otherwise the axis and legend labels will
+be hard to read.
+
+## See also
+
+Other colorbar functions:
+[`combine.colorbar.with.brainview.animation()`](https://dfsp-spirit.github.io/fsbrain/reference/combine.colorbar.with.brainview.animation.md),
+[`combine.colorbar.with.brainview.image()`](https://dfsp-spirit.github.io/fsbrain/reference/combine.colorbar.with.brainview.image.md)
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+   fsbrain::download_optional_data();
+   subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+   coloredmeshes = vis.subject.morph.native(subjects_dir, 'subject1',
+    'thickness', 'lh', views=c('t4'));
+   coloredmesh.plot.colorbar.separate(coloredmeshes);
+
+   # Or plot a colorbar with a label:
+   coloredmesh.plot.colorbar.separate(coloredmeshes,
+    image.plot_extra_options = list("legend.lab"="Thickness [mm]",
+    horizontal=TRUE, legend.cex=1.5, legend.line=-3));
+} # }
+```

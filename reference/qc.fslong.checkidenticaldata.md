@@ -1,0 +1,44 @@
+# Check whether subjects for FS longitudinal pipeline contain data that is identical between time points.
+
+Check whether subjects for FS longitudinal pipeline contain data that is
+identical between time points.
+
+## Usage
+
+``` r
+qc.fslong.checkidenticaldata(
+  subjects_dir,
+  subjects_to_check = NULL,
+  timepoint_names = c("_MR1", "_MR2"),
+  measure = "thickness",
+  surface = "white"
+)
+```
+
+## Arguments
+
+- subjects_dir:
+
+  string. The FreeSurfer SUBJECTS_DIR, i.e., a directory containing the
+  data for all your subjects, each in a subdir named after the subject
+  identifier.
+
+- timepoint_names:
+
+  vector of character strings, the timepoint names. These are mandatory
+  for QDEC, so there should be very little reason to change them. Leave
+  along unless you know what you are doing.
+
+- measure:
+
+  string. Name of the vertex-wise measure of morphometry data file.
+  E.g., "area" or "thickness". Used to construct the name of the
+  morphometry file to be loaded.
+
+## Note
+
+Keep in mind that this checks on the level of the FreeSurfer
+reconstruction, which is not 100% deterministic. So identical raw MRI
+data may lead to different vertex counts in 2 runs. So this is not a
+final check to exclude copied raw MRI images, it only checks for copied
+FreeSurfer reconstructions.

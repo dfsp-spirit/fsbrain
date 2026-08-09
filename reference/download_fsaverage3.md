@@ -1,0 +1,44 @@
+# Download the FreeSurfer v6 low-resolution fsaverage3 subject.
+
+Download some relevant files from the FreeSurfer v6 fsaverage3 subject.
+The files are subject to the FreeSurfer software license, see parameter
+'accept_freesurfer_license' for details. This data is not required for
+the package to work. If you are working on a machine that has FreeSurfer
+installed, you already have this data anyways and do not need to
+download it.
+
+## Usage
+
+``` r
+download_fsaverage3(accept_freesurfer_license = FALSE, scheme = "https")
+```
+
+## Arguments
+
+- accept_freesurfer_license:
+
+  logical, whether you accept the FreeSurfer license for fsaverage,
+  available at
+  https://surfer.nmr.mgh.harvard.edu/fswiki/FreeSurferSoftwareLicense.
+  Defaults to FALSE.
+
+- scheme:
+
+  character string, the URL scheme to use. Either `"https"` (the
+  default) or `"http"`. Switching to `"http"` can be useful as a
+  fallback if the HTTPS server is unreachable.
+
+## Value
+
+Named list. The list has entries: "available": vector of strings. The
+names of the files that are available in the local file cache. You can
+access them using get_optional_data_file(). "missing": vector of
+strings. The names of the files that this function was unable to
+retrieve.
+
+## Note
+
+The subject fsaverage3 is a downsampled (low mesh resolution) version of
+the standard fsaverage. If you never heard about fsaverage3, you do not
+need it. You will have to manually re-sample your data in FreeSurfer if
+you want to use it with fsaverage3.

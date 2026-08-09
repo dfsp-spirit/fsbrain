@@ -1,0 +1,39 @@
+# Download the FreeSurfer v6 fsaverage subject.
+
+Download some relevant files from the FreeSurfer v6 fsaverage subject.
+The files are subject to the FreeSurfer software license, see parameter
+'accept_freesurfer_license' for details. This data is not required for
+the package to work. If you are working on a machine that has FreeSurfer
+installed, you already have this data anyways and do not need to
+download it. If not, it is very convenient to have it if you are using
+the fsaverage template subject to analyze your standard space data, as
+it is required for visualization of such data.
+
+## Usage
+
+``` r
+download_fsaverage(accept_freesurfer_license = FALSE, scheme = "https")
+```
+
+## Arguments
+
+- accept_freesurfer_license:
+
+  logical, whether you accept the FreeSurfer license for fsaverage,
+  available at
+  https://surfer.nmr.mgh.harvard.edu/fswiki/FreeSurferSoftwareLicense.
+  Defaults to FALSE.
+
+- scheme:
+
+  character string, the URL scheme to use. Either `"https"` (the
+  default) or `"http"`. Switching to `"http"` can be useful as a
+  fallback if the HTTPS server is unreachable.
+
+## Value
+
+Named list. The list has entries: "available": vector of strings. The
+names of the files that are available in the local file cache. You can
+access them using get_optional_data_file(). "missing": vector of
+strings. The names of the files that this function was unable to
+retrieve.

@@ -1,0 +1,53 @@
+# Compute geodesic path from a source vertex to one or more target vertices.
+
+Compute geodesic path from a source vertex to one or more target
+vertices.
+
+## Usage
+
+``` r
+geodesic.path(surface, source_vertex, target_vertices)
+```
+
+## Arguments
+
+- surface:
+
+  an
+  [`rgl::tmesh3d`](https://dmurdoch.github.io/rgl/dev/reference/mesh3d.html)
+  or `freesurferformats::fs.surface` instance. Can be a character
+  string, which will be loaded as a surface file if it exists.
+
+- source_vertex:
+
+  a scalar positive integer, the source vertex index in the mesh
+
+- target_vertices:
+
+  single integer or vector of integers, the target vertices to which to
+  compute the paths from the source_vertex.
+
+## Value
+
+list of integer vectors, the paths
+
+## Note
+
+This can take a bit for very large graphs. This requires the optional
+dependency package 'Rvcg'. The backtracking is currently done in R,
+which is not optimal from a performance perspective. If you have a
+recent Rvcg version with the Rvcg::vcgGeodesicPath function, that one
+will be used instead, and the performance will be better.
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+  sjd = fsaverage.path(TRUE);
+  surface = subject.surface(sjd, 'fsaverage3',
+    surface = "white", hemi = "lh");
+  p = geodesic.path(surface, 5, c(10, 20));
+  vis.subject.morph.native(sjd, 'fsaverage3', 'thickness', views='si');
+  vis.paths.along.verts(surface$vertices, p$paths, color=c("red", "yellow"));
+} # }
+```
