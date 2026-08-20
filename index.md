@@ -43,6 +43,10 @@ standard.
 
 ## News
 
+- 2026-08-20: We have some new online documentation: example notebooks
+  demonstrating 2 typical workflows of fMRI result visualization with
+  fsbrain. [View them online
+  here](https://dfsp-spirit.github.io/fsbrain_fMRI_vis_workflows/).
 - 2026-07-09: New fsbrain version 0.6.1 released. Adds automatic
   fallback for plot export on recent macOS versions (Tahoe, Sonoma)
   where X11/XQuartz is broken. You can now export publication-ready
@@ -188,6 +192,7 @@ have loaded the *fsbrain* package:
 - There are two online R Markdown notebooks (like Jupyter Notebook in
   Python) that show various example plots in combination with the code
   used to produce them:
+
   - [basic fsbrain example
     notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples.html):
     Live visualization of subject data
@@ -197,9 +202,11 @@ have loaded the *fsbrain* package:
   - [export API fsbrain example
     notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples_export.html):
     Exporting publication-ready plots
+
 - Detailed vignettes with explanations and examples for the functions of
   the package is included, run `browseVignettes("fsbrain")` to see the
   vignettes. You can also open the vignette directly:
+
   - How to load and visualize surface-based neuroimaging data:
     [`vignette("fsbrain")`](https://dfsp-spirit.github.io/fsbrain/articles/fsbrain.md)
     or: [read online at
@@ -212,12 +219,18 @@ have loaded the *fsbrain* package:
     [`vignette("fsbrain_faq")`](https://dfsp-spirit.github.io/fsbrain/articles/fsbrain_faq.md)
     or: [read online at
     CRAN](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain_faq.html)
+
+- [Online Notebooks including demo workflows for fMRI result
+  visualization](https://dfsp-spirit.github.io/fsbrain_fMRI_vis_workflows/).
+
 - Help for a specific function can be accessed in the usual R manner:
   `?<function>`, where you replace `<function>` with a function name.
   Like this:
   [`?group.morph.native`](https://dfsp-spirit.github.io/fsbrain/reference/group.morph.native.md).
+
 - Run `example(<function>)` to see a live demo that uses the function
   `<function>`. Like this: `example(group.morph.native)`.
+
 - The [unit
   tests](https://dfsp-spirit.github.io/fsbrain/tests/testthat/) that
   come with this package are essentially a list of examples that
