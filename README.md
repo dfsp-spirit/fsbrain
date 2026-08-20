@@ -20,6 +20,7 @@ The plots produced by *fsbrain* can be integrated into R notebooks or written to
 
 
 ## News
+* 2026-08-20: We have some new online documentation: example notebooks demonstrating 2 typical workflows of fMRI result visualization with fsbrain. [View them online here](https://dfsp-spirit.github.io/fsbrain_fMRI_vis_workflows/).
 * 2026-07-09: New fsbrain version 0.6.1 released. Adds automatic fallback for plot export on recent macOS versions (Tahoe, Sonoma) where X11/XQuartz is broken. You can now export publication-ready plots with colorbars even without a working X11 display. See [README_MACOS_TAHOE.md](./README_MACOS_TAHOE.md) for details.
 * 2026-07-08: New fsbrain version 0.6.0 released on CRAN, see the [CHANGES](./CHANGES).
 * 2025-09-09: New fsbrain version 0.5.6 released on CRAN, see the [CHANGES](./CHANGES).
@@ -124,6 +125,7 @@ The documentation can be accessed from within an R session after you have loaded
   * How to load and visualize volume-based neuroimaging data: `vignette("fsbrain_vol")` or: [read online at CRAN](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain_vol.html)
   * The fsbrain FAQ: `vignette("fsbrain_faq")` or: [read online at CRAN](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain_faq.html)
 
+* [Online Notebooks including demo workflows for fMRI result visualization](https://dfsp-spirit.github.io/fsbrain_fMRI_vis_workflows/).
 
 * Help for a specific function can be accessed in the usual R manner: `?<function>`, where you replace `<function>` with a function name. Like this: `?group.morph.native`.
 * Run `example(<function>)` to see a live demo that uses the function `<function>`. Like this: `example(group.morph.native)`.
