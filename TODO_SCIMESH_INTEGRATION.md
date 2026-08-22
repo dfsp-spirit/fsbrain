@@ -19,6 +19,30 @@ Status of the `feature/scimesh-backend` branch. Relevant code:
 - The rgl path currently rotates meshes; the scimesh path uses a camera. See
   `TODO_FSBRAIN_RGL_CAM.md` for the plan to unify this.
 
+## Decisions (2026-08-22)
+
+- **Normals**: `apply.transform()` rotates vertex normals too (rigid rotation)
+  so it matches `rgl::rotate3d`.
+- **Styles**: `edges` -> scimesh `wireframe`. `semitransparent`/`glass` ->
+  plain alpha on the RGBA A channel; the rgl `back="lines"` look is NOT
+  reproduced (document the difference). No two-pass rendering.
+- **`from_mesh`**: per-mesh style resolution is a bug - support it now.
+- **`highlight_points`**: supported via `scimesh::render_spheres()` (rare
+  special case, low priority but do it).
+- **rglactions**: `clip_data` must stay renderer-independent (plain R);
+  `no_vis` does not apply to scimesh (it only suppresses opening an rgl
+  window) - ignore it in the scimesh backend; the rest are handled/warned
+  per-backend.
+- **Hemi shift**: opt-in only (via `shift_hemis_apart`), keep current
+  behavior - it is a hack for weird/inflated meshes from some FreeSurfer
+  versions; do not make it default, do not break it.
+- **README**: do not over-promise - scimesh applies to static image export
+  only, interactive views remain rgl.
+- **scimesh version**: `Suggests: scimesh (>= 0.3.4)` (first CRAN version).
+- **Output resolution**: new global option (not the `rgloptions$windowRect`
+  overload), defaulting to a publication-quality size (~1920x1080). `export()`
+  already has a `quality` knob; decide how it interacts.
+
 ## Status
 
 - [x] scimesh on CRAN (v0.3.4). README/README_MACOS_TAHOE.md use
@@ -36,7 +60,8 @@ Status of the `feature/scimesh-backend` branch. Relevant code:
 Centralize geometry/style/color logic so both backends use one code base.
 
 - [ ] `apply.transform(renderable, matrix)` (S3): rotate/translate a
-      renderable's geometry in base R. Route the rgl path
+      renderable's geometry in base R, rotating vertex normals too (rigid
+      rotation) to match `rgl::rotate3d`. Route the rgl path
       (`vis.rotated.coloredmeshes()` in `R/vis_meshes.R`) and
       `handle.rglactions.highlight.points()` (`R/vis_multiview.R`) through it
       so the per-type `rotate3d` duplication disappears, with NO output change.
@@ -48,23 +73,29 @@ Centralize geometry/style/color logic so both backends use one code base.
 
 ### T2. Style fidelity: alpha/transparency
 - [ ] Use `apply.style.alpha()` in the scimesh path so `semitransparent`
-      (alpha=0.5) and `glass` (alpha=0.4) render semi-transparent.
-- [ ] Handle `style = "from_mesh"` per coloredmesh (alpha resolved per mesh).
-- [ ] Add rgl-vs-scimesh comparison figures for the two transparent styles.
+      (alpha=0.5) and `glass` (alpha=0.4) render semi-transparent. `edges`
+      already maps to `wireframe`.
+- [ ] Fix `style = "from_mesh"`: resolve style per coloredmesh (alpha, etc.)
+      instead of passing the literal string through.
+- [ ] Document that the rgl `back="lines"` look is not reproduced in scimesh.
+- [ ] Add rgl-vs-scimesh comparison figures for the transparent styles.
 
 ### T3. rglactions (plain R where possible)
-- Data-level actions (`clip_data`, `no_vis`, colormap options) are already
-  plain R and shared — nothing to do.
+- `clip_data` is renderer-independent (plain R) - keep it that way.
+- `no_vis` does not apply to scimesh (it only suppresses opening an rgl
+  window) - ignore it in the scimesh backend.
 - Geometry actions go through T1 (plain R, identical for both backends).
 - `snapshot_png` is the only renderer-bound action (write the frame):
   mirror the rgl branch's "ignored, use `output_img`" warning in the scimesh
   branch.
-- Any unsupported render-time action: explicit `warning()`/`stop()`.
+- `highlight_points`: support via `scimesh::render_spheres()`.
+- Any other unsupported render-time action: explicit `warning()`/`stop()`.
 
 ### T4. Hemisphere shift for both-hemisphere views
 - [ ] Apply the shared plain-R `shift.hemis.apart()` for
       `dorsal`/`ventral`/`rostral`/`caudal` in the scimesh path, matching
-      rgl's shift.
+      rgl's shift. Opt-in only (via `shift_hemis_apart` rglactions), same as
+      rgl - do not make it default.
 
 ### T5. Tests, CI, docs
 - [ ] CI leg that installs scimesh from CRAN and runs a headless smoke test

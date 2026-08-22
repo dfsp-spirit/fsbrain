@@ -39,7 +39,8 @@ mechanism differs. Until this is unified, backend parity is guaranteed by
 Centralize the transform in ONE plain-R helper — `apply.transform(renderable,
 matrix)` with S3 dispatch — and route both the rgl path
 (`vis.rotated.coloredmeshes()`) and `handle.rglactions.highlight.points()`
-through it, plus any scimesh-side geometry. This removes the per-type
+through it, plus any scimesh-side geometry. The helper rotates vertex normals
+too (rigid rotation) to match `rgl::rotate3d`. This removes the per-type
 duplication with NO change to rendered output.
 
 ### Step 2 (separate follow-up, NOT part of scimesh integration)
