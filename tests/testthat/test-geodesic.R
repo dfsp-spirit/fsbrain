@@ -1,6 +1,7 @@
 
 test_that("The geodesic neighborhood of a vertex can be computed", {
     testthat::skip_on_cran();
+    skip_if_rgl_required();
 
     fsbrain::download_optional_data();
     fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
@@ -20,6 +21,7 @@ test_that("The geodesic neighborhood of a vertex can be computed", {
 
 test_that("The geodesic color overlay for several vertices over a full brain can be computed", {
     testthat::skip_on_cran();
+    skip_if_rgl_required();
 
     fsbrain::download_optional_data();
     fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
@@ -42,6 +44,7 @@ test_that("The geodesic color overlay for several vertices over a full brain can
 
 test_that("The geodesic per-vertex distance data for several vertices over a full brain can be computed", {
     testthat::skip_on_cran();
+    skip_if_rgl_required();
 
     fsbrain::download_optional_data();
     fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
@@ -82,7 +85,7 @@ test_that("We can render publication-ready vertex highlight figures with geodesi
     rglactions = list('highlight_points'=list('coords'=coords, 'color'=sphere_colors, 'radius'=3, 'hemi'=point_hemi));
 
     # Visualize
-    cm = vis.data.on.subject(subjects_dir, subject_id, morph_data_lh = morph_data$lh, morph_data_rh = morph_data$rh, rglactions = rglactions, style = "glass2");
+    cm = vis.data.on.subject(subjects_dir, subject_id, morph_data_lh = morph_data$lh, morph_data_rh = morph_data$rh, views = NULL, style = "glass2");
     export(cm, rglactions = rglactions, style = "glass2", horizontal = NULL);
 
     testthat::expect_equal(1L, 1L); # only prevent test skipping for now.

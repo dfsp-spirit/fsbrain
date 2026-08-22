@@ -403,6 +403,7 @@ highlight_points_to_scimesh <- function(rglactions, hemi_filter = "both") {
     if (is.vector(coords)) {
         coords <- matrix(coords, ncol = 3L, byrow = TRUE)
     }
+    color <- recycle(color, nrow(coords))
     if (hemi_filter != "both" && !is.null(hp$hemi)) {
         idx <- which(hp$hemi == hemi_filter)
         coords <- coords[idx, , drop = FALSE]
@@ -411,7 +412,6 @@ highlight_points_to_scimesh <- function(rglactions, hemi_filter = "both") {
     if (nrow(coords) == 0L) {
         return(list())
     }
-    color <- recycle(color, nrow(coords))
     spheres <- list()
     for (i in seq_len(nrow(coords))) {
         rgba <- color_to_rgba(color[[i]])

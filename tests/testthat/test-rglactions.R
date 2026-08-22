@@ -1,6 +1,7 @@
 
 test_that("Hemis can be shifted apart using rglactions for non-overlapping rendering.", {
     testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
+    skip_if_rgl_required();
 
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -28,8 +29,8 @@ test_that("Points can be highlighted with 3D spheres.", {
     point_hemi = vertex.hemis(surfaces, vertices);
     colors = c('#FFFF00', '#FFFF00', '#FFFF00', '#FF0000');
     rglactions = list('highlight_points'=list('coords'=point_coords, 'color'=colors, 'radius'=5, 'hemi'=point_hemi));
-    cm = vis.subject.morph.native(subjects_dir, subject_id, 'curv', rglactions = rglactions, views = "si");
-    #export(cm);
+    cm = vis.subject.morph.native(subjects_dir, subject_id, 'curv', views = NULL);
+    render.demo(cm, name = "highlight_points", rglactions = rglactions);
     expect_equal(1L , 1L);
 })
 
