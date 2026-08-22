@@ -364,26 +364,43 @@ vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.ang
                 stop("Renderer backend is 'scimesh' but the scimesh package is not installed.");
             }
 
-            scene = coloredmeshes_to_scimesh(coloredmeshes);
+            if(rglactions.has.key(rglactions, "snapshot_png")) {
+                warning("The key 'snapshot_png' in the 'rglactions' parameter is not supported by the scimesh backend and will be ignored. Use 'output_img' instead.");
+            }
+
+            scene = coloredmeshes_to_scimesh(coloredmeshes, style = style);
             if(length(scene) == 0L) {
                 warning("No renderable meshes in scene. Nothing to visualize.");
                 return(invisible(NULL));
             }
 
+            # Opt-in hemisphere shift (same as rgl): only affects both-hemi views.
+            if(rglactions.has.key(rglactions, "shift_hemis_apart")) {
+                scene_both = coloredmeshes_to_scimesh(shift.hemis.rglactions(coloredmeshes, rglactions), style = style);
+            } else {
+                scene_both = scene;
+            }
+
             bg_rgba = color_to_rgba(background_color);
-            rw <- rgloptions$windowRect
-            img_w <- if (length(rw) >= 3L) as.integer(rw[3L]) else 800L
-            img_h <- if (length(rw) >= 4L) as.integer(rw[4L]) else 600L
+            output_dims = get.fsbrain.scimesh.output.dims();
             opts = fsbrain_style_to_scimesh_options(style, bg_rgba,
-                                                    width = img_w,
-                                                    height = img_h);
+                                                    width = output_dims[1],
+                                                    height = output_dims[2]);
 
             for(view_idx in seq_len(length(view_angles))) {
                 view = view_angles[[view_idx]];
                 view_image = view_images[[view_idx]];
 
-                cam_info = view_angle_to_scimesh_camera(scene, view);
-                renderable = filter_scene_by_view(scene, cam_info$hemi_filter);
+                hemi_filter = view.angle.to.hemi.filter(view);
+                active_scene = if(hemi_filter == "both") scene_both else scene;
+
+                cam_info = view_angle_to_scimesh_camera(active_scene, view);
+                renderable = filter_scene_by_view(active_scene, hemi_filter);
+
+                highlight_meshes = highlight_points_to_scimesh(rglactions, hemi_filter);
+                if(length(highlight_meshes) > 0L) {
+                    renderable = c(renderable, highlight_meshes);
+                }
 
                 if(length(renderable) > 0L) {
                     img = scimesh::render_scene(renderable, cam_info$camera, opts);

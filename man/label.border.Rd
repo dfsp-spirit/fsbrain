@@ -30,11 +30,11 @@ the border as a list with the following entries: \code{vertices}: integer vector
 Compute the border of a label (i.e., a subset of the vertices of a mesh). The border thickness can be specified. Useful to draw the outline of a region, e.g., a significant cluster on the surface or a part of a ROI from a brain parcellation.
 }
 \seealso{
-Other surface mesh functions: 
-\code{\link{face.edges}()},
-\code{\link{mesh.vertex.included.faces}()},
-\code{\link{mesh.vertex.neighbors}()},
-\code{\link{subject.surface}()},
-\code{\link{vis.path.along.verts}()}
+Other surface mesh functions:
+\code{\link[=face.edges]{face.edges()}},
+\code{\link[=mesh.vertex.included.faces]{mesh.vertex.included.faces()}},
+\code{\link[=mesh.vertex.neighbors]{mesh.vertex.neighbors()}},
+\code{\link[=subject.surface]{subject.surface()}},
+\code{\link[=vis.path.along.verts]{vis.path.along.verts()}}
 }
 \concept{surface mesh functions}

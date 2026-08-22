@@ -26,8 +26,8 @@ qc result as a hemilist, each entry contains a named list as returned by \code{\
 Determine subjects that potentially failed segmentation, based on region-wise morphometry data. The stats can be computed from any kind of data, but something like area or volume most likely works best. The stats are based on the mean of the region values, so the measure should at least roughly follow a normal distribution.
 }
 \seealso{
-Other quality check functions: 
-\code{\link{qc.from.regionwise.df}()},
-\code{\link{qc.from.segstats.table}()}
+Other quality check functions:
+\code{\link[=qc.from.regionwise.df]{qc.from.regionwise.df()}},
+\code{\link[=qc.from.segstats.table]{qc.from.segstats.table()}}
 }
 \concept{quality check functions}

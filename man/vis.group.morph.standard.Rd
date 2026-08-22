@@ -50,11 +50,11 @@ The subjects are plotted row-wise, in the order in which they appear in the 'sub
 You can force an identical plot range for all subjects, so that one color represents identical values across subjects, via 'makecmap_options'. E.g., for the ... parameter, pass \code{makecmap_options=list('colFn'=viridis::viridis, 'range'=c(0, 4)))}.
 }
 \seealso{
-Other group visualization functions: 
-\code{\link{vis.data.on.group.native}()},
-\code{\link{vis.data.on.group.standard}()},
-\code{\link{vis.group.annot}()},
-\code{\link{vis.group.coloredmeshes}()},
-\code{\link{vis.group.morph.native}()}
+Other group visualization functions:
+\code{\link[=vis.data.on.group.native]{vis.data.on.group.native()}},
+\code{\link[=vis.data.on.group.standard]{vis.data.on.group.standard()}},
+\code{\link[=vis.group.annot]{vis.group.annot()}},
+\code{\link[=vis.group.coloredmeshes]{vis.group.coloredmeshes()}},
+\code{\link[=vis.group.morph.native]{vis.group.morph.native()}}
 }
 \concept{group visualization functions}

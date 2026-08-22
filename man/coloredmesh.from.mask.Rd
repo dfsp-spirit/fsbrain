@@ -36,17 +36,17 @@ coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} me
 Create a coloredmesh from a mask.
 }
 \seealso{
-Other mask functions: 
-\code{\link{mask.from.labeldata.for.hemi}()},
-\code{\link{vis.mask.on.subject}()}
+Other mask functions:
+\code{\link[=mask.from.labeldata.for.hemi]{mask.from.labeldata.for.hemi()}},
+\code{\link[=vis.mask.on.subject]{vis.mask.on.subject()}}
 
-Other coloredmesh functions: 
-\code{\link{coloredmesh.from.annot}()},
-\code{\link{coloredmesh.from.label}()},
-\code{\link{coloredmesh.from.morph.native}()},
-\code{\link{coloredmesh.from.morph.standard}()},
-\code{\link{coloredmesh.from.morphdata}()},
-\code{\link{coloredmeshes.from.color}()}
+Other coloredmesh functions:
+\code{\link[=coloredmesh.from.annot]{coloredmesh.from.annot()}},
+\code{\link[=coloredmesh.from.label]{coloredmesh.from.label()}},
+\code{\link[=coloredmesh.from.morph.native]{coloredmesh.from.morph.native()}},
+\code{\link[=coloredmesh.from.morph.standard]{coloredmesh.from.morph.standard()}},
+\code{\link[=coloredmesh.from.morphdata]{coloredmesh.from.morphdata()}},
+\code{\link[=coloredmeshes.from.color]{coloredmeshes.from.color()}}
 }
 \concept{coloredmesh functions}
 \concept{mask functions}

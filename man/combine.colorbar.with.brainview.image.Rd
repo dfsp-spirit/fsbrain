@@ -48,8 +48,8 @@ named list with entries 'output_img_path': character string, path to saved image
 Combine a colorbar and a brainview image into a new figure.
 }
 \seealso{
-Other colorbar functions: 
-\code{\link{coloredmesh.plot.colorbar.separate}()},
-\code{\link{combine.colorbar.with.brainview.animation}()}
+Other colorbar functions:
+\code{\link[=coloredmesh.plot.colorbar.separate]{coloredmesh.plot.colorbar.separate()}},
+\code{\link[=combine.colorbar.with.brainview.animation]{combine.colorbar.with.brainview.animation()}}
 }
 \concept{colorbar functions}

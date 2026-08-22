@@ -30,20 +30,20 @@ integer vector with label data: the list of vertex indices in the label. See 're
 The returned label can be used to mask morphometry data, e.g., to set the values of a certain region to \code{NaN} or to extract only values from a certain region.
 }
 \seealso{
-Other atlas functions: 
-\code{\link{get.atlas.region.names}()},
-\code{\link{group.agg.atlas.native}()},
-\code{\link{group.agg.atlas.standard}()},
-\code{\link{group.annot}()},
-\code{\link{group.label.from.annot}()},
-\code{\link{label.to.annot}()},
-\code{\link{regions.to.ignore}()},
-\code{\link{spread.values.over.annot}()},
-\code{\link{spread.values.over.hemi}()},
-\code{\link{spread.values.over.subject}()},
-\code{\link{subject.annot}()},
-\code{\link{subject.atlas.agg}()},
-\code{\link{subject.label.from.annot}()},
-\code{\link{subject.lobes}()}
+Other atlas functions:
+\code{\link[=get.atlas.region.names]{get.atlas.region.names()}},
+\code{\link[=group.agg.atlas.native]{group.agg.atlas.native()}},
+\code{\link[=group.agg.atlas.standard]{group.agg.atlas.standard()}},
+\code{\link[=group.annot]{group.annot()}},
+\code{\link[=group.label.from.annot]{group.label.from.annot()}},
+\code{\link[=label.to.annot]{label.to.annot()}},
+\code{\link[=regions.to.ignore]{regions.to.ignore()}},
+\code{\link[=spread.values.over.annot]{spread.values.over.annot()}},
+\code{\link[=spread.values.over.hemi]{spread.values.over.hemi()}},
+\code{\link[=spread.values.over.subject]{spread.values.over.subject()}},
+\code{\link[=subject.annot]{subject.annot()}},
+\code{\link[=subject.atlas.agg]{subject.atlas.agg()}},
+\code{\link[=subject.label.from.annot]{subject.label.from.annot()}},
+\code{\link[=subject.lobes]{subject.lobes()}}
 }
 \concept{atlas functions}

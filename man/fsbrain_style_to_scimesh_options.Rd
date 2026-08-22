@@ -4,7 +4,12 @@
 \alias{fsbrain_style_to_scimesh_options}
 \title{Map an fsbrain rendering style to scimesh render options}
 \usage{
-fsbrain_style_to_scimesh_options(style = "default", bg_rgba = c(1, 1, 1, 1))
+fsbrain_style_to_scimesh_options(
+  style = "default",
+  bg_rgba = c(1, 1, 1, 1),
+  width = 800L,
+  height = 600L
+)
 }
 \arguments{
 \item{style}{character string, an fsbrain style name. See
@@ -12,6 +17,10 @@ fsbrain_style_to_scimesh_options(style = "default", bg_rgba = c(1, 1, 1, 1))
 
 \item{bg_rgba}{numeric vector of length 4, the background color in RGBA
 (0-1 scale).}
+
+\item{width}{integer, output image width in pixels. Defaults to 800.}
+
+\item{height}{integer, output image height in pixels. Defaults to 600.}
 }
 \value{
 a scimesh render options list from \code{render_options()}.

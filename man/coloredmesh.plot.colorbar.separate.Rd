@@ -56,8 +56,8 @@ If you increase the output resolution of the colorbar (using 'png_options'), you
 
 }
 \seealso{
-Other colorbar functions: 
-\code{\link{combine.colorbar.with.brainview.animation}()},
-\code{\link{combine.colorbar.with.brainview.image}()}
+Other colorbar functions:
+\code{\link[=combine.colorbar.with.brainview.animation]{combine.colorbar.with.brainview.animation()}},
+\code{\link[=combine.colorbar.with.brainview.image]{combine.colorbar.with.brainview.image()}}
 }
 \concept{colorbar functions}

@@ -49,11 +49,11 @@ Compute a binary vertex mask for the surface vertices of a subject. By defaults,
 
 }
 \seealso{
-Other label functions: 
-\code{\link{apply.label.to.morphdata}()},
-\code{\link{apply.labeldata.to.morphdata}()},
-\code{\link{subject.lobes}()},
-\code{\link{vis.labeldata.on.subject}()},
-\code{\link{vis.subject.label}()}
+Other label functions:
+\code{\link[=apply.label.to.morphdata]{apply.label.to.morphdata()}},
+\code{\link[=apply.labeldata.to.morphdata]{apply.labeldata.to.morphdata()}},
+\code{\link[=subject.lobes]{subject.lobes()}},
+\code{\link[=vis.labeldata.on.subject]{vis.labeldata.on.subject()}},
+\code{\link[=vis.subject.label]{vis.subject.label()}}
 }
 \concept{label functions}

@@ -18,9 +18,9 @@ see \code{\link[fsbrain]{qc.from.regionwise.df}}
 Perform data quality check based on a segstats table.
 }
 \seealso{
-Other quality check functions: 
-\code{\link{qc.for.group}()},
-\code{\link{qc.from.regionwise.df}()}
+Other quality check functions:
+\code{\link[=qc.for.group]{qc.for.group()}},
+\code{\link[=qc.from.regionwise.df]{qc.from.regionwise.df()}}
 }
 \concept{quality check functions}
 \keyword{internal}

@@ -23,9 +23,9 @@ Load a list of subjects from a subjects file, i.e., a simple text file containin
 
 }
 \seealso{
-Other metadata functions: 
-\code{\link{demographics.to.fsgd.file}()},
-\code{\link{read.md.demographics}()},
-\code{\link{report.on.demographics}()}
+Other metadata functions:
+\code{\link[=demographics.to.fsgd.file]{demographics.to.fsgd.file()}},
+\code{\link[=read.md.demographics]{read.md.demographics()}},
+\code{\link[=report.on.demographics]{report.on.demographics()}}
 }
 \concept{metadata functions}

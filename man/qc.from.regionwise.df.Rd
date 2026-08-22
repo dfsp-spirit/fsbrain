@@ -27,8 +27,8 @@ named list with entries: 'failed_subjects': vector of character strings, the sub
 Determine subjects that potentially failed segmentation, based on region-wise data. The data can be anything, but there must be one numerical value per subject per region.
 }
 \seealso{
-Other quality check functions: 
-\code{\link{qc.for.group}()},
-\code{\link{qc.from.segstats.table}()}
+Other quality check functions:
+\code{\link[=qc.for.group]{qc.for.group()}},
+\code{\link[=qc.from.segstats.table]{qc.from.segstats.table()}}
 }
 \concept{quality check functions}

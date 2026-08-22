@@ -70,14 +70,33 @@ hex_colors_to_rgba_matrix <- function(hex_colors) {
 }
 
 
+#' @title Extract the alpha value from resolved style parameters
+#'
+#' @param style_params a named list of style parameters (rgl material3d style).
+#'
+#' @return numeric scalar alpha in 0..1, defaults to 1 (opaque) if not set.
+#'
+#' @keywords internal
+apply.style.alpha <- function(style_params) {
+    if (is.list(style_params) && !is.null(style_params$alpha)) {
+        return(as.numeric(style_params$alpha)[1L])
+    }
+    return(1.0)
+}
+
+
 #' @title Convert a single fs.coloredmesh to a scimesh mesh descriptor
 #'
 #' @param cmesh an fs.coloredmesh instance.
 #'
+#' @param style a rendering style: a style name, a named list of style
+#'   parameters, or 'from_mesh' (use cmesh$style). Only the alpha value is
+#'   consumed here (per-mesh vertex alpha).
+#'
 #' @return a scimesh mesh descriptor list with vertices, triangles, and colors.
 #'
 #' @keywords internal
-coloredmesh_to_scimesh <- function(cmesh) {
+coloredmesh_to_scimesh <- function(cmesh, style = "default") {
     if (!requireNamespace("scimesh", quietly = TRUE)) {
         stop("The 'scimesh' package is required for the scimesh renderer backend.")
     }
@@ -92,7 +111,12 @@ coloredmesh_to_scimesh <- function(cmesh) {
     if (length(hex_colors) == 1L) {
         hex_colors <- rep(hex_colors, nrow(smesh$vertices))
     }
-    smesh$colors <- hex_colors_to_rgba_matrix(hex_colors)
+    rgba <- hex_colors_to_rgba_matrix(hex_colors)
+
+    style_params <- get.rglstyle.parameters(cmesh, style)
+    rgba[, "A"] <- apply.style.alpha(style_params)
+
+    smesh$colors <- rgba
 
     return(smesh)
 }
@@ -103,16 +127,19 @@ coloredmesh_to_scimesh <- function(cmesh) {
 #' @param coloredmeshes a named list with entries "lh" and/or "rh", each an
 #'   fs.coloredmesh instance.
 #'
+#' @param style a rendering style (see \code{\link{get.rglstyle}}), passed
+#'   through to \code{coloredmesh_to_scimesh}.
+#'
 #' @return a named list of scimesh mesh descriptors, with the same hemilist
 #'   structure. Only meshes with \code{render=TRUE} are included.
 #'
 #' @keywords internal
-coloredmeshes_to_scimesh <- function(coloredmeshes) {
+coloredmeshes_to_scimesh <- function(coloredmeshes, style = "default") {
     scene <- list()
 
     if (is.fs.coloredmesh(coloredmeshes)) {
         if (isTRUE(coloredmeshes$render)) {
-            return(list("single" = coloredmesh_to_scimesh(coloredmeshes)))
+            return(list("single" = coloredmesh_to_scimesh(coloredmeshes, style)))
         } else {
             return(list())
         }
@@ -125,17 +152,17 @@ coloredmeshes_to_scimesh <- function(coloredmeshes) {
         if (has_lh || has_rh) {
             if (has_lh && is.fs.coloredmesh(coloredmeshes$lh) &&
                 isTRUE(coloredmeshes$lh$render)) {
-                scene$lh <- coloredmesh_to_scimesh(coloredmeshes$lh)
+                scene$lh <- coloredmesh_to_scimesh(coloredmeshes$lh, style)
             }
             if (has_rh && is.fs.coloredmesh(coloredmeshes$rh) &&
                 isTRUE(coloredmeshes$rh$render)) {
-                scene$rh <- coloredmesh_to_scimesh(coloredmeshes$rh)
+                scene$rh <- coloredmesh_to_scimesh(coloredmeshes$rh, style)
             }
         } else {
             for (idx in seq_along(coloredmeshes)) {
                 cmesh <- coloredmeshes[[idx]]
                 if (is.fs.coloredmesh(cmesh) && isTRUE(cmesh$render)) {
-                    scene[[length(scene) + 1L]] <- coloredmesh_to_scimesh(cmesh)
+                    scene[[length(scene) + 1L]] <- coloredmesh_to_scimesh(cmesh, style)
                 }
             }
         }
@@ -178,6 +205,31 @@ filter_scene_by_view <- function(scene, hemi_filter) {
     }
 
     return(list())
+}
+
+
+#' @title Get the hemisphere filter for a view angle
+#'
+#' @param view_angle character string, a valid view angle (with or without the
+#'   'sd_' prefix).
+#'
+#' @return character string, one of "lh", "rh", or "both".
+#'
+#' @keywords internal
+view.angle.to.hemi.filter <- function(view_angle) {
+    if (startsWith(view_angle, "sd_")) {
+        view_angle <- substring(view_angle, 4L)
+    }
+    return(switch(view_angle,
+        "lateral_lh" = "lh",
+        "medial_lh"  = "lh",
+        "lateral_rh" = "rh",
+        "medial_rh"  = "rh",
+        "dorsal"     = "both",
+        "ventral"    = "both",
+        "rostral"    = "both",
+        "caudal"     = "both",
+        stop(sprintf("Invalid view_angle '%s'.", view_angle))))
 }
 
 
@@ -286,13 +338,7 @@ fsbrain_style_to_scimesh_options <- function(style = "default",
         stop("The 'scimesh' package is required for the scimesh renderer backend.")
     }
 
-    if (is.list(style)) {
-        rgl_params <- style
-    } else if (is.character(style)) {
-        rgl_params <- get.rglstyle(style)
-    } else {
-        stop("Parameter 'style' must be a character string or a named list.")
-    }
+    rgl_params <- get.rglstyle.parameters(list(), style)
 
     shading <- "smooth"
     backface_culling <- TRUE
@@ -332,6 +378,62 @@ fsbrain_style_to_scimesh_options <- function(style = "default",
         specular_color = specular_color,
         shininess = shininess
     )
+}
+
+
+#' @title Convert highlight points (rglactions) to scimesh sphere meshes
+#'
+#' @param rglactions named list; the entry 'highlight_points' is used if present.
+#' @param hemi_filter character string, one of "lh", "rh", or "both".
+#'
+#' @return list of scimesh mesh descriptors (spheres), possibly empty.
+#'
+#' @keywords internal
+highlight_points_to_scimesh <- function(rglactions, hemi_filter = "both") {
+    if (!rglactions.has.key(rglactions, "highlight_points")) {
+        return(list())
+    }
+    hp <- rglactions$highlight_points
+    coords <- hp$coords
+    color <- hp$color
+    radius <- if (is.null(hp$radius)) 1.0 else hp$radius
+    if (is.null(color)) {
+        color <- "#FF0000"
+    }
+    if (is.vector(coords)) {
+        coords <- matrix(coords, ncol = 3L, byrow = TRUE)
+    }
+    if (hemi_filter != "both" && !is.null(hp$hemi)) {
+        idx <- which(hp$hemi == hemi_filter)
+        coords <- coords[idx, , drop = FALSE]
+        color <- color[idx]
+    }
+    if (nrow(coords) == 0L) {
+        return(list())
+    }
+    color <- recycle(color, nrow(coords))
+    spheres <- list()
+    for (i in seq_len(nrow(coords))) {
+        rgba <- color_to_rgba(color[[i]])
+        spheres[[length(spheres) + 1L]] <- scimesh::generate_sphere(
+            center = coords[i, ], radius = radius, color = rgba)
+    }
+    return(spheres)
+}
+
+
+#' @title Get the output image dimensions for the scimesh backend
+#'
+#' @return integer vector of length 2 (width, height), read from the global
+#'   option 'fsbrain.scimesh.output_dims'. Defaults to 1920x1080.
+#'
+#' @keywords internal
+get.fsbrain.scimesh.output.dims <- function() {
+    dims <- getOption("fsbrain.scimesh.output_dims", default = c(1920L, 1080L))
+    if (!is.numeric(dims) || length(dims) != 2L) {
+        stop("Option 'fsbrain.scimesh.output_dims' must be a numeric vector of length 2 (width, height).")
+    }
+    return(as.integer(dims))
 }
 
 

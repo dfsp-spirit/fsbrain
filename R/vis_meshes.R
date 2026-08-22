@@ -245,30 +245,13 @@ vis.rotated.coloredmeshes <- function(renderables, rotation_angle, x, y, z, styl
     if(is.null(renderables)) {
         return(invisible(NULL));
     }
+    rot_matrix = rotation.matrix(rotation_angle, x, y, z);
     for (mesh_idx in seq_len(length(renderables))) {     # usually this will only run once for the single mesh of a hemisphere.
         orig_renderable = renderables[[mesh_idx]];
-        do_vis = TRUE;
-        if(is.fs.coloredmesh(orig_renderable)) {
-            orig_mesh = orig_renderable$mesh;
-            rotated_mesh = rgl::rotate3d(orig_mesh, rotation_angle, x, y, z);
-            rotated_renderable = orig_renderable;         # copy coloredmesh
-            rotated_renderable$mesh = rotated_mesh;  # replace inner mesh with rotated version
-        } else if(is.fs.coloredvoxels(orig_renderable)) {
-            colvox = orig_renderable;
-            colvox$voxeltris = rgl::rotate3d(colvox$voxeltris, rotation_angle, x, y, z);
-            rotated_renderable = colvox;
-        } else if(is.Triangles3D(orig_renderable)) {
-            tris3d = orig_renderable;
-            tris3d$v1 = rgl::rotate3d(tris3d$v1, rotation_angle, x, y, z);
-            tris3d$v2 = rgl::rotate3d(tris3d$v2, rotation_angle, x, y, z);
-            tris3d$v3 = rgl::rotate3d(tris3d$v3, rotation_angle, x, y, z);
-            rotated_renderable = tris3d;
-        } else {
+        rotated_renderable = tryCatch(transform.renderable(orig_renderable, rot_matrix), error = function(e) e);
+        if(inherits(rotated_renderable, "error")) {
             warning(sprintf("Rotation not supported for object of type '%s'. Not rendering object.\n", paste(class(orig_renderable), collapse = " ")));
-            do_vis = FALSE;
-        }
-
-        if(do_vis) {
+        } else {
             vis.renderable(rotated_renderable, style=style);
         }
     }
@@ -314,21 +297,16 @@ vis.coloredmesh <- function(cmesh, style="default") {
 #' @keywords internal
 get.rglstyle.parameters <- function(renderable, style) {
     if(is.list(style)) {
-        style_params = style;
-    } else if (is.character(style)) {
-        if(style == 'from_mesh') {
-            if(!is.null(renderable$style)) {
-                style = renderable$style;
-            } else {
-                style = 'default';
-            }
-        } else {
-            style_params = get.rglstyle(style);
-        }
-    } else {
+        return(style);
+    }
+    if(! is.character(style)) {
         stop("Parameter 'style' must be a named list of style parameters or a string specifying an available style by name (e.g., 'default' or 'shiny').");
     }
-    return(style_params);
+    if(style == 'from_mesh') {
+        style = if(! is.null(renderable$style)) renderable$style else 'default';
+        return(get.rglstyle.parameters(renderable, style));
+    }
+    return(get.rglstyle(style));
 }
 
 

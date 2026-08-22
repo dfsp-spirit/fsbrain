@@ -16,12 +16,12 @@ whether 'x' is a hemilist
 A hemilist is a named list with entries 'lh' and/or 'rh', see \code{\link{hemilist}}.
 }
 \seealso{
-Other hemilist functions: 
-\code{\link{hemilist}()},
-\code{\link{hemilist.derive.hemi}()},
-\code{\link{hemilist.from.prefixed.list}()},
-\code{\link{hemilist.get.combined.data}()},
-\code{\link{hemilist.unwrap}()},
-\code{\link{hemilist.wrap}()}
+Other hemilist functions:
+\code{\link[=hemilist]{hemilist()}},
+\code{\link[=hemilist.derive.hemi]{hemilist.derive.hemi()}},
+\code{\link[=hemilist.from.prefixed.list]{hemilist.from.prefixed.list()}},
+\code{\link[=hemilist.get.combined.data]{hemilist.get.combined.data()}},
+\code{\link[=hemilist.unwrap]{hemilist.unwrap()}},
+\code{\link[=hemilist.wrap]{hemilist.wrap()}}
 }
 \concept{hemilist functions}

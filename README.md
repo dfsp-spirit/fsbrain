@@ -66,11 +66,13 @@ To activate the scimesh backend for the current R session:
 options(fsbrain.renderer_backend = "scimesh");
 ```
 
-Now all `vis.*` functions and `vislayout.from.coloredmeshes()` will render with scimesh. Switch back at any time:
+Static image export (`vislayout.from.coloredmeshes()` and `export()`) now renders with scimesh. Interactive `views` (e.g., `views = "si"`, `"sr"`, `"t4"`, `"t9"`) still use rgl. Switch back at any time:
 
 ```r
 options(fsbrain.renderer_backend = "rgl");
 ```
+
+Set the output image resolution (default 1920x1080) with the `fsbrain.scimesh.output_dims` option, e.g. `options(fsbrain.scimesh.output_dims = c(1600, 900))`.
 
 **What scimesh supports**: All static image export (single views, multi-view layouts, colorbars), all rendering styles. **What it does not**: Interactive 3D windows, real-time rotation, browser-based widgets (`vis.rglwidget`), animated GIFs — these remain available through the default rgl backend. In practice, most users only need static images for presentations and publications, for which scimesh works perfectly.
 

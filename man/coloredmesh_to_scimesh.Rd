@@ -4,10 +4,14 @@
 \alias{coloredmesh_to_scimesh}
 \title{Convert a single fs.coloredmesh to a scimesh mesh descriptor}
 \usage{
-coloredmesh_to_scimesh(cmesh)
+coloredmesh_to_scimesh(cmesh, style = "default")
 }
 \arguments{
 \item{cmesh}{an fs.coloredmesh instance.}
+
+\item{style}{a rendering style: a style name, a named list of style
+parameters, or 'from_mesh' (use cmesh$style). Only the alpha value is
+consumed here (per-mesh vertex alpha).}
 }
 \value{
 a scimesh mesh descriptor list with vertices, triangles, and colors.

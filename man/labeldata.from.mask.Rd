@@ -18,9 +18,9 @@ labeldata. The list of indices which are TRUE in the mask (or the ones which FAL
 Create labeldata from a mask. This function is trivial and only calls \code{\link{which}} after performing basic sanity checks.
 }
 \seealso{
-Other label data functions: 
-\code{\link{group.label}()},
-\code{\link{mask.from.labeldata.for.hemi}()},
-\code{\link{subject.label}()}
+Other label data functions:
+\code{\link[=group.label]{group.label()}},
+\code{\link[=mask.from.labeldata.for.hemi]{mask.from.labeldata.for.hemi()}},
+\code{\link[=subject.label]{subject.label()}}
 }
 \concept{label data functions}

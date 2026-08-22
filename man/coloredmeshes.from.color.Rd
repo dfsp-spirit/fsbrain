@@ -33,12 +33,12 @@ named list of coloredmeshes. Each entry is a named list with entries: "mesh" the
 Create coloredmeshes for both hemis using pre-defined colors.
 }
 \seealso{
-Other coloredmesh functions: 
-\code{\link{coloredmesh.from.annot}()},
-\code{\link{coloredmesh.from.label}()},
-\code{\link{coloredmesh.from.mask}()},
-\code{\link{coloredmesh.from.morph.native}()},
-\code{\link{coloredmesh.from.morph.standard}()},
-\code{\link{coloredmesh.from.morphdata}()}
+Other coloredmesh functions:
+\code{\link[=coloredmesh.from.annot]{coloredmesh.from.annot()}},
+\code{\link[=coloredmesh.from.label]{coloredmesh.from.label()}},
+\code{\link[=coloredmesh.from.mask]{coloredmesh.from.mask()}},
+\code{\link[=coloredmesh.from.morph.native]{coloredmesh.from.morph.native()}},
+\code{\link[=coloredmesh.from.morph.standard]{coloredmesh.from.morph.standard()}},
+\code{\link[=coloredmesh.from.morphdata]{coloredmesh.from.morphdata()}}
 }
 \concept{coloredmesh functions}

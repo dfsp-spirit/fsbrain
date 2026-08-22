@@ -221,7 +221,7 @@ handle.rglactions.highlight.points <- function(rglactions, angle_rad, x, y, z, h
             # Can happen if the hemi filtering removes all coords (i.e., no points to highlight on this hemi).
             return(invisible(NULL));
         }
-        coords = rgl::rotate3d(coords, angle_rad, x, y, z);
+        coords = transform.renderable(coords, rotation.matrix(angle_rad, x, y, z));
         highlight.points.spheres(coords, color = color, radius = rglactions$highlight_points$radius);
     }
 }

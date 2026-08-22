@@ -18,12 +18,12 @@ integer vector, the face indices
 Return all faces which are made up completely of the listed vertices.
 }
 \seealso{
-Other surface mesh functions: 
-\code{\link{face.edges}()},
-\code{\link{label.border}()},
-\code{\link{mesh.vertex.neighbors}()},
-\code{\link{subject.surface}()},
-\code{\link{vis.path.along.verts}()}
+Other surface mesh functions:
+\code{\link[=face.edges]{face.edges()}},
+\code{\link[=label.border]{label.border()}},
+\code{\link[=mesh.vertex.neighbors]{mesh.vertex.neighbors()}},
+\code{\link[=subject.surface]{subject.surface()}},
+\code{\link[=vis.path.along.verts]{vis.path.along.verts()}}
 }
 \concept{surface mesh functions}
 \keyword{internal}

@@ -24,7 +24,7 @@ Imports:
 Suggests:
     knitr,
     rmarkdown,
-    scimesh,
+    scimesh (>= 0.3.4),
     testthat (>= 2.1.0),
     sphereplot (>= 1.5),
     misc3d,
@@ -33,4 +33,4 @@ Suggests:
     igraph,
     pracma
 VignetteBuilder: knitr
-RoxygenNote: 7.3.3
+Config/roxygen2/version: 8.0.0

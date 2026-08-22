@@ -4,11 +4,14 @@
 \alias{coloredmeshes_to_scimesh}
 \title{Convert a hemilist of fs.coloredmeshes to a list of scimesh mesh descriptors}
 \usage{
-coloredmeshes_to_scimesh(coloredmeshes)
+coloredmeshes_to_scimesh(coloredmeshes, style = "default")
 }
 \arguments{
 \item{coloredmeshes}{a named list with entries "lh" and/or "rh", each an
 fs.coloredmesh instance.}
+
+\item{style}{a rendering style (see \code{\link{get.rglstyle}}), passed
+through to \code{coloredmesh_to_scimesh}.}
 }
 \value{
 a named list of scimesh mesh descriptors, with the same hemilist
