@@ -460,15 +460,15 @@ path.colors.from.orientation <- function(coords_list, use_three_colors_only = FA
         }
     } else {
         angles = path.slopes(coords_list, return_angles = TRUE); # in degrees, -90..+90
-        path_colors = cbind(as.integer(scale.to.range.zero.one(angles[,1])*255), as.integer(scale.to.range.zero.one(angles[,2])*255), as.integer(scale.to.range.zero.one(angles[,3])*255));
+        path_colors = cbind(as.integer(scale_to_range_zero_one(angles[,1])*255), as.integer(scale_to_range_zero_one(angles[,2])*255), as.integer(scale_to_range_zero_one(angles[,3])*255));
     }
 
     return(path_colors);
 }
 
 #' @title Scale given values to range 0..1.
-#' @keywords internal
-scale.to.range.zero.one <- function(x, ...){(x - min(x, ...)) / (max(x, ...) - min(x, ...))}
+#' @noRd
+scale_to_range_zero_one <- function(x, ...){(x - min(x, ...)) / (max(x, ...) - min(x, ...))}
 
 
 #' @title Scale given values to range 0..1.
@@ -480,7 +480,7 @@ scale.to.range.zero.one <- function(x, ...){(x - min(x, ...)) / (max(x, ...) - m
 #' @return the scaled data
 #'
 #' @export
-scale01 <- function(x, ...) { scale.to.range.zero.one(x, ...) }
+scale01 <- function(x, ...) { scale_to_range_zero_one(x, ...) }
 
 
 #' @title Given a list of path coordinates, create matrix containing only the first and last point of each path.

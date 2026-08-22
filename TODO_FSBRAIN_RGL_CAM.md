@@ -36,7 +36,7 @@ mechanism differs. Until this is unified, backend parity is guaranteed by
 ## Plan
 
 ### Step 1 (do now, as part of the scimesh work)
-Centralize the transform in ONE plain-R helper — `transform.renderable(renderable,
+Centralize the transform in ONE plain-R helper — `transform_renderable(renderable,
 matrix)` — and route both the rgl path
 (`vis.rotated.coloredmeshes()`) and `handle.rglactions.highlight.points()`
 through it, plus any scimesh-side geometry. The helper rotates vertex normals

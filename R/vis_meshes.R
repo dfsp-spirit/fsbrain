@@ -248,7 +248,7 @@ vis.rotated.coloredmeshes <- function(renderables, rotation_angle, x, y, z, styl
     rot_matrix = rotation.matrix(rotation_angle, x, y, z);
     for (mesh_idx in seq_len(length(renderables))) {     # usually this will only run once for the single mesh of a hemisphere.
         orig_renderable = renderables[[mesh_idx]];
-        rotated_renderable = tryCatch(transform.renderable(orig_renderable, rot_matrix), error = function(e) e);
+        rotated_renderable = tryCatch(transform_renderable(orig_renderable, rot_matrix), error = function(e) e);
         if(inherits(rotated_renderable, "error")) {
             warning(sprintf("Rotation not supported for object of type '%s'. Not rendering object.\n", paste(class(orig_renderable), collapse = " ")));
         } else {

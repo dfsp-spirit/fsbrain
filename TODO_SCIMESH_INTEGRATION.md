@@ -21,7 +21,7 @@ Status of the `feature/scimesh-backend` branch. Relevant code:
 
 ## Decisions (2026-08-22)
 
-- **Normals**: `transform.renderable()` rotates vertex normals too (rigid rotation)
+- **Normals**: `transform_renderable()` rotates vertex normals too (rigid rotation)
   so it matches `rgl::rotate3d`.
 - **Styles**: `edges` -> scimesh `wireframe`. `semitransparent`/`glass` ->
   plain alpha on the RGBA A channel; the rgl `back="lines"` look is NOT
@@ -59,7 +59,7 @@ Status of the `feature/scimesh-backend` branch. Relevant code:
 ### T1. Shared plain-R helpers (foundational)
 Centralize geometry/style/color logic so both backends use one code base.
 
-- [ ] `transform.renderable(renderable, matrix)` (single helper): rotate/translate a
+- [ ] `transform_renderable(renderable, matrix)` (single helper): rotate/translate a
       renderable's geometry in base R, rotating vertex normals too (rigid
       rotation) to match `rgl::rotate3d`. Route the rgl path
       (`vis.rotated.coloredmeshes()` in `R/vis_meshes.R`) and
@@ -100,7 +100,7 @@ Centralize geometry/style/color logic so both backends use one code base.
 ### T5. Tests, CI, docs
 - [ ] CI leg that installs scimesh from CRAN and runs a headless smoke test
       with `options(fsbrain.renderer_backend = "scimesh")` (no X11/xvfb).
-- [ ] Unit tests for the plain-R helpers (`transform.renderable`,
+- [ ] Unit tests for the plain-R helpers (`transform_renderable`,
       `apply.style.alpha`, camera mapping, empty-scene handling).
 - [ ] Keep this file and `TODO_FSBRAIN_RGL_CAM.md` up to date.
 

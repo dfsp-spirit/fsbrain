@@ -100,7 +100,7 @@ arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=
         }
 
         if(map_bg_to_transparency) {
-            merged_img = image.remap.color(merged_img, source_color=background_color, source_point = NULL);
+            merged_img = image_remap_color(merged_img, source_color=background_color, source_point = NULL);
         }
 
         magick::image_write(merged_img, path = output_img);
@@ -126,8 +126,8 @@ arrange.brainview.images <- function(brainview_images, output_img, colorbar_img=
 #'
 #' @param target_color an image magick color string, use 'none' for transparency. Only used with flood fill.
 #'
-#' @keywords internal
-image.remap.color <- function(source_img, source_color=NULL, source_point="+1+1", target_color="none") {
+#' @noRd
+image_remap_color <- function(source_img, source_color=NULL, source_point="+1+1", target_color="none") {
     if(is.null(source_color)) {
         if(is.null(source_point)) {
             stop("One of 'source_color' or 'source_point' must be provided.");

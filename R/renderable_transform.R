@@ -48,8 +48,8 @@ rotation.matrix <- function(angle_rad, x, y, z) {
 #'
 #' @return Nx3 numeric matrix of transformed coordinates.
 #'
-#' @keywords internal
-transform.coords <- function(coords, matrix) {
+#' @noRd
+transform_coords <- function(coords, matrix) {
     if(is.null(coords)) {
         return(coords);
     }
@@ -61,7 +61,12 @@ transform.coords <- function(coords, matrix) {
     }
     R <- matrix[1:3, 1:3, drop = FALSE];
     tvec <- matrix[1:3, 4L];
-    return(t(t(R %*% t(coords)) + tvec));
+    n <- nrow(coords);
+    result <- coords %*% R;
+    if(n > 0L) {
+        result <- result + matrix(tvec, nrow = n, ncol = 3L, byrow = TRUE);
+    }
+    return(result);
 }
 
 
@@ -81,38 +86,43 @@ transform.coords <- function(coords, matrix) {
 #'
 #' @return a transformed copy of \code{x}.
 #'
-#' @keywords internal
-transform.renderable <- function(x, matrix, ...) {
+#' @noRd
+transform_renderable <- function(x, matrix, ...) {
     if(is.fs.coloredmesh(x)) {
-        x$mesh <- transform.renderable(x$mesh, matrix);
+        x$mesh <- transform_renderable(x$mesh, matrix);
         return(x);
     }
     if(is.fs.coloredvoxels(x)) {
-        x$voxeltris <- transform.renderable(x$voxeltris, matrix);
+        x$voxeltris <- transform_renderable(x$voxeltris, matrix);
         return(x);
     }
     if(is.Triangles3D(x)) {
-        x$v1 <- transform.coords(x$v1, matrix);
-        x$v2 <- transform.coords(x$v2, matrix);
-        x$v3 <- transform.coords(x$v3, matrix);
+        x$v1 <- transform_coords(x$v1, matrix);
+        x$v2 <- transform_coords(x$v2, matrix);
+        x$v3 <- transform_coords(x$v3, matrix);
         return(x);
     }
-    if(is.matrix(x)) {
-        return(transform.coords(x, matrix));
+    if(is.matrix(x) || is.numeric(x)) {
+        return(transform_coords(x, matrix));
     }
     if(inherits(x, "mesh3d") || (is.list(x) && ! is.null(x$vb))) {
+        R <- matrix[1:3, 1:3, drop = FALSE];
+        tR <- t(R);
+        tvec <- matrix[1:3, 4L];
         if(! is.null(x$vb)) {
-            x$vb <- matrix %*% x$vb;
+            x$vb[1:3, ] <- tR %*% x$vb[1:3, , drop = FALSE];
+            if(any(tvec != 0)) {
+                x$vb[1:3, ] <- x$vb[1:3, ] + tvec;
+            }
         }
         if(! is.null(x$normals)) {
-            R <- matrix[1:3, 1:3, drop = FALSE];
             nrm <- x$normals;
             if(nrow(nrm) >= 3L) {
-                nrm[1:3, ] <- R %*% nrm[1:3, , drop = FALSE];
+                nrm[1:3, ] <- tR %*% nrm[1:3, , drop = FALSE];
                 x$normals <- nrm;
             }
         }
         return(x);
     }
-    stop(sprintf("transform.renderable not supported for object of class '%s'.", paste(class(x), collapse = " ")));
+    stop(sprintf("transform_renderable not supported for object of class '%s'.", paste(class(x), collapse = " ")));
 }

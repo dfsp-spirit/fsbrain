@@ -14,18 +14,20 @@ test_that("rotation.matrix matches rgl::rotationMatrix.", {
 });
 
 
-test_that("apply.transform rotates matrices and mesh3d objects (incl. normals).", {
+test_that("transform_renderable rotates matrices and mesh3d objects (incl. normals).", {
     M <- rotation.matrix(pi / 2, 0, 0, 1);
     pts <- rbind(c(1, 2, 3), c(4, 5, 6), c(0, 0, 1));
-    expected <- t(t(M[1:3, 1:3] %*% t(pts)) + M[1:3, 4]);
-    expect_equal(transform.renderable(pts, M), expected, tolerance = 1e-12);
+    expect_equal(transform_renderable(pts, M), rgl::rotate3d(pts, pi / 2, 0, 0, 1), tolerance = 1e-12);
 
     m <- rgl::tetrahedron3d();
-    m$normals <- m$vb;
-    m$normals[4, ] <- 0;
-    rot <- transform.renderable(m, M);
-    expect_equal(rot$vb, M %*% m$vb, tolerance = 1e-12);
-    expect_equal(rot$normals[1:3, ], M[1:3, 1:3] %*% m$normals[1:3, ], tolerance = 1e-12);
+    rot <- transform_renderable(m, M);
+    expect_equal(rot$vb, rgl::rotate3d(m, pi / 2, 0, 0, 1)$vb, tolerance = 1e-12);
+
+    m2 <- rgl::tetrahedron3d();
+    m2$normals <- m2$vb;
+    m2$normals[4, ] <- 0;
+    rot2 <- transform_renderable(m2, M);
+    expect_equal(rot2$normals[1:3, ], t(M[1:3, 1:3]) %*% m2$normals[1:3, ], tolerance = 1e-12);
 });
 
 

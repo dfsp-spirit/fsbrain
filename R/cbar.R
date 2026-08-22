@@ -418,8 +418,8 @@ symmrange <- function(x) {
 #'
 #' @importFrom graphics plot box
 #' @importFrom grDevices as.raster
-#' @keywords internal
-plot.fsbrain.colorbar <- function(colors, horizontal=FALSE) {
+#' @noRd
+plot_fsbrain_colorbar <- function(colors, horizontal=FALSE) {
     if(horizontal) {
         graphics::plot(t(grDevices::as.raster(colors)));
     } else {

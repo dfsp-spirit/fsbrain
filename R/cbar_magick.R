@@ -98,7 +98,7 @@ combine.colorbar.with.brainview.image <- function(brainview_img = "fsbrain_arran
         combined_img = magick::image_composite(main_img, cbar_img_trimmed, gravity="south", offset=offset);
 
         if(! is.null(transparency_color)) {
-            combined_img = image.remap.color(combined_img, source_color=background_color, source_point = "+1+1");
+            combined_img = image_remap_color(combined_img, source_color=background_color, source_point = "+1+1");
         }
 
 
@@ -197,7 +197,7 @@ combine.colorbar.with.brainview.image.vertical <- function(brainview_img, colorb
 
         # Apply transparency if requested
         if(! is.null(transparency_color)) {
-            combined_img = image.remap.color(combined_img, source_color=background_color, source_point = "+1+1");
+            combined_img = image_remap_color(combined_img, source_color=background_color, source_point = "+1+1");
         }
 
         magick::image_write(combined_img, path = output_img);
