@@ -7,7 +7,6 @@
 <url><loc>https://dfsp-spirit.github.io/fsbrain/articles/fsbrain.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/articles/fsbrain_faq.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/articles/fsbrain_vol.html</loc></url>
-<url><loc>https://dfsp-spirit.github.io/fsbrain/articles/fsbrain_with_scimesh.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/articles/index.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/authors.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/index.html</loc></url>
@@ -16,7 +15,6 @@
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/annot.outline.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/apply.label.to.morphdata.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/apply.labeldata.to.morphdata.html</loc></url>
-<url><loc>https://dfsp-spirit.github.io/fsbrain/reference/apply.style.alpha.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/apply.transform.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/arrange.brainview.images.grid.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/arrange.brainview.images.html</loc></url>
@@ -48,7 +46,6 @@
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/collayer.from.mask.data.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/collayer.from.morphlike.data.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/collayers.merge.html</loc></url>
-<url><loc>https://dfsp-spirit.github.io/fsbrain/reference/color_to_rgba.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/coloredmesh.from.annot.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/coloredmesh.from.color.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/coloredmesh.from.label.html</loc></url>
@@ -58,11 +55,9 @@
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/coloredmesh.from.morphdata.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/coloredmesh.from.preloaded.data.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/coloredmesh.plot.colorbar.separate.html</loc></url>
-<url><loc>https://dfsp-spirit.github.io/fsbrain/reference/coloredmesh_to_scimesh.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/coloredmeshes.combined.data.range.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/coloredmeshes.from.color.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/coloredmeshes.get.md.html</loc></url>
-<url><loc>https://dfsp-spirit.github.io/fsbrain/reference/coloredmeshes_to_scimesh.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/colorlist.brain.clusters.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/colors.are.grayscale.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/colors.have.transparency.html</loc></url>
@@ -97,7 +92,6 @@
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/extend_neighbors.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/extract.volume.3D.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/face.edges.html</loc></url>
-<url><loc>https://dfsp-spirit.github.io/fsbrain/reference/filter_scene_by_view.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/find.freesurferhome.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/find.subjectsdir.of.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/flc.html</loc></url>
@@ -112,7 +106,6 @@
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/fsaverage.path.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/fsbrain.renderable.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/fsbrain.set.default.figsize.html</loc></url>
-<url><loc>https://dfsp-spirit.github.io/fsbrain/reference/fsbrain_style_to_scimesh_options.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/fslong.subjects.detect.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/fslong.subjects.finished.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/fup.html</loc></url>
@@ -128,8 +121,6 @@
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/geodesic.dists.to.vertex.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/geodesic.path.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/get.atlas.region.names.html</loc></url>
-<url><loc>https://dfsp-spirit.github.io/fsbrain/reference/get.fsbrain.renderer.backend.html</loc></url>
-<url><loc>https://dfsp-spirit.github.io/fsbrain/reference/get.fsbrain.scimesh.output.dims.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/get.rglstyle.default.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/get.rglstyle.edges.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/get.rglstyle.glass.html</loc></url>
@@ -171,14 +162,12 @@
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/hemilist.unwrap.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/hemilist.wrap.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/hemlist.ensure.contains.html</loc></url>
-<url><loc>https://dfsp-spirit.github.io/fsbrain/reference/hex_colors_to_rgba_matrix.html</loc></url>
-<url><loc>https://dfsp-spirit.github.io/fsbrain/reference/hex_to_rgba.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/highlight.points.spheres.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/highlight.vertices.on.subject.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/highlight.vertices.on.subject.spheres.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/highlight.vertices.spheres.html</loc></url>
-<url><loc>https://dfsp-spirit.github.io/fsbrain/reference/highlight_points_to_scimesh.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/hull.retain.along.axis.html</loc></url>
+<url><loc>https://dfsp-spirit.github.io/fsbrain/reference/image.remap.color.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/images.annotate.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/images.dimmax.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/images.rescale.to.max.canvas.html</loc></url>
@@ -224,6 +213,7 @@
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/pervertexdata.smoothnn.compute.fwhm.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/pervertexdata.smoothnn.compute.numiter.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/pervertexdata.smoothnn.html</loc></url>
+<url><loc>https://dfsp-spirit.github.io/fsbrain/reference/plot.fsbrain.colorbar.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/pp.named.list.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/principal.curvatures.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/print.fs.coloredmesh.html</loc></url>
@@ -255,8 +245,8 @@
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/rglot.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/rglvoxels.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/rotation.matrix.for.axis.rot.html</loc></url>
-<url><loc>https://dfsp-spirit.github.io/fsbrain/reference/rotation.matrix.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/safe.image.trim.html</loc></url>
+<url><loc>https://dfsp-spirit.github.io/fsbrain/reference/scale.to.range.zero.one.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/scale01.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/shape.descriptor.names.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/shape.descriptors.html</loc></url>
@@ -306,8 +296,6 @@
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/vdata.split.by.hemi.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/vertex.coords.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/vertex.hemis.html</loc></url>
-<url><loc>https://dfsp-spirit.github.io/fsbrain/reference/view.angle.to.hemi.filter.html</loc></url>
-<url><loc>https://dfsp-spirit.github.io/fsbrain/reference/view_angle_to_scimesh_camera.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/vis.color.on.subject.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/vis.coloredmesh.html</loc></url>
 <url><loc>https://dfsp-spirit.github.io/fsbrain/reference/vis.coloredmeshes.html</loc></url>

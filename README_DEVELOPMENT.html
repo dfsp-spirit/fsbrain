@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">fsbrain</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -21,7 +21,6 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="articles/fsbrain_faq.html">The fsbrain FAQ</a></li>
     <li><a class="dropdown-item" href="articles/fsbrain_vol.html">Brain volume visualization with fsbrain</a></li>
-    <li><a class="dropdown-item" href="articles/fsbrain_with_scimesh.html">fsbrain with the scimesh rendering backend</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json"></form></li>
@@ -35,7 +34,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>fsbrain development information</h1>
-      <small class="dont-index">Source: <a href="https://github.com/dfsp-spirit/fsbrain/blob/v0.7.0/README_DEVELOPMENT.md" class="external-link"><code>README_DEVELOPMENT.md</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dfsp-spirit/fsbrain/blob/master/README_DEVELOPMENT.md" class="external-link"><code>README_DEVELOPMENT.md</code></a></small>
     </div>
 
 <div id="fsbrain-development-information" class="section level1">
@@ -61,44 +60,6 @@
 <li>to run an individual test, or several ones, by name filter: <code>Rscript -e "devtools::test(filter = 'morph_agg')"</code>
 </li>
 </ul></div>
-<div class="section level2">
-<h2 id="running-the-unit-tests-with-the-scimesh-renderer-backend">Running the unit tests with the scimesh renderer backend<a class="anchor" aria-label="anchor" href="#running-the-unit-tests-with-the-scimesh-renderer-backend"></a></h2>
-<p>fsbrain can produce static images with two backends: <strong>rgl</strong> (the default; interactive, hardware-accelerated, needs a display / X11) and <strong>scimesh</strong> (headless, software, no display). The test suite can be run under either backend.</p>
-<div class="section level3">
-<h3 id="selecting-the-backend">Selecting the backend<a class="anchor" aria-label="anchor" href="#selecting-the-backend"></a></h3>
-<p>Set the <code>FSBRAIN_TESTS_USE_SCIMESH</code> environment variable to a truthy value (<code>1</code>, <code>true</code>, <code>yes</code>, <code>on</code>) to run the tests with the scimesh backend:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="va">FSBRAIN_TESTS_USE_SCIMESH</span><span class="op">=</span>true <span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">'devtools::test()'</span></span></code></pre></div>
-<p>or, from an R session:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span><span class="st">"FSBRAIN_TESTS_USE_SCIMESH"</span> <span class="op">=</span> <span class="st">"true"</span><span class="op">)</span>;</span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">test</span><span class="op">(</span><span class="op">)</span>;</span></code></pre></div>
-<p>When the variable is unset (or falsy), the default rgl backend is used.</p>
-</div>
-<div class="section level3">
-<h3 id="what-changes-in-scimesh-mode">What changes in scimesh mode<a class="anchor" aria-label="anchor" href="#what-changes-in-scimesh-mode"></a></h3>
-<ul><li>Static image export tests (<code><a href="reference/vislayout.from.coloredmeshes.html">vislayout.from.coloredmeshes()</a></code>, <code><a href="reference/export.html">export()</a></code>) render through scimesh, headlessly — no X11 required.</li>
-<li>Tests that require the interactive rgl backend (multi-view windows <code>t4</code>/<code>t9</code>/<code>si</code>/<code>sr</code>, highlight spheres, volume contours via <code>misc3d</code>, <code>rglwidget</code>, rotating views) are skipped automatically via the <code>skip_if_rgl_required()</code> helper.</li>
-<li>The test helper <code>box.has.x11display()</code> returns <code>TRUE</code> in scimesh mode, so X11-gated tests do not require a display.</li>
-</ul></div>
-<div class="section level3">
-<h3 id="comparing-the-two-backends">Comparing the two backends<a class="anchor" aria-label="anchor" href="#comparing-the-two-backends"></a></h3>
-<p>The <code>render.demo(coloredmeshes, name = "demo")</code> helper renders the given coloredmeshes from the two medial views (<code>t2</code>) and writes the image to the R session temporary directory as <code>&lt;name&gt;_&lt;backend&gt;.png</code> (e.g. <code>demo_rgl.png</code> / <code>demo_scimesh.png</code>), printing the full path. Running the suite once per backend lets you open the two images side by side in an image viewer to compare them directly.</p>
-</div>
-<div class="section level3">
-<h3 id="extra-long--full-data-tests">Extra-long / full-data tests<a class="anchor" aria-label="anchor" href="#extra-long--full-data-tests"></a></h3>
-<p>Some tests require the full FreeSurfer <code>subject1</code> recon-all output (see <code>box.can.run.all.tests()</code> and <code>testdatapath.subjectsdir.full.subject1()</code> in <code>tests/testthat/helper-functions.R</code>) and are only run when <code>RUN_ALL_FSBRAIN_TESTS</code> is set:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="va">RUN_ALL_FSBRAIN_TESTS</span><span class="op">=</span>sure <span class="fu">devtools::test()</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="devtoolstest-vs-r-cmd-check">
-<code>devtools::test()</code> vs <code>R CMD check</code>
-<a class="anchor" aria-label="anchor" href="#devtoolstest-vs-r-cmd-check"></a></h3>
-<ul><li>
-<code>devtools::test()</code> sets <code>NOT_CRAN=true</code>, so tests guarded by <code><a href="https://testthat.r-lib.org/reference/skip.html" class="external-link">testthat::skip_on_cran()</a></code> actually run.</li>
-<li>
-<code>R CMD check</code> runs the tests in a CRAN-like mode and <strong>skips</strong> all <code>skip_on_cran()</code> tests, which is why the check is much faster and only exercises the lightweight (cube-based) tests.</li>
-</ul></div>
-</div>
 <div class="section level2">
 <h2 id="checking-the-package">Checking the package<a class="anchor" aria-label="anchor" href="#checking-the-package"></a></h2>
 <p>This does a lot more than just running the tests, it checks various coding styles, metadata, and all kinds of other stuff that is specific to what the people running CRAN want you to do. It also builds the documentation by default to check whether that works, so it takes a lot of time.</p>

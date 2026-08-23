@@ -30,40 +30,19 @@ to neuroimaging data in [R](https://www.r-project.org/). It supports
 reading, writing, and visualizing various kinds of raw data and
 statistical results on brain surfaces and volumes. While the package
 provides a very convenient interface for working with data arranged in
-the standard [FreeSurfer](https://freesurfer.net/) directory structure
+the standard [FreeSurfer](http://freesurfer.net/) directory structure
 (SUBJECTS_DIR), *fsbrain* is not limited to this layout or FreeSurfer
 file formats. You can load brain meshes, volumes, and data from a range
 of other neuroimaging software packages and visualize them.
 
 The plots produced by *fsbrain* can be integrated into R notebooks or
-written to high-quality bitmap image files, ready for publication. By
-default, *fsbrain* uses the
-[rgl](https://CRAN.R-project.org/package=rgl) package for rendering,
-which provides fast, hardware-accelerated 3D graphics based on OpenGL.
-As an alternative, *fsbrain* also supports the
-[scimesh](https://CRAN.R-project.org/package=scimesh) software renderer
-— a headless, GPU-free C++ renderer that produces identical static
-images without requiring X11, OpenGL, or a GPU. This is ideal for
-headless servers, HPC clusters, or macOS systems where XQuartz is
-broken.
+written to high-quality bitmap image files, ready for publication. The
+[rgl](https://CRAN.R-project.org/package=rgl) renderer used by *fsbrain*
+provides fast, hardware-accelerated rendering based on the OpenGL
+standard.
 
 ## News
 
-- 2026-08-23: New documentation for the scimesh rendering backend: a new
-  vignette
-  ([`vignette("fsbrain_with_scimesh")`](https://dfsp-spirit.github.io/fsbrain/articles/fsbrain_with_scimesh.md))
-  and an [online notebook with pre-rendered
-  figures](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/fsbrain_with_scimesh.html)
-  that show how to configure fsbrain for headless, GPU-free static image
-  export and how to use the
-  [`export()`](https://dfsp-spirit.github.io/fsbrain/reference/export.md)
-  API, including region- and vertex-based results and a workflow with
-  manually loaded meshes.
-- 2026-07-14: New alternative rendering backend via
-  [scimesh](https://CRAN.R-project.org/package=scimesh). Switchable with
-  `options(fsbrain.renderer_backend = "scimesh")`. Enables
-  publication-quality static images without X11/OpenGL/GPU — great for
-  macOS Tahoe/Sonoma, HPC clusters, and headless servers.
 - 2026-08-20: We have some new online documentation: example notebooks
   demonstrating 2 typical workflows of fMRI result visualization with
   fsbrain. [View them online
@@ -121,49 +100,6 @@ install.packages("fsbrain");
 In case something goes wrong, don’t worry. Just install the missing
 [system dependencies](#system-dependencies) and retry.
 
-### Optional: scimesh rendering backend for headless environments
-
-For headless environments (HPC clusters, servers, CI runners) or macOS
-systems where XQuartz is broken, you can use the
-[scimesh](https://CRAN.R-project.org/package=scimesh) software renderer
-instead of rgl. It produces identical publication-ready static images
-without X11, OpenGL, XQuartz, or a GPU.
-
-``` r
-
-install.packages("scimesh");
-```
-
-To activate the scimesh backend for the current R session:
-
-``` r
-
-options(fsbrain.renderer_backend = "scimesh");
-```
-
-Static image export
-([`vislayout.from.coloredmeshes()`](https://dfsp-spirit.github.io/fsbrain/reference/vislayout.from.coloredmeshes.md)
-and
-[`export()`](https://dfsp-spirit.github.io/fsbrain/reference/export.md))
-now renders with scimesh. Interactive `views` (e.g., `views = "si"`,
-`"sr"`, `"t4"`, `"t9"`) still use rgl. Switch back at any time:
-
-``` r
-
-options(fsbrain.renderer_backend = "rgl");
-```
-
-Set the output image resolution (default 1920x1080) with the
-`fsbrain.scimesh.output_dims` option,
-e.g. `options(fsbrain.scimesh.output_dims = c(1600, 900))`.
-
-**What scimesh supports**: All static image export (single views,
-multi-view layouts, colorbars), all rendering styles. **What it does
-not**: Interactive 3D windows, real-time rotation, browser-based widgets
-(`vis.rglwidget`), animated GIFs — these remain available through the
-default rgl backend. In practice, most users only need static images for
-presentations and publications, for which scimesh works perfectly.
-
 ### Risky: install the dev version of fsbrain with the latest features
 
 This version is not guaranteed to be in a usable state, try at your own
@@ -190,12 +126,6 @@ however, it uses *rgl* for rendering. You can check the
 CRAN](https://CRAN.R-project.org/package=rgl) for the full list of rgl
 dependencies or read on. To get GIFTI format support, you will also need
 `libxml2-dev`.
-
-**Note**: If you use the
-[scimesh](https://CRAN.R-project.org/package=scimesh) backend, none of
-the rgl system dependencies are required — scimesh is a pure C++
-software renderer with no external library dependencies beyond a C++
-compiler.
 
 To install the system dependencies for *rgl* and *xml2*:
 
@@ -225,21 +155,16 @@ will need the libraries as well, of course.
 
 #### MacOS System dependencies
 
-Recent macOS versions do not ship with an X11 environment. If you want
-to use the default rgl backend for interactive viewing, you will need to
-install [XQuartz](https://www.xquartz.org/). If you want to create GIF
-movies, make sure you have imagemagick installed (easiest via
-[homebrew](https://brew.sh/): `brew install imagemagick@6`).
+Recent MacOS versions do not ship with an X11 environment. You will have
+to install the [xquartz X11 system](https://www.xquartz.org/) if you do
+not have it already. If you want to create GIF movies, make sure you
+have imagemagick installed (easiest via [homebrew](https://brew.sh/):
+`brew install imagemagick@6`).
 
-**Recommended for static image export**: Use the [scimesh
-backend](#optional-scimesh-rendering-backend-for-headless-environments),
-which requires neither X11 nor XQuartz and produces identical
-publication-ready images.
-
-Note that X11 is not needed for rendering, but only for opening
-interactive windows. If you only need publication-quality static images
-(which is the typical use case), the scimesh backend or the
-browser-based `rglwidget` are better options.
+Note that X11 is not needed for rendering, but only for stuff like
+opening windows, etc. So if you are fine with displaying images in your
+web browser, as opposed to a graphics window, you can use the
+`rglwidget` command, and thus run fsbrain without the need for X11.
 
 #### Known issue: Visualization problems on recent macOS versions
 
@@ -264,53 +189,36 @@ There are Docker images for fsbrain available on Dockerhub, see the
 The documentation can be accessed from within an R session after you
 have loaded the *fsbrain* package:
 
-- There are several online R Markdown notebooks (like Jupyter Notebook
-  in Python) that show various example plots in combination with the
-  code used to produce them:
+- There are two online R Markdown notebooks (like Jupyter Notebook in
+  Python) that show various example plots in combination with the code
+  used to produce them:
 
   - [basic fsbrain example
-    notebook](https://dfsp-spirit.github.io/fsbrain/notebooks/examples.html):
+    notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples.html):
     Live visualization of subject data
   - [advanced fsbrain example
-    notebook](https://dfsp-spirit.github.io/fsbrain/notebooks/examples_adv.html):
+    notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples_adv.html):
     Plotting group data
   - [export API fsbrain example
-    notebook](https://dfsp-spirit.github.io/fsbrain/notebooks/examples_export.html):
+    notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples_export.html):
     Exporting publication-ready plots
-  - [fsbrain with the scimesh rendering
-    backend](https://dfsp-spirit.github.io/fsbrain/notebooks/fsbrain_with_scimesh.html):
-    Headless, GPU-free static image export
 
 - Detailed vignettes with explanations and examples for the functions of
   the package is included, run `browseVignettes("fsbrain")` to see the
-  vignettes. You can also open the vignettes online — the GitHub Pages
-  versions always reflect the latest development state (no new CRAN
-  release required); the CRAN versions are updated on releases:
+  vignettes. You can also open the vignette directly:
 
   - How to load and visualize surface-based neuroimaging data:
     [`vignette("fsbrain")`](https://dfsp-spirit.github.io/fsbrain/articles/fsbrain.md)
-    or: [read
-    online](https://dfsp-spirit.github.io/fsbrain/articles/fsbrain.html)
-    (also on
-    [CRAN](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain.html))
+    or: [read online at
+    CRAN](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain.html)
   - How to load and visualize volume-based neuroimaging data:
     [`vignette("fsbrain_vol")`](https://dfsp-spirit.github.io/fsbrain/articles/fsbrain_vol.md)
-    or: [read
-    online](https://dfsp-spirit.github.io/fsbrain/articles/fsbrain_vol.html)
-    (also on
-    [CRAN](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain_vol.html))
+    or: [read online at
+    CRAN](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain_vol.html)
   - The fsbrain FAQ:
     [`vignette("fsbrain_faq")`](https://dfsp-spirit.github.io/fsbrain/articles/fsbrain_faq.md)
-    or: [read
-    online](https://dfsp-spirit.github.io/fsbrain/articles/fsbrain_faq.html)
-    (also on
-    [CRAN](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain_faq.html))
-  - How to use the scimesh rendering backend:
-    [`vignette("fsbrain_with_scimesh")`](https://dfsp-spirit.github.io/fsbrain/articles/fsbrain_with_scimesh.md)
-    or: [read
-    online](https://dfsp-spirit.github.io/fsbrain/articles/fsbrain_with_scimesh.html)
-    (also on
-    [CRAN](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain_with_scimesh.html))
+    or: [read online at
+    CRAN](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain_faq.html)
 
 - [Online Notebooks including demo workflows for fMRI result
   visualization](https://dfsp-spirit.github.io/fsbrain_fMRI_vis_workflows/).
@@ -501,8 +409,6 @@ Packages similar to fsbrain:
 
 Packages used by fsbrain:
 
-- [scimesh](https://CRAN.R-project.org/package=scimesh) by Tim Schäfer:
-  Headless C++ software renderer for 3D meshes. No GPU or X11 required.
 - [rgl](https://CRAN.R-project.org/package=rgl) by Daniel Adler, Duncan
   Murdoch et al.: OpenGL-based mesh renderer.
 - [oro.nifti](https://github.com/muschellij2/oro.nifti) by Brandon
@@ -761,9 +667,6 @@ fsbrain was written by [Tim Schäfer](https://ts.rcmd.org)
 
 - [`get.atlas.region.names()`](https://dfsp-spirit.github.io/fsbrain/reference/get.atlas.region.names.md)
   : Determine atlas region names from a subject.
-
-- [`get.fsbrain.renderer.backend()`](https://dfsp-spirit.github.io/fsbrain/reference/get.fsbrain.renderer.backend.md)
-  : Get the current fsbrain renderer backend
 
 - [`get.rglstyle()`](https://dfsp-spirit.github.io/fsbrain/reference/get.rglstyle.md)
   : Get the default visualization style parameters as a named list.
@@ -1285,7 +1188,5 @@ fsbrain was written by [Tim Schäfer](https://ts.rcmd.org)
   FAQ](https://dfsp-spirit.github.io/fsbrain/articles/fsbrain_faq.md):
 - [Brain volume visualization with
   fsbrain](https://dfsp-spirit.github.io/fsbrain/articles/fsbrain_vol.md):
-- [fsbrain with the scimesh rendering
-  backend](https://dfsp-spirit.github.io/fsbrain/articles/fsbrain_with_scimesh.md):
 - [fsbrain: Managing and Visualizing Structural Neuroimaging Data in GNU
   R](https://dfsp-spirit.github.io/fsbrain/articles/fsbrain.md):
