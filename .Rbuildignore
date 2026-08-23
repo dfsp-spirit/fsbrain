@@ -21,5 +21,7 @@ docker/
 ^doc$
 ^cran-comments\.md$
 ^\.github$
-
+renovate.json
 ^CRAN-SUBMISSION$
+
+
