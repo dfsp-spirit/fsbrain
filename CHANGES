@@ -4,14 +4,17 @@ fsbrain Changes
 
 Verion 0.7.0 (Current WIP)
 ---------------------------
-- NEW: Support scimesh as an alternate rendering backend to rgl- NEW: Add vignette and online notebook documenting the scimesh rendering backend (`vignette("fsbrain_with_scimesh")`)
+- NEW: Support scimesh as an alternate rendering backend to rgl
+- - NEW: Add vignette and online notebook documenting the scimesh rendering backend (`vignette("fsbrain_with_scimesh")`)
 - FIX: Handle NA vertex colors in the scimesh renderer bridge (treated as fully transparent, like rgl)
+
 
 Version 0.6.1
 -------------
 - NEW: Add automatic fallback for screenshot export on systems without working X11 (e.g., recent macOS versions like Tahoe 26.x and Sonoma 14.x). When X11 is not available, fsbrain now automatically exports the 3D scene as PDF and converts it to PNG using ImageMagick, allowing publication-ready plots with colorbars to be created even without XQuartz. This addresses the rgl/XQuartz compatibility issues tracked in rgl issues #488 and #423.
 - FIX: Handle blank images gracefully in `image_trim()` calls to prevent errors when rendering produces uniform-color images on headless systems.
 - Add README_MACOS_TAHOE.md with detailed explanation and workarounds for macOS users affected by X11/OpenGL issues.
+
 
 Version 0.6.0
 -------------
@@ -21,6 +24,7 @@ Version 0.6.0
 - FIX: `alphablend()` now preserves computed alpha values in output colors. The old code used `rgb(matrix, alpha=TRUE)` which ignored the alpha column and forced all output to fully opaque. Fixes #28.
 - FIX: `annot.outline()` now strips the alpha channel from FreeSurfer annotation colors (which often store alpha=0), so that annotation region outlines remain visible instead of blending to invisibility.
 - SEC: Default to https when downloading optional data
+
 
 Version 0.5.6
 -------------
@@ -40,7 +44,6 @@ Version 0.5.4
 - Rename some internal functions and fix various small complaints from the latest version of R CMD CHECK, from r-base 4.3. (Required for CRAN upload.)
 - NEW: Support plotting colorbar with log scale, implements feature request #44
 - FIX: Fix broken hemis on 9 view with inflated surfaces, see issue #50
-
 
 
 Version 0.5.3
