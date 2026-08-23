@@ -21,11 +21,12 @@ docker/
 ^doc$
 ^cran-comments\.md$
 ^\.github$
-
+renovate.json
 ^CRAN-SUBMISSION$
 ^\.opencode
 ^examples$
 dev_tools
 README_MACOS_TAHOE.md
 _pkgdown.yml
+
 
