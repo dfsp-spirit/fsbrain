@@ -16,6 +16,11 @@ color_to_rgba <- function(color) {
     if (length(color) != 1L || !is.character(color)) {
         stop("color must be a single character string")
     }
+    if (is.na(color)) {
+        # NA is used for transparent/missing vertices (e.g., masked cortex or
+        # data clipped to NA). Treat it as fully transparent, like rgl does.
+        return(c(0, 0, 0, 0))
+    }
     if (startsWith(color, "#")) {
         hex <- substring(color, 2L)
         if (nchar(hex) == 6L) {

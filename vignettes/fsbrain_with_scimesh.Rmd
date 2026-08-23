@@ -1,0 +1,216 @@
+---
+title: "fsbrain with the scimesh rendering backend"
+author: "Tim Schäfer"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{fsbrain with the scimesh rendering backend}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+In this document, we show how to use the *scimesh* software renderer instead of the default *rgl* backend to produce publication-ready static images with *fsbrain*.
+
+*fsbrain* visualizes data on brain surfaces. By default it uses the [rgl](https://CRAN.R-project.org/package=rgl) package, which provides fast, hardware-accelerated 3D graphics based on OpenGL. As an alternative, *fsbrain* also supports the [scimesh](https://CRAN.R-project.org/package=scimesh) software renderer, a headless, GPU-free C++ renderer that produces identical static images without requiring X11, OpenGL, or a GPU.
+
+This vignette explains why and when using scimesh makes sense, how to switch to it, and demonstrates the most important ways to produce output with it. All code blocks below are shown for you to copy and adapt, but they are not executed during the build of this vignette (to keep it fast and independent of a network connection). If you want to browse a fully rendered version of this document, including all resulting images, have a look at the [online notebook with pre-rendered figures](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/fsbrain_with_scimesh.html).
+
+# Why and when to use the scimesh backend
+
+The scimesh backend is a great fit whenever you need static, publication-ready images and cannot or do not want to rely on a GPU, OpenGL, or an X11 display:
+
+* **Headless environments**: HPC clusters, remote servers, and CI runners typically have no display and often no GPU. scimesh renders everything in software, so it works anywhere.
+* **macOS systems with broken X11/XQuartz**: Recent macOS versions (e.g., Tahoe and Sonoma) often ship with broken or missing X11 support, which breaks interactive rgl windows. The scimesh backend is not affected, because it never opens a window.
+* **Reproducibility**: Because scimesh is a deterministic software renderer, the same data and code produce identical output images across machines, which is convenient for scripts and automated reporting.
+* **Simpler system dependencies**: With the scimesh backend, none of the rgl system dependencies (X11, OpenGL/GLU, etc.) are required.
+
+There are a few things scimesh does *not* do: it cannot show interactive 3D windows that you can rotate with the mouse, it does not support the browser-based `vis.rglwidget()` WebGL widgets, and it does not produce animated GIFs. These features remain available through the default rgl backend. In practice, most users only need static images for presentations and publications, for which scimesh works perfectly.
+
+# How to switch to the scimesh backend
+
+Install the scimesh package (it is in the *Suggests* field of *fsbrain*, so it is optional):
+
+```{r, eval=FALSE}
+install.packages("scimesh");
+```
+
+Then activate the scimesh backend for the current R session with a single option. This affects all static image export via `export()` and `vislayout.from.coloredmeshes()`:
+
+```{r, eval=FALSE}
+# Switch to the scimesh software renderer for headless environments:
+options(fsbrain.renderer_backend = "scimesh");
+
+# Check the current backend:
+get.fsbrain.renderer.backend();
+```
+
+The default output resolution is 1920x1080 pixels. You can change it with the `fsbrain.scimesh.output_dims` option:
+
+```{r, eval=FALSE}
+options(fsbrain.scimesh.output_dims = c(1600, 900));
+```
+
+Note that `fsbrain.set.default.figsize()`, which controls the rgl window size, has no effect on scimesh rendering.
+
+You can switch back to the default rgl backend at any time:
+
+```{r, eval=FALSE}
+options(fsbrain.renderer_backend = "rgl");
+```
+
+Again, please keep in mind that interactive viewing (e.g., `views = "si"`, `"sr"`, `"t4"`, `"t9"` passed to a `vis*` function) always uses rgl, even when the scimesh backend is active. To render static multi-view figures with scimesh, obtain the coloredmeshes with `views = NULL` and pass them to the `export()` function, as shown in the rest of this document.
+
+# Example data
+
+We will use the example data that comes with *fsbrain* (downloaded on demand, see `?download_optional_data`) and the FreeSurfer *fsaverage* template subject (see `?download_fsaverage`, and note that you have to accept the FreeSurfer license to download it):
+
+```{r, eval=FALSE}
+library('fsbrain');
+
+download_optional_data();
+download_fsaverage(accept_freesurfer_license = TRUE);
+
+sjd = get_optional_data_filepath("subjects_dir");
+sj = 'subject1';
+```
+
+# Part 1: Different ways to use the export API
+
+The `export()` function provides a high-level interface to create publication-ready figures from a `coloredmeshes` instance. A coloredmeshes instance is returned by all live visualization functions in *fsbrain* and represents the two brain meshes along with per-vertex data, a colormap, and the resulting per-vertex colors. We obtain it by running a `vis*` function with `views = NULL`, which suppresses the interactive rendering while still returning the coloredmeshes. We then pass it to `export()`.
+
+## A basic export
+
+Standard-space cortical thickness, with a legend above the colorbar:
+
+```{r, eval=FALSE}
+cm = vis.subject.morph.standard(sjd, sj, 'thickness', fwhm='10', cortex_only=TRUE, views=NULL);
+img = export(cm, colorbar_legend='Cortical thickness [mm]', output_img='thickness_t4.png');
+```
+
+## Custom view angles
+
+The default layout is the `t4` view (four tiles). You can select any subset of the available views via the `view_angles` parameter (see `get.view.angle.names()` for all valid view names). Here we show only the two medial views, for an annotation:
+
+```{r, eval=FALSE}
+cm = vis.subject.annot(sjd, sj, 'aparc', views=NULL);
+img = export(cm, view_angles = c("sd_medial_lh", "sd_medial_rh"));
+```
+
+## A larger grid of views
+
+The layout of the tiles is determined automatically from the number of requested views: 4 views become a 2x2 grid, 8 views a 2x4 grid, and any other number produces a vertical strip. Here we use all 8 views and clip the tails of the mean curvature data:
+
+```{r, eval=FALSE}
+cm = vis.subject.morph.native(sjd, sj, 'curv', cortex_only=TRUE, views=NULL, rglactions=list('trans_fun'=clip.data));
+img = export(cm, view_angles = get.view.angle.names(angle_set = "t8"), colorbar_legend='Mean curvature [mm^-1]');
+```
+
+## Forcing a vertical strip instead of a grid
+
+You can always force a strip layout by setting `grid_like = FALSE`:
+
+```{r, eval=FALSE}
+cm = vis.subject.morph.standard(sjd, sj, 'sulc', fwhm='10', cortex_only=TRUE, views=NULL);
+img = export(cm, view_angles = get.view.angle.names("t4"), grid_like = FALSE, colorbar_legend='Sulcal depth [mm]');
+```
+
+## The colorbar
+
+The position of the colorbar is controlled with the `draw_colorbar` parameter: it can be `"horizontal"` (the default), `"vertical"`, or disabled with `FALSE`. Note that a colorbar is only drawn if the coloredmeshes contain colormap information (this is the case for morphometry-like data, but not for annotations or custom colors):
+
+```{r, eval=FALSE}
+cm = vis.subject.morph.standard(sjd, sj, 'sulc', fwhm='10', cortex_only=TRUE, views=NULL);
+img = export(cm, colorbar_legend='Sulcal depth [mm]', draw_colorbar = 'vertical');
+```
+
+## Changing the background color
+
+Use hex color strings (like `'#000000'`) rather than color names (like `'black'`), because color names are ambiguous and their interpretation differs between R and ImageMagick:
+
+```{r, eval=FALSE}
+cm = vis.subject.morph.standard(sjd, sj, 'sulc', fwhm='10', cortex_only=TRUE, views=NULL);
+img = export(cm, view_angles = c("sd_medial_lh", "sd_medial_rh"), background_color = '#000000', draw_colorbar = FALSE);
+```
+
+## Transparent background
+
+For figures with a transparent background (very convenient for publications), use the `transparency_color` parameter. It works by rendering on a temporary background color and later mapping that color to transparency in the output image:
+
+```{r, eval=FALSE}
+cm = vis.subject.morph.standard(sjd, sj, 'sulc', fwhm='10', cortex_only=TRUE, views=NULL);
+img = export(cm, view_angles = c("sd_medial_lh", "sd_medial_rh"), transparency_color = '#FFFFFF');
+```
+
+# Part 2: Plotting region-based and vertex-based results
+
+When you perform atlas-based analyses, you typically get one result (significance, effect size, etc.) per atlas region. Vertex-wise analyses in standard space, in contrast, produce one result per vertex (e.g., a t-map). Both kinds of results are commonly displayed on the *fsaverage* template subject.
+
+## Results: region-based
+
+The function `vis.region.values.on.subject()` visualizes one value per atlas region. Here we show an example on the Desikan atlas, using dummy values:
+
+```{r, eval=FALSE}
+atlas = 'aparc';   # Desikan atlas
+
+# For the left hemisphere, we just assign a subset of the atlas regions.
+# The others will get the default value.
+lh_region_value_list = list("bankssts"=0.9, "precuneus"=0.7, "postcentral"=0.8, "lingual"=0.6);
+
+# For the right hemisphere, we retrieve the full list of regions for the
+# atlas and assign random values to all of them.
+atlas_region_names = get.atlas.region.names(atlas, template_subjects_dir = sjd, template_subject = sj);
+rh_region_value_list = rnorm(length(atlas_region_names), 0.8, 0.2);
+names(rh_region_value_list) = atlas_region_names;
+
+cm = vis.region.values.on.subject(sjd, sj, atlas, lh_region_value_list, rh_region_value_list, views=NULL);
+img = export(cm, colorbar_legend='Effect size (dummy data)');
+```
+
+## Results: vertex-based
+
+For symmetric data around zero, e.g., t-values, you should use a symmetric colormap. The function `vis.symmetric.data.on.subject()` does this, and can also draw a gray-scale background computed from the mean curvature of the cortex. Here we use the demo cluster data that ships with *fsbrain* and render it on *fsaverage*:
+
+```{r, eval=FALSE}
+subjects_dir = get_optional_data_filepath("subjects_dir");
+subject_id = 'fsaverage';
+
+lh_demo_cluster_file = system.file("extdata", "lh.clusters_fsaverage.mgz", package = "fsbrain", mustWork = TRUE);
+rh_demo_cluster_file = system.file("extdata", "rh.clusters_fsaverage.mgz", package = "fsbrain", mustWork = TRUE);
+
+lh_clust = freesurferformats::read.fs.morph(lh_demo_cluster_file);   # a single positive cluster (activation), the other values are 0
+rh_clust = freesurferformats::read.fs.morph(rh_demo_cluster_file);   # two negative clusters
+
+cm = vis.symmetric.data.on.subject(subjects_dir, subject_id, lh_clust, rh_clust, bg="curv_light", views=NULL);
+img = export(cm, colorbar_legend='t-value (dummy data)');
+```
+
+# Part 3: A workflow with manually loaded meshes and data
+
+*fsbrain* is not limited to data arranged in the standard FreeSurfer directory structure. As long as you have a brain mesh and per-vertex data (from FreeSurfer files, GIFTI, CIFTI, or any other source supported by *freesurferformats*), you can visualize them. You do not need a *subjects_dir* at all.
+
+The example below mirrors this workflow: we load the surface and morphometry files manually from arbitrary paths (here, from the *fsbrain* example data via `get_optional_data_filepath()`, but they could come from anywhere) using the low-level `freesurferformats::read.fs.surface()` and `freesurferformats::read.fs.morph()` functions. We then build coloredmeshes with `coloredmesh.from.preloaded.data()` and render them with `export()`. Note that we never call a `vis.subject.*` function and never rely on automatic subjects_dir detection.
+
+```{r, eval=FALSE}
+# 1. Paths to the mesh and data files (arbitrary locations, no subjects_dir needed):
+lh_surf_file = get_optional_data_filepath(file.path("subjects_dir", "subject1", "surf", "lh.white"));
+rh_surf_file = get_optional_data_filepath(file.path("subjects_dir", "subject1", "surf", "rh.white"));
+lh_thick_file = get_optional_data_filepath(file.path("subjects_dir", "subject1", "surf", "lh.thickness"));
+rh_thick_file = get_optional_data_filepath(file.path("subjects_dir", "subject1", "surf", "rh.thickness"));
+
+# 2. Load the meshes and the per-vertex data:
+lh_surf = freesurferformats::read.fs.surface(lh_surf_file);
+rh_surf = freesurferformats::read.fs.surface(rh_surf_file);
+lh_thick = freesurferformats::read.fs.morph(lh_thick_file);
+rh_thick = freesurferformats::read.fs.morph(rh_thick_file);
+
+# 3. Build coloredmeshes from the preloaded data and export a multi-view figure:
+cm_lh = coloredmesh.from.preloaded.data(lh_surf, morph_data = lh_thick, hemi = "lh");
+cm_rh = coloredmesh.from.preloaded.data(rh_surf, morph_data = rh_thick, hemi = "rh");
+
+img = export(list("lh" = cm_lh, "rh" = cm_rh), colorbar_legend = 'Cortical thickness [mm]', output_img = 'manual_thickness_t4.png');
+```
+
+This is the same pattern that is used to visualize e.g. CIFTI grayordinate data on fs_LR 32k surfaces, which do not live in a FreeSurfer subjects directory at all.
+
+# See it rendered
+
+The [online notebook with pre-rendered figures](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/fsbrain_with_scimesh.html) runs all the code shown in this document and displays the resulting images, so you can see exactly what output to expect before writing any code yourself.

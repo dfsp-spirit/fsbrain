@@ -5,7 +5,10 @@
 Recent macOS versions (Tahoe 26.x, Sonoma 14.x) changed how they handle
 OpenGL and X11. This breaks [XQuartz](https://www.xquartz.org/) — the X11
 environment that [rgl](https://CRAN.R-project.org/package=rgl) needs to
-open graphics windows. As a result, fsbrain may produce blank plots or
+open graphics windows. rgl has been the mesh renderer used by fbrain since
+fsbrain was first released.
+
+As a result, fsbrain may produce blank plots or
 fail to open visualization windows.
 
 This is not a problem with fsbrain itself, but with the underlying
@@ -14,20 +17,29 @@ graphics stack (rgl / XQuartz). The issue is tracked upstream:
 - [rgl issue #488](https://github.com/dmurdoch/rgl/issues/488)
 - [rgl issue #423](https://github.com/dmurdoch/rgl/issues/423)
 
+...but currently only workarounds exist (like rendering into a web view), and given the situation on MacOS, that is unlikely to change.
+
 ## Solution 1 (recommended): Use the scimesh backend
 
 The [scimesh](https://CRAN.R-project.org/package=scimesh) package provides
 a headless, CPU-based software renderer that produces publication-quality
 static images. It requires **no X11, no OpenGL, no XQuartz, and no GPU**.
 
-scimesh has been specifically designed to replace the rendering part of
-fsbrain's image export pipeline. The output is visually identical to rgl.
 
 ### Installation
 
-```r
+Scimesh is suggested by fsbrain, meaning you already have it if you installed fsbrain with all optional dependencies, like this:
+
+```R
+install.packages("fsbrain", dependencies=TRUE)
+```
+
+If in doubt, just install it:
+
+```R
 install.packages("scimesh")
 ```
+
 
 ### Usage
 
@@ -71,14 +83,18 @@ export(cm,
 
 ### Limitations
 
+In practice, these limitations are rarely relevant: most users use
+fsbrain to create static figures for presentations and publications,
+for which scimesh works perfectly.
+
+The limitations of scimesh are those inherent to all software renderers:
+
 - No interactive 3D windows (`views = "si"`)
 - No real-time rotation (`views = "sr"`, `vis.coloredmeshes.rotating`)
 - No browser-based 3D widgets (`vis.rglwidget`) — see Solution 2 below
 - No animated GIF export via rgl (`movie3d`)
 
-In practice, these limitations are rarely relevant: most users use
-fsbrain to create static figures for presentations and publications,
-for which scimesh works perfectly.
+The reason for these limitations is that a CPU can render a beautiful brain image in about 2 seconds, while a graphics card with OpenGL driver stack can do the same in 0.02 seconds -- and thus produce so many frames per second that interactive viewing becomes possible.
 
 ## Solution 2: Browser-based interactive visualization
 
@@ -119,5 +135,5 @@ widget  # displays in RStudio viewer or web browser
 
 **Bottom line**: For creating static figures (the most common use case),
 use the scimesh backend. If you need interactive 3D exploration, use
-`vis.rglwidget()`. If you have a working XQuartz installation, the
+`vis.rglwidget()`. If you have a working XQuartz installation (older MacOS versions), the
 default rgl backend also works.

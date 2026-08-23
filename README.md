@@ -20,6 +20,7 @@ The plots produced by *fsbrain* can be integrated into R notebooks or written to
 
 
 ## News
+* 2026-08-23: New documentation for the scimesh rendering backend: a new vignette (`vignette("fsbrain_with_scimesh")`) and an [online notebook with pre-rendered figures](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/fsbrain_with_scimesh.html) that show how to configure fsbrain for headless, GPU-free static image export and how to use the `export()` API, including region- and vertex-based results and a workflow with manually loaded meshes.
 * 2026-07-14: New alternative rendering backend via [scimesh](https://CRAN.R-project.org/package=scimesh). Switchable with `options(fsbrain.renderer_backend = "scimesh")`. Enables publication-quality static images without X11/OpenGL/GPU — great for macOS Tahoe/Sonoma, HPC clusters, and headless servers.
 * 2026-08-20: We have some new online documentation: example notebooks demonstrating 2 typical workflows of fMRI result visualization with fsbrain. [View them online here](https://dfsp-spirit.github.io/fsbrain_fMRI_vis_workflows/).
 * 2026-07-09: New fsbrain version 0.6.1 released. Adds automatic fallback for plot export on recent macOS versions (Tahoe, Sonoma) where X11/XQuartz is broken. You can now export publication-ready plots with colorbars even without a working X11 display. See [README_MACOS_TAHOE.md](./README_MACOS_TAHOE.md) for details.
@@ -144,16 +145,18 @@ There are Docker images for fsbrain available on Dockerhub, see the [fsbrain Doc
 
 The documentation can be accessed from within an R session after you have loaded the *fsbrain* package:
 
-* There are two online R Markdown notebooks (like Jupyter Notebook in Python) that show various example plots in combination with the code used to produce them:
+* There are several online R Markdown notebooks (like Jupyter Notebook in Python) that show various example plots in combination with the code used to produce them:
   * [basic fsbrain example notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples.html): Live visualization of subject data
   * [advanced fsbrain example notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples_adv.html): Plotting group data
   * [export API fsbrain example notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples_export.html): Exporting publication-ready plots
+  * [fsbrain with the scimesh rendering backend](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/fsbrain_with_scimesh.html): Headless, GPU-free static image export
 
 
 * Detailed vignettes with explanations and examples for the functions of the package is included, run `browseVignettes("fsbrain")` to see the vignettes. You can also open the vignette directly:
   * How to load and visualize surface-based neuroimaging data: `vignette("fsbrain")` or: [read online at CRAN](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain.html)
   * How to load and visualize volume-based neuroimaging data: `vignette("fsbrain_vol")` or: [read online at CRAN](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain_vol.html)
   * The fsbrain FAQ: `vignette("fsbrain_faq")` or: [read online at CRAN](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain_faq.html)
+  * How to use the scimesh rendering backend: `vignette("fsbrain_with_scimesh")` or: [read online at CRAN](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain_with_scimesh.html)
 
 * [Online Notebooks including demo workflows for fMRI result visualization](https://dfsp-spirit.github.io/fsbrain_fMRI_vis_workflows/).
 

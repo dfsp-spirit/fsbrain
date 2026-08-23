@@ -38,6 +38,11 @@ test_that("color_to_rgba converts hex and named colors.", {
 });
 
 
+test_that("color_to_rgba handles NA as fully transparent.", {
+    expect_equal(color_to_rgba(NA_character_), c(0, 0, 0, 0));
+});
+
+
 test_that("apply.style.alpha extracts alpha from style parameters.", {
     expect_equal(apply.style.alpha(list(alpha = 0.4)), 0.4);
     expect_equal(apply.style.alpha(list(shininess = 50)), 1.0);

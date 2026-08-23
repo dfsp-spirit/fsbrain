@@ -4,8 +4,8 @@ fsbrain Changes
 
 Verion 0.7.0 (Current WIP)
 ---------------------------
-- NEW: Support scimesh as an alternate rendering backend to rgl
-
+- NEW: Support scimesh as an alternate rendering backend to rgl- NEW: Add vignette and online notebook documenting the scimesh rendering backend (`vignette("fsbrain_with_scimesh")`)
+- FIX: Handle NA vertex colors in the scimesh renderer bridge (treated as fully transparent, like rgl)
 
 Version 0.6.1
 -------------
