@@ -110,6 +110,42 @@ get.demo.coloredvoxels <- function(n = 100L) {
 }
 
 
+#' @title Get a coloredmesh of a cube with 6 distinct single-colored faces.
+#'
+#' @description Builds a cube whose 6 faces each carry a distinct, uniform
+#'   colour (+z red, -z green, -x blue, +x yellow, +y cyan, -y magenta).
+#'   Vertices are duplicated per face (24 vertices / 12 triangles) so each face
+#'   can have its own colour. Winding is counter-clockwise seen from OUTSIDE
+#'   (outward normal = cross(v1-v0, v2-v0)), so both the rgl and scimesh
+#'   backends agree on back-face culling and an outside view shows exactly the
+#'   faces whose normal points toward the camera. This makes a view's
+#'   orientation immediately readable (which face is shown) and lets you verify
+#'   backend parity programmatically.
+#'
+#' @return a list with entries: \code{coloredmesh} (an fs.coloredmesh),
+#'   \code{face_colors} (named vector, face axis -> hex colour), and
+#'   \code{face_normals} (6x3 matrix, outward unit normal per face).
+get.demo.facecolored.cube <- function() {
+  h = 0.5;
+  faces = list(
+    "+z" = rbind(c(-h, -h,  h), c( h, -h,  h), c( h,  h,  h), c(-h,  h,  h)),
+    "-z" = rbind(c(-h, -h, -h), c(-h,  h, -h), c( h,  h, -h), c( h, -h, -h)),
+    "-x" = rbind(c(-h, -h, -h), c(-h, -h,  h), c(-h,  h,  h), c(-h,  h, -h)),
+    "+x" = rbind(c( h, -h, -h), c( h,  h, -h), c( h,  h,  h), c( h, -h,  h)),
+    "+y" = rbind(c(-h,  h, -h), c(-h,  h,  h), c( h,  h,  h), c( h,  h, -h)),
+    "-y" = rbind(c(-h, -h, -h), c( h, -h, -h), c( h, -h,  h), c(-h, -h,  h))
+  );
+  face_colors = c("+z"="#FF0000", "-z"="#00FF00", "-x"="#0000FF", "+x"="#FFFF00", "+y"="#00FFFF", "-y"="#FF00FF");
+  face_normals = rbind("+z"=c(0,0,1), "-z"=c(0,0,-1), "-x"=c(-1,0,0), "+x"=c(1,0,0), "+y"=c(0,1,0), "-y"=c(0,-1,0));
+  V = do.call(rbind, faces);
+  it = do.call(rbind, lapply(seq_along(faces), function(f) { off = (f-1L)*4L; rbind(c(off+1L, off+2L, off+3L), c(off+1L, off+3L, off+4L)); }));
+  col = rep(face_colors, each = 4L);
+  tmesh = rgl::tmesh3d(t(cbind(V, 1)), it);
+  cm = structure(list(mesh = tmesh, col = col, render = TRUE), class = "fs.coloredmesh");
+  return(list("coloredmesh" = cm, "face_colors" = face_colors, "face_normals" = face_normals));
+}
+
+
 #' @title Get 3D volume of integers in range 0-255 for unit tests. The volume has a background intensity and random cubes of other intensities.
 #'
 #' @param vd integer, dimension of the volume (will be used for all 3 axes).

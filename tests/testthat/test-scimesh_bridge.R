@@ -196,6 +196,35 @@ test_that("view_angle_to_scimesh_camera errors on invalid views and empty scenes
 });
 
 
+test_that("view_angle_to_scimesh_camera frames with the bounding sphere (Option B, margin 1.0).", {
+    testthat::skip_if_not_installed("scimesh");
+    mesh <- rgl::tetrahedron3d();
+    cm <- structure(list(mesh = mesh, col = "#FF0000", render = TRUE), class = "fs.coloredmesh");
+    scene <- coloredmeshes_to_scimesh(list(lh = cm, rh = cm));
+
+    for (v in c("lateral_lh", "dorsal", "ventral", "caudal")) {
+        res <- view_angle_to_scimesh_camera(scene, v);
+        dist <- sqrt(sum((res$camera$eye - res$camera$center)^2));
+
+        # The scimesh orthographic frustum half-height equals |eye - center|, so
+        # framing with dist == bounding-sphere radius (no extra margin) makes the
+        # scimesh framing identical to rgl's orthographic auto-fit. See
+        # TODO_FSBRAIN_RGL_CAM.md (Step 2, Option B).
+        hemi_meshes <- filter_scene_by_view(scene, res$hemi_filter);
+        if (length(hemi_meshes) == 0L) {
+            hemi_meshes <- filter_scene_by_view(scene, "both");
+        }
+        expected_radius <- bounding_sphere(lapply(hemi_meshes, function(m) m$vertices))$radius;
+        expect_equal(dist, expected_radius, tolerance = 1e-12,
+                     info = sprintf("View '%s': camera distance must equal the bounding-sphere radius.", v));
+
+        # The eye must lie along the view direction from the center.
+        dir <- res$camera$eye - res$camera$center;
+        expect_equal(sqrt(sum(dir^2)), dist, tolerance = 1e-12);
+    }
+});
+
+
 test_that("fsbrain_style_to_scimesh_options maps styles to render options.", {
     testthat::skip_if_not_installed("scimesh");
 

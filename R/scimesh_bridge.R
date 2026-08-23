@@ -300,12 +300,16 @@ view_angle_to_scimesh_camera <- function(scene, view_angle) {
         hemi_meshes <- all_meshes
     }
 
-    all_verts <- do.call(rbind, lapply(hemi_meshes, function(m) m$vertices))
-    bbox_center <- colMeans(apply(all_verts, 2L, range))
-    bbox_extent <- max(apply(all_verts, 2L, function(col) diff(range(col)))) / 2.0
+    # Frame the view with the same bounding-sphere convention rgl uses for its
+    # orthographic auto-fit (radius = half the AABB diagonal, no extra margin):
+    # scimesh's orthographic frustum half-height equals |eye - center|, so
+    # dist = sphere_radius yields a framing identical to rgl (see
+    # TODO_FSBRAIN_RGL_CAM.md, Step 2).
+    bs <- bounding_sphere(hemi_meshes)
+    bbox_center <- bs$center
 
     dir <- view_config$direction / sqrt(sum(view_config$direction^2))
-    dist <- bbox_extent * 1.35
+    dist <- bs$radius
     eye <- bbox_center + dir * dist
 
     cam <- scimesh::camera(

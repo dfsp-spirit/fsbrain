@@ -2,21 +2,17 @@
 % Please edit documentation in R/vis_multiview.R
 \name{handle.rglactions.highlight.points}
 \alias{handle.rglactions.highlight.points}
-\title{Highlight requested points (if any), but apply given view rotation before doing so.}
+\title{Highlight requested points (if any), for camera-based views.}
 \usage{
-handle.rglactions.highlight.points(
-  rglactions,
-  angle_rad,
-  x,
-  y,
-  z,
-  hemi = "both"
-)
+handle.rglactions.highlight.points(rglactions, hemi = "both")
 }
 \arguments{
 \item{hemi}{character string, one of 'lh', 'rh' or 'both'. If lh or rh, plots only points from that hemi (if hemi info is available for the points).}
 }
 \description{
-Highlight requested points (if any), but apply given view rotation before doing so.
+Places the requested highlight points as spheres at their native
+coordinates. Camera-based views keep the meshes unrotated and apply the view
+rotation via the camera, so highlight points must NOT be rotated (this
+matches the scimesh backend). See dev_tools/TODO_FSBRAIN_RGL_CAM.md.
 }
 \keyword{internal}

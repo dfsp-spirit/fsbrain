@@ -201,12 +201,17 @@ get.sorted.cmeshes <- function(coloredmeshes) {
 }
 
 
-#' @title Highlight requested points (if any), but apply given view rotation before doing so.
+#' @title Highlight requested points (if any), for camera-based views.
+#'
+#' @description Places the requested highlight points as spheres at their native
+#'   coordinates. Camera-based views keep the meshes unrotated and apply the view
+#'   rotation via the camera, so highlight points must NOT be rotated (this
+#'   matches the scimesh backend). See dev_tools/TODO_FSBRAIN_RGL_CAM.md.
 #'
 #' @param hemi character string, one of 'lh', 'rh' or 'both'. If lh or rh, plots only points from that hemi (if hemi info is available for the points).
 #'
 #' @keywords internal
-handle.rglactions.highlight.points <- function(rglactions, angle_rad, x, y, z, hemi = "both") {
+handle.rglactions.highlight.points <- function(rglactions, hemi = "both") {
     if('highlight_points' %in% names(rglactions)) {
         coords = rglactions$highlight_points$coords;
         color = rglactions$highlight_points$color;
@@ -221,7 +226,6 @@ handle.rglactions.highlight.points <- function(rglactions, angle_rad, x, y, z, h
             # Can happen if the hemi filtering removes all coords (i.e., no points to highlight on this hemi).
             return(invisible(NULL));
         }
-        coords = transform_renderable(coords, rotation.matrix(angle_rad, x, y, z));
         highlight.points.spheres(coords, color = color, radius = rglactions$highlight_points$radius);
     }
 }
@@ -290,13 +294,14 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 
     callback_after_render = getOption('fsbrain.callback_hook_after_render', default=NULL);
 
+    R_lat = rotation.matrix(pi/2, 1, 0, 0);
+
     # Create the upper left view: draw only the left hemi, from the left
     rgl::next3d(reuse=TRUE);
-    vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style);
-    handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "lh");
-    rgl::view3d(-90, 0, fov=0, interactive=FALSE);
+    vis.view(lh_meshes, style=style, rotation_angle=pi/2, theta=-90);
+    handle.rglactions.highlight.points(rglactions, hemi = "lh");
     if(draw_labels) {
-        rgl::text3d(0,label_shift_y,0,"lateral lh");
+        view_label3d("lateral lh", 0, label_shift_y, 0, R_lat);
     }
     if(is.function(callback_after_render)) {
         callback_after_render('lateral_lh');
@@ -305,11 +310,10 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 
     # Create the upper right view
     rgl::next3d(reuse=FALSE);
-    vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style);
-    handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "rh");
-    rgl::view3d(90, 0, fov=0, interactive=FALSE);
+    vis.view(rh_meshes, style=style, rotation_angle=pi/2, theta=90);
+    handle.rglactions.highlight.points(rglactions, hemi = "rh");
     if(draw_labels) {
-        rgl::text3d(0,label_shift_y,0,"lateral rh");
+        view_label3d("lateral rh", 0, label_shift_y, 0, R_lat);
     }
     if(is.function(callback_after_render)) {
         callback_after_render('lateral_rh');
@@ -318,11 +322,10 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 
     # Create the lower left view
     rgl::next3d(reuse=FALSE);
-    vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style);
-    handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "lh");
-    rgl::view3d(90, 0, fov=0, interactive=FALSE);
+    vis.view(lh_meshes, style=style, rotation_angle=pi/2, theta=90);
+    handle.rglactions.highlight.points(rglactions, hemi = "lh");
     if(draw_labels) {
-        rgl::text3d(0,label_shift_y,0,"medial lh");
+        view_label3d("medial lh", 0, label_shift_y, 0, R_lat);
     }
     if(is.function(callback_after_render)) {
         callback_after_render('medial_lh');
@@ -331,11 +334,10 @@ brainview.t4 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 
     # Create the lower right view
     rgl::next3d(reuse=FALSE);
-    vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style);
-    handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "rh");
-    rgl::view3d(-90, 0, fov=0, interactive=FALSE);
+    vis.view(rh_meshes, style=style, rotation_angle=pi/2, theta=-90);
+    handle.rglactions.highlight.points(rglactions, hemi = "rh");
     if(draw_labels) {
-        rgl::text3d(0,label_shift_y,0,"medial rh");
+        view_label3d("medial rh", 0, label_shift_y, 0, R_lat);
     }
     if(is.function(callback_after_render)) {
         callback_after_render('medial_rh');
@@ -424,15 +426,17 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
     coloredmeshes_potentially_shifted = shift.hemis.rglactions(coloredmeshes, rglactions);
     callback_after_render = getOption('fsbrain.callback_hook_after_render', default=NULL);
 
+    R_lat = rotation.matrix(pi/2, 1, 0, 0);
+    R_pi = rotation.matrix(pi, 1, 0, 0);
+
     #  ------------------ Row 1 --------------------
 
 
     # Create the upper left view: draw only the left hemi, from the left
     rgl::next3d(reuse=TRUE);
-    vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style);
-    rgl::view3d(-90, 0, fov=0, interactive=FALSE);
+    vis.view(lh_meshes, style=style, rotation_angle=pi/2, theta=-90);
     if(draw_labels) {
-        rgl::text3d(0,label_shift_y,0,"lateral lh");
+        view_label3d("lateral lh", 0, label_shift_y, 0, R_lat);
     }
     if(is.function(callback_after_render)) {
         callback_after_render('lateral_lh');
@@ -440,10 +444,9 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 
     # Create the upper central view: draw both hemis from above (top view)
     rgl::next3d(reuse=FALSE);
-    vis.rotated.coloredmeshes(coloredmeshes_potentially_shifted, 0, 1, 0, 0, style=style);
-    rgl::view3d(0, 0, fov=0, interactive=FALSE);
+    vis.view(coloredmeshes_potentially_shifted, style=style, rotation_angle=0, theta=0);
     if(draw_labels) {
-        rgl::text3d(0,label_shift_y_dorsal,0,"dorsal");
+        view_label3d("dorsal", 0, label_shift_y_dorsal, 0, NULL);
     }
     if(is.function(callback_after_render)) {
         callback_after_render('dorsal');
@@ -451,10 +454,9 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 
     # Create the upper right view
     rgl::next3d(reuse=FALSE);
-    vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style);
-    rgl::view3d(90, 0, fov=0, interactive=FALSE);
+    vis.view(rh_meshes, style=style, rotation_angle=pi/2, theta=90);
     if(draw_labels) {
-        rgl::text3d(0,label_shift_y,0,"lateral rh");
+        view_label3d("lateral rh", 0, label_shift_y, 0, R_lat);
     }
     if(is.function(callback_after_render)) {
         callback_after_render('lateral_rh');
@@ -466,10 +468,9 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 
     # Create the 2nd row left view
     rgl::next3d(reuse=FALSE);
-    vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style);
-    rgl::view3d(90, 0, fov=0, interactive=FALSE);
+    vis.view(lh_meshes, style=style, rotation_angle=pi/2, theta=90);
     if(draw_labels) {
-        rgl::text3d(0,label_shift_y,0,"medial lh");
+        view_label3d("medial lh", 0, label_shift_y, 0, R_lat);
     }
     if(is.function(callback_after_render)) {
         callback_after_render('medial_lh');
@@ -477,10 +478,9 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 
     # Create the 2nd row central view: draw both hemis from below (bottom view)
     rgl::next3d(reuse=FALSE);
-    vis.rotated.coloredmeshes(coloredmeshes_potentially_shifted, pi, 1, 0, 0, style=style);
-    rgl::view3d(0, 0, fov=0, interactive=FALSE);
+    vis.view(coloredmeshes_potentially_shifted, style=style, rotation_angle=pi, theta=0);
     if(draw_labels) {
-        rgl::text3d(0,label_shift_y_ventral,0,"ventral");
+        view_label3d("ventral", 0, label_shift_y_ventral, 0, R_pi);
     }
     if(is.function(callback_after_render)) {
         callback_after_render('ventral');
@@ -489,10 +489,9 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 
     # Create the 2nd row right view
     rgl::next3d(reuse=FALSE);
-    vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style);
-    rgl::view3d(-90, 0, fov=0, interactive=FALSE);
+    vis.view(rh_meshes, style=style, rotation_angle=pi/2, theta=-90);
     if(draw_labels) {
-        rgl::text3d(0,label_shift_y,0,"medial rh");
+        view_label3d("medial rh", 0, label_shift_y, 0, R_lat);
     }
     if(is.function(callback_after_render)) {
         callback_after_render('medial_rh');
@@ -504,10 +503,10 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 
     # Create the bottom left view: draw only the left hemi, from the left
     rgl::next3d(reuse=FALSE);
-    vis.rotated.coloredmeshes(coloredmeshes_potentially_shifted, pi/2, 1, 0, 0, style=style);
-    view3d(0, 0, fov=0, interactive=FALSE);
+    # Rostral = anterior (+y in FreeSurfer RAS): camera looks from +y (theta=180).
+    vis.view(coloredmeshes_potentially_shifted, style=style, rotation_angle=pi/2, theta=180);
     if(draw_labels) {
-        rgl::text3d(0,label_shift_y,0,"rostral");
+        view_label3d("rostral", 0, label_shift_y, 0, R_lat);
     }
     if(is.function(callback_after_render)) {
         callback_after_render('rostral');
@@ -521,10 +520,10 @@ brainview.t9 <- function(coloredmeshes, background="white", skip_all_na=TRUE, st
 
     # Create the bottom right view
     rgl::next3d(reuse=FALSE);
-    vis.rotated.coloredmeshes(coloredmeshes_potentially_shifted, pi/2, 1, 0, 0, style=style);
-    rgl::view3d(180, 0, fov=0, interactive=FALSE);
+    # Caudal = posterior (-y in FreeSurfer RAS): camera looks from -y (theta=0).
+    vis.view(coloredmeshes_potentially_shifted, style=style, rotation_angle=pi/2, theta=0);
     if(draw_labels) {
-        rgl::text3d(0,label_shift_y,0,"caudal");
+        view_label3d("caudal", 0, label_shift_y, 0, R_lat);
     }
     if(is.function(callback_after_render)) {
         callback_after_render('caudal');
@@ -615,44 +614,38 @@ brainview.sd <- function(coloredmeshes, view_angle, background="white", skip_all
     coloredmeshes_potentially_shifted = shift.hemis.rglactions(coloredmeshes, rglactions);
 
     if(view_angle == "lateral_lh") {
-        vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style);
-        handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "lh");
-        rgl::view3d(-90, 0, fov=0, interactive=FALSE);
+        vis.view(lh_meshes, style=style, rotation_angle=pi/2, theta=-90);
+        handle.rglactions.highlight.points(rglactions, hemi = "lh");
         if(is.function(callback_after_render)) { callback_after_render('lateral_lh'); }
     } else if (view_angle == "dorsal") {
-        vis.rotated.coloredmeshes(coloredmeshes_potentially_shifted, 0, 1, 0, 0, style=style);
-        handle.rglactions.highlight.points(rglactions, 0, 1, 0, 0, hemi = "both");
-        rgl::view3d(0, 0, fov=0, interactive=FALSE);
+        vis.view(coloredmeshes_potentially_shifted, style=style, rotation_angle=0, theta=0);
+        handle.rglactions.highlight.points(rglactions, hemi = "both");
         if(is.function(callback_after_render)) { callback_after_render('dorsal'); }
     } else if(view_angle == "lateral_rh") {
-        vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style);
-        handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "rh");
-        rgl::view3d(90, 0, fov=0, interactive=FALSE);
-        if(is.function(callback_after_render)) { callback_after_render('lateral_lh'); }
+        vis.view(rh_meshes, style=style, rotation_angle=pi/2, theta=90);
+        handle.rglactions.highlight.points(rglactions, hemi = "rh");
+        if(is.function(callback_after_render)) { callback_after_render('lateral_rh'); }
     } else if(view_angle == "medial_lh") {
-        vis.rotated.coloredmeshes(lh_meshes, pi/2, 1, 0, 0, style=style);
-        handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "lh");
-        rgl::view3d(90, 0, fov=0, interactive=FALSE);
+        vis.view(lh_meshes, style=style, rotation_angle=pi/2, theta=90);
+        handle.rglactions.highlight.points(rglactions, hemi = "lh");
         if(is.function(callback_after_render)) { callback_after_render('medial_lh'); }
     } else if(view_angle == "ventral") {
-        vis.rotated.coloredmeshes(coloredmeshes_potentially_shifted, pi, 1, 0, 0, style=style);
-        handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "both");
-        rgl::view3d(0, 0, fov=0, interactive=FALSE);
+        vis.view(coloredmeshes_potentially_shifted, style=style, rotation_angle=pi, theta=0);
+        handle.rglactions.highlight.points(rglactions, hemi = "both");
         if(is.function(callback_after_render)) { callback_after_render('ventral'); }
     } else if(view_angle == "medial_rh") {
-        vis.rotated.coloredmeshes(rh_meshes, pi/2, 1, 0, 0, style=style);
-        handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "rh");
-        rgl::view3d(-90, 0, fov=0, interactive=FALSE);
+        vis.view(rh_meshes, style=style, rotation_angle=pi/2, theta=-90);
+        handle.rglactions.highlight.points(rglactions, hemi = "rh");
         if(is.function(callback_after_render)) { callback_after_render('medial_rh'); }
     } else if(view_angle == "rostral") {
-        vis.rotated.coloredmeshes(coloredmeshes_potentially_shifted, pi/2, 1, 0, 0, style=style);
-        handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "both");
-        view3d(0, 0, fov=0, interactive=FALSE);
+        # Rostral = anterior (+y in FreeSurfer RAS): camera looks from +y (theta=180).
+        vis.view(coloredmeshes_potentially_shifted, style=style, rotation_angle=pi/2, theta=180);
+        handle.rglactions.highlight.points(rglactions, hemi = "both");
         if(is.function(callback_after_render)) { callback_after_render('rostral'); }
     } else if(view_angle == "caudal") {
-        vis.rotated.coloredmeshes(coloredmeshes_potentially_shifted, pi/2, 1, 0, 0, style=style);
-        handle.rglactions.highlight.points(rglactions, pi/2, 1, 0, 0, hemi = "both");
-        rgl::view3d(180, 0, fov=0, interactive=FALSE);
+        # Caudal = posterior (-y in FreeSurfer RAS): camera looks from -y (theta=0).
+        vis.view(coloredmeshes_potentially_shifted, style=style, rotation_angle=pi/2, theta=0);
+        handle.rglactions.highlight.points(rglactions, hemi = "both");
         if(is.function(callback_after_render)) { callback_after_render('caudal'); }
     } else {
         stop(sprintf("Invalid view_angle '%s'. Must be one of 'lateral_lh', 'dorsal', 'lateral_rh', 'medial_lh', 'ventral', 'medial_rh', 'rostral' or 'caudal'.\n", view_angle));

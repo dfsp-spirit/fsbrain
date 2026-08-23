@@ -263,6 +263,71 @@ vis.rotated.coloredmeshes <- function(renderables, rotation_angle, x, y, z, styl
 }
 
 
+#' @title Render renderables for a static view and orient the camera (camera-based).
+#'
+#' @description Renders the given renderables UNROTATED and orients the rgl
+#' camera so the scene appears exactly as if the renderables had been rotated by
+#' (rotation_angle, x, y, z) and then viewed from (theta, phi, fov=0). This is
+#' the camera-based replacement for the legacy mesh-rotation approach
+#' (\code{vis.rotated.coloredmeshes}); it is pixel-identical for the fsbrain
+#' view angles (see tests/testthat/test-camera_unification.R).
+#'
+#' @param renderables list of renderables (coloredmesh, coloredvoxels,
+#'   Triangles3D) to render into the current scene.
+#'
+#' @param style a rendering style, see \code{\link[fsbrain]{get.rglstyle}}.
+#'
+#' @param rotation_angle, x, y, z the mesh rotation that the camera must
+#'   reproduce (passed to \code{\link[fsbrain]{rotation.matrix}}).
+#'
+#' @param theta, phi the fixed-camera angles (passed to \code{\link[rgl]{view3d}}).
+#'
+#' @keywords internal
+vis.view <- function(renderables, style="default", rotation_angle=0, x=1, y=0, z=0, theta=0, phi=0) {
+    if(is.null(renderables)) {
+        return(invisible(NULL));
+    }
+    R_mesh = rotation.matrix(rotation_angle, x, y, z);
+    for(renderable in renderables) {
+        vis.renderable(renderable, style=style);
+    }
+    # Compose the fixed-camera orientation (view3d(theta, phi)) with the camera
+    # rotation equivalent to rotating the mesh by R_mesh. transform_renderable
+    # rotates meshes as t(R) %*% vb (column convention), hence the transpose.
+    rgl::view3d(theta, phi, fov=0, interactive=FALSE);
+    um_view = rgl::par3d("userMatrix");
+    rgl::view3d(userMatrix = um_view %*% t(R_mesh), fov=0, interactive=FALSE);
+    return(invisible(NULL));
+}
+
+
+#' @title Draw a view label at a position, compensating for the camera rotation.
+#'
+#' @description With camera-based views, geometry (and text) stays in world
+#'   coordinates while the camera applies the view rotation. To keep a label at
+#'   the same screen position relative to the (now unrotated) renderables as in
+#'   the legacy mesh-rotation views, the label offset is pre-rotated by the
+#'   view's mesh rotation matrix R_mesh.
+#'
+#' @param text character string, the label text.
+#'
+#' @param x, y, z numeric, the label offset in the rotated (view) frame.
+#'
+#' @param R_mesh 4x4 numeric rotation matrix, the view's mesh rotation (use
+#'   \code{\link[fsbrain]{rotation.matrix}}), or NULL for no rotation (e.g.,
+#'   the dorsal view).
+#'
+#' @keywords internal
+view_label3d <- function(text, x, y, z, R_mesh=NULL) {
+    coords = c(x, y, z);
+    if(! is.null(R_mesh)) {
+        coords = transform_coords(rbind(coords), R_mesh)[1, ];
+    }
+    rgl::text3d(coords[1], coords[2], coords[3], text);
+    return(invisible(NULL));
+}
+
+
 
 
 #' @title Draw a coloredmesh using a style.
