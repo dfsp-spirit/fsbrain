@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-This is the fully rendered companion to the `fsbrain_with_scimesh` vignette. It shows how to use the *scimesh* software renderer instead of the default *rgl* backend to produce publication-ready static images with *fsbrain*, and it displays all resulting figures. All code is shown and executed, so you can copy and adapt it. If you prefer a lighter document without the images, read the [vignette](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain_with_scimesh.html) instead.
+This is the fully rendered companion to the `fsbrain_with_scimesh` vignette. It shows how to use the *scimesh* software renderer instead of the default *rgl* backend to produce publication-ready static images with *fsbrain*, and it displays all resulting figures. All code is shown and executed, so you can copy and adapt it. If you prefer a lighter document without the images, read the [vignette](https://dfsp-spirit.github.io/fsbrain/articles/fsbrain_with_scimesh.html) instead.
 
 # Why and when to use the scimesh backend
 

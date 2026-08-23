@@ -12,7 +12,7 @@ In this document, we show how to use the *scimesh* software renderer instead of 
 
 *fsbrain* visualizes data on brain surfaces. By default it uses the [rgl](https://CRAN.R-project.org/package=rgl) package, which provides fast, hardware-accelerated 3D graphics based on OpenGL. As an alternative, *fsbrain* also supports the [scimesh](https://CRAN.R-project.org/package=scimesh) software renderer, a headless, GPU-free C++ renderer that produces identical static images without requiring X11, OpenGL, or a GPU.
 
-This vignette explains why and when using scimesh makes sense, how to switch to it, and demonstrates the most important ways to produce output with it. All code blocks below are shown for you to copy and adapt, but they are not executed during the build of this vignette (to keep it fast and independent of a network connection). If you want to browse a fully rendered version of this document, including all resulting images, have a look at the [online notebook with pre-rendered figures](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/fsbrain_with_scimesh.html).
+This vignette explains why and when using scimesh makes sense, how to switch to it, and demonstrates the most important ways to produce output with it. All code blocks below are shown for you to copy and adapt, but they are not executed during the build of this vignette (to keep it fast and independent of a network connection). If you want to browse a fully rendered version of this document, including all resulting images, have a look at the [online notebook with pre-rendered figures](https://dfsp-spirit.github.io/fsbrain/notebooks/fsbrain_with_scimesh.html).
 
 # Why and when to use the scimesh backend
 
@@ -213,4 +213,4 @@ This is the same pattern that is used to visualize e.g. CIFTI grayordinate data 
 
 # See it rendered
 
-The [online notebook with pre-rendered figures](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/fsbrain_with_scimesh.html) runs all the code shown in this document and displays the resulting images, so you can see exactly what output to expect before writing any code yourself.
+The [online notebook with pre-rendered figures](https://dfsp-spirit.github.io/fsbrain/notebooks/fsbrain_with_scimesh.html) runs all the code shown in this document and displays the resulting images, so you can see exactly what output to expect before writing any code yourself.
