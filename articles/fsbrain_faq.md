@@ -5,7 +5,7 @@
 ### **Q**: What kind of input data do I need for fsbrain?
 
 The *fsbrain* software is designed to be used with the output of
-[FreeSurfer](http://freesurfer.net/) and similar neuroimaging software
+[FreeSurfer](https://freesurfer.net/) and similar neuroimaging software
 packages. Running FreeSurfer’s *recon-all* on your T1w MRI scan results
 in a directory structure full of different files and file types for each
 subject. The *fsbrain* library uses knowledge on this directory layout

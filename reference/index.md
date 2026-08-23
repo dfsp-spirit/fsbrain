@@ -238,6 +238,9 @@
 - [`get.atlas.region.names()`](https://dfsp-spirit.github.io/fsbrain/reference/get.atlas.region.names.md)
   : Determine atlas region names from a subject.
 
+- [`get.fsbrain.renderer.backend()`](https://dfsp-spirit.github.io/fsbrain/reference/get.fsbrain.renderer.backend.md)
+  : Get the current fsbrain renderer backend
+
 - [`get.rglstyle()`](https://dfsp-spirit.github.io/fsbrain/reference/get.rglstyle.md)
   : Get the default visualization style parameters as a named list.
 
