@@ -92,6 +92,6 @@ RUN mkdir /home/output
 ## all static images (e.g., vis.* with views=NULL followed by export()) in
 ## software. Note that interactive 3D viewers and vis.rglwidget() still use
 ## the rgl backend (and need a display) and will NOT work in this image.
-CMD cd /home/input && R
+CMD ["/bin/sh", "-c", "cd /home/input && R"]
 
 ## Now run your analyses and write the results/images to /home/output.
