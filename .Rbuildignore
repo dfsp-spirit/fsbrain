@@ -28,5 +28,7 @@ renovate.json
 dev_tools
 README_MACOS_TAHOE.md
 _pkgdown.yml
+INSTALL_FSBRAIN_FROM_SOURCE.md
+
 
 

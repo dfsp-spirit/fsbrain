@@ -61,7 +61,13 @@ You can find the [fsbrain package on CRAN](https://cran.r-project.org/package=fs
 install.packages("fsbrain");
 ```
 
-In case something goes wrong, don't worry. Just install the missing [system dependencies](#system-dependencies) and retry.
+The fsbrain package comes with some optional features. If you want all features:
+
+```r
+install.packages("fsbrain", dependencies=TRUE);
+```
+
+If you are using a platform that defaults to building fsbrain from source, like Linux, and you are getting errors during installation about missing system dependencies, do not worry: just read [INSTALL_FSBRAIN_FROM_SOURCE.md](./INSTALL_FSBRAIN_FROM_SOURCE.md) for instructions.
 
 
 ### Optional: scimesh rendering backend for headless environments
@@ -90,56 +96,17 @@ Set the output image resolution (default 1920x1080) with the `fsbrain.scimesh.ou
 
 
 
-### System dependencies
-
-A *system dependency* is a **non-R** software that is needed for the installation of a package. System dependencies cannot be installed automatically using the R package system, so you need to install them manually or using the package manager of your operating system.
-
-The *fsbrain* package itself does not have any system dependencies, however, it uses *rgl* for rendering. You can check the *SystemRequirements* section on the [rgl page at CRAN](https://CRAN.R-project.org/package=rgl) for the full list of rgl dependencies or read on. To get GIFTI format support, you will also need `libxml2-dev`.
-
-**Note**: If you use the [scimesh](https://CRAN.R-project.org/package=scimesh) backend, none of the rgl system dependencies are required — scimesh is a pure C++ software renderer with no external library dependencies beyond a C++ compiler.
-
-To install the system dependencies for *rgl* and *xml2*:
-
-#### Linux System dependencies (or: building from source)
-
-R packages are compiled from source by default under Linux, so you need some development libraries. Before installing *fsbrain*, run the following command in your system shell (not in R):
-
-* for deb-based Linux distributions (Debian, Ubuntu, ...):
-```shell
-sudo apt-get install libmagick++-dev libx11-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libfreetype6-dev libxml2-dev libssh-dev libcurl4-openssl-dev gfortran libblas-dev liblapack-dev libgfortran5
-```
-
-Note: For older Ubuntu versions, you may have to replace ```libgfortan5``` in the command above with ```libgfortan4```.
-
-
-* for rpm-based Linux distributions (Fedora, CentOS, RHEL, ...):
-```shell
-sudo yum install ImageMagick-c++-devel libX11-devel mesa-libGLU-devel freetype-devel libxml2-devel
-```
-
-If you want to compile the package under any other operating system, you will need the libraries as well, of course.
-
-#### MacOS System dependencies
-
-Recent macOS versions do not ship with an X11 environment. If you want to use the default rgl backend for interactive viewing, you will need to install [XQuartz](https://www.xquartz.org/). If you want to create GIF movies, make sure you have imagemagick installed (easiest via [homebrew](https://brew.sh/): `brew install imagemagick@6`).
-
-**Recommended for static image export**: Use the [scimesh backend](#optional-scimesh-rendering-backend-for-headless-environments), which requires neither X11 nor XQuartz and produces identical publication-ready images.
-
-Note that X11 is not needed for rendering, but only for opening interactive windows. If you only need publication-quality static images (which is the typical use case), the scimesh backend or the browser-based `rglwidget` are better options.
-
 #### Known issue: Visualization problems on recent macOS versions with rgl
 
-If fsbrain does not open visualization windows or produces blank plots on recent macOS versions (Tahoe 26.x or Sonoma 14.x), see [README_MACOS_TAHOE.md](./README_MACOS_TAHOE.md) for details. The new topional scimesh renderer solves most of these issues.
+If fsbrain does not open visualization windows or produces blank plots on recent macOS versions (Tahoe 26.x or Sonoma 14.x), see [README_MACOS_TAHOE.md](./README_MACOS_TAHOE.md) for details. The new opional scimesh renderer solves most of these issues.
+
+Scimesh is a new, alternative rendering backend for fsbrain that is also useful in other headless environments, like CI servers, containers, etc, where you often do not have access to X11, a graphics card, and OpenGL. If you work under these conditions, we highly recommend to also read [README_MACOS_TAHOE.md](./README_MACOS_TAHOE.md)
 
 
 #### Windows Installation Hints
 
-Under Windows 10, it seems that you will need to install these two packages manually via the `install.packages` command: `shiny` and `manipulateWidget`.
+We received reports that under Windows 10, you may need to install these two packages manually via the `install.packages` command: `shiny` and `manipulateWidget`.
 
-
-### Installation via Docker
-
-There are Docker images for fsbrain available on Dockerhub, see the [fsbrain Dockerhub repo](https://hub.docker.com/r/dfspspirit/fsbrain).
 
 
 ## Documentation
@@ -203,27 +170,6 @@ A BibTeX entry for LaTeX users is
 Other materials related to fsbrain:
 
 * A poster on *fsbrain* has been presented at INSAR 2020 Annual Meeting: [Abstract](https://insar.confex.com/insar/2020/meetingapp.cgi/Paper/33181), [ePoster viewer](https://insar.confex.com/insar/2020/techdemo/eposter.cgi?eposterid=227), [PDF download](https://github.com/dfsp-spirit/fsbrain_gallery/raw/master/extra_materials/Poster_IMFAR2020_fsbrain.pdf)
-
-## Visualization examples
-
-The *fsbrain* package support visualizations of different data, and all data can be displayed in one or more views. The figure below shows some examples for surface-based data:
-
-![Visoverview](./web/fsbrain_vis_overview.jpg?raw=true "Some visualization options from fsbrain")
-**Fig.2**: *Example output for the fsbrain interactive visualization functions*.
-
-* **Subfigure A** shows the visualization of raw morphometry data (cortical thickness) from native space on the white surface of a subject. The view shows the data in tiles from 8 different angles.
-* **Subfigure B** illustrates arbitrary data (p-values in this case) visualized on the regions of the Desikan atlas, using the surface of the fsaverage (standard space template) subject from FreeSurfer. The view shows the data in tiles from 4 different angles.
-* **Subfigure C** displays the regions of the Desikan atlas on the white surface of a subject. The colors were loaded from the respective annotation file. The view shows the data in tiles from 4 different angles.
-
-*What* is displayed (morphometry data, atlas regions, arbitrary other data), on *which surface* it is displayed, and *how* it is displayed (a single interactive view, 4 tiles, 9 tiles) is independent and can be selected as needed in fsbrain.
-
-Here is a second figure, showing the same data (the [mean curvature](https://en.wikipedia.org/wiki/Mean_curvature) at each vertex) displayed on 3 different surfaces of a subject: **A** white surface, **B** pial surface, **C** inflated surface.
-![Vissurfaces](./web/fsbrain_curvature_surfaces.jpg?raw=true "Curvature visualization on different surfaces, rendered with fsbrain")
-
-
-The next figure illustrates some options to visualize your results with different backgrounds. **A** Clusters on the white fsaverage surface with sulc background. **B** Region-wise p-values with curv background, inflated fsaverage surface. **C** A background color layer displaying outlines of aparc atlas regions in the respective colors, inflated demo subject surface.
-
-![Visres](./web/fsbrain_vis_bg.jpg?raw=true "Visualization of results and background layers, rendered with fsbrain")
 
 
 ### Animations and videos

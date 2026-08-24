@@ -1,5 +1,7 @@
 # Visualization on macOS Tahoe and Sonoma
 
+...and other environments without X11 and OpenGL.
+
 ## The problem
 
 Recent macOS versions (Tahoe 26.x, Sonoma 14.x) changed how they handle
@@ -91,16 +93,18 @@ The limitations of scimesh are those inherent to all software renderers:
 
 - No interactive 3D windows (`views = "si"`)
 - No real-time rotation (`views = "sr"`, `vis.coloredmeshes.rotating`)
-- No browser-based 3D widgets (`vis.rglwidget`) — see Solution 2 below
-- No animated GIF export via rgl (`movie3d`)
+- No animated GIF export via rgl (`movie3d`). This is possible with scimesh, but using the scimesh functionality is not yet implemented in fsbrain.
 
 The reason for these limitations is that a CPU can render a beautiful brain image in about 2 seconds, while a graphics card with OpenGL driver stack can do the same in 0.02 seconds -- and thus produce so many frames per second that interactive viewing becomes possible.
 
 ## Solution 2: Browser-based interactive visualization
 
 If you need interactive 3D viewing, you can use `vis.rglwidget()`, which
-renders the scene in your web browser. Note that this does **not** include
-colorbars and cannot produce multi-view layouts.
+renders the scene in your web browser using WebGL instead of the missing system OpenGL stack. Note that this does **not** include an option to display colorbars and cannot produce multi-view layouts.
+
+While it can be used for interactive data analysis during development
+and iterative research workflows, it is not suited for generating publication
+quality plots.
 
 ```r
 library(fsbrain)
@@ -133,7 +137,9 @@ widget  # displays in RStudio viewer or web browser
 | Requires GPU / OpenGL | No | No | Yes |
 | Publication-quality output | ✓ | — | ✓ |
 
-**Bottom line**: For creating static figures (the most common use case),
-use the scimesh backend. If you need interactive 3D exploration, use
-`vis.rglwidget()`. If you have a working XQuartz installation (older MacOS versions), the
-default rgl backend also works.
+**Bottom line**:
+
+* For creating static figures (the most common use case), use the scimesh backend.
+* If you need interactive 3D exploration, use `vis.rglwidget()` (uses WebGL).
+* If you have a working XQuartz installation and OpenGL (older MacOS versions), the default rgl backend works.
+* If you are running headless in containers, CI etc, interactive plots make no sense anyways. Use scimesh.
