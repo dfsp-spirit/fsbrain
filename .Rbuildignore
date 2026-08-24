@@ -26,7 +26,7 @@ renovate.json
 ^\.opencode
 ^examples$
 dev_tools
-README_MACOS_TAHOE.md
+README_HEADLESS.md
 _pkgdown.yml
 INSTALL_FSBRAIN_FROM_SOURCE.md
 

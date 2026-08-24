@@ -34,7 +34,7 @@ The plots produced by *fsbrain* can be integrated into R notebooks or written to
 * 2026-08-23: New documentation for the scimesh rendering backend: a new vignette (`vignette("fsbrain_with_scimesh")`) and an [online notebook with pre-rendered figures](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/fsbrain_with_scimesh.html) that show how to configure fsbrain for headless, GPU-free static image export and how to use the `export()` API, including region- and vertex-based results and a workflow with manually loaded meshes.
 * 2026-07-14: New alternative rendering backend via [scimesh](https://CRAN.R-project.org/package=scimesh). Switchable with `options(fsbrain.renderer_backend = "scimesh")`. Enables publication-quality static images without X11/OpenGL/GPU — great for macOS Tahoe/Sonoma, HPC clusters, and headless servers.
 * 2026-08-20: We have some new online documentation: example notebooks demonstrating 2 typical workflows of fMRI result visualization with fsbrain. [View them online here](https://dfsp-spirit.github.io/fsbrain_fMRI_vis_workflows/).
-* 2026-07-09: New fsbrain version 0.6.1 released. Adds automatic fallback for plot export on recent macOS versions (Tahoe, Sonoma) where X11/XQuartz is broken. You can now export publication-ready plots with colorbars even without a working X11 display. See [README_MACOS_TAHOE.md](./README_MACOS_TAHOE.md) for details.
+* 2026-07-09: New fsbrain version 0.6.1 released. Adds automatic fallback for plot export on recent macOS versions (Tahoe, Sonoma) where X11/XQuartz is broken. You can now export publication-ready plots with colorbars even without a working X11 display. See [README_HEADLESS.md](./README_HEADLESS.md) for details.
 * 2026-07-08: New fsbrain version 0.6.0 released on CRAN, see the [CHANGES](./CHANGES).
 * 2025-09-09: New fsbrain version 0.5.6 released on CRAN, see the [CHANGES](./CHANGES).
 * 2024-02-03: New fsbrain version 0.5.5 released on CRAN, see the [CHANGES](./CHANGES).
@@ -70,37 +70,19 @@ install.packages("fsbrain", dependencies=TRUE);
 If you are using a platform that defaults to building fsbrain from source, like Linux, and you are getting errors during installation about missing system dependencies, do not worry: just read [INSTALL_FSBRAIN_FROM_SOURCE.md](./INSTALL_FSBRAIN_FROM_SOURCE.md) for instructions.
 
 
-### Optional: scimesh rendering backend for headless environments
+### Headless / no-display rendering: the scimesh backend
 
-For headless environments (HPC clusters, servers, CI runners) or macOS systems where XQuartz is broken, you can use the [scimesh](https://CRAN.R-project.org/package=scimesh) software renderer instead of rgl. It produces identical publication-ready static images without X11, OpenGL, XQuartz, or a GPU.
+If you work headless (HPC clusters, servers, CI runners, containers) or on recent macOS where XQuartz is broken, fsbrain's default rgl backend cannot open windows. Switch to the [scimesh](https://CRAN.R-project.org/package=scimesh) software renderer — a headless, GPU-free C++ renderer that produces identical static images without X11, OpenGL, or a GPU:
 
 ```r
 install.packages("scimesh");
-```
-
-To activate the scimesh backend for the current R session:
-
-```r
 options(fsbrain.renderer_backend = "scimesh");
 ```
 
-Static image export (`vislayout.from.coloredmeshes()` and `export()`) now renders with scimesh. Interactive `views` (e.g., `views = "si"`, `"sr"`, `"t4"`, `"t9"`) still use rgl. Switch back at any time:
+Static image export (`vislayout.from.coloredmeshes()` and `export()`) now renders with scimesh. Interactive views (e.g., `views = "si"`, `"sr"`, `"t4"`, `"t9"`) and `vis.rglwidget()` still use rgl. Switch back at any time with `options(fsbrain.renderer_backend = "rgl")`.
 
-```r
-options(fsbrain.renderer_backend = "rgl");
-```
-
-Set the output image resolution (default 1920x1080) with the `fsbrain.scimesh.output_dims` option, e.g. `options(fsbrain.scimesh.output_dims = c(1600, 900))`.
-
-**What scimesh supports**: All static image export (single views, multi-view layouts, colorbars), all rendering styles. **What it does not**: Interactive 3D windows, real-time rotation, browser-based widgets (`vis.rglwidget`), animated GIFs — these remain available through the default rgl backend. In practice, most users only need static images for presentations and publications, for which scimesh works perfectly.
-
-
-
-#### Known issue: Visualization problems on recent macOS versions with rgl
-
-If fsbrain does not open visualization windows or produces blank plots on recent macOS versions (Tahoe 26.x or Sonoma 14.x), see [README_MACOS_TAHOE.md](./README_MACOS_TAHOE.md) for details. The new opional scimesh renderer solves most of these issues.
-
-Scimesh is a new, alternative rendering backend for fsbrain that is also useful in other headless environments, like CI servers, containers, etc, where you often do not have access to X11, a graphics card, and OpenGL. If you work under these conditions, we highly recommend to also read [README_MACOS_TAHOE.md](./README_MACOS_TAHOE.md)
+* **How to use it**: see the [scimesh vignette](https://dfsp-spirit.github.io/fsbrain/articles/fsbrain_with_scimesh.html) (`vignette("fsbrain_with_scimesh")`) — what works, the limitations, and many worked examples.
+* **Why / when to use it, and alternatives**: see [README_HEADLESS.md](./README_HEADLESS.md), a decision guide for headless environments and broken-X11 macOS.
 
 
 #### Windows Installation Hints
