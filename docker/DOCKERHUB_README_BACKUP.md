@@ -1,6 +1,6 @@
 # fsbrain Docker Images
 
-This is the official hub.docker.com repo for [fsbrain](https://github.com/dfsp-spirit/fsbrain)  Docker containers, maintained by [Tim Schäfer](http://rcmd.org/ts/).
+This is the official hub.docker.com repo for [fsbrain](https://github.com/dfsp-spirit/fsbrain)  Docker containers, maintained by [Tim Schäfer](https://ts.rcmd.org/).
 
 The fsbrain package is a GNU R library for structural neuroimaging. It provides high-level functions to access (read and write) and visualize surface-based brain morphometry data, e.g. cortical thickness, for individual subjects and groups. See [github.com/dfsp-spirit/fsbrain](https://github.com/dfsp-spirit/fsbrain) for more details on fsbrain, including the documentation, installation instructions, and issue tracker.
 
@@ -17,7 +17,6 @@ In that R session, you can now load fsbrain: `library("fsbrain");`
 
 That's great, but you are inside the container, and *cannot access the host filesystem* of your computer! Read on to learn how to access it, because you will most likely need it to get your data and R scripts, and of course to learn how to also *save your results* to the host computer in the end. (Simply type `q()` in R to exit the interactive R session and destroy the container. Afterwards you are back on your host.).
 
-**Note on rendering:** The images render static visualizations (e.g., `vis.*` functions followed by `export()`) fully headless in software, so no X11, OpenGL, or GPU is needed inside the container. Interactive 3D viewers are *not* available in the Docker images.
 
 ### Making your data available inside the container and keeping results
 
