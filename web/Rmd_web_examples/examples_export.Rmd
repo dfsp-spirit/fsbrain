@@ -25,7 +25,7 @@ sj = 'subject1'
 
 If you do not have any data but still want to follow this tutorial, you can download and use the fsbrain example data like this instead:
 
-```{r}
+```{r, results='hide', message=FALSE, warning=FALSE}
 library('fsbrain')
 download_optional_data()
 download_fsaverage(accept_freesurfer_license = TRUE)
@@ -190,4 +190,26 @@ browseVignettes('fsbrain');
 ```
 
 In general, the vignettes are a great way to get started with *fsbrain*. You can also read them online at CRAN, they are linked on the [fsbrain page on GitHub](https://github.com/dfsp-spirit/fsbrain).
+
+## Results: vertex-based
+
+For symmetric data around zero, e.g., t-values, you should use a symmetric colormap. The function `vis.symmetric.data.on.subject()` does this, and can also draw a gray-scale background computed from the mean curvature of the cortex. Here we use the demo cluster data that ships with *fsbrain* and render it on *fsaverage*:
+
+```{r rgl=TRUE, fig.show = 'hide', warning = 'hide'}
+subjects_dir = get_optional_data_filepath("subjects_dir");
+subject_id = 'fsaverage';
+
+lh_demo_cluster_file = system.file("extdata", "lh.clusters_fsaverage.mgz", package = "fsbrain", mustWork = TRUE);
+rh_demo_cluster_file = system.file("extdata", "rh.clusters_fsaverage.mgz", package = "fsbrain", mustWork = TRUE);
+
+lh_clust = freesurferformats::read.fs.morph(lh_demo_cluster_file);   # a single positive cluster (activation), the other values are 0
+rh_clust = freesurferformats::read.fs.morph(rh_demo_cluster_file);   # two negative clusters
+
+cm = vis.symmetric.data.on.subject(subjects_dir, subject_id, lh_clust, rh_clust, bg="curv_light", views=NULL);
+img = export(cm, colorbar_legend='t-value (dummy data)');
+```
+
+```{r}
+img;
+```
 
