@@ -4,13 +4,13 @@ fsbrain Changes
 
 Version 0.8.0 (WIP) -- camera-based views, shared rgl/scimesh framing
 ----------------------------------------------------------------------
-This version introduces some braking changes, marked with `BRK` in the list of changes below. We assume they will only affect few users of fsbrain, but please read the release notes below carefully to decide whether your code is ready to upgrade to fsbrain v0.8.0. After reading all changes, first decide whether your code uses features that were changed, to decide whether you are affected by the breaking changes. You have two options *if* you are affected:
+This version introduces some breaking changes, marked with `BRK` in the list of changes below. We assume they will only affect few users of fsbrain, but please read the release notes below carefully to decide whether your code is ready to upgrade to fsbrain v0.8.0. After reading all changes, first decide whether your code uses features that were changed, to decide whether you are affected. You have two options *if* you are affected:
 
 * Keep your code untouched and force installation of fsbrain v0.7.0:
     - for R packages, pin the fsbrain version in the `DESCRIPTION` file of your package (e.g., in the `Imports` section, require `fsbrain (== 0.7.0)`)
     - for R scripts, adapt the `install.packages(fsbrain)` call you will most likely have at the top of your script to something like `install.packages(remotes)` and `remotes::install_version("fsbrain", version = "0.7.0")`.
     - Note: You are stuck with fsbrain v0.7.0 then, but that may be fine for your script: if it worked before with that version, it will continue working with that version.
-    - Note that if you give your script to others, you will have to tell them that it requires a specific fsbrain version.
+    - Note that if you give your script to others and you do not explicitely install the correct version in the script itself, you will have to tell them that it requires a specific fsbrain version. If they just `install.packages("fsbrain")`, they will get the latest one, that will not be compatible with your script.
 * or adapt your code now, and become ready to use the latest fsbrain version and its new features. If you just `install.packages("fsbrain")` in R or specify only `fsbrain` without version information in the `Imports` section of your packages `DESCRIPTION` file, you will always get the latest version.
 
 Note: For packages, we highly recommend pinning supported fsbrain versions explicitely in the `DESCRIPTION` file. You should of course list as supported only versions that you have **tested** your package with (e.g., your tests pass with that version on your continuous integration server).
