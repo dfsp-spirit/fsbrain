@@ -17,6 +17,8 @@ In that R session, you can now load fsbrain: `library("fsbrain");`
 
 That's great, but you are inside the container, and *cannot access the host filesystem* of your computer! Read on to learn how to access it, because you will most likely need it to get your data and R scripts, and of course to learn how to also *save your results* to the host computer in the end. (Simply type `q()` in R to exit the interactive R session and destroy the container. Afterwards you are back on your host.).
 
+**Note on rendering:** The images render static visualizations (e.g., `vis.*` functions followed by `export()`) fully headless in software, so no X11, OpenGL, or GPU is needed inside the container. Interactive 3D viewers are *not* available in the Docker images.
+
 ### Making your data available inside the container and keeping results
 
 Typically you will want to mount some part of the host filesystem (e.g., your input neuroimaging data in a FreeSurfer $SUBJECTS_DIR or a folder above that which also includes R scripts for the statistical analysis) into the container, work on that data in an interactive session, and save the results to a separate directory that will persist on your host after you exit the container. Here is an example that does this. We start by creating an output directory on the host, and assume that the data and scripts you need for your analysis are stored in `~/data/study1/` on the host.
