@@ -14,6 +14,7 @@ compute.surface.contour.slices(
   surface_lwd = 1,
   slices = -5,
   axis = 1L,
+  scale = 1L,
   silent = TRUE
 )
 }
@@ -35,6 +36,8 @@ compute.surface.contour.slices(
 \item{slices}{passed to \code{\link[fsbrain]{volvis.lightbox}}. A negative integer N means "use every Nth slice". A numeric vector gives explicit slice indices (1-based). Defaults to \code{-5}.}
 
 \item{axis}{integer, the slice axis. 1 = sagittal, 2 = coronal, 3 = axial. Defaults to \code{1L}.}
+
+\item{scale}{integer >= 1, the factor by which to upscale the slice images in both dimensions using nearest-neighbor interpolation (keeps the MRI pixels sharp, which is good for QA). The surface contour lines are drawn on a high-resolution transparent overlay which is downsampled to the final size, so the lines appear thin and smooth. Defaults to \code{1L} (no upscaling, previous behavior).}
 
 \item{silent}{logical, whether to suppress messages.}
 }

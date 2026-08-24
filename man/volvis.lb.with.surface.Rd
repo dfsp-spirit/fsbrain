@@ -14,6 +14,7 @@ volvis.lb.with.surface(
   surface_lwd = 1,
   slices = -5,
   axis = 1L,
+  scale = 1L,
   per_row = 5L,
   per_col = NULL,
   border_geometry = "5x5",
@@ -39,6 +40,8 @@ volvis.lb.with.surface(
 \item{slices}{passed to \code{\link[fsbrain]{volvis.lightbox}}. A negative integer N means "use every Nth slice". A numeric vector gives explicit slice indices (1-based). Defaults to \code{-5} (every 5th slice).}
 
 \item{axis}{integer, the slice axis. 1 = sagittal, 2 = coronal, 3 = axial (in volume CRS convention). Defaults to \code{1L}.}
+
+\item{scale}{integer >= 1, the factor by which to upscale the slice images in both dimensions using nearest-neighbor interpolation (keeps the MRI pixels sharp, which is good for QA). The surface contour lines are drawn on a high-resolution overlay and downsampled to the final size, so they appear thin and smooth. Defaults to \code{1L} (no upscaling, previous behavior).}
 
 \item{per_row}{integer, number of slice images per row in the lightbox grid. Defaults to \code{5L}.}
 
@@ -91,6 +94,10 @@ Creates a lightbox view of 2D MRI slices with the cortical surface boundary cont
    img <- volvis.lb.with.surface(subjects_dir, "subject1",
       volume="brain", surface=c("white", "pial"), axis=3L,
       surface_color=c("#FF0000", "#0000FF", "#00FF00", "#FF8800"));
+
+   # 2x upscaled slices for larger images with thin, smooth contours:
+   img <- volvis.lb.with.surface(subjects_dir, "subject1",
+      volume="brain", surface="white", axis=3L, scale=2L);
 }
 
 }

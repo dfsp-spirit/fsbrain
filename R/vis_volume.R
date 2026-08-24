@@ -356,6 +356,8 @@ vol.overlay.colors.from.activation <- function(volume, colormap_fn=squash::blueo
 #'
 #' @param axis positive integer in range 1L..3L, the axis to use.
 #'
+#' @param scale integer >= 1, the factor by which to upscale the slice images in both dimensions using nearest-neighbor interpolation. This keeps the MRI pixels sharp (no smoothing) while making the images larger. Defaults to 1L (no upscaling).
+#'
 #' @param per_row positive integer, the number of subimages per row in the output image. If `NULL`, automatically computed from the number of slices and the `per_col` parameter.
 #'
 #' @param per_col positive integer, the number of subimages per column in the output image. If `NULL`, automatically computed from the number of slices and the `per_row` parameter.
@@ -377,7 +379,7 @@ vol.overlay.colors.from.activation <- function(volume, colormap_fn=squash::blueo
 #' @seealso \code{\link[fsbrain]{volvis.lb}}
 #'
 #' @export
-volvis.lightbox <- function(volume, slices=-5, axis=1L, per_row=5L, per_col=NULL, border_geometry="5x5", background_color = "#000000", arrange_single_image=FALSE) {
+volvis.lightbox <- function(volume, slices=-5, axis=1L, per_row=5L, per_col=NULL, border_geometry="5x5", background_color = "#000000", arrange_single_image=FALSE, scale=1L) {
 
     skip_border = FALSE;
     if(length(dim(volume)) == 2) {
@@ -398,6 +400,12 @@ volvis.lightbox <- function(volume, slices=-5, axis=1L, per_row=5L, per_col=NULL
         stop(sprintf("Axis must be integer with value 1, 2 or 3 but is %d.\n", axis));
     }
 
+    scale = as.numeric(scale);
+    if(length(scale) != 1L || is.na(scale) || scale < 1 || scale != round(scale)) {
+        stop("Parameter 'scale' must be a single integer >= 1.");
+    }
+    scale = as.integer(scale);
+
     if(is.numeric(volume)) {
         volume = vol.intensity.to.color(volume);
     }
@@ -414,6 +422,12 @@ volvis.lightbox <- function(volume, slices=-5, axis=1L, per_row=5L, per_col=NULL
 
     # Transform the slices into an ImageMagick stack of 2D images
     images = vol.imagestack(img_slices, axis=axis);
+
+    # Optionally upscale the slices with nearest-neighbor (keeps pixels sharp).
+    if(scale > 1L) {
+        img_info_all = magick::image_info(images);
+        images = magick::image_resize(images, magick::geometry_size_pixels(img_info_all$width[1] * scale, img_info_all$height[1] * scale), filter = "point");
+    }
 
     # Add tiny border
     if(!skip_border) {
@@ -528,7 +542,7 @@ get.slice.indices <- function(voldim, axis, slices) {
     axis = as.integer(axis);
     num_slices_in_volume = voldim[axis];    # along the requested axis
     if(is.numeric(slices)) {
-        if(length(slices) == 1 & slices < 0L) {
+        if(length(slices) == 1L && slices[1L] < 0L) {
             # every nth slice
             return(seq.int(from=1L, to=num_slices_in_volume, by=abs(slices)))
         } else {
@@ -1185,10 +1199,12 @@ mesh.slice.intersection <- function(surface, axis, slice_crs_coord) {
 #'
 #' @param lwd numeric, line width passed to \code{\link[graphics]{segments}}. Defaults to 1.
 #'
+#' @param coord_scale positive integer, the factor by which the CRS coordinates must be multiplied to map them to image pixel coordinates. Defaults to 1L, which maps coordinates 1:1 to pixels (as is the case when the image is at native resolution). Use larger values when drawing onto a scaled-up image or overlay.
+#'
 #' @return the modified magick image (invisibly).
 #'
 #' @keywords internal
-draw.segments.on.image <- function(img, segments, slice_axis, row_axis, col_axis, color = "#FF0000", lwd = 1) {
+draw.segments.on.image <- function(img, segments, slice_axis, row_axis, col_axis, color = "#FF0000", lwd = 1, coord_scale = 1L) {
     if (length(segments) == 0) return(invisible(img));
 
     other_axes <- setdiff(1:3, slice_axis);
@@ -1201,10 +1217,10 @@ draw.segments.on.image <- function(img, segments, slice_axis, row_axis, col_axis
 
     img <- magick::image_draw(img);
     for (seg in segments) {
-        x0 <- max(1, min(img_width,  seg[1, col_col] + 1));
-        y0 <- max(1, min(img_height, seg[1, row_col] + 1));
-        x1 <- max(1, min(img_width,  seg[2, col_col] + 1));
-        y1 <- max(1, min(img_height, seg[2, row_col] + 1));
+        x0 <- max(1, min(img_width,  seg[1, col_col] * coord_scale + 1));
+        y0 <- max(1, min(img_height, seg[1, row_col] * coord_scale + 1));
+        x1 <- max(1, min(img_width,  seg[2, col_col] * coord_scale + 1));
+        y1 <- max(1, min(img_height, seg[2, row_col] * coord_scale + 1));
         graphics::segments(x0, y0, x1, y1, col = color, lwd = lwd);
     }
     dev.off();
@@ -1235,6 +1251,8 @@ draw.segments.on.image <- function(img, segments, slice_axis, row_axis, col_axis
 #'
 #' @param axis integer, the slice axis. 1 = sagittal, 2 = coronal, 3 = axial. Defaults to \code{1L}.
 #'
+#' @param scale integer >= 1, the factor by which to upscale the slice images in both dimensions using nearest-neighbor interpolation (keeps the MRI pixels sharp, which is good for QA). The surface contour lines are drawn on a high-resolution transparent overlay which is downsampled to the final size, so the lines appear thin and smooth. Defaults to \code{1L} (no upscaling, previous behavior).
+#'
 #' @param silent logical, whether to suppress messages.
 #'
 #' @return named list with entries: \code{images} (list of magick images, one per slice), \code{slice_indices} (integer vector of 1-based slice indices used), \code{has_contour} (logical vector, TRUE if at least one contour segment was drawn on the slice). Also includes metadata entries \code{axis}, \code{surfaces}, \code{hemis}, \code{subject_id} for downstream use.
@@ -1248,6 +1266,7 @@ compute.surface.contour.slices <- function(subjects_dir, subject_id,
     surface_lwd = 1,
     slices = -5,
     axis = 1L,
+    scale = 1L,
     silent = TRUE
 ) {
     # ── Validate ──────────────────────────────────────────────────────────
@@ -1257,6 +1276,11 @@ compute.surface.contour.slices <- function(subjects_dir, subject_id,
     if(!(axis %in% 1:3)) {
         stop("Parameter 'axis' must be 1, 2, or 3.");
     }
+    scale <- as.numeric(scale);
+    if(length(scale) != 1L || is.na(scale) || scale < 1 || scale != round(scale)) {
+        stop("Parameter 'scale' must be a single integer >= 1.");
+    }
+    scale <- as.integer(scale);
 
     # ── Load volume ───────────────────────────────────────────────────────
     if(is.character(volume) && length(volume) == 1L && !startsWith(volume, "#")) {
@@ -1332,6 +1356,12 @@ compute.surface.contour.slices <- function(subjects_dir, subject_id,
     # ── Convert volume to grayscale RGB and extract slices ────────────────
     vol_rgb <- vol.intensity.to.color(vol_data, scale = "normalize");
 
+    # Supersampling factor for smooth contour lines: when the image is upscaled
+    # (scale > 1), the lines are drawn on a high-resolution transparent overlay
+    # which is then downsampled, yielding thin and smooth lines, while the
+    # background MRI stays blocky and sharp (nearest-neighbor upscaling).
+    line_ss <- 4L;
+
     # ── For each slice: compute contours, draw on image ──────────────────
     magick_images <- list();
     has_contour <- logical(length(slice_indices));
@@ -1342,6 +1372,16 @@ compute.surface.contour.slices <- function(subjects_dir, subject_id,
         slice_2d <- vol.slice(vol_rgb, slice_index = slice_r_idx, axis = axis);
         img <- magick::image_read(slice_2d);
 
+        # Upscale the background slice with nearest-neighbor interpolation and
+        # prepare a high-resolution transparent overlay for the contour lines.
+        overlay <- NULL;
+        if(scale > 1L) {
+            nat_w <- magick::image_info(img)$width;
+            nat_h <- magick::image_info(img)$height;
+            img <- magick::image_resize(img, magick::geometry_size_pixels(nat_w * scale, nat_h * scale), filter = "point");
+            overlay <- magick::image_blank(nat_w * scale * line_ss, nat_h * scale * line_ss, color = "transparent");
+        }
+
         any_contour <- FALSE;
         for (surf_name in names(surf_crs)) {
             for (h in names(surf_crs[[surf_name]])) {
@@ -1349,13 +1389,30 @@ compute.surface.contour.slices <- function(subjects_dir, subject_id,
                     axis, slice_crs);
                 if(length(segs) > 0) {
                     any_contour <- TRUE;
-                    img <- draw.segments.on.image(img, segs,
-                        slice_axis = axis,
-                        row_axis = row_axis, col_axis = col_axis,
-                        color = surf_col_map[surf_name, h], lwd = surface_lwd);
+                    if(scale > 1L) {
+                        overlay <- draw.segments.on.image(overlay, segs,
+                            slice_axis = axis,
+                            row_axis = row_axis, col_axis = col_axis,
+                            color = surf_col_map[surf_name, h],
+                            lwd = surface_lwd * line_ss,
+                            coord_scale = scale * line_ss);
+                    } else {
+                        img <- draw.segments.on.image(img, segs,
+                            slice_axis = axis,
+                            row_axis = row_axis, col_axis = col_axis,
+                            color = surf_col_map[surf_name, h], lwd = surface_lwd);
+                    }
                 }
             }
         }
+
+        # Downsample the overlay to the final image size (smoothing the contour
+        # lines) and composite it onto the blocky background.
+        if(scale > 1L && any_contour) {
+            overlay_small <- magick::image_resize(overlay, magick::geometry_size_pixels(nat_w * scale, nat_h * scale), filter = "lanczos");
+            img <- magick::image_composite(img, overlay_small);
+        }
+
         magick_images[[si]] <- img;
         has_contour[si] <- any_contour;
     }
@@ -1393,6 +1450,8 @@ compute.surface.contour.slices <- function(subjects_dir, subject_id,
 #' @param slices passed to \code{\link[fsbrain]{volvis.lightbox}}. A negative integer N means "use every Nth slice". A numeric vector gives explicit slice indices (1-based). Defaults to \code{-5} (every 5th slice).
 #'
 #' @param axis integer, the slice axis. 1 = sagittal, 2 = coronal, 3 = axial (in volume CRS convention). Defaults to \code{1L}.
+#'
+#' @param scale integer >= 1, the factor by which to upscale the slice images in both dimensions using nearest-neighbor interpolation (keeps the MRI pixels sharp, which is good for QA). The surface contour lines are drawn on a high-resolution overlay and downsampled to the final size, so they appear thin and smooth. Defaults to \code{1L} (no upscaling, previous behavior).
 #'
 #' @param per_row integer, number of slice images per row in the lightbox grid. Defaults to \code{5L}.
 #'
@@ -1441,6 +1500,10 @@ compute.surface.contour.slices <- function(subjects_dir, subject_id,
 #'    img <- volvis.lb.with.surface(subjects_dir, "subject1",
 #'       volume="brain", surface=c("white", "pial"), axis=3L,
 #'       surface_color=c("#FF0000", "#0000FF", "#00FF00", "#FF8800"));
+#'
+#'    # 2x upscaled slices for larger images with thin, smooth contours:
+#'    img <- volvis.lb.with.surface(subjects_dir, "subject1",
+#'       volume="brain", surface="white", axis=3L, scale=2L);
 #' }
 #'
 #' @family volume visualization
@@ -1454,6 +1517,7 @@ volvis.lb.with.surface <- function(subjects_dir, subject_id,
     surface_lwd = 1,
     slices = -5,
     axis = 1L,
+    scale = 1L,
     per_row = 5L,
     per_col = NULL,
     border_geometry = "5x5",
@@ -1471,6 +1535,7 @@ volvis.lb.with.surface <- function(subjects_dir, subject_id,
         surface_lwd = surface_lwd,
         slices = slices,
         axis = axis,
+        scale = scale,
         silent = silent
     );
 
@@ -1509,6 +1574,8 @@ volvis.lb.with.surface <- function(subjects_dir, subject_id,
 #' @param slices passed to \code{\link[fsbrain]{volvis.lightbox}}. A negative integer N means "use every Nth slice". A numeric vector gives explicit slice indices (1-based). Defaults to \code{-5}.
 #'
 #' @param axis integer, the slice axis. 1 = sagittal, 2 = coronal, 3 = axial (in volume CRS convention). Defaults to \code{1L}.
+#'
+#' @param scale integer >= 1, the factor by which to upscale the slice images in both dimensions using nearest-neighbor interpolation (keeps the MRI pixels sharp, which is good for QA). The surface contour lines are drawn on a high-resolution overlay and downsampled to the final size, so they appear thin and smooth. Defaults to \code{1L} (no upscaling, previous behavior).
 #'
 #' @param silent logical, whether to suppress messages. Defaults to \code{TRUE}.
 #'
@@ -1551,6 +1618,11 @@ volvis.lb.with.surface <- function(subjects_dir, subject_id,
 #'       volume="brain", surface=c("white","pial"), axis=3L,
 #'       surface_color=c("#FF0000","#FFFF00"),
 #'       output_dir="~/qa_slices");
+#'
+#'    # 2x upscaled slices for larger images with thin, smooth contours:
+#'    volvis.slices.with.surface(subjects_dir, "subject1",
+#'       volume="brain", surface="white", axis=3L, scale=2L,
+#'       output_dir="~/qa_slices");
 #' }
 #'
 #' @family volume visualization
@@ -1564,6 +1636,7 @@ volvis.slices.with.surface <- function(subjects_dir, subject_id,
     surface_lwd = 1,
     slices = -5,
     axis = 1L,
+    scale = 1L,
     silent = TRUE,
     output_dir = ".",
     output_prefix = NULL,
@@ -1585,6 +1658,7 @@ volvis.slices.with.surface <- function(subjects_dir, subject_id,
         surface_lwd = surface_lwd,
         slices = slices,
         axis = axis,
+        scale = scale,
         silent = silent
     );
 
@@ -1610,6 +1684,7 @@ volvis.slices.with.surface <- function(subjects_dir, subject_id,
 
     surf_str <- paste(result$surfaces, collapse = "_");
     hemi_str <- paste(result$hemis, collapse = "_");
+    scale_str <- sprintf("scl%d", as.integer(scale));
 
     if(!dir.exists(output_dir)) {
         dir.create(output_dir, recursive = TRUE, showWarnings = !silent);
@@ -1629,9 +1704,9 @@ volvis.slices.with.surface <- function(subjects_dir, subject_id,
                 gravity = label_gravity);
         }
 
-        fname <- sprintf("%s_axis%d_slice%04d_%s_%s.%s",
+        fname <- sprintf("%s_axis%d_slice%04d_%s_%s_%s.%s",
             output_prefix, result$axis, sl_idx, surf_str, hemi_str,
-            image_format);
+            scale_str, image_format);
         fpath <- file.path(output_dir, fname);
         magick::image_write(img, path = fpath, format = image_format);
         out_files[i] <- fpath;

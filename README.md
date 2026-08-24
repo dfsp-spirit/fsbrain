@@ -1,13 +1,24 @@
 # fsbrain
 
+<!-- badges: start -->
 [![DOI](https://zenodo.org/badge/209085379.svg)](https://zenodo.org/doi/10.5281/zenodo.3559816)
 [![HiRSE Code Promo Badge](https://img.shields.io/badge/Promo-8db427?label=HiRSE&labelColor=005aa0&)](https://go.fzj.de/CodePromo)
 
+
+[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/dfsp-spirit/fsbrain?branch=master&svg=true)](https://ci.appveyor.com/project/dfsp-spirit/fsbrain) AppVeyor CI under Windows
+<!-- badges: end -->
+
+
 An R package for structural neuroimaging. Provides high-level functions to access (read and write) and visualize surface-based brain morphometry data (e.g. cortical thickness) for individual subjects and groups.
 
-![Vis](https://github.com/dfsp-spirit/fsbrain_gallery/blob/master/surface/fsbrain_sulcal_depth_cbar_web.jpg?raw=true "Sulcal depth visualization, created with fsbrain")
+![Fig1](https://github.com/dfsp-spirit/fsbrain_gallery/blob/master/surface/fsbrain_sulcal_depth_cbar_web.jpg?raw=true "Sulcal depth visualization, created with fsbrain")
 
 **Fig.1**: *Visualization of sulcal depth for a subject in FreeSurfer standard space (fsaverage). See the [source code to reproduce this image](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples_export.html) in an R notebook.*
+
+
+![Fig2](https://github.com/dfsp-spirit/fsbrain_gallery/blob/master/surface/fsbrain_clusters_cbar_web.jpg?raw=true "Statistical results visualization, created with fsbrain")
+
+**Fig.2**: *Visualization of statistical results (clusters) in FreeSurfer standard space (fsaverage) with a diverging colormap. See the [source code to reproduce this image](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples_export.html) in an R notebook.*
 
 [About](#about) | [Installation](#installation) | [Documentation](#documentation) | [Unit tests](#unit-tests-and-continuous-integration) | [License](#license) | [Citation](#citation) | [Visualization examples](#visualization-examples) | [Contributing](#contributing)
 
@@ -128,7 +139,7 @@ Note that X11 is not needed for rendering, but only for opening interactive wind
 
 #### Known issue: Visualization problems on recent macOS versions
 
-If fsbrain does not open visualization windows or produces blank plots on recent macOS versions (Tahoe 26.x or Sonoma 14.x), see [README_MACOS_TAHOE.md](./README_MACOS_TAHOE.md) for details and a partial workaround.
+If fsbrain does not open visualization windows or produces blank plots on recent macOS versions (Tahoe 26.x or Sonoma 14.x), see [README_MACOS_TAHOE.md](./README_MACOS_TAHOE.md) for details. The new topional scimesh renderer solves most of these issues.
 
 
 #### Windows Installation Hints
@@ -177,14 +188,7 @@ library(fsbrain)
 devtools::check()
 ```
 
-Continuous integration results:
 
-<!-- badges: start -->
-[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/dfsp-spirit/fsbrain?branch=master&svg=true)](https://ci.appveyor.com/project/dfsp-spirit/fsbrain) AppVeyor CI under Windows
-
-<!-- [![R-CMD-check](https://github.com/dfsp-spirit/fsbrain/workflows/R-CMD-check/badge.svg)](https://github.com/dfsp-spirit/fsbrain/actions) -->
-[GitHub Actions, Ubuntu Linux and MacOS](https://github.com/dfsp-spirit/fsbrain/actions) (Note: Currently this is always "failing" because of a warning caused by the `rgl` package when running headless. So the simlpe "passing"/"failing" status is useless, and one needs to follow the link to check the relevant CI results in detail.)
-<!-- badges: end -->
 
 ## License
 

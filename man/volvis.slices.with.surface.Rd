@@ -14,6 +14,7 @@ volvis.slices.with.surface(
   surface_lwd = 1,
   slices = -5,
   axis = 1L,
+  scale = 1L,
   silent = TRUE,
   output_dir = ".",
   output_prefix = NULL,
@@ -43,6 +44,8 @@ volvis.slices.with.surface(
 \item{slices}{passed to \code{\link[fsbrain]{volvis.lightbox}}. A negative integer N means "use every Nth slice". A numeric vector gives explicit slice indices (1-based). Defaults to \code{-5}.}
 
 \item{axis}{integer, the slice axis. 1 = sagittal, 2 = coronal, 3 = axial (in volume CRS convention). Defaults to \code{1L}.}
+
+\item{scale}{integer >= 1, the factor by which to upscale the slice images in both dimensions using nearest-neighbor interpolation (keeps the MRI pixels sharp, which is good for QA). The surface contour lines are drawn on a high-resolution overlay and downsampled to the final size, so they appear thin and smooth. Defaults to \code{1L} (no upscaling, previous behavior).}
 
 \item{silent}{logical, whether to suppress messages. Defaults to \code{TRUE}.}
 
@@ -88,6 +91,11 @@ Creates individual 2D slice images with surface contour overlays and exports the
    volvis.slices.with.surface(subjects_dir, "subject1",
       volume="brain", surface=c("white","pial"), axis=3L,
       surface_color=c("#FF0000","#FFFF00"),
+      output_dir="~/qa_slices");
+
+   # 2x upscaled slices for larger images with thin, smooth contours:
+   volvis.slices.with.surface(subjects_dir, "subject1",
+      volume="brain", surface="white", axis=3L, scale=2L,
       output_dir="~/qa_slices");
 }
 

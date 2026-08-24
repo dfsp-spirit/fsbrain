@@ -12,7 +12,8 @@ volvis.lightbox(
   per_col = NULL,
   border_geometry = "5x5",
   background_color = "#000000",
-  arrange_single_image = FALSE
+  arrange_single_image = FALSE,
+  scale = 1L
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ volvis.lightbox(
 \item{background_color}{string, a valid ImageMagick color string such as "white" or "#000080". The color to use when extending images (e.g., when creating the border). Defaults to black.}
 
 \item{arrange_single_image}{logical, whether to apply the given arrangement (from parameters \code{per_row} and \code{per_column}) even if a single slice (a 2D image) is passed as \code{volume}. Defaults to FALSE, which prevents that background tiles are added to fill the row up to \code{per_row} images. This also prevents the border from getting added to a single image, so all you see is the raw image. Set to \code{TRUE} if you want to arrange even a single image in a row with a border.}
+
+\item{scale}{integer >= 1, the factor by which to upscale the slice images in both dimensions using nearest-neighbor interpolation. This keeps the MRI pixels sharp (no smoothing) while making the images larger. Defaults to 1L (no upscaling).}
 }
 \value{
 a magick image instance

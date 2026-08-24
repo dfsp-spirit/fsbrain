@@ -11,7 +11,8 @@ draw.segments.on.image(
   row_axis,
   col_axis,
   color = "#FF0000",
-  lwd = 1
+  lwd = 1,
+  coord_scale = 1L
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ draw.segments.on.image(
 \item{color}{character string, the color for the contour lines.}
 
 \item{lwd}{numeric, line width passed to \code{\link[graphics]{segments}}. Defaults to 1.}
+
+\item{coord_scale}{positive integer, the factor by which the CRS coordinates must be multiplied to map them to image pixel coordinates. Defaults to 1L, which maps coordinates 1:1 to pixels (as is the case when the image is at native resolution). Use larger values when drawing onto a scaled-up image or overlay.}
 }
 \value{
 the modified magick image (invisibly).
