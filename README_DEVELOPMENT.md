@@ -10,7 +10,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for contribution guidelines and general
 * install the following R packages: `devtools, knitr, testthat`
 * install system dependencies of fsbrain, as explained in the installation instruction in [README.md](README.md).
 * install all fsbrain dependencies, e.g., by installing fsbrain from CRAN using `install.packages("fsbrain", dependencies=TRUE);`
-* in rstudio, click `File => Open Project` and open the project file `fsbrain.Rproj` from the root of this repo
+* in rstudio, click `File => Open Project` and open the project file `fsbrain.Rproj` from the root of this repo. In VSCode or other IDEs, just open the repo directory as usual.
 
 ## Running the unit tests
 
