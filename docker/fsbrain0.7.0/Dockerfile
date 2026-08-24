@@ -4,6 +4,9 @@
 # This image uses the scimesh software renderer backend by default, so it is
 # fully headless: static images are rendered in software (CPU only), with no
 # X11 server, OpenGL, or GPU required. See vignette("fsbrain_with_scimesh").
+# The rgl backend is also installed and usable headlessly (e.g., for
+# vis.rglwidget() HTML export) by running R under xvfb-run; see the bottom of
+# this script.
 #
 # See the very bottom of this script for info on how to run it.
 
@@ -21,6 +24,9 @@ ENV R_LIBS_USER="/usr/local/lib/R/site-library"
 # Note: 'cmake' and 'libuv1-dev' are needed to build the R 'fs' package from
 # source (fs needs libuv1-dev, or cmake to compile its vendored libuv).
 # 'cmake' is also required by the R 'sass' package (rmarkdown dependency).
+# 'xvfb' and 'libtk8.6' enable the optional rgl backend headlessly (e.g., for
+# vis.rglwidget() HTML export via 'xvfb-run'). The default scimesh backend
+# does not need them, but they are small and keep the installed rgl usable.
 RUN apt-get update && apt-get install -y apt-utils
 RUN apt-get update && apt-get install -y \
   build-essential \
@@ -39,6 +45,8 @@ RUN apt-get update && apt-get install -y \
   libfontconfig1-dev \
   libharfbuzz-dev \
   libfribidi-dev \
+  xvfb \
+  libtk8.6 \
   && rm -rf /var/lib/apt/lists/*
 
 ##### Install required R packages #####
@@ -53,8 +61,9 @@ RUN R -e "install.packages('remotes', repos = 'https://cloud.r-project.org/')"
 RUN R -e "remotes::install_version('freesurferformats', version = '1.0.1', dependencies=TRUE, repos = 'https://cloud.r-project.org')"
 
 ## rgl is a hard dependency of fsbrain (see the 'Imports' field in its
-## DESCRIPTION), so it must be installed. It is NOT the active renderer in
-## this image though: we render with scimesh (see below).
+## DESCRIPTION), so it must be installed. It is not the active renderer by
+## default (we render with scimesh, see below), but it is fully usable
+## headlessly via xvfb-run, e.g. for vis.rglwidget() HTML export.
 RUN R -e "install.packages('rgl', repos = 'https://cloud.r-project.org/')"
 RUN R -e "install.packages('viridis', repos = 'https://cloud.r-project.org/')"
 RUN R -e "install.packages('RColorBrewer', repos = 'https://cloud.r-project.org/')"
@@ -79,7 +88,8 @@ RUN R -e "remotes::install_version('fsbrain', version = '0.7.0', dependencies=TR
 
 ## Make scimesh the default renderer backend for every R session in this
 ## container, and keep the 2k output resolution of the old rgl-based images.
-## You can still switch back per session with:
+## To use rgl in a session, run R under xvfb-run and switch the backend:
+##   xvfb-run -a R
 ##   options(fsbrain.renderer_backend = "rgl")
 RUN echo 'options(fsbrain.renderer_backend = "scimesh");' >> /root/.Rprofile
 RUN echo 'options(fsbrain.scimesh.output_dims = c(2560, 1440));' >> /root/.Rprofile
@@ -88,10 +98,15 @@ RUN echo 'options(fsbrain.scimesh.output_dims = c(2560, 1440));' >> /root/.Rprof
 RUN mkdir /home/input
 RUN mkdir /home/output
 
-## Run R. No xvfb is needed: the scimesh backend is fully headless and renders
-## all static images (e.g., vis.* with views=NULL followed by export()) in
-## software. Note that interactive 3D viewers and vis.rglwidget() still use
-## the rgl backend (and need a display) and will NOT work in this image.
+## Run R. The default scimesh backend is fully headless and renders all static
+## images (e.g., vis.* with views=NULL followed by export()) in software, with
+## no display server needed. To use the rgl backend instead (e.g., for
+## vis.rglwidget() HTML export), run R under a virtual display and switch the
+## backend:
+##   xvfb-run -a R
+##   options(fsbrain.renderer_backend = "rgl")
+## Note that truly interactive 3D viewers still need a real display or X11
+## forwarding into the container, so they are not really supported here.
 CMD ["/bin/sh", "-c", "cd /home/input && R"]
 
 ## Now run your analyses and write the results/images to /home/output.
