@@ -154,6 +154,7 @@ lh_region_value_list = list("bankssts"=0.9, "precuneus"=0.7, "postcentral"=0.8, 
 # For the right hemisphere, we retrieve the full list of regions for the
 # atlas and assign random values to all of them.
 atlas_region_names = get.atlas.region.names(atlas, template_subjects_dir = sjd, template_subject = sj);
+set.seed(42);   # fix the seed so the dummy values are reproducible across re-renders
 rh_region_value_list = rnorm(length(atlas_region_names), 0.8, 0.2);
 names(rh_region_value_list) = atlas_region_names;
 

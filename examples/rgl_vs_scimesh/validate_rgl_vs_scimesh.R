@@ -197,6 +197,8 @@ cat("08 region_values_aparc...\n");
 atlas <- 'aparc';
 lh_region_value_list <- list("bankssts"=0.9, "precuneus"=0.7, "postcentral"=0.8, "lingual"=0.6);
 atlas_region_names <- get.atlas.region.names(atlas, template_subjects_dir = sjd, template_subject = sj);
+set.seed(42);   # fixed seed: the dummy RH region values are random (rnorm), so seed them
+                # to make the image reproducible across backend runs / re-runs
 rh_region_value_list <- rnorm(length(atlas_region_names), 0.8, 0.2);
 names(rh_region_value_list) <- atlas_region_names;
 cm <- vis.region.values.on.subject(sjd, sj, atlas, lh_region_value_list, rh_region_value_list, views=NULL);
