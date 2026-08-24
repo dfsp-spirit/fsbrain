@@ -89,16 +89,6 @@ Set the output image resolution (default 1920x1080) with the `fsbrain.scimesh.ou
 **What scimesh supports**: All static image export (single views, multi-view layouts, colorbars), all rendering styles. **What it does not**: Interactive 3D windows, real-time rotation, browser-based widgets (`vis.rglwidget`), animated GIFs — these remain available through the default rgl backend. In practice, most users only need static images for presentations and publications, for which scimesh works perfectly.
 
 
-### Risky: install the dev version of fsbrain with the latest features
-
-This version is not guaranteed to be in a usable state, try at your own risk and run the tests before using it.
-
-From an R session:
-
-```r
-install.packages(c("devtools", "knitr", "markdown", "rmarkdown", "testthat", "qpdf"));
-devtools::install_github("dfsp-spirit/fsbrain", build_vignettes=TRUE);
-```
 
 ### System dependencies
 
@@ -137,7 +127,7 @@ Recent macOS versions do not ship with an X11 environment. If you want to use th
 
 Note that X11 is not needed for rendering, but only for opening interactive windows. If you only need publication-quality static images (which is the typical use case), the scimesh backend or the browser-based `rglwidget` are better options.
 
-#### Known issue: Visualization problems on recent macOS versions
+#### Known issue: Visualization problems on recent macOS versions with rgl
 
 If fsbrain does not open visualization windows or produces blank plots on recent macOS versions (Tahoe 26.x or Sonoma 14.x), see [README_MACOS_TAHOE.md](./README_MACOS_TAHOE.md) for details. The new topional scimesh renderer solves most of these issues.
 
@@ -174,19 +164,6 @@ The documentation can be accessed from within an R session after you have loaded
 * Help for a specific function can be accessed in the usual R manner: `?<function>`, where you replace `<function>` with a function name. Like this: `?group.morph.native`.
 * Run `example(<function>)` to see a live demo that uses the function `<function>`. Like this: `example(group.morph.native)`.
 * The [unit tests](./tests/testthat/) that come with this package are essentially a list of examples that illustrate how to use the functions.
-
-
-
-## Unit tests and Continuous integration
-
-
-This package comes with [lots of unit tests](./tests/testthat/). To run them, in a clean R session:
-
-```r
-library(devtools)
-library(fsbrain)
-devtools::check()
-```
 
 
 
@@ -256,7 +233,7 @@ Want to see brains spin? [Check this out.](./web/fsbrain_movies.md) (WARNING: lo
 
 ### Live visualization on the web
 
-You can also use fsbrain in a shiny app, see the [demo code here](./web/shiny_demo/) and a live demo here on posit cloud: [fsbrain in shiny app](https://connect.posit.cloud/timschaefer/content/019f40eb-f687-4aaa-6413-4f7b18f1b292).
+You can also use fsbrain in a shiny app, see the [demo code here](./web/shiny_demo/) and a live demo here on posit cloud: [fsbrain in shiny app](https://019f40eb-f687-4aaa-6413-4f7b18f1b292.share.connect.posit.cloud/).
 
 ### Volume visualization
 
