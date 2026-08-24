@@ -4,9 +4,22 @@ fsbrain Changes
 
 Version 0.8.0 (WIP) -- camera-based views, shared rgl/scimesh framing
 ----------------------------------------------------------------------
-- NEW: The rgl backend now orients static views via the camera instead of rotating the mesh geometry (`vis.view()`), reusing the same bounding-sphere framing as the scimesh backend (`bounding_sphere()` in `R/view_framing.R`). Rendered output is pixel-identical to the old mesh-rotation approach for the standard views.
-- NEW: The scimesh backend now frames views with the same bounding-sphere fit as rgl (radius = half the AABB diagonal, no extra margin) instead of the previous max-extent + 35% margin. This makes rgl and scimesh framing identical.
-- FIX: rgl `rostral` and `caudal` views were anatomically swapped (rgl "rostral" showed the posterior/caudal surface and vice versa). They now look from +y (anterior/rostral) and -y (posterior/caudal) respectively, matching FreeSurfer RAS and the scimesh backend. BREAKING for any figure using the rostral/caudal views.
+This version introduces some braking changes, marked with `BRK` in the list of changes below. We assume they will only affect few users of fsbrain, but please read the release notes below carefully to decide whether your code is ready to upgrade to fsbrain v0.8.0. After reading all changes, first decide whether your code uses features that were changed, to decide whether you are affected by the breaking changes. You have two options *if* you are affected:
+
+* Keep your code untouched and force installation of fsbrain v0.7.0:
+    - for R packages, pin the fsbrain version in the `DESCRIPTION` file of your package (e.g., in the `Imports` section, require `fsbrain (== 0.7.0)`)
+    - for R scripts, adapt the `install.packages(fsbrain)` call you will most likely have at the top of your script to something like `install.packages(remotes)` and `remotes::install_version("fsbrain", version = "0.7.0")`.
+    - Note: You are stuck with fsbrain v0.7.0 then, but that may be fine for your script: if it worked before with that version, it will continue working with that version.
+    - Note that if you give your script to others, you will have to tell them that it requires a specific fsbrain version.
+* or adapt your code now, and become ready to use the latest fsbrain version and its new features. If you just `install.packages("fsbrain")` in R or specify only `fsbrain` without version information in the `Imports` section of your packages `DESCRIPTION` file, you will always get the latest version.
+
+Note: For packages, we highly recommend pinning supported fsbrain versions explicitely in the `DESCRIPTION` file. You should of course list as supported only versions that you have **tested** your package with (e.g., your tests pass with that version on your continuous integration server).
+
+List of v0.8.0 Changes:
+
+- CHG + BRK: The rgl backend now orients static views via the camera instead of rotating the mesh geometry (`vis.view()`), reusing the same bounding-sphere framing as the scimesh backend (`bounding_sphere()` in `R/view_framing.R`). Rendered output is pixel-identical to the old mesh-rotation approach for the standard views. Note that previously, in the rare case that you manually added your own objects to the fsbrain scene before rendering (e.g., spheres to mark an anatomical position in an image), you had to use the `rgl_actions` parameter to have them rotated along with the mesh for them to stay in the correct spot for different views. This is now no longer needed, and code that does the manual rotation will need to be changed (simple remove manual rotation).
+- FIX + BRK: rgl `rostral` and `caudal` views were anatomically swapped (rgl "rostral" showed the posterior/caudal surface and vice versa). They now look from +y (anterior/rostral) and -y (posterior/caudal) respectively, matching FreeSurfer RAS and the scimesh backend. BREAKING for any figure using the rostral/caudal views. Basically the position of these two views in the rare arranged views that use them (only "t9") will swap. If you manually called functions that produced only the caudal or the rostral view, and want the output of v0.8.0 to be identical with earlier versions, you will need to swap the function you call.
+- NEW: The scimesh backend now frames views with the same bounding-sphere fit as rgl (radius = half the AABB diagonal, no extra margin) instead of the previous max-extent + 35% margin. This makes rgl and scimesh framing identical. (It was already **very** similar before).
 - DEV: add regression tests for the view/camera unification (`tests/testthat/test-camera_unification.R`, headless), a shared framing helper (`R/view_framing.R`), and a comparison script for rgl-vs-scimesh orientation (`examples/rgl_vs_scimesh/camera_orientation_compare.R`).
 
 
