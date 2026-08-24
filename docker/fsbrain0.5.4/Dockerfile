@@ -15,7 +15,6 @@ RUN apt-get update && apt-get install -y \
   git \
   libcurl4-openssl-dev \
   libfreetype6-dev \
-  libgfortran4 \
   libgl1-mesa-dev \
   libglu1-mesa-dev \
   libmagick++-dev \
