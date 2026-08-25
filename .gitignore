@@ -48,3 +48,5 @@ Meta
 .Rproj.user
 doc
 CRAN-SUBMISSION
+
+examples/vol_slices/*.png
