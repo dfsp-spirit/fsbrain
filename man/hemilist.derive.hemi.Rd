@@ -19,12 +19,12 @@ Derive 'hemi' string from the data in a hemilist
 See \code{\link{hemilist}} for details.
 }
 \seealso{
-Other hemilist functions:
-\code{\link[=hemilist]{hemilist()}},
-\code{\link[=hemilist.from.prefixed.list]{hemilist.from.prefixed.list()}},
-\code{\link[=hemilist.get.combined.data]{hemilist.get.combined.data()}},
-\code{\link[=hemilist.unwrap]{hemilist.unwrap()}},
-\code{\link[=hemilist.wrap]{hemilist.wrap()}},
-\code{\link[=is.hemilist]{is.hemilist()}}
+Other hemilist functions: 
+\code{\link{hemilist}()},
+\code{\link{hemilist.from.prefixed.list}()},
+\code{\link{hemilist.get.combined.data}()},
+\code{\link{hemilist.unwrap}()},
+\code{\link{hemilist.wrap}()},
+\code{\link{is.hemilist}()}
 }
 \concept{hemilist functions}

@@ -42,11 +42,11 @@ Load native space morphometry data (like 'surf/lh.area') for a group of subjects
 
 }
 \seealso{
-Other morphometry data functions:
-\code{\link[=apply.label.to.morphdata]{apply.label.to.morphdata()}},
-\code{\link[=apply.labeldata.to.morphdata]{apply.labeldata.to.morphdata()}},
-\code{\link[=group.morph.standard]{group.morph.standard()}},
-\code{\link[=subject.morph.native]{subject.morph.native()}},
-\code{\link[=subject.morph.standard]{subject.morph.standard()}}
+Other morphometry data functions: 
+\code{\link{apply.label.to.morphdata}()},
+\code{\link{apply.labeldata.to.morphdata}()},
+\code{\link{group.morph.standard}()},
+\code{\link{subject.morph.native}()},
+\code{\link{subject.morph.standard}()}
 }
 \concept{morphometry data functions}

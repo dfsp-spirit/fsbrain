@@ -41,20 +41,20 @@ Given an annotation and a list of values (one per brain region), return data tha
 
 }
 \seealso{
-Other atlas functions:
-\code{\link[=get.atlas.region.names]{get.atlas.region.names()}},
-\code{\link[=group.agg.atlas.native]{group.agg.atlas.native()}},
-\code{\link[=group.agg.atlas.standard]{group.agg.atlas.standard()}},
-\code{\link[=group.annot]{group.annot()}},
-\code{\link[=group.label.from.annot]{group.label.from.annot()}},
-\code{\link[=label.from.annotdata]{label.from.annotdata()}},
-\code{\link[=label.to.annot]{label.to.annot()}},
-\code{\link[=regions.to.ignore]{regions.to.ignore()}},
-\code{\link[=spread.values.over.hemi]{spread.values.over.hemi()}},
-\code{\link[=spread.values.over.subject]{spread.values.over.subject()}},
-\code{\link[=subject.annot]{subject.annot()}},
-\code{\link[=subject.atlas.agg]{subject.atlas.agg()}},
-\code{\link[=subject.label.from.annot]{subject.label.from.annot()}},
-\code{\link[=subject.lobes]{subject.lobes()}}
+Other atlas functions: 
+\code{\link{get.atlas.region.names}()},
+\code{\link{group.agg.atlas.native}()},
+\code{\link{group.agg.atlas.standard}()},
+\code{\link{group.annot}()},
+\code{\link{group.label.from.annot}()},
+\code{\link{label.from.annotdata}()},
+\code{\link{label.to.annot}()},
+\code{\link{regions.to.ignore}()},
+\code{\link{spread.values.over.hemi}()},
+\code{\link{spread.values.over.subject}()},
+\code{\link{subject.annot}()},
+\code{\link{subject.atlas.agg}()},
+\code{\link{subject.label.from.annot}()},
+\code{\link{subject.lobes}()}
 }
 \concept{atlas functions}

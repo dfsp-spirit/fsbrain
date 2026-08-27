@@ -27,11 +27,11 @@ the neighborhood as a list with two entries: "faces": integer vector, the face i
 Given a set of query vertex indices and a mesh \emph{m}, compute all vertices which are adjacent to the query vertices in the mesh. A vertex \emph{u} is \emph{adjacent} to another vertex \emph{v} iff there exists an edge \emph{e = (u, v)} in \emph{m}. While you could call this function repeatedly with the old output as its new input to extend the neighborhood, you should maybe use a proper graph library for this.
 }
 \seealso{
-Other surface mesh functions:
-\code{\link[=face.edges]{face.edges()}},
-\code{\link[=label.border]{label.border()}},
-\code{\link[=mesh.vertex.included.faces]{mesh.vertex.included.faces()}},
-\code{\link[=subject.surface]{subject.surface()}},
-\code{\link[=vis.path.along.verts]{vis.path.along.verts()}}
+Other surface mesh functions: 
+\code{\link{face.edges}()},
+\code{\link{label.border}()},
+\code{\link{mesh.vertex.included.faces}()},
+\code{\link{subject.surface}()},
+\code{\link{vis.path.along.verts}()}
 }
 \concept{surface mesh functions}

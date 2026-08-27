@@ -43,11 +43,11 @@ To get a nice path along the surface, pass the vertex indices along a geodesic p
 \seealso{
 \code{\link[fsbrain]{vis.paths}} if you need to draw many paths, \code{\link[fsbrain]{geodesic.path}} to compute a geodesic path.
 
-Other surface mesh functions:
-\code{\link[=face.edges]{face.edges()}},
-\code{\link[=label.border]{label.border()}},
-\code{\link[=mesh.vertex.included.faces]{mesh.vertex.included.faces()}},
-\code{\link[=mesh.vertex.neighbors]{mesh.vertex.neighbors()}},
-\code{\link[=subject.surface]{subject.surface()}}
+Other surface mesh functions: 
+\code{\link{face.edges}()},
+\code{\link{label.border}()},
+\code{\link{mesh.vertex.included.faces}()},
+\code{\link{mesh.vertex.neighbors}()},
+\code{\link{subject.surface}()}
 }
 \concept{surface mesh functions}

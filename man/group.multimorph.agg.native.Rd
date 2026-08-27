@@ -53,9 +53,9 @@ Compute the mean (or other aggregates) over all vertices of a subject from nativ
 
 }
 \seealso{
-Other global aggregation functions:
-\code{\link[=group.morph.agg.native]{group.morph.agg.native()}},
-\code{\link[=group.morph.agg.standard]{group.morph.agg.standard()}},
-\code{\link[=group.multimorph.agg.standard]{group.multimorph.agg.standard()}}
+Other global aggregation functions: 
+\code{\link{group.morph.agg.native}()},
+\code{\link{group.morph.agg.standard}()},
+\code{\link{group.multimorph.agg.standard}()}
 }
 \concept{global aggregation functions}

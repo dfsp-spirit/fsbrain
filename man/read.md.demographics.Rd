@@ -47,9 +47,9 @@ Load a list of subjects and metadata from a demographics file, i.e., a tab-separ
 
 }
 \seealso{
-Other metadata functions:
-\code{\link[=demographics.to.fsgd.file]{demographics.to.fsgd.file()}},
-\code{\link[=read.md.subjects]{read.md.subjects()}},
-\code{\link[=report.on.demographics]{report.on.demographics()}}
+Other metadata functions: 
+\code{\link{demographics.to.fsgd.file}()},
+\code{\link{read.md.subjects}()},
+\code{\link{report.on.demographics}()}
 }
 \concept{metadata functions}

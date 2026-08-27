@@ -20,19 +20,19 @@ numerical vector, the masked data.
 This function will set all values in morphdata which are \emph{not} part of the labeldata to NA (or whatever is specified by 'masked_data_value'). This is typically used to ignore values which are not part of the cortex (or any other label) during your analysis.
 }
 \seealso{
-Other label functions:
-\code{\link[=apply.label.to.morphdata]{apply.label.to.morphdata()}},
-\code{\link[=subject.lobes]{subject.lobes()}},
-\code{\link[=subject.mask]{subject.mask()}},
-\code{\link[=vis.labeldata.on.subject]{vis.labeldata.on.subject()}},
-\code{\link[=vis.subject.label]{vis.subject.label()}}
+Other label functions: 
+\code{\link{apply.label.to.morphdata}()},
+\code{\link{subject.lobes}()},
+\code{\link{subject.mask}()},
+\code{\link{vis.labeldata.on.subject}()},
+\code{\link{vis.subject.label}()}
 
-Other morphometry data functions:
-\code{\link[=apply.label.to.morphdata]{apply.label.to.morphdata()}},
-\code{\link[=group.morph.native]{group.morph.native()}},
-\code{\link[=group.morph.standard]{group.morph.standard()}},
-\code{\link[=subject.morph.native]{subject.morph.native()}},
-\code{\link[=subject.morph.standard]{subject.morph.standard()}}
+Other morphometry data functions: 
+\code{\link{apply.label.to.morphdata}()},
+\code{\link{group.morph.native}()},
+\code{\link{group.morph.standard}()},
+\code{\link{subject.morph.native}()},
+\code{\link{subject.morph.standard}()}
 }
 \concept{label functions}
 \concept{morphometry data functions}

@@ -36,8 +36,8 @@ combine.colorbar.with.brainview.animation(
 Combine a colorbar and a brain animation in gif format into a new animation.
 }
 \seealso{
-Other colorbar functions:
-\code{\link[=coloredmesh.plot.colorbar.separate]{coloredmesh.plot.colorbar.separate()}},
-\code{\link[=combine.colorbar.with.brainview.image]{combine.colorbar.with.brainview.image()}}
+Other colorbar functions: 
+\code{\link{coloredmesh.plot.colorbar.separate}()},
+\code{\link{combine.colorbar.with.brainview.image}()}
 }
 \concept{colorbar functions}

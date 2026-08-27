@@ -36,9 +36,9 @@ vector of character strings, the lines written to the 'filepath', invisible.
 Write FreeSurfer Group Descriptor (FSGD) file from demographics dataframe.
 }
 \seealso{
-Other metadata functions:
-\code{\link[=read.md.demographics]{read.md.demographics()}},
-\code{\link[=read.md.subjects]{read.md.subjects()}},
-\code{\link[=report.on.demographics]{report.on.demographics()}}
+Other metadata functions: 
+\code{\link{read.md.demographics}()},
+\code{\link{read.md.subjects}()},
+\code{\link{report.on.demographics}()}
 }
 \concept{metadata functions}

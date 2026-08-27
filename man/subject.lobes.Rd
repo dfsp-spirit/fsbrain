@@ -30,28 +30,28 @@ hemilist of integer vectors, the vectors represent vertex indices of the hemisph
 This gives you labels that represent brain lobes for a subject. The lobe definition is based on the Desikan-Killiany atlas (Desikan \emph{et al.}, 2010) as suggested on the FreeSurfer website at https://surfer.nmr.mgh.harvard.edu/fswiki/CorticalParcellation.
 }
 \seealso{
-Other atlas functions:
-\code{\link[=get.atlas.region.names]{get.atlas.region.names()}},
-\code{\link[=group.agg.atlas.native]{group.agg.atlas.native()}},
-\code{\link[=group.agg.atlas.standard]{group.agg.atlas.standard()}},
-\code{\link[=group.annot]{group.annot()}},
-\code{\link[=group.label.from.annot]{group.label.from.annot()}},
-\code{\link[=label.from.annotdata]{label.from.annotdata()}},
-\code{\link[=label.to.annot]{label.to.annot()}},
-\code{\link[=regions.to.ignore]{regions.to.ignore()}},
-\code{\link[=spread.values.over.annot]{spread.values.over.annot()}},
-\code{\link[=spread.values.over.hemi]{spread.values.over.hemi()}},
-\code{\link[=spread.values.over.subject]{spread.values.over.subject()}},
-\code{\link[=subject.annot]{subject.annot()}},
-\code{\link[=subject.atlas.agg]{subject.atlas.agg()}},
-\code{\link[=subject.label.from.annot]{subject.label.from.annot()}}
+Other atlas functions: 
+\code{\link{get.atlas.region.names}()},
+\code{\link{group.agg.atlas.native}()},
+\code{\link{group.agg.atlas.standard}()},
+\code{\link{group.annot}()},
+\code{\link{group.label.from.annot}()},
+\code{\link{label.from.annotdata}()},
+\code{\link{label.to.annot}()},
+\code{\link{regions.to.ignore}()},
+\code{\link{spread.values.over.annot}()},
+\code{\link{spread.values.over.hemi}()},
+\code{\link{spread.values.over.subject}()},
+\code{\link{subject.annot}()},
+\code{\link{subject.atlas.agg}()},
+\code{\link{subject.label.from.annot}()}
 
-Other label functions:
-\code{\link[=apply.label.to.morphdata]{apply.label.to.morphdata()}},
-\code{\link[=apply.labeldata.to.morphdata]{apply.labeldata.to.morphdata()}},
-\code{\link[=subject.mask]{subject.mask()}},
-\code{\link[=vis.labeldata.on.subject]{vis.labeldata.on.subject()}},
-\code{\link[=vis.subject.label]{vis.subject.label()}}
+Other label functions: 
+\code{\link{apply.label.to.morphdata}()},
+\code{\link{apply.labeldata.to.morphdata}()},
+\code{\link{subject.mask}()},
+\code{\link{vis.labeldata.on.subject}()},
+\code{\link{vis.subject.label}()}
 }
 \concept{atlas functions}
 \concept{label functions}

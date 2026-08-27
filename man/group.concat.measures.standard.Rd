@@ -43,7 +43,7 @@ A measure is something like 'thickness' or 'area'. This function concatenates th
 
 }
 \seealso{
-Other concatination functions:
-\code{\link[=group.concat.measures.native]{group.concat.measures.native()}}
+Other concatination functions: 
+\code{\link{group.concat.measures.native}()}
 }
 \concept{concatination functions}

@@ -17,8 +17,8 @@ highlight.points.spheres(coords, color = "#FF0000", radius = 1)
 Draw small 3D spheres at given points.
 }
 \seealso{
-Other 3d utility functions:
-\code{\link[=highlight.vertices.spheres]{highlight.vertices.spheres()}},
-\code{\link[=vertex.coords]{vertex.coords()}}
+Other 3d utility functions: 
+\code{\link{highlight.vertices.spheres}()},
+\code{\link{vertex.coords}()}
 }
 \concept{3d utility functions}

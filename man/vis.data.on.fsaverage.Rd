@@ -54,29 +54,29 @@ list of coloredmeshes. The coloredmeshes used for the visualization.
 Creates a surface mesh, applies a colormap transform the morphometry data values into colors, and renders the resulting colored mesh in an interactive window. If hemi is 'both', the data is rendered for the whole brain. This function tries to automatically retrieve the subjects dir of the fsaverage template subject by checking the environment variables SUBJECTS_DIR and FREESURFER_HOME for the subject. The subject is required for its surfaces, which are not shipped with this package for licensing reasons.
 }
 \seealso{
-Other visualization functions:
-\code{\link[=highlight.vertices.on.subject]{highlight.vertices.on.subject()}},
-\code{\link[=highlight.vertices.on.subject.spheres]{highlight.vertices.on.subject.spheres()}},
-\code{\link[=vis.color.on.subject]{vis.color.on.subject()}},
-\code{\link[=vis.data.on.subject]{vis.data.on.subject()}},
-\code{\link[=vis.labeldata.on.subject]{vis.labeldata.on.subject()}},
-\code{\link[=vis.mask.on.subject]{vis.mask.on.subject()}},
-\code{\link[=vis.region.values.on.subject]{vis.region.values.on.subject()}},
-\code{\link[=vis.rglwidget]{vis.rglwidget()}},
-\code{\link[=vis.subject.annot]{vis.subject.annot()}},
-\code{\link[=vis.subject.label]{vis.subject.label()}},
-\code{\link[=vis.subject.morph.native]{vis.subject.morph.native()}},
-\code{\link[=vis.subject.morph.standard]{vis.subject.morph.standard()}},
-\code{\link[=vis.subject.pre]{vis.subject.pre()}},
-\code{\link[=vis.symmetric.data.on.subject]{vis.symmetric.data.on.subject()}},
-\code{\link[=vis.volume.on.surface]{vis.volume.on.surface()}},
-\code{\link[=vislayout.from.coloredmeshes]{vislayout.from.coloredmeshes()}}
+Other visualization functions: 
+\code{\link{highlight.vertices.on.subject}()},
+\code{\link{highlight.vertices.on.subject.spheres}()},
+\code{\link{vis.color.on.subject}()},
+\code{\link{vis.data.on.subject}()},
+\code{\link{vis.labeldata.on.subject}()},
+\code{\link{vis.mask.on.subject}()},
+\code{\link{vis.region.values.on.subject}()},
+\code{\link{vis.rglwidget}()},
+\code{\link{vis.subject.annot}()},
+\code{\link{vis.subject.label}()},
+\code{\link{vis.subject.morph.native}()},
+\code{\link{vis.subject.morph.standard}()},
+\code{\link{vis.subject.pre}()},
+\code{\link{vis.symmetric.data.on.subject}()},
+\code{\link{vis.volume.on.surface}()},
+\code{\link{vislayout.from.coloredmeshes}()}
 
-Other morphometry visualization functions:
-\code{\link[=vis.data.on.subject]{vis.data.on.subject()}},
-\code{\link[=vis.subject.morph.native]{vis.subject.morph.native()}},
-\code{\link[=vis.subject.morph.standard]{vis.subject.morph.standard()}},
-\code{\link[=vis.symmetric.data.on.subject]{vis.symmetric.data.on.subject()}}
+Other morphometry visualization functions: 
+\code{\link{vis.data.on.subject}()},
+\code{\link{vis.subject.morph.native}()},
+\code{\link{vis.subject.morph.standard}()},
+\code{\link{vis.symmetric.data.on.subject}()}
 }
 \concept{morphometry visualization functions}
 \concept{visualization functions}

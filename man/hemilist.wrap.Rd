@@ -20,12 +20,12 @@ a \code{\link{hemilist}}: a named list, with the 'data' in the name given by par
 Wrap data into a named hemi list.
 }
 \seealso{
-Other hemilist functions:
-\code{\link[=hemilist]{hemilist()}},
-\code{\link[=hemilist.derive.hemi]{hemilist.derive.hemi()}},
-\code{\link[=hemilist.from.prefixed.list]{hemilist.from.prefixed.list()}},
-\code{\link[=hemilist.get.combined.data]{hemilist.get.combined.data()}},
-\code{\link[=hemilist.unwrap]{hemilist.unwrap()}},
-\code{\link[=is.hemilist]{is.hemilist()}}
+Other hemilist functions: 
+\code{\link{hemilist}()},
+\code{\link{hemilist.derive.hemi}()},
+\code{\link{hemilist.from.prefixed.list}()},
+\code{\link{hemilist.get.combined.data}()},
+\code{\link{hemilist.unwrap}()},
+\code{\link{is.hemilist}()}
 }
 \concept{hemilist functions}

@@ -31,8 +31,8 @@ highlight.vertices.spheres(lh_surf,
 
 }
 \seealso{
-Other 3d utility functions:
-\code{\link[=highlight.points.spheres]{highlight.points.spheres()}},
-\code{\link[=vertex.coords]{vertex.coords()}}
+Other 3d utility functions: 
+\code{\link{highlight.points.spheres}()},
+\code{\link{vertex.coords}()}
 }
 \concept{3d utility functions}

@@ -49,10 +49,10 @@ You should, in most cases, not call this function directly. Use \code{\link[fsbr
 \seealso{
 \code{\link[fsbrain]{volvis.lb}}
 
-Other volume visualization:
-\code{\link[=vis.volume.on.surface]{vis.volume.on.surface()}},
-\code{\link[=volvis.lb]{volvis.lb()}},
-\code{\link[=volvis.lb.with.surface]{volvis.lb.with.surface()}},
-\code{\link[=volvis.slices.with.surface]{volvis.slices.with.surface()}}
+Other volume visualization: 
+\code{\link{vis.volume.on.surface}()},
+\code{\link{volvis.lb}()},
+\code{\link{volvis.lb.with.surface}()},
+\code{\link{volvis.slices.with.surface}()}
 }
 \concept{volume visualization}

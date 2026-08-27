@@ -20,11 +20,11 @@ named list with 2 entries: \code{from} is an integer vector of length 3, definin
 Compute the axis-aligned foreground bounding box of a 3D volume, i.e. the inner foreground area that must be retained if you want to remove all background from the corners of the volume. The foreground is determined by thresholding, such that all values greater than 0 are considered foreground. See \code{\link[fsbrain]{vol.boundary.mask}} for details.
 }
 \seealso{
-Other volume utility:
-\code{\link[=vol.imagestack]{vol.imagestack()}},
-\code{\link[=vol.merge]{vol.merge()}},
-\code{\link[=vol.overlay.colors.from.activation]{vol.overlay.colors.from.activation()}},
-\code{\link[=vol.planes]{vol.planes()}},
-\code{\link[=vol.slice]{vol.slice()}}
+Other volume utility: 
+\code{\link{vol.imagestack}()},
+\code{\link{vol.merge}()},
+\code{\link{vol.overlay.colors.from.activation}()},
+\code{\link{vol.planes}()},
+\code{\link{vol.slice}()}
 }
 \concept{volume utility}

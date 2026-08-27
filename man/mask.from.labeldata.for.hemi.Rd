@@ -58,14 +58,14 @@ Create a binary mask for the data of a single hemisphere from one or more labels
 
 }
 \seealso{
-Other label data functions:
-\code{\link[=group.label]{group.label()}},
-\code{\link[=labeldata.from.mask]{labeldata.from.mask()}},
-\code{\link[=subject.label]{subject.label()}}
+Other label data functions: 
+\code{\link{group.label}()},
+\code{\link{labeldata.from.mask}()},
+\code{\link{subject.label}()}
 
-Other mask functions:
-\code{\link[=coloredmesh.from.mask]{coloredmesh.from.mask()}},
-\code{\link[=vis.mask.on.subject]{vis.mask.on.subject()}}
+Other mask functions: 
+\code{\link{coloredmesh.from.mask}()},
+\code{\link{vis.mask.on.subject}()}
 }
 \concept{label data functions}
 \concept{mask functions}

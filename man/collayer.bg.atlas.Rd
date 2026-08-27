@@ -41,14 +41,14 @@ Using 'outline' mode is quite slow, and increasing the border thickness makes it
 \seealso{
 You can plot the return value using \code{\link[fsbrain]{vis.color.on.subject}}.
 
-Other surface color layer:
-\code{\link[=collayer.bg]{collayer.bg()}},
-\code{\link[=collayer.bg.meancurv]{collayer.bg.meancurv()}},
-\code{\link[=collayer.bg.sulc]{collayer.bg.sulc()}},
-\code{\link[=collayer.from.annot]{collayer.from.annot()}},
-\code{\link[=collayer.from.annotdata]{collayer.from.annotdata()}},
-\code{\link[=collayer.from.mask.data]{collayer.from.mask.data()}},
-\code{\link[=collayer.from.morphlike.data]{collayer.from.morphlike.data()}},
-\code{\link[=collayers.merge]{collayers.merge()}}
+Other surface color layer: 
+\code{\link{collayer.bg}()},
+\code{\link{collayer.bg.meancurv}()},
+\code{\link{collayer.bg.sulc}()},
+\code{\link{collayer.from.annot}()},
+\code{\link{collayer.from.annotdata}()},
+\code{\link{collayer.from.mask.data}()},
+\code{\link{collayer.from.morphlike.data}()},
+\code{\link{collayers.merge}()}
 }
 \concept{surface color layer}

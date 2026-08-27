@@ -33,12 +33,13 @@ coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} me
 Create a coloredmesh from an annotation of an atlas.
 }
 \seealso{
-Other coloredmesh functions:
-\code{\link[=coloredmesh.from.label]{coloredmesh.from.label()}},
-\code{\link[=coloredmesh.from.mask]{coloredmesh.from.mask()}},
-\code{\link[=coloredmesh.from.morph.native]{coloredmesh.from.morph.native()}},
-\code{\link[=coloredmesh.from.morph.standard]{coloredmesh.from.morph.standard()}},
-\code{\link[=coloredmesh.from.morphdata]{coloredmesh.from.morphdata()}},
-\code{\link[=coloredmeshes.from.color]{coloredmeshes.from.color()}}
+Other coloredmesh functions: 
+\code{\link{Triangles3D.to.coloredmesh}()},
+\code{\link{coloredmesh.from.label}()},
+\code{\link{coloredmesh.from.mask}()},
+\code{\link{coloredmesh.from.morph.native}()},
+\code{\link{coloredmesh.from.morph.standard}()},
+\code{\link{coloredmesh.from.morphdata}()},
+\code{\link{coloredmeshes.from.color}()}
 }
 \concept{coloredmesh functions}

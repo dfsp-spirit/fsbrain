@@ -2,7 +2,7 @@
 % Please edit documentation in R/coloredmesh.R
 \name{Triangles3D.to.coloredmesh}
 \alias{Triangles3D.to.coloredmesh}
-\title{Convert a misc3d Triangles3D iso-surface to a coloredmesh}
+\title{Convert a misc3d Triangles3D iso-surface to a coloredmesh.}
 \usage{
 Triangles3D.to.coloredmesh(tris, hemi = NULL, add_normals = TRUE)
 }
@@ -19,3 +19,14 @@ an \code{fs.coloredmesh} instance, or a list of such instances if 'tris' is a li
 \description{
 Convert a \code{misc3d::contour3d(draw = FALSE)} result (an iso-surface mesh of class 'Triangles3D', e.g., as returned by \code{\link[fsbrain]{volvis.contour}}) into an \code{fs.coloredmesh}. This allows rendering volume iso-surfaces with ANY renderer backend: while the rgl backend can render 'Triangles3D' instances directly, the scimesh backend requires \code{fs.coloredmesh} instances and converts them automatically, so you normally do not need to call this function yourself.
 }
+\seealso{
+Other coloredmesh functions: 
+\code{\link{coloredmesh.from.annot}()},
+\code{\link{coloredmesh.from.label}()},
+\code{\link{coloredmesh.from.mask}()},
+\code{\link{coloredmesh.from.morph.native}()},
+\code{\link{coloredmesh.from.morph.standard}()},
+\code{\link{coloredmesh.from.morphdata}()},
+\code{\link{coloredmeshes.from.color}()}
+}
+\concept{coloredmesh functions}

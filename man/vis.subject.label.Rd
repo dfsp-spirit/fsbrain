@@ -69,30 +69,30 @@ Drawing a colorbar for label data makes limited sense, use a legend instead. The
 
 }
 \seealso{
-Other visualization functions:
-\code{\link[=highlight.vertices.on.subject]{highlight.vertices.on.subject()}},
-\code{\link[=highlight.vertices.on.subject.spheres]{highlight.vertices.on.subject.spheres()}},
-\code{\link[=vis.color.on.subject]{vis.color.on.subject()}},
-\code{\link[=vis.data.on.fsaverage]{vis.data.on.fsaverage()}},
-\code{\link[=vis.data.on.subject]{vis.data.on.subject()}},
-\code{\link[=vis.labeldata.on.subject]{vis.labeldata.on.subject()}},
-\code{\link[=vis.mask.on.subject]{vis.mask.on.subject()}},
-\code{\link[=vis.region.values.on.subject]{vis.region.values.on.subject()}},
-\code{\link[=vis.rglwidget]{vis.rglwidget()}},
-\code{\link[=vis.subject.annot]{vis.subject.annot()}},
-\code{\link[=vis.subject.morph.native]{vis.subject.morph.native()}},
-\code{\link[=vis.subject.morph.standard]{vis.subject.morph.standard()}},
-\code{\link[=vis.subject.pre]{vis.subject.pre()}},
-\code{\link[=vis.symmetric.data.on.subject]{vis.symmetric.data.on.subject()}},
-\code{\link[=vis.volume.on.surface]{vis.volume.on.surface()}},
-\code{\link[=vislayout.from.coloredmeshes]{vislayout.from.coloredmeshes()}}
+Other visualization functions: 
+\code{\link{highlight.vertices.on.subject}()},
+\code{\link{highlight.vertices.on.subject.spheres}()},
+\code{\link{vis.color.on.subject}()},
+\code{\link{vis.data.on.fsaverage}()},
+\code{\link{vis.data.on.subject}()},
+\code{\link{vis.labeldata.on.subject}()},
+\code{\link{vis.mask.on.subject}()},
+\code{\link{vis.region.values.on.subject}()},
+\code{\link{vis.rglwidget}()},
+\code{\link{vis.subject.annot}()},
+\code{\link{vis.subject.morph.native}()},
+\code{\link{vis.subject.morph.standard}()},
+\code{\link{vis.subject.pre}()},
+\code{\link{vis.symmetric.data.on.subject}()},
+\code{\link{vis.volume.on.surface}()},
+\code{\link{vislayout.from.coloredmeshes}()}
 
-Other label functions:
-\code{\link[=apply.label.to.morphdata]{apply.label.to.morphdata()}},
-\code{\link[=apply.labeldata.to.morphdata]{apply.labeldata.to.morphdata()}},
-\code{\link[=subject.lobes]{subject.lobes()}},
-\code{\link[=subject.mask]{subject.mask()}},
-\code{\link[=vis.labeldata.on.subject]{vis.labeldata.on.subject()}}
+Other label functions: 
+\code{\link{apply.label.to.morphdata}()},
+\code{\link{apply.labeldata.to.morphdata}()},
+\code{\link{subject.lobes}()},
+\code{\link{subject.mask}()},
+\code{\link{vis.labeldata.on.subject}()}
 }
 \concept{label functions}
 \concept{visualization functions}

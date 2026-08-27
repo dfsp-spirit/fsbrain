@@ -27,11 +27,11 @@ vol.merge(
 Merge background volume and overlay to new colors.
 }
 \seealso{
-Other volume utility:
-\code{\link[=vol.boundary.box]{vol.boundary.box()}},
-\code{\link[=vol.imagestack]{vol.imagestack()}},
-\code{\link[=vol.overlay.colors.from.activation]{vol.overlay.colors.from.activation()}},
-\code{\link[=vol.planes]{vol.planes()}},
-\code{\link[=vol.slice]{vol.slice()}}
+Other volume utility: 
+\code{\link{vol.boundary.box}()},
+\code{\link{vol.imagestack}()},
+\code{\link{vol.overlay.colors.from.activation}()},
+\code{\link{vol.planes}()},
+\code{\link{vol.slice}()}
 }
 \concept{volume utility}
