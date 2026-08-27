@@ -19,6 +19,13 @@ library("fsbrain", quietly = quietly);
 library("misc3d", quietly = quietly);
 library("magick", quietly = quietly);
 
+# Allow forcing the renderer backend via the environment (used by the example
+# runner to select the headless scimesh backend, see examples/run_all_examples.sh).
+backend_env = Sys.getenv("FSBRAIN_RENDERER_BACKEND", unset = NA);
+if(!is.na(backend_env)) {
+    options(fsbrain.renderer_backend = backend_env);
+}
+
 args = commandArgs(trailingOnly=TRUE);
 
 

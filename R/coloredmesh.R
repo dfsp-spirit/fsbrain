@@ -534,6 +534,40 @@ coloredmesh.from.mask <- function(subjects_dir, subject_id, mask, hemi, surface=
 }
 
 
+#' @title Convert a misc3d Triangles3D iso-surface to a coloredmesh.
+#'
+#' @description Convert a `misc3d::contour3d(draw = FALSE)` result (an iso-surface mesh of class 'Triangles3D', e.g., as returned by \code{\link[fsbrain]{volvis.contour}}) into an `fs.coloredmesh`. This allows rendering volume iso-surfaces with ANY renderer backend: while the rgl backend can render 'Triangles3D' instances directly, the scimesh backend requires `fs.coloredmesh` instances and converts them automatically, so you normally do not need to call this function yourself.
+#'
+#' @param tris a 'Triangles3D' instance as returned by `misc3d::contour3d(draw = FALSE)` or \code{\link[fsbrain]{volvis.contour}}, or a list of such instances (e.g., when multiple frames of a 4D volume were extracted with `frame = "all"`).
+#'
+#' @param hemi character string or NULL, the hemisphere for the resulting coloredmesh. 'Triangles3D' iso-surfaces are not hemisphere-specific, so this defaults to NULL. See \code{\link[fsbrain]{fs.coloredmesh}}.
+#'
+#' @param add_normals logical, whether to compute per-vertex normals for the mesh. Required for correct lighting in the scimesh backend, defaults to TRUE.
+#'
+#' @return an `fs.coloredmesh` instance, or a list of such instances if 'tris' is a list.
+#'
+#' @family coloredmesh functions
+#'
+#' @export
+Triangles3D.to.coloredmesh <- function(tris, hemi = NULL, add_normals = TRUE) {
+
+    if(is.list(tris) && ! is.Triangles3D(tris)) {
+        return(lapply(tris, Triangles3D.to.coloredmesh, hemi = hemi, add_normals = add_normals));
+    }
+
+    if(! is.Triangles3D(tris)) {
+        stop("Parameter 'tris' must be a misc3d 'Triangles3D' instance (as returned by misc3d::contour3d(draw = FALSE) or fsbrain::volvis.contour) or a list of such instances.");
+    }
+
+    vertices = rbind(tris$v1, tris$v2, tris$v3);
+    faces = matrix(seq_len(nrow(vertices)), ncol = 3L, byrow = TRUE);   # each row is one triangle
+    mesh = rgl::tmesh3d(t(cbind(vertices, 1)), c(t(faces)));           # faces passed flat (3 x n)
+
+    col = if(is.null(tris$color)) "white" else tris$color;
+    return(fs.coloredmesh(mesh, col, hemi = hemi, render = TRUE, add_normals = add_normals));
+}
+
+
 #' @title Print description of a brain coloredmesh (S3).
 #'
 #' @param x brain surface with class `fs.coloredmesh`.

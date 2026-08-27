@@ -142,6 +142,20 @@ coloredmesh_to_scimesh <- function(cmesh, style = "default") {
 coloredmeshes_to_scimesh <- function(coloredmeshes, style = "default") {
     scene <- list()
 
+    # The scimesh backend can only render 'fs.coloredmesh' instances, while the
+    # rgl backend can additionally render misc3d 'Triangles3D' iso-surfaces
+    # (e.g., as returned by volvis.contour()). Convert such renderables to
+    # coloredmeshes first, so both backends accept the same input. See
+    # Triangles3D.to.coloredmesh().
+    if(is.Triangles3D(coloredmeshes)) {
+        coloredmeshes <- Triangles3D.to.coloredmesh(coloredmeshes);
+    } else if(is.list(coloredmeshes) && ! is.fs.coloredmesh(coloredmeshes)) {
+        is_tris <- vapply(coloredmeshes, is.Triangles3D, logical(1));
+        if(any(is_tris)) {
+            coloredmeshes[is_tris] <- lapply(coloredmeshes[is_tris], Triangles3D.to.coloredmesh);
+        }
+    }
+
     if (is.fs.coloredmesh(coloredmeshes)) {
         if (isTRUE(coloredmeshes$render)) {
             return(list("single" = coloredmesh_to_scimesh(coloredmeshes, style)))
