@@ -50,3 +50,14 @@ doc
 CRAN-SUBMISSION
 
 examples/vol_slices/*.png
+
+# Generated outputs from the example runner (examples/run_all_examples.sh)
+examples/brain_surface_geodesic/highlighted_vertices.png
+examples/brain_surface_geodesic/dist_*.png
+examples/brain_surface_geodesic/lh.disteuclid
+examples/brain_surface_geodesic/lh.distgeod
+examples/facecheck/facecheck_subject_*.png
+examples/facecheck/facecheck_tmp_*.png
+examples/medial_mask/lh_mask_*.mgz
+examples/medial_mask/rh_mask_*.mgz
+examples/rgl_vs_scimesh/*_scimesh.png
