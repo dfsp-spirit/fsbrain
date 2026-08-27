@@ -66,10 +66,18 @@ jobs:
             eval sudo $cmd
           done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04"))')
 
-      - name: Install xquartz on macOS
+      - name: Install xquartz, imagemagick and ghostscript on macOS
         if: runner.os == 'macOS'
         run: |
           brew install --cask xquartz
+          # ImageMagick 'convert' is used by take.screenshot()'s PDF->PNG fallback,
+          # which is taken when rgl.useNULL() is TRUE (RGL_USE_NULL=true, set below)
+          # and rgl.snapshot() is unavailable. Recent macos runner images (e.g.
+          # macos-26-arm64) no longer ship ImageMagick, so install it explicitly.
+          # Ghostscript is required as ImageMagick's PDF delegate: the standard
+          # 'imagemagick' formula is built with --without-gslib and cannot read
+          # PDFs without the external 'gs' binary.
+          brew install imagemagick ghostscript
           export DISPLAY=:99
 
 #      - name: Install mesa under Linux
