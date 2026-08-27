@@ -6,13 +6,10 @@
 # Dependencies:
 #   Requires the 'fsbrain' package to be installed.
 #
-#   NOTE: Currently, you need the latest development version of 'fsbrain' for this to work. To install it, run in your R session:
-#
-#            install.packages(c("devtools", "knitr", "rmarkdown", "testthat"));
-#            devtools::install_github("dfsp-spirit/fsbrain", build_vignettes=TRUE);
 #
 # USAGE: ./medial_mask.R <subjects_dir> <subject>
-#
+# EXAMPLE if you have FreeSurfer installed:
+#   ./medial_mask.R $SUBJECTS_DIR bert
 # Written by Tim Schaefer
 
 
@@ -27,7 +24,7 @@ save_medial_mask <- function(subjects_dir, subject_id, outfile_lh="lh_mask.mgz",
   if(!silent) {
     cat(sprintf("lh: %d verts total, %d in cortex, %d medial wall.\n", length(mask$lh), sum(mask$lh), (length(mask$lh)- sum(mask$lh))));
     cat(sprintf("rh: %d verts total, %d in cortex, %d medial wall.\n", length(mask$rh), sum(mask$rh), (length(mask$rh)- sum(mask$rh))))
-    cat(sprintf("Mask files written to '%s' and '%s'.\n", outfile_lh, outfile_rh));
+    cat(sprintf("Mask files written to '%s' and '%s' in MGZ format.\n", outfile_lh, outfile_rh));
   }
 }
 

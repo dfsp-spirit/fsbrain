@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 #
-# Extract the given subjects from a QDEC longtitudinal table and write tghe subset to a new file.
+# Extract the given subjects from a QDEC longtitudinal table and write the subset to a new file.
 #
 # This script uses an internal fsbrain function (using the fsbrain:::<function> notation), which you shoud NOT do. Internal functions are not part
 #  of the official API and may change or disappear between versions without notice. You can consider it an anti-example. To be honest it's here

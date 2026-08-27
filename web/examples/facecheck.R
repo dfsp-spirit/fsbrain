@@ -6,12 +6,11 @@
 # Dependencies:
 #   Requires the 'fsbrain' package to be installed.
 #
-#   NOTE: Currently, you need the latest development version of 'fsbrain' for this to work. To install it, run in your R session:
-#
-#            install.packages(c("devtools", "knitr", "rmarkdown", "testthat"));
-#            devtools::install_github("dfsp-spirit/fsbrain", build_vignettes=TRUE);
 #
 # USAGE: ./facecheck.R <subjects_dir> <subject_id>
+#
+# EXAMPLE if you have FreeSurfer installed:
+#   ./facecheck.R $SUBJECTS_DIR bert
 #
 # Written by Tim Schaefer
 
