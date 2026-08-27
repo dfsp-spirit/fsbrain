@@ -2,10 +2,13 @@
 #
 # This demo script illustrates how to compute geodesic distances on
 # brain surface meshes using the Rvcg package (https://github.com/zarquon42b/Rvcg).
-
-#devtools::install_github("dfsp-spirit/fsbrain", ref="brain_mesh_geodesic") # >= 0.4.3
-#devtools::install_github("dfsp-spirit/freesurferformats"); # >= 0.1.15
-#devtools::install_github("zarquon42b/Rvcg"); # > 0.19.2
+#
+#
+#  It requires optional fsbrain dependencies to be installed.
+#  To get them, run in your R session:
+#
+#      install.packages("fsbrain", dependencies = TRUE);
+#
 
 library("fsbrain");
 library("freesurferformats");
