@@ -29,6 +29,38 @@ brainviews <- function(views, coloredmeshes, rgloptions = rglo(), rglactions = l
     }
 
     if(length(views)) {
+
+        # The scimesh backend is a headless software renderer that writes PNG images; it
+        # cannot open interactive OpenGL windows. Render the requested views to an image
+        # file (in the current working directory) and print its path instead.
+        if(get.fsbrain.renderer.backend() == "scimesh") {
+            view_angles = c();
+            unsupported_views = c();
+            for(view in views) {
+                if(view %in% c("t4", "t9")) {
+                    view_angles = c(view_angles, get.view.angle.names(view));
+                } else if(startsWith(view, "sd_")) {
+                    view_angles = c(view_angles, view);
+                } else {
+                    # 'si' (single interactive) and 'sr' (rotating) require interactive OpenGL windows.
+                    unsupported_views = c(unsupported_views, view);
+                }
+            }
+            if(length(unsupported_views) > 0) {
+                warning(sprintf("The view(s) %s are not supported by the scimesh renderer backend (they require interactive OpenGL windows) and will be skipped. Supported views: 't4', 't9', 'sd_<angle>'.",
+                                paste(sprintf("'%s'", unsupported_views), collapse = ", ")));
+            }
+            if(length(view_angles) > 0) {
+                if(is.character(draw_colorbar) || isTRUE(draw_colorbar)) {
+                    warning("Parameter 'draw_colorbar' is not supported by the scimesh renderer backend in this context and will be ignored. Use the 'export' function to render colorbars.");
+                }
+                output_img = sprintf("fsbrain_views_%s.png", get.fsbrain.renderer.backend());
+                invisible(vislayout.from.coloredmeshes(coloredmeshes, view_angles = unique(view_angles), rgloptions = rgloptions, rglactions = rglactions, style = style, output_img = output_img, silent = FALSE, background_color = background));
+                message(sprintf("Rendered views to '%s'.", output_img));
+            }
+            return(invisible(coloredmeshes));
+        }
+
         for(view in views) {
             if(view == "t4") {
                 invisible(brainview.t4(coloredmeshes, background = background, rgloptions = rgloptions, rglactions = rglactions, draw_colorbar = draw_colorbar, style = style));
