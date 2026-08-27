@@ -264,6 +264,13 @@ coloredmeshes.combined.data.range <- function(coloredmeshes) {
             combined_data = c(combined_data, cmesh$metadata$src_data);
         }
     }
+    if(all(!is.finite(combined_data))) {
+        # No (finite) data: happens e.g. for color-only meshes (coloredmesh.from.color,
+        # highlight.vertices.on.subject) which have no 'src_data'. Avoid the spurious
+        # 'no non-missing arguments to min/max; returning Inf/-Inf' warnings from
+        # range() on empty input.
+        return(c(NA_real_, NA_real_));
+    }
     return(range(combined_data, finite=TRUE));
 }
 
