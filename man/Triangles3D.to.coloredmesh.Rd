@@ -20,7 +20,7 @@ an \code{fs.coloredmesh} instance, or a list of such instances if 'tris' is a li
 Convert a \code{misc3d::contour3d(draw = FALSE)} result (an iso-surface mesh of class 'Triangles3D', e.g., as returned by \code{\link[fsbrain]{volvis.contour}}) into an \code{fs.coloredmesh}. This allows rendering volume iso-surfaces with ANY renderer backend: while the rgl backend can render 'Triangles3D' instances directly, the scimesh backend requires \code{fs.coloredmesh} instances and converts them automatically, so you normally do not need to call this function yourself.
 }
 \seealso{
-Other coloredmesh functions: 
+Other coloredmesh functions:
 \code{\link{coloredmesh.from.annot}()},
 \code{\link{coloredmesh.from.label}()},
 \code{\link{coloredmesh.from.mask}()},
