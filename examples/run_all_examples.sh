@@ -3,7 +3,8 @@
 # run_all_examples.sh -- Run all fsbrain example scripts and report a summary.
 #
 # Usage:
-#   ./run_all_examples.sh
+#   ./run_all_examples.sh              # run all examples
+#   ./run_all_examples.sh <example>    # run only one example (e.g. 'facecheck')
 #
 # This script:
 #   1. Ensures the fsbrain demo data is available: downloads the fsaverage
@@ -36,9 +37,33 @@ fsbrain_require_rscript || exit 1
 
 cd "${SCRIPT_DIR}" || exit 1
 
+# Optional: restrict the run to a single example directory given on the
+# command line, e.g. './run_all_examples.sh facecheck'.
+EXAMPLE="${1:-}"
+runshs=()
+if [[ -n "${EXAMPLE}" ]]; then
+    EXAMPLE="${EXAMPLE%/}"
+    if [[ ! -d "${EXAMPLE}" || ! -f "${EXAMPLE}/run.sh" ]]; then
+        echo "ERROR: example directory '${EXAMPLE}' not found (expected '${EXAMPLE}/run.sh')." >&2
+        echo "Available examples:" >&2
+        for d in */run.sh; do
+            [[ -f "${d}" ]] && echo "  - $(dirname "${d}")" >&2
+        done
+        exit 1
+    fi
+    runshs=("${EXAMPLE}/run.sh")
+else
+    runshs=(*/run.sh)
+fi
+
 echo "============================================================"
 echo "fsbrain example runner"
 echo "============================================================"
+if [[ -n "${EXAMPLE}" ]]; then
+    echo "Running only example: ${EXAMPLE}"
+else
+    echo "Running all examples"
+fi
 
 echo "Ensuring fsbrain demo data (fsaverage + optional demo subject)..."
 SUBJECTS_DIR="$(fsbrain_ensure_demo_data)" || exit 1
@@ -55,7 +80,7 @@ success=0
 failures=0
 failed_examples=()
 
-for runsh in */run.sh; do
+for runsh in "${runshs[@]}"; do
     if [[ ! -f "${runsh}" ]]; then
         continue
     fi
