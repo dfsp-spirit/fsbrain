@@ -10,19 +10,30 @@
 #   To get them, run in your R session:
 #       install.packages("fsbrain", dependencies = TRUE);
 #
-# USAGE: ./brain_surface_geodesic.R [--vis] [--outdir <dir>]
+# USAGE: ./brain_surface_geodesic.R [--vis] [--renderer <rgl|scimesh>] [--outdir <dir>]
 #
 # OPTIONS:
-#   --vis          : try to open an OpenGL window and plot the results.
-#                    Turn off on headless machines (default: FALSE).
-#   --outdir <dir> : directory to write distance map files and images into
-#                    (default: the current working directory).
+#   --vis                : visualize the results (default: FALSE).
+#   --renderer <backend> : the renderer backend to use for visualization, either
+#                          'rgl' (default, opens interactive OpenGL windows) or
+#                          'scimesh' (headless software renderer that writes PNG
+#                          images; requires the scimesh package). The interactive
+#                          views ('si', 'sr') are only available with the 'rgl'
+#                          backend.
+#   --outdir <dir>       : directory to write distance map files and images into
+#                          (default: the current working directory).
 #
 # Written by Tim Schaefer
 
 library("fsbrain");
 library("freesurferformats");
 library("Rvcg");
+
+
+# The renderer backend can be selected on the command line via '--renderer scimesh'
+# (see USAGE above). This is equivalent to uncommenting the following two lines:
+# options(fsbrain.renderer_backend = "scimesh")
+# options(fsbrain.scimesh.output_dims = c(2560, 1440))
 
 
 # --- Distance helpers --------------------------------------------------------------
@@ -58,8 +69,8 @@ load_brain_data <- function() {
 # Compute geodesic and Euclidian distances between a few well-known vertices on the left
 # hemisphere: on the precentral gyrus, at the bottom of the central sulcus, and on the
 # postcentral gyrus. Results are printed to the console. If 'do_vis' is TRUE, the three
-# vertices are also highlighted on an interactive brain surface.
-run_pairwise_distance_tests <- function(data, do_vis = FALSE) {
+# vertices are also highlighted and an image is saved into 'outdir'.
+run_pairwise_distance_tests <- function(data, do_vis = FALSE, outdir = ".") {
     brain_hemispheres = data$brain_hemispheres;
     lh_tmesh3d = data$lh_tmesh3d;
 
@@ -71,12 +82,19 @@ run_pairwise_distance_tests <- function(data, do_vis = FALSE) {
     lh_mid_point = brain_hemispheres$lh$vertices[lh_vertex_idx_central_sulcus, ];
     lh_destination_point = brain_hemispheres$lh$vertices[lh_vertex_idx_postcentral_gyrus, ];
 
-    # Optional: show source and destination points on brain surface.
+    # Optional: highlight the source and destination points on the brain surface and
+    # save an image. This works with both the 'rgl' and the 'scimesh' renderer backend
+    # (the interactive 'si' view is rgl-only and not used here).
     if(do_vis) {
-        fsbrain::highlight.vertices.on.subject(data$subjects_dir, data$subject_id,
+        cm_highlighted = fsbrain::highlight.vertices.on.subject(data$subjects_dir, data$subject_id,
             verts_lh = c(lh_vertex_idx_precentral_gyrus, lh_vertex_idx_central_sulcus, lh_vertex_idx_postcentral_gyrus),
-            verts_rh = NULL, views = "si",
+            verts_rh = NULL, views = NULL,
             color_verts_lh = c("#FF0000", "#00FF00", "#0000FF"));
+        fsbrain::export(cm_highlighted,
+            draw_colorbar = FALSE,  # categorical highlight, not a continuous measure
+            view_angles = c("sd_medial_lh", "sd_lateral_lh"),
+            output_img = file.path(outdir, "highlighted_vertices.png"));
+        cat(sprintf("  Wrote '%s' (highlighted vertices: red = precentral gyrus, green = central sulcus, blue = postcentral gyrus).\n", file.path(outdir, "highlighted_vertices.png")));
     }
 
     cat("\n## Test 1: from precentral gyrus (red) to postcentral gyrus (blue).\n");
@@ -129,10 +147,10 @@ run_full_hemi_distance_map <- function(data, do_vis = FALSE, outdir = ".") {
     cat(sprintf("  Wrote '%s'.\n", file.path(outdir, "lh.distgeod")));
 
     if(do_vis) {
-        cm_euclid = fsbrain::vis.data.on.subject(data$subjects_dir, data$subject_id, morph_data_lh = euclid_dists_to_source);
+        cm_euclid = fsbrain::vis.data.on.subject(data$subjects_dir, data$subject_id, morph_data_lh = euclid_dists_to_source, views = NULL);
         fsbrain::export(cm_euclid, colorbar_legend = sprintf("Euclidian distance to vertex %d [mm]", source_vert_idx), view_angles = c("sd_medial_lh", "sd_lateral_lh"), output_img = file.path(outdir, "dist_euclid.png"));
 
-        cm_geod = fsbrain::vis.data.on.subject(data$subjects_dir, data$subject_id, morph_data_lh = geodesic_dists_to_source);
+        cm_geod = fsbrain::vis.data.on.subject(data$subjects_dir, data$subject_id, morph_data_lh = geodesic_dists_to_source, views = NULL);
         fsbrain::export(cm_geod, colorbar_legend = sprintf("Geodesic distance to vertex %d [mm]", source_vert_idx), view_angles = c("sd_medial_lh", "sd_lateral_lh"), output_img = file.path(outdir, "dist_geodesic.png"));
 
         ## We can illustrate the difference between Euclidian and geodesic distance by
@@ -154,6 +172,7 @@ run_full_hemi_distance_map <- function(data, do_vis = FALSE, outdir = ".") {
 # 'commandArgs(trailingOnly = TRUE)'). Returns a list with the settings.
 parse_args <- function(args) {
     do_vis = FALSE;
+    renderer = "rgl";
     outdir = ".";
     if(length(args) > 0) {
         idx = 1;
@@ -162,6 +181,15 @@ parse_args <- function(args) {
             if(arg == "--vis") {
                 do_vis = TRUE;
                 idx = idx + 1;
+            } else if(arg == "--renderer") {
+                if(idx + 1 > length(args)) {
+                    stop("Option '--renderer' requires an argument ('rgl' or 'scimesh').");
+                }
+                renderer = args[idx + 1];
+                if(!(renderer %in% c("rgl", "scimesh"))) {
+                    stop(sprintf("Invalid renderer '%s'. Must be one of 'rgl' or 'scimesh'.", renderer));
+                }
+                idx = idx + 2;
             } else if(arg == "--outdir") {
                 if(idx + 1 > length(args)) {
                     stop("Option '--outdir' requires a directory argument.");
@@ -169,11 +197,11 @@ parse_args <- function(args) {
                 outdir = args[idx + 1];
                 idx = idx + 2;
             } else {
-                stop(sprintf("Unknown command line argument '%s'.\nUSAGE: ./brain_surface_geodesic.R [--vis] [--outdir <dir>]", arg));
+                stop(sprintf("Unknown command line argument '%s'.\nUSAGE: ./brain_surface_geodesic.R [--vis] [--renderer <rgl|scimesh>] [--outdir <dir>]", arg));
             }
         }
     }
-    return(list(do_vis = do_vis, outdir = outdir));
+    return(list(do_vis = do_vis, renderer = renderer, outdir = outdir));
 }
 
 
@@ -181,14 +209,23 @@ parse_args <- function(args) {
 
 main <- function(args) {
     settings = parse_args(args);
+
+    if(settings$renderer == "scimesh") {
+        if(!requireNamespace("scimesh", quietly = TRUE)) {
+            stop("Renderer backend 'scimesh' selected, but the 'scimesh' package is not installed.");
+        }
+        options(fsbrain.renderer_backend = "scimesh");
+        options(fsbrain.scimesh.output_dims = c(2560, 1440));
+    }
+
     if(!dir.exists(settings$outdir)) {
         dir.create(settings$outdir, recursive = TRUE);
     }
-    cat(sprintf("Settings: do_vis = %s, outdir = '%s'.\n", settings$do_vis, settings$outdir));
+    cat(sprintf("Settings: do_vis = %s, renderer = '%s', outdir = '%s'.\n", settings$do_vis, settings$renderer, settings$outdir));
 
     data = load_brain_data();
 
-    run_pairwise_distance_tests(data, do_vis = settings$do_vis);
+    run_pairwise_distance_tests(data, do_vis = settings$do_vis, outdir = settings$outdir);
     run_full_hemi_distance_map(data, do_vis = settings$do_vis, outdir = settings$outdir);
 }
 
