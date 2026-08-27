@@ -1,0 +1,3 @@
+## Files moved
+
+The example R scipts / apps that used to be in this directory `web/examples/` have been to the `examples/` directory in the repo root.
