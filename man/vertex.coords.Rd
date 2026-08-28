@@ -18,8 +18,8 @@ double nx3 matrix of vertex coordinates.
 Return coordinates for vertices, supporting entire brain via hemilist.
 }
 \seealso{
-Other 3d utility functions: 
-\code{\link{highlight.points.spheres}()},
-\code{\link{highlight.vertices.spheres}()}
+Other 3d utility functions:
+\code{\link[=highlight.points.spheres]{highlight.points.spheres()}},
+\code{\link[=highlight.vertices.spheres]{highlight.vertices.spheres()}}
 }
 \concept{3d utility functions}

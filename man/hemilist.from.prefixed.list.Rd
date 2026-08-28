@@ -24,12 +24,12 @@ a hemilist
 A hemilist is a named list with entries 'lh' and/or 'rh', see \code{\link{hemilist}}.
 }
 \seealso{
-Other hemilist functions: 
-\code{\link{hemilist}()},
-\code{\link{hemilist.derive.hemi}()},
-\code{\link{hemilist.get.combined.data}()},
-\code{\link{hemilist.unwrap}()},
-\code{\link{hemilist.wrap}()},
-\code{\link{is.hemilist}()}
+Other hemilist functions:
+\code{\link[=hemilist]{hemilist()}},
+\code{\link[=hemilist.derive.hemi]{hemilist.derive.hemi()}},
+\code{\link[=hemilist.get.combined.data]{hemilist.get.combined.data()}},
+\code{\link[=hemilist.unwrap]{hemilist.unwrap()}},
+\code{\link[=hemilist.wrap]{hemilist.wrap()}},
+\code{\link[=is.hemilist]{is.hemilist()}}
 }
 \concept{hemilist functions}

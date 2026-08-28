@@ -102,10 +102,10 @@ Creates a lightbox view of 2D MRI slices with the cortical surface boundary cont
 
 }
 \seealso{
-Other volume visualization: 
-\code{\link{vis.volume.on.surface}()},
-\code{\link{volvis.lb}()},
-\code{\link{volvis.lightbox}()},
-\code{\link{volvis.slices.with.surface}()}
+Other volume visualization:
+\code{\link[=vis.volume.on.surface]{vis.volume.on.surface()}},
+\code{\link[=volvis.lb]{volvis.lb()}},
+\code{\link[=volvis.lightbox]{volvis.lightbox()}},
+\code{\link[=volvis.slices.with.surface]{volvis.slices.with.surface()}}
 }
 \concept{volume visualization}

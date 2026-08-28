@@ -55,8 +55,8 @@ Given an atlas and a list that contains one value for each atlas region, write a
 
 }
 \seealso{
-Other output functions: 
-\code{\link{write.region.aggregated}()},
-\code{\link{write.region.values.fsaverage}()}
+Other output functions:
+\code{\link[=write.region.aggregated]{write.region.aggregated()}},
+\code{\link[=write.region.values.fsaverage]{write.region.values.fsaverage()}}
 }
 \concept{output functions}

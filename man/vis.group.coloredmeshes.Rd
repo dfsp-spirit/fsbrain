@@ -36,11 +36,11 @@ Plot coloredmeshes for a group of subjects into a single image.
 This is a mid-level function, end users may want to call high-level functions like \code{\link{vis.group.annot}} instead.
 }
 \seealso{
-Other group visualization functions: 
-\code{\link{vis.data.on.group.native}()},
-\code{\link{vis.data.on.group.standard}()},
-\code{\link{vis.group.annot}()},
-\code{\link{vis.group.morph.native}()},
-\code{\link{vis.group.morph.standard}()}
+Other group visualization functions:
+\code{\link[=vis.data.on.group.native]{vis.data.on.group.native()}},
+\code{\link[=vis.data.on.group.standard]{vis.data.on.group.standard()}},
+\code{\link[=vis.group.annot]{vis.group.annot()}},
+\code{\link[=vis.group.morph.native]{vis.group.morph.native()}},
+\code{\link[=vis.group.morph.standard]{vis.group.morph.standard()}}
 }
 \concept{group visualization functions}

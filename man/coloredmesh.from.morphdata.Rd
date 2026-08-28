@@ -33,13 +33,13 @@ coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} me
 Create a coloredmesh from arbitrary data.
 }
 \seealso{
-Other coloredmesh functions: 
-\code{\link{Triangles3D.to.coloredmesh}()},
-\code{\link{coloredmesh.from.annot}()},
-\code{\link{coloredmesh.from.label}()},
-\code{\link{coloredmesh.from.mask}()},
-\code{\link{coloredmesh.from.morph.native}()},
-\code{\link{coloredmesh.from.morph.standard}()},
-\code{\link{coloredmeshes.from.color}()}
+Other coloredmesh functions:
+\code{\link[=Triangles3D.to.coloredmesh]{Triangles3D.to.coloredmesh()}},
+\code{\link[=coloredmesh.from.annot]{coloredmesh.from.annot()}},
+\code{\link[=coloredmesh.from.label]{coloredmesh.from.label()}},
+\code{\link[=coloredmesh.from.mask]{coloredmesh.from.mask()}},
+\code{\link[=coloredmesh.from.morph.native]{coloredmesh.from.morph.native()}},
+\code{\link[=coloredmesh.from.morph.standard]{coloredmesh.from.morph.standard()}},
+\code{\link[=coloredmeshes.from.color]{coloredmeshes.from.color()}}
 }
 \concept{coloredmesh functions}

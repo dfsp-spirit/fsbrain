@@ -23,7 +23,7 @@ Implements the \emph{over} alpha blending operation.
 see the \emph{Alpha blending} section on https://en.wikipedia.org/wiki/Alpha_compositing
 }
 \seealso{
-Other color functions: 
-\code{\link{desaturate}()}
+Other color functions:
+\code{\link[=desaturate]{desaturate()}}
 }
 \concept{color functions}

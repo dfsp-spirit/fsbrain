@@ -45,9 +45,9 @@ group.morph.agg.standard.vertex(
 Aggregate vertex-wise values over subjects, leading to one aggregated measure per vertex.
 }
 \seealso{
-Other aggregation functions: 
-\code{\link{group.agg.atlas.native}()},
-\code{\link{group.agg.atlas.standard}()},
-\code{\link{subject.atlas.agg}()}
+Other aggregation functions:
+\code{\link[=group.agg.atlas.native]{group.agg.atlas.native()}},
+\code{\link[=group.agg.atlas.standard]{group.agg.atlas.standard()}},
+\code{\link[=subject.atlas.agg]{subject.atlas.agg()}}
 }
 \concept{aggregation functions}

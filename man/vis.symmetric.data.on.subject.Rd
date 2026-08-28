@@ -67,29 +67,29 @@ This function is intended to plot symmetric data around zero (like positive and 
 
 }
 \seealso{
-Other visualization functions: 
-\code{\link{highlight.vertices.on.subject}()},
-\code{\link{highlight.vertices.on.subject.spheres}()},
-\code{\link{vis.color.on.subject}()},
-\code{\link{vis.data.on.fsaverage}()},
-\code{\link{vis.data.on.subject}()},
-\code{\link{vis.labeldata.on.subject}()},
-\code{\link{vis.mask.on.subject}()},
-\code{\link{vis.region.values.on.subject}()},
-\code{\link{vis.rglwidget}()},
-\code{\link{vis.subject.annot}()},
-\code{\link{vis.subject.label}()},
-\code{\link{vis.subject.morph.native}()},
-\code{\link{vis.subject.morph.standard}()},
-\code{\link{vis.subject.pre}()},
-\code{\link{vis.volume.on.surface}()},
-\code{\link{vislayout.from.coloredmeshes}()}
+Other visualization functions:
+\code{\link[=highlight.vertices.on.subject]{highlight.vertices.on.subject()}},
+\code{\link[=highlight.vertices.on.subject.spheres]{highlight.vertices.on.subject.spheres()}},
+\code{\link[=vis.color.on.subject]{vis.color.on.subject()}},
+\code{\link[=vis.data.on.fsaverage]{vis.data.on.fsaverage()}},
+\code{\link[=vis.data.on.subject]{vis.data.on.subject()}},
+\code{\link[=vis.labeldata.on.subject]{vis.labeldata.on.subject()}},
+\code{\link[=vis.mask.on.subject]{vis.mask.on.subject()}},
+\code{\link[=vis.region.values.on.subject]{vis.region.values.on.subject()}},
+\code{\link[=vis.rglwidget]{vis.rglwidget()}},
+\code{\link[=vis.subject.annot]{vis.subject.annot()}},
+\code{\link[=vis.subject.label]{vis.subject.label()}},
+\code{\link[=vis.subject.morph.native]{vis.subject.morph.native()}},
+\code{\link[=vis.subject.morph.standard]{vis.subject.morph.standard()}},
+\code{\link[=vis.subject.pre]{vis.subject.pre()}},
+\code{\link[=vis.volume.on.surface]{vis.volume.on.surface()}},
+\code{\link[=vislayout.from.coloredmeshes]{vislayout.from.coloredmeshes()}}
 
-Other morphometry visualization functions: 
-\code{\link{vis.data.on.fsaverage}()},
-\code{\link{vis.data.on.subject}()},
-\code{\link{vis.subject.morph.native}()},
-\code{\link{vis.subject.morph.standard}()}
+Other morphometry visualization functions:
+\code{\link[=vis.data.on.fsaverage]{vis.data.on.fsaverage()}},
+\code{\link[=vis.data.on.subject]{vis.data.on.subject()}},
+\code{\link[=vis.subject.morph.native]{vis.subject.morph.native()}},
+\code{\link[=vis.subject.morph.standard]{vis.subject.morph.standard()}}
 }
 \concept{morphometry visualization functions}
 \concept{visualization functions}

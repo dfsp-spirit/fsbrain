@@ -21,12 +21,12 @@ Convert a \code{misc3d::contour3d(draw = FALSE)} result (an iso-surface mesh of 
 }
 \seealso{
 Other coloredmesh functions:
-\code{\link{coloredmesh.from.annot}()},
-\code{\link{coloredmesh.from.label}()},
-\code{\link{coloredmesh.from.mask}()},
-\code{\link{coloredmesh.from.morph.native}()},
-\code{\link{coloredmesh.from.morph.standard}()},
-\code{\link{coloredmesh.from.morphdata}()},
-\code{\link{coloredmeshes.from.color}()}
+\code{\link[=coloredmesh.from.annot]{coloredmesh.from.annot()}},
+\code{\link[=coloredmesh.from.label]{coloredmesh.from.label()}},
+\code{\link[=coloredmesh.from.mask]{coloredmesh.from.mask()}},
+\code{\link[=coloredmesh.from.morph.native]{coloredmesh.from.morph.native()}},
+\code{\link[=coloredmesh.from.morph.standard]{coloredmesh.from.morph.standard()}},
+\code{\link[=coloredmesh.from.morphdata]{coloredmesh.from.morphdata()}},
+\code{\link[=coloredmeshes.from.color]{coloredmeshes.from.color()}}
 }
 \concept{coloredmesh functions}
