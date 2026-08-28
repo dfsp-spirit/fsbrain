@@ -2,9 +2,9 @@
 
 <!-- badges: start -->
 [![DOI](https://zenodo.org/badge/209085379.svg)](https://zenodo.org/doi/10.5281/zenodo.3559816)
+[![unittests](https://github.com/dfsp-spirit/fsbrain/actions/workflows/R-CMD-check.yaml/badge.svg?branch=main)](https://github.com/dfsp-spirit/fsbrain/actions)
+[![docs](https://github.com/dfsp-spirit/fsbrain/actions/workflows/pkgdown.yaml/badge.svg?branch=main)](https://github.com/dfsp-spirit/fsbrain/actions)
 [![HiRSE Code Promo Badge](https://img.shields.io/badge/Promo-8db427?label=HiRSE&labelColor=005aa0&)](https://go.fzj.de/CodePromo)
-
-
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/dfsp-spirit/fsbrain?branch=master&svg=true)](https://ci.appveyor.com/project/dfsp-spirit/fsbrain) AppVeyor CI under Windows
 <!-- badges: end -->
 
@@ -95,19 +95,19 @@ We received reports that under Windows 10, you may need to install these two pac
 
 The documentation can be accessed from within an R session after you have loaded the *fsbrain* package:
 
-* There are several online R Markdown notebooks (like Jupyter Notebook in Python) that show various example plots in combination with the code used to produce them:
+* There are several **online R Markdown notebooks** (like Jupyter Notebook in Python) that show various example plots in combination with the code used to produce them:
   * [basic fsbrain example notebook](https://dfsp-spirit.github.io/fsbrain/notebooks/examples.html): Live visualization of subject data
   * [advanced fsbrain example notebook](https://dfsp-spirit.github.io/fsbrain/notebooks/examples_adv.html): Plotting group data
   * [export API fsbrain example notebook](https://dfsp-spirit.github.io/fsbrain/notebooks/examples_export.html): Exporting publication-ready plots
   * [fsbrain with the scimesh rendering backend](https://dfsp-spirit.github.io/fsbrain/notebooks/fsbrain_with_scimesh.html): Headless, GPU-free static image export
 
 
-* Detailed vignettes with explanations and examples for the functions of the package is included, run `browseVignettes("fsbrain")` to see the vignettes. You can also open the vignettes online — the GitHub Pages versions always reflect the latest development state (no new CRAN release required); the CRAN versions are updated on releases:
+* Detailed **R vignettes** with explanations and examples for the functions of the package is included, run `browseVignettes("fsbrain")` to see the vignettes. You can also open the vignettes online — the GitHub Pages versions always reflect the latest development state (no new CRAN release required); the CRAN versions are updated on releases:
   * How to load and visualize surface-based neuroimaging data: `vignette("fsbrain")` or: [read online](https://dfsp-spirit.github.io/fsbrain/articles/fsbrain.html) (also on [CRAN](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain.html))
   * How to load and visualize volume-based neuroimaging data: `vignette("fsbrain_vol")` or: [read online](https://dfsp-spirit.github.io/fsbrain/articles/fsbrain_vol.html) (also on [CRAN](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain_vol.html))
   * The fsbrain FAQ: `vignette("fsbrain_faq")` or: [read online](https://dfsp-spirit.github.io/fsbrain/articles/fsbrain_faq.html) (also on [CRAN](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain_faq.html))
   * How to use the scimesh rendering backend: `vignette("fsbrain_with_scimesh")` or: [read online](https://dfsp-spirit.github.io/fsbrain/articles/fsbrain_with_scimesh.html) (also on [CRAN](https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain_with_scimesh.html))
-
+* The **full API Documentation** is at [dfsp-spirit.github.io/fsbrain/reference/](https://dfsp-spirit.github.io/fsbrain/reference/index.html)
 * [Online Notebooks including demo workflows for fMRI result visualization](https://dfsp-spirit.github.io/fsbrain_fMRI_vis_workflows/).
 
 * Help for a specific function can be accessed in the usual R manner: `?<function>`, where you replace `<function>` with a function name. Like this: `?group.morph.native`.
