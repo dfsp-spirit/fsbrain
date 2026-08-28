@@ -69,7 +69,7 @@ jobs:
           # load with 'libGLU.so.1: cannot open shared object file'. The list
           # below matches INSTALL_FSBRAIN_FROM_SOURCE.md; libglpk40 is required
           # at runtime by the igraph R package (Suggests).
-          sudo apt-get install -y build-essential cmake libmagick++-dev libx11-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libfreetype6-dev libxml2-dev libssh-dev libcurl4-openssl-dev gfortran libblas-dev liblapack-dev libgfortran5 libglpk40
+          sudo apt-get install -y build-essential cmake libmagick++-dev libx11-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libfreetype6-dev libxml2-dev libssh-dev libcurl4-openssl-dev gfortran libblas-dev liblapack-dev libgfortran5 libglpk40 imagemagick
 
       - name: Install xquartz, imagemagick and ghostscript on macOS
         if: runner.os == 'macOS'
