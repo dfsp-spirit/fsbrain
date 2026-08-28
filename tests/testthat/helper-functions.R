@@ -228,20 +228,38 @@ skip_if_rgl_required <- function() {
 #'
 #' @description Some tests need a working interactive rgl window (a real
 #'   X11/OpenGL display) to open a scene and/or take a screenshot of it, e.g.
-#'   via \code{take.screenshot()} or the 'snapshot_png'/'movie' rglactions. On
-#'   recent macOS versions (Tahoe 26.x, Sonoma 14.x) the X11/OpenGL stack
-#'   (XQuartz) is broken, so no window can be opened and screenshots cannot be
-#'   produced (this surfaces as spurious CI failures like 'Postscript
-#'   conversion failed' / 'Failed to convert PDF to PNG'). Such tests are
-#'   therefore skipped on macOS. See README_HEADLESS.md for details.
+#'   via \code{take.screenshot()} or the 'snapshot_png'/'movie' rglactions.
+#'   Such a window is unavailable:
+#'   \itemize{
+#'     \item on recent macOS versions (Tahoe 26.x, Sonoma 14.x), where the
+#'       X11/OpenGL stack (XQuartz) is broken;
+#'     \item on headless systems (no X11 display / DISPLAY unset) and on CI
+#'       runners that run without a display server, where rgl falls back to its
+#'       headless 'useNULL' device.
+#'   }
+#'   Without a window the screenshots cannot be produced and the tests fail
+#'   spuriously with 'Postscript conversion failed' / 'Failed to convert PDF to
+#'   PNG' (rgl cannot render a valid PDF, so the ImageMagick fallback has
+#'   nothing to convert). Such tests are therefore skipped here. See
+#'   README_HEADLESS.md for details.
 #'
 #' This complements \code{\link{skip_if_rgl_required}}, which handles the
 #' scimesh backend; a test that needs a window should call both.
 #'
-#' @return invisible NULL; skips the test on macOS.
+#' @return invisible NULL; skips the test when no interactive rgl window can
+#'   be opened.
 skip_if_rgl_window_required <- function() {
+  if(fsbrain.tests.use.scimesh()) {
+    testthat::skip("This test requires the interactive rgl backend, but the scimesh backend is active.");
+  }
   if(tolower(Sys.info()[["sysname"]]) == 'darwin') {
     testthat::skip("This test requires an rgl window, which is unavailable on macOS (broken X11/OpenGL stack, see README_HEADLESS.md).");
+  }
+  if(!box.has.x11display()) {
+    testthat::skip("This test requires an interactive rgl window (a working X11 display), which is not available in this session (headless?).");
+  }
+  if(rgl::rgl.useNULL()) {
+    testthat::skip("This test requires an interactive rgl window, but rgl is running in headless (useNULL) mode.");
   }
   invisible(NULL);
 }
