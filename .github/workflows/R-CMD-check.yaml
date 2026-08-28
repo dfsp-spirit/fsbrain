@@ -61,10 +61,15 @@ jobs:
       - name: Install system dependencies
         if: runner.os == 'Linux'
         run: |
-          while read -r cmd
-          do
-            eval sudo $cmd
-          done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "24.04"))')
+          # Install the system libraries required to build and load the R
+          # package dependencies from source (rgl, magick, xml2, igraph, ...).
+          # We install them explicitly because the
+          # remotes::system_requirements() database for Ubuntu 24.04 (noble) is
+          # incomplete: it omits libglu1-mesa-dev, so rgl builds but fails to
+          # load with 'libGLU.so.1: cannot open shared object file'. The list
+          # below matches INSTALL_FSBRAIN_FROM_SOURCE.md; libglpk40 is required
+          # at runtime by the igraph R package (Suggests).
+          sudo apt-get install -y build-essential cmake libmagick++-dev libx11-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libfreetype6-dev libxml2-dev libssh-dev libcurl4-openssl-dev gfortran libblas-dev liblapack-dev libgfortran5 libglpk40
 
       - name: Install xquartz, imagemagick and ghostscript on macOS
         if: runner.os == 'macOS'
