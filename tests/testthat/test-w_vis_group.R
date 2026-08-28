@@ -2,6 +2,7 @@
 testthat::test_that("Visualizing a single image for a group of subjects works for native space morph data.", {
     testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
     testthat::skip_if_not(box.has.x11display(), "This test requires X11.");
+    skip_if_rgl_window_required();
     fsbrain::download_optional_data();
     testthat::skip_on_travis(); # Reduce test time on travis to prevent the build from being killed.
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -25,6 +26,7 @@ test_that("Visualizing a single image for a group of subjects works for standard
     testthat::skip_on_cran(); # skip: leads to memory errors ('cannot allocate vector of size XX MB') on CRAN.
     testthat::skip_on_travis(); # Reduce test time on travis to prevent the build from being killed.
     testthat::skip_if_not(box.has.x11display(), "This test requires X11.");
+    skip_if_rgl_window_required();
 
     fsbrain::download_optional_data();
     fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);

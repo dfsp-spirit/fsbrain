@@ -1,6 +1,7 @@
 
 
 test_that("A coloredmesh can be rendered using vis.coloredmeshes", {
+    skip_if_rgl_window_required();
 
     cm_hemilist = get.demo.coloredmeshes.hemilist();
 
@@ -19,6 +20,7 @@ test_that("A coloredmesh can be rendered using vis.coloredmeshes", {
 
 
 test_that("A coloredmesh can be rendered using vis.coloredmeshes.rotating", {
+    skip_if_rgl_window_required();
     cm_hemilist = get.demo.coloredmeshes.hemilist();
 
     vis.coloredmeshes.rotating(cm_hemilist, duration = 2L);

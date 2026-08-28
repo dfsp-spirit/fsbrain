@@ -9,6 +9,7 @@ test_that("We can visualize morphometry data in multiview.", {
     testthat::skip_on_travis(); # Reduce test time on travis to prevent the build from being killed.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires the full test data and X11.");
+    skip_if_rgl_window_required();
 
     fsbrain::download_optional_data();
 
@@ -63,6 +64,7 @@ test_that("We can visualize p values or other arbitrary data, one value per atla
     testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires the full test data and X11.");
+    skip_if_rgl_window_required();
     fsbrain::download_optional_data();
 
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -95,6 +97,7 @@ test_that("We can visualize data on fsaverage if available", {
     testthat::skip_on_cran(); # skip: leads to memory errors ('cannot allocate vector of size XX MB') on CRAN.
     testthat::skip_on_travis(); # Reduce test time on travis to prevent the build from being killed.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+    skip_if_rgl_window_required();
     fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 
@@ -117,6 +120,7 @@ test_that("We can visualize data on fsaverage if available", {
 test_that("We can visualize data on fsaverage3 if available", {
     testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+    skip_if_rgl_window_required();
     fsbrain::download_fsaverage3(accept_freesurfer_license = TRUE);
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
 
@@ -133,6 +137,7 @@ test_that("We can record a gif movie of a rotating brain.", {
     testthat::skip_on_travis(); # Reduce test time on travis to prevent the build from being killed.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(run.extralong.tests(), "This test takes ages.");
+    skip_if_rgl_window_required();
 
     fsbrain::download_optional_data();
 
@@ -175,6 +180,7 @@ test_that("A label can be visualized.", {
     testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.has.x11display(), "This test requires X11.");
+    skip_if_rgl_window_required();
 
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -194,6 +200,7 @@ test_that("A region from an atlas can be converted to a label and visualized.", 
     testthat::skip_on_travis(); # Reduce test time on travis to prevent the build from being killed.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires the full test data and X11.");
+    skip_if_rgl_window_required();
     subjects_dir = testdatapath.subjectsdir.full.subject1();
 
     fsbrain::download_optional_data();
@@ -233,6 +240,7 @@ test_that("We can visualize label data or arbitrary sets of vertices.", {
     testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires the full test data and X11.");
+    skip_if_rgl_window_required();
     subjects_dir = testdatapath.subjectsdir.full.subject1();
 
     fsbrain::download_optional_data();
@@ -262,6 +270,7 @@ test_that("We can combine an output view with a separate colormap.", {
     testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(run.extralong.tests(), "This test requires the full test data and X11, and takes ages.");
+    skip_if_rgl_window_required();
     subjects_dir = testdatapath.subjectsdir.full.subject1();
 
     fsbrain::download_optional_data();
@@ -352,6 +361,7 @@ test_that("We can construct a tight layout image by merging several sd views.", 
     testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires X11 and imagemagick.");
+    skip_if_rgl_window_required();
 
     fsbrain::download_optional_data();
 
@@ -399,6 +409,7 @@ test_that("We can export a PNG with background transparency from a tight layout 
     testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
     testthat::skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     testthat::skip_if_not(box.can.run.all.tests(), "This test requires X11 and imagemagick.");
+    skip_if_rgl_window_required();
 
     fsbrain::download_optional_data();
     fsbrain::download_fsaverage(accept_freesurfer_license = TRUE)

@@ -11,6 +11,7 @@ context("vis.volume.on.surface — combined surface + volume 3D rendering")
 test_that("Brain volume contour can be overlaid on a thickness-colored surface", {
     testthat::skip_on_cran();
     skip_if_rgl_required();
+    skip_if_rgl_window_required();
     skip_if(tests_running_on_cran_under_macos(),
         message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.has.x11display(),
@@ -57,6 +58,7 @@ test_that("Brain volume contour can be overlaid on a thickness-colored surface",
 test_that("Brain volume contour can be overlaid on both hemispheres", {
     testthat::skip_on_cran();
     skip_if_rgl_required();
+    skip_if_rgl_window_required();
     skip_if(tests_running_on_cran_under_macos(),
         message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.has.x11display(),
@@ -98,6 +100,7 @@ test_that("Brain volume contour can be overlaid on both hemispheres", {
 test_that("Brain volume contour over sulc-colored pial surface", {
     testthat::skip_on_cran();
     skip_if_rgl_required();
+    skip_if_rgl_window_required();
     skip_if(tests_running_on_cran_under_macos(),
         message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.has.x11display(),
@@ -136,6 +139,7 @@ test_that("Brain volume contour over sulc-colored pial surface", {
 test_that("Brain volume voxels can be overlaid on a surface", {
     testthat::skip_on_cran();
     skip_if_rgl_required();
+    skip_if_rgl_window_required();
     skip_if(tests_running_on_cran_under_macos(),
         message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.has.x11display(),
@@ -204,6 +208,7 @@ test_that("Non-3D volume input is rejected", {
 test_that("Volume contour overlaid on both hemispheres in t4 layout", {
     testthat::skip_on_cran();
     skip_if_rgl_required();
+    skip_if_rgl_window_required();
     skip_if(tests_running_on_cran_under_macos(),
         message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.has.x11display(),

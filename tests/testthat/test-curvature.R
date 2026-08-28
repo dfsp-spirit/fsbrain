@@ -2,6 +2,7 @@
 
 test_that("Shape descriptors can be computed", {
     testthat::skip_on_cran();
+    skip_if_rgl_window_required();
 
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -30,6 +31,7 @@ test_that("Shape descriptors can be computed", {
 
 test_that("Principal curvatures can be computed", {
     testthat::skip_on_cran();
+    skip_if_rgl_window_required();
 
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");

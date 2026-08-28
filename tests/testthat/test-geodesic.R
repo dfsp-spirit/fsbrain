@@ -2,6 +2,7 @@
 test_that("The geodesic neighborhood of a vertex can be computed", {
     testthat::skip_on_cran();
     skip_if_rgl_required();
+    skip_if_rgl_window_required();
 
     fsbrain::download_optional_data();
     fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
@@ -22,6 +23,7 @@ test_that("The geodesic neighborhood of a vertex can be computed", {
 test_that("The geodesic color overlay for several vertices over a full brain can be computed", {
     testthat::skip_on_cran();
     skip_if_rgl_required();
+    skip_if_rgl_window_required();
 
     fsbrain::download_optional_data();
     fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
@@ -45,6 +47,7 @@ test_that("The geodesic color overlay for several vertices over a full brain can
 test_that("The geodesic per-vertex distance data for several vertices over a full brain can be computed", {
     testthat::skip_on_cran();
     skip_if_rgl_required();
+    skip_if_rgl_window_required();
 
     fsbrain::download_optional_data();
     fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
@@ -68,6 +71,7 @@ test_that("The geodesic per-vertex distance data for several vertices over a ful
 test_that("We can render publication-ready vertex highlight figures with geodesic per-vertex distance morph data.", {
     testthat::skip_on_cran();
     testthat::skip_if_not(box.has.x11display(), "This test requires an X11 display.");
+    skip_if_rgl_window_required();
 
     fsbrain::download_optional_data();
     fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);

@@ -2,6 +2,7 @@
 test_that("Hemis can be shifted apart using rglactions for non-overlapping rendering.", {
     testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
     skip_if_rgl_required();
+    skip_if_rgl_window_required();
 
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -15,6 +16,7 @@ test_that("Hemis can be shifted apart using rglactions for non-overlapping rende
 
 test_that("Points can be highlighted with 3D spheres.", {
     testthat::skip_on_cran();
+    skip_if_rgl_window_required();
 
     fsbrain::download_optional_data();
     fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);

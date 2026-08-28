@@ -38,6 +38,7 @@ test_that("Brain volume CRS voxels are rendered at the correct surface space RAS
     # In order for this to work, the volume has to be a FreeSurfer conformed volume.
 
     skip_if_not(box.can.run.all.tests(), "This test requires X11.");
+    skip_if_rgl_window_required();
 
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");

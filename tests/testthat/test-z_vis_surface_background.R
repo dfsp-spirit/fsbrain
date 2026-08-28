@@ -5,6 +5,7 @@ test_that("A mean curvature color layer can be loaded", {
     testthat::skip_on_cran();
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires the full test data and X11.");
+    skip_if_rgl_window_required();
     subjects_dir = testdatapath.subjectsdir.full.subject1();
 
     subject_id = "subject1";
@@ -81,6 +82,7 @@ test_that("An outline layer based on an annotation can be created", {
     testthat::skip_on_cran();
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires the full test data and X11.");
+    skip_if_rgl_window_required();
     subjects_dir = testdatapath.subjectsdir.full.subject1();
 
     fsbrain::download_optional_data();
@@ -106,6 +108,7 @@ test_that("We can visualize meshes using vis.fs.surface as expected.", {
     testthat::skip_on_cran();
     testthat::skip_on_travis(); # Reduce test time on travis to prevent the build from being killed.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+    skip_if_rgl_window_required();
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     subject_id = 'subject1';

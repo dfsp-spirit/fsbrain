@@ -3,6 +3,7 @@
 test_that("We can highlight vertices using 3D spheres using a single surface.", {
     testthat::skip_on_cran();
     skip_if_rgl_required();
+    skip_if_rgl_window_required();
 
     fsbrain::download_optional_data();
     fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
@@ -28,6 +29,7 @@ test_that("We can highlight vertices using geodesic single-color patches and 3D 
 
     testthat::skip_on_cran();
     skip_if_rgl_required();
+    skip_if_rgl_window_required();
 
     fsbrain::download_optional_data();
     fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
@@ -56,6 +58,7 @@ test_that("We can highlight vertices using geodesic distance morphdata patches."
 
     testthat::skip_on_cran();
     skip_if_rgl_required();
+    skip_if_rgl_window_required();
 
     fsbrain::download_optional_data();
     fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
@@ -79,6 +82,7 @@ test_that("We can highlight vertices using the high-level function for spheres a
 
     testthat::skip_on_cran();
     skip_if_rgl_required();
+    skip_if_rgl_window_required();
 
     fsbrain::download_optional_data();
     fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);
@@ -96,6 +100,7 @@ test_that("We can highlight directly adjacent vertices using the high-level func
 
     testthat::skip_on_cran();
     skip_if_rgl_required();
+    skip_if_rgl_window_required();
 
     fsbrain::download_optional_data();
     fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);

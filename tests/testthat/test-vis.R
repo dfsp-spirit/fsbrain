@@ -5,6 +5,7 @@ test_that("We can visualize morphometry data from different views.", {
     testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires X11.");
+    skip_if_rgl_window_required();
 
     fsbrain::download_optional_data();
     fsbrain::download_optional_paper_data();
@@ -39,6 +40,7 @@ test_that("We can visualize annotation atlas data.", {
     testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires X11.");
+    skip_if_rgl_window_required();
 
     fsbrain::download_optional_data();
 
@@ -56,6 +58,7 @@ test_that("We can visualize arbitrary data on a subjects surface.", {
     testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires X11.");
+    skip_if_rgl_window_required();
 
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -77,6 +80,7 @@ test_that("We can visualize arbitrary data on the fsaverage surfaces if availabl
     testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires X11.");
+    skip_if_rgl_window_required();
 
     subjects_dir_query = find.subjectsdir.of(subject_id='fsaverage', mustWork = FALSE);
     if(subjects_dir_query$found) {
@@ -101,6 +105,7 @@ test_that("We can visualize one value per atlas region on a subject.", {
     testthat::skip_on_cran();
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires X11.");
+    skip_if_rgl_window_required();
 
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -131,6 +136,7 @@ test_that("We can visualize one value per Desikan atlas region on fsaverage.", {
     testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires X11.");
+    skip_if_rgl_window_required();
 
     subjects_dir = find.subjectsdir.of("fsaverage")$found_at;
     subject_id = 'fsaverage';                                   # You could visualize on any other subject, of course.
@@ -166,6 +172,7 @@ test_that("We can visualize a subset of the regions of the Desikan atlas on fsav
     testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.has.fsaverage(), "This test requires fsaverage.");
+    skip_if_rgl_window_required();
 
     subjects_dir = find.subjectsdir.of("fsaverage")$found_at;
     subject_id = 'fsaverage';                                   # You could visualize on any other subject, of course.
@@ -199,6 +206,7 @@ test_that("We can visualize clusters on fsaverage with a background.", {
     testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.has.freesurfer() & box.has.fsaverage(), "This test requires the full fsaverage subject with curv data.");
+    skip_if_rgl_window_required();
 
     subjects_dir = file.path(find.freesurferhome()$found_at, 'subjects');
     subject_id = 'fsaverage';
@@ -218,6 +226,7 @@ test_that("We can visualize clusters on fsaverage with a background and use a ra
     testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.has.freesurfer() & box.has.fsaverage(), "This test requires the full fsaverage subject with curv data.");
+    skip_if_rgl_window_required();
 
     subjects_dir = file.path(find.freesurferhome()$found_at, 'subjects');
     subject_id = 'fsaverage';
@@ -237,6 +246,7 @@ test_that("We can visualize clusters on fsaverage with a background and use a ra
     testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.has.freesurfer() & box.has.fsaverage(), "This test requires the full fsaverage subject with curv data.");
+    skip_if_rgl_window_required();
 
     subjects_dir = file.path(find.freesurferhome()$found_at, 'subjects');
     subject_id = 'fsaverage';
@@ -257,6 +267,7 @@ test_that("We can visualize arbitrary data on a subjects surface using a single 
     testthat::skip_on_cran();
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires X11.");
+    skip_if_rgl_window_required();
 
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -300,6 +311,7 @@ test_that("We can retrieve vertex counts for a subject.", {
 test_that("We can visualize meshes using vis.fs.surface as expected.", {
     testthat::skip_on_cran(); # CRAN maintainers asked me to reduce test time on CRAN by disabling unit tests.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+    skip_if_rgl_window_required();
 
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");

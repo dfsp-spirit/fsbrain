@@ -3,6 +3,7 @@ test_that("A brain volume can be turned into an animation", {
     testthat::skip_on_travis(); # Reduce test time on travis to prevent the build from being killed.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(run.extralong.tests(), "This test requires the full test data and X11, and takes ages.");
+    skip_if_rgl_window_required();
 
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -125,6 +126,7 @@ test_that("A brain volume and an overlay can be merged", {
     testthat::skip_on_travis(); # Reduce test time on travis to prevent the build from being killed.
     testthat::skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     testthat::skip_if_not(box.can.run.all.tests(), "This test requires X11 and the 'magick' package (ImageMagick for R).");
+    skip_if_rgl_window_required();
 
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
@@ -213,6 +215,7 @@ test_that("A brain volume can be visualized as a lightbox colored from the aseg"
     testthat::skip_on_travis(); # Reduce test time on travis to prevent the build from being killed.
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.can.run.all.tests(), "This test requires X11, the 'magick' package (ImageMagick for R), and extra data.");
+    skip_if_rgl_window_required();
 
     fsbrain::download_optional_data();
     fsbrain::download_fsaverage(accept_freesurfer_license = TRUE);

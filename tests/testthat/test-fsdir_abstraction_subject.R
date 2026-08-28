@@ -214,6 +214,7 @@ test_that("We can compute the medial mask for a subject", {
 test_that("We can compute the lobes for a subject based on the aparc atlas", {
     testthat::skip_on_cran();
     skip_if(tests_running_on_cran_under_macos(), message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
+    skip_if_rgl_window_required();
     fsbrain::download_optional_data();
 
     # Define the data to use:

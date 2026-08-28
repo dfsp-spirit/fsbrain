@@ -224,6 +224,29 @@ skip_if_rgl_required <- function() {
 }
 
 
+#' @title Skip the current test if it requires an interactive rgl window.
+#'
+#' @description Some tests need a working interactive rgl window (a real
+#'   X11/OpenGL display) to open a scene and/or take a screenshot of it, e.g.
+#'   via \code{take.screenshot()} or the 'snapshot_png'/'movie' rglactions. On
+#'   recent macOS versions (Tahoe 26.x, Sonoma 14.x) the X11/OpenGL stack
+#'   (XQuartz) is broken, so no window can be opened and screenshots cannot be
+#'   produced (this surfaces as spurious CI failures like 'Postscript
+#'   conversion failed' / 'Failed to convert PDF to PNG'). Such tests are
+#'   therefore skipped on macOS. See README_HEADLESS.md for details.
+#'
+#' This complements \code{\link{skip_if_rgl_required}}, which handles the
+#' scimesh backend; a test that needs a window should call both.
+#'
+#' @return invisible NULL; skips the test on macOS.
+skip_if_rgl_window_required <- function() {
+  if(tolower(Sys.info()[["sysname"]]) == 'darwin') {
+    testthat::skip("This test requires an rgl window, which is unavailable on macOS (broken X11/OpenGL stack, see README_HEADLESS.md).");
+  }
+  invisible(NULL);
+}
+
+
 #' @title Render demo coloredmeshes to a PNG (backend-aware) for smoke testing.
 #'
 #' @description Renders the given coloredmeshes from the two medial views
