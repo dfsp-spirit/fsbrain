@@ -192,17 +192,17 @@ render.export(7L, "sulc_transparent_bg", cm_sulc, view_angles = c("sd_medial_lh"
 # ---------------------------------------------------------------------------
 cat("\n=== Part 2: region-based and vertex-based results ===\n");
 
-# 08 -- one value per atlas region (Desikan / aparc), dummy data
+# 08 -- one value per atlas region (Desikan / aparc), simulated data
 cat("08 region_values_aparc...\n");
 atlas <- 'aparc';
 lh_region_value_list <- list("bankssts"=0.9, "precuneus"=0.7, "postcentral"=0.8, "lingual"=0.6);
 atlas_region_names <- get.atlas.region.names(atlas, template_subjects_dir = sjd, template_subject = sj);
-set.seed(42);   # fixed seed: the dummy RH region values are random (rnorm), so seed them
+set.seed(42);   # fixed seed: the simulated RH region values are random (rnorm), so seed them
                 # to make the image reproducible across backend runs / re-runs
 rh_region_value_list <- rnorm(length(atlas_region_names), 0.8, 0.2);
 names(rh_region_value_list) <- atlas_region_names;
 cm <- vis.region.values.on.subject(sjd, sj, atlas, lh_region_value_list, rh_region_value_list, views=NULL);
-render.export(8L, "region_values_aparc", cm, colorbar_legend = 'Effect size (dummy data)');
+render.export(8L, "region_values_aparc", cm, colorbar_legend = 'Effect size (simulated data)');
 
 # 09 -- symmetric data (t-values) on fsaverage with curvature background
 cat("09 symmetric_clusters...\n");
@@ -213,7 +213,7 @@ rh_demo_cluster_file <- system.file("extdata", "rh.clusters_fsaverage.mgz", pack
 lh_clust <- freesurferformats::read.fs.morph(lh_demo_cluster_file);
 rh_clust <- freesurferformats::read.fs.morph(rh_demo_cluster_file);
 cm <- vis.symmetric.data.on.subject(subjects_dir, subject_id, lh_clust, rh_clust, bg="curv_light", views=NULL);
-render.export(9L, "symmetric_clusters", cm, colorbar_legend = 't-value (dummy data)');
+render.export(9L, "symmetric_clusters", cm, colorbar_legend = 't-value (simulated data)');
 
 # ---------------------------------------------------------------------------
 # Part 3: a workflow with manually loaded meshes and data

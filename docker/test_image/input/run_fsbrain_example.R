@@ -93,14 +93,14 @@ render(7, "sulc_transparent", cm, view_angles = c("sd_medial_lh", "sd_medial_rh"
 # --- Part 2: Region-based and vertex-based results -----------------------------
 cat("\n[Part 2] Region-based and vertex-based results\n");
 
-cat("  region-based: dummy values on the Desikan atlas (subject1)\n");
+cat("  region-based: simulated values on the Desikan atlas (subject1)\n");
 atlas <- 'aparc';   # Desikan atlas
 lh_region_value_list <- list("bankssts" = 0.9, "precuneus" = 0.7, "postcentral" = 0.8, "lingual" = 0.6);
 atlas_region_names <- get.atlas.region.names(atlas, template_subjects_dir = sjd, template_subject = sj);
 rh_region_value_list <- rnorm(length(atlas_region_names), 0.8, 0.2);
 names(rh_region_value_list) <- atlas_region_names;
 cm <- vis.region.values.on.subject(sjd, sj, atlas, lh_region_value_list, rh_region_value_list, views = NULL);
-render(8, "region_values", cm, colorbar_legend = 'Effect size (dummy data)');
+render(8, "region_values", cm, colorbar_legend = 'Effect size (simulated data)');
 
 cat("  vertex-based: demo clusters on fsaverage with symmetric colormap\n");
 subjects_dir <- get_optional_data_filepath("subjects_dir");
@@ -110,7 +110,7 @@ rh_demo_cluster_file <- system.file("extdata", "rh.clusters_fsaverage.mgz", pack
 lh_clust <- freesurferformats::read.fs.morph(lh_demo_cluster_file);   # a single positive cluster (activation), the other values are 0
 rh_clust <- freesurferformats::read.fs.morph(rh_demo_cluster_file);   # two negative clusters
 cm <- vis.symmetric.data.on.subject(subjects_dir, subject_id, lh_clust, rh_clust, bg = "curv_light", views = NULL);
-render(9, "vertex_clusters", cm, colorbar_legend = 't-value (dummy data)');
+render(9, "vertex_clusters", cm, colorbar_legend = 't-value (simulated data)');
 
 # --- Part 3: A workflow with manually loaded meshes and data -------------------
 cat("\n[Part 3] Manually loaded meshes and data\n");
