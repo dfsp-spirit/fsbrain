@@ -5,7 +5,7 @@
 [![unittests](https://github.com/dfsp-spirit/fsbrain/actions/workflows/R-CMD-check.yaml/badge.svg?branch=main)](https://github.com/dfsp-spirit/fsbrain/actions)
 [![docs](https://github.com/dfsp-spirit/fsbrain/actions/workflows/pkgdown.yaml/badge.svg?branch=main)](https://github.com/dfsp-spirit/fsbrain/actions)
 [![HiRSE Code Promo Badge](https://img.shields.io/badge/Promo-8db427?label=HiRSE&labelColor=005aa0&)](https://go.fzj.de/CodePromo)
-[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/dfsp-spirit/fsbrain?branch=master&svg=true)](https://ci.appveyor.com/project/dfsp-spirit/fsbrain) AppVeyor CI under Windows
+[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/dfsp-spirit/fsbrain?branch=master&svg=true)](https://ci.appveyor.com/project/dfsp-spirit/fsbrain)
 <!-- badges: end -->
 
 
