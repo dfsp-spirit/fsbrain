@@ -7,15 +7,28 @@ The fsbrain package is a GNU R library for structural neuroimaging. It provides 
 
 ## Using the fsbrain Docker images
 
+### Rendering backends: headless (scimesh) by default, rgl still available
+
+The 0.7.0 image renders static images with the **scimesh** software renderer by default: it is fully headless (CPU-only, no X11 server, OpenGL, or GPU required), so you can run it on servers, HPC nodes, and CI runners and get publication-ready images via `export()` without any display.
+
+Long-time users do **not** need to change their workflow: the image still contains **rgl** and **Xvfb**, so the traditional pre-0.7.0 way of rendering keeps working unchanged. To opt out of scimesh and use rgl again, just run R under a virtual display and switch the backend:
+
+```
+xvfb-run -a R
+options(fsbrain.renderer_backend = "rgl")
+```
+
+Note that truly *interactive* 3D viewers (rotating a mesh in a window) still need a real display or X11 forwarding into the container, so they are not really supported here; the intended workflow is static image export.
+
 ### Minimal Example
 
 * Make sure that you have [Docker installed](https://docs.docker.com/get-docker/) on the machine on which you want to run fsbrain via Docker
 * Pull the image and make sure to specify the fsbrain version you want. E.g., for fsbrain 0.7.0: `sudo docker pull dfspspirit/fsbrain:0.7.0`
-* You can now run an interactive R session inside the container, e.g.: `sudo docker run -it dfspspirit/fsbrain:0.7.0`
+* You can now run an interactive R session inside the container, e.g.: `sudo docker run --rm -it dfspspirit/fsbrain:0.7.0`
 
 In that R session, you can now load fsbrain: `library("fsbrain");`
 
-That's great, but you are inside the container, and *cannot access the host filesystem* of your computer! Read on to learn how to access it, because you will most likely need it to get your data and R scripts, and of course to learn how to also *save your results* to the host computer in the end. (Simply type `q()` in R to exit the interactive R session and destroy the container. Afterwards you are back on your host.).
+That's great, but you are inside the container, and *cannot access the host filesystem* of your computer! Read on to learn how to access it, because you will most likely need it to get your data and R scripts, and of course to learn how to also *save your results* to the host computer in the end. (Simply type `q()` in R to exit the interactive R session; with `--rm` the container is removed automatically afterwards, and you are back on your host.).
 
 
 ### Making your data available inside the container and keeping results
@@ -26,26 +39,24 @@ Typically you will want to mount some part of the host filesystem (e.g., your in
 
 ```
 mkdir ~/fsbrain_docker_results
-sudo docker run -v ~/fsbrain_docker_results:/home/output -v ~/data/study1:/home/input:ro -it dfspspirit/fsbrain:0.7.0
+sudo docker run --rm -v ~/fsbrain_docker_results:/home/output -v ~/data/study1:/home/input:ro -it dfspspirit/fsbrain:0.7.0
 ```
-Now you are in an R session inside the container, and your data from the host system is available under `/home/input/`. You must write any results you want to keep after the container is destroyed to  `/home/output/`.
+Now you are in an R session inside the container, and your data from the host system is available under `/home/input/`. You must write any results you want to keep after the container is destroyed to `/home/output/`.
 
-### Using a single input/output directory instead
-
-The approach above has the advantage that you cannot accidentally overwrite or change your input data because it is mounted read-only in the container. If having separate directories for the input and output seems unintuitive or you want to change the input data, you can simply mount a single directory in read-write mode:
+If you prefer a single read-write directory instead of separate input/output folders (e.g. because you want to modify the input data), you can simply mount just one directory:
 
 ```
-sudo docker run -v ~/data/study1:/home/input -it dfspspirit/fsbrain:0.7.0
+sudo docker run --rm -v ~/data/study1:/home/input -it dfspspirit/fsbrain:0.7.0
 ```
 
-Now you are in an R session inside the container, and your data from the host system is available under `/home/input/`. You must write any results you want to keep after the container is destroyed to the input directory.
+**Note:** the container runs as root, so files it writes to `/home/output` are owned by root on your host. Clean up with e.g. `sudo chown -R "$USER" ~/fsbrain_docker_results`.
 
 ### Running a shell (or something else) instead of R in the container
 
-If you have data analysis and visualization scripts ready and prefer to run the from a shell instead of being dropped in an interactive R session, you can of course specify a custom command to run when the container is started. Here we start an interactive bash session instead of R:
+If you have data analysis and visualization scripts ready and prefer to run them from a shell instead of being dropped in an interactive R session, you can of course specify a custom command to run when the container is started. Here we start an interactive bash session instead of R:
 
 ```
-sudo docker run -v ~/data/study1:/home/input -it dfspspirit/fsbrain:0.7.0 /bin/bash
+sudo docker run --rm -v ~/data/study1:/home/input -it dfspspirit/fsbrain:0.7.0 /bin/bash
 ```
 
 

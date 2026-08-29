@@ -70,6 +70,13 @@ install.packages("fsbrain", dependencies=TRUE);
 If you are using a platform that defaults to building fsbrain from source, like Linux, and you are getting errors during installation about missing system dependencies, do not worry: just read [INSTALL_FSBRAIN_FROM_SOURCE.md](./INSTALL_FSBRAIN_FROM_SOURCE.md) for instructions.
 
 
+### Docker
+
+There are Docker images for fsbrain available on Dockerhub, see the [fsbrain Dockerhub repo](https://hub.docker.com/r/dfspspirit/fsbrain).
+
+If you want the Dockerfiles, see [docker/](./docker/) in this repo.
+
+
 ### Headless / no-display rendering: the scimesh backend
 
 If you work headless (HPC clusters, servers, CI runners, containers) or on recent macOS where XQuartz is broken, fsbrain's default rgl backend cannot open windows. Switch to the [scimesh](https://CRAN.R-project.org/package=scimesh) software renderer — a headless, GPU-free C++ renderer that produces identical static images without X11, OpenGL, or a GPU:
@@ -85,9 +92,13 @@ Static image export (`vislayout.from.coloredmeshes()` and `export()`) now render
 * **Why / when to use it, and alternatives**: see [README_HEADLESS.md](./README_HEADLESS.md), a decision guide for headless environments and broken-X11 macOS.
 
 
-#### Windows Installation Hints
+#### Optional interactive/Shiny features
 
-We received reports that under Windows 10, you may need to install these two packages manually via the `install.packages` command: `shiny` and `manipulateWidget`.
+Interactive manipulation of rgl widgets and hosting them in Shiny apps (e.g. using `vis.rglwidget()` inside a Shiny app) require two extra packages that are only *suggested* by rgl and are therefore not installed automatically together with fsbrain:
+
+```r
+install.packages(c("shiny", "manipulateWidget"))
+```
 
 
 
