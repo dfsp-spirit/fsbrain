@@ -17,9 +17,14 @@ An R package for structural neuroimaging. Provides high-level functions to acces
 **Fig.1**: *Visualization of sulcal depth for a subject in FreeSurfer standard space (fsaverage). See the [source code to reproduce this image](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples_export.html) in an R notebook.*
 
 
-![Fig2](https://github.com/dfsp-spirit/fsbrain_gallery/blob/master/surface/fsbrain_clusters_cbar_web.jpg?raw=true "Statistical results visualization, created with fsbrain")
+![Fig2](https://github.com/dfsp-spirit/fsbrain_gallery/blob/master/surface/fsbrain_clusters_cbar_web.jpg?raw=true "Statistical vertex-wise results visualization, created with fsbrain")
 
-**Fig.2**: *Visualization of statistical results (clusters) in FreeSurfer standard space (fsaverage) with a diverging colormap. See the [source code to reproduce this image](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples_export.html) in an R notebook.*
+**Fig.2**: *Visualization of statistical vertex-wise results (clusters) in FreeSurfer standard space (fsaverage) with a diverging colormap. See the [source code to reproduce this image](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples_export.html) in an R notebook.*
+
+
+![Fig3](https://github.com/dfsp-spirit/fsbrain_gallery/blob/master/surface/fsbrain_vis_regions.jpg?raw=true "Statistical per atlas region results visualization, created with fsbrain")
+
+**Fig.3**: *Visualization of statistical results per brain atlas region in FreeSurfer standard space (fsaverage) This uses the aparc atlas, but you can use any atlas. See the [source code to reproduce this image](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples_export.html) in an R notebook.*
 
 [About](#about) | [Installation](#installation) | [Documentation](#documentation) | [Unit tests](#unit-tests-and-continuous-integration) | [License](#license) | [Citation](#citation) | [Visualization examples](#visualization-examples) | [Contributing](#contributing)
 
