@@ -32,6 +32,7 @@ The plots produced by *fsbrain* can be integrated into R notebooks or written to
 
 
 ## News
+* 2026-08-23: New fsbrain version 0.7.0 released on CRAN, see the [CHANGES](./CHANGES). With [scimesh](https://github.com/dfsp-spirit/scimesh) support.
 * 2026-08-23: New documentation for the scimesh rendering backend: a new vignette (`vignette("fsbrain_with_scimesh")`) and an [online notebook with pre-rendered figures](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/fsbrain_with_scimesh.html) that show how to configure fsbrain for headless, GPU-free static image export and how to use the `export()` API, including region- and vertex-based results and a workflow with manually loaded meshes.
 * 2026-07-14: New alternative rendering backend via [scimesh](https://CRAN.R-project.org/package=scimesh). Switchable with `options(fsbrain.renderer_backend = "scimesh")`. Enables publication-quality static images without X11/OpenGL/GPU — great for macOS Tahoe/Sonoma, HPC clusters, and headless servers.
 * 2026-08-20: We have some new online documentation: example notebooks demonstrating 2 typical workflows of fMRI result visualization with fsbrain. [View them online here](https://dfsp-spirit.github.io/fsbrain_fMRI_vis_workflows/).
