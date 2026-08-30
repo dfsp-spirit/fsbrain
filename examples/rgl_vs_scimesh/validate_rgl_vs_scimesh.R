@@ -235,6 +235,26 @@ cm_rh <- coloredmesh.from.preloaded.data(rh_surf, morph_data = rh_thick, hemi = 
 render.export(10L, "manual_preloaded", list("lh" = cm_lh, "rh" = cm_rh), colorbar_legend = 'Cortical thickness [mm]');
 
 # ---------------------------------------------------------------------------
+# Part 4: one value per atlas region, on the fsaverage template
+# ---------------------------------------------------------------------------
+cat("\n=== Part 4: region values on the fsaverage template ===\n");
+
+# 11 -- like 08 (one value per aparc region), but rendered on the fsaverage
+# template subject instead of native space, and with a random value in [0,1]
+# for EVERY atlas region (both hemis), so no region is left at NA/0.
+cat("11 region_values_aparc_fsaverage...\n");
+atlas <- 'aparc';
+atlas_region_names <- get.atlas.region.names(atlas, template_subjects_dir = sjd, template_subject = 'fsaverage');
+set.seed(43);   # fixed seed: the simulated region values are random (runif), so seed them
+                # to make the image reproducible across backend runs / re-runs
+lh_region_value_list <- runif(length(atlas_region_names), 0, 1);
+names(lh_region_value_list) <- atlas_region_names;
+rh_region_value_list <- runif(length(atlas_region_names), 0, 1);
+names(rh_region_value_list) <- atlas_region_names;
+cm <- vis.region.values.on.subject(sjd, 'fsaverage', atlas, lh_region_value_list, rh_region_value_list, views=NULL);
+render.export(11L, "region_values_aparc_fsaverage", cm, colorbar_legend = 'Simulated effect size');
+
+# ---------------------------------------------------------------------------
 # Optional: build side-by-side montages
 # ---------------------------------------------------------------------------
 if(do_montage) {
