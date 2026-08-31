@@ -10,7 +10,7 @@ Authors@R: c(person("Tim", "Schäfer", role = c("aut", "cre"), email = "ts+code@
     person("Lingzhong", "Fan", role = "cph", comment = "Copyright holder of the AAL3 atlas that can OPTIONALLY be downloaded via fsbrain functions."),
     person("Edmund T.", "Rolls", role = "cph", comment = "Copyright holder of the HCP-MMP1 atlas that can OPTIONALLY be downloaded via fsbrain functions."),
     person("Matthew F.", "Glasser", role = "cph", comment = "Copyright holder of the HCP-MMP1 atlas that can OPTIONALLY be downloaded via fsbrain functions."),
-    person("Kathryn", "Mills", role = "cph", comment = "Provided the conversion of the HCP-MMP1 atlas to fsaverage space that can OPTIONALLY be downloaded via fsbrain functions."),)
+    person("Kathryn", "Mills", role = "cph", comment = "Provided the conversion of the HCP-MMP1 atlas to fsaverage space that can OPTIONALLY be downloaded via fsbrain functions."))
 Maintainer: Tim Schäfer <ts+code@rcmd.org>
 Description: Provides high-level access to neuroimaging data from standard software packages like 'FreeSurfer' <https://freesurfer.net/> on the level of subjects and groups. Load morphometry data, surfaces and brain parcellations based on atlases. Mask data using labels, load data for specific atlas regions only, and visualize data and statistical results directly in 'R'.
 License: MIT + file LICENSE
