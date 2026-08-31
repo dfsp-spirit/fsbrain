@@ -1,0 +1,14 @@
+{
+  "atlas": "aal3",
+  "origin_space": "atlas_fs_LR_32",
+  "title": "Automated Anatomical Labelling atlas 3 (AAL3), on conte69/fs_LR 32k mesh",
+  "authors": "Edmund T. Rolls et al.",
+  "source_url": "https://osf.io/rcjqk/download",
+  "license": {
+    "name": "freely available for academic/research use",
+    "url": "https://www.gin.cnrs.fr/en/tools/aal/"
+  },
+  "acquired_at": "2026-08-29",
+  "citation": "Rolls ET, Huang CC, Lin CP, Feng J, Joliot M. Automated anatomical labelling atlas 3. NeuroImage 2020;206:116189.",
+  "dois": ["10.1016/j.neuroimage.2019.116189"]
+}

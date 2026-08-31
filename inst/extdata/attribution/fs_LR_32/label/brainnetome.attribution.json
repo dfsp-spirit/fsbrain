@@ -1,0 +1,14 @@
+{
+  "atlas": "brainnetome",
+  "origin_space": "atlas_fs_LR_32",
+  "title": "Human Brainnetome Atlas, on conte69/fs_LR 32k mesh",
+  "authors": "Lingzhong Fan et al. (Brainnetome Center, Institute of Automation, CAS)",
+  "source_url": "https://osf.io/5nr4x/download",
+  "license": {
+    "name": "free for academic/research use",
+    "url": "https://atlas.brainnetome.org"
+  },
+  "acquired_at": "2026-08-29",
+  "citation": "Fan L, et al. The Human Brainnetome Atlas: A New Brain Atlas Based on Connectional Architecture. Cereb Cortex 2016;26(8):3508-3526.",
+  "dois": ["10.1093/cercor/bhw157"]
+}

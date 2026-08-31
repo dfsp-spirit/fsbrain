@@ -1,0 +1,126 @@
+Copyright and license information for fsbrain and its optional data files
+=========================================================================
+
+This file documents the ownership of copyright and intellectual property of
+all components of the fsbrain package, including the optional data files that
+can be downloaded at runtime via the download_*() functions. It is provided in
+compliance with the CRAN Repository Policy
+(https://cran.r-project.org/web/packages/policies.html).
+
+
+1. Package code
+---------------
+
+The fsbrain package code is (c) Tim Schafer, and is licensed under the MIT
+license. See the files 'LICENSE' and 'LICENSE_FULL' for details.
+
+
+2. Demo data downloaded by download_optional_data()
+---------------------------------------------------
+
+The demo subject data ('subject1' and 'subject2') was created by Tim Schafer,
+the author of fsbrain, using FreeSurfer. It is the author's own data and
+carries no third-party copyright. It is provided for testing, examples, and
+the vignette.
+
+
+3. FreeSurfer template data downloaded by download_fsaverage(),
+   download_fsaverage_minimal(), download_fsaverage3(), and
+   download_fsaverage6()
+---------------------------------------------------------------
+
+These functions download data of the FreeSurfer 'fsaverage', 'fsaverage3' and
+'fsaverage6' template subjects (cortical surfaces, cortex labels, curvature,
+sphere and registration files, and related files). This data originates from
+FreeSurfer, developed by the Martinos Center for Biomedical Imaging,
+Massachusetts General Hospital / Harvard Medical School, and is subject to the
+FreeSurfer Software License
+(https://surfer.nmr.mgh.harvard.edu/fswiki/FreeSurferSoftwareLicense). The
+download functions require the user to explicitly accept the FreeSurfer
+license before downloading. Please cite:
+
+  * Dale AM, Fischl B, Sereno MI. Cortical surface-based analysis. I.
+    Segmentation and surface reconstruction. NeuroImage 1999;9(2):179-194.
+  * Fischl B, Sereno MI, Dale AM. Cortical surface-based analysis. II.
+    Inflation, flattening, and a surface-based coordinate system.
+    NeuroImage 1999;9(2):195-207.
+
+See also inst/extdata/attribution/fsaverage/surf/fsaverage.attribution.json.
+
+
+4. Atlas data downloaded by download_fsaverage_atlases() and
+   download_fs_LR_32_atlases()
+---------------------------------------------------------------
+
+These functions download cortical atlas (parcellation) files in the space of
+the 'fsaverage' and 'fs_LR 32k' templates, respectively. The atlases are the
+work of their respective authors and are redistributed (and, for the fsaverage
+versions, resampled from the fs_LR 32k versions) by the brain_atlases project
+(https://github.com/dfsp-spirit/brain_atlases). The converted files are
+considered derivative works and are licensed under the license of the original
+atlas. See the per-atlas attribution files in
+inst/extdata/attribution/fsaverage/label/ and
+inst/extdata/attribution/fs_LR_32/label/ for full details. In particular:
+
+  * Schaefer 2018 local-global parcellations (100-1000 parcels):
+    (c) Alexander Schaefer, Ru Kong, et al.; for research use (see original
+    distribution at https://github.com/ThomasYeoLab/CBIG).
+    Cite: Schaefer A, et al. Local-Global Parcellation of the Human Cerebral
+    Cortex from Intrinsic Functional Connectivity MRI. Cereb Cortex
+    2018;28(9):3095-3114.
+
+  * Human Brainnetome Atlas: (c) Lingzhong Fan et al. (Brainnetome Center,
+    Institute of Automation, Chinese Academy of Sciences); free for
+    academic/research use (https://atlas.brainnetome.org).
+    Cite: Fan L, et al. The Human Brainnetome Atlas: A New Brain Atlas Based
+    on Connectional Architecture. Cereb Cortex 2016;26(8):3508-3526.
+
+  * Automated Anatomical Labelling atlas 3 (AAL3): (c) Edmund T. Rolls et al.;
+    freely available for academic/research use
+    (https://www.gin.cnrs.fr/en/tools/aal/).
+    Cite: Rolls ET, Huang CC, Lin CP, Feng J, Joliot M. Automated anatomical
+    labelling atlas 3. NeuroImage 2020;206:116189.
+
+  * HCP-MMP1.0 (fsaverage only): (c) Matthew F. Glasser et al., CC BY 4.0
+    (https://creativecommons.org/licenses/by/4.0/); the fsaverage projection
+    was created by Kathryn Mills (figshare,
+    https://doi.org/10.6084/m9.figshare.3498446.v2).
+    Cite: Glasser MF, et al. A multi-modal parcellation of human cerebral
+    cortex. Nature 2016;536:171-178.
+
+
+5. fs_LR 32k template meshes downloaded by download_fs_LR_32_meshes()
+---------------------------------------------------------------------
+
+These functions download the standard fs_LR 32k cortical surface meshes
+(white, pial, inflated, very inflated, midthickness, sphere, and flat). The
+meshes were created by the Van Essen Lab et al. as part of Caret / Connectome
+Workbench / HCP Pipelines, and are widely used subject to the HCP Open Access
+Data Use Terms (https://www.humanconnectome.org/license). No license file was
+found in the source repository (https://github.com/DiedrichsenLab/fs_LR_32).
+See inst/extdata/attribution/fs_LR_32/surf/fs_LR_32k.attribution.json.
+Please cite:
+
+  * Van Essen DC, et al. The WU-Minn Human Connectome Project: An overview.
+    NeuroImage 2013;80:62-79.
+  * Van Essen DC, et al. Parcellations and hemispheric asymmetries of human
+    cerebral cortex analyzed on surface-based atlases. Cereb Cortex
+    2012;22(10):2241-2262.
+
+
+6. Trademarks
+-------------
+
+'FreeSurfer', 'fsaverage', 'fs_LR', 'conte69', 'HCP' and 'Caret' are names,
+marks, or project names of their respective owners. Their use here is factual
+and does not imply endorsement by, or affiliation with, the respective owners.
+
+
+7. Availability
+---------------
+
+None of the optional data files described above are part of the fsbrain
+package itself. They are downloaded on demand from a public web server
+(https://rcmd.org/projects/nitestdata/) into a local package file cache managed
+by the 'pkgfilecache' package. Users must comply with the respective licenses
+of the data they download.

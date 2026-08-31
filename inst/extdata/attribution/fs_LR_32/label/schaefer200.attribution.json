@@ -1,0 +1,14 @@
+{
+  "atlas": "schaefer200",
+  "origin_space": "atlas_fs_LR_32",
+  "title": "Schaefer 2018 local-global parcellation (200 parcels, 7 networks), on conte69/fs_LR 32k mesh",
+  "authors": "Alexander Schaefer, Ru Kong, et al.",
+  "source_url": "https://osf.io/9uzc8/download",
+  "license": {
+    "name": "research use (see original distribution)",
+    "url": "https://github.com/ThomasYeoLab/CBIG"
+  },
+  "acquired_at": "2026-08-29",
+  "citation": "Schaefer A, et al. Local-Global Parcellation of the Human Cerebral Cortex from Intrinsic Functional Connectivity MRI. Cereb Cortex 2018;28(9):3095-3114.",
+  "dois": ["10.1093/cercor/bhx179"]
+}

@@ -1,0 +1,15 @@
+{
+  "atlas": "brainnetome",
+  "origin_space": "fsaverage",
+  "title": "Human Brainnetome Atlas, on fsaverage mesh",
+  "authors": "Lingzhong Fan et al. (Brainnetome Center, Institute of Automation, CAS)",
+  "source_url": "https://osf.io/5nr4x/download",
+  "license": {
+    "name": "free for academic/research use",
+    "url": "https://atlas.brainnetome.org"
+  },
+  "acquired_at": "2026-08-29",
+  "citation": "Fan L, et al. The Human Brainnetome Atlas: A New Brain Atlas Based on Connectional Architecture. Cereb Cortex 2016;26(8):3508-3526.",
+  "dois": ["10.1093/cercor/bhw157"],
+  "notes": "Derived: resampled to the FreeSurfer fsaverage mesh (163,842 vertices/hemisphere) from the fs_LR 32k version; see atlas_fsaverage/brainnetome.provenance.json. Original attribution of the source atlas applies."
+}

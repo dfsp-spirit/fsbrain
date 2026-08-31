@@ -1,0 +1,15 @@
+{
+  "atlas": "schaefer400",
+  "origin_space": "fsaverage",
+  "title": "Schaefer 2018 local-global parcellation (400 parcels, 7 networks), on fsaverage mesh",
+  "authors": "Alexander Schaefer, Ru Kong, et al.",
+  "source_url": "https://osf.io/k8dvw/download",
+  "license": {
+    "name": "research use (see original distribution)",
+    "url": "https://github.com/ThomasYeoLab/CBIG"
+  },
+  "acquired_at": "2026-08-29",
+  "citation": "Schaefer A, et al. Local-Global Parcellation of the Human Cerebral Cortex from Intrinsic Functional Connectivity MRI. Cereb Cortex 2018;28(9):3095-3114.",
+  "dois": ["10.1093/cercor/bhx179"],
+  "notes": "Derived: resampled to the FreeSurfer fsaverage mesh (163,842 vertices/hemisphere) from the fs_LR 32k version; see atlas_fsaverage/schaefer400.provenance.json. Original attribution of the source atlas applies."
+}

@@ -3,7 +3,6 @@
 # path: relative to the package cache; md5: checksum (optional).
 "path","url","md5"
 "fs_LR_32/label/lh.aal3.annot","rcmd.org/projects/nitestdata/fs_LR_32/label/lh.aal3.annot","2bf509f7f0d4235f085e2a52b9295958"
-"fs_LR_32/label/lh.aparc_conv.annot","rcmd.org/projects/nitestdata/fs_LR_32/label/lh.aparc_conv.annot","af663967dc8b9e36e2af0ec14955de0c"
 "fs_LR_32/label/lh.brainnetome.annot","rcmd.org/projects/nitestdata/fs_LR_32/label/lh.brainnetome.annot","aabbf0d2e5cbb12e7f0338bab6a91b90"
 "fs_LR_32/label/lh.schaefer100.annot","rcmd.org/projects/nitestdata/fs_LR_32/label/lh.schaefer100.annot","2df8e2e668e5b38df30dc804bcd15d6d"
 "fs_LR_32/label/lh.schaefer1000.annot","rcmd.org/projects/nitestdata/fs_LR_32/label/lh.schaefer1000.annot","82db5e851fd46a72f036e37d88ad39bd"
@@ -11,7 +10,6 @@
 "fs_LR_32/label/lh.schaefer300.annot","rcmd.org/projects/nitestdata/fs_LR_32/label/lh.schaefer300.annot","29e24865698c3b2b1f78d39ad61415c8"
 "fs_LR_32/label/lh.schaefer400.annot","rcmd.org/projects/nitestdata/fs_LR_32/label/lh.schaefer400.annot","e7e2f168ca37035f2bf248efbf1e665f"
 "fs_LR_32/label/rh.aal3.annot","rcmd.org/projects/nitestdata/fs_LR_32/label/rh.aal3.annot","34116a45c1b6e86732d5760f74c34933"
-"fs_LR_32/label/rh.aparc_conv.annot","rcmd.org/projects/nitestdata/fs_LR_32/label/rh.aparc_conv.annot","5ba49721875e611a407beddbca7502d4"
 "fs_LR_32/label/rh.brainnetome.annot","rcmd.org/projects/nitestdata/fs_LR_32/label/rh.brainnetome.annot","e8d9b4382754e8fd2f3169c4de144e31"
 "fs_LR_32/label/rh.schaefer100.annot","rcmd.org/projects/nitestdata/fs_LR_32/label/rh.schaefer100.annot","7a318fc6a95d84c1fb9bfad1f573fb43"
 "fs_LR_32/label/rh.schaefer1000.annot","rcmd.org/projects/nitestdata/fs_LR_32/label/rh.schaefer1000.annot","4ff1d8695858b5919836324ef47d0b09"

@@ -1,0 +1,17 @@
+{
+  "atlas": "HCPMMP1",
+  "origin_space": "fsaverage",
+  "title": "HCP-MMP1.0 projected on fsaverage",
+  "authors": "Matthew F. Glasser et al.",
+  "source_url": "https://figshare.com/articles/dataset/HCP-MMP1_0_projected_on_fsaverage/3498446",
+  "source_doi": "10.6084/m9.figshare.3498446.v2",
+  "source_derived_by": "Kathryn Mills",
+  "license": {
+    "name": "CC BY 4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  "acquired_at": "2026-08-29",
+  "citation": "Glasser MF, et al. A multi-modal parcellation of human cerebral cortex. Nature 2016;536:171-178.",
+  "dois": ["10.1038/nature18933"],
+  "notes": "The fsaverage projection redistributed here (figshare version 2, published 2016-07-25, modified 2023-05-30) was created by Kathryn Mills (ORCID 0000-0002-6463-186X) from the HCP-MMP1.0 parcellation (Glasser et al. 2016, Nature 536:171-178) using Connectome Workbench. Cite Glasser et al. for the atlas itself; credit Mills for the fsaverage projection. figshare citation: Mills, Kathryn (2016). HCP-MMP1.0 projected on fsaverage. figshare. Dataset. https://doi.org/10.6084/m9.figshare.3498446.v2"
+}

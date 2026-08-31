@@ -13,5 +13,5 @@ download_fs_LR_32_atlases(scheme = "https")
 Named list. The list has entries: "available": vector of strings. The names of the files that are available in the local file cache. You can access them using get_optional_data_filepath(). "missing": vector of strings. The names of the files that this function was unable to retrieve.
 }
 \description{
-Download a set of cortical atlas files (annotations) defined in the space of the fs_LR 32k template (the HCP-style surface space), based on a declarative manifest file shipped with this package. The atlases (e.g., Schaefer 100-1000, Brainnetome, AAL3, aparc_conventional) are not part of FreeSurfer and are not subject to the FreeSurfer license. This data is not required for the package to work.
+Download a set of cortical atlas files (annotations) defined in the space of the fs_LR 32k template (the HCP-style surface space), based on a declarative manifest file shipped with this package. The atlases (e.g., Schaefer 100-1000, Brainnetome, AAL3) are not part of FreeSurfer and are not subject to the FreeSurfer license. This data is not required for the package to work.
 }

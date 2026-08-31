@@ -1,0 +1,15 @@
+{
+  "atlas": "fsaverage",
+  "origin_space": "template_subject_meshes/fsaverage",
+  "title": "FreeSurfer fsaverage template subject cortical surfaces",
+  "authors": "FreeSurfer (Martinos Center, MGH/HMS)",
+  "source_url": "https://surfer.nmr.mgh.harvard.edu/fswiki/FsAverage",
+  "license": {
+    "name": "FreeSurfer license",
+    "url": "https://surfer.nmr.mgh.harvard.edu/fswiki/FreeSurferUsage"
+  },
+  "acquired_at": "2026-08-29",
+  "citation": "Dale AM, Fischl B, Sereno MI. Cortical surface-based analysis. I. Segmentation and surface reconstruction. NeuroImage 1999;9(2):179-194. doi:10.1006/nimg.1998.0395; Fischl B, Sereno MI, Dale AM. Cortical surface-based analysis. II. Inflation, flattening, and a surface-based coordinate system. NeuroImage 1999;9(2):195-207. doi:10.1006/nimg.1998.0396",
+  "dois": ["10.1006/nimg.1998.0395", "10.1006/nimg.1998.0396"],
+  "notes": "FreeSurfer fsaverage template: 163,842 vertices / 327,680 faces per hemisphere. Surfaces included: inflated, pial, white."
+}

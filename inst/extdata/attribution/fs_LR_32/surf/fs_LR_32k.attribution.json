@@ -1,0 +1,14 @@
+{
+  "atlas": "fs_LR_32k",
+  "origin_space": "template_subject_meshes/fs_LR_32",
+  "title": "fs_LR 32k standard human cortical surface meshes (7 surfaces x 2 hemispheres)",
+  "authors": "Van Essen Lab et al.",
+  "source_url": "https://github.com/DiedrichsenLab/fs_LR_32",
+  "license": {
+    "name": "no license file found in source repository; see HCP Open Access Data Use Terms"
+  },
+  "acquired_at": "2026-08-29",
+  "citation": "Van Essen DC, et al. The WU-Minn Human Connectome Project: An overview. NeuroImage 2013;80:62-79. doi:10.1016/j.neuroimage.2013.05.041; Van Essen DC, et al. Parcellations and hemispheric asymmetries of human cerebral cortex analyzed on surface-based atlases. Cereb Cortex 2012;22(10):2241-2262. doi:10.1093/cercor/bhr291",
+  "dois": ["10.1016/j.neuroimage.2013.05.041", "10.1093/cercor/bhr291"],
+  "notes": "Left-right symmetric fs_LR 32k mesh: 32,492 vertices / 64,980 faces per hemisphere. Surfaces included: inflated, midthickness, pial, white, sphere, very_inflated, flat. Created by the Van Essen Lab as part of Caret/Connectome Workbench/HCP Pipelines; distributed on GitHub by Diedrichsen Lab et al. No license file found in the source repository; community-standard mesh used widely (e.g., by HCP), see HCP Open Access Data Use Terms."
+}
