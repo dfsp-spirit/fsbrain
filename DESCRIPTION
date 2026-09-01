@@ -22,7 +22,7 @@ Roxygen: list(markdown = TRUE)
 Imports:
     reshape,
     freesurferformats (>= 1.0.1),
-    pkgfilecache (>= 0.4.0),
+    pkgfilecache (>= 0.4.1),
     rgl,
     squash,
     fields,
