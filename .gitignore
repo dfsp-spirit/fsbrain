@@ -61,3 +61,6 @@ examples/facecheck/facecheck_tmp_*.png
 examples/medial_mask/lh_mask_*.mgz
 examples/medial_mask/rh_mask_*.mgz
 examples/rgl_vs_scimesh/*_scimesh.png
+examples/rgl_vs_scimesh/*_rgl.png
+examples/*.png
+examples/*.jpg
