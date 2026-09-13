@@ -13,21 +13,21 @@ sph2fs(
 )
 }
 \arguments{
-\item{lon}{numerical vector, the longitudes, passed to \code{sphereplot::sph2car}. See 'deg' for unit information.}
+\item{lon}{numerical vector, the longitudes. See 'deg' for unit information.}
 
-\item{lat}{numerical vector, the latitudes, passed to \code{sphereplot::sph2car}. See 'deg' for unit information.}
+\item{lat}{numerical vector, the latitudes. See 'deg' for unit information.}
 
-\item{radius}{numerical vector, the radii, passed to \code{sphereplot::sph2car}. Defaults to the radius of the combined mesh from the fsaverage lh and rh surfaces.}
+\item{radius}{numerical vector, the radii. Defaults to the radius of the combined mesh from the fsaverage lh and rh surfaces.}
 
-\item{center}{numerical vector of length 3, the x, y, and z coordinates of the target center. The \code{sphereplot::sph2car} function operates on the unit sphere, and this parameter is used to translate the resulting cartesian coordinates to a new center, typically the center of the surface meshes or MRI volume or substructures. If you want no translation, pass \code{c(0,0,0)}.}
+\item{center}{numerical vector of length 3, the x, y, and z coordinates of the target center. The spherical coordinates are transformed on the unit sphere, and this parameter is used to translate the resulting cartesian coordinates to a new center, typically the center of the surface meshes or MRI volume or substructures. If you want no translation, pass \code{c(0,0,0)}.}
 
-\item{deg}{logical, whether to use degrees (as opposed to radians) as the unit for 'lat' and 'lon'. Passed to \code{sphereplot::sph2car}.}
+\item{deg}{logical, whether to use degrees (as opposed to radians) as the unit for 'lat' and 'lon'.}
 }
 \description{
 Transform spherical coordinates to FreeSurfer surface space to plot things around a brain.
 }
 \note{
-This function can be used to plot things in FreeSurfer space using spherical coordinates, as commonly used in EEG to define electrode positions. Requires the 'sphereplot' package.
+This function can be used to plot things in FreeSurfer space using spherical coordinates, as commonly used in EEG to define electrode positions.
 }
 \examples{
 \dontrun{

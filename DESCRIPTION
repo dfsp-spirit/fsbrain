@@ -33,7 +33,6 @@ Suggests:
     rmarkdown,
     scimesh (>= 0.3.4),
     testthat (>= 2.1.0),
-    sphereplot (>= 1.5),
     misc3d,
     RColorBrewer,
     Rvcg (>= 0.20.2),

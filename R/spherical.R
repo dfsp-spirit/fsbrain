@@ -2,17 +2,17 @@
 
 #' @title Transform spherical coordinates to FreeSurfer surface space to plot things around a brain.
 #'
-#' @param lon numerical vector, the longitudes, passed to \code{sphereplot::sph2car}. See 'deg' for unit information.
+#' @param lon numerical vector, the longitudes. See 'deg' for unit information.
 #'
-#' @param lat numerical vector, the latitudes, passed to \code{sphereplot::sph2car}. See 'deg' for unit information.
+#' @param lat numerical vector, the latitudes. See 'deg' for unit information.
 #'
-#' @param radius numerical vector, the radii, passed to \code{sphereplot::sph2car}. Defaults to the radius of the combined mesh from the fsaverage lh and rh surfaces.
+#' @param radius numerical vector, the radii. Defaults to the radius of the combined mesh from the fsaverage lh and rh surfaces.
 #'
-#' @param center numerical vector of length 3, the x, y, and z coordinates of the target center. The \code{sphereplot::sph2car} function operates on the unit sphere, and this parameter is used to translate the resulting cartesian coordinates to a new center, typically the center of the surface meshes or MRI volume or substructures. If you want no translation, pass \code{c(0,0,0)}.
+#' @param center numerical vector of length 3, the x, y, and z coordinates of the target center. The spherical coordinates are transformed on the unit sphere, and this parameter is used to translate the resulting cartesian coordinates to a new center, typically the center of the surface meshes or MRI volume or substructures. If you want no translation, pass \code{c(0,0,0)}.
 #'
-#' @param deg logical, whether to use degrees (as opposed to radians) as the unit for 'lat' and 'lon'. Passed to \code{sphereplot::sph2car}.
+#' @param deg logical, whether to use degrees (as opposed to radians) as the unit for 'lat' and 'lon'.
 #'
-#' @note This function can be used to plot things in FreeSurfer space using spherical coordinates, as commonly used in EEG to define electrode positions. Requires the 'sphereplot' package.
+#' @note This function can be used to plot things in FreeSurfer space using spherical coordinates, as commonly used in EEG to define electrode positions.
 #'
 #' @examples
 #' \dontrun{
@@ -28,12 +28,12 @@
 #'
 #' @keywords internal
 sph2fs <- function(lon, lat, radius = surf.radius.fsaverage(), center=surf.center.fsaverage(), deg = TRUE) {
-    if(requireNamespace('sphereplot', quietly = TRUE)) {
-        cartesian_coords = sphereplot::sph2car(lon, lat, radius=radius, deg=deg);
-        return(rgl::translate3d(data.matrix(cartesian_coords), center[1], center[2], center[3]));
-    } else {
-        stop("The 'sphereplot' package is required to use this functionality.");
+    if(deg) {
+        lon = lon * pi / 180;
+        lat = lat * pi / 180;
     }
+    cartesian_coords = cbind(x = radius * cos(lon) * cos(lat), y = radius * sin(lon) * cos(lat), z = radius * sin(lat));
+    return(rgl::translate3d(data.matrix(cartesian_coords), center[1], center[2], center[3]));
 }
 
 
