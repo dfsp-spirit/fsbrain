@@ -20,14 +20,12 @@ URL: https://github.com/dfsp-spirit/fsbrain
 BugReports: https://github.com/dfsp-spirit/fsbrain/issues
 Roxygen: list(markdown = TRUE)
 Imports:
-    reshape,
     freesurferformats (>= 1.0.1),
     pkgfilecache (>= 0.4.1),
     rgl,
     squash,
     fields,
     viridis,
-    data.table,
     magick,
     methods
 Suggests:

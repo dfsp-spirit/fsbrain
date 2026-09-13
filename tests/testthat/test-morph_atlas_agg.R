@@ -381,3 +381,56 @@ test_that("Merging annotations works", {
 })
 
 
+test_that("Aggregation results can be reshaped from long to wide format", {
+    # This test does not require any downloaded data, the long-format input is constructed directly.
+    long = data.frame(
+        subject = c("subject1", "subject1", "subject1", "subject2", "subject2", "subject2"),
+        region = c("bankssts", "insula", "unknown", "bankssts", "insula", "unknown"),
+        aggregated = c(2.49, 2.1, NaN, 2.58, 2.2, NaN), stringsAsFactors = FALSE);
+
+    wide = as.data.frame(fsbrain:::agg.res.long.to.wide(long, c("subject1", "subject2")));
+
+    expect_true(is.data.frame(wide));
+    expect_equal(dim(wide), c(2L, 4L));
+    expect_equal(colnames(wide), c("subject", "bankssts", "insula", "unknown"));  # region columns are sorted alphabetically
+    expect_equal(rownames(wide), c("subject1", "subject2"));
+    expect_equal(wide$subject, c("subject1", "subject2"));
+    expect_equal(wide$bankssts, c(2.49, 2.58));
+    expect_equal(wide$insula, c(2.1, 2.2));
+    expect_true(all(is.na(wide$unknown)));    # NaN in the input means that there is no data for the region
+
+    # The region columns are sorted, no matter in which order the regions occur in the input.
+    long_unsorted = long;
+    long_unsorted$region = c("zzz", "aaa", "mmm", "zzz", "aaa", "mmm");
+    wide_unsorted = as.data.frame(fsbrain:::agg.res.long.to.wide(long_unsorted, c("subject1", "subject2")));
+    expect_equal(colnames(wide_unsorted), c("subject", "aaa", "mmm", "zzz"));
+
+    # A subject-region combination without any data results in NA for that cell.
+    long_missing = long[-5L, ];   # there is no insula value for subject2
+    wide_missing = as.data.frame(fsbrain:::agg.res.long.to.wide(long_missing, c("subject1", "subject2")));
+    expect_equal(dim(wide_missing), c(2L, 4L));
+    expect_equal(wide_missing$bankssts, c(2.49, 2.58));
+    expect_true(is.na(wide_missing$insula[2L]));
+    expect_false(is.na(wide_missing$insula[1L]));
+
+    # If an aggregation function is given, it is applied to all values of a subject-region combination.
+    long_dupl = rbind(long, long[1:2, ]);
+    long_dupl$aggregated[7:8] = c(10., 20.);
+    wide_mean = as.data.frame(fsbrain:::agg.res.long.to.wide(long_dupl, c("subject1", "subject2"), agg_fun = mean));
+    expect_equal(wide_mean$bankssts, c(6.245, 2.58));
+    expect_equal(wide_mean$insula, c(11.05, 2.2));
+    expect_true(all(is.nan(wide_mean$unknown)));   # NaN is kept if an aggregation function is used
+
+    # A single subject with a single region works as well.
+    long_one = data.frame(subject = "subject1", region = "bankssts", aggregated = 3.5, stringsAsFactors = FALSE);
+    wide_one = as.data.frame(fsbrain:::agg.res.long.to.wide(long_one, "subject1"));
+    expect_equal(dim(wide_one), c(1L, 2L));
+    expect_equal(colnames(wide_one), c("subject", "bankssts"));
+    expect_equal(wide_one$bankssts, 3.5);
+
+    # Invalid input is reported.
+    expect_error(fsbrain:::agg.res.long.to.wide(data.frame(subject = "s", region = "r"), "s"), "must contain the columns");
+    expect_error(fsbrain:::agg.res.long.to.wide(long[0L, ], "subject1"), "at least one row");
+})
+
+

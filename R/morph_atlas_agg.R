@@ -59,6 +59,63 @@ subject.atlas.agg <- function(vertex_morph_data, vertex_label_names, agg_fun = b
 
 
 
+#' @title Reshape aggregated region data from long to wide format.
+#'
+#' @description Internal helper. Takes a long-format dataframe with one row per subject and atlas region (as returned by \code{\link{subject.atlas.agg}}) and reshapes it into a wide dataframe with one row per subject and one column per atlas region, plus a leading character column named 'subject' which holds the subject identifiers. Region columns are sorted alphabetically. Cells for which no data is available are set to NA.
+#'
+#' @param agg_all_subjects, dataframe in long format. Must contain the columns 'subject', 'region' and 'aggregated'. Each combination of 'subject' and 'region' must be unique.
+#'
+#' @param subjects_list, vector of character strings, the subject identifiers. Also determines the row order of the result.
+#'
+#' @param agg_fun, function or NULL. If given, it is used to aggregate all values which occur for the same subject and region combination. If NULL, the single value for each combination is used directly.
+#'
+#' @return dataframe in wide format, with one row per subject. The first column is named 'subject' and holds the subject identifiers, the remaining columns are named after the atlas regions and hold the aggregated values.
+#'
+#' @keywords internal
+agg.res.long.to.wide <- function(agg_all_subjects, subjects_list, agg_fun = NULL) {
+
+  required_cols = c("subject", "region", "aggregated");
+  missing_cols = required_cols[! required_cols %in% colnames(agg_all_subjects)];
+  if(length(missing_cols) > 0L) {
+    stop(sprintf("Parameter 'agg_all_subjects' must contain the columns %s, but the following columns are missing: %s.\n", paste(required_cols, collapse=", "), paste(missing_cols, collapse=", ")));
+  }
+
+  if(nrow(agg_all_subjects) == 0L) {
+    stop("Parameter 'agg_all_subjects' must contain at least one row.\n");
+  }
+
+  row_names = unique(as.character(subjects_list));
+  col_names = sort(unique(as.character(agg_all_subjects$region)));
+  row_idx = match(as.character(agg_all_subjects$subject), row_names);
+  col_idx = match(as.character(agg_all_subjects$region), col_names);
+
+  unknown_subjects = unique(as.character(agg_all_subjects$subject)[is.na(row_idx)]);
+  if(length(unknown_subjects) > 0L) {
+    stop(sprintf("Parameter 'agg_all_subjects' contains data for subjects which do not occur in parameter 'subjects_list': %s.\n", paste(unknown_subjects, collapse=", ")));
+  }
+
+  if(is.null(agg_fun)) {
+    # There is exactly one value per subject and region combination, so the values can be placed in the result directly. Cells without data remain NA.
+    cell_data = rep(NA_real_, length(row_names) * length(col_names));
+    dim(cell_data) = c(length(row_names), length(col_names));
+    cell_data[cbind(row_idx, col_idx)] = agg_all_subjects$aggregated;
+  } else {
+    # Aggregate all values which occur for the same subject and region combination. Cells without data remain NA.
+    cell_data = tapply(agg_all_subjects$aggregated,
+                       list(factor(row_idx, levels = seq_along(row_names)), factor(col_idx, levels = seq_along(col_names))),
+                       FUN = agg_fun);
+  }
+
+  agg_res = as.data.frame(cell_data, stringsAsFactors = FALSE);
+  colnames(agg_res) = col_names;
+  agg_res = data.frame("subject" = row_names, agg_res, stringsAsFactors = FALSE, check.names = FALSE);
+  rownames(agg_res) = subjects_list;
+
+  return(agg_res);
+}
+
+
+
 #' @title Aggregate native space morphometry data over brain atlas regions and subjects for a group of subjects.
 #'
 #' @description Aggregate native space morphometry data over brain atlas regions, e.g., compute the mean thickness value over all regions in an atlas for all subjects.
@@ -159,8 +216,7 @@ group.agg.atlas.native <- function(subjects_dir, subjects_list, measure, hemi, a
           agg_all_subjects = subject_agg;
         }
     }
-    agg_res = reshape::cast(agg_all_subjects, subject~region, value='aggregated', fun.aggregate = agg_fun);
-    rownames(agg_res) = subjects_list;
+    agg_res = agg.res.long.to.wide(agg_all_subjects, subjects_list, agg_fun = agg_fun);
     agg_res_df_nt = as.data.frame(agg_res);
 
     if(! is.null(cache_file)) {
@@ -264,8 +320,7 @@ group.agg.atlas.standard <- function(subjects_dir, subjects_list, measure, hemi,
       agg_all_subjects = subject_agg;
     }
   }
-  agg_res = reshape::cast(agg_all_subjects, subject~region, value='aggregated');
-  rownames(agg_res) = subjects_list;
+  agg_res = agg.res.long.to.wide(agg_all_subjects, subjects_list, agg_fun = NULL);
   agg_res_df_std = as.data.frame(agg_res);
 
   if(! is.null(cache_file)) {

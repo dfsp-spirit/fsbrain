@@ -711,7 +711,6 @@ label.border.fast <- function(surface_mesh, label) {
 #' @family surface mesh functions
 #'
 #' @export
-#' @importFrom data.table as.data.table .N
 label.border <- function(surface_mesh, label, inner_only=TRUE, expand_inwards=0L, derive=FALSE) {
 
     if(freesurferformats::is.fs.label(label)) {
@@ -739,16 +738,16 @@ label.border <- function(surface_mesh, label, inner_only=TRUE, expand_inwards=0L
 
     #cat(sprintf("Found %d label faces and %d label edges based on the %d label_vertices.\n", length(label_faces), nrow(label_edges), length(label_vertices)))
     if(nrow(label_edges) == 0L) {
-        # return early in this case, because otherwise the line that computes border_edges below will fail (because the $N==1 part will return no rows)
+        # Return early in this case: the label does not contain any faces, so there are no edges and thus no border.
         return(list("vertices"=c(), "edges"=c(), "faces"=c()));
     }
 
     label_edges_sorted = as.data.frame(t(apply(label_edges, 1, sort)));    # Sort start and target vertex within edge to count edges (u,v) and (v,u) as 2 occurrences of same edge later.
-    edge_dt = data.table::as.data.table(label_edges_sorted);
-    edgecount_dt = edge_dt[, .N, by = names(edge_dt)]; # add column 'N' which contains the counts (i.e., how often each edge occurs over all faces).
-    border_edges = edgecount_dt[edgecount_dt$N==1][,1:2]; # Border edges occur only once, as the other face they touch is not part of the label.
+    # An edge is a border edge if it occurs exactly once over all label faces: the other face it touches is not part of the label. Edges which occur twice are shared by 2 label faces and thus not on the border.
+    edge_keys = paste(label_edges_sorted[[1L]], label_edges_sorted[[2L]], sep = "_");
+    border_edges = label_edges_sorted[!duplicated(edge_keys) & !duplicated(edge_keys, fromLast = TRUE), , drop = FALSE];
 
-    border_vertices = unique(as.vector(t(border_edges)));
+    border_vertices = unique(as.vector(rbind(border_edges[[1L]], border_edges[[2L]])));
 
     if(expand_inwards > 0L) {
       num_before_expansion = length(border_vertices);
