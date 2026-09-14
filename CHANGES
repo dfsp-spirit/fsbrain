@@ -2,9 +2,9 @@ fsbrain Changes
 ===============
 
 
-Version 0.8.0 (WIP) -- camera-based views, shared rgl/scimesh framing
+Version 0.8.0 -- Camera-based views, shared rgl/scimesh framing
 ----------------------------------------------------------------------
-This version introduces some breaking changes, marked with `BRK` in the list of changes below. We assume they will only affect few users of fsbrain, but please read the release notes below carefully to decide whether your code is ready to upgrade to fsbrain v0.8.0. After reading all changes, first decide whether your code uses features that were changed, to decide whether you are affected. You have two options *if* you are affected:
+This version introduces some breaking changes, marked with `BRK` in the list of changes below. We assume they will only affect very few users of fsbrain, but please read the release notes below carefully to decide whether your code is ready to upgrade to fsbrain v0.8.0. After reading all changes, first decide whether your code uses features that were changed, to decide whether you are affected. You have two options *if* you are affected:
 
 * Keep your code untouched and force installation of fsbrain v0.7.0:
     - for R packages, pin the fsbrain version in the `DESCRIPTION` file of your package (e.g., in the `Imports` section, require `fsbrain (== 0.7.0)`)
