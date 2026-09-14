@@ -25,7 +25,7 @@ volvis.lb(
   numerical 3D array of per-voxel data, typically activation data, a raw
   MRI image, or a segmentation to show. Can also be a filename if the
   file can be loaded as such a volume with
-  [`read.fs.volume`](https://rdrr.io/pkg/freesurferformats/man/read.fs.volume.html).
+  [`read.fs.volume`](https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.volume.html).
 
 - background:
 
@@ -51,7 +51,7 @@ volvis.lb(
 
   optional, only makes sense for categorical 'volume' data like
   segmentations. If not NULL, a colortable as returned by
-  [`read.fs.colortable`](https://rdrr.io/pkg/freesurferformats/man/read.fs.colortable.html),
+  [`read.fs.colortable`](https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.colortable.html),
   or a character string representing a path to a colortable file (like
   `"FREESURFER_HOME/FreeSurferColorLUT.txt"]`).
 

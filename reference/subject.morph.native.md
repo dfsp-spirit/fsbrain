@@ -65,7 +65,7 @@ subject.morph.native(
 ## Value
 
 vector with native space morph data, as returned by
-[`read.fs.morph`](https://rdrr.io/pkg/freesurferformats/man/read.fs.morph.html).
+[`read.fs.morph`](https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.morph.html).
 
 ## See also
 

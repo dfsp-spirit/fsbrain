@@ -234,7 +234,7 @@ template subject.
 The function
 [`vis.region.values.on.subject()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.region.values.on.subject.md)
 visualizes one value per atlas region. Here we show an example on the
-Desikan atlas, using dummy values:
+Desikan atlas, using simulated values:
 
 ``` r
 
@@ -251,7 +251,7 @@ rh_region_value_list = rnorm(length(atlas_region_names), 0.8, 0.2);
 names(rh_region_value_list) = atlas_region_names;
 
 cm = vis.region.values.on.subject(sjd, sj, atlas, lh_region_value_list, rh_region_value_list, views=NULL);
-img = export(cm, colorbar_legend='Effect size (dummy data)');
+img = export(cm, colorbar_legend='Effect size (simulated data)');
 ```
 
 ### Results: vertex-based
@@ -275,7 +275,7 @@ lh_clust = freesurferformats::read.fs.morph(lh_demo_cluster_file);   # a single 
 rh_clust = freesurferformats::read.fs.morph(rh_demo_cluster_file);   # two negative clusters
 
 cm = vis.symmetric.data.on.subject(subjects_dir, subject_id, lh_clust, rh_clust, bg="curv_light", views=NULL);
-img = export(cm, colorbar_legend='t-value (dummy data)');
+img = export(cm, colorbar_legend='t-value (simulated data)');
 ```
 
 ## Part 3: A workflow with manually loaded meshes and data
@@ -291,9 +291,9 @@ morphometry files manually from arbitrary paths (here, from the
 *fsbrain* example data via
 [`get_optional_data_filepath()`](https://dfsp-spirit.github.io/fsbrain/reference/get_optional_data_filepath.md),
 but they could come from anywhere) using the low-level
-[`freesurferformats::read.fs.surface()`](https://rdrr.io/pkg/freesurferformats/man/read.fs.surface.html)
+[`freesurferformats::read.fs.surface()`](https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.surface.html)
 and
-[`freesurferformats::read.fs.morph()`](https://rdrr.io/pkg/freesurferformats/man/read.fs.morph.html)
+[`freesurferformats::read.fs.morph()`](https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.morph.html)
 functions. We then build coloredmeshes with
 [`coloredmesh.from.preloaded.data()`](https://dfsp-spirit.github.io/fsbrain/reference/coloredmesh.from.preloaded.data.md)
 and render them with

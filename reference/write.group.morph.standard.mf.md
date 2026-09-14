@@ -32,7 +32,7 @@ write.group.morph.standard.mf(
 - format:
 
   character string, a valid format spec for
-  [`freesurferformats::write.fs.morph`](https://rdrr.io/pkg/freesurferformats/man/write.fs.morph.html),
+  [`freesurferformats::write.fs.morph`](https://dfsp-spirit.github.io/freesurferformats/reference/write.fs.morph.html),
   e.g., "auto" to derive from filename, "mgh", "mgz", "curv" or others.
 
 - create_dirs:

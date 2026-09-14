@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">fsbrain</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -21,6 +21,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/fsbrain_faq.html">The fsbrain FAQ</a></li>
     <li><a class="dropdown-item" href="../articles/fsbrain_vol.html">Brain volume visualization with fsbrain</a></li>
+    <li><a class="dropdown-item" href="../articles/fsbrain_with_scimesh.html">fsbrain with the scimesh rendering backend</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -34,7 +35,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Compute average distance from the origin to each vertex.</h1>
-      <small class="dont-index">Source: <a href="https://github.com/dfsp-spirit/fsbrain/blob/master/R/smooth.R" class="external-link"><code>R/smooth.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dfsp-spirit/fsbrain/blob/v0.8.0/R/smooth.R" class="external-link"><code>R/smooth.R</code></a></small>
       <div class="d-none name"><code>surf.avg.vertexradius.Rd</code></div>
     </div>
 
@@ -75,7 +76,7 @@
 <span class="r-in"><span>  surface<span class="op">=</span><span class="st">"sphere"</span>, hemi<span class="op">=</span><span class="st">"lh"</span><span class="op">)</span>;</span></span>
 <span class="r-in"><span><span class="va">vr</span> <span class="op">=</span> <span class="fu">fsbrain</span><span class="fu">:::</span><span class="fu">surf.avg.vertexradius</span><span class="op">(</span><span class="va">spherical_surface</span><span class="op">)</span>;</span></span>
 <span class="r-in"><span><span class="co"># Show histogram to verify that the surface is a sphere centered at 0,0,0:</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="fu">freesurferformats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/freesurferformats/man/vertexdists.to.point.html" class="external-link">vertexdists.to.point</a></span><span class="op">(</span><span class="va">spherical_surface</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="fu">freesurferformats</span><span class="fu">::</span><span class="fu"><a href="https://dfsp-spirit.github.io/freesurferformats/reference/vertexdists.to.point.html" class="external-link">vertexdists.to.point</a></span><span class="op">(</span><span class="va">spherical_surface</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>;</span></span>
 <span class="r-in"><span><span class="co"># Plot the coords and a point at the origin:</span></span></span>
 <span class="r-in"><span><span class="fu">fsbrain</span><span class="fu">::</span><span class="fu"><a href="highlight.points.spheres.html">highlight.points.spheres</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">spherical_surface</span><span class="op">$</span><span class="va">vertices</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>;</span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>

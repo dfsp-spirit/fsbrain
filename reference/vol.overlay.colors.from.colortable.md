@@ -25,7 +25,7 @@ vol.overlay.colors.from.colortable(
 - colortable:
 
   a colortable, as returned by
-  [`read.fs.colortable`](https://rdrr.io/pkg/freesurferformats/man/read.fs.colortable.html),
+  [`read.fs.colortable`](https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.colortable.html),
   or a character string representing a path to a colortable file.
 
 - ignored_struct_indices:

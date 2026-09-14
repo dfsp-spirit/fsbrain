@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">fsbrain</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -21,6 +21,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/fsbrain_faq.html">The fsbrain FAQ</a></li>
     <li><a class="dropdown-item" href="../articles/fsbrain_vol.html">Brain volume visualization with fsbrain</a></li>
+    <li><a class="dropdown-item" href="../articles/fsbrain_with_scimesh.html">fsbrain with the scimesh rendering backend</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -34,7 +35,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Transform spherical coordinates to FreeSurfer surface space to plot things around a brain.</h1>
-      <small class="dont-index">Source: <a href="https://github.com/dfsp-spirit/fsbrain/blob/master/R/spherical.R" class="external-link"><code>R/spherical.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dfsp-spirit/fsbrain/blob/v0.8.0/R/spherical.R" class="external-link"><code>R/spherical.R</code></a></small>
       <div class="d-none name"><code>sph2fs.Rd</code></div>
     </div>
 
@@ -58,28 +59,28 @@
 
 
 <dl><dt id="arg-lon">lon<a class="anchor" aria-label="anchor" href="#arg-lon"></a></dt>
-<dd><p>numerical vector, the longitudes, passed to <code><a href="https://rdrr.io/pkg/sphereplot/man/sph2car.html" class="external-link">sphereplot::sph2car</a></code>. See 'deg' for unit information.</p></dd>
+<dd><p>numerical vector, the longitudes. See 'deg' for unit information.</p></dd>
 
 
 <dt id="arg-lat">lat<a class="anchor" aria-label="anchor" href="#arg-lat"></a></dt>
-<dd><p>numerical vector, the latitudes, passed to <code><a href="https://rdrr.io/pkg/sphereplot/man/sph2car.html" class="external-link">sphereplot::sph2car</a></code>. See 'deg' for unit information.</p></dd>
+<dd><p>numerical vector, the latitudes. See 'deg' for unit information.</p></dd>
 
 
 <dt id="arg-radius">radius<a class="anchor" aria-label="anchor" href="#arg-radius"></a></dt>
-<dd><p>numerical vector, the radii, passed to <code><a href="https://rdrr.io/pkg/sphereplot/man/sph2car.html" class="external-link">sphereplot::sph2car</a></code>. Defaults to the radius of the combined mesh from the fsaverage lh and rh surfaces.</p></dd>
+<dd><p>numerical vector, the radii. Defaults to the radius of the combined mesh from the fsaverage lh and rh surfaces.</p></dd>
 
 
 <dt id="arg-center">center<a class="anchor" aria-label="anchor" href="#arg-center"></a></dt>
-<dd><p>numerical vector of length 3, the x, y, and z coordinates of the target center. The <code><a href="https://rdrr.io/pkg/sphereplot/man/sph2car.html" class="external-link">sphereplot::sph2car</a></code> function operates on the unit sphere, and this parameter is used to translate the resulting cartesian coordinates to a new center, typically the center of the surface meshes or MRI volume or substructures. If you want no translation, pass <code>c(0,0,0)</code>.</p></dd>
+<dd><p>numerical vector of length 3, the x, y, and z coordinates of the target center. The spherical coordinates are transformed on the unit sphere, and this parameter is used to translate the resulting cartesian coordinates to a new center, typically the center of the surface meshes or MRI volume or substructures. If you want no translation, pass <code>c(0,0,0)</code>.</p></dd>
 
 
 <dt id="arg-deg">deg<a class="anchor" aria-label="anchor" href="#arg-deg"></a></dt>
-<dd><p>logical, whether to use degrees (as opposed to radians) as the unit for 'lat' and 'lon'. Passed to <code><a href="https://rdrr.io/pkg/sphereplot/man/sph2car.html" class="external-link">sphereplot::sph2car</a></code>.</p></dd>
+<dd><p>logical, whether to use degrees (as opposed to radians) as the unit for 'lat' and 'lon'.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
-    <p>This function can be used to plot things in FreeSurfer space using spherical coordinates, as commonly used in EEG to define electrode positions. Requires the 'sphereplot' package.</p>
+    <p>This function can be used to plot things in FreeSurfer space using spherical coordinates, as commonly used in EEG to define electrode positions.</p>
     </div>
 
     <div class="section level2">

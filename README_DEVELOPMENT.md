@@ -15,7 +15,8 @@ for contribution guidelines and general workflow.
 - install all fsbrain dependencies, e.g., by installing fsbrain from
   CRAN using `install.packages("fsbrain", dependencies=TRUE);`
 - in rstudio, click `File => Open Project` and open the project file
-  `fsbrain.Rproj` from the root of this repo
+  `fsbrain.Rproj` from the root of this repo. In VSCode or other IDEs,
+  just open the repo directory as usual.
 
 ## Running the unit tests
 
@@ -27,6 +28,75 @@ On the console:
   `Rscript -e "devtools::test()"`
 - to run an individual test, or several ones, by name filter:
   `Rscript -e "devtools::test(filter = 'morph_agg')"`
+
+## Running the unit tests with the scimesh renderer backend
+
+fsbrain can produce static images with two backends: **rgl** (the
+default; interactive, hardware-accelerated, needs a display / X11) and
+**scimesh** (headless, software, no display). The test suite can be run
+under either backend.
+
+### Selecting the backend
+
+Set the `FSBRAIN_TESTS_USE_SCIMESH` environment variable to a truthy
+value (`1`, `true`, `yes`, `on`) to run the tests with the scimesh
+backend:
+
+``` sh
+FSBRAIN_TESTS_USE_SCIMESH=true Rscript -e 'devtools::test()'
+```
+
+or, from an R session:
+
+``` r
+
+Sys.setenv("FSBRAIN_TESTS_USE_SCIMESH" = "true");
+devtools::test();
+```
+
+When the variable is unset (or falsy), the default rgl backend is used.
+
+### What changes in scimesh mode
+
+- Static image export tests
+  ([`vislayout.from.coloredmeshes()`](https://dfsp-spirit.github.io/fsbrain/reference/vislayout.from.coloredmeshes.md),
+  [`export()`](https://dfsp-spirit.github.io/fsbrain/reference/export.md))
+  render through scimesh, headlessly — no X11 required.
+- Tests that require the interactive rgl backend (multi-view windows
+  `t4`/`t9`/`si`/`sr`, highlight spheres, volume contours via `misc3d`,
+  `rglwidget`, rotating views) are skipped automatically via the
+  `skip_if_rgl_required()` helper.
+- The test helper `box.has.x11display()` returns `TRUE` in scimesh mode,
+  so X11-gated tests do not require a display.
+
+### Comparing the two backends
+
+The `render.demo(coloredmeshes, name = "demo")` helper renders the given
+coloredmeshes from the two medial views (`t2`) and writes the image to
+the R session temporary directory as `<name>_<backend>.png`
+(e.g. `demo_rgl.png` / `demo_scimesh.png`), printing the full path.
+Running the suite once per backend lets you open the two images side by
+side in an image viewer to compare them directly.
+
+### Extra-long / full-data tests
+
+Some tests require the full FreeSurfer `subject1` recon-all output (see
+`box.can.run.all.tests()` and `testdatapath.subjectsdir.full.subject1()`
+in `tests/testthat/helper-functions.R`) and are only run when
+`RUN_ALL_FSBRAIN_TESTS` is set:
+
+``` sh
+RUN_ALL_FSBRAIN_TESTS=sure devtools::test()
+```
+
+### `devtools::test()` vs `R CMD check`
+
+- `devtools::test()` sets `NOT_CRAN=true`, so tests guarded by
+  [`testthat::skip_on_cran()`](https://testthat.r-lib.org/reference/skip.html)
+  actually run.
+- `R CMD check` runs the tests in a CRAN-like mode and **skips** all
+  `skip_on_cran()` tests, which is why the check is much faster and only
+  exercises the lightweight (cube-based) tests.
 
 ## Checking the package
 
@@ -93,3 +163,13 @@ On the console, run `Rscript -e "roxygen2::roxygenise()"`
   this locally, make sure to push the tag: `git push --tags`.
 - Log into github.com, and make a release there based on the tag. Copy
   relevant CHANGES section as description.
+- Update the Docker image by creating `docker/fsbrain<version>/`,
+  copying the `Dockerfile` from the most recent image in there, adapting
+  it for the new version (raise R version, freesurferformats version,
+  maybe other deps). Then build and upload the image to Dockerhub (e.g.,
+  `docker build -t dfspspirit/fsbrain:0.7.0 .`, then test it, then push
+  it and also update the latest tag
+  (`docker push dfspspirit/fsbrain:0.7.0`,
+  `docker tag dfspspirit/fsbrain:0.7.0 dfspspirit/fsbrain:latest`,
+  `docker push dfspspirit/fsbrain:latest`). See readme files in
+  `docker/` for details.

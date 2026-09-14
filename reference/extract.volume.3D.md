@@ -2,7 +2,7 @@
 
 Check whether it already is such an array, whether it is a filename that
 can be loaded with
-[`freesurferformats::read.fs.volume`](https://rdrr.io/pkg/freesurferformats/man/read.fs.volume.html)
+[`freesurferformats::read.fs.volume`](https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.volume.html)
 into such an array, etc.
 
 ## Usage

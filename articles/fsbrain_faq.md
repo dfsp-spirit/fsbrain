@@ -5,7 +5,7 @@
 ### **Q**: What kind of input data do I need for fsbrain?
 
 The *fsbrain* software is designed to be used with the output of
-[FreeSurfer](http://freesurfer.net/) and similar neuroimaging software
+[FreeSurfer](https://freesurfer.net/) and similar neuroimaging software
 packages. Running FreeSurfer’s *recon-all* on your T1w MRI scan results
 in a directory structure full of different files and file types for each
 subject. The *fsbrain* library uses knowledge on this directory layout
@@ -422,7 +422,7 @@ separate plot, so you can use standard R methods to save it in vector
 formats like PDF for best quality.
 
 Hint: you can load a color lookup table with
-[`freesurferformats::read.fs.colortable`](https://rdrr.io/pkg/freesurferformats/man/read.fs.colortable.html).
+[`freesurferformats::read.fs.colortable`](https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.colortable.html).
 
 ### There is too much whitespace between the different views of the brain. How can I reduce it?
 

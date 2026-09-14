@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">fsbrain</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -21,6 +21,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/fsbrain_faq.html">The fsbrain FAQ</a></li>
     <li><a class="dropdown-item" href="../articles/fsbrain_vol.html">Brain volume visualization with fsbrain</a></li>
+    <li><a class="dropdown-item" href="../articles/fsbrain_with_scimesh.html">fsbrain with the scimesh rendering backend</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -34,7 +35,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Visualize volume slices with surface mesh contours overlaid in lightbox view.</h1>
-      <small class="dont-index">Source: <a href="https://github.com/dfsp-spirit/fsbrain/blob/master/R/vis_volume.R" class="external-link"><code>R/vis_volume.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dfsp-spirit/fsbrain/blob/v0.8.0/R/vis_volume.R" class="external-link"><code>R/vis_volume.R</code></a></small>
       <div class="d-none name"><code>volvis.lb.with.surface.Rd</code></div>
     </div>
 
@@ -54,6 +55,7 @@
 <span>  surface_lwd <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  slices <span class="op">=</span> <span class="op">-</span><span class="fl">5</span>,</span>
 <span>  axis <span class="op">=</span> <span class="fl">1L</span>,</span>
+<span>  scale <span class="op">=</span> <span class="fl">1L</span>,</span>
 <span>  per_row <span class="op">=</span> <span class="fl">5L</span>,</span>
 <span>  per_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  border_geometry <span class="op">=</span> <span class="st">"5x5"</span>,</span>
@@ -100,6 +102,10 @@
 
 <dt id="arg-axis">axis<a class="anchor" aria-label="anchor" href="#arg-axis"></a></dt>
 <dd><p>integer, the slice axis. 1 = sagittal, 2 = coronal, 3 = axial (in volume CRS convention). Defaults to <code>1L</code>.</p></dd>
+
+
+<dt id="arg-scale">scale<a class="anchor" aria-label="anchor" href="#arg-scale"></a></dt>
+<dd><p>integer &gt;= 1, the factor by which to upscale the slice images in both dimensions using nearest-neighbor interpolation (keeps the MRI pixels sharp, which is good for QA). The surface contour lines are drawn on a high-resolution overlay and downsampled to the final size, so they appear thin and smooth. Defaults to <code>1L</code> (no upscaling, previous behavior).</p></dd>
 
 
 <dt id="arg-per-row">per_row<a class="anchor" aria-label="anchor" href="#arg-per-row"></a></dt>
@@ -171,6 +177,10 @@
 <span class="r-in"><span>   <span class="va">img</span> <span class="op">&lt;-</span> <span class="fu">volvis.lb.with.surface</span><span class="op">(</span><span class="va">subjects_dir</span>, <span class="st">"subject1"</span>,</span></span>
 <span class="r-in"><span>      volume<span class="op">=</span><span class="st">"brain"</span>, surface<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"white"</span>, <span class="st">"pial"</span><span class="op">)</span>, axis<span class="op">=</span><span class="fl">3L</span>,</span></span>
 <span class="r-in"><span>      surface_color<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#FF0000"</span>, <span class="st">"#0000FF"</span>, <span class="st">"#00FF00"</span>, <span class="st">"#FF8800"</span><span class="op">)</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>   <span class="co"># 2x upscaled slices for larger images with thin, smooth contours:</span></span></span>
+<span class="r-in"><span>   <span class="va">img</span> <span class="op">&lt;-</span> <span class="fu">volvis.lb.with.surface</span><span class="op">(</span><span class="va">subjects_dir</span>, <span class="st">"subject1"</span>,</span></span>
+<span class="r-in"><span>      volume<span class="op">=</span><span class="st">"brain"</span>, surface<span class="op">=</span><span class="st">"white"</span>, axis<span class="op">=</span><span class="fl">3L</span>, scale<span class="op">=</span><span class="fl">2L</span><span class="op">)</span>;</span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

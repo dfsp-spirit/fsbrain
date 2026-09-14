@@ -18,7 +18,7 @@ vis.dti.trk(
 
   character string, the path to a TRK file that should be loaded.
   Alternatively, a loaded `trk` instance as returned by
-  [`freesurferformats::read.dti.trk`](https://rdrr.io/pkg/freesurferformats/man/read.dti.trk.html).
+  [`freesurferformats::read.dti.trk`](https://dfsp-spirit.github.io/freesurferformats/reference/read.dti.trk.html).
 
 - filter_tracks:
 

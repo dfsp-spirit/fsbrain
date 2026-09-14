@@ -53,7 +53,7 @@ subject.surface(
 ## Value
 
 the `fs.surface` instance, as returned by
-[`read.fs.surface`](https://rdrr.io/pkg/freesurferformats/man/read.fs.surface.html).
+[`read.fs.surface`](https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.surface.html).
 If parameter `hemi` is set to `both`, a named list with entries `lh` and
 `rh` is returned, and the values of are the respective surfaces. The
 mesh data structure used in `fs.surface` is a *face index set*.

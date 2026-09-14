@@ -44,7 +44,7 @@ label.to.annot(
 ## Value
 
 an annotation, see
-[`read.fs.annot`](https://rdrr.io/pkg/freesurferformats/man/read.fs.annot.html)
+[`read.fs.annot`](https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.annot.html)
 for details.
 
 ## See also

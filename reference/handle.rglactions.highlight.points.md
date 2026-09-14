@@ -1,19 +1,15 @@
-# Highlight requested points (if any), but apply given view rotation before doing so.
+# Highlight requested points (if any), for camera-based views.
 
-Highlight requested points (if any), but apply given view rotation
-before doing so.
+Places the requested highlight points as spheres at their native
+coordinates. Camera-based views keep the meshes unrotated and apply the
+view rotation via the camera, so highlight points must NOT be rotated
+(this matches the scimesh backend). See
+dev_tools/TODO_FSBRAIN_RGL_CAM.md.
 
 ## Usage
 
 ``` r
-handle.rglactions.highlight.points(
-  rglactions,
-  angle_rad,
-  x,
-  y,
-  z,
-  hemi = "both"
-)
+handle.rglactions.highlight.points(rglactions, hemi = "both")
 ```
 
 ## Arguments

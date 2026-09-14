@@ -22,17 +22,17 @@ annot.outline.border.vertices(
   [`subject.annot`](https://dfsp-spirit.github.io/fsbrain/reference/subject.annot.md).
   If a character string, interpreted as a path to a file containing such
   data, and loaded with
-  [`freesurferformats::read.fs.annot`](https://rdrr.io/pkg/freesurferformats/man/read.fs.annot.html)
+  [`freesurferformats::read.fs.annot`](https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.annot.html)
 
 - surface_mesh:
 
   brain surface mesh, as returned by functions like
   [`subject.surface`](https://dfsp-spirit.github.io/fsbrain/reference/subject.surface.md)
   or
-  [`read.fs.surface`](https://rdrr.io/pkg/freesurferformats/man/read.fs.surface.html).
+  [`read.fs.surface`](https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.surface.html).
   If a character string, interpreted as a path to a file containing such
   data, and loaded with
-  [`freesurferformats::read.fs.surface`](https://rdrr.io/pkg/freesurferformats/man/read.fs.surface.html)
+  [`freesurferformats::read.fs.surface`](https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.surface.html)
 
 - silent:
 

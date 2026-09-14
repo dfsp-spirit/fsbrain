@@ -19,4 +19,4 @@ tmesh3d.to.fs.surface(tmesh)
 ## Value
 
 an fs.surface instance, as returned by `subject.surface` or
-[`freesurferformats::read.fs.surface`](https://rdrr.io/pkg/freesurferformats/man/read.fs.surface.html).
+[`freesurferformats::read.fs.surface`](https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.surface.html).

@@ -20,7 +20,7 @@ coloredmesh.from.preloaded.data(
 
   an fs.surface instance or a character string, which will be
   interpreted as the path to a file and loaded with
-  [`freesurferformats::read.fs.surface`](https://rdrr.io/pkg/freesurferformats/man/read.fs.surface.html).
+  [`freesurferformats::read.fs.surface`](https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.surface.html).
 
 - morph_data:
 

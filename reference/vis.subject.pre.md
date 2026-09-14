@@ -25,7 +25,7 @@ vis.subject.pre(
   a
   [`hemilist`](https://dfsp-spirit.github.io/fsbrain/reference/hemilist.md)
   of surfaces loaded with a function like
-  [`freesurferformats::read.fs.surface`](https://rdrr.io/pkg/freesurferformats/man/read.fs.surface.html).
+  [`freesurferformats::read.fs.surface`](https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.surface.html).
 
 - pervertex_data:
 
@@ -33,7 +33,7 @@ vis.subject.pre(
   [`hemilist`](https://dfsp-spirit.github.io/fsbrain/reference/hemilist.md)
   of per-vertex data for the surfaces, i.e., a list of numeric vectors.
   E.g., loaded from a moorphometry data file with a function like
-  [`freesurferformats::read.fs.morph`](https://rdrr.io/pkg/freesurferformats/man/read.fs.morph.html).
+  [`freesurferformats::read.fs.morph`](https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.morph.html).
   ´
 
 - hemi:

@@ -25,7 +25,7 @@ mesh.vertex.neighbors(
   a surface as returned by functions like
   [`subject.surface`](https://dfsp-spirit.github.io/fsbrain/reference/subject.surface.md)
   or
-  [`read.fs.surface`](https://rdrr.io/pkg/freesurferformats/man/read.fs.surface.html).
+  [`read.fs.surface`](https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.surface.html).
 
 - source_vertices:
 

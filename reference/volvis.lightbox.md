@@ -18,7 +18,8 @@ volvis.lightbox(
   per_col = NULL,
   border_geometry = "5x5",
   background_color = "#000000",
-  arrange_single_image = FALSE
+  arrange_single_image = FALSE,
+  scale = 1L
 )
 ```
 
@@ -74,6 +75,13 @@ volvis.lightbox(
   prevents the border from getting added to a single image, so all you
   see is the raw image. Set to `TRUE` if you want to arrange even a
   single image in a row with a border.
+
+- scale:
+
+  integer \>= 1, the factor by which to upscale the slice images in both
+  dimensions using nearest-neighbor interpolation. This keeps the MRI
+  pixels sharp (no smoothing) while making the images larger. Defaults
+  to 1L (no upscaling).
 
 ## Value
 

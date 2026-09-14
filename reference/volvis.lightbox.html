@@ -9,7 +9,7 @@ If overlay_colors are given, the volume will be used as the background, and it w
 
     <a class="navbar-brand me-2" href="../index.html">fsbrain</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -23,6 +23,7 @@ If overlay_colors are given, the volume will be used as the background, and it w
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/fsbrain_faq.html">The fsbrain FAQ</a></li>
     <li><a class="dropdown-item" href="../articles/fsbrain_vol.html">Brain volume visualization with fsbrain</a></li>
+    <li><a class="dropdown-item" href="../articles/fsbrain_with_scimesh.html">fsbrain with the scimesh rendering backend</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -36,7 +37,7 @@ If overlay_colors are given, the volume will be used as the background, and it w
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Draw a lightbox view from volume slices.</h1>
-      <small class="dont-index">Source: <a href="https://github.com/dfsp-spirit/fsbrain/blob/master/R/vis_volume.R" class="external-link"><code>R/vis_volume.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dfsp-spirit/fsbrain/blob/v0.8.0/R/vis_volume.R" class="external-link"><code>R/vis_volume.R</code></a></small>
       <div class="d-none name"><code>volvis.lightbox.Rd</code></div>
     </div>
 
@@ -55,7 +56,8 @@ If overlay_colors are given, the volume will be used as the background, and it w
 <span>  per_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  border_geometry <span class="op">=</span> <span class="st">"5x5"</span>,</span>
 <span>  background_color <span class="op">=</span> <span class="st">"#000000"</span>,</span>
-<span>  arrange_single_image <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  arrange_single_image <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  scale <span class="op">=</span> <span class="fl">1L</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -93,6 +95,10 @@ If overlay_colors are given, the volume will be used as the background, and it w
 
 <dt id="arg-arrange-single-image">arrange_single_image<a class="anchor" aria-label="anchor" href="#arg-arrange-single-image"></a></dt>
 <dd><p>logical, whether to apply the given arrangement (from parameters <code>per_row</code> and <code>per_column</code>) even if a single slice (a 2D image) is passed as <code>volume</code>. Defaults to FALSE, which prevents that background tiles are added to fill the row up to <code>per_row</code> images. This also prevents the border from getting added to a single image, so all you see is the raw image. Set to <code>TRUE</code> if you want to arrange even a single image in a row with a border.</p></dd>
+
+
+<dt id="arg-scale">scale<a class="anchor" aria-label="anchor" href="#arg-scale"></a></dt>
+<dd><p>integer &gt;= 1, the factor by which to upscale the slice images in both dimensions using nearest-neighbor interpolation. This keeps the MRI pixels sharp (no smoothing) while making the images larger. Defaults to 1L (no upscaling).</p></dd>
 
 </dl></div>
     <div class="section level2">

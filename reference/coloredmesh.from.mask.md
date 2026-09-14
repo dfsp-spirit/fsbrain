@@ -69,6 +69,7 @@ Other mask functions:
 [`vis.mask.on.subject()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.mask.on.subject.md)
 
 Other coloredmesh functions:
+[`Triangles3D.to.coloredmesh()`](https://dfsp-spirit.github.io/fsbrain/reference/Triangles3D.to.coloredmesh.md),
 [`coloredmesh.from.annot()`](https://dfsp-spirit.github.io/fsbrain/reference/coloredmesh.from.annot.md),
 [`coloredmesh.from.label()`](https://dfsp-spirit.github.io/fsbrain/reference/coloredmesh.from.label.md),
 [`coloredmesh.from.morph.native()`](https://dfsp-spirit.github.io/fsbrain/reference/coloredmesh.from.morph.native.md),

@@ -45,7 +45,7 @@ subject.volume(
 
   logical, whether to drop empty dimensions of the returned data. Passed
   to
-  [`read.fs.mgh`](https://rdrr.io/pkg/freesurferformats/man/read.fs.mgh.html).
+  [`read.fs.mgh`](https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.mgh.html).
 
 - with_header:
 
@@ -57,7 +57,7 @@ subject.volume(
   E.g., c(256, 256, 256, 1). These header entries may exist:
   "vox2ras_matrix" (exists if "ras_good_flag" is 1), "mr_params" (exists
   if "has_mr_params" is 1). Passed to
-  [`read.fs.mgh`](https://rdrr.io/pkg/freesurferformats/man/read.fs.mgh.html).
+  [`read.fs.mgh`](https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.mgh.html).
 
 - mri_subdir:
 

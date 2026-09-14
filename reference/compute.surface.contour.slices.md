@@ -21,6 +21,7 @@ compute.surface.contour.slices(
   surface_lwd = 1,
   slices = -5,
   axis = 1L,
+  scale = 1L,
   silent = TRUE
 )
 ```
@@ -69,6 +70,15 @@ compute.surface.contour.slices(
 
   integer, the slice axis. 1 = sagittal, 2 = coronal, 3 = axial.
   Defaults to `1L`.
+
+- scale:
+
+  integer \>= 1, the factor by which to upscale the slice images in both
+  dimensions using nearest-neighbor interpolation (keeps the MRI pixels
+  sharp, which is good for QA). The surface contour lines are drawn on a
+  high-resolution transparent overlay which is downsampled to the final
+  size, so the lines appear thin and smooth. Defaults to `1L` (no
+  upscaling, previous behavior).
 
 - silent:
 

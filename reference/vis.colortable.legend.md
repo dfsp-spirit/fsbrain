@@ -15,7 +15,7 @@ vis.colortable.legend(colortable, ncols = 1L, plot_struct_index = TRUE)
 - colortable:
 
   dataframe, a colortable as returned by
-  [`read.fs.colortable`](https://rdrr.io/pkg/freesurferformats/man/read.fs.colortable.html)
+  [`read.fs.colortable`](https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.colortable.html)
   or the inner 'colortable_df' returned by
   [`subject.annot`](https://dfsp-spirit.github.io/fsbrain/reference/subject.annot.md).
   One can also pass an annotation (*fs.annot* instance).

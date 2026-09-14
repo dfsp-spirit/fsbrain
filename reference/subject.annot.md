@@ -35,7 +35,7 @@ subject.annot(subjects_dir, subject_id, hemi, atlas)
 ## Value
 
 the annotation, as returned by
-[`read.fs.annot`](https://rdrr.io/pkg/freesurferformats/man/read.fs.annot.html).
+[`read.fs.annot`](https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.annot.html).
 It is a named list, enties are: "vertices" vector of n vertex indices,
 starting with 0. "label_codes": vector of n integers, each entry is a
 color code, i.e., a value from the 5th column in the table structure

@@ -2,6 +2,9 @@
 
 ## All functions
 
+- [`Triangles3D.to.coloredmesh()`](https://dfsp-spirit.github.io/fsbrain/reference/Triangles3D.to.coloredmesh.md)
+  : Convert a misc3d Triangles3D iso-surface to a coloredmesh.
+
 - [`alphablend()`](https://dfsp-spirit.github.io/fsbrain/reference/alphablend.md)
   : Perform alpha blending for pairs of RGBA colors.
 
@@ -145,6 +148,12 @@
 - [`desaturate()`](https://dfsp-spirit.github.io/fsbrain/reference/desaturate.md)
   : Perform simple desaturation or grayscale conversion of RGBA colors.
 
+- [`download_fs_LR_32_atlases()`](https://dfsp-spirit.github.io/fsbrain/reference/download_fs_LR_32_atlases.md)
+  : Download atlas files for the fs_LR 32k template.
+
+- [`download_fs_LR_32_meshes()`](https://dfsp-spirit.github.io/fsbrain/reference/download_fs_LR_32_meshes.md)
+  : Download surface meshes for the fs_LR 32k template.
+
 - [`download_fsaverage()`](https://dfsp-spirit.github.io/fsbrain/reference/download_fsaverage.md)
   : Download the FreeSurfer v6 fsaverage subject.
 
@@ -153,6 +162,9 @@
 
 - [`download_fsaverage6()`](https://dfsp-spirit.github.io/fsbrain/reference/download_fsaverage6.md)
   : Download the FreeSurfer v6 fsaverage6 subject.
+
+- [`download_fsaverage_atlases()`](https://dfsp-spirit.github.io/fsbrain/reference/download_fsaverage_atlases.md)
+  : Download atlas files for the fsaverage template subject.
 
 - [`download_fsaverage_minimal()`](https://dfsp-spirit.github.io/fsbrain/reference/download_fsaverage_minimal.md)
   : Download only essential FreeSurfer v6 fsaverage files for quick
@@ -237,6 +249,9 @@
 
 - [`get.atlas.region.names()`](https://dfsp-spirit.github.io/fsbrain/reference/get.atlas.region.names.md)
   : Determine atlas region names from a subject.
+
+- [`get.fsbrain.renderer.backend()`](https://dfsp-spirit.github.io/fsbrain/reference/get.fsbrain.renderer.backend.md)
+  : Get the current fsbrain renderer backend
 
 - [`get.rglstyle()`](https://dfsp-spirit.github.io/fsbrain/reference/get.rglstyle.md)
   : Get the default visualization style parameters as a named list.

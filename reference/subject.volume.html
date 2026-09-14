@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">fsbrain</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -21,6 +21,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/fsbrain_faq.html">The fsbrain FAQ</a></li>
     <li><a class="dropdown-item" href="../articles/fsbrain_vol.html">Brain volume visualization with fsbrain</a></li>
+    <li><a class="dropdown-item" href="../articles/fsbrain_with_scimesh.html">fsbrain with the scimesh rendering backend</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -34,7 +35,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Read a brain volume.</h1>
-      <small class="dont-index">Source: <a href="https://github.com/dfsp-spirit/fsbrain/blob/master/R/volume.R" class="external-link"><code>R/volume.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dfsp-spirit/fsbrain/blob/v0.8.0/R/volume.R" class="external-link"><code>R/volume.R</code></a></small>
       <div class="d-none name"><code>subject.volume.Rd</code></div>
     </div>
 
@@ -76,11 +77,11 @@
 
 
 <dt id="arg-drop-empty-dims">drop_empty_dims<a class="anchor" aria-label="anchor" href="#arg-drop-empty-dims"></a></dt>
-<dd><p>logical, whether to drop empty dimensions of the returned data. Passed to <code><a href="https://rdrr.io/pkg/freesurferformats/man/read.fs.mgh.html" class="external-link">read.fs.mgh</a></code>.</p></dd>
+<dd><p>logical, whether to drop empty dimensions of the returned data. Passed to <code><a href="https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.mgh.html" class="external-link">read.fs.mgh</a></code>.</p></dd>
 
 
 <dt id="arg-with-header">with_header<a class="anchor" aria-label="anchor" href="#arg-with-header"></a></dt>
-<dd><p>logical. Whether to return the header as well. If TRUE, return a named list with entries "data" and "header". The latter is another named list which contains the header data. These header entries exist: "dtype": int, one of: 0=MRI_UCHAR; 1=MRI_INT; 3=MRI_FLOAT; 4=MRI_SHORT. "voldim": integer vector. The volume (=data) dimensions. E.g., c(256, 256, 256, 1). These header entries may exist: "vox2ras_matrix" (exists if "ras_good_flag" is 1), "mr_params" (exists if "has_mr_params" is 1). Passed to <code><a href="https://rdrr.io/pkg/freesurferformats/man/read.fs.mgh.html" class="external-link">read.fs.mgh</a></code>.</p></dd>
+<dd><p>logical. Whether to return the header as well. If TRUE, return a named list with entries "data" and "header". The latter is another named list which contains the header data. These header entries exist: "dtype": int, one of: 0=MRI_UCHAR; 1=MRI_INT; 3=MRI_FLOAT; 4=MRI_SHORT. "voldim": integer vector. The volume (=data) dimensions. E.g., c(256, 256, 256, 1). These header entries may exist: "vox2ras_matrix" (exists if "ras_good_flag" is 1), "mr_params" (exists if "has_mr_params" is 1). Passed to <code><a href="https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.mgh.html" class="external-link">read.fs.mgh</a></code>.</p></dd>
 
 
 <dt id="arg-mri-subdir">mri_subdir<a class="anchor" aria-label="anchor" href="#arg-mri-subdir"></a></dt>

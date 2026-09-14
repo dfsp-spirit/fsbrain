@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">fsbrain</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,7 +63,7 @@
 Schäfer</h4>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/dfsp-spirit/fsbrain/blob/v0.7.0/vignettes/fsbrain_with_scimesh.Rmd" class="external-link"><code>vignettes/fsbrain_with_scimesh.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dfsp-spirit/fsbrain/blob/v0.8.0/vignettes/fsbrain_with_scimesh.Rmd" class="external-link"><code>vignettes/fsbrain_with_scimesh.Rmd</code></a></small>
       <div class="d-none name"><code>fsbrain_with_scimesh.Rmd</code></div>
     </div>
 
@@ -272,7 +272,7 @@ t-map). Both kinds of results are commonly displayed on the
 </h3>
 <p>The function <code><a href="../reference/vis.region.values.on.subject.html">vis.region.values.on.subject()</a></code> visualizes
 one value per atlas region. Here we show an example on the Desikan
-atlas, using dummy values:</p>
+atlas, using simulated values:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">atlas</span> <span class="op">=</span> <span class="st">'aparc'</span>;   <span class="co"># Desikan atlas</span></span>
 <span></span>
@@ -287,7 +287,7 @@ atlas, using dummy values:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">rh_region_value_list</span><span class="op">)</span> <span class="op">=</span> <span class="va">atlas_region_names</span>;</span>
 <span></span>
 <span><span class="va">cm</span> <span class="op">=</span> <span class="fu"><a href="../reference/vis.region.values.on.subject.html">vis.region.values.on.subject</a></span><span class="op">(</span><span class="va">sjd</span>, <span class="va">sj</span>, <span class="va">atlas</span>, <span class="va">lh_region_value_list</span>, <span class="va">rh_region_value_list</span>, views<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span>;</span>
-<span><span class="va">img</span> <span class="op">=</span> <span class="fu"><a href="../reference/export.html">export</a></span><span class="op">(</span><span class="va">cm</span>, colorbar_legend<span class="op">=</span><span class="st">'Effect size (dummy data)'</span><span class="op">)</span>;</span></code></pre></div>
+<span><span class="va">img</span> <span class="op">=</span> <span class="fu"><a href="../reference/export.html">export</a></span><span class="op">(</span><span class="va">cm</span>, colorbar_legend<span class="op">=</span><span class="st">'Effect size (simulated data)'</span><span class="op">)</span>;</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="results-vertex-based">Results: vertex-based<a class="anchor" aria-label="anchor" href="#results-vertex-based"></a>
@@ -305,11 +305,11 @@ cortex. Here we use the demo cluster data that ships with
 <span><span class="va">lh_demo_cluster_file</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"lh.clusters_fsaverage.mgz"</span>, package <span class="op">=</span> <span class="st">"fsbrain"</span>, mustWork <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>;</span>
 <span><span class="va">rh_demo_cluster_file</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"rh.clusters_fsaverage.mgz"</span>, package <span class="op">=</span> <span class="st">"fsbrain"</span>, mustWork <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>;</span>
 <span></span>
-<span><span class="va">lh_clust</span> <span class="op">=</span> <span class="fu">freesurferformats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/freesurferformats/man/read.fs.morph.html" class="external-link">read.fs.morph</a></span><span class="op">(</span><span class="va">lh_demo_cluster_file</span><span class="op">)</span>;   <span class="co"># a single positive cluster (activation), the other values are 0</span></span>
-<span><span class="va">rh_clust</span> <span class="op">=</span> <span class="fu">freesurferformats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/freesurferformats/man/read.fs.morph.html" class="external-link">read.fs.morph</a></span><span class="op">(</span><span class="va">rh_demo_cluster_file</span><span class="op">)</span>;   <span class="co"># two negative clusters</span></span>
+<span><span class="va">lh_clust</span> <span class="op">=</span> <span class="fu">freesurferformats</span><span class="fu">::</span><span class="fu"><a href="https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.morph.html" class="external-link">read.fs.morph</a></span><span class="op">(</span><span class="va">lh_demo_cluster_file</span><span class="op">)</span>;   <span class="co"># a single positive cluster (activation), the other values are 0</span></span>
+<span><span class="va">rh_clust</span> <span class="op">=</span> <span class="fu">freesurferformats</span><span class="fu">::</span><span class="fu"><a href="https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.morph.html" class="external-link">read.fs.morph</a></span><span class="op">(</span><span class="va">rh_demo_cluster_file</span><span class="op">)</span>;   <span class="co"># two negative clusters</span></span>
 <span></span>
 <span><span class="va">cm</span> <span class="op">=</span> <span class="fu"><a href="../reference/vis.symmetric.data.on.subject.html">vis.symmetric.data.on.subject</a></span><span class="op">(</span><span class="va">subjects_dir</span>, <span class="va">subject_id</span>, <span class="va">lh_clust</span>, <span class="va">rh_clust</span>, bg<span class="op">=</span><span class="st">"curv_light"</span>, views<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span>;</span>
-<span><span class="va">img</span> <span class="op">=</span> <span class="fu"><a href="../reference/export.html">export</a></span><span class="op">(</span><span class="va">cm</span>, colorbar_legend<span class="op">=</span><span class="st">'t-value (dummy data)'</span><span class="op">)</span>;</span></code></pre></div>
+<span><span class="va">img</span> <span class="op">=</span> <span class="fu"><a href="../reference/export.html">export</a></span><span class="op">(</span><span class="va">cm</span>, colorbar_legend<span class="op">=</span><span class="st">'t-value (simulated data)'</span><span class="op">)</span>;</span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -325,8 +325,8 @@ morphometry files manually from arbitrary paths (here, from the
 <em>fsbrain</em> example data via
 <code><a href="../reference/get_optional_data_filepath.html">get_optional_data_filepath()</a></code>, but they could come from
 anywhere) using the low-level
-<code><a href="https://rdrr.io/pkg/freesurferformats/man/read.fs.surface.html" class="external-link">freesurferformats::read.fs.surface()</a></code> and
-<code><a href="https://rdrr.io/pkg/freesurferformats/man/read.fs.morph.html" class="external-link">freesurferformats::read.fs.morph()</a></code> functions. We then build
+<code><a href="https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.surface.html" class="external-link">freesurferformats::read.fs.surface()</a></code> and
+<code><a href="https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.morph.html" class="external-link">freesurferformats::read.fs.morph()</a></code> functions. We then build
 coloredmeshes with <code><a href="../reference/coloredmesh.from.preloaded.data.html">coloredmesh.from.preloaded.data()</a></code> and
 render them with <code><a href="../reference/export.html">export()</a></code>. Note that we never call a
 <code>vis.subject.*</code> function and never rely on automatic
@@ -339,10 +339,10 @@ subjects_dir detection.</p>
 <span><span class="va">rh_thick_file</span> <span class="op">=</span> <span class="fu"><a href="../reference/get_optional_data_filepath.html">get_optional_data_filepath</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"subjects_dir"</span>, <span class="st">"subject1"</span>, <span class="st">"surf"</span>, <span class="st">"rh.thickness"</span><span class="op">)</span><span class="op">)</span>;</span>
 <span></span>
 <span><span class="co"># 2. Load the meshes and the per-vertex data:</span></span>
-<span><span class="va">lh_surf</span> <span class="op">=</span> <span class="fu">freesurferformats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/freesurferformats/man/read.fs.surface.html" class="external-link">read.fs.surface</a></span><span class="op">(</span><span class="va">lh_surf_file</span><span class="op">)</span>;</span>
-<span><span class="va">rh_surf</span> <span class="op">=</span> <span class="fu">freesurferformats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/freesurferformats/man/read.fs.surface.html" class="external-link">read.fs.surface</a></span><span class="op">(</span><span class="va">rh_surf_file</span><span class="op">)</span>;</span>
-<span><span class="va">lh_thick</span> <span class="op">=</span> <span class="fu">freesurferformats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/freesurferformats/man/read.fs.morph.html" class="external-link">read.fs.morph</a></span><span class="op">(</span><span class="va">lh_thick_file</span><span class="op">)</span>;</span>
-<span><span class="va">rh_thick</span> <span class="op">=</span> <span class="fu">freesurferformats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/freesurferformats/man/read.fs.morph.html" class="external-link">read.fs.morph</a></span><span class="op">(</span><span class="va">rh_thick_file</span><span class="op">)</span>;</span>
+<span><span class="va">lh_surf</span> <span class="op">=</span> <span class="fu">freesurferformats</span><span class="fu">::</span><span class="fu"><a href="https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.surface.html" class="external-link">read.fs.surface</a></span><span class="op">(</span><span class="va">lh_surf_file</span><span class="op">)</span>;</span>
+<span><span class="va">rh_surf</span> <span class="op">=</span> <span class="fu">freesurferformats</span><span class="fu">::</span><span class="fu"><a href="https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.surface.html" class="external-link">read.fs.surface</a></span><span class="op">(</span><span class="va">rh_surf_file</span><span class="op">)</span>;</span>
+<span><span class="va">lh_thick</span> <span class="op">=</span> <span class="fu">freesurferformats</span><span class="fu">::</span><span class="fu"><a href="https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.morph.html" class="external-link">read.fs.morph</a></span><span class="op">(</span><span class="va">lh_thick_file</span><span class="op">)</span>;</span>
+<span><span class="va">rh_thick</span> <span class="op">=</span> <span class="fu">freesurferformats</span><span class="fu">::</span><span class="fu"><a href="https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.morph.html" class="external-link">read.fs.morph</a></span><span class="op">(</span><span class="va">rh_thick_file</span><span class="op">)</span>;</span>
 <span></span>
 <span><span class="co"># 3. Build coloredmeshes from the preloaded data and export a multi-view figure:</span></span>
 <span><span class="va">cm_lh</span> <span class="op">=</span> <span class="fu"><a href="../reference/coloredmesh.from.preloaded.data.html">coloredmesh.from.preloaded.data</a></span><span class="op">(</span><span class="va">lh_surf</span>, morph_data <span class="op">=</span> <span class="va">lh_thick</span>, hemi <span class="op">=</span> <span class="st">"lh"</span><span class="op">)</span>;</span>

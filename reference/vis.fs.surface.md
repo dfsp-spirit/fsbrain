@@ -23,10 +23,10 @@ vis.fs.surface(
   an fs.surface instance, as returned by function like
   [`subject.surface`](https://dfsp-spirit.github.io/fsbrain/reference/subject.surface.md)
   or
-  [`read.fs.surface`](https://rdrr.io/pkg/freesurferformats/man/read.fs.surface.html).
+  [`read.fs.surface`](https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.surface.html).
   If a character string, it is assumed to be the full path of a surface
   file, and the respective file is loaded with
-  [`read.fs.surface`](https://rdrr.io/pkg/freesurferformats/man/read.fs.surface.html).
+  [`read.fs.surface`](https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.surface.html).
   If parameter 'hemi' is 'both', this must be a hemilist. A single
   `rgl::tmesh` is also fine.
 
@@ -43,7 +43,7 @@ vis.fs.surface(
   'makecmap_options'. If a character string, it is assumed to be the
   full path of a morphometry data file, and the respective file is
   loaded with
-  [`read.fs.morph`](https://rdrr.io/pkg/freesurferformats/man/read.fs.morph.html).
+  [`read.fs.morph`](https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.morph.html).
   If parameter 'hemi' is 'both', this must be a hemilist.
 
 - hemi:

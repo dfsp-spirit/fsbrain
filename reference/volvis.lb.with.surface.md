@@ -21,6 +21,7 @@ volvis.lb.with.surface(
   surface_lwd = 1,
   slices = -5,
   axis = 1L,
+  scale = 1L,
   per_row = 5L,
   per_col = NULL,
   border_geometry = "5x5",
@@ -85,6 +86,15 @@ volvis.lb.with.surface(
 
   integer, the slice axis. 1 = sagittal, 2 = coronal, 3 = axial (in
   volume CRS convention). Defaults to `1L`.
+
+- scale:
+
+  integer \>= 1, the factor by which to upscale the slice images in both
+  dimensions using nearest-neighbor interpolation (keeps the MRI pixels
+  sharp, which is good for QA). The surface contour lines are drawn on a
+  high-resolution overlay and downsampled to the final size, so they
+  appear thin and smooth. Defaults to `1L` (no upscaling, previous
+  behavior).
 
 - per_row:
 
@@ -163,5 +173,9 @@ if (FALSE) { # \dontrun{
    img <- volvis.lb.with.surface(subjects_dir, "subject1",
       volume="brain", surface=c("white", "pial"), axis=3L,
       surface_color=c("#FF0000", "#0000FF", "#00FF00", "#FF8800"));
+
+   # 2x upscaled slices for larger images with thin, smooth contours:
+   img <- volvis.lb.with.surface(subjects_dir, "subject1",
+      volume="brain", surface="white", axis=3L, scale=2L);
 } # }
 ```

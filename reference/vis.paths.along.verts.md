@@ -20,7 +20,7 @@ vis.paths.along.verts(
   returned as part of
   [`subject.surface`](https://dfsp-spirit.github.io/fsbrain/reference/subject.surface.md)
   or
-  [`read.fs.surface`](https://rdrr.io/pkg/freesurferformats/man/read.fs.surface.html),
+  [`read.fs.surface`](https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.surface.html),
   in the member "vertices". Can also be a
   `freesurferformats::fs.surface` or
   [`rgl::tmesh3d`](https://dmurdoch.github.io/rgl/dev/reference/mesh3d.html)

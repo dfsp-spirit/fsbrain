@@ -17,7 +17,7 @@ mesh.ras2crs(surface)
 - surface:
 
   an `fs.surface` instance, as returned by
-  [`read.fs.surface`](https://rdrr.io/pkg/freesurferformats/man/read.fs.surface.html).
+  [`read.fs.surface`](https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.surface.html).
 
 ## Value
 

@@ -14,14 +14,14 @@ vis.seg.legend(colortable, segvol, ...)
 
   a colortable data.frame, or a character string, which will be treated
   as a filename and loaded with
-  [`read.fs.colortable`](https://rdrr.io/pkg/freesurferformats/man/read.fs.colortable.html).
+  [`read.fs.colortable`](https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.colortable.html).
   Typically `FS_HOME/FreeSurferColorLUT.txt`.
 
 - segvol:
 
   optional 3D or 4D array of integer data, the brain segmentation. Or a
   character string, which will be treated as a filename and loaded with
-  [`read.fs.volume`](https://rdrr.io/pkg/freesurferformats/man/read.fs.volume.html).
+  [`read.fs.volume`](https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.volume.html).
   If given, only colortable entries which actually occur in the volume
   data are plotted. If `NULL`, all entries are plotted, which may be a
   lot.

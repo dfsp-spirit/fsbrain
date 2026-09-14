@@ -16,7 +16,7 @@ face.edges(surface_mesh, face_indices = "all")
   surface mesh, as loaded by
   [`subject.surface`](https://dfsp-spirit.github.io/fsbrain/reference/subject.surface.md)
   or
-  [`read.fs.surface`](https://rdrr.io/pkg/freesurferformats/man/read.fs.surface.html).
+  [`read.fs.surface`](https://dfsp-spirit.github.io/freesurferformats/reference/read.fs.surface.html).
 
 - face_indices:
 
