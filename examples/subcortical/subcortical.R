@@ -94,7 +94,7 @@ vis.subcortical.example <- function(subjects_dir, subject_id, output_dir = ".",
     output_img_ctx = file.path(output_dir, "subcortical_region_values_in_cortex.png");
     cm_ctx = fsbrain::vis.subcortical.region.values(subjects_dir, subject_id,
         lh_region_value_list = region_value_lists$lh, rh_region_value_list = region_value_lists$rh,
-        surface = 'subcortical', cortex = list('surface' = 'white', 'color' = '#B0B0B0', 'alpha' = 0.15),
+        surface = 'subcortical', cortex = list('surface' = 'white', 'color' = '#B0B0B0', 'alpha' = 0.05),
         makecmap_options = fsbrain::mkco.seq(),
         rglactions = list('no_vis' = TRUE), silent = silent);
     fsbrain::export(cm_ctx, view_angles = views, colorbar_legend = "random value",
