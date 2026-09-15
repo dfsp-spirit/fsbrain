@@ -52,6 +52,7 @@ test_that("Visualizing a single image for a group of subjects works for standard
 test_that("Visualizing a single image for a group of subjects works for atlas data.", {
     testthat::skip_on_cran(); # skip: leads to memory errors ('cannot allocate vector of size XX MB') on CRAN.
     testthat::skip_if_not(box.has.x11display(), "This test requires X11.");
+    skip_if_rgl_window_required();
     fsbrain::download_optional_data();
     subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
     skip_if_not(dir.exists(subjects_dir), message="Test data missing.");

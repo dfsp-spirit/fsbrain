@@ -79,22 +79,17 @@ jobs:
         run: |
           brew install --cask xquartz
           # ImageMagick 'convert' is used by take.screenshot()'s PDF->PNG fallback,
-          # which is taken when rgl.useNULL() is TRUE (RGL_USE_NULL=true, set below)
-          # and rgl.snapshot() is unavailable. Recent macos runner images (e.g.
+          # which is taken when rgl.useNULL() is TRUE (RGL_USE_NULL, set for the check
+          # step below) and rgl.snapshot() is unavailable. Recent macos runner images (e.g.
           # macos-26-arm64) no longer ship ImageMagick, so install it explicitly.
           # Ghostscript is required as ImageMagick's PDF delegate: the standard
           # 'imagemagick' formula is built with --without-gslib and cannot read
           # PDFs without the external 'gs' binary.
           brew install imagemagick ghostscript
-          export DISPLAY=:99
 
 #      - name: Install mesa under Linux
 #        if: runner.os == 'Linux'
 #        run: sudo apt-get build-dep mesa
-
-      - name: Stop rgl from breaking CI with its warnings
-        if: runner.os != 'Windows'
-        run: export RGL_USE_NULL=true
 
 
       - name: Install curl on Windows
@@ -111,6 +106,12 @@ jobs:
       - name: Check
         env:
           _R_CHECK_CRAN_INCOMING_REMOTE_: false
+          # Let rgl use its headless 'NULL' device on the non-Windows runners, which have no real
+          # display: the tests that need a window to take a screenshot then skip themselves
+          # (see skip_if_rgl_window_required()). Note that the environment must be set here, in the
+          # 'env' of the step that runs the check: an 'export' in another step has no effect, since
+          # each 'run:' block gets a fresh shell.
+          RGL_USE_NULL: ${{ runner.os != 'Windows' }}
         run: |
           options(crayon.enabled = TRUE)
           rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = c("error"), check_dir = "check")

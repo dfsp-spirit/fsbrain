@@ -245,6 +245,7 @@ test_that("Volume contour overlaid on both hemispheres in t4 layout", {
 test_that("A high-quality QA image can be produced: surface + volume contour", {
     testthat::skip_on_cran();
     skip_if_rgl_required();
+    skip_if_rgl_window_required();
     skip_if(tests_running_on_cran_under_macos(),
         message = "Skipping on CRAN under MacOS, required test data cannot be downloaded.");
     skip_if_not(box.has.x11display(),

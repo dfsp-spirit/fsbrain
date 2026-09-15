@@ -27,6 +27,26 @@ Note that `devtools::test()` sets the environment variable `NOT_CRAN=true`, whic
 NOT_CRAN=true Rscript -e 'testthat::test_dir("tests/testthat")'
 ```
 
+### Avoiding the flood of rgl windows
+
+Almost every `vis.*` call opens a new rgl window, and the test suite calls them a lot. On a normal desktop, all those windows pop up and steal the focus, which makes the machine unusable while the tests run. There are two ways around that:
+
+* Render to a virtual X display. This keeps *all* tests running (including the ones that take screenshots), but into a display that you cannot see:
+
+```sh
+xvfb-run -a Rscript -e 'devtools::test()'
+```
+
+  This requires the `xvfb` package, e.g., `sudo apt-get install xvfb` on Debian/Ubuntu. It is the recommended way to run the suite locally on Linux.
+
+* Or let rgl use its headless "NULL" device, so that no windows are created at all. Tests that need a real window for a screenshot skip themselves (see `skip_if_rgl_window_required()` in `tests/testthat/helper-functions.R`), all other tests run normally:
+
+```sh
+RGL_USE_NULL=true NOT_CRAN=true Rscript -e 'testthat::test_dir("tests/testthat")'
+```
+
+  On CI runners without a display, rgl falls back to the NULL device automatically, so the same tests skip there as well.
+
 ## Running the unit tests with the scimesh renderer backend
 
 fsbrain can produce static images with two backends: **rgl** (the default; interactive, hardware-accelerated, needs a display / X11) and **scimesh** (headless, software, no display). The test suite can be run under either backend.
