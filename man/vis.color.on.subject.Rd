@@ -77,6 +77,7 @@ Other visualization functions:
 \code{\link[=vis.subject.morph.standard]{vis.subject.morph.standard()}},
 \code{\link[=vis.subject.pre]{vis.subject.pre()}},
 \code{\link[=vis.symmetric.data.on.subject]{vis.symmetric.data.on.subject()}},
+\code{\link[=vis.volume.clusters]{vis.volume.clusters()}},
 \code{\link[=vis.volume.on.surface]{vis.volume.on.surface()}},
 \code{\link[=vislayout.from.coloredmeshes]{vislayout.from.coloredmeshes()}}
 

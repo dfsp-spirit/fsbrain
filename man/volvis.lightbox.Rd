@@ -50,6 +50,7 @@ You should, in most cases, not call this function directly. Use \code{\link[fsbr
 \code{\link[fsbrain]{volvis.lb}}
 
 Other volume visualization:
+\code{\link[=vis.volume.clusters]{vis.volume.clusters()}},
 \code{\link[=vis.volume.on.surface]{vis.volume.on.surface()}},
 \code{\link[=volvis.lb]{volvis.lb()}},
 \code{\link[=volvis.lb.with.surface]{volvis.lb.with.surface()}},

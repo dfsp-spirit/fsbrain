@@ -225,10 +225,12 @@ get.sorted.cmeshes <- function(coloredmeshes) {
         # This is the old style of passing the list: unsorted with unmerged colormaps. We need to fiddle with the data.
         # Some functions still use this, but they will all be reworked in the future. Once done, this part can be removed.
         # Note that passing a flat list of meshes which are not hemisphere-specific (like the volume
-        # iso-surface shells created by 'volvis.shells') is a valid use of this style, so we only warn
-        # if the list actually contains meshes which are assigned to a hemisphere.
-        has_hemi_meshes = any(vapply(coloredmeshes, function(cmesh) { ! is.null(cmesh$hemi); }, logical(1L)));
-        if(has_hemi_meshes) {
+        # iso-surface shells created by 'volvis.shells') is a valid use of this style, and so is a list
+        # which mixes both kinds (e.g., a semi-transparent cortex plus volume data, see
+        # 'vis.volume.clusters'), so we only warn if the list contains *nothing but* meshes which are
+        # assigned to a hemisphere.
+        is_hemi_mesh = vapply(coloredmeshes, function(cmesh) { ! is.null(cmesh$hemi); }, logical(1L));
+        if(length(is_hemi_mesh) > 0L && all(is_hemi_mesh)) {
             warning("The old style of passing coloredmeshes should not be in use anymore.");
         }
         hemi_sorted_cmeshes = sortcoloredmeshes.by.hemi(coloredmeshes);

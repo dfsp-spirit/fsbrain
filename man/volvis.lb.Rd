@@ -56,6 +56,7 @@ volvis.lb("~/study1/subject1/mri/aseg.mgz", background = "~/study1/subject1/mri/
 }
 \seealso{
 Other volume visualization:
+\code{\link[=vis.volume.clusters]{vis.volume.clusters()}},
 \code{\link[=vis.volume.on.surface]{vis.volume.on.surface()}},
 \code{\link[=volvis.lb.with.surface]{volvis.lb.with.surface()}},
 \code{\link[=volvis.lightbox]{volvis.lightbox()}},

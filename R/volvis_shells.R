@@ -154,7 +154,7 @@ shell.volume.data <- function(volume, frame = 1L) {
     }
     if(length(dim(volume)) == 4L) {
         if(frame == "all") {
-            stop("Parameter 'frame' must be a single positive integer for 'volvis.shells'.\n");
+            stop("Parameter 'frame' must be a single positive integer, the frame of the 4D volume to use.");
         }
         if(! (is.numeric(frame) && length(frame) == 1L && frame >= 1L && frame <= dim(volume)[4])) {
             stop(sprintf("Parameter 'frame' must be a value between 1 and %d for this 4D volume.\n", dim(volume)[4]));

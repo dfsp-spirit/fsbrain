@@ -100,9 +100,11 @@ Other visualization functions:
 \code{\link[=vis.subject.morph.standard]{vis.subject.morph.standard()}},
 \code{\link[=vis.subject.pre]{vis.subject.pre()}},
 \code{\link[=vis.symmetric.data.on.subject]{vis.symmetric.data.on.subject()}},
+\code{\link[=vis.volume.clusters]{vis.volume.clusters()}},
 \code{\link[=vislayout.from.coloredmeshes]{vislayout.from.coloredmeshes()}}
 
 Other volume visualization:
+\code{\link[=vis.volume.clusters]{vis.volume.clusters()}},
 \code{\link[=volvis.lb]{volvis.lb()}},
 \code{\link[=volvis.lb.with.surface]{volvis.lb.with.surface()}},
 \code{\link[=volvis.lightbox]{volvis.lightbox()}},

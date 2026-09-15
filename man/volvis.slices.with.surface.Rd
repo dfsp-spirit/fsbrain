@@ -102,6 +102,7 @@ Creates individual 2D slice images with surface contour overlays and exports the
 }
 \seealso{
 Other volume visualization:
+\code{\link[=vis.volume.clusters]{vis.volume.clusters()}},
 \code{\link[=vis.volume.on.surface]{vis.volume.on.surface()}},
 \code{\link[=volvis.lb]{volvis.lb()}},
 \code{\link[=volvis.lb.with.surface]{volvis.lb.with.surface()}},
