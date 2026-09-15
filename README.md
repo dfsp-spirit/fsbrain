@@ -195,7 +195,7 @@ We support subcortical visualization (treating subcortial structures as regions,
 
 ![Vissubcortical](./web/fsbrain_vis_subcortical.png?raw=true "Subcortical visualization using FreeSurfer ASEG structures. Rendered with fsbrain.")
 
-It is also possible to hide a subset of the subcortical structures by passing `NAN` as their respective data value.
+It is also possible to hide a subset of the subcortical structures by passing `NAN` as their respective data value. See [examples/subcortical/](./examples/subcortical/) for a full example app.
 
 ### Example Notebooks
 
