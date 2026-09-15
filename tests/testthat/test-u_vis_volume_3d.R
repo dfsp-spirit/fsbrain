@@ -160,15 +160,15 @@ test_that("Brain structures can be rendered as contours using misc3d", {
     ## ---- Draw the surface of the left hemi, and the ventricle contours into the same plot ----
     vis.subject.morph.native(subjects_dir, 'subject1', 'thickness', 'lh', views = 'si', style='semitransparent');
     vent_tris = misc3d::contour3d(ventricle_mask_mod, level=3, color="red", draw=FALSE);
-    # # Fix the rendering coords to surface RAS
-    vent_tris = apply.transform(vent_tris, vox2ras_tkr());
+    # # Fix the rendering coords to surface RAS (the contour is in 1-based R array index space).
+    vent_tris = apply.transform(vent_tris, index2ras_tkr());
     misc3d::drawScene.rgl(vent_tris, add = TRUE);
 
     ## Add transparent overlay of whole brain for worse performance ><
     have_mighty_computer = TRUE;
     if(have_mighty_computer) {
         brain_tris = misc3d::contour3d(aseg, level=1, color="gray", alpha=0.1, back='culled', draw = FALSE);
-        brain_tris = apply.transform(brain_tris, vox2ras_tkr());
+        brain_tris = apply.transform(brain_tris, index2ras_tkr());
         misc3d::drawScene.rgl(brain_tris, add = TRUE);
     }
 

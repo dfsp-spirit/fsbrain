@@ -52,13 +52,14 @@ test_that("Brain volume CRS voxels are rendered at the correct surface space RAS
     # ----- Draw a red dot at surface RAS origin -----
     # The voxel at the origin of surface RAS coordinate system. Note that this is NOT expected to be in the
     #   center of the brain surface (because the brain surface is not centered at 0.0, 0.0, 0.0, see the min/max vertex coords along the axes).
+    # The FreeSurfer CRS indices are 0-based, so they can be passed to vox2ras_tkr() directly.
     fs_crs = c(128, 128, 128);
-    surface_ras_coords = (vox2ras_tkr() %*% vol.vox.from.crs(fs_crs, add_affine=TRUE))[1:3]; # switch to 1-based R indices with affine column, matmult, then strip affine column from result.
+    surface_ras_coords = (vox2ras_tkr() %*% c(fs_crs, 1))[1:3];
     rgl::spheres3d(surface_ras_coords, r = 5, color = "#ff0000");    # adds to the active surface plot.
 
      # ----- Draw a set of 8 green spheres at the outer corners of the 256x256x256 volume (in surface RAS space) -----
      fs_boundary_crs = matrix(c(0, 0, 0, 0, 0, 255, 0, 255, 255, 0, 255, 0, 255, 255, 255, 255, 0, 0, 255, 255, 0, 255, 0, 255), ncol=3, byrow=TRUE);
-     boundary_crs_aff = vol.vox.from.crs(fs_boundary_crs, add_affine=TRUE); # switch to 1-based R indices, add affine column
+     boundary_crs_aff = cbind(fs_boundary_crs, 1.0); # the corners are CRS (0-based) indices, add the homogeneous column
      for(row_idx in seq_len(nrow(boundary_crs_aff))) {
          surface_ras = (vox2ras_tkr() %*% boundary_crs_aff[row_idx,])[1:3];
          rgl::spheres3d(surface_ras, r = 5, color = "#00ff00");
@@ -66,7 +67,7 @@ test_that("Brain volume CRS voxels are rendered at the correct surface space RAS
 
      # Compute the bounding box of the brain from the volume data, plot blue spheres at border.
      bbox = vol.boundary.box(brain$data);
-     bbox_R_aff = cbind(bbox$edge_coords, 1);
+     bbox_R_aff = cbind(bbox$edge_coords - 1.0, 1.0);   # edge_coords are 1-based R indices, map them to CRS
      for(row_idx in seq_len(nrow(bbox_R_aff))) {
          surface_ras = (vox2ras_tkr() %*% bbox_R_aff[row_idx,])[1:3];
          rgl::spheres3d(surface_ras, r = 5, color = "#0000ff");

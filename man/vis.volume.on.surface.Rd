@@ -63,7 +63,7 @@ vis.volume.on.surface(
 invisible named list with entries: \code{"surface"} (the coloredmeshes from the surface rendering, a hemilist of \code{coloredmesh} instances) and \code{"volume"} (the volume rendering result: a \code{Triangles3D} object for contour mode, or a list of \code{coloredvoxels} for voxel mode).
 }
 \description{
-Render a brain volume (as an isosurface or as voxels) together with a cortical surface mesh colored by morphometry data in the same interactive 3D scene. The volume coordinates are transformed to surface RAS space using the FreeSurfer \code{vox2ras_tkr} matrix, ensuring proper spatial alignment of volume and surface.
+Render a brain volume (as an isosurface or as voxels) together with a cortical surface mesh colored by morphometry data in the same interactive 3D scene. The volume coordinates are transformed to surface RAS space using the FreeSurfer \code{\link[fsbrain]{vox2ras_tkr}} matrix (more precisely \code{\link[fsbrain]{index2ras_tkr}}, see there for the R-index versus CRS distinction), ensuring proper spatial alignment of volume and surface.
 }
 \examples{
 \dontrun{

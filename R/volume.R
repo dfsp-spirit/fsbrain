@@ -145,3 +145,48 @@ ras2vox_tkr <- function() {
 }
 
 
+#' @title Create a 4x4 translation matrix.
+#'
+#' @description Create the affine matrix which translates coordinates by the given offsets, for use with \code{\link[fsbrain]{apply.transform}}.
+#'
+#' @param x numerical scalar, the translation along the first axis.
+#'
+#' @param y numerical scalar, the translation along the second axis.
+#'
+#' @param z numerical scalar, the translation along the third axis.
+#'
+#' @return numeric 4x4 matrix, the translation matrix.
+#'
+#' @keywords internal
+translation.matrix <- function(x = 0.0, y = 0.0, z = 0.0) {
+    return(matrix(c(1.0, 0.0, 0.0, x,
+                    0.0, 1.0, 0.0, y,
+                    0.0, 0.0, 1.0, z,
+                    0.0, 0.0, 0.0, 1.0), nrow = 4L, byrow = TRUE));
+}
+
+
+#' @title The affine matrix that maps 1-based R array indices to surface RAS.
+#'
+#' @description Meshes and coordinates that were computed from a volume *array* in R are expressed in **1-based R array indices**: the first voxel of the volume is at index 1, the second at index 2, and so on. This is the convention of the iso-surfaces returned by \code{\link[fsbrain]{shell.extract.mesh}} and \code{\link[fsbrain]{volvis.contour}}, and of the indices returned by `which(volume != 0, arr.ind = TRUE)`.
+#'
+#'   The FreeSurfer \code{\link[fsbrain]{vox2ras_tkr}} matrix, in contrast, expects **0-based CRS** (column, row, slice) indices: the first voxel of the volume is at CRS (0, 0, 0), and (as the name says) the *voxel* index is mapped to RAS. Feeding 1-based R indices to `vox2ras_tkr()` shifts the result by one voxel (1 mm for a conformed volume), which is why volume data seemed to be slightly offset from the brain surface it was rendered with.
+#'
+#'   This function returns the matrix which maps 1-based R array indices to surface RAS, i.e., `vox2ras_tkr() %*% translation.matrix(-1, -1, -1)`. It is used internally by the volume visualization functions, and can be used to transform the meshes returned by \code{\link[fsbrain]{volvis.contour}} (or `misc3d::contour3d`) so that they are aligned with surface renderings of the same subject.
+#'
+#' @return numeric 4x4 matrix, the mapping from 1-based R array indices to surface RAS.
+#'
+#' @examples
+#'    # The first voxel of a conformed volume (R index 1) is at CRS (0, 0, 0):
+#'    (index2ras_tkr() %*% c(1, 1, 1, 1))[1:3];
+#'    # which is the position reported by the vox2ras_tkr matrix for CRS (0, 0, 0):
+#'    (vox2ras_tkr() %*% c(0, 0, 0, 1))[1:3];
+#'
+#' @family surface and volume coordinates
+#'
+#' @export
+index2ras_tkr <- function() {
+    return(vox2ras_tkr() %*% translation.matrix(-1.0, -1.0, -1.0));
+}
+
+

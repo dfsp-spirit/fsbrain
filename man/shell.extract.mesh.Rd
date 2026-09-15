@@ -17,6 +17,6 @@ shell.extract.mesh(volume, level, backend)
 a \code{mesh3d} instance with normals, in the voxel space of the volume, or \code{NULL} if the level is not within the range of the data.
 }
 \description{
-The mesh is returned in the voxel space of the volume, using 1-based voxel indices (the convention used by the \code{vox2ras_tkr} matrix and by \code{misc3d}), no matter which backend is used.
+The mesh is returned in the voxel space of the volume, using 1-based R array indices (i.e., the first voxel of the volume is at index 1), no matter which backend is used. Use \code{\link[fsbrain]{index2ras_tkr}} (not \code{vox2ras_tkr()}, which expects 0-based CRS indices) to transform such a mesh to surface RAS. The result is welded and free of degenerate faces, see \code{\link[fsbrain]{mesh.weld}}.
 }
 \keyword{internal}

@@ -8,7 +8,7 @@
 
 #' @title Visualize a volume as nested, semi-transparent iso-surface shells.
 #'
-#' @description Visualize the iso-surfaces (*shells*) of a volume at several levels as nested, semi-transparent meshes, like the nested contour lines of a topographic map. This is useful to show the shape and the internal structure of a volume at the same time, e.g., for a statistical map: the outer shells (low levels) are rendered more transparently than the inner ones (high levels), so that the inner structure remains visible. The volume is extracted in voxel space and transformed to surface RAS with the FreeSurfer \code{\link[fsbrain]{vox2ras_tkr}} matrix, so the result is spatially aligned with surface renderings of the same subject (see \code{\link[fsbrain]{vis.subject.morph.native}}). To combine the shells with a surface rendering, use the `rglactions` parameter of the surface function (key 'no_vis') to keep the rendering window open, or call this function with `views = NULL` and render the returned meshes yourself.
+#' @description Visualize the iso-surfaces (*shells*) of a volume at several levels as nested, semi-transparent meshes, like the nested contour lines of a topographic map. This is useful to show the shape and the internal structure of a volume at the same time, e.g., for a statistical map: the outer shells (low levels) are rendered more transparently than the inner ones (high levels), so that the inner structure remains visible. The volume is extracted in voxel space and transformed to surface RAS with the \code{\link[fsbrain]{index2ras_tkr}} matrix, so the result is spatially aligned with surface renderings of the same subject (see \code{\link[fsbrain]{vis.subject.morph.native}}). To combine the shells with a surface rendering, use the `rglactions` parameter of the surface function (key 'no_vis') to keep the rendering window open, or call this function with `views = NULL` and render the returned meshes yourself.
 #'
 #' @param volume a 3D numerical array (or an `fs.volume` instance), the volume to visualize. Values 0 and `NA` are treated as background when the levels are computed automatically, and the shells are the iso-surfaces at the computed (or given) levels.
 #'
@@ -112,8 +112,10 @@ volvis.shells <- function(volume, levels = NULL, num_levels = 4L, level_type = "
         if(is.null(mesh)) {
             stop(sprintf("The iso-level %g is not within the range of the volume data, no shell was found. Use 'level_range' or the 'levels' parameter to stay within the data range.\n", levels[level_idx]));
         }
-        # Transform from voxel space (of the possibly subsampled volume) to surface RAS.
-        mesh = apply.transform(mesh, vox2ras_tkr() %*% volume.subsample.matrix(downsample));
+        # Transform from the R array index space (of the possibly subsampled volume) to surface RAS.
+        # Note that mesh vertices are in 1-based R array indices, so 'index2ras_tkr' is the correct
+        # matrix here, not 'vox2ras_tkr' (which expects 0-based CRS indices).
+        mesh = apply.transform(mesh, index2ras_tkr() %*% volume.subsample.matrix(downsample));
         if(! is.null(cut_away)) {
             mesh = shell.cut.away(mesh, cut_away = cut_away, cut_fraction = cut_fraction);
         }
@@ -289,7 +291,7 @@ volume.subsample <- function(volume, factor = 1L) {
 
 #' @title Compute the transform between the voxel space of a subsampled volume and the original voxel space.
 #'
-#' @description Subsampling a volume with a factor `f` keeps voxels 1, 1+f, 1+2f, ... of the original volume, so the coordinate `i` of the subsampled volume corresponds to the original voxel coordinate `i*f + (1-f)/2` (e.g., for `f = 2`: 1, 3, 5, ... stay at 1.5, 3.5, 5.5 of the original volume). This function returns the 4x4 affine matrix which implements this mapping, it can be composed with the `vox2ras_tkr` matrix to transform subsampled shells to surface RAS.
+#' @description Subsampling a volume with a factor `f` keeps voxels 1, 1+f, 1+2f, ... of the original volume, so the coordinate `i` of the subsampled volume corresponds to the original 1-based R array index `i*f + (1-f)` (e.g., for `f = 2`: the subsampled voxels are the original voxels 1, 3, 5, ... and they stay at 1, 3, 5 of the original volume). This function returns the 4x4 affine matrix which implements this mapping. Note that it maps to 1-based R array indices, so it has to be composed with `index2ras_tkr()` (and not with `vox2ras_tkr()`, which expects 0-based CRS indices) to transform subsampled shells to surface RAS.
 #'
 #' @param factor positive integer, the subsampling factor.
 #'
@@ -298,7 +300,7 @@ volume.subsample <- function(volume, factor = 1L) {
 #' @keywords internal
 volume.subsample.matrix <- function(factor = 1L) {
     factor = as.integer(factor);
-    shift = (1.0 - factor) / 2.0;
+    shift = 1.0 - factor;
     return(matrix(c(factor, 0, 0, shift,
                     0, factor, 0, shift,
                     0, 0, factor, shift,
@@ -335,7 +337,7 @@ shell.backend <- function(backend = "auto") {
 
 #' @title Extract the iso-surface mesh of a volume at one level.
 #'
-#' @description The mesh is returned in the voxel space of the volume, using 1-based voxel indices (the convention used by the `vox2ras_tkr` matrix and by `misc3d`), no matter which backend is used.
+#' @description The mesh is returned in the voxel space of the volume, using 1-based R array indices (i.e., the first voxel of the volume is at index 1), no matter which backend is used. Use \code{\link[fsbrain]{index2ras_tkr}} (not `vox2ras_tkr()`, which expects 0-based CRS indices) to transform such a mesh to surface RAS. The result is welded and free of degenerate faces, see \code{\link[fsbrain]{mesh.weld}}.
 #'
 #' @param volume a 3D numerical array, in voxel space.
 #'
@@ -353,18 +355,38 @@ shell.extract.mesh <- function(volume, level, backend) {
     if(backend == "Rvcg") {
         # VCGLib marching cubes: fast, and it returns a vertex-welded mesh with normals. Note that
         # 'Rvcg' flips the first two axes by default (its 'IJK2RAS' argument) and returns 0-based
-        # voxel indices, so we ask for unmodified coordinates and shift them to 1-based indices
-        # afterwards. This way, both backends produce meshes in the same coordinate system, and the
-        # meshes can be transformed to surface RAS with the vox2ras_tkr matrix.
-        mesh = Rvcg::vcgIsosurface(volume, threshold = level, IJK2RAS = diag(4L));
+        # voxel indices, so we ask for unmodified coordinates and shift them to 1-based R array
+        # indices afterwards. This way, both backends produce meshes in the same coordinate system,
+        # and the meshes can be transformed to surface RAS with the 'index2ras_tkr' matrix.
+        #
+        # Also note that 'vcgIsosurface' expects an *integer valued* volume (see its docs, and the
+        # 'storage.mode(v) <- "integer"' in its example) and silently truncates double values. For a
+        # statistical map this moves the iso-surface by up to one intensity unit, which is about
+        # 1.5 mm in space, and makes it blocky: on a synthetic Gaussian blob the extracted sphere had
+        # a 14 percent smaller radius than the true level set, and the voxel values at its vertices
+        # were ~0.8 units too high. The volume is therefore mapped to a fine integer grid first, with
+        # the level scaled along with it (1e6 steps over the data range, i.e., a resolution of about
+        # 1e-6 of the range).
+        vol_range = max(volume) - min(volume);
+        if(is.finite(vol_range) && vol_range > 0.0) {
+            level_scale = max(1.0, round(1e6 / vol_range));
+        } else {
+            level_scale = 1.0;
+        }
+        vol_min = min(volume);
+        mesh = Rvcg::vcgIsosurface(round((volume - vol_min) * level_scale),
+            threshold = (level - vol_min) * level_scale, IJK2RAS = diag(4L));
         mesh$vb[1:3, ] = mesh$vb[1:3, , drop = FALSE] + 1.0;
-        return(mesh);
     } else {
         # misc3d: returns a 'Triangles3D' instance, which is converted to a mesh. Note that the
         # resulting mesh is not welded, it has one vertex per triangle corner.
         tris = misc3d::contour3d(volume, level = level, draw = FALSE);
-        return(Triangles3D.to.coloredmesh(tris, hemi = NULL, add_normals = TRUE)$mesh);
+        mesh = Triangles3D.to.coloredmesh(tris, hemi = NULL, add_normals = FALSE)$mesh;
     }
+    # Weld and clean the mesh: 'misc3d' returns completely unwelded meshes (one vertex per triangle
+    # corner) and both backends can return a few degenerate faces, which render badly with lighting
+    # enabled, see mesh.weld().
+    return(mesh.weld(mesh, drop_degenerate = TRUE, add_normals = TRUE));
 }
 
 

@@ -3,7 +3,7 @@
 
 #' @title Voxel-based visualization of volume mask at surface RAS positions.
 #'
-#' @description Plots a 3D box at every *foreground* voxel in the given volume. All voxels which do not have their intensity value set to `NA` are considered *foreground* voxels. The locations at which to plot the voxels is computed from the voxel CRS indices using the FreeSurfer \code{\link[fsbrain]{vox2ras_tkr}} matrix. This means that the position of the rendered data fits to the surface coordinates (in files like `surf/lh.white`), and that you can call this function while an active surface rendering window is open (e.g., from calling \code{\link[fsbrain]{vis.subject.morph.native}}), to superimpose the surface and volume data. **On coloring the voxels** (using *rgl materials*): Note that you can call this function several times for the active plot, and color the voxels differently by passing different material properties in each call. Alternatively, check the `voxelcol` parameter.
+#' @description Plots a 3D box at every *foreground* voxel in the given volume. All voxels which do not have their intensity value set to `NA` are considered *foreground* voxels. The locations at which to plot the voxels is computed from the 1-based R array indices of the voxels using the \code{\link[fsbrain]{index2ras_tkr}} matrix (see \code{\link[fsbrain]{vox2ras_tkr}} for the CRS-based variant). This means that the position of the rendered data fits to the surface coordinates (in files like `surf/lh.white`), and that you can call this function while an active surface rendering window is open (e.g., from calling \code{\link[fsbrain]{vis.subject.morph.native}}), to superimpose the surface and volume data. **On coloring the voxels** (using *rgl materials*): Note that you can call this function several times for the active plot, and color the voxels differently by passing different material properties in each call. Alternatively, check the `voxelcol` parameter.
 #'
 #' @param volume numeric 3d array, voxels which should not be plotted must have value `NA`. Take care not to plot too many.
 #'
@@ -76,7 +76,9 @@ volvis.voxels <- function(volume, render_every=1, voxelcol=NULL, ...) {
     if(num_foreground_voxels > 0) {
         voxel_crs = cbind(voxel_crs, 1); # turn coords into homogeneous repr.
         surface_ras = matrix(rep(0, length(rendered_voxels)*3), ncol=3);
-        vox2surface_ras_matrix = vox2ras_tkr();
+        # The indices from 'which(..., arr.ind = TRUE)' are 1-based R array indices, so the
+        # 'index2ras_tkr' matrix is used instead of the 'vox2ras_tkr' one (which expects CRS).
+        vox2surface_ras_matrix = index2ras_tkr();
         for(idx in seq(length(rendered_voxels))) {
             row_idx = rendered_voxels[idx];
             surface_ras[idx,] = (vox2surface_ras_matrix %*% voxel_crs[row_idx,])[1:3];
@@ -564,7 +566,7 @@ print.fs.coloredvoxels <- function(x, ...) {
 
 #' @title Visualize a brain volume overlaid on a cortical surface in 3D.
 #'
-#' @description Render a brain volume (as an isosurface or as voxels) together with a cortical surface mesh colored by morphometry data in the same interactive 3D scene. The volume coordinates are transformed to surface RAS space using the FreeSurfer \code{vox2ras_tkr} matrix, ensuring proper spatial alignment of volume and surface.
+#' @description Render a brain volume (as an isosurface or as voxels) together with a cortical surface mesh colored by morphometry data in the same interactive 3D scene. The volume coordinates are transformed to surface RAS space using the FreeSurfer \code{\link[fsbrain]{vox2ras_tkr}} matrix (more precisely \code{\link[fsbrain]{index2ras_tkr}}, see there for the R-index versus CRS distinction), ensuring proper spatial alignment of volume and surface.
 #'
 #' @param subjects_dir character string, the FreeSurfer SUBJECTS_DIR, i.e., a directory containing the data for all your subjects, each in a subdir named after the subject identifier.
 #'
@@ -678,15 +680,15 @@ vis.volume.on.surface <- function(subjects_dir, subject_id,
     vol_result = NULL;
 
     if(volume_mode == "contour") {
-        # Create isosurface in voxel CRS, transform to surface RAS, draw into scene
+        # Create isosurface in R array index space, transform to surface RAS, draw into scene
         vol_tris = misc3d::contour3d(vol_data, level = volume_level,
             color = volume_color, alpha = volume_alpha, draw = FALSE);
-        vol_tris = apply.transform(vol_tris, vox2ras_tkr());
+        vol_tris = apply.transform(vol_tris, index2ras_tkr());
         misc3d::drawScene.rgl(vol_tris, add = TRUE);
         vol_result = vol_tris;
 
     } else if(volume_mode == "voxels") {
-        # volvis.voxels handles the vox2ras_tkr transform internally
+        # volvis.voxels handles the index2ras_tkr transform internally
         # and renders directly into the current rgl scene
         vol_data_bg = vol_data;
         vol_data_bg[vol_data_bg == 0] = NA;

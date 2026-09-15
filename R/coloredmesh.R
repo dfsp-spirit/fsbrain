@@ -545,6 +545,73 @@ coloredmesh.from.mask <- function(subjects_dir, subject_id, mask, hemi, surface=
 }
 
 
+#' @title Weld the vertices of a mesh and remove degenerate faces.
+#'
+#' @description Meshes returned by the marching cubes implementations are usually not clean: `Rvcg::vcgIsosurface()` returns duplicated vertices along with a large number of degenerate (zero area) faces which overlap the real faces, and `misc3d::contour3d()` returns completely unwelded meshes, i.e., one vertex per triangle corner. Both waste memory and render badly when lighting is enabled: the degenerate faces get invalid normals and fight for the same depth values as the real faces, which makes the surface look patched, grooved and partly black instead of smoothly shaded. This function welds vertices which are at (numerically) identical positions, removes the faces which use the same vertex more than once, and recomputes the normals.
+#'
+#' @param mesh a `mesh3d` instance, e.g., as returned by `Rvcg::vcgIsosurface()`, `misc3d::contour3d()` or \code{\link[fsbrain]{shell.extract.mesh}}.
+#'
+#' @param drop_degenerate logical, whether to remove the degenerate faces, i.e., the faces which have at least two coincident corners and thus zero area. Defaults to `TRUE`.
+#'
+#' @param add_normals logical, whether to compute per-vertex normals for the result. Defaults to `TRUE`.
+#'
+#' @param tolerance numerical scalar, the distance (in the units of the mesh coordinates, typically mm) below which two vertices are considered identical. Defaults to `1e-6`.
+#'
+#' @return a `mesh3d` instance with welded vertices, without degenerate faces, and with normals if requested. Vertices which are not used by any face are dropped, so per-vertex data like colors has to be assigned *after* welding (see the note).
+#'
+#' @note Welding changes the vertex array, so per-vertex data which is not part of the mesh (e.g., a color vector) cannot be preserved. Assign such data to the welded mesh, which is what the visualization functions do internally.
+#'
+#' @keywords internal
+#' @importFrom rgl addNormals
+mesh.weld <- function(mesh, drop_degenerate = TRUE, add_normals = TRUE, tolerance = 1e-6) {
+    if(! inherits(mesh, "mesh3d")) {
+        stop("Parameter 'mesh' must be a mesh3d instance.\n");
+    }
+    # Any normals the caller may have attached are invalidated by the welding and cleaning below.
+    mesh$normals = NULL;
+
+    # Merge vertices which are at the same position. Marching cubes implementations return such
+    # vertices either as exact duplicates (Rvcg) or as numbers which differ only in the last bits of
+    # their double representation (misc3d), so the coordinates are quantized to 'tolerance' to build
+    # the key. Note that 'rgl::mergeVertices' does not merge all of these duplicates.
+    num_verts = ncol(mesh$vb);
+    verts = t(mesh$vb[1:3, , drop = FALSE]);
+    key = paste(round(verts[, 1L] / tolerance), round(verts[, 2L] / tolerance), round(verts[, 3L] / tolerance), sep = "_");
+    first_at_position = match(key, key);     # for each vertex, the index of the first vertex at its position
+    if(! is.null(mesh$it)) {
+        mesh$it = matrix(first_at_position[mesh$it], nrow = 3L);
+    }
+    if(! is.null(mesh$ib)) {
+        mesh$ib = matrix(first_at_position[mesh$ib], nrow = 4L);
+    }
+
+    # Drop the degenerate faces (those which use the same vertex more than once), they have no area.
+    if(isTRUE(drop_degenerate) && ! is.null(mesh$it)) {
+        faces = mesh$it;
+        keep = ! (faces[1L, ] == faces[2L, ] | faces[2L, ] == faces[3L, ] | faces[1L, ] == faces[3L, ]);
+        if(! all(keep)) {
+            mesh$it = faces[, keep, drop = FALSE];
+        }
+    }
+
+    # Drop the vertices which are no longer used by any face.
+    used_vertices = sort(unique(as.vector(c(mesh$ip, mesh$is, mesh$it, mesh$ib))));
+    if(length(used_vertices) < num_verts && length(used_vertices) > 0L) {
+        mesh$vb = mesh$vb[, used_vertices, drop = FALSE];
+        renumber = function(indices) { return(match(indices, used_vertices)); };
+        if(! is.null(mesh$ip)) { mesh$ip = renumber(mesh$ip); }
+        if(! is.null(mesh$is)) { mesh$is = renumber(mesh$is); }
+        if(! is.null(mesh$it)) { mesh$it = matrix(renumber(mesh$it), nrow = 3L); }
+        if(! is.null(mesh$ib)) { mesh$ib = matrix(renumber(mesh$ib), nrow = 4L); }
+    }
+
+    if(isTRUE(add_normals)) {
+        mesh = rgl::addNormals(mesh);
+    }
+    return(mesh);
+}
+
+
 #' @title Convert a misc3d Triangles3D iso-surface to a coloredmesh.
 #'
 #' @description Convert a `misc3d::contour3d(draw = FALSE)` result (an iso-surface mesh of class 'Triangles3D', e.g., as returned by \code{\link[fsbrain]{volvis.contour}}) into an `fs.coloredmesh`. This allows rendering volume iso-surfaces with ANY renderer backend: while the rgl backend can render 'Triangles3D' instances directly, the scimesh backend requires `fs.coloredmesh` instances and converts them automatically, so you normally do not need to call this function yourself.

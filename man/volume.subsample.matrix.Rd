@@ -13,6 +13,6 @@ volume.subsample.matrix(factor = 1L)
 a 4x4 numerical matrix.
 }
 \description{
-Subsampling a volume with a factor \code{f} keeps voxels 1, 1+f, 1+2f, ... of the original volume, so the coordinate \code{i} of the subsampled volume corresponds to the original voxel coordinate \code{i*f + (1-f)/2} (e.g., for \code{f = 2}: 1, 3, 5, ... stay at 1.5, 3.5, 5.5 of the original volume). This function returns the 4x4 affine matrix which implements this mapping, it can be composed with the \code{vox2ras_tkr} matrix to transform subsampled shells to surface RAS.
+Subsampling a volume with a factor \code{f} keeps voxels 1, 1+f, 1+2f, ... of the original volume, so the coordinate \code{i} of the subsampled volume corresponds to the original 1-based R array index \code{i*f + (1-f)} (e.g., for \code{f = 2}: the subsampled voxels are the original voxels 1, 3, 5, ... and they stay at 1, 3, 5 of the original volume). This function returns the 4x4 affine matrix which implements this mapping. Note that it maps to 1-based R array indices, so it has to be composed with \code{index2ras_tkr()} (and not with \code{vox2ras_tkr()}, which expects 0-based CRS indices) to transform subsampled shells to surface RAS.
 }
 \keyword{internal}

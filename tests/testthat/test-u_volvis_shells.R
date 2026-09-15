@@ -84,11 +84,11 @@ test_that("Smoothing and subsampling the volume work as expected", {
     expect_equal(dim(sub), c(16L, 16L, 16L));
     expect_equal(fsbrain:::volume.subsample(vol, factor = 1L), vol);
 
-    # The subsample matrix maps subsampled voxel indices back to the original volume: index i of the
-    # subsampled volume is the center of the original voxels i*f-f+1 ... i*f.
+    # The subsample matrix maps subsampled voxel indices back to the original volume: subsampling
+    # keeps the original voxels 1, 1+f, 1+2f, ..., so index i is the original voxel i*f+1-f.
     m = fsbrain:::volume.subsample.matrix(2L);
-    expect_equal(as.numeric((m %*% c(1, 1, 1, 1))[1:3]), c(1.5, 1.5, 1.5));
-    expect_equal(as.numeric((m %*% c(16, 16, 16, 1))[1:3]), c(31.5, 31.5, 31.5));
+    expect_equal(as.numeric((m %*% c(1, 1, 1, 1))[1:3]), c(1, 1, 1));
+    expect_equal(as.numeric((m %*% c(16, 16, 16, 1))[1:3]), c(31, 31, 31));
     expect_equal(fsbrain:::volume.subsample.matrix(1L), diag(4L));
 })
 
@@ -102,17 +102,23 @@ test_that("Both iso-surface backends produce spatially aligned shells", {
         skip_if_not_installed(backend);
         mesh = fsbrain:::shell.extract.mesh(vol, level = level, backend = backend);
 
-        # The mesh is in 1-based voxel space (no matter the backend) and has normals for shading.
+        # The mesh is in 1-based R array index space (no matter the backend) and has normals for shading.
         verts = t(mesh$vb[1:3, , drop = FALSE]);
         expect_true(! is.null(mesh$normals));
         expect_equal(colMeans(verts), rep(20.0, 3L), tolerance = 0.5);          # centered in the volume
         expect_equal(apply(verts, 2L, function(x) diff(range(x))), rep(12.0, 3L), tolerance = 1.0);   # diameter
 
-        # The mesh is backwards-compatible with the vox2ras_tkr transform: the center of the sphere
-        # has to end up at the RAS position of the center voxel. This also catches backends which
-        # return coordinates in their own convention (0-based, flipped axes, ...).
-        ras = apply.transform(mesh, vox2ras_tkr());
-        expect_equal(colMeans(mesh.vertices(fs.coloredmesh(ras, "#FF0000", hemi = NULL))), voxel.to.ras(c(20, 20, 20)), tolerance = 0.5);
+        # The mesh is backwards-compatible with the index2ras_tkr transform: mesh vertices are 1-based
+        # R array indices, and the center of the sphere (R index 20, i.e., CRS 19) has to end up at the
+        # RAS position of CRS (19, 19, 19). This also catches backends which return coordinates in their
+        # own convention (0-based, flipped axes, ...).
+        ras = apply.transform(mesh, index2ras_tkr());
+        expect_equal(colMeans(mesh.vertices(fs.coloredmesh(ras, "#FF0000", hemi = NULL))), voxel.to.ras(c(19, 19, 19)), tolerance = 0.1);
+
+        # Using the vox2ras_tkr matrix on mesh vertices would be the wrong convention (it expects
+        # 0-based CRS indices), and shifts the whole mesh by one voxel, i.e., 1.7 mm on the diagonal.
+        ras_wrong = apply.transform(mesh, vox2ras_tkr());
+        expect_gt(sqrt(sum((colMeans(mesh.vertices(fs.coloredmesh(ras_wrong, "#FF0000", hemi = NULL))) - voxel.to.ras(c(19, 19, 19)))^2)), 1.0);
 
         # The stored normals must stay consistent with the winding of the faces after the transform:
         # otherwise the surface renders black (with lighting enabled) instead of colored.
@@ -156,10 +162,10 @@ test_that("A volume can be visualized as nested, semi-transparent shells", {
     extents = sapply(shells, function(cmesh) diff(range(mesh.vertices(cmesh)[, 1L])));
     expect_true(all(diff(extents) < 0));
     # Radius 12 - level, in voxel units, and the shells are centered at the RAS position of the
-    # center voxel of the volume.
+    # center voxel of the volume: the sphere is centered at R index 20, which is CRS 19.
     expect_equal(extents, 2.0 * (12.0 - c(2.0, 5.0, 8.0)), tolerance = 1.5);
     for(cmesh in shells) {
-        expect_equal(colMeans(mesh.vertices(cmesh)), voxel.to.ras(c(20, 20, 20)), tolerance = 0.5);
+        expect_equal(colMeans(mesh.vertices(cmesh)), voxel.to.ras(c(19, 19, 19)), tolerance = 0.1);
     }
 
     # Colors and alphas can be set explicitly.
@@ -234,11 +240,12 @@ test_that("Shells can be cut open and subsampled", {
     # The other dimensions are not affected.
     expect_equal(diff(range(cut_verts[, 3L])), diff(range(full_verts[, 3L])), tolerance = 1e-6);
 
-    # Subsampling reduces the number of faces, but keeps the spatial extent and the alignment.
+    # Subsampling reduces the number of faces, but keeps the spatial extent and the alignment: the
+    # subsampled voxels are the original voxels 1, 1+f, ..., so their positions must not shift.
     sub = volvis.shells(vol, levels = 6.0, downsample = 4L, views = NULL, silent = TRUE)[[1L]];
     expect_lt(ncol(sub$mesh$it), ncol(full$mesh$it));
     expect_equal(diff(range(mesh.vertices(sub)[, 1L])), diff(range(full_verts[, 1L])), tolerance = 1.0);
-    expect_equal(colMeans(mesh.vertices(sub)), colMeans(full_verts), tolerance = 0.5);
+    expect_equal(colMeans(mesh.vertices(sub)), colMeans(full_verts), tolerance = 0.3);
 
     # Smoothing is optional, and a warning is emitted for subsampling without smoothing.
     expect_silent(volvis.shells(vol, levels = 6.0, smoothing = 0L, views = NULL, silent = TRUE));
@@ -293,4 +300,104 @@ test_that("Shells can be rendered with the scimesh backend", {
     expect_true(file.exists("fsbrain_views_scimesh.png"));
     expect_gt(file.size("fsbrain_views_scimesh.png"), 0L);
     file.remove("fsbrain_views_scimesh.png");
+})
+
+
+test_that("Volume data is aligned with the surfaces, also for asymmetric volumes and with subsampling", {
+    skip_if_not_installed("Rvcg");
+    # An asymmetric sphere: the center is at R index (12, 20, 24), i.e., CRS (11, 19, 23). A one voxel
+    # error in any of the axes would be larger than the tolerance used below.
+    vol = sphere.volume(dim = 40L, radius = 8.0, center = c(12, 20, 24));
+    level = 4.0;
+    expected_center_ras = voxel.to.ras(c(11, 19, 23));
+
+    for(backend in c("misc3d", "Rvcg")) {
+        skip_if_not_installed(backend);
+        mesh = fsbrain:::shell.extract.mesh(vol, level = level, backend = backend);
+        mesh_ras = apply.transform(mesh, index2ras_tkr());
+        expect_equal(colMeans(mesh.vertices(fs.coloredmesh(mesh_ras, "#FF0000", hemi = NULL))), expected_center_ras, tolerance = 0.1);
+    }
+
+    # The same has to hold for the shells created by volvis.shells, with and without subsampling.
+    full = volvis.shells(vol, levels = level, views = NULL, silent = TRUE)[[1L]];
+    sub = volvis.shells(vol, levels = level, downsample = 2L, views = NULL, silent = TRUE)[[1L]];
+    expect_equal(colMeans(mesh.vertices(full)), expected_center_ras, tolerance = 0.1);
+    expect_equal(colMeans(mesh.vertices(sub)), expected_center_ras, tolerance = 0.5);
+})
+
+
+test_that("Extracted iso-surfaces are welded and free of degenerate faces", {
+    vol = sphere.volume(dim = 40L, radius = 12.0);
+    level = 6.0;   # -> a sphere of radius 6 around R index (20, 20, 20)
+
+    for(backend in c("misc3d", "Rvcg")) {
+        skip_if_not_installed(backend);
+        mesh = fsbrain:::shell.extract.mesh(vol, level = level, backend = backend);
+        verts = t(mesh$vb[1:3, , drop = FALSE]);
+        faces = mesh$it;
+
+        # No face may use the same vertex twice: such faces have zero area, are invisible but overlap
+        # the real faces, and their normals are undefined, so they render as black patches.
+        expect_true(all(faces[1L, ] != faces[2L, ] & faces[1L, ] != faces[3L, ] & faces[2L, ] != faces[3L, ]));
+        # Vertices are welded: no two vertices may be at the same position.
+        expect_equal(nrow(verts), nrow(unique(round(verts, 6L))));
+        # The normals have been recomputed for the welded mesh and match the winding of its faces.
+        expect_equal(ncol(mesh$normals), ncol(mesh$vb));
+        expect_gt(normals.agreement(mesh), 0.9);
+        # Cleaning the mesh must not distort the surface: all vertices are on the sphere of radius 6.
+        radii = sqrt(rowSums(sweep(verts, 2L, c(20.0, 20.0, 20.0), "-")^2));
+        expect_equal(range(radii), c(6.0, 6.0), tolerance = 0.25);
+    }
+})
+
+
+test_that("Extracted iso-surfaces lie on the iso-level of the data", {
+    # A Gaussian blob: its iso-surface at the level 'threshold' is a sphere of a known radius.
+    sdim = 60L; sigma = 8.0; peak = 6.5; threshold = 3.0;
+    grid = expand.grid(i = seq_len(sdim), j = seq_len(sdim), k = seq_len(sdim));
+    dist = sqrt((grid$i - 30.0)^2 + (grid$j - 30.0)^2 + (grid$k - 30.0)^2);
+    vol = array(peak * exp(-dist^2 / (2.0 * sigma^2)), dim = c(sdim, sdim, sdim));
+    expected_radius = sigma * sqrt(2.0 * log(peak / threshold));
+
+    for(backend in c("misc3d", "Rvcg")) {
+        skip_if_not_installed(backend);
+        mesh = fsbrain:::shell.extract.mesh(vol, level = threshold, backend = backend);
+        verts = t(mesh$vb[1:3, , drop = FALSE]);
+        radii = sqrt(rowSums(sweep(verts, 2L, c(30.0, 30.0, 30.0), "-")^2));
+
+        # All vertices have to be on the true iso-surface. 'Rvcg::vcgIsosurface' truncates non-integer
+        # volumes, which used to move the surface 1.4 mm inward here, so the volume is scaled to an
+        # integer grid before it is passed to the backend.
+        expect_lt(abs(median(radii) - expected_radius), 0.02);
+        expect_lt(diff(range(radii)), 0.1);
+    }
+})
+
+
+test_that("The index2ras_tkr matrix maps 1-based R array indices to the voxel positions", {
+    # The first voxel of a volume has R index 1 and CRS (0, 0, 0): both have to map to the same RAS.
+    expect_equal(as.numeric((index2ras_tkr() %*% c(1, 1, 1, 1))[1:3]), as.numeric((vox2ras_tkr() %*% c(0, 0, 0, 1))[1:3]));
+    # The central voxel of a conformed 256^3 volume has CRS (128, 128, 128) and thus R index 129,
+    # and its surface RAS position is the origin.
+    expect_equal(as.numeric((index2ras_tkr() %*% c(129, 129, 129, 1))[1:3]), c(0.0, 0.0, 0.0));
+    # The two transforms differ by exactly one voxel in every axis.
+    expect_equal(index2ras_tkr(), vox2ras_tkr() %*% fsbrain:::translation.matrix(-1.0, -1.0, -1.0));
+})
+
+
+test_that("The subsample matrix maps to the position of the retained voxels", {
+    # volume.subsample() keeps voxels 1, 1+f, 1+2f, ... of the original volume, so the coordinate of
+    # subsampled voxel i is the original coordinate i*f + (1-f).
+    for(factor in c(1L, 2L, 4L)) {
+        mat = fsbrain:::volume.subsample.matrix(factor);
+        for(idx in 1L:4L) {
+            expect_equal(as.numeric((mat %*% c(idx, idx, idx, 1.0))[1:3]), rep(factor * idx + (1L - factor), 3L));
+        }
+    }
+    # The mapping has to agree with the data that volume.subsample() actually keeps.
+    vol = sphere.volume(dim = 40L, radius = 12.0);
+    sub = fsbrain:::volume.subsample(vol, factor = 2L);
+    expect_equal(vol[seq(1L, 40L, by = 2L), 1L, 1L], sub[, 1L, 1L]);
+    expect_equal(as.numeric((fsbrain:::volume.subsample.matrix(2L) %*% c(1, 1, 1, 1))[1:3]), c(1.0, 1.0, 1.0));
+    expect_equal(as.numeric((fsbrain:::volume.subsample.matrix(2L) %*% c(2, 2, 2, 1))[1:3]), c(3.0, 3.0, 3.0));
 })

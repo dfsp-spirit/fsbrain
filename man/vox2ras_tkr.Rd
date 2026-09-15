@@ -22,6 +22,7 @@ Applying this matrix to a FreeSurfer CRS index of a conformed volume will give y
 }
 \seealso{
 Other surface and volume coordinates:
+\code{\link[=index2ras_tkr]{index2ras_tkr()}},
 \code{\link[=ras2vox_tkr]{ras2vox_tkr()}}
 }
 \concept{surface and volume coordinates}
