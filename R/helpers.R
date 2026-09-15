@@ -975,13 +975,13 @@ hasIn <- function(named_list, listkeys) {
 
 #' @title Find the subject directory containing the fsaverage subject (or others) on disk.
 #'
-#' @description Try to find directory containing the fsaverage subject (or any other subject) by checking in the following places and returning the first path where it is found: first, the directory given by the environment variable SUBJECTS_DIR, then in the subir 'subjects' of the directory given by the environment variable FREESURFER_HOME, and finally the base dir of the package cache. See the function \code{\link[fsbrain]{download_fsaverage}} if you want to download fsaverage to your package cache and ensure it always gets found, no matter whether the environment variables are set or not.
+#' @description Try to find directory containing the fsaverage subject (or any other subject) by checking in the following places and returning the first path where it is found: first, the directory given by the environment variable SUBJECTS_DIR, then in the subir 'subjects' of the directory given by the environment variable FREESURFER_HOME, and finally the base dir of the package cache. See the function \code{\link[fsbrain]{download_fsaverage}} if you want to download fsaverage to your package cache and ensure it always gets found, no matter whether the environment variables are set or not. Note that a subject directory in the package cache is only considered complete if it contains the essential files of a subject, see \code{\link[fsbrain]{subject.dir.has.core.files}}: the cache can contain a subject which only has some atlas files (see \code{\link[fsbrain]{download_fsaverage_atlases}}), and such a directory would make all functions that need the surfaces of the subject fail.
 #'
 #' @param subject_id string, the subject id of the subject. Defaults to 'fsaverage'.
 #'
 #' @param mustWork logical. Whether the function should with an error stop if the directory cannot be found. If this is TRUE, the return value will be only the 'found_at' entry of the list (i.e., only the path of the subjects dir).
 #'
-#' @return named list with the following entries: "found": logical, whether it was found. "found_at": Only set if found=TRUE, the path to the fsaverage directory (NOT including the fsaverage dir itself). "found_all_locations": list of all locations in which it was found. See 'mustWork' for important information.
+#' @return named list with the following entries: "found": logical, whether it was found. "found_at": Only set if found=TRUE, the path to the fsaverage directory (NOT including the fsaverage dir itself). "found_all_locations": list of all locations in which the subject directory exists, including locations at which the subject is incomplete (see the description). See 'mustWork' for important information.
 #'
 #' @seealso \code{\link{fsaverage.path}}
 #'
@@ -991,11 +991,21 @@ find.subjectsdir.of <- function(subject_id='fsaverage', mustWork=FALSE) {
   ret$found = FALSE;
   ret$found_all_locations = NULL;
 
+  # Check the package cache. It can contain an incomplete subject: the functions that download atlas
+  # files (see 'download_fsaverage_atlases') only add annotation and atlas mesh files like
+  # '<cache>/subjects_dir/fsaverage/label/lh.subcortical.annot' for a template subject, they do not
+  # download the FreeSurfer template surfaces. Such a directory must not be reported as the subject,
+  # or the caller would fail later with a confusing error about missing files. It is still listed in
+  # 'found_all_locations', so that code which looks for specific files (like the atlas files) can
+  # check all locations, see 'mesh.atlas.resolve.subjects.dir'.
+  cache_subjects_dir = get_optional_data_filepath("subjects_dir", mustWork = FALSE);
   guessed_path = get_optional_data_filepath(file.path("subjects_dir", subject_id), mustWork = FALSE);
   if(nchar(guessed_path) > 0L & dir.exists(guessed_path)) {
-      ret$found = TRUE;
-      ret$found_at = get_optional_data_filepath(file.path("subjects_dir"));
-      ret$found_all_locations = c(ret$found_all_locations, ret$found_at);
+      ret$found_all_locations = c(ret$found_all_locations, cache_subjects_dir);
+      if(subject.dir.has.core.files(guessed_path)) {
+          ret$found = TRUE;
+          ret$found_at = cache_subjects_dir;
+      }
   }
 
 
@@ -1026,11 +1036,25 @@ find.subjectsdir.of <- function(subject_id='fsaverage', mustWork=FALSE) {
     if(ret$found) {
       return(ret$found_at);
     } else {
-      stop(sprintf("Could not find subjects dir containing subject '%s' and parameter 'mustWork' is TRUE. Checked for directories given by environment variables FREESURFER_HOME and SUBJECTS_DIR and in package cache. Please set the environment variables by installing and configuring FreeSurfer.\n Or, if you want to download fsaverage without installing FreeSurfer, have a look at the 'download_fsaverage' function in this package.\n", subject_id));
+      stop(sprintf("Could not find subjects dir containing subject '%s' and parameter 'mustWork' is TRUE. Checked for directories given by environment variables FREESURFER_HOME and SUBJECTS_DIR and in package cache. Please set the environment variables by installing and configuring FreeSurfer.\n Or, if you want to download fsaverage without installing FreeSurfer, have a look at the 'download_fsaverage' function in this package.\n Note that a subject in the package cache is only used if it is complete, i.e., if it contains the 'surf/lh.white' file.\n", subject_id));
     }
   }
 
   return(ret);
+}
+
+
+#' @title Check whether a subject directory contains the essential files of a subject.
+#'
+#' @description A subject directory can be incomplete, e.g., the package cache can contain a subject directory that was created by downloading only the atlas files for it (see \code{\link[fsbrain]{download_fsaverage_atlases}}). Such a directory does not contain the surfaces of the subject, and using it makes all functions fail that need them. This function checks for the file 'surf/lh.white', which is part of every subject (including fsaverage and the fsaverage template derivatives).
+#'
+#' @param subject_dir string, the path to the directory of a single subject.
+#'
+#' @return logical, whether the directory contains the essential files of a subject.
+#'
+#' @keywords internal
+subject.dir.has.core.files <- function(subject_dir) {
+    return(file.exists(file.path(subject_dir, "surf", "lh.white")));
 }
 
 

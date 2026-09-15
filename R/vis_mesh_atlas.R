@@ -45,14 +45,23 @@ mesh.atlas.file.paths <- function(subjects_dir, subject_id, atlas, surface) {
 #'
 #' @keywords internal
 mesh.atlas.resolve.subjects.dir <- function(subject_id, atlas = "subcortical", surface = "subcortical") {
-    found = find.subjectsdir.of(subject_id = subject_id, mustWork = TRUE);   # returns the path of the first location, or stops with a helpful message.
+    # Any location in which the subject directory exists is a candidate, even if the subject itself
+    # is incomplete: the atlas files are downloaded into the package cache (see
+    # 'download_fsaverage_atlases'), which does not download the surfaces of the subject, so a
+    # location with the atlas files can lack the file 'surf/lh.white'.
     all_locations = find.subjectsdir.of(subject_id = subject_id, mustWork = FALSE)$found_all_locations;
     for(location in all_locations) {
         if(all(file.exists(mesh.atlas.file.paths(location, subject_id, atlas, surface)))) {
             return(location);
         }
     }
-    return(found);
+    if(length(all_locations) > 0L) {
+        # None of the locations has the atlas files. Return one of them, so that the caller can
+        # report the missing files, see 'mesh.atlas.check.files'.
+        return(all_locations[1L]);
+    }
+    # The subject is not available at all, stop with the helpful error message of find.subjectsdir.of.
+    return(find.subjectsdir.of(subject_id = subject_id, mustWork = TRUE));
 }
 
 
