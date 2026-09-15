@@ -296,7 +296,7 @@ volvis.contour <- function(volume, level=80, show=TRUE, frame=1L, color='white')
 #'
 #' @note The affine matrix is applied in the standard way: the coordinates are interpreted as homogeneous *column* vectors, i.e., a vertex `v` is transformed as `v' = M %*% v`. Note that rgl, and fsbrain functions that are implemented on top of rgl (like the camera transforms used internally for views), use the transposed convention for their rotation matrices, see \code{\link[rgl]{rotationMatrix}}. For pure translations and scalings, both conventions are identical.
 #'
-#'   Meshes keep their orientation: if the linear part of the matrix has a negative determinant, the transformation mirrors the object (this is the case for the FreeSurfer `vox2ras_tkr` matrix, which flips and permutes axes), which would invert all surface normals and make the mesh render inside-out. In that case, the vertex order within each face is reversed (and the stored normals are negated) to preserve the original orientation.
+#'   Meshes keep their orientation: if the linear part of the matrix has a negative determinant, the transformation mirrors the object (this is the case for the FreeSurfer `vox2ras_tkr` matrix, which flips and permutes axes), which would invert all surface normals and make the mesh render inside-out. In that case, the vertex order within each face is reversed to preserve the original orientation, and the stored normals (if any) are transformed with the linear part of the matrix so that they stay consistent with the faces.
 #'
 #' @examples
 #' \dontrun{
@@ -401,10 +401,9 @@ apply.transform.matrix <- function(object, affine_matrix) {
         object$vb[1:3, ] = t(apply.affine.to.coords(t(object$vb[1:3, , drop = FALSE]), affine_matrix));
         if(! is.null(object$normals) && nrow(object$normals) >= 3L) {
             # Normals are transformed with the linear part of the matrix (translation does not apply).
+            # Note that they must NOT be negated: the winding of the faces is restored above, so
+            # the transformed normals stay consistent with the (outward) faces, see the tests.
             object$normals[1:3, ] = affine_matrix[1:3, 1:3, drop = FALSE] %*% object$normals[1:3, , drop = FALSE];
-            if(flips_orientation) {
-                object$normals[1:3, ] = -object$normals[1:3, , drop = FALSE];
-            }
         }
         if(flips_orientation) {
             # Same as above: restore the winding of the faces, in 'it' (triangles) or 'ib' (quads).

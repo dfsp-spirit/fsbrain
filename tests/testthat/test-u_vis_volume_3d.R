@@ -348,14 +348,16 @@ test_that("apply.transform restores the orientation of meshes for orientation-fl
     expect_equal(tris_ras$v2, transform.coords(tris$v3, vox2ras));
     expect_equal(tris_ras$v3, transform.coords(tris$v2, vox2ras));
 
-    # A mesh3d: the winding of its faces is restored as well, and stored normals are negated.
+    # A mesh3d: the winding of its faces is restored as well. The stored normals are transformed with
+    # the linear part of the matrix, they must stay consistent with the winding (negating them would
+    # make the surface render black with lighting enabled).
     tmesh = rgl::mesh3d(cbind(t(tris$v1[1, , drop = FALSE]), 1));
     tmesh$it = matrix(c(1L, 2L, 3L), nrow = 3L);
     tmesh$normals = matrix(c(0, 0, 1, 0), ncol = 1L);
     tmesh_ras = apply.transform(tmesh, vox2ras);
     expect_equal(tmesh_ras$it[2, ], tmesh$it[3, ]);
     expect_equal(tmesh_ras$it[3, ], tmesh$it[2, ]);
-    expect_equal(tmesh_ras$normals[1:3, 1], -as.vector(vox2ras[1:3, 1:3] %*% c(0, 0, 1)));
+    expect_equal(tmesh_ras$normals[1:3, 1], as.vector(vox2ras[1:3, 1:3] %*% c(0, 0, 1)));
 
     # A quad mesh (rgl::cube3d) is outward-wound, and stays that way after the mirroring transform.
     cube3d_mesh = rgl::cube3d();

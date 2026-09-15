@@ -20,7 +20,7 @@ Apply an affine transformation, like a \emph{vox2ras_tkr} transformation, to inp
 \note{
 The affine matrix is applied in the standard way: the coordinates are interpreted as homogeneous \emph{column} vectors, i.e., a vertex \code{v} is transformed as \verb{v' = M \%*\% v}. Note that rgl, and fsbrain functions that are implemented on top of rgl (like the camera transforms used internally for views), use the transposed convention for their rotation matrices, see \code{\link[rgl]{rotationMatrix}}. For pure translations and scalings, both conventions are identical.
 
-Meshes keep their orientation: if the linear part of the matrix has a negative determinant, the transformation mirrors the object (this is the case for the FreeSurfer \code{vox2ras_tkr} matrix, which flips and permutes axes), which would invert all surface normals and make the mesh render inside-out. In that case, the vertex order within each face is reversed (and the stored normals are negated) to preserve the original orientation.
+Meshes keep their orientation: if the linear part of the matrix has a negative determinant, the transformation mirrors the object (this is the case for the FreeSurfer \code{vox2ras_tkr} matrix, which flips and permutes axes), which would invert all surface normals and make the mesh render inside-out. In that case, the vertex order within each face is reversed to preserve the original orientation, and the stored normals (if any) are transformed with the linear part of the matrix so that they stay consistent with the faces.
 }
 \examples{
 \dontrun{
