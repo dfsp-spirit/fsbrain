@@ -239,8 +239,22 @@ collayer.from.morphlike.data <- function(lh_morph_data=NULL, rh_morph_data=NULL,
     }
 
     bg_color = getOption('fsbrain.brain_na_color', default="#FEFEFE");
-    if((all(is.na(lh_morph_data)) & all(is.na(rh_morph_data))) || (is.null(lh_morph_data) && is.null(rh_morph_data))) {
-        return(list("lh"=bg_color, "rh"=bg_color));
+    # Note that we must not simply use 'all(is.na(x))' as test for an all-NA hemisphere: 'all(is.na(NULL))'
+    # is TRUE, which would wrongly treat a hemisphere without any data as a hemisphere that is all NA.
+    if((is.null(lh_morph_data) || all(is.na(lh_morph_data))) && (is.null(rh_morph_data) || all(is.na(rh_morph_data)))) {
+        # There is no usable data, so no colormap can be computed. Draw the hemispheres for which data was
+        # given in the color for missing data. Hemispheres without any data are omitted, they are not rendered.
+        collayer = list();
+        if(! is.null(lh_morph_data)) {
+            collayer$lh = bg_color;
+        }
+        if(! is.null(rh_morph_data)) {
+            collayer$rh = bg_color;
+        }
+        if(length(collayer) == 0L) {
+            collayer = list("lh" = bg_color, "rh" = bg_color);
+        }
+        return(collayer);
     }
 
     cmr = common.makecmap.range(makecmap_options, lh_data=lh_morph_data, rh_data=rh_morph_data, return_metadata = return_metadata);

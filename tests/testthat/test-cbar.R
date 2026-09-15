@@ -22,3 +22,19 @@ test_that("We can retrieve recommended mkcmap_options.", {
     expect_true(is.list(mkco.heat()));
     expect_true(is.list(mkco.div()));
 })
+
+
+test_that("A colorbar can only be plotted if the metadata contains a usable data range.", {
+    mkco = mkco.seq();
+    expect_true(can.plot.colorbar(c(1, 2), mkco));
+    # A degenerate data range (all values identical) cannot be plotted, the plotting code
+    # would fail with 'increasing x and y values expected'.
+    expect_false(can.plot.colorbar(c(1, 1), mkco));
+    expect_false(can.plot.colorbar(c(0, 0), mkco));
+    expect_false(can.plot.colorbar(c(NA, 1), mkco));
+    expect_false(can.plot.colorbar(c(1, 1, 2), mkco));
+    # Missing metadata does not allow plotting a colorbar either.
+    expect_false(can.plot.colorbar(NULL, mkco));
+    expect_false(can.plot.colorbar(c(1, 2), NULL));
+    expect_false(can.plot.colorbar(c(1, 2), list('colFn' = 'not a function')));
+})

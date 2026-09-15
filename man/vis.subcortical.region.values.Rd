@@ -27,7 +27,7 @@ vis.subcortical.region.values(
 
 \item{subject_id}{string. The subject identifier. Defaults to 'fsaverage', the template subject for which the subcortical atlas is available for download.}
 
-\item{lh_region_value_list}{named list. A list for the left hemisphere in which the names are atlas regions, and the values are the value to write to all vertices of that region, see \code{\link[fsbrain]{vis.region.values.on.subject}}.}
+\item{lh_region_value_list}{named list. A list for the left hemisphere in which the names are atlas regions, and the values are the value to write to all vertices of that region, see \code{\link[fsbrain]{vis.region.values.on.subject}}. Use \code{NaN} as the value of a region to hide it completely: the vertices of that region are removed from the mesh and it is not rendered at all, see the 'details' section.}
 
 \item{rh_region_value_list}{named list, the same for the right hemisphere.}
 
@@ -43,7 +43,7 @@ vis.subcortical.region.values(
 
 \item{rglactions}{named list. A list in which the names are from a set of pre-defined actions, see \code{\link[fsbrain]{rglactions}}. Note that the action 'shift_hemis_apart' is not supported here: the structures of a mesh atlas are rendered in their anatomical position.}
 
-\item{value_for_unlisted_regions}{numerical scalar or \code{NA}, the value to assign to regions which do not occur in the region value lists, see \code{\link[fsbrain]{vis.region.values.on.subject}}.}
+\item{value_for_unlisted_regions}{numerical scalar or \code{NA}, the value to assign to regions which do not occur in the region value lists, see \code{\link[fsbrain]{vis.region.values.on.subject}}. Set this to \code{NaN} to hide all regions that are not listed explicitly.}
 
 \item{draw_colorbar}{logical. Whether to draw a colorbar. Defaults to FALSE, see \code{\link[fsbrain]{coloredmesh.plot.colorbar.separate}} for a better looking alternative.}
 
@@ -69,6 +69,13 @@ The subcortical atlas is defined in MNI305 space (fsaverage surface RAS), so it 
 
 This function is not limited to the subcortical atlas: any atlas that comes with its own mesh and annotation files works, pass the respective names via parameters 'atlas' and 'surface'.
 }
+\section{Hiding regions}{
+
+Assigning the value \code{NaN} to a region hides it: the vertices of the region are removed from the mesh (together with the faces that use them), so the structure is not rendered at all, in contrast to drawing it in the color that represents missing data. This is a per-vertex operation on the shared mesh of all regions of a hemisphere, so hiding is not limited to entire meshes and can be combined with any rendering style.
+
+The values of hidden regions are excluded from the colorbar range, just like \code{NA} values. Setting \code{value_for_unlisted_regions = NaN} hides all regions that are not listed in the region value lists, which is a convenient way of visualizing only a few structures of an atlas.
+}
+
 \examples{
 \dontrun{
    fsbrain::download_optional_data();   # includes the subcortical atlas for fsaverage
@@ -91,6 +98,12 @@ This function is not limited to the subcortical atlas: any atlas that comes with
    cm_ctx = vis.subcortical.region.values(subjects_dir, "fsaverage", lh_region_values,
     rh_region_values, cortex = "white", rglactions = list("no_vis" = TRUE));
    export(cm_ctx, colorbar_legend = "my values", output_img = "subcortical_in_cortex.png");
+
+   # Visualize only the two hippocampi, by hiding all other regions (they are set to NaN):
+   cm_hippo = vis.subcortical.region.values(subjects_dir, "fsaverage",
+    list("Left-Hippocampus" = 0.2), list("Right-Hippocampus" = 0.8),
+    value_for_unlisted_regions = NaN, rglactions = list("no_vis" = TRUE));
+   export(cm_hippo, colorbar_legend = "my values", output_img = "subcortical_hippocampi.png");
 }
 
 }

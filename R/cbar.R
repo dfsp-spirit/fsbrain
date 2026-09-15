@@ -146,7 +146,7 @@ coloredmesh.plot.colorbar.separate <- function(coloredmeshes, show=FALSE, image.
     }
 
     if(! can.plot.colorbar(combined_data_range, makecmap_options)) {
-        warning("Requested to draw a colorbar based on meshes, but they do not contain the required metadata, skipping.");
+        warning("Requested to draw a colorbar based on meshes, but the required metadata is missing or the data range is degenerate (all values are identical), skipping.");
         return(invisible(NULL));
     }
 
@@ -382,6 +382,14 @@ can.plot.colorbar <- function(combined_data_range, makecmap_options) {
         return(FALSE);
     }
     if( ! is.function(makecmap_options$colFn)) {
+        return(FALSE);
+    }
+    if(length(combined_data_range) != 2L || ! all(is.finite(combined_data_range))) {
+        return(FALSE);
+    }
+    if(combined_data_range[1] == combined_data_range[2]) {
+        # A degenerate data range (all data values are identical) cannot be plotted: the colorbar
+        # would cover a range of width zero, which makes the plotting code fail.
         return(FALSE);
     }
     return(TRUE);

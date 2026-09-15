@@ -148,6 +148,121 @@ test_that("meshes which carry their own style are rendered with it", {
 })
 
 
+test_that("regions with the value NaN are hidden completely", {
+    subjects_dir = create.synthetic.mesh.atlas.subject();
+    cm_all = vis.synth.atlas(subjects_dir);   # RegionA (vertices 1-4) = 0.1, RegionB (vertices 5-8) = 0.9
+
+    cm_hidden = vis.synth.atlas(subjects_dir, lh_region_value_list = list("RegionA" = NaN, "RegionB" = 0.9),
+        rh_region_value_list = NULL);
+    expect_equal(length(cm_hidden), 1L);
+    cmesh = cm_hidden[[1]];
+
+    # The vertices of the hidden region are removed from the mesh, together with all faces that use them.
+    # For the cube, only the 2 faces of the second region survive.
+    expect_equal(ncol(cmesh$mesh$vb), 4L);
+    expect_equal(ncol(cmesh$mesh$it), 2L);
+    expect_true(min(cmesh$mesh$it) >= 1L);
+    expect_true(max(cmesh$mesh$it) <= 4L);
+    expect_false(any(is.na(cmesh$mesh$it)));
+
+    # The remaining vertices, colors and data are those of the visible region, and the hidden
+    # region is not drawn in the NA color but really gone.
+    expect_equal(length(cmesh$col), 4L);
+    expect_equal(length(unique(cmesh$col)), 1L);
+    expect_false(identical(cmesh$col[1], getOption('fsbrain.brain_na_color', default = "#FEFEFE")));
+    expect_equal(cmesh$metadata$src_data$lh, rep(0.9, 4L));
+    expect_false(any(is.nan(cmesh$metadata$src_data$lh)));
+
+    # The vertices are a subset of the atlas mesh, in the same order (not reordered).
+    cube = freesurferformats::read.fs.surface(file.path(subjects_dir, "fsaverage", "surf", "lh.testmesh"));
+    expect_equal(unname(t(cmesh$mesh$vb[1:3, ])), unname(cube$vertices[5:8, ]));
+
+    # The source surface in the metadata is kept consistent as well. Note that for fs.surface
+    # instances, the faces are stored one row per face (in contrast to the tmesh3d 'it' matrix).
+    expect_equal(nrow(cmesh$metadata$fs_mesh$vertices), 4L);
+    expect_equal(unname(cmesh$metadata$fs_mesh$vertices), unname(cube$vertices[5:8, ]));
+    expect_equal(nrow(cmesh$metadata$fs_mesh$faces), 2L);
+    expect_equal(as.integer(t(cmesh$metadata$fs_mesh$faces)), as.integer(cmesh$mesh$it));
+
+    # Hidden regions do not contribute to the colorbar range.
+    expect_equal(coloredmeshes.combined.data.range(cm_hidden), c(0.9, 0.9));
+    expect_equal(coloredmeshes.combined.data.range(cm_all), c(0.1, 0.9));
+
+    # Hiding works per hemisphere and does not affect the other one.
+    cm_rh_hidden = vis.synth.atlas(subjects_dir, rh_region_value_list = list("RegionA" = 0.2, "RegionB" = NaN));
+    expect_equal(ncol(cm_rh_hidden[[1]]$mesh$vb), 8L);   # the left hemisphere is not affected
+    expect_equal(ncol(cm_rh_hidden[[2]]$mesh$vb), 4L);
+    expect_equal(cm_rh_hidden[[1]]$metadata$src_data$lh, cm_all[[1]]$metadata$src_data$lh);
+
+    # Hiding composes with a rendering style and a context mesh.
+    cm_ctx = vis.synth.atlas(subjects_dir, lh_region_value_list = list("RegionA" = NaN, "RegionB" = 0.9),
+        rh_region_value_list = NULL, cortex = "white", style = "shiny");
+    expect_equal(length(cm_ctx), 3L);   # 2 context meshes + 1 data mesh
+    expect_equal(ncol(cm_ctx[[3]]$mesh$vb), 4L);
+    expect_equal(cm_ctx[[3]]$style, "shiny");
+})
+
+
+test_that("all regions of a hemisphere can be hidden with value_for_unlisted_regions", {
+    subjects_dir = create.synthetic.mesh.atlas.subject();
+
+    # Only the listed regions are visible, all others are hidden.
+    cm = vis.synth.atlas(subjects_dir, lh_region_value_list = list("RegionA" = 0.5),
+        rh_region_value_list = NULL, value_for_unlisted_regions = NaN);
+    expect_equal(length(cm), 1L);
+    expect_equal(ncol(cm[[1]]$mesh$vb), 4L);   # 'RegionB' has been hidden
+    expect_equal(ncol(cm[[1]]$mesh$it), 2L);
+    expect_equal(cm[[1]]$metadata$src_data$lh, rep(0.5, 4L));
+    expect_equal(unique(cm[[1]]$col), cm[[1]]$col[1]);
+})
+
+
+test_that("hiding all regions reports a helpful error", {
+    subjects_dir = create.synthetic.mesh.atlas.subject();
+    all_hidden = list("RegionA" = NaN, "RegionB" = NaN);
+
+    expect_error(vis.synth.atlas(subjects_dir, lh_region_value_list = all_hidden, rh_region_value_list = NULL,
+        value_for_unlisted_regions = NaN), "All regions are hidden");
+    # Same for a hemisphere in which all regions are listed explicitly and all of them are hidden.
+    expect_error(vis.synth.atlas(subjects_dir, lh_region_value_list = all_hidden, rh_region_value_list = NULL),
+        "All regions are hidden");
+})
+
+
+test_that("hiding all but one region still allows exporting the scene", {
+    subjects_dir = create.synthetic.mesh.atlas.subject();
+    cm = vis.synth.atlas(subjects_dir, lh_region_value_list = list("RegionA" = 0.5, "RegionB" = NaN),
+        rh_region_value_list = NULL, value_for_unlisted_regions = NaN);
+
+    # All remaining vertices carry the same value, so the data range is degenerate. This must not
+    # make the export fail: no colorbar can be plotted for such data.
+    expect_equal(coloredmeshes.combined.data.range(cm), c(0.5, 0.5));
+    expect_false(can.plot.colorbar.from.coloredmeshes(cm));
+
+    if(requireNamespace("scimesh", quietly = TRUE) && requireNamespace("magick", quietly = TRUE)) {
+        old_backend = getOption("fsbrain.renderer_backend");
+        options(fsbrain.renderer_backend = "scimesh");
+        output_img = tempfile("fsbrain_mesh_atlas_hidden_", fileext = ".png");
+        export(cm, view_angles = c("sd_lateral_lh"), output_img = output_img, silent = TRUE);
+        options(fsbrain.renderer_backend = old_backend);
+        expect_true(file.exists(output_img));
+    }
+})
+
+
+test_that("regions with a NA value are not hidden but drawn in the NA color", {
+    subjects_dir = create.synthetic.mesh.atlas.subject();
+    cm = vis.synth.atlas(subjects_dir, lh_region_value_list = list("RegionA" = NA, "RegionB" = 0.9),
+        rh_region_value_list = NULL);
+    cmesh = cm[[1]];
+    # In contrast to NaN, a NA value does not remove any vertices.
+    expect_equal(ncol(cmesh$mesh$vb), 8L);
+    expect_equal(length(cmesh$col), 8L);
+    expect_true(all(cmesh$col[1:4] == cmesh$col[1]));
+    expect_false(identical(cmesh$col[1], cmesh$col[5]));
+})
+
+
 test_that("coloredmesh.from.color stores the style in the coloredmesh", {
     subjects_dir = create.synthetic.mesh.atlas.subject();
     cm = coloredmesh.from.color(subjects_dir, "fsaverage", "#FF0000", "lh", surface = "white",
@@ -184,6 +299,34 @@ test_that("the subcortical atlas works with the fsaverage template subject", {
         lh_region_value_list = lh_values, rh_region_value_list = rh_values,
         rglactions = list("no_vis" = TRUE), silent = TRUE);
     expect_equal(length(cm_auto), 2L);
+
+    # Regions can be hidden by assigning NaN to them: their vertices are removed from the mesh.
+    annot = subject.annot(subjects_dir, "fsaverage", "lh", "subcortical");
+    keep = annot$label_names != "Left-Putamen";
+    surf = freesurferformats::read.fs.surface(file.path(subjects_dir, "fsaverage", "surf", "lh.subcortical"));
+    face_kept = keep[surf$faces[, 1]] & keep[surf$faces[, 2]] & keep[surf$faces[, 3]];
+    cm_hidden = vis.subcortical.region.values(subjects_dir, "fsaverage",
+        lh_region_value_list = list("Left-Caudate" = 0.1, "Left-Putamen" = NaN),
+        rh_region_value_list = NULL, rglactions = list("no_vis" = TRUE), silent = TRUE);
+    expect_equal(ncol(cm_hidden[[1]]$mesh$vb), sum(keep));
+    expect_equal(ncol(cm_hidden[[1]]$mesh$it), sum(face_kept));
+    expect_equal(unname(t(cm_hidden[[1]]$mesh$vb[1:3, ])), unname(surf$vertices[keep, ]));
+    expect_equal(coloredmeshes.combined.data.range(cm_hidden), c(0.1, 0.1));
+
+    # Hiding does not change the colors of the regions that are still visible: the hidden value
+    # is excluded from the colorbar range, so both runs use the same colormap.
+    caudate_vertices = which(annot$label_names == "Left-Caudate");
+    vis_caudate = function(putamen_value) {
+        vis.subcortical.region.values(subjects_dir, "fsaverage",
+            lh_region_value_list = list("Left-Caudate" = 0.1, "Left-Amygdala" = 0.9, "Left-Putamen" = putamen_value),
+            rh_region_value_list = NULL, rglactions = list("no_vis" = TRUE), silent = TRUE);
+    }
+    cm_visible_putamen = vis_caudate(0.5);
+    cm_hidden_putamen = vis_caudate(NaN);
+    expect_equal(coloredmeshes.combined.data.range(cm_visible_putamen), c(0.1, 0.9));
+    expect_equal(coloredmeshes.combined.data.range(cm_hidden_putamen), c(0.1, 0.9));
+    expect_equal(cm_hidden_putamen[[1]]$col[match(caudate_vertices, which(keep))],
+        cm_visible_putamen[[1]]$col[caudate_vertices]);
 
     # Rendering with the context mesh of the same subject works as well, provided that the
     # cortical surfaces of the subject are available.

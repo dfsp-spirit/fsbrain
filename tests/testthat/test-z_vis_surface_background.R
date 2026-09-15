@@ -22,6 +22,30 @@ test_that("A mean curvature color layer can be loaded", {
 })
 
 
+test_that("Color layers for all-NA data keep the hemisphere structure of the input", {
+    na_color = getOption('fsbrain.brain_na_color', default = "#FEFEFE");
+
+    # A hemisphere without any data must not be treated like a hemisphere that is all NA:
+    # 'all(is.na(NULL))' is TRUE, so this requires an explicit NULL check.
+    layer_lh = collayer.from.morphlike.data(c(NA_real_, NA_real_), NULL);
+    expect_equal(names(layer_lh), "lh");
+    expect_equal(layer_lh$lh, na_color);
+
+    layer_rh = collayer.from.morphlike.data(NULL, c(NaN, NaN));
+    expect_equal(names(layer_rh), "rh");
+    expect_equal(layer_rh$rh, na_color);
+
+    # All-NA data for both hemispheres, and no data at all, result in both hemispheres drawn in the NA color.
+    layer_both = collayer.from.morphlike.data(c(NA_real_, NA_real_), c(NA_real_, NA_real_));
+    expect_equal(names(layer_both), c("lh", "rh"));
+    expect_equal(unique(c(layer_both$lh, layer_both$rh)), na_color);
+
+    layer_none = collayer.from.morphlike.data(NULL, NULL);
+    expect_equal(names(layer_none), c("lh", "rh"));
+    expect_equal(unique(c(layer_none$lh, layer_none$rh)), na_color);
+})
+
+
 test_that("Color layers can be merged", {
     collayers = list();
     collayers$background = rep('#000000', 100L);

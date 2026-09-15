@@ -86,6 +86,136 @@ mesh.atlas.check.files <- function(subjects_dir, subject_id, atlas, surface) {
 }
 
 
+#' @title Remove all faces that use one of the given vertices and renumber the remaining ones.
+#'
+#' @description Filter the faces of a mesh and renumber the vertex indices to refer to the reduced vertex list.
+#'
+#' @param faces integer matrix, one face per column, holding 1-based indices into the vertex list.
+#'
+#' @param keep_mask logical vector, one entry per vertex of the mesh, TRUE for the vertices which are kept.
+#'
+#' @return integer matrix like \code{faces}, with all faces removed that used a vertex which is not kept, and with the remaining vertex indices renumbered to refer to \code{which(keep_mask)}.
+#'
+#' @keywords internal
+mesh.atlas.restrict.faces <- function(faces, keep_mask) {
+    if(is.null(faces) || length(faces) == 0L || ncol(faces) == 0L) {
+        return(faces);
+    }
+    face_kept = keep_mask[faces[1L, ]] & keep_mask[faces[2L, ]] & keep_mask[faces[3L, ]];
+    faces = faces[, face_kept, drop = FALSE];
+    if(ncol(faces) > 0L) {
+        faces = matrix(match(faces, which(keep_mask)), nrow = nrow(faces));
+    }
+    return(faces);
+}
+
+
+#' @title Hide the vertices that carry NaN data in a coloredmesh.
+#'
+#' @description Remove the vertices (and all faces that use them) for which the data value is NaN. This hides the
+#'   respective region completely, it is not rendered at all. This is a per-vertex operation, so it also works for
+#'   meshes in which several regions share a single mesh (like a mesh atlas), in contrast to the mesh-wide rendering
+#'   style. It is the basis of hiding individual regions of a mesh atlas by passing NaN as their value.
+#'
+#' @param cmesh fs.coloredmesh, the coloredmesh to modify. It must have data values in \code{metadata$src_data} which can be mapped to the vertices of the mesh.
+#'
+#' @param hemi character string, one of 'lh' or 'rh', the hemisphere of the mesh. Used to look up the data values in the hemilist \code{metadata$src_data}.
+#'
+#' @return fs.coloredmesh, the modified coloredmesh. If the mesh contains no NaN data (or the data cannot be mapped to the vertices), the input is returned unchanged. If all vertices are NaN, the returned mesh has the property 'render' set to FALSE, which makes the rendering functions skip it.
+#'
+#' @keywords internal
+mesh.atlas.hide.nan.vertices <- function(cmesh, hemi) {
+
+    if(is.null(cmesh$mesh) || is.null(cmesh$mesh$vb) || is.null(cmesh$mesh$it)) {
+        return(cmesh);   # cannot remove vertices from a mesh that does not expose its vertices and faces.
+    }
+
+    src_data = getIn(cmesh, c('metadata', 'src_data'), default = NULL);
+    if(is.list(src_data)) {
+        src_data = src_data[[hemi]];
+    }
+    num_vertices = length(cmesh$col);
+    if(is.null(src_data) || ! is.numeric(src_data) || length(src_data) != num_vertices || ncol(cmesh$mesh$vb) != num_vertices) {
+        return(cmesh);   # the data values cannot be mapped reliably to the vertices, leave the mesh as it is.
+    }
+
+    keep_mask = ! is.nan(src_data);
+    if(all(keep_mask)) {
+        return(cmesh);   # nothing to hide.
+    }
+
+    if(! any(keep_mask)) {
+        cmesh$render = FALSE;   # all vertices are hidden, do not render this mesh at all.
+        return(cmesh);
+    }
+
+    # Remove the hidden vertices from the mesh, the colors and the data, and adapt the faces.
+    cmesh$mesh$vb = cmesh$mesh$vb[, keep_mask, drop = FALSE];
+    if(! is.null(cmesh$mesh$normals) && ncol(cmesh$mesh$normals) == num_vertices) {
+        cmesh$mesh$normals = cmesh$mesh$normals[, keep_mask, drop = FALSE];
+    }
+    cmesh$mesh$it = mesh.atlas.restrict.faces(cmesh$mesh$it, keep_mask);
+    cmesh$col = cmesh$col[keep_mask];
+
+    if(is.list(cmesh$metadata$src_data)) {
+        cmesh$metadata$src_data[[hemi]] = src_data[keep_mask];
+    } else {
+        cmesh$metadata$src_data = src_data[keep_mask];
+    }
+
+    # Keep the source surface in the metadata consistent with the mesh, it is derived from the same vertices.
+    if(! is.null(cmesh$metadata$fs_mesh) && freesurferformats::is.fs.surface(cmesh$metadata$fs_mesh)
+            && nrow(cmesh$metadata$fs_mesh$vertices) == num_vertices) {
+        cmesh$metadata$fs_mesh$vertices = cmesh$metadata$fs_mesh$vertices[keep_mask, , drop = FALSE];
+        cmesh$metadata$fs_mesh$faces = t(mesh.atlas.restrict.faces(t(cmesh$metadata$fs_mesh$faces), keep_mask));
+    }
+
+    return(cmesh);
+}
+
+
+#' @title Check whether all regions of a mesh atlas visualization are hidden.
+#'
+#' @description Regions are hidden by assigning the value NaN to them (see \code{\link[fsbrain]{vis.subcortical.region.values}}). This function determines whether that leaves any region to render, so that the caller can stop with a helpful message instead of an unhelpful error from the (unrelated) data processing code. Regions which are not listed in the region value lists are hidden if \code{value_for_unlisted_regions} is NaN as well, which requires the atlas to be read to know the region names.
+#'
+#' @inheritParams mesh.atlas.file.paths
+#'
+#' @param lh_region_value_list named list or NULL, the region values for the left hemisphere.
+#'
+#' @param rh_region_value_list named list or NULL, the region values for the right hemisphere.
+#'
+#' @param value_for_unlisted_regions numerical scalar, the value assigned to regions which do not occur in the region value lists.
+#'
+#' @return logical, TRUE if none of the regions of the atlas would be rendered (because all their values are NaN), FALSE otherwise.
+#'
+#' @keywords internal
+mesh.atlas.all.regions.hidden <- function(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, value_for_unlisted_regions) {
+
+    unlisted_are_hidden = is.numeric(value_for_unlisted_regions) && length(value_for_unlisted_regions) == 1L && is.nan(value_for_unlisted_regions);
+    region_value_lists = list('lh' = lh_region_value_list, 'rh' = rh_region_value_list);
+
+    for(hemi in c('lh', 'rh')) {
+        values = unlist(region_value_lists[[hemi]], use.names = FALSE);
+        if(length(values) == 0L) {
+            next;   # no data given for this hemisphere, nothing is rendered for it anyway.
+        }
+        if(! is.numeric(values) || ! all(is.nan(values))) {
+            return(FALSE);   # at least one listed region of this hemisphere has a finite value.
+        }
+        if(! unlisted_are_hidden) {
+            # The regions which are not listed in the value list are rendered in the color for
+            # missing data, unless the hemisphere consists of listed regions only.
+            atlas_regions = subject.annot(subjects_dir, subject_id, hemi, atlas)$label_names;
+            if(length(setdiff(unique(atlas_regions), names(region_value_lists[[hemi]]))) > 0L) {
+                return(FALSE);
+            }
+        }
+    }
+
+    return(TRUE);
+}
+
+
 #' @title Compute the context layer of a mesh atlas visualization.
 #'
 #' @description Compute the optional context mesh (typically a semi-transparent cortex) that is
@@ -170,7 +300,7 @@ mesh.atlas.context.layer <- function(subjects_dir, subject_id, cortex) {
 #'
 #' @param subject_id string. The subject identifier. Defaults to 'fsaverage', the template subject for which the subcortical atlas is available for download.
 #'
-#' @param lh_region_value_list named list. A list for the left hemisphere in which the names are atlas regions, and the values are the value to write to all vertices of that region, see \code{\link[fsbrain]{vis.region.values.on.subject}}.
+#' @param lh_region_value_list named list. A list for the left hemisphere in which the names are atlas regions, and the values are the value to write to all vertices of that region, see \code{\link[fsbrain]{vis.region.values.on.subject}}. Use \code{NaN} as the value of a region to hide it completely: the vertices of that region are removed from the mesh and it is not rendered at all, see the 'details' section.
 #'
 #' @param rh_region_value_list named list, the same for the right hemisphere.
 #'
@@ -186,7 +316,7 @@ mesh.atlas.context.layer <- function(subjects_dir, subject_id, cortex) {
 #'
 #' @param rglactions named list. A list in which the names are from a set of pre-defined actions, see \code{\link[fsbrain]{rglactions}}. Note that the action 'shift_hemis_apart' is not supported here: the structures of a mesh atlas are rendered in their anatomical position.
 #'
-#' @param value_for_unlisted_regions numerical scalar or `NA`, the value to assign to regions which do not occur in the region value lists, see \code{\link[fsbrain]{vis.region.values.on.subject}}.
+#' @param value_for_unlisted_regions numerical scalar or `NA`, the value to assign to regions which do not occur in the region value lists, see \code{\link[fsbrain]{vis.region.values.on.subject}}. Set this to \code{NaN} to hide all regions that are not listed explicitly.
 #'
 #' @param draw_colorbar logical. Whether to draw a colorbar. Defaults to FALSE, see \code{\link[fsbrain]{coloredmesh.plot.colorbar.separate}} for a better looking alternative.
 #'
@@ -201,6 +331,11 @@ mesh.atlas.context.layer <- function(subjects_dir, subject_id, cortex) {
 #' @note The subcortical atlas is defined in MNI305 space (fsaverage surface RAS), so it can be combined with the cortical surfaces of the fsaverage template subject. The 8 structures per hemisphere are colored with the standard FreeSurfer 'aseg' colors when you visualize the atlas itself, this function assigns data-driven colors instead. Region names are the FreeSurfer 'aseg' structure names, e.g., 'Left-Hippocampus' or 'Right-Thalamus-Proper'.
 #'
 #'   This function is not limited to the subcortical atlas: any atlas that comes with its own mesh and annotation files works, pass the respective names via parameters 'atlas' and 'surface'.
+#'
+#' @section Hiding regions:
+#'   Assigning the value \code{NaN} to a region hides it: the vertices of the region are removed from the mesh (together with the faces that use them), so the structure is not rendered at all, in contrast to drawing it in the color that represents missing data. This is a per-vertex operation on the shared mesh of all regions of a hemisphere, so hiding is not limited to entire meshes and can be combined with any rendering style.
+#'
+#'   The values of hidden regions are excluded from the colorbar range, just like \code{NA} values. Setting \code{value_for_unlisted_regions = NaN} hides all regions that are not listed in the region value lists, which is a convenient way of visualizing only a few structures of an atlas.
 #'
 #' @examples
 #' \dontrun{
@@ -224,6 +359,12 @@ mesh.atlas.context.layer <- function(subjects_dir, subject_id, cortex) {
 #'    cm_ctx = vis.subcortical.region.values(subjects_dir, "fsaverage", lh_region_values,
 #'     rh_region_values, cortex = "white", rglactions = list("no_vis" = TRUE));
 #'    export(cm_ctx, colorbar_legend = "my values", output_img = "subcortical_in_cortex.png");
+#'
+#'    # Visualize only the two hippocampi, by hiding all other regions (they are set to NaN):
+#'    cm_hippo = vis.subcortical.region.values(subjects_dir, "fsaverage",
+#'     list("Left-Hippocampus" = 0.2), list("Right-Hippocampus" = 0.8),
+#'     value_for_unlisted_regions = NaN, rglactions = list("no_vis" = TRUE));
+#'    export(cm_hippo, colorbar_legend = "my values", output_img = "subcortical_hippocampi.png");
 #' }
 #'
 #' @family visualization functions
@@ -254,11 +395,25 @@ vis.subcortical.region.values <- function(subjects_dir = NULL, subject_id = "fsa
         warning("The rglactions key 'shift_hemis_apart' is not supported by 'vis.subcortical.region.values', the structures are rendered in their anatomical position.\n");
     }
 
+    # A region with the value NaN is hidden completely (see the 'Hiding regions' section of the docs),
+    # so we stop early if that would leave nothing to visualize at all.
+    if(mesh.atlas.all.regions.hidden(subjects_dir, subject_id, atlas, lh_region_value_list, rh_region_value_list, value_for_unlisted_regions)) {
+        stop("All regions are hidden: all region values are NaN and 'value_for_unlisted_regions' is not a finite value. Assign a finite value to at least one region to render it.\n");
+    }
+
     # Compute the data meshes, i.e., one coloredmesh per hemisphere which contains the region values.
     data_meshes = vis.region.values.on.subject(subjects_dir, subject_id, atlas = atlas, surface = surface,
         lh_region_value_list = lh_region_value_list, rh_region_value_list = rh_region_value_list,
         value_for_unlisted_regions = value_for_unlisted_regions, makecmap_options = makecmap_options,
         rglactions = utils::modifyList(list("no_vis" = TRUE), rglactions), silent = silent);
+
+    # Regions with the value NaN are hidden: their vertices are removed from the mesh, so that they
+    # are not rendered at all. This allows for visualizing a subset of the structures of an atlas.
+    for(hemi in c('lh', 'rh')) {
+        if(! is.null(data_meshes[[hemi]])) {
+            data_meshes[[hemi]] = mesh.atlas.hide.nan.vertices(data_meshes[[hemi]], hemi);
+        }
+    }
 
     # The data meshes get the style requested by the user.
     data_meshes = lapply(data_meshes, function(cmesh) { cmesh$style = style; return(cmesh); });
@@ -284,6 +439,10 @@ vis.subcortical.region.values <- function(subjects_dir = NULL, subject_id = "fsa
     }
     if(! is.null(data_meshes$rh)) {
         renderable = c(renderable, list(data_meshes$rh));
+    }
+
+    if(length(renderable) == 0L || all(vapply(renderable, function(cmesh) { identical(cmesh$render, FALSE); }, logical(1L)))) {
+        stop("All regions have the value NaN, or no region values have been given, so there is nothing to visualize. Assign a numeric value to at least one region to render it.\n");
     }
 
     if(! hasIn(rglactions, c('no_vis'))) {

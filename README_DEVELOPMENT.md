@@ -21,6 +21,12 @@ On the console:
 * to run all tests based on source code in dir: ```Rscript -e "devtools::test()"```
 * to run an individual test, or several ones, by name filter: ```Rscript -e "devtools::test(filter = 'morph_agg')"```
 
+Note that `devtools::test()` sets the environment variable `NOT_CRAN=true`, which the test files use (via `skip_on_cran()`) to decide whether they may download and use the optional test data. If you call testthat directly instead, set it yourself, otherwise all tests that need the optional data are skipped with the reason "On CRAN":
+
+```sh
+NOT_CRAN=true Rscript -e 'testthat::test_dir("tests/testthat")'
+```
+
 ## Running the unit tests with the scimesh renderer backend
 
 fsbrain can produce static images with two backends: **rgl** (the default; interactive, hardware-accelerated, needs a display / X11) and **scimesh** (headless, software, no display). The test suite can be run under either backend.

@@ -238,3 +238,56 @@ test_that("A misc3d contour (Triangles3D instance) can be rotated and rendered i
 
     expect_equal(1L, 1L); # Empty tests will be skipped by testthat.
 })
+
+
+test_that("apply.transform supports surface meshes, renderables and lists of them", {
+    cube = freesurferformats::read.fs.surface(system.file("extdata", "cube.ply", package = "fsbrain", mustWork = TRUE));
+    num_verts = nrow(cube$vertices);
+
+    # A rotation around z (90 degrees) combined with a translation.
+    transform = matrix(c(0, -1, 0, 10,
+                         1,  0, 0, 20,
+                         0,  0, 1, 30,
+                         0,  0, 0, 1), nrow = 4L, byrow = TRUE);
+    expected_vertices = cbind(-cube$vertices[, 2] + 10, cube$vertices[, 1] + 20, cube$vertices[, 3] + 30);
+
+    # NULL matrix: the input is returned as-is.
+    expect_identical(apply.transform(cube, NULL), cube);
+
+    # fs.surface: vertices are transformed, faces are not touched, class is kept.
+    cube_moved = apply.transform(cube, transform);
+    expect_true(freesurferformats::is.fs.surface(cube_moved));
+    expect_equal(cube_moved$vertices, expected_vertices);
+    expect_equal(cube_moved$faces, cube$faces);
+
+    # Coordinate matrix (both representations).
+    expect_equal(apply.transform(cube$vertices, transform), expected_vertices);
+    expect_equal(apply.transform(cbind(cube$vertices, 1), transform), expected_vertices);
+    expect_equal(apply.transform(cube$vertices[1, ], transform), expected_vertices[1, ]);
+    expect_error(apply.transform(matrix(rep(1, 10), ncol = 5), transform), "must have 3");
+
+    # rgl tmesh3d.
+    tmesh_moved = apply.transform(fs.surface.to.tmesh3d(cube), transform);
+    expect_equal(t(tmesh_moved$vb[1:3, ]), expected_vertices);
+
+    # fs.coloredmesh: the mesh and the source mesh in the metadata are transformed, colors stay.
+    cm = coloredmesh.from.preloaded.data(cube, morph_data = seq.int(num_verts), hemi = "lh");
+    cm_moved = apply.transform(cm, transform);
+    expect_true(is.fs.coloredmesh(cm_moved));
+    expect_equal(cm_moved$col, cm$col);
+    expect_equal(cm_moved$metadata$fs_mesh$vertices, expected_vertices);
+
+    # A hemilist of coloredmeshes is transformed element-wise, names are kept.
+    cms_moved = apply.transform(list("lh" = cm, "rh" = cm), transform);
+    expect_equal(names(cms_moved), c("lh", "rh"));
+    expect_equal(cms_moved$rh$metadata$fs_mesh$vertices, expected_vertices);
+
+    # misc3d Triangles3D (as produced by volvis.contour or misc3d::contour3d).
+    tris = list("v1" = cube$vertices[cube$faces[, 1], ], "v2" = cube$vertices[cube$faces[, 2], ], "v3" = cube$vertices[cube$faces[, 3], ]);
+    class(tris) = c(class(tris), "Triangles3D");
+    tris_moved = apply.transform(tris, transform);
+    expect_equal(tris_moved$v1, expected_vertices[cube$faces[, 1], ]);
+
+    # Unsupported input is reported.
+    expect_error(apply.transform("not a mesh", transform), "not supported");
+})
