@@ -240,6 +240,148 @@ test_that("A misc3d contour (Triangles3D instance) can be rotated and rendered i
 })
 
 
+test_that("A misc3d Triangles3D iso-surface is converted to a coloredmesh without changing its geometry", {
+    skip_if_not_installed("misc3d");
+
+    # A sphere-like volume. Its iso-surface area is known: the level 5 isosurface of '15 - distance
+    # from the center' is a sphere of radius 10 centered in the volume.
+    sdim = 30L;
+    grid = expand.grid(i = seq_len(sdim), j = seq_len(sdim), k = seq_len(sdim));
+    radius = sqrt((grid$i - 15)^2 + (grid$j - 15)^2 + (grid$k - 15)^2);
+    vol = array(15 - radius, dim = c(sdim, sdim, sdim));
+    tris = misc3d::contour3d(vol, level = 5, draw = FALSE);
+
+    tri.area = function(v1, v2, v3) {
+        face_normals = cbind(
+            (v2[, 2] - v1[, 2]) * (v3[, 3] - v1[, 3]) - (v2[, 3] - v1[, 3]) * (v3[, 2] - v1[, 2]),
+            (v2[, 3] - v1[, 3]) * (v3[, 1] - v1[, 1]) - (v2[, 1] - v1[, 1]) * (v3[, 3] - v1[, 3]),
+            (v2[, 1] - v1[, 1]) * (v3[, 2] - v1[, 2]) - (v2[, 2] - v1[, 2]) * (v3[, 1] - v1[, 1]));
+        return(sqrt(rowSums(face_normals^2)) / 2.0);
+    };
+
+    source_area = sum(tri.area(tris$v1, tris$v2, tris$v3));
+    expect_equal(source_area, 4.0 * pi * 10^2, tolerance = 0.02);   # sanity check of the test data
+
+    # The fields 'v1', 'v2' and 'v3' of the Triangles3D are Nx3 matrices, one row per triangle.
+    num_tris = length(tris$v1) / 3L;
+    expect_equal(dim(tris$v1), c(num_tris, 3L));
+
+    cm = Triangles3D.to.coloredmesh(tris);
+    expect_true(is.fs.coloredmesh(cm));
+    expect_null(cm$hemi);   # iso-surfaces are not hemisphere-specific, see the function docs.
+
+    mesh = cm$mesh;
+    faces = mesh$it;
+    verts = t(mesh$vb[1:3, ]);
+    expect_equal(ncol(faces), num_tris);   # one mesh face per source triangle
+
+    # Face k of the mesh consists of the three vertices of triangle k, in the same order. If the
+    # vertex blocks were combined wrongly, most faces would be degenerate and the mesh would not
+    # represent the iso-surface at all.
+    expect_equal(verts[faces[1, ], ], tris$v1);
+    expect_equal(verts[faces[2, ], ], tris$v2);
+    expect_equal(verts[faces[3, ], ], tris$v3);
+    expect_equal(sum(tri.area(verts[faces[1, ], ], verts[faces[2, ], ], verts[faces[3, ], ])), source_area);
+
+    # Extra arguments: a hemisphere can be set, and a list of Triangles3D instances is converted
+    # element-wise.
+    expect_equal(Triangles3D.to.coloredmesh(tris, hemi = "lh")$hemi, "lh");
+    cm_list = Triangles3D.to.coloredmesh(list(tris, tris), hemi = "rh");
+    expect_length(cm_list, 2L);
+    expect_true(is.fs.coloredmesh(cm_list[[1]]));
+    expect_equal(cm_list[[2]]$hemi, "rh");
+
+    # error handling
+    expect_error(Triangles3D.to.coloredmesh("notatriangles3d"));   # not a Triangles3D
+    expect_error(Triangles3D.to.coloredmesh(list("notatriangles3d")));   # list of something else
+    brokentris = tris;   # a Triangles3D whose vertex fields have the transposed layout
+    class(brokentris) = "Triangles3D";
+    brokentris$v1 = t(tris$v1);
+    brokentris$v2 = t(tris$v2);
+    brokentris$v3 = t(tris$v3);
+    expect_error(Triangles3D.to.coloredmesh(brokentris), "3 vertex coordinates");
+})
+
+
+test_that("apply.transform restores the orientation of meshes for orientation-flipping matrices", {
+    # A sphere-like volume, from which we extract an iso-surface. Contouring in voxel space and then
+    # transforming to surface RAS with the FreeSurfer 'vox2ras_tkr' matrix is what the volume
+    # overlay functions do.
+    sdim = 30L;
+    grid = expand.grid(i = seq_len(sdim), j = seq_len(sdim), k = seq_len(sdim));
+    radius = sqrt((grid$i - 15)^2 + (grid$j - 15)^2 + (grid$k - 15)^2);
+    vol = array(15 - radius, dim = c(sdim, sdim, sdim));
+    tris = misc3d::contour3d(vol, level = 5, draw = FALSE);
+
+    # Mean sign of the geometric normal (computed from the winding, i.e., from the vertex order of
+    # the faces) relative to the direction away from the mesh center: positive means outward-facing.
+    mean.orientation = function(v1, v2, v3) {
+        face_normals = cbind(
+            (v2[, 2] - v1[, 2]) * (v3[, 3] - v1[, 3]) - (v2[, 3] - v1[, 3]) * (v3[, 2] - v1[, 2]),
+            (v2[, 3] - v1[, 3]) * (v3[, 1] - v1[, 1]) - (v2[, 1] - v1[, 1]) * (v3[, 3] - v1[, 3]),
+            (v2[, 1] - v1[, 1]) * (v3[, 2] - v1[, 2]) - (v2[, 2] - v1[, 2]) * (v3[, 1] - v1[, 1]));
+        centers = (v1 + v2 + v3) / 3.0;
+        mesh_center = matrix(colMeans(rbind(v1, v2, v3)), nrow(centers), 3L, byrow = TRUE);
+        return(mean(rowSums(face_normals * (centers - mesh_center))));
+    };
+
+    # The same for a mesh3d/tmesh3d instance, using its triangles ('it') or quads ('ib').
+    mean.mesh.orientation = function(mesh) {
+        verts = t(mesh$vb[1:3, ]);
+        faces = if(! is.null(mesh$it)) mesh$it else mesh$ib;
+        return(mean.orientation(verts[faces[1, ], , drop = FALSE], verts[faces[2, ], , drop = FALSE], verts[faces[3, ], , drop = FALSE]));
+    };
+
+    transform.coords = function(coords, mat) { return((cbind(coords, 1) %*% t(mat))[, 1:3]); };
+
+    vox2ras = vox2ras_tkr();
+    expect_true(det(vox2ras[1:3, 1:3]) < 0);   # the transform does flip the orientation
+
+    # The raw iso-surface (in voxel space) is wound so that its normals point outwards, and it has to
+    # stay that way after the transformation to surface RAS. Without the orientation restoration in
+    # apply.transform, the mirroring matrix would flip all normals, so the iso-surface would be
+    # rendered inside-out.
+    expect_gt(mean.orientation(tris$v1, tris$v2, tris$v3), 0);
+    tris_ras = apply.transform(tris, vox2ras);
+    expect_gt(mean.orientation(tris_ras$v1, tris_ras$v2, tris_ras$v3), 0);
+    # This is achieved by swapping the 2nd and 3rd vertex of every triangle.
+    expect_equal(tris_ras$v2, transform.coords(tris$v3, vox2ras));
+    expect_equal(tris_ras$v3, transform.coords(tris$v2, vox2ras));
+
+    # A mesh3d: the winding of its faces is restored as well, and stored normals are negated.
+    tmesh = rgl::mesh3d(cbind(t(tris$v1[1, , drop = FALSE]), 1));
+    tmesh$it = matrix(c(1L, 2L, 3L), nrow = 3L);
+    tmesh$normals = matrix(c(0, 0, 1, 0), ncol = 1L);
+    tmesh_ras = apply.transform(tmesh, vox2ras);
+    expect_equal(tmesh_ras$it[2, ], tmesh$it[3, ]);
+    expect_equal(tmesh_ras$it[3, ], tmesh$it[2, ]);
+    expect_equal(tmesh_ras$normals[1:3, 1], -as.vector(vox2ras[1:3, 1:3] %*% c(0, 0, 1)));
+
+    # A quad mesh (rgl::cube3d) is outward-wound, and stays that way after the mirroring transform.
+    cube3d_mesh = rgl::cube3d();
+    expect_gt(mean.mesh.orientation(cube3d_mesh), 0);
+    cube3d_ras = apply.transform(cube3d_mesh, vox2ras);
+    expect_gt(mean.mesh.orientation(cube3d_ras), 0);
+    expect_equal(cube3d_ras$ib, cube3d_mesh$ib[c(1L, 3L, 2L, 4L), ]);
+
+    # An orientation-preserving transform (rotation + translation, e.g. a registration matrix) must
+    # not touch the face order at all.
+    rotation_translation = matrix(c(0, -1, 0, 10, 1, 0, 0, 20, 0, 0, 1, 30, 0, 0, 0, 1), nrow = 4L, byrow = TRUE);
+    expect_true(det(rotation_translation[1:3, 1:3]) > 0);
+    tris_rot = apply.transform(tris, rotation_translation);
+    expect_equal(tris_rot$v2, transform.coords(tris$v2, rotation_translation));
+    expect_equal(tris_rot$v3, transform.coords(tris$v3, rotation_translation));
+    expect_equal(apply.transform(cube3d_mesh, rotation_translation)$ib, cube3d_mesh$ib);
+
+    # fs.surface instances: the vertex order within the faces is reversed for flipping matrices.
+    cube = freesurferformats::read.fs.surface(system.file("extdata", "cube.ply", package = "fsbrain", mustWork = TRUE));
+    cube_flipped = apply.transform(cube, vox2ras);
+    expect_equal(cube_flipped$faces, cube$faces[, c(1L, 3L, 2L)]);
+    expect_equal(cube_flipped$vertices, apply.transform(cube$vertices, vox2ras));
+    expect_equal(apply.transform(cube, rotation_translation)$faces, cube$faces);
+})
+
+
 test_that("apply.transform supports surface meshes, renderables and lists of them", {
     cube = freesurferformats::read.fs.surface(system.file("extdata", "cube.ply", package = "fsbrain", mustWork = TRUE));
     num_verts = nrow(cube$vertices);

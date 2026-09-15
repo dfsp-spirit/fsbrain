@@ -296,6 +296,8 @@ volvis.contour <- function(volume, level=80, show=TRUE, frame=1L, color='white')
 #'
 #' @note The affine matrix is applied in the standard way: the coordinates are interpreted as homogeneous *column* vectors, i.e., a vertex `v` is transformed as `v' = M %*% v`. Note that rgl, and fsbrain functions that are implemented on top of rgl (like the camera transforms used internally for views), use the transposed convention for their rotation matrices, see \code{\link[rgl]{rotationMatrix}}. For pure translations and scalings, both conventions are identical.
 #'
+#'   Meshes keep their orientation: if the linear part of the matrix has a negative determinant, the transformation mirrors the object (this is the case for the FreeSurfer `vox2ras_tkr` matrix, which flips and permutes axes), which would invert all surface normals and make the mesh render inside-out. In that case, the vertex order within each face is reversed (and the stored normals are negated) to preserve the original orientation.
+#'
 #' @examples
 #' \dontrun{
 #'    # Transform the vertex coordinates of a surface mesh:
@@ -339,9 +341,32 @@ apply.transform <- function(object, matrix_fun) {
 #' @keywords internal
 apply.transform.matrix <- function(object, affine_matrix) {
 
+    # If the linear part of the matrix has a negative determinant, the transformation mirrors the
+    # object, i.e., it turns a right-handed into a left-handed coordinate system. This happens for
+    # the FreeSurfer 'vox2ras_tkr' matrix (which flips and permutes axes), so it is the common case
+    # when transforming data from voxel space to surface RAS. Mirroring reverses the winding of
+    # every face, which makes all geometric normals point inwards: the mesh is rendered inside-out
+    # (dark, with wrong lighting), so we restore the original orientation after the transformation.
+    flips_orientation = det(affine_matrix[1:3, 1:3, drop = FALSE]) < 0;
+
+    # Vertex order which restores the original winding of a face: swap the 2nd and 3rd vertex and
+    # keep the remaining ones (quads) in place.
+    winding_restore_order = function(num_vertices) {
+        order = c(1L, 3L, 2L);
+        if(num_vertices > 3L) {
+            order = c(order, seq.int(4L, num_vertices));
+        }
+        return(order);
+    };
+
     if(freesurferformats::is.fs.surface(object)) {
-        # Transform the vertex coordinates. The faces (vertex indices) are unaffected.
+        # Transform the vertex coordinates. The face indices themselves are unaffected, only their
+        # order within each face may change (see below).
         object$vertices = apply.affine.to.coords(object$vertices, affine_matrix);
+        if(flips_orientation && ncol(object$faces) >= 3L) {
+            # Restore the original winding of the faces.
+            object$faces = object$faces[, winding_restore_order(ncol(object$faces)), drop = FALSE];
+        }
         return(object);
     }
 
@@ -363,6 +388,12 @@ apply.transform.matrix <- function(object, affine_matrix) {
         object$v1 = apply.affine.to.coords(object$v1, affine_matrix);
         object$v2 = apply.affine.to.coords(object$v2, affine_matrix);
         object$v3 = apply.affine.to.coords(object$v3, affine_matrix);
+        if(flips_orientation) {
+            # Swap the second and third vertex of every triangle to restore the original winding.
+            tmp_v = object$v2;
+            object$v2 = object$v3;
+            object$v3 = tmp_v;
+        }
         return(object);
     }
 
@@ -371,6 +402,17 @@ apply.transform.matrix <- function(object, affine_matrix) {
         if(! is.null(object$normals) && nrow(object$normals) >= 3L) {
             # Normals are transformed with the linear part of the matrix (translation does not apply).
             object$normals[1:3, ] = affine_matrix[1:3, 1:3, drop = FALSE] %*% object$normals[1:3, , drop = FALSE];
+            if(flips_orientation) {
+                object$normals[1:3, ] = -object$normals[1:3, , drop = FALSE];
+            }
+        }
+        if(flips_orientation) {
+            # Same as above: restore the winding of the faces, in 'it' (triangles) or 'ib' (quads).
+            for(faces_key in c('it', 'ib')) {
+                if(! is.null(object[[faces_key]]) && nrow(object[[faces_key]]) >= 3L) {
+                    object[[faces_key]] = object[[faces_key]][winding_restore_order(nrow(object[[faces_key]])), , drop = FALSE];
+                }
+            }
         }
         return(object);
     }

@@ -497,8 +497,11 @@ sortcoloredmeshes.by.hemi <- function(coloredmeshes) {
     for (mesh_idx in seq_len(length(coloredmeshes))) {
         cmesh = coloredmeshes[[mesh_idx]];
         mesh_name = sprintf("mesh%d", mesh_idx);
-        if(! ('hemi' %in% names(cmesh))) {
-            if(is.fs.coloredmesh(cmesh)) {
+        # Note that a hemi value of NULL is the documented default for meshes which are not
+        # hemisphere-specific, e.g., volume iso-surfaces created with Triangles3D.to.coloredmesh().
+        # Such meshes are shown in the views of both hemispheres, just like hemi='both'.
+        if(! ('hemi' %in% names(cmesh)) || is.null(cmesh$hemi)) {
+            if(! ('hemi' %in% names(cmesh)) && is.fs.coloredmesh(cmesh)) {
                 warning(sprintf("Assigning coloredmesh # %d which has no hemi value at all to both hemispheres.\n", mesh_idx));
             }
             lh_meshes[[mesh_name]] = cmesh;

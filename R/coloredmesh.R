@@ -570,8 +570,17 @@ Triangles3D.to.coloredmesh <- function(tris, hemi = NULL, add_normals = TRUE) {
         stop("Parameter 'tris' must be a misc3d 'Triangles3D' instance (as returned by misc3d::contour3d(draw = FALSE) or fsbrain::volvis.contour) or a list of such instances.");
     }
 
+    # The fields 'v1', 'v2' and 'v3' of a misc3d 'Triangles3D' are Nx3 matrices, one row per
+    # triangle, and they are stored as consecutive blocks in 'vertices'. So the three vertices of
+    # triangle k are the k-th row of each block, i.e., rows k, num_tris+k and 2*num_tris+k.
+    num_verts_per_tri = if(is.matrix(tris$v1)) ncol(tris$v1) else length(tris$v1);
+    if(num_verts_per_tri != 3L) {
+        stop(sprintf("Expected the 'Triangles3D' fields 'v1', 'v2' and 'v3' to contain 3 vertex coordinates (x,y,z) per triangle, but 'v1' has %d.\n", num_verts_per_tri));
+    }
+    num_tris = length(tris$v1) / 3L;
+
     vertices = rbind(tris$v1, tris$v2, tris$v3);
-    faces = matrix(seq_len(nrow(vertices)), ncol = 3L, byrow = TRUE);   # each row is one triangle
+    faces = cbind(seq_len(num_tris), num_tris + seq_len(num_tris), 2L * num_tris + seq_len(num_tris));   # each row is one triangle
     mesh = rgl::tmesh3d(t(cbind(vertices, 1)), c(t(faces)));           # faces passed flat (3 x n)
 
     col = if(is.null(tris$color)) "white" else tris$color;
