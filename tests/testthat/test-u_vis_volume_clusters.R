@@ -245,13 +245,34 @@ test_that("vis.volume.clusters renders the clusters inside a pre-built context m
     expect_null(coloredmeshes.get.md(list(cm[[1L]]), 'makecmap_options'));
     expect_false(is.null(coloredmeshes.get.md(cm[3:6], 'makecmap_options')));
 
-    # Mixing hemisphere-specific context meshes with the non-hemispheric cluster shells is supported
-    # and must not warn.
-    out_img = tempfile(fileext = ".png");
-    expect_silent(fsbrain::export(cm, view_angles = c("sd_lateral_lh"), colorbar_legend = "value", output_img = out_img, silent = TRUE));
-    expect_true(file.exists(out_img));
-    expect_gt(file.size(out_img), 0L);
-    file.remove(out_img);
+    # Mixing hemisphere-specific context meshes with the non-hemispheric cluster shells is supported,
+    # so the renderers have to sort them into the views without complaining: a context mesh is shown
+    # in the views of its own hemisphere, while the cluster shells (which are not hemisphere-specific)
+    # are shown in the views of both hemispheres.
+    sorted = NULL;
+    expect_silent(sorted <- fsbrain:::get.sorted.cmeshes(cm));
+    num_shells = length(cm) - 2L;       # all renderables but the two context meshes
+    expect_length(sorted$lh, num_shells + 1L);   # the left context mesh and all cluster shells
+    expect_length(sorted$rh, num_shells + 1L);   # the right context mesh and all cluster shells
+    expect_equal(sorted$lh[[1L]]$hemi, "lh");
+    expect_equal(sorted$rh[[1L]]$hemi, "rh");
+    # A list which contains nothing but hemisphere meshes is still reported, that is the case the
+    # warning was originally added for.
+    expect_warning(fsbrain:::get.sorted.cmeshes(list(ctx_lh, ctx_rh)), "old style of passing coloredmeshes");
+
+    # Rendering the scene to an image is only checked if a renderer backend is available which can
+    # write images in this environment (the headless scimesh backend; the rgl backend needs a
+    # working display/OpenGL, see the tests of the other vis functions).
+    if(requireNamespace("scimesh", quietly = TRUE) && requireNamespace("magick", quietly = TRUE)) {
+        old_backend = getOption("fsbrain.renderer_backend");
+        options(fsbrain.renderer_backend = "scimesh");
+        out_img = tempfile(fileext = ".png");
+        expect_silent(export(cm, view_angles = c("sd_lateral_lh"), colorbar_legend = "value", output_img = out_img, silent = TRUE));
+        options(fsbrain.renderer_backend = old_backend);
+        expect_true(file.exists(out_img));
+        expect_gt(file.size(out_img), 0L);
+        file.remove(out_img);
+    }
 })
 
 
@@ -271,7 +292,14 @@ test_that("vis.volume.clusters renders the clusters inside a surface of a subjec
     expect_length(cm, 6L);
     expect_equal(cm[[1L]]$hemi, "lh");
     expect_equal(cm[[2L]]$hemi, "rh");
-    # The context mesh is the requested surface, rendered semi-transparently by default.
-    expect_equal(cm[[1L]]$style$alpha, 0.09);
     expect_true(all(sapply(cm[3:6], function(x) { is.null(x$hemi); })));
+
+    # The context mesh is rendered semi-transparently (the default of the context definition), and an
+    # alpha value given by the user takes precedence.
+    expect_gt(cm[[1L]]$style$alpha, 0.0);
+    expect_lt(cm[[1L]]$style$alpha, 0.5);
+    cm_alpha = vis.volume.clusters(subjects_dir, "fsaverage", vol, threshold = 1.5, num_levels = 1L,
+        downsample = 2L, context = list("surface" = "white", "alpha" = 0.13), views = NULL, silent = TRUE);
+    expect_equal(cm_alpha[[1L]]$style$alpha, 0.13);
+    expect_equal(cm_alpha[[2L]]$style$alpha, 0.13);
 })
