@@ -1,6 +1,6 @@
 #' @title Download optional data for this package if required.
 #'
-#' @description Ensure that the optioanl data is available locally in the package cache. Will try to download the data only if it is not available. This data is not required for the package to work, but it is used in the examples, in the unit tests and also in the example code from the vignette. Downloading it is highly recommended.
+#' @description Ensure that the optioanl data is available locally in the package cache. Will try to download the data only if it is not available. This data is not required for the package to work, but it is used in the examples, in the unit tests and also in the example code from the vignette. Downloading it is highly recommended. This function also calls \code{\link[fsbrain]{download_fsaverage_atlases}}, so the atlases defined in fsaverage space (including the subcortical atlas, see \code{\link[fsbrain]{vis.subcortical.region.values}}) become available as well.
 #'
 #' @param scheme character string, the URL scheme to use. Either `"https"` (the default) or `"http"`. Switching to `"http"` can be useful as a fallback if the HTTPS server is unreachable.
 #'
@@ -207,6 +207,11 @@ download_optional_data <- function(scheme="https") {
 
     cfiles = pkgfilecache::ensure_files_available(pkg_info, local_filenames, urls, md5sums=md5sums);
     cfiles$file_status = NULL; # not exposed to end user
+
+    # Also make sure that the atlas files defined in declarative manifest files are available, this
+    # includes the subcortical atlas of the ENIGMA structures (see 'vis.subcortical.region.values').
+    invisible(download_fsaverage_atlases(scheme=scheme));
+
     return(invisible(cfiles));
 }
 
@@ -570,7 +575,7 @@ download_fsaverage6 <- function(accept_freesurfer_license=FALSE,
 
 #' @title Download atlas files for the fsaverage template subject.
 #'
-#' @description Download a set of cortical atlas files (annotations) defined in the space of the fsaverage template subject, based on a declarative manifest file shipped with this package. The atlases (e.g., Schaefer 100-1000, Brainnetome, HCP-MMP1, AAL3) are defined in fsaverage space, but they are not part of FreeSurfer and are not subject to the FreeSurfer license. This data is not required for the package to work.
+#' @description Download a set of atlas files defined in the space of the fsaverage template subject, based on a declarative manifest file shipped with this package. The atlases (e.g., Schaefer 100-1000, Brainnetome, HCP-MMP1, AAL3) are defined in fsaverage space, but they are not part of FreeSurfer and are not subject to the FreeSurfer license. This data is not required for the package to work. Note that some atlases are not defined on the cortical surface and ship their own surface mesh, e.g., the subcortical atlas of the ENIGMA aseg structures: for those, the 'surf/lh.subcortical' and 'label/lh.subcortical.annot' files (and the same for the right hemisphere) are downloaded, see \code{\link[fsbrain]{vis.subcortical.region.values}}.
 #'
 #' @param scheme character string, the URL scheme to use. Either `"https"` (the default) or `"http"`. Switching to `"http"` can be useful as a fallback if the HTTPS server is unreachable.
 #'

@@ -91,6 +91,7 @@ Other visualization functions:
 \code{\link[=vis.labeldata.on.subject]{vis.labeldata.on.subject()}},
 \code{\link[=vis.mask.on.subject]{vis.mask.on.subject()}},
 \code{\link[=vis.rglwidget]{vis.rglwidget()}},
+\code{\link[=vis.subcortical.region.values]{vis.subcortical.region.values()}},
 \code{\link[=vis.subject.annot]{vis.subject.annot()}},
 \code{\link[=vis.subject.label]{vis.subject.label()}},
 \code{\link[=vis.subject.morph.native]{vis.subject.morph.native()}},
@@ -101,6 +102,7 @@ Other visualization functions:
 \code{\link[=vislayout.from.coloredmeshes]{vislayout.from.coloredmeshes()}}
 
 Other region-based visualization functions:
+\code{\link[=vis.subcortical.region.values]{vis.subcortical.region.values()}},
 \code{\link[=vis.subject.annot]{vis.subject.annot()}}
 }
 \concept{region-based visualization functions}

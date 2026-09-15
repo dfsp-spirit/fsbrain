@@ -63,6 +63,7 @@ Other visualization functions:
 \code{\link[=vis.mask.on.subject]{vis.mask.on.subject()}},
 \code{\link[=vis.region.values.on.subject]{vis.region.values.on.subject()}},
 \code{\link[=vis.rglwidget]{vis.rglwidget()}},
+\code{\link[=vis.subcortical.region.values]{vis.subcortical.region.values()}},
 \code{\link[=vis.subject.label]{vis.subject.label()}},
 \code{\link[=vis.subject.morph.native]{vis.subject.morph.native()}},
 \code{\link[=vis.subject.morph.standard]{vis.subject.morph.standard()}},
@@ -72,7 +73,8 @@ Other visualization functions:
 \code{\link[=vislayout.from.coloredmeshes]{vislayout.from.coloredmeshes()}}
 
 Other region-based visualization functions:
-\code{\link[=vis.region.values.on.subject]{vis.region.values.on.subject()}}
+\code{\link[=vis.region.values.on.subject]{vis.region.values.on.subject()}},
+\code{\link[=vis.subcortical.region.values]{vis.subcortical.region.values()}}
 }
 \concept{region-based visualization functions}
 \concept{visualization functions}

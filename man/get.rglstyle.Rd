@@ -15,6 +15,9 @@ a style, resolved to a parameter list compatible with \code{\link[rgl]{material3
 \description{
 Run \code{\link[rgl]{material3d}} without arguments to see valid style keywords to create new styles.
 }
+\note{
+In addition to the style names listed above, the magic word 'from_mesh' can be passed as parameter 'style' to the rendering functions: it makes them use the style stored in the 'style' field of each individual mesh (see \code{\link[fsbrain]{coloredmesh.from.color}}). This allows you to give individual meshes of a scene their own look, e.g., to render a cortex mesh semi-transparently behind colored data meshes, see \code{\link[fsbrain]{vis.subcortical.region.values}}. Note that the scimesh renderer backend currently only supports the alpha channel of a style, not other material properties.
+}
 \seealso{
 \code{\link[rgl]{shade3d}} can use the returned style
 }

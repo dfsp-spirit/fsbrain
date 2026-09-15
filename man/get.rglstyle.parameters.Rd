@@ -15,6 +15,6 @@ get.rglstyle.parameters(renderable, style)
 a style, resolved to a parameter list compatible with \code{\link[rgl]{material3d}}.
 }
 \description{
-A style definition can be a character string like "shiny", already a parameter list, or a command like 'from_mesh' that tells us to get the style from the renderable. This function creates the final parameters from the definition and the renderable.
+A style definition can be a character string like "shiny", already a parameter list, or a command like 'from_mesh' that tells us to get the style from the renderable. This function creates the final parameters from the definition and the renderable. Note that a mesh which carries its own style (in its 'style' field, see \code{\link[fsbrain]{coloredmesh.from.color}}) is rendered with that style whenever the requested style is the 'default' style: this way, scenes that assign individual styles to their meshes look as intended even if the rendering or export function is called without an explicit style.
 }
 \keyword{internal}

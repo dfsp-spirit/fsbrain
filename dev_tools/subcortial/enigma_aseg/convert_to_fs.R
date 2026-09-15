@@ -16,6 +16,17 @@
 # lh.subcortical.annot: FreeSurfer annotation file for left hemisphere subcortical aparc structures
 # rh.subcortical.annot: FreeSurfer annotation file for right hemisphere subcortical aparc structures
 #
+# Publishing the generated files: they are distributed on the data server (see the manifest file
+# 'inst/extdata/pkgfilecache_manifest_fsaverage_atlases.csv' in the fsbrain repository) and can be
+# downloaded with 'fsbrain::download_fsaverage_atlases()' (or 'fsbrain::download_optional_data()').
+# To update them:
+#   1. run this script to regenerate the files
+#   2. copy the 4 files into the local checkout of the data server repo, into
+#      'subjects_dir/fsaverage/surf/' and 'subjects_dir/fsaverage/label/'
+#   3. update the md5 checksums in the manifest file (and the sha256 checksums and the
+#      'generated_at' date in 'subjects_dir/fsaverage/label/subcortical.provenance.json')
+#   4. commit and push the data server repo (the files become available on the next download)
+#
 #
 #
 

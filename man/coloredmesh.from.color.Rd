@@ -10,7 +10,8 @@ coloredmesh.from.color(
   color_data,
   hemi,
   surface = "white",
-  metadata = list()
+  metadata = list(),
+  style = NULL
 )
 }
 \arguments{
@@ -25,14 +26,27 @@ coloredmesh.from.color(
 \item{surface}{character string or \code{fs.surface} instance. The display surface. E.g., "white", "pial", or "inflated". Defaults to "white".}
 
 \item{metadata}{a named list, can contain whatever you want. Typical entries are: 'src_data' a hemilist containing the source data from which the 'color_data' was created, optional. If available, it is encoded into the coloredmesh and can be used later to plot a colorbar. 'makecmap_options': the options used to created the colormap from the data.}
+
+\item{style}{\code{NULL} or a rendering style for this mesh, see \code{\link[fsbrain]{get.rglstyle}}. Styles can be a style name (like 'default' or 'glass') or a named list of material properties (like \code{list('alpha'=0.2)}). The style is stored in the 'style' field of the returned coloredmesh and is used when the mesh is rendered with \code{style='from_mesh'}, see \code{\link[fsbrain]{vis.coloredmeshes}}. This is how you can give individual meshes in a scene their own look, e.g., to draw a cortex mesh semi-transparently behind colored data meshes.}
 }
 \value{
-coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "render", logical, whether to render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'.
+coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "render", logical, whether to render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'. If not \code{NULL}, also "style": the rendering style for this mesh.
 }
 \description{
 Create a coloredmesh from a mesh and pre-defined colors.
 }
 \note{
-Do not call this directly, use \code{\link[fsbrain]{coloredmeshes.from.color}} instead.
+You will usually not call this directly, but use \code{\link[fsbrain]{coloredmeshes.from.color}} or \code{\link[fsbrain]{vis.color.on.subject}} instead. It is exported for cases in which you want to build a single hemisphere of a scene manually.
 }
-\keyword{internal}
+\seealso{
+Other coloredmesh functions:
+\code{\link[=Triangles3D.to.coloredmesh]{Triangles3D.to.coloredmesh()}},
+\code{\link[=coloredmesh.from.annot]{coloredmesh.from.annot()}},
+\code{\link[=coloredmesh.from.label]{coloredmesh.from.label()}},
+\code{\link[=coloredmesh.from.mask]{coloredmesh.from.mask()}},
+\code{\link[=coloredmesh.from.morph.native]{coloredmesh.from.morph.native()}},
+\code{\link[=coloredmesh.from.morph.standard]{coloredmesh.from.morph.standard()}},
+\code{\link[=coloredmesh.from.morphdata]{coloredmesh.from.morphdata()}},
+\code{\link[=coloredmeshes.from.color]{coloredmeshes.from.color()}}
+}
+\concept{coloredmesh functions}

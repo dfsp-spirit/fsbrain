@@ -22,6 +22,7 @@ Convert a \code{misc3d::contour3d(draw = FALSE)} result (an iso-surface mesh of 
 \seealso{
 Other coloredmesh functions:
 \code{\link[=coloredmesh.from.annot]{coloredmesh.from.annot()}},
+\code{\link[=coloredmesh.from.color]{coloredmesh.from.color()}},
 \code{\link[=coloredmesh.from.label]{coloredmesh.from.label()}},
 \code{\link[=coloredmesh.from.mask]{coloredmesh.from.mask()}},
 \code{\link[=coloredmesh.from.morph.native]{coloredmesh.from.morph.native()}},

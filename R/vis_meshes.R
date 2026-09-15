@@ -9,7 +9,7 @@
 #'
 #' @param skip_all_na logical, whether to skip (i.e., not render) meshes in the list that have the property 'render' set to FALSE. Defaults to TRUE. Practically, this means that a hemisphere for which the data was not given is not rendered, instead of being rendered in a single color.
 #'
-#' @param style a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.
+#' @param style a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style. Use the magic word 'from_mesh' to use the 'style' field of each coloredmesh instead of a single, global style: this allows you to give individual meshes in the scene their own look, e.g., to render a cortex mesh semi-transparently behind colored data meshes. Meshes which have no 'style' field fall back to the 'default' style. See \code{\link[fsbrain]{vis.subcortical.region.values}} for an example, and note that the scimesh renderer backend currently only supports the alpha channel of a style, not other material properties.
 #'
 #' @param rgloptions option list passed to \code{\link[rgl]{par3d}}. Example: \code{rgloptions = list("windowRect"=c(50,50,1000,1000))};
 #'
@@ -351,7 +351,7 @@ vis.coloredmesh <- function(cmesh, style="default") {
 
 #' @title Produce the named list of style parameters from style definition.
 #'
-#' @description A style definition can be a character string like "shiny", already a parameter list, or a command like 'from_mesh' that tells us to get the style from the renderable. This function creates the final parameters from the definition and the renderable.
+#' @description A style definition can be a character string like "shiny", already a parameter list, or a command like 'from_mesh' that tells us to get the style from the renderable. This function creates the final parameters from the definition and the renderable. Note that a mesh which carries its own style (in its 'style' field, see \code{\link[fsbrain]{coloredmesh.from.color}}) is rendered with that style whenever the requested style is the 'default' style: this way, scenes that assign individual styles to their meshes look as intended even if the rendering or export function is called without an explicit style.
 #'
 #' @param renderable A renderable (or any list) which includes a 'style' key. If it does not include such a key, the 'default' style will be used.
 #'
@@ -371,6 +371,11 @@ get.rglstyle.parameters <- function(renderable, style) {
         style = if(! is.null(renderable$style)) renderable$style else 'default';
         return(get.rglstyle.parameters(renderable, style));
     }
+    # If the caller asked for the default style but the mesh has its own style, use the mesh style.
+    # (Guarded against 'default' in the mesh to avoid infinite recursion.)
+    if(style == 'default' && ! is.null(renderable$style) && ! identical(renderable$style, 'default')) {
+        return(get.rglstyle.parameters(renderable, renderable$style));
+    }
     return(get.rglstyle(style));
 }
 
@@ -382,6 +387,8 @@ get.rglstyle.parameters <- function(renderable, style) {
 #' @param style string. A style name. Available styles are one of: "default", "shiny", "semitransparent", "glass", "edges".
 #'
 #' @return a style, resolved to a parameter list compatible with \code{\link[rgl]{material3d}}.
+#'
+#' @note In addition to the style names listed above, the magic word 'from_mesh' can be passed as parameter 'style' to the rendering functions: it makes them use the style stored in the 'style' field of each individual mesh (see \code{\link[fsbrain]{coloredmesh.from.color}}). This allows you to give individual meshes of a scene their own look, e.g., to render a cortex mesh semi-transparently behind colored data meshes, see \code{\link[fsbrain]{vis.subcortical.region.values}}. Note that the scimesh renderer backend currently only supports the alpha channel of a style, not other material properties.
 #'
 #' @seealso \code{\link[rgl]{shade3d}} can use the returned style
 #'

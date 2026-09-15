@@ -108,13 +108,17 @@ tmesh3d.to.fs.surface <- function(tmesh) {
 #'
 #' @param color_data vector of hex color strings, a single one or one per vertex.
 #'
-#' @return coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "render", logical, whether to render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'.
+#' @param style `NULL` or a rendering style for this mesh, see \code{\link[fsbrain]{get.rglstyle}}. Styles can be a style name (like 'default' or 'glass') or a named list of material properties (like \code{list('alpha'=0.2)}). The style is stored in the 'style' field of the returned coloredmesh and is used when the mesh is rendered with \code{style='from_mesh'}, see \code{\link[fsbrain]{vis.coloredmeshes}}. This is how you can give individual meshes in a scene their own look, e.g., to draw a cortex mesh semi-transparently behind colored data meshes.
 #'
-#' @note Do not call this directly, use \code{\link[fsbrain]{coloredmeshes.from.color}} instead.
+#' @return coloredmesh. A named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "render", logical, whether to render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'. If not `NULL`, also "style": the rendering style for this mesh.
 #'
-#' @keywords internal
+#' @note You will usually not call this directly, but use \code{\link[fsbrain]{coloredmeshes.from.color}} or \code{\link[fsbrain]{vis.color.on.subject}} instead. It is exported for cases in which you want to build a single hemisphere of a scene manually.
+#'
+#' @family coloredmesh functions
+#'
+#' @export
 #' @importFrom rgl tmesh3d open3d wire3d
-coloredmesh.from.color <- function(subjects_dir, subject_id, color_data, hemi, surface="white", metadata=list()) {
+coloredmesh.from.color <- function(subjects_dir, subject_id, color_data, hemi, surface="white", metadata=list(), style=NULL) {
 
     if(!(hemi %in% c("lh", "rh"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh' or 'rh' but is '%s'.\n", hemi));
@@ -144,7 +148,12 @@ coloredmesh.from.color <- function(subjects_dir, subject_id, color_data, hemi, s
 
     metadata$fs_mesh = surface_mesh;
 
-    return(fs.coloredmesh(mesh, color_data, hemi, metadata=metadata));
+    cm = fs.coloredmesh(mesh, color_data, hemi, metadata=metadata);
+    if(! is.null(style)) {
+        cm$style = style;
+    }
+
+    return(cm);
 }
 
 
@@ -178,12 +187,14 @@ brain <- function(lh_cm, rh_cm) {
 #'
 #' @param metadata a named list, can contain whatever you want. Typical entries are: 'src_data' a hemilist containing the source data from which the 'color_data' was created, optional. If available, it is encoded into the coloredmesh and can be used later to plot a colorbar. 'makecmap_options': the options used to created the colormap from the data.
 #'
-#' @return named list of coloredmeshes. Each entry is a named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "render", logical, whether to render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'.
+#' @param style `NULL` or a rendering style for the created meshes, see \code{\link[fsbrain]{get.rglstyle}}. Styles can be a style name (like 'default' or 'glass') or a named list of material properties (like \code{list('alpha'=0.2)}). The style is stored in the 'style' field of the returned coloredmeshes and is used when the meshes are rendered with \code{style='from_mesh'}, see \code{\link[fsbrain]{vis.coloredmeshes}}.
+#'
+#' @return named list of coloredmeshes. Each entry is a named list with entries: "mesh" the \code{\link[rgl]{tmesh3d}} mesh object. "col": the mesh colors. "render", logical, whether to render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'. If not `NULL`, also "style": the rendering style for the mesh.
 #'
 #' @family coloredmesh functions
 #'
 #' @export
-coloredmeshes.from.color <- function(subjects_dir, subject_id, color_data, hemi, surface="white", metadata=list()) {
+coloredmeshes.from.color <- function(subjects_dir, subject_id, color_data, hemi, surface="white", metadata=list(), style=NULL) {
     if(!(hemi %in% c("lh", "rh", "both"))) {
         stop(sprintf("Parameter 'hemi' must be one of 'lh', 'rh', or 'both' but is '%s'.\n", hemi));
     }
@@ -192,14 +203,14 @@ coloredmeshes.from.color <- function(subjects_dir, subject_id, color_data, hemi,
         if(! is.hemilist(color_data)) {
             stop("The parameter 'color_data' must be a named list with entries 'lh' and 'rh' if 'hemi' is 'both'.");
         }
-        lh_cm = coloredmesh.from.color(subjects_dir, subject_id, color_data$lh, 'lh', surface=surface, metadata=metadata);
-        rh_cm = coloredmesh.from.color(subjects_dir, subject_id, color_data$rh, 'rh', surface=surface, metadata=metadata);
+        lh_cm = coloredmesh.from.color(subjects_dir, subject_id, color_data$lh, 'lh', surface=surface, metadata=metadata, style=style);
+        rh_cm = coloredmesh.from.color(subjects_dir, subject_id, color_data$rh, 'rh', surface=surface, metadata=metadata, style=style);
         return(brain(lh_cm, rh_cm));
     } else {
         if(is.hemilist(color_data)) {
             color_data = hemilist.unwrap(color_data);
         }
-        cm = coloredmesh.from.color(subjects_dir, subject_id, color_data, hemi, surface=surface, metadata=metadata);
+        cm = coloredmesh.from.color(subjects_dir, subject_id, color_data, hemi, surface=surface, metadata=metadata, style=style);
         return(hemilist.wrap(cm, hemi));
     }
 }
