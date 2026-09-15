@@ -189,6 +189,11 @@ A particularly useful feature for quality assessment (QA) of FreeSurfer reconstr
 
 ![Visvoloutline](./web/fsbrain_vol_outline.png?raw=true "Volume slizes with contours of white and pial surfaces, shown in red and yellow respectively. Rendered with fsbrain")
 
+### Subcortical visualization
+
+We support subcortical visualization (treating subcortial structures as regions, so one value per subcortical structure) with the `vis.subcortical.region.values()` function.
+
+![Vissubcortical](./web/fsbrain_vis_subcortical.png?raw=true "Subcortical visualization using FreeSurfer ASEG structures. Rendered with fsbrain.")
 
 
 ### Example Notebooks
