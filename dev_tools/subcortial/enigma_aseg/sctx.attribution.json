@@ -1,0 +1,13 @@
+{
+  "title": "Meshes of subcortical aparc structures from ENIGMA",
+  "authors": "Larivière, S et al.",
+  "source_url": "https://github.com/MICA-MNI/ENIGMA",
+  "license": {
+    "name": "MIT",
+    "url": "https://spdx.org/licenses/MIT.html"
+  },
+  "acquired_at": "2026-09-15",
+  "citation": "Larivière, S., Paquola, C., Park, By. Royer, J., Wang, Y., Benkarim, O., Vos de Wael, R., Valk, S., Thomopoulos, S.I., Kirschner, M., Lewis, L.B., Evans, A.C., Sisodiya, S.M., McDonald, C.R., Thompson, P.T, Bernhardt, B.C.. The ENIGMA Toolbox: multiscale neural contextualization of multisite neuroimaging datasets. Nat Methods 18, 698–700 (2021)",
+  "dois": ["10.1038/s41592-021-01186-4"],
+  "notes": "Part of ENIGMA software package. Meshes are in ASCII version of VTK format, all substructures for one hemisphere in one shared mesh file. The CSV file contains the mapping of vertices to substructures, it was created by Tim Schaefer by reading the MATLAB code of the ENIGMA plotting functions."
+}
