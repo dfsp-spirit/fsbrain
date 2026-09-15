@@ -103,8 +103,8 @@
 #' @export
 vis.volume.clusters <- function(subjects_dir = NULL, subject_id = "fsaverage", volume,
         threshold = NULL, threshold_quantile = 0.95, max_level = NULL, max_level_quantile = 0.99,
-        num_levels = 10L, positive = TRUE, negative = TRUE, smoothing = 2L, downsample = 1L,
-        frame = 1L, backend = "auto", context = list("surface" = "white", "alpha" = 0.09),
+        num_levels = 4L, positive = TRUE, negative = TRUE, smoothing = 2L, downsample = 1L,
+        frame = 1L, backend = "auto", context = list("surface" = "white", "alpha" = 0.05),
         alpha_range = c(0.08, 1.0), makecmap_options = mkco.cluster(),
         views = c("sd_lateral_lh", "sd_medial_lh", "sd_lateral_rh", "sd_medial_rh"),
         rgloptions = rglo(), rglactions = list(), silent = FALSE) {

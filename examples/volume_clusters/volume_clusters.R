@@ -44,7 +44,7 @@ template_subject = "fsaverage";
 
 # The threshold and the number of nested shells per cluster to use in the demo.
 cluster_threshold = 3.0;
-num_shells = 10L;
+num_shells = 4L;
 
 # The size of the conformed volume used in this demo (256^3 with 1 mm voxels).
 volume_dim = 256L;
