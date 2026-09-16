@@ -50,6 +50,20 @@ works, the limitations, and many worked examples. In short, all static
 image export, multi-view layouts, and colorbars work; interactive 3D
 windows, real-time rotation, and `vis.rglwidget()` do not.
 
+Note that scimesh itself renders without anti-aliasing, which is most
+visible on thin lines (they show a hard staircase pattern, unlike the lines
+drawn by rgl), so fsbrain turns on 2x2 supersampling by default. Change that
+with:
+
+```r
+options(fsbrain.scimesh.aa_samples = 4)   # better quality, slower
+options(fsbrain.scimesh.aa_samples = 1)   # no anti-aliasing, fastest
+```
+
+This affects all subsequent fsbrain renders with the scimesh backend. The
+scimesh-wide equivalent is `options(scimesh.aa_samples = 2)`, which is honored
+as long as the fsbrain option is not set.
+
 ## Solution 2: Browser-based interactive visualization
 
 If you need interactive 3D viewing, you can use `vis.rglwidget()`, which

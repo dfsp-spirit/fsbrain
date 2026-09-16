@@ -31,7 +31,7 @@ Imports:
 Suggests:
     knitr,
     rmarkdown,
-    scimesh (>= 0.3.4),
+    scimesh (>= 0.4.0),
     testthat (>= 2.1.0),
     misc3d,
     RColorBrewer,

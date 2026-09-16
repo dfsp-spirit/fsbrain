@@ -389,7 +389,7 @@ fsbrain_style_to_scimesh_options <- function(style = "default",
         shininess <- as.numeric(rgl_params$shininess)
     }
 
-    scimesh::render_options(
+    scimesh_opts <- list(
         width = as.integer(width),
         height = as.integer(height),
         shading = shading,
@@ -399,8 +399,14 @@ fsbrain_style_to_scimesh_options <- function(style = "default",
         wireframe = wireframe,
         projection = "orthographic",
         specular_color = specular_color,
-        shininess = shininess
-    )
+        shininess = shininess,
+        # Anti-aliasing: scimesh defaults to no AA, which shows on thin lines,
+        # so fsbrain asks for supersampling. See
+        # get.fsbrain.scimesh.aa.samples() for how the factor is determined.
+        aa_samples = get.fsbrain.scimesh.aa.samples()
+    );
+
+    return(do.call(scimesh::render_options, scimesh_opts));
 }
 
 
@@ -457,6 +463,68 @@ get.fsbrain.scimesh.output.dims <- function() {
         stop("Option 'fsbrain.scimesh.output_dims' must be a numeric vector of length 2 (width, height).")
     }
     return(as.integer(dims))
+}
+
+
+#' @title The default anti-aliasing factor of the scimesh backend
+#'
+#' @description The anti-aliasing factor used for scimesh renders when neither
+#'   the fsbrain option 'fsbrain.scimesh.aa_samples' nor the scimesh-wide option
+#'   'scimesh.aa_samples' is set. scimesh renders without anti-aliasing by
+#'   default, which is most visible on thin lines (they show a staircase
+#'   pattern, unlike the hardware-drawn lines of the rgl backend), so fsbrain
+#'   requests 2x2 supersampling. Set 'fsbrain.scimesh.aa_samples' to 1 to turn
+#'   anti-aliasing off, or to 4 for higher quality.
+#'
+#' @keywords internal
+FSBRAIN_SCIMESH_DEFAULT_AA <- 2L
+
+
+#' @title Get the anti-aliasing factor for the scimesh backend
+#'
+#' @description Determines the anti-aliasing (supersampling) factor that
+#'   fsbrain passes to scimesh. The value is taken from the global option
+#'   'fsbrain.scimesh.aa_samples'; when that option is unset, an explicitly set
+#'   scimesh-wide option 'scimesh.aa_samples' is used instead, so that a
+#'   session-wide scimesh setting is honored. If neither is set, fsbrain uses
+#'   \code{FSBRAIN_SCIMESH_DEFAULT_AA} (2, i.e. 2x2 supersampling).
+#'
+#' @details The order of precedence is:
+#'   \code{fsbrain.scimesh.aa_samples} > \code{scimesh.aa_samples} >
+#'   \code{2} (the fsbrain default). The option is read for every render call,
+#'   so it can be changed at any time with \code{options()}.
+#'
+#' @return single positive integer.
+#'
+#' @examples
+#' \dontrun{
+#'   # Higher quality (4x4 supersampling) for all scimesh renders:
+#'   options(fsbrain.scimesh.aa_samples = 4);
+#'
+#'   # Back to the fsbrain default (2x2), ignoring a scimesh-wide setting:
+#'   options(fsbrain.scimesh.aa_samples = 2);
+#'
+#'   # No anti-aliasing, for fast drafts:
+#'   options(fsbrain.scimesh.aa_samples = 1);
+#' }
+#'
+#' @keywords internal
+get.fsbrain.scimesh.aa.samples <- function() {
+    aa_samples <- getOption("fsbrain.scimesh.aa_samples", default = NULL);
+    if (is.null(aa_samples)) {
+        # No fsbrain-specific setting: honor an explicit scimesh-wide setting,
+        # otherwise fall back to the fsbrain default.
+        aa_samples <- getOption("scimesh.aa_samples", default = NULL);
+        if (is.null(aa_samples)) {
+            aa_samples <- FSBRAIN_SCIMESH_DEFAULT_AA;
+        }
+    }
+    if (!is.numeric(aa_samples) || length(aa_samples) != 1L ||
+        is.na(aa_samples) || !is.finite(aa_samples) || aa_samples < 1 ||
+        abs(aa_samples - round(aa_samples)) > 1e-8) {
+        stop("Option 'fsbrain.scimesh.aa_samples' (or 'scimesh.aa_samples') must be a single positive integer, e.g. 1 (no anti-aliasing), 2 or 4.");
+    }
+    return(as.integer(round(aa_samples)));
 }
 
 

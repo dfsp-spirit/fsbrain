@@ -324,3 +324,97 @@ test_that("coloredmeshes_to_scimesh converts Triangles3D iso-surfaces without ch
     expect_equal(names(scene_list), c("lh", "rh"));
     expect_equal(sum(tri.area(scene_list$rh)), 4.0 * pi * 10^2, tolerance = 0.02);
 });
+
+
+test_that("get.fsbrain.scimesh.aa.samples defaults to 2x anti-aliasing.", {
+    old <- getOption("fsbrain.scimesh.aa_samples");
+    old_scimesh_aa <- getOption("scimesh.aa_samples");
+    on.exit(options(fsbrain.scimesh.aa_samples = old));
+    on.exit(options(scimesh.aa_samples = old_scimesh_aa), add = TRUE);
+
+    # Nothing set: the fsbrain default (2x2 supersampling) is used, because
+    # scimesh would render without anti-aliasing otherwise.
+    options(fsbrain.scimesh.aa_samples = NULL);
+    options(scimesh.aa_samples = NULL);
+    expect_equal(FSBRAIN_SCIMESH_DEFAULT_AA, 2L);
+    expect_equal(get.fsbrain.scimesh.aa.samples(), FSBRAIN_SCIMESH_DEFAULT_AA);
+
+    # The fsbrain default can be turned off explicitly.
+    options(fsbrain.scimesh.aa_samples = 1);
+    expect_equal(get.fsbrain.scimesh.aa.samples(), 1L);
+
+    # An explicitly set scimesh-wide option is honored when fsbrain has no
+    # opinion of its own.
+    options(fsbrain.scimesh.aa_samples = NULL);
+    options(scimesh.aa_samples = 4L);
+    expect_equal(get.fsbrain.scimesh.aa.samples(), 4L);
+});
+
+
+test_that("get.fsbrain.scimesh.aa.samples validates the option.", {
+    old <- getOption("fsbrain.scimesh.aa_samples");
+    on.exit(options(fsbrain.scimesh.aa_samples = old));
+
+    options(fsbrain.scimesh.aa_samples = 2);
+    expect_equal(get.fsbrain.scimesh.aa.samples(), 2L);
+
+    options(fsbrain.scimesh.aa_samples = 4L);
+    expect_equal(get.fsbrain.scimesh.aa.samples(), 4L);
+
+    options(fsbrain.scimesh.aa_samples = 0);
+    expect_error(get.fsbrain.scimesh.aa.samples(), "single positive integer");
+
+    options(fsbrain.scimesh.aa_samples = c(2, 4));
+    expect_error(get.fsbrain.scimesh.aa.samples(), "single positive integer");
+
+    options(fsbrain.scimesh.aa_samples = "2");
+    expect_error(get.fsbrain.scimesh.aa.samples(), "single positive integer");
+});
+
+
+test_that("fsbrain.scimesh.aa_samples is passed on to scimesh render options.", {
+    testthat::skip_if_not_installed("scimesh");
+    old <- getOption("fsbrain.scimesh.aa_samples");
+    old_scimesh_aa <- getOption("scimesh.aa_samples");
+    on.exit(options(fsbrain.scimesh.aa_samples = old));
+    on.exit(options(scimesh.aa_samples = old_scimesh_aa), add = TRUE);
+
+    # Nothing set: fsbrain applies its own default (2x anti-aliasing).
+    options(fsbrain.scimesh.aa_samples = NULL);
+    options(scimesh.aa_samples = NULL);
+    opts <- fsbrain_style_to_scimesh_options("default", c(1, 1, 1, 1), 100L, 100L);
+    expect_equal(opts$aa_samples, 2L);
+
+    # Turning anti-aliasing off explicitly is passed on to scimesh.
+    options(fsbrain.scimesh.aa_samples = 1);
+    opts <- fsbrain_style_to_scimesh_options("default", c(1, 1, 1, 1), 100L, 100L);
+    expect_equal(opts$aa_samples, 1L);
+
+    # Explicitly requested: fsbrain passes it through.
+    options(fsbrain.scimesh.aa_samples = 2);
+    opts <- fsbrain_style_to_scimesh_options("default", c(1, 1, 1, 1), 100L, 100L);
+    expect_equal(opts$aa_samples, 2L);
+    expect_equal(opts$width, 100L);
+    expect_equal(opts$height, 100L);
+});
+
+
+test_that("the scimesh-wide AA default reaches the fsbrain render options.", {
+    testthat::skip_if_not_installed("scimesh");
+    testthat::skip_if(utils::packageVersion("scimesh") < "0.4.0");
+    old_aa <- getOption("fsbrain.scimesh.aa_samples");
+    old_scimesh_aa <- getOption("scimesh.aa_samples");
+    on.exit(options(fsbrain.scimesh.aa_samples = old_aa));
+    on.exit(options(scimesh.aa_samples = old_scimesh_aa), add = TRUE);
+
+    # No fsbrain option: the scimesh-wide setting is used.
+    options(fsbrain.scimesh.aa_samples = NULL);
+    options(scimesh.aa_samples = 4L);
+    opts <- fsbrain_style_to_scimesh_options("default", c(1, 1, 1, 1), 100L, 100L);
+    expect_equal(opts$aa_samples, 4L);
+
+    # The fsbrain option wins over the scimesh-wide setting.
+    options(fsbrain.scimesh.aa_samples = 2L);
+    opts <- fsbrain_style_to_scimesh_options("default", c(1, 1, 1, 1), 100L, 100L);
+    expect_equal(opts$aa_samples, 2L);
+});

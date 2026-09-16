@@ -51,6 +51,24 @@ options(fsbrain.scimesh.output_dims = c(1600, 900));
 
 Note that `fsbrain.set.default.figsize()`, which controls the rgl window size, has no effect on scimesh rendering.
 
+scimesh itself renders without anti-aliasing, which is most noticeable on thin lines and points (they show a hard staircase pattern, unlike the hardware-accelerated lines that rgl draws). fsbrain therefore requests 2x2 supersampling by default. To change the quality, use the fsbrain-specific option:
+
+```{r, eval=FALSE}
+# 4x4 supersampling, for publication quality (slower):
+options(fsbrain.scimesh.aa_samples = 4);
+
+# No anti-aliasing, for fast drafts (fastest):
+options(fsbrain.scimesh.aa_samples = 1);
+```
+
+The scimesh-wide option is honored as well, as long as the fsbrain option is not set, so the setting can apply to all scimesh render calls:
+
+```{r, eval=FALSE}
+options(scimesh.aa_samples = 2);
+```
+
+Both options are read when fsbrain builds the render options for the scimesh backend, so they apply to all subsequent `export()` calls. The order of precedence is `fsbrain.scimesh.aa_samples` > `scimesh.aa_samples` > `2` (the fsbrain default). Higher factors cost render time and memory (the image is rendered internally at `width * aa_samples` by `height * aa_samples`), so 2 is a compromise between quality and speed.
+
 You can switch back to the default rgl backend at any time:
 
 ```{r, eval=FALSE}
