@@ -197,9 +197,16 @@ We support subcortical visualization (treating subcortial structures as regions,
 
 It is also possible to hide a subset of the subcortical structures by passing `NAN` as their respective data value. See [examples/subcortical/](./examples/subcortical/) for a full example app.
 
+
 ### Connectome visualization
 
-Connectivity matrices (structural connectivity from tractography, functional connectivity, or any other square matrix between brain regions) can be rendered as a connectome: the edges are drawn as lines between the region centroids, the nodes as spheres, and a semi-transparent cortex as context. The function `vis.connectome()` takes the matrix and the atlas that defines the nodes (`subject.region.centroids()` computes the node positions), and returns regular fsbrain renderables that can be passed to `export()` to create figures with a colorbar for the edge weights. Both renderer backends are supported, and the edge weights can be encoded in the line width and in the node size. See [examples/connectome/](./examples/connectome/) for a full example app.
+Connectivity matrices (structural connectivity from tractography, functional connectivity, or any other square matrix between brain regions) can be rendered as a connectome: the edges are drawn as lines between the region centroids, the nodes as spheres, and a semi-transparent cortex as context.
+
+![Visconnectome](./web/fsbrain_vis_connectome.png?raw=true "Connectome visualization based on schaefer400 atlas and fs_LR_32 meshes, synthetic data. Rendered with fsbrain.")
+
+
+The function `vis.connectome()` takes the matrix and the atlas that defines the nodes (`subject.region.centroids()` computes the node positions), and returns regular fsbrain renderables that can be passed to `export()` to create figures with a colorbar for the edge weights. See [examples/connectome/](./examples/connectome/) for a full example app.
+
 
 ### Example Notebooks
 
