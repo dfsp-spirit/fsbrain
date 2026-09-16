@@ -601,6 +601,8 @@ download_fsaverage_atlases <- function(scheme="https") {
 #'
 #' @return Named list. The list has entries: "available": vector of strings. The names of the files that are available in the local file cache. You can access them using get_optional_data_filepath(). "missing": vector of strings. The names of the files that this function was unable to retrieve.
 #'
+#' @family fs_LR 32k template functions
+#'
 #' @export
 download_fs_LR_32_atlases <- function(scheme="https") {
     pkg_info = pkgfilecache::get_pkg_info("fsbrain");
@@ -621,10 +623,41 @@ download_fs_LR_32_atlases <- function(scheme="https") {
 #'
 #' @return Named list. The list has entries: "available": vector of strings. The names of the files that are available in the local file cache. You can access them using get_optional_data_filepath(). "missing": vector of strings. The names of the files that this function was unable to retrieve.
 #'
+#' @family fs_LR 32k template functions
+#'
 #' @export
 download_fs_LR_32_meshes <- function(scheme="https") {
     pkg_info = pkgfilecache::get_pkg_info("fsbrain");
     manifest_file = system.file("extdata", "pkgfilecache_manifest_fs_LR_32_meshes.csv", package="fsbrain");
+    manifest = pkgfilecache::read_manifest(manifest_file);
+    manifest$url = paste0(scheme, "://", manifest$url);  # The manifest stores scheme-less URLs.
+    cfiles = pkgfilecache::ensure_files_available_from_manifest(pkg_info, manifest);
+    cfiles$file_status = NULL; # not exposed to end user
+    return(invisible(cfiles));
+}
+
+
+#' @title Download label files for the fs_LR 32k template.
+#'
+#' @description Download a set of label files for the fs_LR 32k template (the HCP-style surface space), based on a declarative manifest file shipped with this package. Currently this is the cortex label (`?h.cortex.label`), which defines the medial wall: all vertices which are *not* part of the label are medial wall vertices. It can be used to mask the medial wall when projecting volume data to the fs_LR 32k surface, see \code{\link[fsbrain]{template.vol2surf}} (parameter `cortex_only`). This data is not required for the package to work.
+#'
+#' @inheritParams download_fsaverage_atlases
+#'
+#' @return Named list. The list has entries: "available": vector of strings. The names of the files that are available in the local file cache. You can access them using get_optional_data_filepath(). "missing": vector of strings. The names of the files that this function was unable to retrieve.
+#'
+#' @family fs_LR 32k template functions
+#'
+#' @examples
+#' \dontrun{
+#'    fsbrain::download_fs_LR_32_labels();
+#'    subjects_dir = fsbrain::get_optional_data_filepath("subjects_dir");
+#'    cortex_lh = subject.label(subjects_dir, "fs_LR_32", "cortex.label", "lh");
+#' }
+#'
+#' @export
+download_fs_LR_32_labels <- function(scheme="https") {
+    pkg_info = pkgfilecache::get_pkg_info("fsbrain");
+    manifest_file = system.file("extdata", "pkgfilecache_manifest_fs_LR_32_labels.csv", package="fsbrain");
     manifest = pkgfilecache::read_manifest(manifest_file);
     manifest$url = paste0(scheme, "://", manifest$url);  # The manifest stores scheme-less URLs.
     cfiles = pkgfilecache::ensure_files_available_from_manifest(pkg_info, manifest);

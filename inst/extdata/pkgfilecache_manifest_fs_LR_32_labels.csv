@@ -1,0 +1,6 @@
+# pkgfilecache manifest: one row per file.
+# url: download URL without the scheme prefix; the scheme is prepended at call time.
+# path: relative to the package cache; md5: checksum (optional).
+"path","url","md5"
+"subjects_dir/fs_LR_32/label/lh.cortex.label","rcmd.org/projects/nitestdata/subjects_dir/fs_LR_32/label/lh.cortex.label","b99f15a3e7ac9224abd47833c3fe854b"
+"subjects_dir/fs_LR_32/label/rh.cortex.label","rcmd.org/projects/nitestdata/subjects_dir/fs_LR_32/label/rh.cortex.label","2cae5618a862e177cfe4861c862fc074"

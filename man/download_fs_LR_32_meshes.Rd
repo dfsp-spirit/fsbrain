@@ -15,3 +15,9 @@ Named list. The list has entries: "available": vector of strings. The names of t
 \description{
 Download a set of surface mesh files for the fs_LR 32k template (the HCP-style surface space), based on a declarative manifest file shipped with this package. The meshes include the white, pial, inflated, very inflated, midthickness, sphere and flat surfaces for both hemispheres. This data is not required for the package to work.
 }
+\seealso{
+Other fs_LR 32k template functions:
+\code{\link[=download_fs_LR_32_atlases]{download_fs_LR_32_atlases()}},
+\code{\link[=download_fs_LR_32_labels]{download_fs_LR_32_labels()}}
+}
+\concept{fs_LR 32k template functions}

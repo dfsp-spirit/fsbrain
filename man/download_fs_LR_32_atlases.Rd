@@ -15,3 +15,9 @@ Named list. The list has entries: "available": vector of strings. The names of t
 \description{
 Download a set of cortical atlas files (annotations) defined in the space of the fs_LR 32k template (the HCP-style surface space), based on a declarative manifest file shipped with this package. The atlases (e.g., Schaefer 100-1000, Brainnetome, AAL3) are not part of FreeSurfer and are not subject to the FreeSurfer license. This data is not required for the package to work.
 }
+\seealso{
+Other fs_LR 32k template functions:
+\code{\link[=download_fs_LR_32_labels]{download_fs_LR_32_labels()}},
+\code{\link[=download_fs_LR_32_meshes]{download_fs_LR_32_meshes()}}
+}
+\concept{fs_LR 32k template functions}
