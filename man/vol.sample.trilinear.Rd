@@ -9,7 +9,7 @@ vol.sample.trilinear(volume_data, coords)
 \arguments{
 \item{volume_data}{numeric 3D array, the volume data.}
 
-\item{coords}{numeric matrix with 3 columns and one row per query point, the \strong{0-based} voxel coordinates (column, row, slice). Coordinates must be within the volume (see \code{\link[fsbrain]{vol.clamp.coords}}), or an error will be raised.}
+\item{coords}{numeric matrix with 3 columns and one row per query point, the \strong{0-based} voxel coordinates (column, row, slice). Coordinates must be within the volume, or an error will be raised.}
 }
 \value{
 numeric vector, one interpolated value per query point.

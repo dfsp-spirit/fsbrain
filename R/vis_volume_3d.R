@@ -288,9 +288,9 @@ volvis.contour <- function(volume, level=80, show=TRUE, frame=1L, color='white')
 
 #' Apply affine transformation to input.
 #'
-#' @description Apply an affine transformation, like a *vox2ras_tkr* transformation, to input. This is just matrix multiplication for different input objects. Supported input types are coordinate vectors, coordinate matrices, `fs.surface` meshes (the vertex coordinates are transformed, the face indices stay the same), renderable objects like `fs.coloredmesh`, `fs.coloredvoxels` or *misc3d* `Triangles3D`, rgl `mesh3d`/`tmesh3d` instances (including their normals, if any), and (hemi-)lists of such objects (which are transformed element-wise).
+#' @description Apply an affine transformation, like a *vox2ras_tkr* transformation, to input. This is just matrix multiplication for different input objects. Supported input types are coordinate vectors, coordinate matrices, `fs.surface` meshes (the vertex coordinates are transformed, the face indices stay the same), renderable objects like `fs.coloredmesh`, `fs.coloredvoxels`, `fs.coloredpaths` or *misc3d* `Triangles3D`, rgl `mesh3d`/`tmesh3d` instances (including their normals, if any), and (hemi-)lists of such objects (which are transformed element-wise).
 #'
-#' @param object numerical vector/matrix, `fs.surface`, `fs.coloredmesh`, `fs.coloredvoxels`, `Triangles3D`, `mesh3d`/`tmesh3d` instance, or a list (e.g., a hemilist) of such objects, the coordinates or objects to transform.
+#' @param object numerical vector/matrix, `fs.surface`, `fs.coloredmesh`, `fs.coloredvoxels`, `fs.coloredpaths`, `Triangles3D`, `mesh3d`/`tmesh3d` instance, or a list (e.g., a hemilist) of such objects, the coordinates or objects to transform.
 #'
 #' @param matrix_fun a 4x4 affine matrix or a function returning such a matrix. If `NULL`, the input is returned as-is. In many cases you way want to use a matrix computed from the header of a volume file, e.g., the `vox2ras` matrix of the respective volume. See the `mghheader.*` functions in the *freesurferformats* package to obtain these matrices. Registration files can be read with `freesurferformats::read.fs.transform` and friends, but note that such files often describe a *voxel* to *surface RAS* mapping, so you may have to compose them with a `vox2ras` matrix to get a transformation between RAS coordinates.
 #'
@@ -386,6 +386,13 @@ apply.transform.matrix <- function(object, affine_matrix) {
         return(object);
     }
 
+    if(is.fs.coloredpaths(object)) {
+        # Line segments: transform both endpoints. The winding of faces is irrelevant here.
+        object$from = apply.affine.to.coords(object$from, affine_matrix);
+        object$to = apply.affine.to.coords(object$to, affine_matrix);
+        return(object);
+    }
+
     if(is.Triangles3D(object)) {
         object$v1 = apply.affine.to.coords(object$v1, affine_matrix);
         object$v2 = apply.affine.to.coords(object$v2, affine_matrix);
@@ -439,14 +446,14 @@ apply.transform.matrix <- function(object, affine_matrix) {
     if(is.list(object) && length(object) > 0L) {
         # A (e.g., hemi-)list of objects: transform all elements, provided that they are supported.
         supported = vapply(object, function(el) {
-            freesurferformats::is.fs.surface(el) || is.fs.coloredmesh(el) || is.fs.coloredvoxels(el) || is.Triangles3D(el) || inherits(el, "mesh3d") || is.matrix(el) || is.list(el);
+            freesurferformats::is.fs.surface(el) || is.fs.coloredmesh(el) || is.fs.coloredvoxels(el) || is.fs.coloredpaths(el) || is.Triangles3D(el) || inherits(el, "mesh3d") || is.matrix(el) || is.list(el);
         }, logical(1L));
         if(all(supported)) {
             return(lapply(object, apply.transform.matrix, affine_matrix = affine_matrix));
         }
     }
 
-    stop("Input type of parameter 'object' not supported. Must be a numerical vector/matrix, an fs.surface, an fs.coloredmesh, fs.coloredvoxels, Triangles3D or mesh3d instance, or a list of such objects.");
+    stop("Input type of parameter 'object' not supported. Must be a numerical vector/matrix, an fs.surface, an fs.coloredmesh, fs.coloredvoxels, fs.coloredpaths, Triangles3D or mesh3d instance, or a list of such objects.");
 }
 
 

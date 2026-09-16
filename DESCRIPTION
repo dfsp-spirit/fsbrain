@@ -34,6 +34,7 @@ Suggests:
     scimesh (>= 0.4.0),
     testthat (>= 2.1.0),
     misc3d,
+    oro.nifti,
     RColorBrewer,
     Rvcg (>= 0.20.2),
     igraph,

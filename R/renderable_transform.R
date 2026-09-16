@@ -77,8 +77,8 @@ transform_coords <- function(coords, matrix) {
 #' \code{\link[rgl]{rotate3d}}.
 #'
 #' @param x a renderable: \code{fs.coloredmesh}, \code{fs.coloredvoxels},
-#'   \code{Triangles3D}, a \code{mesh3d}/\code{tmesh3d}, or an Nx3 matrix of
-#'   coordinates.
+#'   \code{fs.coloredpaths}, \code{Triangles3D}, a \code{mesh3d}/\code{tmesh3d},
+#'   or an Nx3 matrix of coordinates.
 #'
 #' @param matrix 4x4 numeric transform matrix.
 #'
@@ -94,6 +94,11 @@ transform_renderable <- function(x, matrix, ...) {
     }
     if(is.fs.coloredvoxels(x)) {
         x$voxeltris <- transform_renderable(x$voxeltris, matrix);
+        return(x);
+    }
+    if(is.fs.coloredpaths(x)) {
+        x$from <- transform_coords(x$from, matrix);
+        x$to <- transform_coords(x$to, matrix);
         return(x);
     }
     if(is.Triangles3D(x)) {

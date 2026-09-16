@@ -369,13 +369,17 @@ vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.ang
             }
 
             scene = coloredmeshes_to_scimesh(coloredmeshes, style = style);
-            if(length(scene) == 0L) {
+            line_layers = renderables_to_line_layers(coloredmeshes, style = style);
+            if(length(scene) == 0L && length(line_layers) == 0L) {
                 warning("No renderable meshes in scene. Nothing to visualize.");
                 return(invisible(NULL));
             }
 
             # Opt-in hemisphere shift (same as rgl): only affects both-hemi views.
             if(rglactions.has.key(rglactions, "shift_hemis_apart")) {
+                if(length(line_layers) > 0L) {
+                    warning("The rglactions key 'shift_hemis_apart' is not supported for line renderables ('fs.coloredpaths'), the lines will not be shifted.");
+                }
                 scene_both = coloredmeshes_to_scimesh(shift.hemis.rglactions(coloredmeshes, rglactions), style = style);
             } else {
                 scene_both = scene;
@@ -402,8 +406,17 @@ vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.ang
                     renderable = c(renderable, highlight_meshes);
                 }
 
-                if(length(renderable) > 0L) {
-                    img = scimesh::render_scene(renderable, cam_info$camera, opts);
+                if(length(renderable) > 0L || length(line_layers) > 0L) {
+                    if(length(line_layers) > 0L) {
+                        # Line renderables are not meshes, so they are passed to scimesh as line
+                        # layers of the scene. They share the depth buffer with the meshes and are
+                        # drawn in every view (they are not hemisphere-specific).
+                        render_scene_obj = scimesh::scene(meshes = renderable, lines = line_layers,
+                                                          camera = cam_info$camera, options = opts);
+                        img = scimesh::render_scene(render_scene_obj);
+                    } else {
+                        img = scimesh::render_scene(renderable, cam_info$camera, opts);
+                    }
                     scimesh::write_png(img, view_image);
                 } else {
                     warning(sprintf("No meshes to render for view '%s', creating empty placeholder.", view));

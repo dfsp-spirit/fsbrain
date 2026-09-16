@@ -10,7 +10,7 @@ fsbrain.renderable(x)
 \item{x}{any \code{R} object}
 }
 \value{
-TRUE if \emph{x} is an instance of a class that can be rendered by fsbrain visualization functions, and FALSE otherwise. Currently, the following types are renderable: \code{fs.coloredvoxels}, \code{fs.coloredmesh}, \code{Triangles3D}.
+TRUE if \emph{x} is an instance of a class that can be rendered by fsbrain visualization functions, and FALSE otherwise. Currently, the following types are renderable: \code{fs.coloredvoxels}, \code{fs.coloredmesh}, \code{fs.coloredpaths}, \code{Triangles3D}.
 }
 \description{
 Check whether object can be rendered by fsbrain

@@ -207,7 +207,7 @@ vol.select.frame <- function(volume_data, frame = 1L) {
 #'
 #' @param volume_data numeric 3D array, the volume data.
 #'
-#' @param coords numeric matrix with 3 columns and one row per query point, the **0-based** voxel coordinates (column, row, slice). Coordinates must be within the volume (see \code{\link[fsbrain]{vol.clamp.coords}}), or an error will be raised.
+#' @param coords numeric matrix with 3 columns and one row per query point, the **0-based** voxel coordinates (column, row, slice). Coordinates must be within the volume, or an error will be raised.
 #'
 #' @return numeric vector, one interpolated value per query point.
 #'

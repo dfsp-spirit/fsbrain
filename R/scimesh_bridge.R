@@ -191,6 +191,87 @@ coloredmeshes_to_scimesh <- function(coloredmeshes, style = "default") {
 }
 
 
+#' @title Convert an fs.coloredpaths instance to scimesh line layers
+#'
+#' @description Line segments have no mesh representation, so they cannot be
+#'   passed to the scimesh renderer as meshes. They are converted to scimesh
+#'   line layers instead (see \code{scimesh::line_layer}), which the scimesh
+#'   rasterizer draws directly, without creating any geometry. This is the
+#'   cheap way to draw many thin lines, like the edges of a connectome.
+#'
+#' @param cpaths an fs.coloredpaths instance.
+#'
+#' @param style a rendering style, see \code{\link{get.rglstyle}}.
+#'
+#' @return a list of scimesh line layers (class 'scimesh_lines'). One layer per
+#'   distinct line width, because the width is a property of the layer.
+#'
+#' @keywords internal
+coloredpaths_to_scimesh <- function(cpaths, style = "default") {
+    if (!requireNamespace("scimesh", quietly = TRUE)) {
+        stop("The 'scimesh' package is required for the scimesh renderer backend.")
+    }
+    if (!is.fs.coloredpaths(cpaths)) {
+        stop("Parameter 'cpaths' must be an fs.coloredpaths instance.")
+    }
+    if (!isTRUE(cpaths$render) || nrow(cpaths$from) < 1L) {
+        return(list())
+    }
+
+    rgba <- hex_colors_to_rgba_matrix(cpaths$col)
+    style_params <- get.rglstyle.parameters(cpaths, style)
+    rgba[, "A"] <- apply.style.alpha(style_params)
+
+    layers <- list()
+    for (line_width in unique(cpaths$width)) {
+        sel <- which(cpaths$width == line_width)
+        layers[[length(layers) + 1L]] <- scimesh::line_layer(
+            from = cpaths$from[sel, , drop = FALSE],
+            to = cpaths$to[sel, , drop = FALSE],
+            colors = rgba[sel, , drop = FALSE],
+            width = line_width,
+            depth_test = isTRUE(cpaths$depth_test),
+            lit = isTRUE(cpaths$lit)
+        )
+    }
+
+    return(layers)
+}
+
+
+#' @title Collect the scimesh line layers of all fs.coloredpaths instances in a renderable list
+#'
+#' @description Walks a renderable list (a flat list of renderables, a hemilist,
+#'   or a single renderable) and converts everything that is an
+#'   fs.coloredpaths instance to scimesh line layers. Non-line renderables are
+#'   ignored, they are handled by \code{\link{coloredmeshes_to_scimesh}}.
+#'
+#' @param renderables a renderable, or a (possibly nested) list of renderables.
+#'
+#' @param style a rendering style, see \code{\link{get.rglstyle}}.
+#'
+#' @return a list of scimesh line layers, possibly empty.
+#'
+#' @keywords internal
+renderables_to_line_layers <- function(renderables, style = "default") {
+    layers <- list()
+
+    collect <- function(x) {
+        if (is.fs.coloredpaths(x)) {
+            layers <<- c(layers, coloredpaths_to_scimesh(x, style))
+        } else if (is.list(x) && !inherits(x, "mesh3d") && !is.fs.coloredmesh(x)) {
+            for (entry in x) {
+                collect(entry)
+            }
+        }
+        invisible(NULL)
+    }
+
+    collect(renderables)
+    return(layers);
+}
+
+
 #' @title Filter a scimesh scene to the meshes visible from a given view
 #'
 #' @param scene a named list of scimesh mesh descriptors (with "lh" and/or "rh" entries).

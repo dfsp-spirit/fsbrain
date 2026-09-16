@@ -102,13 +102,13 @@ vis.coloredmeshes <- function(coloredmeshes, background="white", skip_all_na=TRU
 #'
 #' @param x any `R` object
 #'
-#' @return TRUE if *x* is an instance of a class that can be rendered by fsbrain visualization functions, and FALSE otherwise. Currently, the following types are renderable: `fs.coloredvoxels`, `fs.coloredmesh`, `Triangles3D`.
+#' @return TRUE if *x* is an instance of a class that can be rendered by fsbrain visualization functions, and FALSE otherwise. Currently, the following types are renderable: `fs.coloredvoxels`, `fs.coloredmesh`, `fs.coloredpaths`, `Triangles3D`.
 #'
 #' @seealso \code{\link[fsbrain]{is.Triangles3D}}
 #'
 #' @keywords internal
 fsbrain.renderable <- function(x) {
-    return(is.fs.coloredvoxels(x) | is.fs.coloredmesh(x) | is.Triangles3D(x));
+    return(is.fs.coloredvoxels(x) | is.fs.coloredmesh(x) | is.fs.coloredpaths(x) | is.Triangles3D(x));
 }
 
 
@@ -124,7 +124,7 @@ is.Triangles3D <- function(x) inherits(x, "Triangles3D")
 
 #' @title Visualize a renderable object
 #'
-#' @description Renders instances of `coloredmesh`, `coloredvoxels` and `Triangles3D`.
+#' @description Renders instances of `coloredmesh`, `coloredvoxels`, `coloredpaths` and `Triangles3D`.
 #'
 #' @param cmesh an instance of one of the supported renderable classes
 #'
@@ -142,6 +142,10 @@ vis.renderable <- function(cmesh, skip_all_na=TRUE, style="default") {
         if(!(skip_all_na && !cmesh$render)) {
             vis.coloredmesh(cmesh, style = style);
         }
+    } else if (is.fs.coloredpaths(cmesh)) {
+        if(!(skip_all_na && !cmesh$render)) {
+            vis.coloredpaths(cmesh, style = style);
+        }
     } else if (is.fs.coloredvoxels(cmesh)) {
         style_params = get.rglstyle.parameters(cmesh, style);
         if(hasIn(cmesh, 'color')) {
@@ -157,8 +161,47 @@ vis.renderable <- function(cmesh, skip_all_na=TRUE, style="default") {
             warning("The 'misc3d' package must be installed to render 'Triangles3D' instances. Skipping visualization."); # nocov
         }
     } else {
-        stop(sprintf("Received object with classes '%s', cannot render this. Pass an 'fs.coloredmesh', 'fs.coloredvoxels', or 'Triangles3D' instance.\n", paste(class(cmesh), collapse=" ")));  # nocov
+        stop(sprintf("Received object with classes '%s', cannot render this. Pass an 'fs.coloredmesh', 'fs.coloredvoxels', 'fs.coloredpaths', or 'Triangles3D' instance.\n", paste(class(cmesh), collapse=" ")));  # nocov
     }
+}
+
+
+#' @title Draw the segments of an fs.coloredpaths instance with rgl.
+#'
+#' @description Uses rgl::segments3d, i.e., hardware lines, so that a line is always one pixel wide (times the requested width) no matter how far away it is from the camera. Segments which share a line width are drawn in a single call, because the line width is a material property (like the color, which can be set per segment).
+#'
+#' @param cpaths an fs.coloredpaths instance.
+#'
+#' @param style a rendering style, see \code{\link[fsbrain]{get.rglstyle}}.
+#'
+#' @return invisible NULL.
+#'
+#' @keywords internal
+#' @importFrom utils modifyList
+#' @importFrom rgl segments3d
+vis.coloredpaths <- function(cpaths, style="default") {
+    if(! is.fs.coloredpaths(cpaths)) {
+        stop("Parameter 'cpaths' must be an 'fs.coloredpaths' instance.");
+    }
+    if(nrow(cpaths$from) < 1L) {
+        return(invisible(NULL));
+    }
+
+    style_params = get.rglstyle.parameters(cpaths, style);
+
+    for(line_width in unique(cpaths$width)) {
+        sel = which(cpaths$width == line_width);
+        # segments3d expects the coordinates of the segment endpoints interleaved in a single vector per axis.
+        x = as.vector(rbind(cpaths$from[sel, 1], cpaths$to[sel, 1]));
+        y = as.vector(rbind(cpaths$from[sel, 2], cpaths$to[sel, 2]));
+        z = as.vector(rbind(cpaths$from[sel, 3], cpaths$to[sel, 3]));
+        # The entries after the style parameters take precedence over the style, so that the
+        # per-segment color and width win over the material defaults of the style.
+        line_params = modifyList(style_params, list("color"=cpaths$col[sel], "lwd"=line_width, "lit"=cpaths$lit, "point_antialias"=TRUE, "line_antialias"=TRUE));
+        do.call(rgl::segments3d, c(list(x, y, z), line_params));
+    }
+
+    return(invisible(NULL));
 }
 
 

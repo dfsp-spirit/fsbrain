@@ -7,7 +7,7 @@
 apply.transform(object, matrix_fun)
 }
 \arguments{
-\item{object}{numerical vector/matrix, \code{fs.surface}, \code{fs.coloredmesh}, \code{fs.coloredvoxels}, \code{Triangles3D}, \code{mesh3d}/\code{tmesh3d} instance, or a list (e.g., a hemilist) of such objects, the coordinates or objects to transform.}
+\item{object}{numerical vector/matrix, \code{fs.surface}, \code{fs.coloredmesh}, \code{fs.coloredvoxels}, \code{fs.coloredpaths}, \code{Triangles3D}, \code{mesh3d}/\code{tmesh3d} instance, or a list (e.g., a hemilist) of such objects, the coordinates or objects to transform.}
 
 \item{matrix_fun}{a 4x4 affine matrix or a function returning such a matrix. If \code{NULL}, the input is returned as-is. In many cases you way want to use a matrix computed from the header of a volume file, e.g., the \code{vox2ras} matrix of the respective volume. See the \verb{mghheader.*} functions in the \emph{freesurferformats} package to obtain these matrices. Registration files can be read with \code{freesurferformats::read.fs.transform} and friends, but note that such files often describe a \emph{voxel} to \emph{surface RAS} mapping, so you may have to compose them with a \code{vox2ras} matrix to get a transformation between RAS coordinates.}
 }
@@ -15,7 +15,7 @@ apply.transform(object, matrix_fun)
 the input after application of the affine matrix (matrix multiplication)
 }
 \description{
-Apply an affine transformation, like a \emph{vox2ras_tkr} transformation, to input. This is just matrix multiplication for different input objects. Supported input types are coordinate vectors, coordinate matrices, \code{fs.surface} meshes (the vertex coordinates are transformed, the face indices stay the same), renderable objects like \code{fs.coloredmesh}, \code{fs.coloredvoxels} or \emph{misc3d} \code{Triangles3D}, rgl \code{mesh3d}/\code{tmesh3d} instances (including their normals, if any), and (hemi-)lists of such objects (which are transformed element-wise).
+Apply an affine transformation, like a \emph{vox2ras_tkr} transformation, to input. This is just matrix multiplication for different input objects. Supported input types are coordinate vectors, coordinate matrices, \code{fs.surface} meshes (the vertex coordinates are transformed, the face indices stay the same), renderable objects like \code{fs.coloredmesh}, \code{fs.coloredvoxels}, \code{fs.coloredpaths} or \emph{misc3d} \code{Triangles3D}, rgl \code{mesh3d}/\code{tmesh3d} instances (including their normals, if any), and (hemi-)lists of such objects (which are transformed element-wise).
 }
 \note{
 The affine matrix is applied in the standard way: the coordinates are interpreted as homogeneous \emph{column} vectors, i.e., a vertex \code{v} is transformed as \verb{v' = M \%*\% v}. Note that rgl, and fsbrain functions that are implemented on top of rgl (like the camera transforms used internally for views), use the transposed convention for their rotation matrices, see \code{\link[rgl]{rotationMatrix}}. For pure translations and scalings, both conventions are identical.
