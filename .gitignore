@@ -64,5 +64,7 @@ examples/rgl_vs_scimesh/*_scimesh.png
 examples/rgl_vs_scimesh/*_rgl.png
 examples/subcortical/*.png
 examples/volume_clusters/*.png
+examples/voltosurf/*.png
+examples/connectome/*.png
 examples/*.png
 examples/*.jpg
