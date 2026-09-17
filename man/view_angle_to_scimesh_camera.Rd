@@ -4,7 +4,7 @@
 \alias{view_angle_to_scimesh_camera}
 \title{Map an fsbrain view angle to a scimesh camera}
 \usage{
-view_angle_to_scimesh_camera(scene, view_angle)
+view_angle_to_scimesh_camera(scene, view_angle, fallback_bbox = NULL)
 }
 \arguments{
 \item{scene}{a named list of scimesh mesh descriptors with "lh" and/or "rh"
@@ -12,6 +12,11 @@ entries, as returned by \code{coloredmeshes_to_scimesh}.}
 
 \item{view_angle}{character string, a valid view angle. See
 \code{\link{get.view.angle.names}} for all valid options.}
+
+\item{fallback_bbox}{numeric vector of length 6 or NULL, the bounding box to
+compute the camera from if the scene contains no mesh, see
+\code{\link{segment_bbox}}. This is needed for scenes that contain only line
+renderables, e.g. tracts without a context surface.}
 }
 \value{
 a list with entries: \code{camera} (scimesh camera list from

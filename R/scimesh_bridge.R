@@ -255,10 +255,12 @@ coloredpaths_to_scimesh <- function(cpaths, style = "default") {
 #' @keywords internal
 renderables_to_line_layers <- function(renderables, style = "default") {
     layers <- list()
+    bbox <- NULL
 
     collect <- function(x) {
         if (is.fs.coloredpaths(x)) {
             layers <<- c(layers, coloredpaths_to_scimesh(x, style))
+            bbox <<- combine_bboxes(bbox, segment_bbox(x$from, x$to))
         } else if (is.list(x) && !inherits(x, "mesh3d") && !is.fs.coloredmesh(x)) {
             for (entry in x) {
                 collect(entry)
@@ -268,7 +270,48 @@ renderables_to_line_layers <- function(renderables, style = "default") {
     }
 
     collect(renderables)
+    # The bounding box of all segments is needed to place the camera in scenes
+    # which contain line renderables but no mesh, see
+    # view_angle_to_scimesh_camera().
+    attr(layers, "bbox") <- bbox
     return(layers);
+}
+
+
+#' @title Compute the bounding box of line segments.
+#'
+#' @param from matrix of segment start points.
+#'
+#' @param to matrix of segment end points.
+#'
+#' @return numeric vector of length 6: \code{c(xmin, xmax, ymin, ymax, zmin, zmax)}.
+#'
+#' @keywords internal
+segment_bbox <- function(from, to) {
+    points <- rbind(from, to)
+    return(c(min(points[, 1L]), max(points[, 1L]),
+             min(points[, 2L]), max(points[, 2L]),
+             min(points[, 3L]), max(points[, 3L])))
+}
+
+
+#' @title Combine two bounding boxes.
+#'
+#' @param bbox1 numeric vector of length 6 or NULL, see
+#'   \code{\link{segment_bbox}}.
+#'
+#' @param bbox2 numeric vector of length 6.
+#'
+#' @return numeric vector of length 6, the box that contains both input boxes.
+#'
+#' @keywords internal
+combine_bboxes <- function(bbox1, bbox2) {
+    if (is.null(bbox1)) {
+        return(bbox2)
+    }
+    return(c(min(bbox1[1L], bbox2[1L]), max(bbox1[2L], bbox2[2L]),
+             min(bbox1[3L], bbox2[3L]), max(bbox1[4L], bbox2[4L]),
+             min(bbox1[5L], bbox2[5L]), max(bbox1[6L], bbox2[6L])))
 }
 
 
@@ -344,12 +387,16 @@ view.angle.to.hemi.filter <- function(view_angle) {
 #'   entries, as returned by \code{coloredmeshes_to_scimesh}.
 #' @param view_angle character string, a valid view angle. See
 #'   \code{\link{get.view.angle.names}} for all valid options.
+#' @param fallback_bbox numeric vector of length 6 or NULL, the bounding box to
+#'   compute the camera from if the scene contains no mesh, see
+#'   \code{\link{segment_bbox}}. This is needed for scenes that contain only line
+#'   renderables, e.g. tracts without a context surface.
 #'
 #' @return a list with entries: \code{camera} (scimesh camera list from
 #'   \code{camera_auto}), and \code{hemi_filter} (one of "lh", "rh", or "both").
 #'
 #' @keywords internal
-view_angle_to_scimesh_camera <- function(scene, view_angle) {
+view_angle_to_scimesh_camera <- function(scene, view_angle, fallback_bbox = NULL) {
     if (!requireNamespace("scimesh", quietly = TRUE)) {
         stop("The 'scimesh' package is required for the scimesh renderer backend.")
     }
@@ -359,7 +406,7 @@ view_angle_to_scimesh_camera <- function(scene, view_angle) {
     }
 
     all_meshes <- filter_scene_by_view(scene, "both")
-    if (length(all_meshes) == 0L) {
+    if (length(all_meshes) == 0L && is.null(fallback_bbox)) {
         stop("No meshes in scene to compute camera position.")
     }
 
@@ -400,7 +447,14 @@ view_angle_to_scimesh_camera <- function(scene, view_angle) {
     # scimesh's orthographic frustum half-height equals |eye - center|, so
     # dist = sphere_radius yields a framing identical to rgl (see
     # TODO_FSBRAIN_RGL_CAM.md, Step 2).
-    bs <- bounding_sphere(hemi_meshes)
+    if (length(all_meshes) == 0L) {
+        # A scene with line renderables but without any mesh: use the bounding box
+        # of the lines instead of the mesh geometry.
+        bs <- bounding_sphere(rbind(c(fallback_bbox[1L], fallback_bbox[3L], fallback_bbox[5L]),
+                                    c(fallback_bbox[2L], fallback_bbox[4L], fallback_bbox[6L])))
+    } else {
+        bs <- bounding_sphere(hemi_meshes)
+    }
     bbox_center <- bs$center
 
     dir <- view_config$direction / sqrt(sum(view_config$direction^2))

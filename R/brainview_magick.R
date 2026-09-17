@@ -398,7 +398,8 @@ vislayout.from.coloredmeshes <- function(coloredmeshes, view_angles=get.view.ang
                 hemi_filter = view.angle.to.hemi.filter(view);
                 active_scene = if(hemi_filter == "both") scene_both else scene;
 
-                cam_info = view_angle_to_scimesh_camera(active_scene, view);
+                cam_info = view_angle_to_scimesh_camera(active_scene, view,
+                                                        fallback_bbox = attr(line_layers, "bbox"));
                 renderable = filter_scene_by_view(active_scene, hemi_filter);
 
                 highlight_meshes = highlight_points_to_scimesh(rglactions, hemi_filter);
