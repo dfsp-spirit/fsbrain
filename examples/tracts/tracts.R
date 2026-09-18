@@ -122,8 +122,8 @@ tracts = fsbrain::vis.tracts(bundles, bundle_values = bundle_values, template_id
     tract_width = 1.0, views = NULL, silent = TRUE);
 
 img_bundles = file.path(output_dir, "tracts_bundles.png");
-fsbrain::export(tracts, view_angles = c("sd_lateral_lh", "sd_rostral", "sd_dorsal"),
-    draw_colorbar = "horizontal", colorbar_legend = "Value",
+fsbrain::export(tracts, view_angles = c("sd_lateral_lh", "sd_lateral_rh", "sd_rostral", "sd_dorsal"),
+    draw_colorbar = "horizontal", colorbar_legend = "Value", grid_like = FALSE,
     output_img = img_bundles, silent = TRUE);
 cat(sprintf("Wrote '%s'.\n", img_bundles));
 
@@ -136,8 +136,8 @@ tracts_orient = fsbrain::vis.tracts(bundles, color_by_orientation = TRUE, templa
     views = NULL, silent = TRUE);
 
 img_orient = file.path(output_dir, "tracts_orientation.png");
-fsbrain::export(tracts_orient, view_angles = c("sd_lateral_lh", "sd_rostral", "sd_dorsal"),
-    draw_colorbar = FALSE, output_img = img_orient, silent = TRUE);
+fsbrain::export(tracts_orient, view_angles = c("sd_lateral_lh", "sd_lateral_rh", "sd_rostral", "sd_dorsal"),
+    draw_colorbar = FALSE, output_img = img_orient, silent = TRUE, grid_like = FALSE);
 cat(sprintf("Wrote '%s'.\n", img_orient));
 
 # --- Figure 3: without the context surface -------------------------------------

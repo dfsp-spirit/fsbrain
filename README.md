@@ -207,6 +207,14 @@ Connectivity matrices (structural connectivity from tractography, functional con
 
 The function `vis.connectome()` takes the matrix and the atlas that defines the nodes (`subject.region.centroids()` computes the node positions), and returns regular fsbrain renderables that can be passed to `export()` to create figures with a colorbar for the edge weights. See [examples/connectome/](./examples/connectome/) for a full example app.
 
+### Tract Visualization (DWI)
+
+We support tract visualization from trk/tck files.
+
+![Vistracts](./web/fsbrain_vis_tracts.png?raw=true "Tracts visualization based on xtract atlas on fs_LR_32 meshes. Rendered with fsbrain.")
+
+See [examples/tracts/](./examples/tracts/) for a full example app.
+
 
 ### Projecting volume / voxel-based data to the surface for visualization
 
@@ -236,7 +244,7 @@ Packages used by fsbrain:
 * [scimesh](https://CRAN.R-project.org/package=scimesh) by Tim Schäfer: Headless C++ software renderer for 3D meshes. No GPU or X11 required.
 * [rgl](https://CRAN.R-project.org/package=rgl) by Daniel Adler, Duncan Murdoch et al.: OpenGL-based mesh renderer.
 * [oro.nifti](https://github.com/muschellij2/oro.nifti) by Brandon Witcher et al. : Loading and manipulation of brain volumes from NIFTI v1 files.
-* [freesurferformats](https://github.com/dfsp-spirit/freesurferformats) by Tim Schäfer (me): Loading and writing various neuroimaging file formats and general mesh file formats, with a focus on FreeSurfer formats.
+* [freesurferformats](https://github.com/dfsp-spirit/freesurferformats) by Tim Schäfer: Loading and writing various neuroimaging file formats and general mesh file formats, with a focus on FreeSurfer formats.
 * [gifti](https://github.com/muschellij2/gifti/) and [cifti](https://github.com/muschellij2/cifti/) by John Muschelli: Read GIFTI and CIFTI format files.
 * [Rvcg](https://github.com/zarquon42b/Rvcg) by Stefan Schlager: Rcpp interface for the [VCG Library](http://vcg.isti.cnr.it/vcglib/).
 
