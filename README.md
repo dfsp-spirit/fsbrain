@@ -208,6 +208,11 @@ Connectivity matrices (structural connectivity from tractography, functional con
 The function `vis.connectome()` takes the matrix and the atlas that defines the nodes (`subject.region.centroids()` computes the node positions), and returns regular fsbrain renderables that can be passed to `export()` to create figures with a colorbar for the edge weights. See [examples/connectome/](./examples/connectome/) for a full example app.
 
 
+### Projecting volume / voxel-based data to the surface for visualization
+
+You can do this in the software package of your choice (e.g., use Freesurfer's `mri_vol2surf` command line app) and visualize the resulting per-vertex data using standard fsbrain `vis.subject.morph.*()` methods, or you can project directly in fsbrain with the `subject.vol2surf()` function. See [examples/voltosurf/](./examples/voltosurf/) for a full example app.
+
+
 ### Example Notebooks
 
 To see a combination of example figures and the code used to produce them, you should have a look at the example notebooks: [getting started notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples.html) and [advanced examples notebook](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/examples_adv.html).
