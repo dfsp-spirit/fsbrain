@@ -66,5 +66,6 @@ examples/subcortical/*.png
 examples/volume_clusters/*.png
 examples/voltosurf/*.png
 examples/connectome/*.png
+examples/tracts/*.png
 examples/*.png
 examples/*.jpg
