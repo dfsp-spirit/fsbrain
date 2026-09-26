@@ -173,7 +173,8 @@ spheres.mesh <- function(centers, radii = 1.0, subdivisions = 2L) {
 #' @return fs.coloredmesh instance.
 #'
 #' @examples
-#'   cm = fsbrain:::coloredmesh.from.spheres(rbind(c(0, 0, 0), c(10, 0, 0)), c(1, 2), c("#FF0000", "#00FF00"));
+#'   centers = rbind(c(0, 0, 0), c(10, 0, 0));
+#'   cm = fsbrain:::coloredmesh.from.spheres(centers, c(1, 2), c("#FF0000", "#00FF00"));
 #'   class(cm);
 #'
 #' @keywords internal

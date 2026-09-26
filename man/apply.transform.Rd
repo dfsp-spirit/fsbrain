@@ -25,7 +25,8 @@ Meshes keep their orientation: if the linear part of the matrix has a negative d
 \examples{
 \dontrun{
    # Transform the vertex coordinates of a surface mesh:
-   cube = freesurferformats::read.fs.surface(system.file("extdata", "cube.ply", package = "fsbrain"));
+   cube_file = system.file("extdata", "cube.ply", package = "fsbrain");
+   cube = freesurferformats::read.fs.surface(cube_file);
    translation = matrix(c(1,0,0,10, 0,1,0,20, 0,0,1,30, 0,0,0,1), nrow = 4L, byrow = TRUE);
    cube_moved = apply.transform(cube, translation);
 }

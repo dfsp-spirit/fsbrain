@@ -50,7 +50,7 @@
 #'
 #' @param makecmap_options named list of parameters to pass to \code{\link[squash]{makecmap}}. Must not include the unnamed first parameter, which is derived from the data. The entry 'range' can be used to fix the range of the colormap, otherwise a symmetric range which covers all rendered iso-levels is used. Defaults to \code{\link[fsbrain]{mkco.cluster}}.
 #'
-#' @param views list of character strings, the views to visualize. Available views are 'sd_<angle>' (a static view, see \code{\link[fsbrain]{vis.subject.morph.native}}), 't4'/'t9' (a 2x2 or 3x3 lightbox of views) and 'si'/'sr' (single interactive / rotating, requires the rgl renderer backend). Defaults to the 4 standard lateral and medial views. Pass `NULL` to skip the rendering entirely and only compute the meshes (which are also returned).
+#' @param views list of character strings, the views to visualize. Available views are `'sd_<angle>'` (a static view, see \code{\link[fsbrain]{vis.subject.morph.native}}), 't4'/'t9' (a 2x2 or 3x3 lightbox of views) and 'si'/'sr' (single interactive / rotating, requires the rgl renderer backend). Defaults to the 4 standard lateral and medial views. Pass `NULL` to skip the rendering entirely and only compute the meshes (which are also returned).
 #'
 #' @param rgloptions option list passed to \code{\link[rgl]{par3d}}. Defaults to the package default, see \code{\link[fsbrain]{rglo}}.
 #'

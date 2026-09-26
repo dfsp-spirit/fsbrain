@@ -36,7 +36,8 @@ fs.coloredmesh instance.
 Builds one mesh containing all spheres, with a per-vertex color taken from the color of the sphere the vertex belongs to. The result is a regular \code{\link[fsbrain]{fs.coloredmesh}} instance, so it can be rendered, transformed and exported like any other mesh. Note that the vertices of a sphere are not shared with any other sphere, so each sphere can have its own radius and color.
 }
 \examples{
-  cm = fsbrain:::coloredmesh.from.spheres(rbind(c(0, 0, 0), c(10, 0, 0)), c(1, 2), c("#FF0000", "#00FF00"));
+  centers = rbind(c(0, 0, 0), c(10, 0, 0));
+  cm = fsbrain:::coloredmesh.from.spheres(centers, c(1, 2), c("#FF0000", "#00FF00"));
   class(cm);
 
 }

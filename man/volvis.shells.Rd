@@ -57,7 +57,7 @@ volvis.shells(
 
 \item{backend}{character string, the backend used to extract the iso-surfaces. One of 'auto' (the default: use the \code{Rvcg} package if it is installed, and fall back to \code{misc3d} otherwise), 'Rvcg' or 'misc3d'. \code{Rvcg} is the recommended backend: it is faster and returns vertex-welded meshes (i.e., meshes that need much less memory) with normals. Note that at least one of the two optional packages must be installed.}
 
-\item{views}{list of character strings, the views to visualize. Available views are 'sd_\if{html}{\out{<angle>}}' (a static view, see \code{\link[fsbrain]{vis.subject.morph.native}}), 't4'/'t9' (a 2x2 or 3x3 lightbox of views) and 'si'/'sr' (single interactive / rotating, requires the rgl renderer backend). Defaults to the 4 standard lateral and medial views. Pass \code{NULL} to skip the rendering entirely and only compute the meshes (which are also returned).}
+\item{views}{list of character strings, the views to visualize. Available views are \code{'sd_<angle>'} (a static view, see \code{\link[fsbrain]{vis.subject.morph.native}}), 't4'/'t9' (a 2x2 or 3x3 lightbox of views) and 'si'/'sr' (single interactive / rotating, requires the rgl renderer backend). Defaults to the 4 standard lateral and medial views. Pass \code{NULL} to skip the rendering entirely and only compute the meshes (which are also returned).}
 
 \item{rgloptions}{option list passed to \code{\link[rgl]{par3d}}. Defaults to the package default, see \code{\link[fsbrain]{rglo}}.}
 
@@ -82,8 +82,8 @@ Both renderers are used with the mesh's own style (see \code{\link[fsbrain]{get.
    # Show the 5 inner shells of the brain, cut open from the right:
    shells = volvis.shells(brain, num_levels = 5, downsample = 2, cut_away = 'right', views = NULL);
    # Combine the 4 standard views into a single image:
-   fsbrain::export(shells, view_angles = c('sd_lateral_lh', 'sd_medial_lh', 'sd_lateral_rh', 'sd_medial_rh'),
-       output_img = 'shells.png');
+   view_angles = c('sd_lateral_lh', 'sd_medial_lh', 'sd_lateral_rh', 'sd_medial_rh');
+   fsbrain::export(shells, view_angles = view_angles, output_img = 'shells.png');
 }
 
 }
