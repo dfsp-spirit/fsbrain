@@ -37,9 +37,9 @@ The plots produced by *fsbrain* can be integrated into R notebooks or written to
 
 
 ## News
-* 2026-09-14: New fsbrain version 0.8.0 released on CRAN. See the [CHANGES](./CHANGES) for more details.
-* 2026-08-23: New fsbrain version 0.7.0 released on CRAN, see the [CHANGES](./CHANGES) for details. With [scimesh](https://github.com/dfsp-spirit/scimesh) support.
-* 2026-08-23: New documentation for the scimesh rendering backend: a new vignette (`vignette("fsbrain_with_scimesh")`) and an [online notebook with pre-rendered figures](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/fsbrain_with_scimesh.html) that show how to configure fsbrain for headless, GPU-free static image export and how to use the `export()` API, including region- and vertex-based results and a workflow with manually loaded meshes.
+* 2026-09-27: New fsbrain version 1.0.0 released on CRAN. This version capitalizes on recent improvements to the `freesuferformats` dependency and supports plotting data beyond Freesurfer's surface + MNI305 space focus. We now support connectome visualization, projecting volume data to surfaces, subcortical visulization, and tracts. See the [examples](./examples/) directory and the demo images further down in this README, as well as the [CHANGES](./CHANGES) for more details.
+* 2026-09-14: New fsbrain version 0.8.0 released on CRAN. This version mostly improves internal design, which simplifies future additions to fsbrain and cross-renderer interoperability. See the [CHANGES](./CHANGES) for more details.
+* 2026-08-23: New fsbrain version 0.7.0 released on CRAN. This version adds support for an alternative rendering backend: headless rendering on the CPU via [scimesh](https://github.com/dfsp-spirit/scimesh). No OpenGL, X11, etc needed. See the [CHANGES](./CHANGES) for details and read the new vignette (`vignette("fsbrain_with_scimesh")`) or the [online notebook with pre-rendered figures](https://htmlpreview.github.io/?https://github.com/dfsp-spirit/fsbrain/blob/develop/web/Rmd_web_examples/fsbrain_with_scimesh.html).
 * 2026-08-20: We have some new online documentation: example notebooks demonstrating 2 typical workflows of fMRI result visualization with fsbrain. [View them online here](https://dfsp-spirit.github.io/fsbrain_fMRI_vis_workflows/).
 * 2026-07-09: New fsbrain version 0.6.1 released on CRAN, see the [CHANGES](./CHANGES).
 * 2026-07-08: New fsbrain version 0.6.0 released on CRAN, see the [CHANGES](./CHANGES).
@@ -251,4 +251,4 @@ Packages used by fsbrain:
 
 ## Author
 
-fsbrain was written by [Tim Schäfer](https://ts.rcmd.org)
+fsbrain was written by [Tim Schäfer](https://ts.rcmd.org), it is licensed under the MIT license.
