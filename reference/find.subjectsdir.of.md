@@ -9,7 +9,13 @@ dir of the package cache. See the function
 [`download_fsaverage`](https://dfsp-spirit.github.io/fsbrain/reference/download_fsaverage.md)
 if you want to download fsaverage to your package cache and ensure it
 always gets found, no matter whether the environment variables are set
-or not.
+or not. Note that a subject directory in the package cache is only
+considered complete if it contains the essential files of a subject, see
+[`subject.dir.has.core.files`](https://dfsp-spirit.github.io/fsbrain/reference/subject.dir.has.core.files.md):
+the cache can contain a subject which only has some atlas files (see
+[`download_fsaverage_atlases`](https://dfsp-spirit.github.io/fsbrain/reference/download_fsaverage_atlases.md)),
+and such a directory would make all functions that need the surfaces of
+the subject fail.
 
 ## Usage
 
@@ -35,8 +41,9 @@ find.subjectsdir.of(subject_id = "fsaverage", mustWork = FALSE)
 named list with the following entries: "found": logical, whether it was
 found. "found_at": Only set if found=TRUE, the path to the fsaverage
 directory (NOT including the fsaverage dir itself).
-"found_all_locations": list of all locations in which it was found. See
-'mustWork' for important information.
+"found_all_locations": list of all locations in which the subject
+directory exists, including locations at which the subject is incomplete
+(see the description). See 'mustWork' for important information.
 
 ## See also
 

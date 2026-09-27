@@ -4,7 +4,12 @@ Ensure that the optioanl data is available locally in the package cache.
 Will try to download the data only if it is not available. This data is
 not required for the package to work, but it is used in the examples, in
 the unit tests and also in the example code from the vignette.
-Downloading it is highly recommended.
+Downloading it is highly recommended. This function also calls
+[`download_fsaverage_atlases`](https://dfsp-spirit.github.io/fsbrain/reference/download_fsaverage_atlases.md),
+so the atlases defined in fsaverage space (including the subcortical
+atlas, see
+[`vis.subcortical.region.values`](https://dfsp-spirit.github.io/fsbrain/reference/vis.subcortical.region.values.md))
+become available as well.
 
 ## Usage
 

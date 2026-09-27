@@ -3,7 +3,11 @@
 Render a brain volume (as an isosurface or as voxels) together with a
 cortical surface mesh colored by morphometry data in the same
 interactive 3D scene. The volume coordinates are transformed to surface
-RAS space using the FreeSurfer `vox2ras_tkr` matrix, ensuring proper
+RAS space using the FreeSurfer
+[`vox2ras_tkr`](https://dfsp-spirit.github.io/fsbrain/reference/vox2ras_tkr.md)
+matrix (more precisely
+[`index2ras_tkr`](https://dfsp-spirit.github.io/fsbrain/reference/index2ras_tkr.md),
+see there for the R-index versus CRS distinction), ensuring proper
 spatial alignment of volume and surface.
 
 ## Usage
@@ -156,15 +160,18 @@ Other visualization functions:
 [`vis.mask.on.subject()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.mask.on.subject.md),
 [`vis.region.values.on.subject()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.region.values.on.subject.md),
 [`vis.rglwidget()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.rglwidget.md),
+[`vis.subcortical.region.values()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.subcortical.region.values.md),
 [`vis.subject.annot()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.subject.annot.md),
 [`vis.subject.label()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.subject.label.md),
 [`vis.subject.morph.native()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.subject.morph.native.md),
 [`vis.subject.morph.standard()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.subject.morph.standard.md),
 [`vis.subject.pre()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.subject.pre.md),
 [`vis.symmetric.data.on.subject()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.symmetric.data.on.subject.md),
+[`vis.volume.clusters()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.volume.clusters.md),
 [`vislayout.from.coloredmeshes()`](https://dfsp-spirit.github.io/fsbrain/reference/vislayout.from.coloredmeshes.md)
 
 Other volume visualization:
+[`vis.volume.clusters()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.volume.clusters.md),
 [`volvis.lb()`](https://dfsp-spirit.github.io/fsbrain/reference/volvis.lb.md),
 [`volvis.lb.with.surface()`](https://dfsp-spirit.github.io/fsbrain/reference/volvis.lb.with.surface.md),
 [`volvis.lightbox()`](https://dfsp-spirit.github.io/fsbrain/reference/volvis.lightbox.md),

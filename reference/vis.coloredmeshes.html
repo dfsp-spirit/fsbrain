@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">fsbrain</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,7 +35,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Visualize a list of colored meshes in a single scene.</h1>
-      <small class="dont-index">Source: <a href="https://github.com/dfsp-spirit/fsbrain/blob/v0.8.0/R/vis_meshes.R" class="external-link"><code>R/vis_meshes.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dfsp-spirit/fsbrain/blob/v1.0.0/R/vis_meshes.R" class="external-link"><code>R/vis_meshes.R</code></a></small>
       <div class="d-none name"><code>vis.coloredmeshes.Rd</code></div>
     </div>
 
@@ -73,7 +73,7 @@
 
 
 <dt id="arg-style">style<a class="anchor" aria-label="anchor" href="#arg-style"></a></dt>
-<dd><p>a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style.</p></dd>
+<dd><p>a named list of style parameters or a string specifying an available style by name (e.g., 'shiny'). Defaults to 'default', the default style. Use the magic word 'from_mesh' to use the 'style' field of each coloredmesh instead of a single, global style: this allows you to give individual meshes in the scene their own look, e.g., to render a cortex mesh semi-transparently behind colored data meshes. Meshes which have no 'style' field fall back to the 'default' style. See <code><a href="vis.subcortical.region.values.html">vis.subcortical.region.values</a></code> for an example, and note that the scimesh renderer backend currently only supports the alpha channel of a style, not other material properties.</p></dd>
 
 
 <dt id="arg-rgloptions">rgloptions<a class="anchor" aria-label="anchor" href="#arg-rgloptions"></a></dt>

@@ -39,7 +39,15 @@ vis.coloredmeshes(
 
   a named list of style parameters or a string specifying an available
   style by name (e.g., 'shiny'). Defaults to 'default', the default
-  style.
+  style. Use the magic word 'from_mesh' to use the 'style' field of each
+  coloredmesh instead of a single, global style: this allows you to give
+  individual meshes in the scene their own look, e.g., to render a
+  cortex mesh semi-transparently behind colored data meshes. Meshes
+  which have no 'style' field fall back to the 'default' style. See
+  [`vis.subcortical.region.values`](https://dfsp-spirit.github.io/fsbrain/reference/vis.subcortical.region.values.md)
+  for an example, and note that the scimesh renderer backend currently
+  only supports the alpha channel of a style, not other material
+  properties.
 
 - rgloptions:
 

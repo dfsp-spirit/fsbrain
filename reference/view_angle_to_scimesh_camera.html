@@ -13,7 +13,7 @@ to render for this view.'></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">fsbrain</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,7 +41,7 @@ to render for this view.'></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Map an fsbrain view angle to a scimesh camera</h1>
-      <small class="dont-index">Source: <a href="https://github.com/dfsp-spirit/fsbrain/blob/v0.8.0/R/scimesh_bridge.R" class="external-link"><code>R/scimesh_bridge.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dfsp-spirit/fsbrain/blob/v1.0.0/R/scimesh_bridge.R" class="external-link"><code>R/scimesh_bridge.R</code></a></small>
       <div class="d-none name"><code>view_angle_to_scimesh_camera.Rd</code></div>
     </div>
 
@@ -54,7 +54,7 @@ to render for this view.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">view_angle_to_scimesh_camera</span><span class="op">(</span><span class="va">scene</span>, <span class="va">view_angle</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">view_angle_to_scimesh_camera</span><span class="op">(</span><span class="va">scene</span>, <span class="va">view_angle</span>, fallback_bbox <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -69,6 +69,13 @@ entries, as returned by <code>coloredmeshes_to_scimesh</code>.</p></dd>
 <dt id="arg-view-angle">view_angle<a class="anchor" aria-label="anchor" href="#arg-view-angle"></a></dt>
 <dd><p>character string, a valid view angle. See
 <code><a href="get.view.angle.names.html">get.view.angle.names</a></code> for all valid options.</p></dd>
+
+
+<dt id="arg-fallback-bbox">fallback_bbox<a class="anchor" aria-label="anchor" href="#arg-fallback-bbox"></a></dt>
+<dd><p>numeric vector of length 6 or NULL, the bounding box to
+compute the camera from if the scene contains no mesh, see
+<code><a href="segment_bbox.html">segment_bbox</a></code>. This is needed for scenes that contain only line
+renderables, e.g. tracts without a context surface.</p></dd>
 
 </dl></div>
     <div class="section level2">

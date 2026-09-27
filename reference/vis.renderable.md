@@ -1,6 +1,7 @@
 # Visualize a renderable object
 
-Renders instances of `coloredmesh`, `coloredvoxels` and `Triangles3D`.
+Renders instances of `coloredmesh`, `coloredvoxels`, `coloredpaths` and
+`Triangles3D`.
 
 ## Usage
 

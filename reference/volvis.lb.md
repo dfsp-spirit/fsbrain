@@ -94,6 +94,7 @@ This function should be preferred over manually calling
 ## See also
 
 Other volume visualization:
+[`vis.volume.clusters()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.volume.clusters.md),
 [`vis.volume.on.surface()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.volume.on.surface.md),
 [`volvis.lb.with.surface()`](https://dfsp-spirit.github.io/fsbrain/reference/volvis.lb.with.surface.md),
 [`volvis.lightbox()`](https://dfsp-spirit.github.io/fsbrain/reference/volvis.lightbox.md),

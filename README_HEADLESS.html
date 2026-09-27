@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">fsbrain</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,7 +35,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>fsbrain without a display: headless and macOS</h1>
-      <small class="dont-index">Source: <a href="https://github.com/dfsp-spirit/fsbrain/blob/v0.8.0/README_HEADLESS.md" class="external-link"><code>README_HEADLESS.md</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dfsp-spirit/fsbrain/blob/v1.0.0/README_HEADLESS.md" class="external-link"><code>README_HEADLESS.md</code></a></small>
     </div>
 
 <div id="fsbrain-without-a-display-headless-and-macos" class="section level1">
@@ -61,12 +61,17 @@
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"scimesh"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>fsbrain.renderer_backend <span class="op">=</span> <span class="st">"scimesh"</span><span class="op">)</span></span></code></pre></div>
 <p>Static image export (<code><a href="reference/export.html">export()</a></code>, <code><a href="reference/vislayout.from.coloredmeshes.html">vislayout.from.coloredmeshes()</a></code>) then renders with scimesh. See the package vignette — <code><a href="articles/fsbrain_with_scimesh.html">vignette("fsbrain_with_scimesh")</a></code> — for the full documentation: what works, the limitations, and many worked examples. In short, all static image export, multi-view layouts, and colorbars work; interactive 3D windows, real-time rotation, and <code><a href="reference/vis.rglwidget.html">vis.rglwidget()</a></code> do not.</p>
+<p>Note that scimesh itself renders without anti-aliasing, which is most visible on thin lines (they show a hard staircase pattern, unlike the lines drawn by rgl), so fsbrain turns on 2x2 supersampling by default. Change that with:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>fsbrain.scimesh.aa_samples <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>   <span class="co"># better quality, slower</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>fsbrain.scimesh.aa_samples <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>   <span class="co"># no anti-aliasing, fastest</span></span></code></pre></div>
+<p>This affects all subsequent fsbrain renders with the scimesh backend. The scimesh-wide equivalent is <code>options(scimesh.aa_samples = 2)</code>, which is honored as long as the fsbrain option is not set.</p>
 </div>
 <div class="section level2">
 <h2 id="solution-2-browser-based-interactive-visualization">Solution 2: Browser-based interactive visualization<a class="anchor" aria-label="anchor" href="#solution-2-browser-based-interactive-visualization"></a></h2>
 <p>If you need interactive 3D viewing, you can use <code><a href="reference/vis.rglwidget.html">vis.rglwidget()</a></code>, which renders the scene in your web browser using WebGL instead of the missing system OpenGL stack. Note that this does <strong>not</strong> include an option to display colorbars and cannot produce multi-view layouts.</p>
 <p>While it can be used for interactive data analysis during development and iterative research workflows, it is not suited for generating publication quality plots.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dfsp-spirit/fsbrain" class="external-link">fsbrain</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Download example data (only needed once)</span></span>

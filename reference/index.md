@@ -21,7 +21,7 @@
   : Apply a label to morphometry data.
 
 - [`apply.transform()`](https://dfsp-spirit.github.io/fsbrain/reference/apply.transform.md)
-  : Apply matmult transformation to input.
+  : Apply affine transformation to input.
 
 - [`arrange.brainview.images()`](https://dfsp-spirit.github.io/fsbrain/reference/arrange.brainview.images.md)
   : Combine several brainview images into a new figure.
@@ -82,6 +82,9 @@
 
 - [`coloredmesh.from.annot()`](https://dfsp-spirit.github.io/fsbrain/reference/coloredmesh.from.annot.md)
   : Create a coloredmesh from an annotation of an atlas.
+
+- [`coloredmesh.from.color()`](https://dfsp-spirit.github.io/fsbrain/reference/coloredmesh.from.color.md)
+  : Create a coloredmesh from a mesh and pre-defined colors.
 
 - [`coloredmesh.from.label()`](https://dfsp-spirit.github.io/fsbrain/reference/coloredmesh.from.label.md)
   : Create a coloredmesh from a label.
@@ -151,6 +154,9 @@
 - [`download_fs_LR_32_atlases()`](https://dfsp-spirit.github.io/fsbrain/reference/download_fs_LR_32_atlases.md)
   : Download atlas files for the fs_LR 32k template.
 
+- [`download_fs_LR_32_labels()`](https://dfsp-spirit.github.io/fsbrain/reference/download_fs_LR_32_labels.md)
+  : Download label files for the fs_LR 32k template.
+
 - [`download_fs_LR_32_meshes()`](https://dfsp-spirit.github.io/fsbrain/reference/download_fs_LR_32_meshes.md)
   : Download surface meshes for the fs_LR 32k template.
 
@@ -176,6 +182,9 @@
 - [`download_optional_paper_data()`](https://dfsp-spirit.github.io/fsbrain/reference/download_optional_paper_data.md)
   : Download extra data to reproduce the figures from the fsbrain paper.
 
+- [`download_xtract_tracts()`](https://dfsp-spirit.github.io/fsbrain/reference/download_xtract_tracts.md)
+  : Download a white matter tract atlas (streamlines).
+
 - [`export()`](https://dfsp-spirit.github.io/fsbrain/reference/export.md)
   : Export high-quality brainview image with a colorbar.
 
@@ -194,6 +203,9 @@
 
 - [`fs.coloredmesh()`](https://dfsp-spirit.github.io/fsbrain/reference/fs.coloredmesh.md)
   : fs.coloredmesh constructor
+
+- [`fs.coloredpaths()`](https://dfsp-spirit.github.io/fsbrain/reference/fs.coloredpaths.md)
+  : Create fs.coloredpaths instance from 2 point matrices.
 
 - [`fs.home()`](https://dfsp-spirit.github.io/fsbrain/reference/fs.home.md)
   : Return FreeSurfer path.
@@ -364,8 +376,14 @@
 - [`images.dimmax()`](https://dfsp-spirit.github.io/fsbrain/reference/images.dimmax.md)
   : Compute max width and height of magick images.
 
+- [`index2ras_tkr()`](https://dfsp-spirit.github.io/fsbrain/reference/index2ras_tkr.md)
+  : The affine matrix that maps 1-based R array indices to surface RAS.
+
 - [`is.fs.coloredmesh()`](https://dfsp-spirit.github.io/fsbrain/reference/is.fs.coloredmesh.md)
   : Check whether object is an fs.coloredmesh (S3)
+
+- [`is.fs.coloredpaths()`](https://dfsp-spirit.github.io/fsbrain/reference/is.fs.coloredpaths.md)
+  : Check whether object is an fs.coloredpaths instance (S3)
 
 - [`is.fs.coloredvoxels()`](https://dfsp-spirit.github.io/fsbrain/reference/is.fs.coloredvoxels.md)
   : Check whether object is an fs.coloredvoxels instance (S3)
@@ -440,6 +458,9 @@
 - [`print(`*`<fs.coloredmesh>`*`)`](https://dfsp-spirit.github.io/fsbrain/reference/print.fs.coloredmesh.md)
   : Print description of a brain coloredmesh (S3).
 
+- [`print(`*`<fs.coloredpaths>`*`)`](https://dfsp-spirit.github.io/fsbrain/reference/print.fs.coloredpaths.md)
+  : Print description of an fs.coloredpaths instance (S3).
+
 - [`print(`*`<fs.coloredvoxels>`*`)`](https://dfsp-spirit.github.io/fsbrain/reference/print.fs.coloredvoxels.md)
   : Print description of fs.coloredvoxels (S3).
 
@@ -477,6 +498,9 @@
 
 - [`read.md.subjects.from.fsgd()`](https://dfsp-spirit.github.io/fsbrain/reference/read.md.subjects.from.fsgd.md)
   : Read subjects list from an FSGD file.
+
+- [`read.tract.bundles()`](https://dfsp-spirit.github.io/fsbrain/reference/read.tract.bundles.md)
+  : Read tract (streamline) files into named bundles.
 
 - [`regions.to.ignore()`](https://dfsp-spirit.github.io/fsbrain/reference/regions.to.ignore.md)
   : Give suggestions for regions to ignore for an atlas.
@@ -562,14 +586,24 @@
 - [`subject.num.verts()`](https://dfsp-spirit.github.io/fsbrain/reference/subject.num.verts.md)
   : Get subjects vertex count.
 
+- [`subject.region.centroids()`](https://dfsp-spirit.github.io/fsbrain/reference/subject.region.centroids.md)
+  : Compute the centroid of every region of an atlas on a surface.
+
 - [`subject.surface()`](https://dfsp-spirit.github.io/fsbrain/reference/subject.surface.md)
   : Load a surface for a subject.
+
+- [`subject.vol2surf()`](https://dfsp-spirit.github.io/fsbrain/reference/subject.vol2surf.md)
+  : Project a volume onto the cortical surface of a subject using its
+  own (native) space.
 
 - [`subject.volume()`](https://dfsp-spirit.github.io/fsbrain/reference/subject.volume.md)
   : Read a brain volume.
 
 - [`surface.curvatures()`](https://dfsp-spirit.github.io/fsbrain/reference/surface.curvatures.md)
   : Compute the k1 and k2 principal curvatures of a mesh.
+
+- [`template.vol2surf()`](https://dfsp-spirit.github.io/fsbrain/reference/template.vol2surf.md)
+  : Project a volume onto a template surface like fsaverage or fs_LR_32.
 
 - [`tmesh3d.to.fs.surface()`](https://dfsp-spirit.github.io/fsbrain/reference/tmesh3d.to.fs.surface.md)
   : Get an fs.surface brain mesh from an rgl tmesh3d instance.
@@ -596,6 +630,9 @@
 
 - [`vis.colortable.legend()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.colortable.legend.md)
   : Create a separate legend plot for a colortable or an annotation.
+
+- [`vis.connectome()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.connectome.md)
+  : Visualize a connectivity matrix as a connectome on a brain surface.
 
 - [`vis.data.on.fsaverage()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.data.on.fsaverage.md)
   : Visualize arbitrary data on the fsaverage template subject, if
@@ -658,6 +695,10 @@
 - [`vis.seg.legend()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.seg.legend.md)
   : Plot legend for a brain volume segmentation based on colorLUT.
 
+- [`vis.subcortical.region.values()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.subcortical.region.values.md)
+  : Visualize one value per region of the subcortical atlas of a
+  subject.
+
 - [`vis.subject.annot()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.subject.annot.md)
   : Visualize an annotation for a subject.
 
@@ -675,6 +716,12 @@
 
 - [`vis.symmetric.data.on.subject()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.symmetric.data.on.subject.md)
   : Visualize clusters or activation data on the surface of any subject.
+
+- [`vis.tracts()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.tracts.md)
+  : Visualize white matter tracts (streamlines) on the cortical surface.
+
+- [`vis.volume.clusters()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.volume.clusters.md)
+  : Visualize clusters of a volume inside a translucent anatomical mesh.
 
 - [`vis.volume.on.surface()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.volume.on.surface.md)
   : Visualize a brain volume overlaid on a cortical surface in 3D.
@@ -733,6 +780,9 @@
 
 - [`volvis.lightbox()`](https://dfsp-spirit.github.io/fsbrain/reference/volvis.lightbox.md)
   : Draw a lightbox view from volume slices.
+
+- [`volvis.shells()`](https://dfsp-spirit.github.io/fsbrain/reference/volvis.shells.md)
+  : Visualize a volume as nested, semi-transparent iso-surface shells.
 
 - [`volvis.slices.with.surface()`](https://dfsp-spirit.github.io/fsbrain/reference/volvis.slices.with.surface.md)
   : Export individual volume slices with surface contours to image

@@ -1,0 +1,62 @@
+# Weld the vertices of a mesh and remove degenerate faces.
+
+Meshes returned by the marching cubes implementations are usually not
+clean:
+[`Rvcg::vcgIsosurface()`](https://rdrr.io/pkg/Rvcg/man/vcgIsosurface.html)
+returns duplicated vertices along with a large number of degenerate
+(zero area) faces which overlap the real faces, and
+[`misc3d::contour3d()`](https://rdrr.io/pkg/misc3d/man/contour3d.html)
+returns completely unwelded meshes, i.e., one vertex per triangle
+corner. Both waste memory and render badly when lighting is enabled: the
+degenerate faces get invalid normals and fight for the same depth values
+as the real faces, which makes the surface look patched, grooved and
+partly black instead of smoothly shaded. This function welds vertices
+which are at (numerically) identical positions, removes the faces which
+use the same vertex more than once, and recomputes the normals.
+
+## Usage
+
+``` r
+mesh.weld(mesh, drop_degenerate = TRUE, add_normals = TRUE, tolerance = 1e-06)
+```
+
+## Arguments
+
+- mesh:
+
+  a `mesh3d` instance, e.g., as returned by
+  [`Rvcg::vcgIsosurface()`](https://rdrr.io/pkg/Rvcg/man/vcgIsosurface.html),
+  [`misc3d::contour3d()`](https://rdrr.io/pkg/misc3d/man/contour3d.html)
+  or
+  [`shell.extract.mesh`](https://dfsp-spirit.github.io/fsbrain/reference/shell.extract.mesh.md).
+
+- drop_degenerate:
+
+  logical, whether to remove the degenerate faces, i.e., the faces which
+  have at least two coincident corners and thus zero area. Defaults to
+  `TRUE`.
+
+- add_normals:
+
+  logical, whether to compute per-vertex normals for the result.
+  Defaults to `TRUE`.
+
+- tolerance:
+
+  numerical scalar, the distance (in the units of the mesh coordinates,
+  typically mm) below which two vertices are considered identical.
+  Defaults to `1e-6`.
+
+## Value
+
+a `mesh3d` instance with welded vertices, without degenerate faces, and
+with normals if requested. Vertices which are not used by any face are
+dropped, so per-vertex data like colors has to be assigned *after*
+welding (see the note).
+
+## Note
+
+Welding changes the vertex array, so per-vertex data which is not part
+of the mesh (e.g., a color vector) cannot be preserved. Assign such data
+to the welded mesh, which is what the visualization functions do
+internally.

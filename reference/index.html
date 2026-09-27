@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">fsbrain</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -94,7 +94,7 @@
           <code><a href="apply.transform.html">apply.transform()</a></code>
 
         </dt>
-        <dd>Apply matmult transformation to input.</dd>
+        <dd>Apply affine transformation to input.</dd>
 
         <dt>
 
@@ -235,6 +235,13 @@
 
         </dt>
         <dd>Create a coloredmesh from an annotation of an atlas.</dd>
+
+        <dt>
+
+          <code><a href="coloredmesh.from.color.html">coloredmesh.from.color()</a></code>
+
+        </dt>
+        <dd>Create a coloredmesh from a mesh and pre-defined colors.</dd>
 
         <dt>
 
@@ -385,6 +392,13 @@
 
         <dt>
 
+          <code><a href="download_fs_LR_32_labels.html">download_fs_LR_32_labels()</a></code>
+
+        </dt>
+        <dd>Download label files for the fs_LR 32k template.</dd>
+
+        <dt>
+
           <code><a href="download_fs_LR_32_meshes.html">download_fs_LR_32_meshes()</a></code>
 
         </dt>
@@ -441,6 +455,13 @@
 
         <dt>
 
+          <code><a href="download_xtract_tracts.html">download_xtract_tracts()</a></code>
+
+        </dt>
+        <dd>Download a white matter tract atlas (streamlines).</dd>
+
+        <dt>
+
           <code><a href="export.html">export()</a></code>
 
         </dt>
@@ -480,6 +501,13 @@
 
         </dt>
         <dd>fs.coloredmesh constructor</dd>
+
+        <dt>
+
+          <code><a href="fs.coloredpaths.html">fs.coloredpaths()</a></code>
+
+        </dt>
+        <dd>Create fs.coloredpaths instance from 2 point matrices.</dd>
 
         <dt>
 
@@ -826,10 +854,24 @@
 
         <dt>
 
+          <code><a href="index2ras_tkr.html">index2ras_tkr()</a></code>
+
+        </dt>
+        <dd>The affine matrix that maps 1-based R array indices to surface RAS.</dd>
+
+        <dt>
+
           <code><a href="is.fs.coloredmesh.html">is.fs.coloredmesh()</a></code>
 
         </dt>
         <dd>Check whether object is an fs.coloredmesh (S3)</dd>
+
+        <dt>
+
+          <code><a href="is.fs.coloredpaths.html">is.fs.coloredpaths()</a></code>
+
+        </dt>
+        <dd>Check whether object is an fs.coloredpaths instance (S3)</dd>
 
         <dt>
 
@@ -994,6 +1036,13 @@
 
         <dt>
 
+          <code><a href="print.fs.coloredpaths.html">print(<i>&lt;fs.coloredpaths&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Print description of an fs.coloredpaths instance (S3).</dd>
+
+        <dt>
+
           <code><a href="print.fs.coloredvoxels.html">print(<i>&lt;fs.coloredvoxels&gt;</i>)</a></code>
 
         </dt>
@@ -1075,6 +1124,13 @@
 
         </dt>
         <dd>Read subjects list from an FSGD file.</dd>
+
+        <dt>
+
+          <code><a href="read.tract.bundles.html">read.tract.bundles()</a></code>
+
+        </dt>
+        <dd>Read tract (streamline) files into named bundles.</dd>
 
         <dt>
 
@@ -1267,10 +1323,24 @@
 
         <dt>
 
+          <code><a href="subject.region.centroids.html">subject.region.centroids()</a></code>
+
+        </dt>
+        <dd>Compute the centroid of every region of an atlas on a surface.</dd>
+
+        <dt>
+
           <code><a href="subject.surface.html">subject.surface()</a></code>
 
         </dt>
         <dd>Load a surface for a subject.</dd>
+
+        <dt>
+
+          <code><a href="subject.vol2surf.html">subject.vol2surf()</a></code>
+
+        </dt>
+        <dd>Project a volume onto the cortical surface of a subject using its own (native) space.</dd>
 
         <dt>
 
@@ -1285,6 +1355,13 @@
 
         </dt>
         <dd>Compute the k1 and k2 principal curvatures of a mesh.</dd>
+
+        <dt>
+
+          <code><a href="template.vol2surf.html">template.vol2surf()</a></code>
+
+        </dt>
+        <dd>Project a volume onto a template surface like fsaverage or fs_LR_32.</dd>
 
         <dt>
 
@@ -1341,6 +1418,13 @@
 
         </dt>
         <dd>Create a separate legend plot for a colortable or an annotation.</dd>
+
+        <dt>
+
+          <code><a href="vis.connectome.html">vis.connectome()</a></code>
+
+        </dt>
+        <dd>Visualize a connectivity matrix as a connectome on a brain surface.</dd>
 
         <dt>
 
@@ -1477,6 +1561,13 @@
 
         <dt>
 
+          <code><a href="vis.subcortical.region.values.html">vis.subcortical.region.values()</a></code>
+
+        </dt>
+        <dd>Visualize one value per region of the subcortical atlas of a subject.</dd>
+
+        <dt>
+
           <code><a href="vis.subject.annot.html">vis.subject.annot()</a></code>
 
         </dt>
@@ -1516,6 +1607,20 @@
 
         </dt>
         <dd>Visualize clusters or activation data on the surface of any subject.</dd>
+
+        <dt>
+
+          <code><a href="vis.tracts.html">vis.tracts()</a></code>
+
+        </dt>
+        <dd>Visualize white matter tracts (streamlines) on the cortical surface.</dd>
+
+        <dt>
+
+          <code><a href="vis.volume.clusters.html">vis.volume.clusters()</a></code>
+
+        </dt>
+        <dd>Visualize clusters of a volume inside a translucent anatomical mesh.</dd>
 
         <dt>
 
@@ -1642,6 +1747,13 @@
 
         </dt>
         <dd>Draw a lightbox view from volume slices.</dd>
+
+        <dt>
+
+          <code><a href="volvis.shells.html">volvis.shells()</a></code>
+
+        </dt>
+        <dd>Visualize a volume as nested, semi-transparent iso-surface shells.</dd>
 
         <dt>
 

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">fsbrain</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,7 +35,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Create a coloredmesh from a mesh and pre-defined colors.</h1>
-      <small class="dont-index">Source: <a href="https://github.com/dfsp-spirit/fsbrain/blob/v0.8.0/R/coloredmesh.R" class="external-link"><code>R/coloredmesh.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dfsp-spirit/fsbrain/blob/v1.0.0/R/coloredmesh.R" class="external-link"><code>R/coloredmesh.R</code></a></small>
       <div class="d-none name"><code>coloredmesh.from.color.Rd</code></div>
     </div>
 
@@ -51,7 +51,8 @@
 <span>  <span class="va">color_data</span>,</span>
 <span>  <span class="va">hemi</span>,</span>
 <span>  surface <span class="op">=</span> <span class="st">"white"</span>,</span>
-<span>  metadata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  metadata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  style <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -82,14 +83,30 @@
 <dt id="arg-metadata">metadata<a class="anchor" aria-label="anchor" href="#arg-metadata"></a></dt>
 <dd><p>a named list, can contain whatever you want. Typical entries are: 'src_data' a hemilist containing the source data from which the 'color_data' was created, optional. If available, it is encoded into the coloredmesh and can be used later to plot a colorbar. 'makecmap_options': the options used to created the colormap from the data.</p></dd>
 
+
+<dt id="arg-style">style<a class="anchor" aria-label="anchor" href="#arg-style"></a></dt>
+<dd><p><code>NULL</code> or a rendering style for this mesh, see <code><a href="get.rglstyle.html">get.rglstyle</a></code>. Styles can be a style name (like 'default' or 'glass') or a named list of material properties (like <code>list('alpha'=0.2)</code>). The style is stored in the 'style' field of the returned coloredmesh and is used when the mesh is rendered with <code>style='from_mesh'</code>, see <code><a href="vis.coloredmeshes.html">vis.coloredmeshes</a></code>. This is how you can give individual meshes in a scene their own look, e.g., to draw a cortex mesh semi-transparently behind colored data meshes.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>coloredmesh. A named list with entries: "mesh" the <code><a href="https://dmurdoch.github.io/rgl/dev/reference/mesh3d.html" class="external-link">tmesh3d</a></code> mesh object. "col": the mesh colors. "render", logical, whether to render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'.</p>
+    <p>coloredmesh. A named list with entries: "mesh" the <code><a href="https://dmurdoch.github.io/rgl/dev/reference/mesh3d.html" class="external-link">tmesh3d</a></code> mesh object. "col": the mesh colors. "render", logical, whether to render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'. If not <code>NULL</code>, also "style": the rendering style for this mesh.</p>
     </div>
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
-    <p>Do not call this directly, use <code><a href="coloredmeshes.from.color.html">coloredmeshes.from.color</a></code> instead.</p>
+    <p>You will usually not call this directly, but use <code><a href="coloredmeshes.from.color.html">coloredmeshes.from.color</a></code> or <code><a href="vis.color.on.subject.html">vis.color.on.subject</a></code> instead. It is exported for cases in which you want to build a single hemisphere of a scene manually.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p>Other coloredmesh functions:
+<code><a href="Triangles3D.to.coloredmesh.html">Triangles3D.to.coloredmesh()</a></code>,
+<code><a href="coloredmesh.from.annot.html">coloredmesh.from.annot()</a></code>,
+<code><a href="coloredmesh.from.label.html">coloredmesh.from.label()</a></code>,
+<code><a href="coloredmesh.from.mask.html">coloredmesh.from.mask()</a></code>,
+<code><a href="coloredmesh.from.morph.native.html">coloredmesh.from.morph.native()</a></code>,
+<code><a href="coloredmesh.from.morph.standard.html">coloredmesh.from.morph.standard()</a></code>,
+<code><a href="coloredmesh.from.morphdata.html">coloredmesh.from.morphdata()</a></code>,
+<code><a href="coloredmeshes.from.color.html">coloredmeshes.from.color()</a></code></p></div>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

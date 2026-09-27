@@ -28,3 +28,9 @@ names of the files that are available in the local file cache. You can
 access them using get_optional_data_filepath(). "missing": vector of
 strings. The names of the files that this function was unable to
 retrieve.
+
+## See also
+
+Other fs_LR 32k template functions:
+[`download_fs_LR_32_labels()`](https://dfsp-spirit.github.io/fsbrain/reference/download_fs_LR_32_labels.md),
+[`download_fs_LR_32_meshes()`](https://dfsp-spirit.github.io/fsbrain/reference/download_fs_LR_32_meshes.md)

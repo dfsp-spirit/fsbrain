@@ -65,9 +65,12 @@ broken.
 
 ## News
 
+- 2026-09-14: New fsbrain version 0.8.0 released on CRAN. See the
+  [CHANGES](https://dfsp-spirit.github.io/fsbrain/CHANGES) for more
+  details.
 - 2026-08-23: New fsbrain version 0.7.0 released on CRAN, see the
-  [CHANGES](https://dfsp-spirit.github.io/fsbrain/CHANGES). With
-  [scimesh](https://github.com/dfsp-spirit/scimesh) support.
+  [CHANGES](https://dfsp-spirit.github.io/fsbrain/CHANGES) for details.
+  With [scimesh](https://github.com/dfsp-spirit/scimesh) support.
 - 2026-08-23: New documentation for the scimesh rendering backend: a new
   vignette
   ([`vignette("fsbrain_with_scimesh")`](https://dfsp-spirit.github.io/fsbrain/articles/fsbrain_with_scimesh.md))
@@ -78,21 +81,12 @@ broken.
   [`export()`](https://dfsp-spirit.github.io/fsbrain/reference/export.md)
   API, including region- and vertex-based results and a workflow with
   manually loaded meshes.
-- 2026-07-14: New alternative rendering backend via
-  [scimesh](https://CRAN.R-project.org/package=scimesh). Switchable with
-  `options(fsbrain.renderer_backend = "scimesh")`. Enables
-  publication-quality static images without X11/OpenGL/GPU — great for
-  macOS Tahoe/Sonoma, HPC clusters, and headless servers.
 - 2026-08-20: We have some new online documentation: example notebooks
   demonstrating 2 typical workflows of fMRI result visualization with
   fsbrain. [View them online
   here](https://dfsp-spirit.github.io/fsbrain_fMRI_vis_workflows/).
-- 2026-07-09: New fsbrain version 0.6.1 released. Adds automatic
-  fallback for plot export on recent macOS versions (Tahoe, Sonoma)
-  where X11/XQuartz is broken. You can now export publication-ready
-  plots with colorbars even without a working X11 display. See
-  [README_HEADLESS.md](https://dfsp-spirit.github.io/fsbrain/README_HEADLESS.md)
-  for details.
+- 2026-07-09: New fsbrain version 0.6.1 released on CRAN, see the
+  [CHANGES](https://dfsp-spirit.github.io/fsbrain/CHANGES).
 - 2026-07-08: New fsbrain version 0.6.0 released on CRAN, see the
   [CHANGES](https://dfsp-spirit.github.io/fsbrain/CHANGES).
 - 2025-09-09: New fsbrain version 0.5.6 released on CRAN, see the
@@ -354,6 +348,68 @@ which overlays the cortical surface boundary contours onto 2D MRI slices
 
 Visvoloutline
 
+### Subcortical visualization
+
+We support subcortical visualization (treating subcortial structures as
+regions, so one value per subcortical structure) with the
+[`vis.subcortical.region.values()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.subcortical.region.values.md)
+function.
+
+![Vissubcortical](./web/fsbrain_vis_subcortical.png?raw=true "Subcortical visualization using FreeSurfer ASEG structures. Rendered with fsbrain.")
+
+Vissubcortical
+
+It is also possible to hide a subset of the subcortical structures by
+passing `NAN` as their respective data value. See
+[examples/subcortical/](https://dfsp-spirit.github.io/fsbrain/examples/subcortical/)
+for a full example app.
+
+### Connectome visualization
+
+Connectivity matrices (structural connectivity from tractography,
+functional connectivity, or any other square matrix between brain
+regions) can be rendered as a connectome: the edges are drawn as lines
+between the region centroids, the nodes as spheres, and a
+semi-transparent cortex as context.
+
+![Visconnectome](./web/fsbrain_vis_connectome.png?raw=true "Connectome visualization based on schaefer400 atlas and fs_LR_32 meshes, synthetic data. Rendered with fsbrain.")
+
+Visconnectome
+
+The function
+[`vis.connectome()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.connectome.md)
+takes the matrix and the atlas that defines the nodes
+([`subject.region.centroids()`](https://dfsp-spirit.github.io/fsbrain/reference/subject.region.centroids.md)
+computes the node positions), and returns regular fsbrain renderables
+that can be passed to
+[`export()`](https://dfsp-spirit.github.io/fsbrain/reference/export.md)
+to create figures with a colorbar for the edge weights. See
+[examples/connectome/](https://dfsp-spirit.github.io/fsbrain/examples/connectome/)
+for a full example app.
+
+### Tract Visualization (DWI)
+
+We support tract visualization from trk/tck files.
+
+![Vistracts](./web/fsbrain_vis_tracts.png?raw=true "Tracts visualization based on xtract atlas on fs_LR_32 meshes. Rendered with fsbrain.")
+
+Vistracts
+
+See
+[examples/tracts/](https://dfsp-spirit.github.io/fsbrain/examples/tracts/)
+for a full example app.
+
+### Projecting volume / voxel-based data to the surface for visualization
+
+You can do this in the software package of your choice (e.g., use
+Freesurfer’s `mri_vol2surf` command line app) and visualize the
+resulting per-vertex data using standard fsbrain `vis.subject.morph.*()`
+methods, or you can project directly in fsbrain with the
+[`subject.vol2surf()`](https://dfsp-spirit.github.io/fsbrain/reference/subject.vol2surf.md)
+function. See
+[examples/voltosurf/](https://dfsp-spirit.github.io/fsbrain/examples/voltosurf/)
+for a full example app.
+
 ### Example Notebooks
 
 To see a combination of example figures and the code used to produce
@@ -394,9 +450,8 @@ Packages used by fsbrain:
   Witcher et al. : Loading and manipulation of brain volumes from NIFTI
   v1 files.
 - [freesurferformats](https://github.com/dfsp-spirit/freesurferformats)
-  by Tim Schäfer (me): Loading and writing various neuroimaging file
-  formats and general mesh file formats, with a focus on FreeSurfer
-  formats.
+  by Tim Schäfer: Loading and writing various neuroimaging file formats
+  and general mesh file formats, with a focus on FreeSurfer formats.
 - [gifti](https://github.com/muschellij2/gifti/) and
   [cifti](https://github.com/muschellij2/cifti/) by John Muschelli: Read
   GIFTI and CIFTI format files.

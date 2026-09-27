@@ -19,7 +19,7 @@ fsbrain.renderable(x)
 TRUE if *x* is an instance of a class that can be rendered by fsbrain
 visualization functions, and FALSE otherwise. Currently, the following
 types are renderable: `fs.coloredvoxels`, `fs.coloredmesh`,
-`Triangles3D`.
+`fs.coloredpaths`, `Triangles3D`.
 
 ## See also
 

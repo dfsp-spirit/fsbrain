@@ -46,6 +46,7 @@ list.
 
 Other coloredmesh functions:
 [`coloredmesh.from.annot()`](https://dfsp-spirit.github.io/fsbrain/reference/coloredmesh.from.annot.md),
+[`coloredmesh.from.color()`](https://dfsp-spirit.github.io/fsbrain/reference/coloredmesh.from.color.md),
 [`coloredmesh.from.label()`](https://dfsp-spirit.github.io/fsbrain/reference/coloredmesh.from.label.md),
 [`coloredmesh.from.mask()`](https://dfsp-spirit.github.io/fsbrain/reference/coloredmesh.from.mask.md),
 [`coloredmesh.from.morph.native()`](https://dfsp-spirit.github.io/fsbrain/reference/coloredmesh.from.morph.native.md),

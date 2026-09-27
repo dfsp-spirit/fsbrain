@@ -40,7 +40,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/dfsp-spirit/fsbrain/blob/v0.8.0/inst/CITATION)
+[`inst/CITATION`](https://github.com/dfsp-spirit/fsbrain/blob/v1.0.0/inst/CITATION)
 
 Schaefer T, Ecker C (2020). “fsbrain: an R package for the visualization
 of structural neuroimaging data.” *bioRxiv*.

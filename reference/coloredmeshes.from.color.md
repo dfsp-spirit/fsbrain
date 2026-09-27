@@ -11,7 +11,8 @@ coloredmeshes.from.color(
   color_data,
   hemi,
   surface = "white",
-  metadata = list()
+  metadata = list(),
+  style = NULL
 )
 ```
 
@@ -50,19 +51,31 @@ coloredmeshes.from.color(
   'makecmap_options': the options used to created the colormap from the
   data.
 
+- style:
+
+  `NULL` or a rendering style for the created meshes, see
+  [`get.rglstyle`](https://dfsp-spirit.github.io/fsbrain/reference/get.rglstyle.md).
+  Styles can be a style name (like 'default' or 'glass') or a named list
+  of material properties (like `list('alpha'=0.2)`). The style is stored
+  in the 'style' field of the returned coloredmeshes and is used when
+  the meshes are rendered with `style='from_mesh'`, see
+  [`vis.coloredmeshes`](https://dfsp-spirit.github.io/fsbrain/reference/vis.coloredmeshes.md).
+
 ## Value
 
 named list of coloredmeshes. Each entry is a named list with entries:
 "mesh" the
 [`tmesh3d`](https://dmurdoch.github.io/rgl/dev/reference/mesh3d.html)
 mesh object. "col": the mesh colors. "render", logical, whether to
-render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'.
+render the mesh. "hemi": the hemisphere, one of 'lh' or 'rh'. If not
+`NULL`, also "style": the rendering style for the mesh.
 
 ## See also
 
 Other coloredmesh functions:
 [`Triangles3D.to.coloredmesh()`](https://dfsp-spirit.github.io/fsbrain/reference/Triangles3D.to.coloredmesh.md),
 [`coloredmesh.from.annot()`](https://dfsp-spirit.github.io/fsbrain/reference/coloredmesh.from.annot.md),
+[`coloredmesh.from.color()`](https://dfsp-spirit.github.io/fsbrain/reference/coloredmesh.from.color.md),
 [`coloredmesh.from.label()`](https://dfsp-spirit.github.io/fsbrain/reference/coloredmesh.from.label.md),
 [`coloredmesh.from.mask()`](https://dfsp-spirit.github.io/fsbrain/reference/coloredmesh.from.mask.md),
 [`coloredmesh.from.morph.native()`](https://dfsp-spirit.github.io/fsbrain/reference/coloredmesh.from.morph.native.md),

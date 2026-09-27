@@ -3,12 +3,15 @@
 Plots a 3D box at every *foreground* voxel in the given volume. All
 voxels which do not have their intensity value set to `NA` are
 considered *foreground* voxels. The locations at which to plot the
-voxels is computed from the voxel CRS indices using the FreeSurfer
+voxels is computed from the 1-based R array indices of the voxels using
+the
+[`index2ras_tkr`](https://dfsp-spirit.github.io/fsbrain/reference/index2ras_tkr.md)
+matrix (see
 [`vox2ras_tkr`](https://dfsp-spirit.github.io/fsbrain/reference/vox2ras_tkr.md)
-matrix. This means that the position of the rendered data fits to the
-surface coordinates (in files like `surf/lh.white`), and that you can
-call this function while an active surface rendering window is open
-(e.g., from calling
+for the CRS-based variant). This means that the position of the rendered
+data fits to the surface coordinates (in files like `surf/lh.white`),
+and that you can call this function while an active surface rendering
+window is open (e.g., from calling
 [`vis.subject.morph.native`](https://dfsp-spirit.github.io/fsbrain/reference/vis.subject.morph.native.md)),
 to superimpose the surface and volume data. **On coloring the voxels**
 (using *rgl materials*): Note that you can call this function several

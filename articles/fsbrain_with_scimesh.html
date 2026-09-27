@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">fsbrain</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,7 +63,7 @@
 Schäfer</h4>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/dfsp-spirit/fsbrain/blob/v0.8.0/vignettes/fsbrain_with_scimesh.Rmd" class="external-link"><code>vignettes/fsbrain_with_scimesh.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dfsp-spirit/fsbrain/blob/v1.0.0/vignettes/fsbrain_with_scimesh.Rmd" class="external-link"><code>vignettes/fsbrain_with_scimesh.Rmd</code></a></small>
       <div class="d-none name"><code>fsbrain_with_scimesh.Rmd</code></div>
     </div>
 
@@ -143,8 +143,33 @@ with the <code>fsbrain.scimesh.output_dims</code> option:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>fsbrain.scimesh.output_dims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1600</span>, <span class="fl">900</span><span class="op">)</span><span class="op">)</span>;</span></code></pre></div>
 <p>Note that <code><a href="../reference/fsbrain.set.default.figsize.html">fsbrain.set.default.figsize()</a></code>, which controls
 the rgl window size, has no effect on scimesh rendering.</p>
-<p>You can switch back to the default rgl backend at any time:</p>
+<p>scimesh itself renders without anti-aliasing, which is most
+noticeable on thin lines and points (they show a hard staircase pattern,
+unlike the hardware-accelerated lines that rgl draws). fsbrain therefore
+requests 2x2 supersampling by default. To change the quality, use the
+fsbrain-specific option:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># 4x4 supersampling, for publication quality (slower):</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>fsbrain.scimesh.aa_samples <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>;</span>
+<span></span>
+<span><span class="co"># No anti-aliasing, for fast drafts (fastest):</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>fsbrain.scimesh.aa_samples <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>;</span></code></pre></div>
+<p>The scimesh-wide option is honored as well, as long as the fsbrain
+option is not set, so the setting can apply to all scimesh render
+calls:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>scimesh.aa_samples <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>;</span></code></pre></div>
+<p>Both options are read when fsbrain builds the render options for the
+scimesh backend, so they apply to all subsequent <code><a href="../reference/export.html">export()</a></code>
+calls. The order of precedence is
+<code>fsbrain.scimesh.aa_samples</code> &gt;
+<code>scimesh.aa_samples</code> &gt; <code>2</code> (the fsbrain
+default). Higher factors cost render time and memory (the image is
+rendered internally at <code>width * aa_samples</code> by
+<code>height * aa_samples</code>), so 2 is a compromise between quality
+and speed.</p>
+<p>You can switch back to the default rgl backend at any time:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>fsbrain.renderer_backend <span class="op">=</span> <span class="st">"rgl"</span><span class="op">)</span>;</span></code></pre></div>
 <p>Again, please keep in mind that interactive viewing (e.g.,
 <code>views = "si"</code>, <code>"sr"</code>, <code>"t4"</code>,
@@ -162,7 +187,7 @@ function, as shown in the rest of this document.</p>
 FreeSurfer <em>fsaverage</em> template subject (see
 <code><a href="../reference/download_fsaverage.html">?download_fsaverage</a></code>, and note that you have to accept the
 FreeSurfer license to download it):</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/dfsp-spirit/fsbrain" class="external-link">'fsbrain'</a></span><span class="op">)</span>;</span>
 <span></span>
 <span><span class="fu"><a href="../reference/download_optional_data.html">download_optional_data</a></span><span class="op">(</span><span class="op">)</span>;</span>
@@ -188,7 +213,7 @@ while still returning the coloredmeshes. We then pass it to
 </h3>
 <p>Standard-space cortical thickness, with a legend above the
 colorbar:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cm</span> <span class="op">=</span> <span class="fu"><a href="../reference/vis.subject.morph.standard.html">vis.subject.morph.standard</a></span><span class="op">(</span><span class="va">sjd</span>, <span class="va">sj</span>, <span class="st">'thickness'</span>, fwhm<span class="op">=</span><span class="st">'10'</span>, cortex_only<span class="op">=</span><span class="cn">TRUE</span>, views<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span>;</span>
 <span><span class="va">img</span> <span class="op">=</span> <span class="fu"><a href="../reference/export.html">export</a></span><span class="op">(</span><span class="va">cm</span>, colorbar_legend<span class="op">=</span><span class="st">'Cortical thickness [mm]'</span>, output_img<span class="op">=</span><span class="st">'thickness_t4.png'</span><span class="op">)</span>;</span></code></pre></div>
 </div>
@@ -200,7 +225,7 @@ select any subset of the available views via the
 <code>view_angles</code> parameter (see
 <code><a href="../reference/get.view.angle.names.html">get.view.angle.names()</a></code> for all valid view names). Here we
 show only the two medial views, for an annotation:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cm</span> <span class="op">=</span> <span class="fu"><a href="../reference/vis.subject.annot.html">vis.subject.annot</a></span><span class="op">(</span><span class="va">sjd</span>, <span class="va">sj</span>, <span class="st">'aparc'</span>, views<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span>;</span>
 <span><span class="va">img</span> <span class="op">=</span> <span class="fu"><a href="../reference/export.html">export</a></span><span class="op">(</span><span class="va">cm</span>, view_angles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sd_medial_lh"</span>, <span class="st">"sd_medial_rh"</span><span class="op">)</span><span class="op">)</span>;</span></code></pre></div>
 </div>
@@ -211,7 +236,7 @@ show only the two medial views, for an annotation:</p>
 of requested views: 4 views become a 2x2 grid, 8 views a 2x4 grid, and
 any other number produces a vertical strip. Here we use all 8 views and
 clip the tails of the mean curvature data:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cm</span> <span class="op">=</span> <span class="fu"><a href="../reference/vis.subject.morph.native.html">vis.subject.morph.native</a></span><span class="op">(</span><span class="va">sjd</span>, <span class="va">sj</span>, <span class="st">'curv'</span>, cortex_only<span class="op">=</span><span class="cn">TRUE</span>, views<span class="op">=</span><span class="cn">NULL</span>, rglactions<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">'trans_fun'</span><span class="op">=</span><span class="va">clip.data</span><span class="op">)</span><span class="op">)</span>;</span>
 <span><span class="va">img</span> <span class="op">=</span> <span class="fu"><a href="../reference/export.html">export</a></span><span class="op">(</span><span class="va">cm</span>, view_angles <span class="op">=</span> <span class="fu"><a href="../reference/get.view.angle.names.html">get.view.angle.names</a></span><span class="op">(</span>angle_set <span class="op">=</span> <span class="st">"t8"</span><span class="op">)</span>, colorbar_legend<span class="op">=</span><span class="st">'Mean curvature [mm^-1]'</span><span class="op">)</span>;</span></code></pre></div>
 </div>
@@ -220,7 +245,7 @@ clip the tails of the mean curvature data:</p>
 </h3>
 <p>You can always force a strip layout by setting
 <code>grid_like = FALSE</code>:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cm</span> <span class="op">=</span> <span class="fu"><a href="../reference/vis.subject.morph.standard.html">vis.subject.morph.standard</a></span><span class="op">(</span><span class="va">sjd</span>, <span class="va">sj</span>, <span class="st">'sulc'</span>, fwhm<span class="op">=</span><span class="st">'10'</span>, cortex_only<span class="op">=</span><span class="cn">TRUE</span>, views<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span>;</span>
 <span><span class="va">img</span> <span class="op">=</span> <span class="fu"><a href="../reference/export.html">export</a></span><span class="op">(</span><span class="va">cm</span>, view_angles <span class="op">=</span> <span class="fu"><a href="../reference/get.view.angle.names.html">get.view.angle.names</a></span><span class="op">(</span><span class="st">"t4"</span><span class="op">)</span>, grid_like <span class="op">=</span> <span class="cn">FALSE</span>, colorbar_legend<span class="op">=</span><span class="st">'Sulcal depth [mm]'</span><span class="op">)</span>;</span></code></pre></div>
 </div>
@@ -233,7 +258,7 @@ clip the tails of the mean curvature data:</p>
 disabled with <code>FALSE</code>. Note that a colorbar is only drawn if
 the coloredmeshes contain colormap information (this is the case for
 morphometry-like data, but not for annotations or custom colors):</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cm</span> <span class="op">=</span> <span class="fu"><a href="../reference/vis.subject.morph.standard.html">vis.subject.morph.standard</a></span><span class="op">(</span><span class="va">sjd</span>, <span class="va">sj</span>, <span class="st">'sulc'</span>, fwhm<span class="op">=</span><span class="st">'10'</span>, cortex_only<span class="op">=</span><span class="cn">TRUE</span>, views<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span>;</span>
 <span><span class="va">img</span> <span class="op">=</span> <span class="fu"><a href="../reference/export.html">export</a></span><span class="op">(</span><span class="va">cm</span>, colorbar_legend<span class="op">=</span><span class="st">'Sulcal depth [mm]'</span>, draw_colorbar <span class="op">=</span> <span class="st">'vertical'</span><span class="op">)</span>;</span></code></pre></div>
 </div>
@@ -243,7 +268,7 @@ morphometry-like data, but not for annotations or custom colors):</p>
 <p>Use hex color strings (like <code>'#000000'</code>) rather than color
 names (like <code>'black'</code>), because color names are ambiguous and
 their interpretation differs between R and ImageMagick:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cm</span> <span class="op">=</span> <span class="fu"><a href="../reference/vis.subject.morph.standard.html">vis.subject.morph.standard</a></span><span class="op">(</span><span class="va">sjd</span>, <span class="va">sj</span>, <span class="st">'sulc'</span>, fwhm<span class="op">=</span><span class="st">'10'</span>, cortex_only<span class="op">=</span><span class="cn">TRUE</span>, views<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span>;</span>
 <span><span class="va">img</span> <span class="op">=</span> <span class="fu"><a href="../reference/export.html">export</a></span><span class="op">(</span><span class="va">cm</span>, view_angles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sd_medial_lh"</span>, <span class="st">"sd_medial_rh"</span><span class="op">)</span>, background_color <span class="op">=</span> <span class="st">'#000000'</span>, draw_colorbar <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>;</span></code></pre></div>
 </div>
@@ -254,7 +279,7 @@ their interpretation differs between R and ImageMagick:</p>
 publications), use the <code>transparency_color</code> parameter. It
 works by rendering on a temporary background color and later mapping
 that color to transparency in the output image:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cm</span> <span class="op">=</span> <span class="fu"><a href="../reference/vis.subject.morph.standard.html">vis.subject.morph.standard</a></span><span class="op">(</span><span class="va">sjd</span>, <span class="va">sj</span>, <span class="st">'sulc'</span>, fwhm<span class="op">=</span><span class="st">'10'</span>, cortex_only<span class="op">=</span><span class="cn">TRUE</span>, views<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span>;</span>
 <span><span class="va">img</span> <span class="op">=</span> <span class="fu"><a href="../reference/export.html">export</a></span><span class="op">(</span><span class="va">cm</span>, view_angles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sd_medial_lh"</span>, <span class="st">"sd_medial_rh"</span><span class="op">)</span>, transparency_color <span class="op">=</span> <span class="st">'#FFFFFF'</span><span class="op">)</span>;</span></code></pre></div>
 </div>
@@ -273,7 +298,7 @@ t-map). Both kinds of results are commonly displayed on the
 <p>The function <code><a href="../reference/vis.region.values.on.subject.html">vis.region.values.on.subject()</a></code> visualizes
 one value per atlas region. Here we show an example on the Desikan
 atlas, using simulated values:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">atlas</span> <span class="op">=</span> <span class="st">'aparc'</span>;   <span class="co"># Desikan atlas</span></span>
 <span></span>
 <span><span class="co"># For the left hemisphere, we just assign a subset of the atlas regions.</span></span>
@@ -298,7 +323,7 @@ symmetric colormap. The function
 draw a gray-scale background computed from the mean curvature of the
 cortex. Here we use the demo cluster data that ships with
 <em>fsbrain</em> and render it on <em>fsaverage</em>:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">subjects_dir</span> <span class="op">=</span> <span class="fu"><a href="../reference/get_optional_data_filepath.html">get_optional_data_filepath</a></span><span class="op">(</span><span class="st">"subjects_dir"</span><span class="op">)</span>;</span>
 <span><span class="va">subject_id</span> <span class="op">=</span> <span class="st">'fsaverage'</span>;</span>
 <span></span>
@@ -331,7 +356,7 @@ coloredmeshes with <code><a href="../reference/coloredmesh.from.preloaded.data.h
 render them with <code><a href="../reference/export.html">export()</a></code>. Note that we never call a
 <code>vis.subject.*</code> function and never rely on automatic
 subjects_dir detection.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># 1. Paths to the mesh and data files (arbitrary locations, no subjects_dir needed):</span></span>
 <span><span class="va">lh_surf_file</span> <span class="op">=</span> <span class="fu"><a href="../reference/get_optional_data_filepath.html">get_optional_data_filepath</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"subjects_dir"</span>, <span class="st">"subject1"</span>, <span class="st">"surf"</span>, <span class="st">"lh.white"</span><span class="op">)</span><span class="op">)</span>;</span>
 <span><span class="va">rh_surf_file</span> <span class="op">=</span> <span class="fu"><a href="../reference/get_optional_data_filepath.html">get_optional_data_filepath</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"subjects_dir"</span>, <span class="st">"subject1"</span>, <span class="st">"surf"</span>, <span class="st">"rh.white"</span><span class="op">)</span><span class="op">)</span>;</span>

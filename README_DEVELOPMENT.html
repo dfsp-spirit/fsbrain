@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">fsbrain</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,7 +35,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>fsbrain development information</h1>
-      <small class="dont-index">Source: <a href="https://github.com/dfsp-spirit/fsbrain/blob/v0.8.0/README_DEVELOPMENT.md" class="external-link"><code>README_DEVELOPMENT.md</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dfsp-spirit/fsbrain/blob/v1.0.0/README_DEVELOPMENT.md" class="external-link"><code>README_DEVELOPMENT.md</code></a></small>
     </div>
 
 <div id="fsbrain-development-information" class="section level1">
@@ -60,16 +60,28 @@
 </li>
 <li>to run an individual test, or several ones, by name filter: <code>Rscript -e "devtools::test(filter = 'morph_agg')"</code>
 </li>
-</ul></div>
+</ul><p>Note that <code>devtools::test()</code> sets the environment variable <code>NOT_CRAN=true</code>, which the test files use (via <code>skip_on_cran()</code>) to decide whether they may download and use the optional test data. If you call testthat directly instead, set it yourself, otherwise all tests that need the optional data are skipped with the reason “On CRAN”:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="va">NOT_CRAN</span><span class="op">=</span>true <span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">'testthat::test_dir("tests/testthat")'</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="avoiding-the-flood-of-rgl-windows">Avoiding the flood of rgl windows<a class="anchor" aria-label="anchor" href="#avoiding-the-flood-of-rgl-windows"></a></h3>
+<p>Almost every <code>vis.*</code> call opens a new rgl window, and the test suite calls them a lot. On a normal desktop, all those windows pop up and steal the focus, which makes the machine unusable while the tests run. There are two ways around that:</p>
+<ul><li>Render to a virtual X display. This keeps <em>all</em> tests running (including the ones that take screenshots), but into a display that you cannot see:</li>
+</ul><div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="ex">xvfb-run</span> <span class="at">-a</span> Rscript <span class="at">-e</span> <span class="st">'devtools::test()'</span></span></code></pre></div>
+<p>This requires the <code>xvfb</code> package, e.g., <code>sudo apt-get install xvfb</code> on Debian/Ubuntu. It is the recommended way to run the suite locally on Linux.</p>
+<ul><li>Or let rgl use its headless “NULL” device, so that no windows are created at all. Tests that need a real window for a screenshot skip themselves (see <code>skip_if_rgl_window_required()</code> in <code>tests/testthat/helper-functions.R</code>), all other tests run normally:</li>
+</ul><div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="va">RGL_USE_NULL</span><span class="op">=</span>true <span class="va">NOT_CRAN</span><span class="op">=</span>true <span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">'testthat::test_dir("tests/testthat")'</span></span></code></pre></div>
+<p>On CI runners without a display, rgl falls back to the NULL device automatically, so the same tests skip there as well.</p>
+</div>
+</div>
 <div class="section level2">
 <h2 id="running-the-unit-tests-with-the-scimesh-renderer-backend">Running the unit tests with the scimesh renderer backend<a class="anchor" aria-label="anchor" href="#running-the-unit-tests-with-the-scimesh-renderer-backend"></a></h2>
 <p>fsbrain can produce static images with two backends: <strong>rgl</strong> (the default; interactive, hardware-accelerated, needs a display / X11) and <strong>scimesh</strong> (headless, software, no display). The test suite can be run under either backend.</p>
 <div class="section level3">
 <h3 id="selecting-the-backend">Selecting the backend<a class="anchor" aria-label="anchor" href="#selecting-the-backend"></a></h3>
 <p>Set the <code>FSBRAIN_TESTS_USE_SCIMESH</code> environment variable to a truthy value (<code>1</code>, <code>true</code>, <code>yes</code>, <code>on</code>) to run the tests with the scimesh backend:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="va">FSBRAIN_TESTS_USE_SCIMESH</span><span class="op">=</span>true <span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">'devtools::test()'</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="va">FSBRAIN_TESTS_USE_SCIMESH</span><span class="op">=</span>true <span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">'devtools::test()'</span></span></code></pre></div>
 <p>or, from an R session:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span><span class="st">"FSBRAIN_TESTS_USE_SCIMESH"</span> <span class="op">=</span> <span class="st">"true"</span><span class="op">)</span>;</span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">test</span><span class="op">(</span><span class="op">)</span>;</span></code></pre></div>
 <p>When the variable is unset (or falsy), the default rgl backend is used.</p>
@@ -87,7 +99,7 @@
 <div class="section level3">
 <h3 id="extra-long--full-data-tests">Extra-long / full-data tests<a class="anchor" aria-label="anchor" href="#extra-long--full-data-tests"></a></h3>
 <p>Some tests require the full FreeSurfer <code>subject1</code> recon-all output (see <code>box.can.run.all.tests()</code> and <code>testdatapath.subjectsdir.full.subject1()</code> in <code>tests/testthat/helper-functions.R</code>) and are only run when <code>RUN_ALL_FSBRAIN_TESTS</code> is set:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="va">RUN_ALL_FSBRAIN_TESTS</span><span class="op">=</span>sure <span class="fu">devtools::test()</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="va">RUN_ALL_FSBRAIN_TESTS</span><span class="op">=</span>sure <span class="fu">devtools::test()</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="devtoolstest-vs-r-cmd-check">

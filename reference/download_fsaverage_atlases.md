@@ -1,11 +1,16 @@
 # Download atlas files for the fsaverage template subject.
 
-Download a set of cortical atlas files (annotations) defined in the
-space of the fsaverage template subject, based on a declarative manifest
-file shipped with this package. The atlases (e.g., Schaefer 100-1000,
-Brainnetome, HCP-MMP1, AAL3) are defined in fsaverage space, but they
-are not part of FreeSurfer and are not subject to the FreeSurfer
-license. This data is not required for the package to work.
+Download a set of atlas files defined in the space of the fsaverage
+template subject, based on a declarative manifest file shipped with this
+package. The atlases (e.g., Schaefer 100-1000, Brainnetome, HCP-MMP1,
+AAL3) are defined in fsaverage space, but they are not part of
+FreeSurfer and are not subject to the FreeSurfer license. This data is
+not required for the package to work. Note that some atlases are not
+defined on the cortical surface and ship their own surface mesh, e.g.,
+the subcortical atlas of the ENIGMA aseg structures: for those, the
+'surf/lh.subcortical' and 'label/lh.subcortical.annot' files (and the
+same for the right hemisphere) are downloaded, see
+[`vis.subcortical.region.values`](https://dfsp-spirit.github.io/fsbrain/reference/vis.subcortical.region.values.md).
 
 ## Usage
 

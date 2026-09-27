@@ -21,6 +21,7 @@ numeric 4x4 matrix, the FreeSurfer vox2ras_tkr matrix.
 ## See also
 
 Other surface and volume coordinates:
+[`index2ras_tkr()`](https://dfsp-spirit.github.io/fsbrain/reference/index2ras_tkr.md),
 [`ras2vox_tkr()`](https://dfsp-spirit.github.io/fsbrain/reference/ras2vox_tkr.md)
 
 ## Examples

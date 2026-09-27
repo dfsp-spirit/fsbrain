@@ -149,6 +149,7 @@ invisible character vector of file paths that were written.
 ## See also
 
 Other volume visualization:
+[`vis.volume.clusters()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.volume.clusters.md),
 [`vis.volume.on.surface()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.volume.on.surface.md),
 [`volvis.lb()`](https://dfsp-spirit.github.io/fsbrain/reference/volvis.lb.md),
 [`volvis.lb.with.surface()`](https://dfsp-spirit.github.io/fsbrain/reference/volvis.lb.with.surface.md),

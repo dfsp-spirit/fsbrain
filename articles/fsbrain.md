@@ -460,7 +460,7 @@ hemi = "lh"               # 'lh' or 'rh'
 atlas = "aparc"           # an atlas, e.g., 'aparc', 'aparc.a2009s', 'aparc.DKTatlas'
 
 # Some directory where we can find fsaverage. This can be omitted if FREESURFER_HOME or SUBJECTS_DIR is set, the function will find fsaverage in there by default. Also see the function download_fsaverage().
-template_subjects_dir = "~/software/freesurfer/subjects";    
+template_subjects_dir = "~/software/freesurfer/subjects";
 
 region_value_list = list("bankssts"=0.9, "precuneus"=0.7, "postcentral"=0.8, "lingual"=0.6);
 
@@ -764,8 +764,8 @@ The resolution of rgl windows is set in the call to
 [`rgl::par3d`](https://dmurdoch.github.io/rgl/dev/reference/par3d.html).
 You can pass arbitrary options to the call by specifying the parameter
 `rgloptions` when calling any visualization function. Here is an example
-that increases the resolution of the output window to 800x800 pixels and
-opens the window at screen position 50, 50:
+that increases the resolution of the output window to 1000x1000 pixels
+and opens the window at screen position 50, 50:
 
 ``` r
 
@@ -784,6 +784,40 @@ if parts of it are off-screen. This also means you should **not**
 perform other actions on the machine while a movie is being recorded, as
 taking away the focus from the rgl window or opening other windows on
 top of it may lead to artifacts.
+
+#### Changing the resolution of figures with the scimesh backend
+
+Everything above applies to the default rgl renderer backend, which
+draws into a window whose size is set with *windowRect*. The *scimesh*
+backend (see the dedicated vignette *fsbrain with the scimesh rendering
+backend*) is a headless software renderer: it does not open a window and
+thus has no *windowRect*, so the `rgloptions` parameter is ignored when
+the scimesh backend is active. This also applies to the `quality`
+parameter of the
+[`export()`](https://dfsp-spirit.github.io/fsbrain/reference/export.md)
+function, which is implemented in terms of *windowRect*.
+
+Instead of setting the size of a window, you set the resolution of the
+images that scimesh writes, and you do so globally for the R session:
+
+``` r
+
+# Set the output resolution of all scimesh renders to 2560x1440 pixels (the default is 1920x1080):
+options(fsbrain.scimesh.output_dims = c(2560, 1440));
+```
+
+The setting is read by the scimesh backend on every render call, so it
+applies to all images exported with
+[`export()`](https://dfsp-spirit.github.io/fsbrain/reference/export.md)
+and
+[`vislayout.from.coloredmeshes()`](https://dfsp-spirit.github.io/fsbrain/reference/vislayout.from.coloredmeshes.md).
+Like
+[`fsbrain.set.default.figsize()`](https://dfsp-spirit.github.io/fsbrain/reference/fsbrain.set.default.figsize.md)
+for rgl, you can put it into your `~/.Rprofile` file if you want it in
+all future R sessions. Note that
+[`fsbrain.set.default.figsize()`](https://dfsp-spirit.github.io/fsbrain/reference/fsbrain.set.default.figsize.md)
+itself has no effect when using scimesh, as it only sets the rgl window
+size.
 
 #### Using backgrounds when visualizing data
 

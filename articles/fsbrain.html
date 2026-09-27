@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">fsbrain</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,7 +61,7 @@
       <h1>fsbrain: Managing and Visualizing Structural Neuroimaging Data in GNU R</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/dfsp-spirit/fsbrain/blob/v0.8.0/vignettes/fsbrain.Rmd" class="external-link"><code>vignettes/fsbrain.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dfsp-spirit/fsbrain/blob/v1.0.0/vignettes/fsbrain.Rmd" class="external-link"><code>vignettes/fsbrain.Rmd</code></a></small>
       <div class="d-none name"><code>fsbrain.Rmd</code></div>
     </div>
 
@@ -468,7 +468,7 @@ that for one hemisphere in the next example:</p>
 <span><span class="va">atlas</span> <span class="op">=</span> <span class="st">"aparc"</span>           <span class="co"># an atlas, e.g., 'aparc', 'aparc.a2009s', 'aparc.DKTatlas'</span></span>
 <span></span>
 <span><span class="co"># Some directory where we can find fsaverage. This can be omitted if FREESURFER_HOME or SUBJECTS_DIR is set, the function will find fsaverage in there by default. Also see the function download_fsaverage().</span></span>
-<span><span class="va">template_subjects_dir</span> <span class="op">=</span> <span class="st">"~/software/freesurfer/subjects"</span>;    </span>
+<span><span class="va">template_subjects_dir</span> <span class="op">=</span> <span class="st">"~/software/freesurfer/subjects"</span>;</span>
 <span></span>
 <span><span class="va">region_value_list</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"bankssts"</span><span class="op">=</span><span class="fl">0.9</span>, <span class="st">"precuneus"</span><span class="op">=</span><span class="fl">0.7</span>, <span class="st">"postcentral"</span><span class="op">=</span><span class="fl">0.8</span>, <span class="st">"lingual"</span><span class="op">=</span><span class="fl">0.6</span><span class="op">)</span>;</span>
 <span></span>
@@ -744,7 +744,7 @@ surface. <em>C</em> inflated surface.</div>
 <code><a href="https://dmurdoch.github.io/rgl/dev/reference/par3d.html" class="external-link">rgl::par3d</a></code>. You can pass arbitrary options to the call by
 specifying the parameter <code>rgloptions</code> when calling any
 visualization function. Here is an example that increases the resolution
-of the output window to 800x800 pixels and opens the window at screen
+of the output window to 1000x1000 pixels and opens the window at screen
 position 50, 50:</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rgloptions</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"windowRect"</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">50</span>, <span class="fl">1000</span>, <span class="fl">1000</span><span class="op">)</span><span class="op">)</span>;</span>
@@ -762,6 +762,33 @@ is being recorded, as taking away the focus from the rgl window or
 opening other windows on top of it may lead to artifacts.</p>
 </div>
 <div class="section level4">
+<h4 id="changing-the-resolution-of-figures-with-the-scimesh-backend">Changing the resolution of figures with the scimesh backend<a class="anchor" aria-label="anchor" href="#changing-the-resolution-of-figures-with-the-scimesh-backend"></a>
+</h4>
+<p>Everything above applies to the default rgl renderer backend, which
+draws into a window whose size is set with <em>windowRect</em>. The
+<em>scimesh</em> backend (see the dedicated vignette <em>fsbrain with
+the scimesh rendering backend</em>) is a headless software renderer: it
+does not open a window and thus has no <em>windowRect</em>, so the
+<code>rgloptions</code> parameter is ignored when the scimesh backend is
+active. This also applies to the <code>quality</code> parameter of the
+<code><a href="../reference/export.html">export()</a></code> function, which is implemented in terms of
+<em>windowRect</em>.</p>
+<p>Instead of setting the size of a window, you set the resolution of
+the images that scimesh writes, and you do so globally for the R
+session:</p>
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Set the output resolution of all scimesh renders to 2560x1440 pixels (the default is 1920x1080):</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>fsbrain.scimesh.output_dims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2560</span>, <span class="fl">1440</span><span class="op">)</span><span class="op">)</span>;</span></code></pre></div>
+<p>The setting is read by the scimesh backend on every render call, so
+it applies to all images exported with <code><a href="../reference/export.html">export()</a></code> and
+<code><a href="../reference/vislayout.from.coloredmeshes.html">vislayout.from.coloredmeshes()</a></code>. Like
+<code><a href="../reference/fsbrain.set.default.figsize.html">fsbrain.set.default.figsize()</a></code> for rgl, you can put it into
+your <code>~/.Rprofile</code> file if you want it in all future R
+sessions. Note that <code><a href="../reference/fsbrain.set.default.figsize.html">fsbrain.set.default.figsize()</a></code> itself
+has no effect when using scimesh, as it only sets the rgl window
+size.</p>
+</div>
+<div class="section level4">
 <h4 id="using-backgrounds-when-visualizing-data">Using backgrounds when visualizing data<a class="anchor" aria-label="anchor" href="#using-backgrounds-when-visualizing-data"></a>
 </h4>
 <p>By default, when you plot vertex-wise data that contains
@@ -774,7 +801,7 @@ depth, as they show the pattern of gyri and sulci and thus make it
 easier to see where the clusters are, especially with the inflated
 surface. Here is an example that plots clusters against a background of
 mean curvature:</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">subjects_dir</span> <span class="op">=</span> <span class="fu"><a href="../reference/find.subjectsdir.of.html">find.subjectsdir.of</a></span><span class="op">(</span><span class="st">"fsaverage"</span><span class="op">)</span><span class="op">$</span><span class="va">found_at</span>;</span>
 <span><span class="va">subject_id</span> <span class="op">=</span> <span class="st">'fsaverage'</span>;</span>
 <span></span>
@@ -858,7 +885,7 @@ screenshot:
 </h5>
 <p>Here is an example that creates a GIF movie in your HOME
 directory:</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">subjects_dir</span> <span class="op">=</span> <span class="fu">fsbrain</span><span class="fu">::</span><span class="fu"><a href="../reference/get_optional_data_filepath.html">get_optional_data_filepath</a></span><span class="op">(</span><span class="st">"subjects_dir"</span><span class="op">)</span>;</span>
 <span><span class="va">subject_id</span> <span class="op">=</span> <span class="st">'subject1'</span>;</span>
 <span><span class="va">rgloptions</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"windowRect"</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">50</span>, <span class="fl">600</span>, <span class="fl">600</span><span class="op">)</span><span class="op">)</span>;     <span class="co"># the first 2 entries give the position on screen, the rest defines resolution as width, height in px</span></span>
@@ -904,7 +931,7 @@ rgl device whether or not there is enough space to draw the colorbar. If
 there is not enough space, the colorbar may not show up at all or it may
 be empty. You can use the rgloptions parameter to all these functions to
 increase the size of the rgl device. Example (continued from above):</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">subjects_dir</span> <span class="op">=</span> <span class="fu">fsbrain</span><span class="fu">::</span><span class="fu"><a href="../reference/get_optional_data_filepath.html">get_optional_data_filepath</a></span><span class="op">(</span><span class="st">"subjects_dir"</span><span class="op">)</span>;</span>
 <span><span class="va">subject_id</span> <span class="op">=</span> <span class="st">'subject1'</span>;</span>
 <span><span class="va">rgloptions</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"windowRect"</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">50</span>, <span class="fl">1000</span>, <span class="fl">1000</span><span class="op">)</span><span class="op">)</span>;     <span class="co"># larger plot</span></span>
@@ -932,7 +959,7 @@ and create the final version of your figure in standard image
 manipulation software like Inkscape. To do this, you can use the
 invisible return value of all visualization functions in combination
 with the <code><a href="../reference/coloredmesh.plot.colorbar.separate.html">coloredmesh.plot.colorbar.separate()</a></code> function:</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">subjects_dir</span> <span class="op">=</span> <span class="fu">fsbrain</span><span class="fu">::</span><span class="fu"><a href="../reference/get_optional_data_filepath.html">get_optional_data_filepath</a></span><span class="op">(</span><span class="st">"subjects_dir"</span><span class="op">)</span>;</span>
 <span><span class="va">coloredmeshes</span> <span class="op">=</span> <span class="fu"><a href="../reference/vis.subject.morph.native.html">vis.subject.morph.native</a></span><span class="op">(</span><span class="va">subjects_dir</span>, <span class="st">'subject1'</span>, <span class="st">'thickness'</span>, <span class="st">'lh'</span>, views<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'t4'</span><span class="op">)</span>, makecmap_options<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">'colFn'</span><span class="op">=</span><span class="fu">squash</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/squash/man/ColorPalettes.html" class="external-link">jet</a></span><span class="op">)</span><span class="op">)</span>;</span>
 <span><span class="fu"><a href="../reference/coloredmesh.plot.colorbar.separate.html">coloredmesh.plot.colorbar.separate</a></span><span class="op">(</span><span class="va">coloredmeshes</span>, horizontal<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span></code></pre></div>
@@ -954,7 +981,7 @@ space between in the plots shown above is too large. Therefore, we
 provide the <code><a href="../reference/export.html">export()</a></code> function, which creates a tight layout
 of the brain from four different angles, and adds a colorbar (if
 possible for the plotted data).</p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">coloredmeshes</span> <span class="op">=</span> <span class="fu"><a href="../reference/vis.subject.morph.standard.html">vis.subject.morph.standard</a></span><span class="op">(</span><span class="va">subjects_dir</span>, <span class="st">'subject1'</span>, <span class="st">'sulc'</span>, rglactions<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">'no_vis'</span><span class="op">=</span><span class="cn">T</span><span class="op">)</span><span class="op">)</span>;</span>
 <span><span class="va">img</span> <span class="op">=</span> <span class="fu"><a href="../reference/export.html">export</a></span><span class="op">(</span><span class="va">coloredmeshes</span>, colorbar_legend<span class="op">=</span><span class="st">'Sulcal depth [mm]'</span>, output_img<span class="op">=</span><span class="st">'~/fig1.png'</span><span class="op">)</span>;</span></code></pre></div>
 <p>This function creates four different plots, then trims the individual
@@ -980,7 +1007,7 @@ for a full example with output.</p>
 <code>vis.group.morph.native</code>,
 <code>vis.group.morph.standard</code>, and <code>vis.group.annot</code>
 which can produce a plot for a group of subjects.</p>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">subjects_list</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'subject1'</span>, <span class="st">'subject2'</span>, <span class="st">'subject3'</span><span class="op">)</span>;</span>
 <span></span>
 <span><span class="co"># Plot standard space thickness for 3 subjects:</span></span>

@@ -131,6 +131,7 @@ or displayed interactively.
 ## See also
 
 Other volume visualization:
+[`vis.volume.clusters()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.volume.clusters.md),
 [`vis.volume.on.surface()`](https://dfsp-spirit.github.io/fsbrain/reference/vis.volume.on.surface.md),
 [`volvis.lb()`](https://dfsp-spirit.github.io/fsbrain/reference/volvis.lb.md),
 [`volvis.lightbox()`](https://dfsp-spirit.github.io/fsbrain/reference/volvis.lightbox.md),

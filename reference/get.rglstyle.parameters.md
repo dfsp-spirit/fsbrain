@@ -3,7 +3,13 @@
 A style definition can be a character string like "shiny", already a
 parameter list, or a command like 'from_mesh' that tells us to get the
 style from the renderable. This function creates the final parameters
-from the definition and the renderable.
+from the definition and the renderable. Note that a mesh which carries
+its own style (in its 'style' field, see
+[`coloredmesh.from.color`](https://dfsp-spirit.github.io/fsbrain/reference/coloredmesh.from.color.md))
+is rendered with that style whenever the requested style is the
+'default' style: this way, scenes that assign individual styles to their
+meshes look as intended even if the rendering or export function is
+called without an explicit style.
 
 ## Usage
 
