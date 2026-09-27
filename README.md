@@ -93,7 +93,7 @@ install.packages("scimesh");
 options(fsbrain.renderer_backend = "scimesh");
 ```
 
-Static image export (`vislayout.from.coloredmeshes()` and `export()`) now renders with scimesh. Interactive views (e.g., `views = "si"`, `"sr"`, `"t4"`, `"t9"`) and `vis.rglwidget()` still use rgl. Switch back at any time with `options(fsbrain.renderer_backend = "rgl")`.
+Static image export (`vislayout.from.coloredmeshes()` and `export()`) now renders with scimesh, and so does every non-interactive view: the tiled layouts `views = "t4"` / `"t9"` and the single static views `views = "sd_<angle>"` are rendered to a PNG file (run `get.view.angle.names()` for the valid angles). Only the views that need a live OpenGL window still use rgl — the single interactive view `views = "si"` and the rotating view `views = "sr"`, which are skipped with a warning under scimesh — plus `vis.rglwidget()`, which renders in the browser and needs no display either. Switch back at any time with `options(fsbrain.renderer_backend = "rgl")`.
 
 * **How to use it**: see the [scimesh vignette](https://dfsp-spirit.github.io/fsbrain/articles/fsbrain_with_scimesh.html) (`vignette("fsbrain_with_scimesh")`) — what works, the limitations, and many worked examples.
 * **Why / when to use it, and alternatives**: see [README_HEADLESS.md](./README_HEADLESS.md), a decision guide for headless environments and broken-X11 macOS.

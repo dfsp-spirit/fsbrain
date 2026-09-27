@@ -49,7 +49,7 @@ get.fsbrain.renderer.backend();
 
 Note that `fsbrain.set.default.figsize()`, which controls the rgl window size, has no effect on scimesh rendering. You can switch back to the default rgl backend at any time with `options(fsbrain.renderer_backend = "rgl")`.
 
-Also please keep in mind that interactive viewing (e.g., `views = "si"`, `"sr"`, `"t4"`, `"t9"` passed to a `vis*` function) always uses rgl, even when the scimesh backend is active. To render static multi-view figures with scimesh, obtain the coloredmeshes with `views = NULL` and pass them to the `export()` function, as shown in the rest of this document.
+Also please keep in mind that the views which need a live OpenGL window (`views = "si"` for a single interactive view and `views = "sr"` for a rotating view, passed to a `vis*` function) always use rgl, even when the scimesh backend is active — they are skipped with a warning. The tiled views (`views = "t4"` and `"t9"`) and the single static views (`views = "sd_<angle>"`) do work with the scimesh backend, which renders them to a PNG file in the current working directory. To get full control over static multi-view figures, obtain the coloredmeshes with `views = NULL` and pass them to the `export()` function, as shown in the rest of this document.
 
 # Example data
 

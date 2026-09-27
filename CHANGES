@@ -1,8 +1,8 @@
 fsbrain Changes
 ===============
 
-Version 1.0.0
-------------
+Version 1.0.0 -- Subcortical visualization, tracts, connectome, and volume-to-surface projection
+--------------------------------------------------------------------------------------------------
 
 - NEW: white matter tract visualization: `vis.tracts()` draws tractography streamlines, optionally with a semi-transparent brain surface as context (the fsbrain equivalent of `plot_tracts` of the Python package `yabplot`). The streamlines can come from TRK or TCK files, from a directory of such files (e.g. the XTRACT atlas), or from in-memory data. Whole-brain tractograms can be read in subsets, and the bundle colors use the usual `makecmap_options` colormaps. See `examples/tracts`.
 - NEW: `read.tract.bundles()` reads one or more tract files, or a whole directory of them, into a named list of bundles. Requires `freesurferformats (>= 1.1.0)` (up from 1.0.1).

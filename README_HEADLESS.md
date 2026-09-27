@@ -29,6 +29,14 @@ graphics stack (rgl / XQuartz). On macOS, the issue is tracked upstream:
 ...but currently only workarounds exist (like rendering into a web view),
 and given the situation on macOS, that is unlikely to change.
 
+One more option exists on Linux: keep the rgl backend and hand it a display
+and an OpenGL implementation in *software*, by running R under a virtual X
+server (Xvfb) with Mesa's software rasterizer (llvmpipe). It works, but it
+needs extra system packages and gives up GPU acceleration, and it is not
+available on macOS, where rgl depends on exactly the XQuartz/X11 stack that
+is broken. See [solution 3](#solution-3-advanced-linux-only-rgl-under-a-virtual-x-display)
+below.
+
 ## Solution 1 (recommended): Use the scimesh backend
 
 The [scimesh](https://CRAN.R-project.org/package=scimesh) package provides
@@ -89,6 +97,33 @@ widget <- vis.rglwidget(cm)
 widget  # displays in RStudio viewer or web browser
 ```
 
+## Solution 3 (advanced, Linux only): rgl under a virtual X display
+
+If you need the rgl backend itself — e.g., because you rely on a feature that
+scimesh does not support — and you are on Linux, you can give rgl what it
+wants in software: a virtual X server ([Xvfb](https://www.x.org/releases/X11R7.7/doc/man/man1/Xvfb.1.xhtml))
+for the display and Mesa's software rasterizer (llvmpipe) for OpenGL.
+
+```sh
+# Debian/Ubuntu
+sudo apt-get install xvfb libgl1-mesa-dri libglu1-mesa
+xvfb-run -a Rscript my_fsbrain_analysis.R
+```
+
+This is how the fsbrain Docker images run R (`xvfb-run -a R`, see
+[docker/README.md](./docker/README.md)) and how
+[README_DEVELOPMENT.md](./README_DEVELOPMENT.md) runs the test suite locally,
+including the tests that need a real rgl window. Note the downsides:
+
+* it adds system packages (X11, Mesa, GLU) — rgl needs `libGL`/`libGLU`
+  regardless, so this does not help on a system where you cannot install them,
+* rendering is done on the CPU, which is slower than a GPU,
+* it is not an option on macOS, where rgl uses the very XQuartz/X11 stack
+  that is broken and Xvfb is unavailable.
+
+For static image export, the scimesh backend (solution 1) is the simpler and
+recommended way.
+
 ## Quick comparison
 
 | Feature | scimesh backend | rglwidget | rgl (XQuartz) |
@@ -109,4 +144,5 @@ widget  # displays in RStudio viewer or web browser
 * For creating static figures (the most common use case) without a display, use the scimesh backend.
 * If you need interactive 3D exploration, use `vis.rglwidget()` (uses WebGL).
 * If you have a working X11/OpenGL stack (most Linux desktops, older macOS versions), the default rgl backend works.
+* If you need the rgl backend itself on a display-less Linux machine, you can run it under Xvfb with Mesa's software OpenGL ([solution 3](#solution-3-advanced-linux-only-rgl-under-a-virtual-x-display)) — advanced, and not an option on macOS.
 * If you are running headless in containers, CI, etc, interactive plots make no sense anyway. Use scimesh.
