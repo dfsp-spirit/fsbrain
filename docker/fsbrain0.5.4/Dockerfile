@@ -10,7 +10,7 @@
 #
 # See the very bottom of this script for info on how to run it.
 
-FROM rocker/r-ver:4.6.1
+FROM rocker/r-ver:4.6.2
 
 # Shell setup:
 WORKDIR /root
